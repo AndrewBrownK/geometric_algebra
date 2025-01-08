@@ -1,31 +1,34 @@
-extension AntiCircleRotor {
-    // Fancy infix trick
-    func operator/(_rhs: InversePrefixOrPostfix) -> AntiCircleRotor {
+implementing cga3d;
+using traits;
+public extension AntiCircleRotor {
+    // Fancy postfix trick
+    public AntiCircleRotor operator /(InversePrefixOrPostfix rhs)  {
         return this.inverse();
     }
-    func operator/=(const InversePrefixOrPostfix& _rhs) -> AntiCircleRotor& {
-        this = this.inverse();
-        return *this;
+}
+public extension InversePrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiCircleRotor operator /(AntiCircleRotor rhs) {
+        return rhs.inverse();
     }
 }
-extension AntiCircleRotor: Inverse {
-    associatedtype Output = AntiCircleRotor;
-    func inverse() -> Output {
-        AntiCircleRotor reverse = AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(this.group0.xyz * float3(-1.0), 0.0), 
+public extension AntiCircleRotor {
+    public AntiCircleRotor inverse() {
+        AntiCircleRotor reverse = AntiCircleRotor(
+            /* e41, e42, e43 */
+            this.group0.xyz * float3(-1.0), 
             /* e23, e31, e12, e45 */
             this.group1 * float4(-1.0), 
             /* e15, e25, e35, scalar */
             this.group2 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        Scalar other = Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(2.0*(this.e41 * this.e15) + 2.0 * (this.e42 * this.e25) + 2.0 * (this.e43 * this.e35) + powi(this.e23, 2) + powi(this.e31, 2) + powi(this.e12, 2) + powi(this.scalar, 2) - powi(this.e45, 2), 0.0, 0.0, 0.0)
+        Scalar other = Scalar(
+            /* scalar */
+            2.0*(this.e41 * this.e15) + 2.0 * (this.e42 * this.e25) + 2.0 * (this.e43 * this.e35) + pow(this.e23, 2) + pow(this.e31, 2) + pow(this.e12, 2) + pow(this.scalar, 2) - pow(this.e45, 2)
         );
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(other.scalar) * reverse.group0.xyz, 0.0), 
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            float3(other.scalar) * reverse.group0.xyz, 
             /* e23, e31, e12, e45 */
             float4(other.scalar) * reverse.group1, 
             /* e15, e25, e35, scalar */
@@ -33,22 +36,23 @@ extension AntiCircleRotor: Inverse {
         );
     }
 }
-extension AntiDipoleInversion {
-    // Fancy infix trick
-    func operator/(_rhs: InversePrefixOrPostfix) -> AntiDipoleInversion {
+public extension AntiDipoleInversion {
+    // Fancy postfix trick
+    public AntiDipoleInversion operator /(InversePrefixOrPostfix rhs)  {
         return this.inverse();
     }
-    func operator/=(const InversePrefixOrPostfix& _rhs) -> AntiDipoleInversion& {
-        this = this.inverse();
-        return *this;
+}
+public extension InversePrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiDipoleInversion operator /(AntiDipoleInversion rhs) {
+        return rhs.inverse();
     }
 }
-extension AntiDipoleInversion: Inverse {
-    associatedtype Output = AntiDipoleInversion;
-    func inverse() -> Output {
-        AntiDipoleInversion reverse = AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz * float3(-1.0), 0.0), 
+public extension AntiDipoleInversion {
+    public AntiDipoleInversion inverse() {
+        AntiDipoleInversion reverse = AntiDipoleInversion(
+            /* e423, e431, e412 */
+            this.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             this.group1 * float4(-1.0), 
             /* e235, e315, e125, e4 */
@@ -56,13 +60,13 @@ extension AntiDipoleInversion: Inverse {
             /* e1, e2, e3, e5 */
             this.group3
         );
-        Scalar other = Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(powi(this.e321, 2) + powi(this.e1, 2) + powi(this.e2, 2) + powi(this.e3, 2) - powi(this.e415, 2) - powi(this.e425, 2) - powi(this.e435, 2) - 2.0 * (this.e423 * this.e235) - 2.0 * (this.e431 * this.e315) - 2.0 * (this.e412 * this.e125) - 2.0 * (this.e4 * this.e5), 0.0, 0.0, 0.0)
+        Scalar other = Scalar(
+            /* scalar */
+            pow(this.e321, 2) + pow(this.e1, 2) + pow(this.e2, 2) + pow(this.e3, 2) - pow(this.e415, 2) - pow(this.e425, 2) - pow(this.e435, 2) - 2.0 * (this.e423 * this.e235) - 2.0 * (this.e431 * this.e315) - 2.0 * (this.e412 * this.e125) - 2.0 * (this.e4 * this.e5)
         );
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(other.scalar) * reverse.group0.xyz, 0.0), 
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(other.scalar) * reverse.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(other.scalar) * reverse.group1, 
             /* e235, e315, e125, e4 */
@@ -72,68 +76,71 @@ extension AntiDipoleInversion: Inverse {
         );
     }
 }
-extension AntiDualNum {
-    // Fancy infix trick
-    func operator/(_rhs: InversePrefixOrPostfix) -> AntiDualNum {
+public extension AntiDualNum {
+    // Fancy postfix trick
+    public AntiDualNum operator /(InversePrefixOrPostfix rhs)  {
         return this.inverse();
     }
-    func operator/=(const InversePrefixOrPostfix& _rhs) -> AntiDualNum& {
-        this = this.inverse();
-        return *this;
+}
+public extension InversePrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiDualNum operator /(AntiDualNum rhs) {
+        return rhs.inverse();
     }
 }
-extension AntiDualNum: Inverse {
-    associatedtype Output = AntiDualNum;
-    func inverse() -> Output {
-        return AntiDualNum.from_groups(
-            /* e3215, scalar, 0, 0 */
-            float4(float2(powi(this.scalar, -2)) * this.group0.xy, 0.0, 0.0)
+public extension AntiDualNum {
+    public AntiDualNum inverse() {
+        return AntiDualNum(
+            /* e3215, scalar */
+            float2(pow(this.scalar, -2)) * this.group0.xy
         );
     }
 }
-extension AntiFlatPoint {
-    // Fancy infix trick
-    func operator/(_rhs: InversePrefixOrPostfix) -> AntiFlatPoint {
+public extension AntiFlatPoint {
+    // Fancy postfix trick
+    public AntiFlatPoint operator /(InversePrefixOrPostfix rhs)  {
         return this.inverse();
     }
-    func operator/=(const InversePrefixOrPostfix& _rhs) -> AntiFlatPoint& {
-        this = this.inverse();
-        return *this;
+}
+public extension InversePrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiFlatPoint operator /(AntiFlatPoint rhs) {
+        return rhs.inverse();
     }
 }
-extension AntiFlatPoint: Inverse {
-    associatedtype Output = AntiFlatPoint;
-    func inverse() -> Output {
-        return AntiFlatPoint.from_groups(
+public extension AntiFlatPoint {
+    public AntiFlatPoint inverse() {
+        return AntiFlatPoint(
             /* e235, e315, e125, e321 */
-            float4(powi(this.e321, -2)) * float4(this.e235 * -1.0, this.e315 * -1.0, this.e125 * -1.0, this.e321 * -1.0)
+            float4(pow(this.e321, -2)) * float4(this.e235 * -1.0, this.e315 * -1.0, this.e125 * -1.0, this.e321 * -1.0)
         );
     }
 }
-extension AntiFlector {
-    // Fancy infix trick
-    func operator/(_rhs: InversePrefixOrPostfix) -> AntiFlector {
+public extension AntiFlector {
+    // Fancy postfix trick
+    public AntiFlector operator /(InversePrefixOrPostfix rhs)  {
         return this.inverse();
     }
-    func operator/=(const InversePrefixOrPostfix& _rhs) -> AntiFlector& {
-        this = this.inverse();
-        return *this;
+}
+public extension InversePrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiFlector operator /(AntiFlector rhs) {
+        return rhs.inverse();
     }
 }
-extension AntiFlector: Inverse {
-    associatedtype Output = AntiFlector;
-    func inverse() -> Output {
-        AntiFlector reverse = AntiFlector.from_groups(
+public extension AntiFlector {
+    public AntiFlector inverse() {
+        AntiFlector reverse = AntiFlector(
             /* e235, e315, e125, e321 */
             this.group0 * float4(-1.0), 
             /* e1, e2, e3, e5 */
             this.group1
         );
-        Scalar other = Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(powi(this.e321, 2) + powi(this.e1, 2) + powi(this.e2, 2) + powi(this.e3, 2), 0.0, 0.0, 0.0)
+        Scalar other = Scalar(
+            /* scalar */
+            pow(this.e321, 2) + pow(this.e1, 2) + pow(this.e2, 2) + pow(this.e3, 2)
         );
-        return AntiFlector.from_groups(
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(other.scalar) * reverse.group0, 
             /* e1, e2, e3, e5 */
@@ -141,61 +148,63 @@ extension AntiFlector: Inverse {
         );
     }
 }
-extension AntiLine {
-    // Fancy infix trick
-    func operator/(_rhs: InversePrefixOrPostfix) -> AntiLine {
+public extension AntiLine {
+    // Fancy postfix trick
+    public AntiLine operator /(InversePrefixOrPostfix rhs)  {
         return this.inverse();
     }
-    func operator/=(const InversePrefixOrPostfix& _rhs) -> AntiLine& {
-        this = this.inverse();
-        return *this;
+}
+public extension InversePrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiLine operator /(AntiLine rhs) {
+        return rhs.inverse();
     }
 }
-extension AntiLine: Inverse {
-    associatedtype Output = AntiLine;
-    func inverse() -> Output {
-        AntiLine reverse = AntiLine.from_groups(
-            /* e23, e31, e12, 0 */
-            float4(this.group0.xyz * float3(-1.0), 0.0), 
-            /* e15, e25, e35, 0 */
-            float4(this.group1.xyz * float3(-1.0), 0.0)
+public extension AntiLine {
+    public AntiLine inverse() {
+        AntiLine reverse = AntiLine(
+            /* e23, e31, e12 */
+            this.group0.xyz * float3(-1.0), 
+            /* e15, e25, e35 */
+            this.group1.xyz * float3(-1.0)
         );
-        Scalar other = Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(powi(this.e23, 2) + powi(this.e31, 2) + powi(this.e12, 2), 0.0, 0.0, 0.0)
+        Scalar other = Scalar(
+            /* scalar */
+            pow(this.e23, 2) + pow(this.e31, 2) + pow(this.e12, 2)
         );
-        return AntiLine.from_groups(
-            /* e23, e31, e12, 0 */
-            float4(float3(other.scalar) * reverse.group0.xyz, 0.0), 
-            /* e15, e25, e35, 0 */
-            float4(float3(other.scalar) * reverse.group1.xyz, 0.0)
+        return AntiLine(
+            /* e23, e31, e12 */
+            float3(other.scalar) * reverse.group0.xyz, 
+            /* e15, e25, e35 */
+            float3(other.scalar) * reverse.group1.xyz
         );
     }
 }
-extension AntiMotor {
-    // Fancy infix trick
-    func operator/(_rhs: InversePrefixOrPostfix) -> AntiMotor {
+public extension AntiMotor {
+    // Fancy postfix trick
+    public AntiMotor operator /(InversePrefixOrPostfix rhs)  {
         return this.inverse();
     }
-    func operator/=(const InversePrefixOrPostfix& _rhs) -> AntiMotor& {
-        this = this.inverse();
-        return *this;
+}
+public extension InversePrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiMotor operator /(AntiMotor rhs) {
+        return rhs.inverse();
     }
 }
-extension AntiMotor: Inverse {
-    associatedtype Output = AntiMotor;
-    func inverse() -> Output {
-        AntiMotor reverse = AntiMotor.from_groups(
+public extension AntiMotor {
+    public AntiMotor inverse() {
+        AntiMotor reverse = AntiMotor(
             /* e23, e31, e12, scalar */
             this.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e15, e25, e35, e3215 */
             this.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        Scalar other = Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(powi(this.e23, 2) + powi(this.e31, 2) + powi(this.e12, 2) + powi(this.scalar, 2), 0.0, 0.0, 0.0)
+        Scalar other = Scalar(
+            /* scalar */
+            pow(this.e23, 2) + pow(this.e31, 2) + pow(this.e12, 2) + pow(this.scalar, 2)
         );
-        return AntiMotor.from_groups(
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(other.scalar) * reverse.group0, 
             /* e15, e25, e35, e3215 */
@@ -203,107 +212,111 @@ extension AntiMotor: Inverse {
         );
     }
 }
-extension AntiPlane {
-    // Fancy infix trick
-    func operator/(_rhs: InversePrefixOrPostfix) -> AntiPlane {
+public extension AntiPlane {
+    // Fancy postfix trick
+    public AntiPlane operator /(InversePrefixOrPostfix rhs)  {
         return this.inverse();
     }
-    func operator/=(const InversePrefixOrPostfix& _rhs) -> AntiPlane& {
-        this = this.inverse();
-        return *this;
+}
+public extension InversePrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiPlane operator /(AntiPlane rhs) {
+        return rhs.inverse();
     }
 }
-extension AntiPlane: Inverse {
-    associatedtype Output = AntiPlane;
-    func inverse() -> Output {
-        return AntiPlane.from_groups(
+public extension AntiPlane {
+    public AntiPlane inverse() {
+        return AntiPlane(
             /* e1, e2, e3, e5 */
-            float4(powi(this.e1, 2) + powi(this.e2, 2) + powi(this.e3, 2)) * this.group0
+            float4(pow(this.e1, 2) + pow(this.e2, 2) + pow(this.e3, 2)) * this.group0
         );
     }
 }
-extension AntiScalar {
-    // Fancy infix trick
-    func operator/(_rhs: InversePrefixOrPostfix) -> AntiScalar {
+public extension AntiScalar {
+    // Fancy postfix trick
+    public AntiScalar operator /(InversePrefixOrPostfix rhs)  {
         return this.inverse();
     }
-    func operator/=(const InversePrefixOrPostfix& _rhs) -> AntiScalar& {
-        this = this.inverse();
-        return *this;
+}
+public extension InversePrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiScalar operator /(AntiScalar rhs) {
+        return rhs.inverse();
     }
 }
-extension AntiScalar: Inverse {
-    associatedtype Output = AntiScalar;
-    func inverse() -> Output {
-        return AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(1.0/this.e12345 * -1.0, 0.0, 0.0, 0.0)
+public extension AntiScalar {
+    public AntiScalar inverse() {
+        return AntiScalar(
+            /* e12345 */
+            1.0/this.e12345 * -1.0
         );
     }
 }
-extension Circle {
-    // Fancy infix trick
-    func operator/(_rhs: InversePrefixOrPostfix) -> Circle {
+public extension Circle {
+    // Fancy postfix trick
+    public Circle operator /(InversePrefixOrPostfix rhs)  {
         return this.inverse();
     }
-    func operator/=(const InversePrefixOrPostfix& _rhs) -> Circle& {
-        this = this.inverse();
-        return *this;
+}
+public extension InversePrefixOrPostfix {
+    // Fancy prefix trick
+    public Circle operator /(Circle rhs) {
+        return rhs.inverse();
     }
 }
-extension Circle: Inverse {
-    associatedtype Output = Circle;
-    func inverse() -> Output {
-        Circle reverse = Circle.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz * float3(-1.0), 0.0), 
+public extension Circle {
+    public Circle inverse() {
+        Circle reverse = Circle(
+            /* e423, e431, e412 */
+            this.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             this.group1 * float4(-1.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group2.xyz * float3(-1.0), 0.0)
+            /* e235, e315, e125 */
+            this.group2.xyz * float3(-1.0)
         );
-        Scalar other = Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(powi(this.e321, 2) - powi(this.e415, 2) - powi(this.e425, 2) - powi(this.e435, 2) - 2.0 * (this.e423 * this.e235) - 2.0 * (this.e431 * this.e315) - 2.0 * (this.e412 * this.e125), 0.0, 0.0, 0.0)
+        Scalar other = Scalar(
+            /* scalar */
+            pow(this.e321, 2) - pow(this.e415, 2) - pow(this.e425, 2) - pow(this.e435, 2) - 2.0 * (this.e423 * this.e235) - 2.0 * (this.e431 * this.e315) - 2.0 * (this.e412 * this.e125)
         );
-        return Circle.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(other.scalar) * reverse.group0.xyz, 0.0), 
+        return Circle(
+            /* e423, e431, e412 */
+            float3(other.scalar) * reverse.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(other.scalar) * reverse.group1, 
-            /* e235, e315, e125, 0 */
-            float4(float3(other.scalar) * reverse.group2.xyz, 0.0)
+            /* e235, e315, e125 */
+            float3(other.scalar) * reverse.group2.xyz
         );
     }
 }
-extension CircleRotor {
-    // Fancy infix trick
-    func operator/(_rhs: InversePrefixOrPostfix) -> CircleRotor {
+public extension CircleRotor {
+    // Fancy postfix trick
+    public CircleRotor operator /(InversePrefixOrPostfix rhs)  {
         return this.inverse();
     }
-    func operator/=(const InversePrefixOrPostfix& _rhs) -> CircleRotor& {
-        this = this.inverse();
-        return *this;
+}
+public extension InversePrefixOrPostfix {
+    // Fancy prefix trick
+    public CircleRotor operator /(CircleRotor rhs) {
+        return rhs.inverse();
     }
 }
-extension CircleRotor: Inverse {
-    associatedtype Output = CircleRotor;
-    func inverse() -> Output {
-        CircleRotor reverse = CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz * float3(-1.0), 0.0), 
+public extension CircleRotor {
+    public CircleRotor inverse() {
+        CircleRotor reverse = CircleRotor(
+            /* e423, e431, e412 */
+            this.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             this.group1 * float4(-1.0), 
             /* e235, e315, e125, e12345 */
             this.group2 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        Scalar other = Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(powi(this.e321, 2) - powi(this.e415, 2) - powi(this.e425, 2) - powi(this.e435, 2) - powi(this.e12345, 2) - 2.0 * (this.e423 * this.e235) - 2.0 * (this.e431 * this.e315) - 2.0 * (this.e412 * this.e125), 0.0, 0.0, 0.0)
+        Scalar other = Scalar(
+            /* scalar */
+            pow(this.e321, 2) - pow(this.e415, 2) - pow(this.e425, 2) - pow(this.e435, 2) - pow(this.e12345, 2) - 2.0 * (this.e423 * this.e235) - 2.0 * (this.e431 * this.e315) - 2.0 * (this.e412 * this.e125)
         );
-        return CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(other.scalar) * reverse.group0.xyz, 0.0), 
+        return CircleRotor(
+            /* e423, e431, e412 */
+            float3(other.scalar) * reverse.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(other.scalar) * reverse.group1, 
             /* e235, e315, e125, e12345 */
@@ -311,57 +324,59 @@ extension CircleRotor: Inverse {
         );
     }
 }
-extension Dipole {
-    // Fancy infix trick
-    func operator/(_rhs: InversePrefixOrPostfix) -> Dipole {
+public extension Dipole {
+    // Fancy postfix trick
+    public Dipole operator /(InversePrefixOrPostfix rhs)  {
         return this.inverse();
     }
-    func operator/=(const InversePrefixOrPostfix& _rhs) -> Dipole& {
-        this = this.inverse();
-        return *this;
+}
+public extension InversePrefixOrPostfix {
+    // Fancy prefix trick
+    public Dipole operator /(Dipole rhs) {
+        return rhs.inverse();
     }
 }
-extension Dipole: Inverse {
-    associatedtype Output = Dipole;
-    func inverse() -> Output {
-        Dipole reverse = Dipole.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(this.group0.xyz * float3(-1.0), 0.0), 
+public extension Dipole {
+    public Dipole inverse() {
+        Dipole reverse = Dipole(
+            /* e41, e42, e43 */
+            this.group0.xyz * float3(-1.0), 
             /* e23, e31, e12, e45 */
             this.group1 * float4(-1.0), 
-            /* e15, e25, e35, 0 */
-            float4(this.group2.xyz * float3(-1.0), 0.0)
+            /* e15, e25, e35 */
+            this.group2.xyz * float3(-1.0)
         );
-        Scalar other = Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(2.0*(this.e41 * this.e15) + 2.0 * (this.e42 * this.e25) + 2.0 * (this.e43 * this.e35) + powi(this.e23, 2) + powi(this.e31, 2) + powi(this.e12, 2) - powi(this.e45, 2), 0.0, 0.0, 0.0)
+        Scalar other = Scalar(
+            /* scalar */
+            2.0*(this.e41 * this.e15) + 2.0 * (this.e42 * this.e25) + 2.0 * (this.e43 * this.e35) + pow(this.e23, 2) + pow(this.e31, 2) + pow(this.e12, 2) - pow(this.e45, 2)
         );
-        return Dipole.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(other.scalar) * reverse.group0.xyz, 0.0), 
+        return Dipole(
+            /* e41, e42, e43 */
+            float3(other.scalar) * reverse.group0.xyz, 
             /* e23, e31, e12, e45 */
             float4(other.scalar) * reverse.group1, 
-            /* e15, e25, e35, 0 */
-            float4(float3(other.scalar) * reverse.group2.xyz, 0.0)
+            /* e15, e25, e35 */
+            float3(other.scalar) * reverse.group2.xyz
         );
     }
 }
-extension DipoleInversion {
-    // Fancy infix trick
-    func operator/(_rhs: InversePrefixOrPostfix) -> DipoleInversion {
+public extension DipoleInversion {
+    // Fancy postfix trick
+    public DipoleInversion operator /(InversePrefixOrPostfix rhs)  {
         return this.inverse();
     }
-    func operator/=(const InversePrefixOrPostfix& _rhs) -> DipoleInversion& {
-        this = this.inverse();
-        return *this;
+}
+public extension InversePrefixOrPostfix {
+    // Fancy prefix trick
+    public DipoleInversion operator /(DipoleInversion rhs) {
+        return rhs.inverse();
     }
 }
-extension DipoleInversion: Inverse {
-    associatedtype Output = DipoleInversion;
-    func inverse() -> Output {
-        DipoleInversion reverse = DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(this.group0.xyz * float3(-1.0), 0.0), 
+public extension DipoleInversion {
+    public DipoleInversion inverse() {
+        DipoleInversion reverse = DipoleInversion(
+            /* e41, e42, e43 */
+            this.group0.xyz * float3(-1.0), 
             /* e23, e31, e12, e45 */
             this.group1 * float4(-1.0), 
             /* e15, e25, e35, e1234 */
@@ -369,13 +384,13 @@ extension DipoleInversion: Inverse {
             /* e4235, e4315, e4125, e3215 */
             this.group3
         );
-        Scalar other = Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(2.0*(this.e41 * this.e15) + 2.0 * (this.e42 * this.e25) + 2.0 * (this.e43 * this.e35) + 2.0 * (this.e1234 * this.e3215) + powi(this.e23, 2) + powi(this.e31, 2) + powi(this.e12, 2) - powi(this.e45, 2) - powi(this.e4235, 2) - powi(this.e4315, 2) - powi(this.e4125, 2), 0.0, 0.0, 0.0)
+        Scalar other = Scalar(
+            /* scalar */
+            2.0*(this.e41 * this.e15) + 2.0 * (this.e42 * this.e25) + 2.0 * (this.e43 * this.e35) + 2.0 * (this.e1234 * this.e3215) + pow(this.e23, 2) + pow(this.e31, 2) + pow(this.e12, 2) - pow(this.e45, 2) - pow(this.e4235, 2) - pow(this.e4315, 2) - pow(this.e4125, 2)
         );
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(other.scalar) * reverse.group0.xyz, 0.0), 
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            float3(other.scalar) * reverse.group0.xyz, 
             /* e23, e31, e12, e45 */
             float4(other.scalar) * reverse.group1, 
             /* e15, e25, e35, e1234 */
@@ -385,68 +400,71 @@ extension DipoleInversion: Inverse {
         );
     }
 }
-extension DualNum {
-    // Fancy infix trick
-    func operator/(_rhs: InversePrefixOrPostfix) -> DualNum {
+public extension DualNum {
+    // Fancy postfix trick
+    public DualNum operator /(InversePrefixOrPostfix rhs)  {
         return this.inverse();
     }
-    func operator/=(const InversePrefixOrPostfix& _rhs) -> DualNum& {
-        this = this.inverse();
-        return *this;
+}
+public extension InversePrefixOrPostfix {
+    // Fancy prefix trick
+    public DualNum operator /(DualNum rhs) {
+        return rhs.inverse();
     }
 }
-extension DualNum: Inverse {
-    associatedtype Output = DualNum;
-    func inverse() -> Output {
-        return DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(float2(powi(this.e12345, -2) * -1.0) * this.group0.xy, 0.0, 0.0)
+public extension DualNum {
+    public DualNum inverse() {
+        return DualNum(
+            /* e5, e12345 */
+            float2(pow(this.e12345, -2) * -1.0) * this.group0.xy
         );
     }
 }
-extension FlatPoint {
-    // Fancy infix trick
-    func operator/(_rhs: InversePrefixOrPostfix) -> FlatPoint {
+public extension FlatPoint {
+    // Fancy postfix trick
+    public FlatPoint operator /(InversePrefixOrPostfix rhs)  {
         return this.inverse();
     }
-    func operator/=(const InversePrefixOrPostfix& _rhs) -> FlatPoint& {
-        this = this.inverse();
-        return *this;
+}
+public extension InversePrefixOrPostfix {
+    // Fancy prefix trick
+    public FlatPoint operator /(FlatPoint rhs) {
+        return rhs.inverse();
     }
 }
-extension FlatPoint: Inverse {
-    associatedtype Output = FlatPoint;
-    func inverse() -> Output {
-        return FlatPoint.from_groups(
+public extension FlatPoint {
+    public FlatPoint inverse() {
+        return FlatPoint(
             /* e15, e25, e35, e45 */
-            float4(powi(this.e45, -2) * -1.0) * float4(this.e15 * -1.0, this.e25 * -1.0, this.e35 * -1.0, this.e45 * -1.0)
+            float4(pow(this.e45, -2) * -1.0) * float4(this.e15 * -1.0, this.e25 * -1.0, this.e35 * -1.0, this.e45 * -1.0)
         );
     }
 }
-extension Flector {
-    // Fancy infix trick
-    func operator/(_rhs: InversePrefixOrPostfix) -> Flector {
+public extension Flector {
+    // Fancy postfix trick
+    public Flector operator /(InversePrefixOrPostfix rhs)  {
         return this.inverse();
     }
-    func operator/=(const InversePrefixOrPostfix& _rhs) -> Flector& {
-        this = this.inverse();
-        return *this;
+}
+public extension InversePrefixOrPostfix {
+    // Fancy prefix trick
+    public Flector operator /(Flector rhs) {
+        return rhs.inverse();
     }
 }
-extension Flector: Inverse {
-    associatedtype Output = Flector;
-    func inverse() -> Output {
-        Flector reverse = Flector.from_groups(
+public extension Flector {
+    public Flector inverse() {
+        Flector reverse = Flector(
             /* e15, e25, e35, e45 */
             this.group0 * float4(-1.0), 
             /* e4235, e4315, e4125, e3215 */
             this.group1
         );
-        Scalar other = Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(-powi(this.e45, 2) - powi(this.e4235, 2) - powi(this.e4315, 2) - powi(this.e4125, 2), 0.0, 0.0, 0.0)
+        Scalar other = Scalar(
+            /* scalar */
+            -pow(this.e45, 2) - pow(this.e4235, 2) - pow(this.e4315, 2) - pow(this.e4125, 2)
         );
-        return Flector.from_groups(
+        return Flector(
             /* e15, e25, e35, e45 */
             float4(other.scalar) * reverse.group0, 
             /* e4235, e4315, e4125, e3215 */
@@ -454,61 +472,63 @@ extension Flector: Inverse {
         );
     }
 }
-extension Line {
-    // Fancy infix trick
-    func operator/(_rhs: InversePrefixOrPostfix) -> Line {
+public extension Line {
+    // Fancy postfix trick
+    public Line operator /(InversePrefixOrPostfix rhs)  {
         return this.inverse();
     }
-    func operator/=(const InversePrefixOrPostfix& _rhs) -> Line& {
-        this = this.inverse();
-        return *this;
+}
+public extension InversePrefixOrPostfix {
+    // Fancy prefix trick
+    public Line operator /(Line rhs) {
+        return rhs.inverse();
     }
 }
-extension Line: Inverse {
-    associatedtype Output = Line;
-    func inverse() -> Output {
-        Line reverse = Line.from_groups(
-            /* e415, e425, e435, 0 */
-            float4(this.group0.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group1.xyz * float3(-1.0), 0.0)
+public extension Line {
+    public Line inverse() {
+        Line reverse = Line(
+            /* e415, e425, e435 */
+            this.group0.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            this.group1.xyz * float3(-1.0)
         );
-        Scalar other = Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(-powi(this.e415, 2) - powi(this.e425, 2) - powi(this.e435, 2), 0.0, 0.0, 0.0)
+        Scalar other = Scalar(
+            /* scalar */
+            -pow(this.e415, 2) - pow(this.e425, 2) - pow(this.e435, 2)
         );
-        return Line.from_groups(
-            /* e415, e425, e435, 0 */
-            float4(float3(other.scalar) * reverse.group0.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(float3(other.scalar) * reverse.group1.xyz, 0.0)
+        return Line(
+            /* e415, e425, e435 */
+            float3(other.scalar) * reverse.group0.xyz, 
+            /* e235, e315, e125 */
+            float3(other.scalar) * reverse.group1.xyz
         );
     }
 }
-extension Motor {
-    // Fancy infix trick
-    func operator/(_rhs: InversePrefixOrPostfix) -> Motor {
+public extension Motor {
+    // Fancy postfix trick
+    public Motor operator /(InversePrefixOrPostfix rhs)  {
         return this.inverse();
     }
-    func operator/=(const InversePrefixOrPostfix& _rhs) -> Motor& {
-        this = this.inverse();
-        return *this;
+}
+public extension InversePrefixOrPostfix {
+    // Fancy prefix trick
+    public Motor operator /(Motor rhs) {
+        return rhs.inverse();
     }
 }
-extension Motor: Inverse {
-    associatedtype Output = Motor;
-    func inverse() -> Output {
-        Motor reverse = Motor.from_groups(
+public extension Motor {
+    public Motor inverse() {
+        Motor reverse = Motor(
             /* e415, e425, e435, e12345 */
             this.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e5 */
             this.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        Scalar other = Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(-powi(this.e415, 2) - powi(this.e425, 2) - powi(this.e435, 2) - powi(this.e12345, 2), 0.0, 0.0, 0.0)
+        Scalar other = Scalar(
+            /* scalar */
+            -pow(this.e415, 2) - pow(this.e425, 2) - pow(this.e435, 2) - pow(this.e12345, 2)
         );
-        return Motor.from_groups(
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4(other.scalar) * reverse.group0, 
             /* e235, e315, e125, e5 */
@@ -516,175 +536,181 @@ extension Motor: Inverse {
         );
     }
 }
-extension MultiVector {
-    // Fancy infix trick
-    func operator/(_rhs: InversePrefixOrPostfix) -> MultiVector {
+public extension MultiVector {
+    // Fancy postfix trick
+    public MultiVector operator /(InversePrefixOrPostfix rhs)  {
         return this.inverse();
     }
-    func operator/=(const InversePrefixOrPostfix& _rhs) -> MultiVector& {
-        this = this.inverse();
-        return *this;
+}
+public extension InversePrefixOrPostfix {
+    // Fancy prefix trick
+    public MultiVector operator /(MultiVector rhs) {
+        return rhs.inverse();
     }
 }
-extension MultiVector: Inverse {
-    associatedtype Output = MultiVector;
-    func inverse() -> Output {
-        MultiVector reverse = MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(this.group0.xy, 0.0, 0.0), 
+public extension MultiVector {
+    public MultiVector inverse() {
+        MultiVector reverse = MultiVector(
+            /* scalar, e12345 */
+            this.group0.xy, 
             /* e1, e2, e3, e4 */
             this.group1, 
-            /* e5, 0, 0, 0 */
-            float4(this.e5, 0.0, 0.0, 0.0), 
+            /* e5 */
+            this.e5, 
             /* e15, e25, e35, e45 */
             this.group3 * float4(-1.0), 
-            /* e41, e42, e43, 0 */
-            float4(this.group4.xyz * float3(-1.0), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(this.group5.xyz * float3(-1.0), 0.0), 
+            /* e41, e42, e43 */
+            this.group4.xyz * float3(-1.0), 
+            /* e23, e31, e12 */
+            this.group5.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             this.group6 * float4(-1.0), 
-            /* e423, e431, e412, 0 */
-            float4(this.group7.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group8.xyz * float3(-1.0), 0.0), 
+            /* e423, e431, e412 */
+            this.group7.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            this.group8.xyz * float3(-1.0), 
             /* e4235, e4315, e4125, e3215 */
             this.group9, 
-            /* e1234, 0, 0, 0 */
-            float4(this.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            this.e1234
         );
-        Scalar other = Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(2.0*(this.e15 * this.e41) + 2.0 * (this.e25 * this.e42) + 2.0 * (this.e35 * this.e43) + 2.0 * (this.e3215 * this.e1234) + powi(this.scalar, 2) + powi(this.e1, 2) + powi(this.e2, 2) + powi(this.e3, 2) + powi(this.e23, 2) + powi(this.e31, 2) + powi(this.e12, 2) + powi(this.e321, 2) - powi(this.e12345, 2) - powi(this.e45, 2) - powi(this.e415, 2) - powi(this.e425, 2) - powi(this.e435, 2) - powi(this.e4235, 2) - powi(this.e4315, 2) - powi(this.e4125, 2) - 2.0 * (this.e4 * this.e5) - 2.0 * (this.e423 * this.e235) - 2.0 * (this.e431 * this.e315) - 2.0 * (this.e412 * this.e125), 0.0, 0.0, 0.0)
+        Scalar other = Scalar(
+            /* scalar */
+            2.0*(this.e15 * this.e41) + 2.0 * (this.e25 * this.e42) + 2.0 * (this.e35 * this.e43) + 2.0 * (this.e3215 * this.e1234) + pow(this.scalar, 2) + pow(this.e1, 2) + pow(this.e2, 2) + pow(this.e3, 2) + pow(this.e23, 2) + pow(this.e31, 2) + pow(this.e12, 2) + pow(this.e321, 2) - pow(this.e12345, 2) - pow(this.e45, 2) - pow(this.e415, 2) - pow(this.e425, 2) - pow(this.e435, 2) - pow(this.e4235, 2) - pow(this.e4315, 2) - pow(this.e4125, 2) - 2.0 * (this.e4 * this.e5) - 2.0 * (this.e423 * this.e235) - 2.0 * (this.e431 * this.e315) - 2.0 * (this.e412 * this.e125)
         );
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(other.scalar) * reverse.group0.xy, 0.0, 0.0), 
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(other.scalar) * reverse.group0.xy, 
             /* e1, e2, e3, e4 */
             float4(other.scalar) * reverse.group1, 
-            /* e5, 0, 0, 0 */
-            float4(reverse.e5 * other.scalar, 0.0, 0.0, 0.0), 
+            /* e5 */
+            reverse.e5 * other.scalar, 
             /* e15, e25, e35, e45 */
             float4(other.scalar) * reverse.group3, 
-            /* e41, e42, e43, 0 */
-            float4(float3(other.scalar) * reverse.group4.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(float3(other.scalar) * reverse.group5.xyz, 0.0), 
+            /* e41, e42, e43 */
+            float3(other.scalar) * reverse.group4.xyz, 
+            /* e23, e31, e12 */
+            float3(other.scalar) * reverse.group5.xyz, 
             /* e415, e425, e435, e321 */
             float4(other.scalar) * reverse.group6, 
-            /* e423, e431, e412, 0 */
-            float4(float3(other.scalar) * reverse.group7.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(float3(other.scalar) * reverse.group8.xyz, 0.0), 
+            /* e423, e431, e412 */
+            float3(other.scalar) * reverse.group7.xyz, 
+            /* e235, e315, e125 */
+            float3(other.scalar) * reverse.group8.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(other.scalar) * reverse.group9, 
-            /* e1234, 0, 0, 0 */
-            float4(reverse.e1234 * other.scalar, 0.0, 0.0, 0.0)
+            /* e1234 */
+            reverse.e1234 * other.scalar
         );
     }
 }
-extension Plane {
-    // Fancy infix trick
-    func operator/(_rhs: InversePrefixOrPostfix) -> Plane {
+public extension Plane {
+    // Fancy postfix trick
+    public Plane operator /(InversePrefixOrPostfix rhs)  {
         return this.inverse();
     }
-    func operator/=(const InversePrefixOrPostfix& _rhs) -> Plane& {
-        this = this.inverse();
-        return *this;
+}
+public extension InversePrefixOrPostfix {
+    // Fancy prefix trick
+    public Plane operator /(Plane rhs) {
+        return rhs.inverse();
     }
 }
-extension Plane: Inverse {
-    associatedtype Output = Plane;
-    func inverse() -> Output {
-        return Plane.from_groups(
+public extension Plane {
+    public Plane inverse() {
+        return Plane(
             /* e4235, e4315, e4125, e3215 */
-            float4(-powi(this.e4235, 2) - powi(this.e4315, 2) - powi(this.e4125, 2)) * this.group0
+            float4(-pow(this.e4235, 2) - pow(this.e4315, 2) - pow(this.e4125, 2)) * this.group0
         );
     }
 }
-extension RoundPoint {
-    // Fancy infix trick
-    func operator/(_rhs: InversePrefixOrPostfix) -> RoundPoint {
+public extension RoundPoint {
+    // Fancy postfix trick
+    public RoundPoint operator /(InversePrefixOrPostfix rhs)  {
         return this.inverse();
     }
-    func operator/=(const InversePrefixOrPostfix& _rhs) -> RoundPoint& {
-        this = this.inverse();
-        return *this;
+}
+public extension InversePrefixOrPostfix {
+    // Fancy prefix trick
+    public RoundPoint operator /(RoundPoint rhs) {
+        return rhs.inverse();
     }
 }
-extension RoundPoint: Inverse {
-    associatedtype Output = RoundPoint;
-    func inverse() -> Output {
-        Scalar other = Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(powi(this.e1, 2) + powi(this.e2, 2) + powi(this.e3, 2) - 2.0 * (this.e4 * this.e5), 0.0, 0.0, 0.0)
+public extension RoundPoint {
+    public RoundPoint inverse() {
+        Scalar other = Scalar(
+            /* scalar */
+            pow(this.e1, 2) + pow(this.e2, 2) + pow(this.e3, 2) - 2.0 * (this.e4 * this.e5)
         );
-        return RoundPoint.from_groups(
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4(other.scalar) * this.group0, 
-            /* e5, 0, 0, 0 */
-            float4(this.e5 * other.scalar, 0.0, 0.0, 0.0)
+            /* e5 */
+            this.e5 * other.scalar
         );
     }
 }
-extension Scalar {
-    // Fancy infix trick
-    func operator/(_rhs: InversePrefixOrPostfix) -> Scalar {
+public extension Scalar {
+    // Fancy postfix trick
+    public Scalar operator /(InversePrefixOrPostfix rhs)  {
         return this.inverse();
     }
-    func operator/=(const InversePrefixOrPostfix& _rhs) -> Scalar& {
-        this = this.inverse();
-        return *this;
+}
+public extension InversePrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(Scalar rhs) {
+        return rhs.inverse();
     }
 }
-extension Scalar: Inverse {
-    associatedtype Output = Scalar;
-    func inverse() -> Output {
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(1.0/this.scalar, 0.0, 0.0, 0.0)
+public extension Scalar {
+    public Scalar inverse() {
+        return Scalar(
+            /* scalar */
+            1.0/this.scalar
         );
     }
 }
-extension Sphere {
-    // Fancy infix trick
-    func operator/(_rhs: InversePrefixOrPostfix) -> Sphere {
+public extension Sphere {
+    // Fancy postfix trick
+    public Sphere operator /(InversePrefixOrPostfix rhs)  {
         return this.inverse();
     }
-    func operator/=(const InversePrefixOrPostfix& _rhs) -> Sphere& {
-        this = this.inverse();
-        return *this;
+}
+public extension InversePrefixOrPostfix {
+    // Fancy prefix trick
+    public Sphere operator /(Sphere rhs) {
+        return rhs.inverse();
     }
 }
-extension Sphere: Inverse {
-    associatedtype Output = Sphere;
-    func inverse() -> Output {
-        Scalar other = Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(2.0*(this.e3215 * this.e1234) - powi(this.e4235, 2) - powi(this.e4315, 2) - powi(this.e4125, 2), 0.0, 0.0, 0.0)
+public extension Sphere {
+    public Sphere inverse() {
+        Scalar other = Scalar(
+            /* scalar */
+            2.0*(this.e3215 * this.e1234) - pow(this.e4235, 2) - pow(this.e4315, 2) - pow(this.e4125, 2)
         );
-        return Sphere.from_groups(
+        return Sphere(
             /* e4235, e4315, e4125, e3215 */
             float4(other.scalar) * this.group0, 
-            /* e1234, 0, 0, 0 */
-            float4(other.scalar * this.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.scalar * this.e1234
         );
     }
 }
-extension VersorEven {
-    // Fancy infix trick
-    func operator/(_rhs: InversePrefixOrPostfix) -> VersorEven {
+public extension VersorEven {
+    // Fancy postfix trick
+    public VersorEven operator /(InversePrefixOrPostfix rhs)  {
         return this.inverse();
     }
-    func operator/=(const InversePrefixOrPostfix& _rhs) -> VersorEven& {
-        this = this.inverse();
-        return *this;
+}
+public extension InversePrefixOrPostfix {
+    // Fancy prefix trick
+    public VersorEven operator /(VersorEven rhs) {
+        return rhs.inverse();
     }
 }
-extension VersorEven: Inverse {
-    associatedtype Output = VersorEven;
-    func inverse() -> Output {
-        VersorEven reverse = VersorEven.from_groups(
+public extension VersorEven {
+    public VersorEven inverse() {
+        VersorEven reverse = VersorEven(
             /* e423, e431, e412, e12345 */
             this.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e415, e425, e435, e321 */
@@ -694,11 +720,11 @@ extension VersorEven: Inverse {
             /* e1, e2, e3, e4 */
             this.group3
         );
-        Scalar other = Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(powi(this.e321, 2) + powi(this.e1, 2) + powi(this.e2, 2) + powi(this.e3, 2) - powi(this.e12345, 2) - powi(this.e415, 2) - powi(this.e425, 2) - powi(this.e435, 2) - 2.0 * (this.e423 * this.e235) - 2.0 * (this.e431 * this.e315) - 2.0 * (this.e412 * this.e125) - 2.0 * (this.e5 * this.e4), 0.0, 0.0, 0.0)
+        Scalar other = Scalar(
+            /* scalar */
+            pow(this.e321, 2) + pow(this.e1, 2) + pow(this.e2, 2) + pow(this.e3, 2) - pow(this.e12345, 2) - pow(this.e415, 2) - pow(this.e425, 2) - pow(this.e435, 2) - 2.0 * (this.e423 * this.e235) - 2.0 * (this.e431 * this.e315) - 2.0 * (this.e412 * this.e125) - 2.0 * (this.e5 * this.e4)
         );
-        return VersorEven.from_groups(
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(other.scalar) * reverse.group0, 
             /* e415, e425, e435, e321 */
@@ -710,20 +736,21 @@ extension VersorEven: Inverse {
         );
     }
 }
-extension VersorOdd {
-    // Fancy infix trick
-    func operator/(_rhs: InversePrefixOrPostfix) -> VersorOdd {
+public extension VersorOdd {
+    // Fancy postfix trick
+    public VersorOdd operator /(InversePrefixOrPostfix rhs)  {
         return this.inverse();
     }
-    func operator/=(const InversePrefixOrPostfix& _rhs) -> VersorOdd& {
-        this = this.inverse();
-        return *this;
+}
+public extension InversePrefixOrPostfix {
+    // Fancy prefix trick
+    public VersorOdd operator /(VersorOdd rhs) {
+        return rhs.inverse();
     }
 }
-extension VersorOdd: Inverse {
-    associatedtype Output = VersorOdd;
-    func inverse() -> Output {
-        VersorOdd reverse = VersorOdd.from_groups(
+public extension VersorOdd {
+    public VersorOdd inverse() {
+        VersorOdd reverse = VersorOdd(
             /* e41, e42, e43, scalar */
             this.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, e45 */
@@ -733,11 +760,11 @@ extension VersorOdd: Inverse {
             /* e4235, e4315, e4125, e3215 */
             this.group3
         );
-        Scalar other = Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(2.0*(this.e41 * this.e15) + 2.0 * (this.e42 * this.e25) + 2.0 * (this.e43 * this.e35) + 2.0 * (this.e1234 * this.e3215) + powi(this.scalar, 2) + powi(this.e23, 2) + powi(this.e31, 2) + powi(this.e12, 2) - powi(this.e45, 2) - powi(this.e4235, 2) - powi(this.e4315, 2) - powi(this.e4125, 2), 0.0, 0.0, 0.0)
+        Scalar other = Scalar(
+            /* scalar */
+            2.0*(this.e41 * this.e15) + 2.0 * (this.e42 * this.e25) + 2.0 * (this.e43 * this.e35) + 2.0 * (this.e1234 * this.e3215) + pow(this.scalar, 2) + pow(this.e23, 2) + pow(this.e31, 2) + pow(this.e12, 2) - pow(this.e45, 2) - pow(this.e4235, 2) - pow(this.e4315, 2) - pow(this.e4125, 2)
         );
-        return VersorOdd.from_groups(
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(other.scalar) * reverse.group0, 
             /* e23, e31, e12, e45 */

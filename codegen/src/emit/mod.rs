@@ -6,6 +6,7 @@ use anyhow::bail;
 use crate::ast::traits::{RawTraitImplementation, TraitKey};
 
 pub mod rust;
+pub mod wesl;
 pub mod wgsl;
 pub mod glsl;
 pub mod sql;

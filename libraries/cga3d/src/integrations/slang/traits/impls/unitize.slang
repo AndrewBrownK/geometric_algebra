@@ -1,25 +1,26 @@
-using traits::AntiSquareRoot;
-using traits::RoundWeightNormSquared;
-extension AntiCircleRotor {
-    // Fancy infix trick
-    func operator/(_rhs: UnitizePrefixOrPostfix) -> AntiCircleRotor {
+implementing cga3d;
+using traits;
+public extension AntiCircleRotor {
+    // Fancy postfix trick
+    public AntiCircleRotor operator /(UnitizePrefixOrPostfix rhs)  {
         return this.unitize();
     }
-    func operator/=(const UnitizePrefixOrPostfix& _rhs) -> AntiCircleRotor& {
-        this = this.unitize();
-        return *this;
+}
+public extension UnitizePrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiCircleRotor operator /(AntiCircleRotor rhs) {
+        return rhs.unitize();
     }
 }
-extension AntiCircleRotor: Unitize {
-    associatedtype Output = AntiCircleRotor;
-    func unitize() -> Output {
-        AntiScalar geometric_anti_product = AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(1.0/this.round_weight_norm_squared().anti_square_root().e12345, 0.0, 0.0, 0.0)
+public extension AntiCircleRotor {
+    public AntiCircleRotor unitize() {
+        AntiScalar geometric_anti_product = AntiScalar(
+            /* e12345 */
+            1.0/this.round_weight_norm_squared().anti_square_root().e12345
         );
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(geometric_anti_product.e12345) * this.group0.xyz, 0.0), 
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            float3(geometric_anti_product.e12345) * this.group0.xyz, 
             /* e23, e31, e12, e45 */
             float4(geometric_anti_product.e12345) * this.group1, 
             /* e15, e25, e35, scalar */
@@ -27,26 +28,27 @@ extension AntiCircleRotor: Unitize {
         );
     }
 }
-extension AntiDipoleInversion {
-    // Fancy infix trick
-    func operator/(_rhs: UnitizePrefixOrPostfix) -> AntiDipoleInversion {
+public extension AntiDipoleInversion {
+    // Fancy postfix trick
+    public AntiDipoleInversion operator /(UnitizePrefixOrPostfix rhs)  {
         return this.unitize();
     }
-    func operator/=(const UnitizePrefixOrPostfix& _rhs) -> AntiDipoleInversion& {
-        this = this.unitize();
-        return *this;
+}
+public extension UnitizePrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiDipoleInversion operator /(AntiDipoleInversion rhs) {
+        return rhs.unitize();
     }
 }
-extension AntiDipoleInversion: Unitize {
-    associatedtype Output = AntiDipoleInversion;
-    func unitize() -> Output {
-        AntiScalar geometric_anti_product = AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(1.0/this.round_weight_norm_squared().anti_square_root().e12345, 0.0, 0.0, 0.0)
+public extension AntiDipoleInversion {
+    public AntiDipoleInversion unitize() {
+        AntiScalar geometric_anti_product = AntiScalar(
+            /* e12345 */
+            1.0/this.round_weight_norm_squared().anti_square_root().e12345
         );
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(geometric_anti_product.e12345) * this.group0.xyz, 0.0), 
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(geometric_anti_product.e12345) * this.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(geometric_anti_product.e12345) * this.group1, 
             /* e235, e315, e125, e4 */
@@ -56,53 +58,55 @@ extension AntiDipoleInversion: Unitize {
         );
     }
 }
-extension Circle {
-    // Fancy infix trick
-    func operator/(_rhs: UnitizePrefixOrPostfix) -> Circle {
+public extension Circle {
+    // Fancy postfix trick
+    public Circle operator /(UnitizePrefixOrPostfix rhs)  {
         return this.unitize();
     }
-    func operator/=(const UnitizePrefixOrPostfix& _rhs) -> Circle& {
-        this = this.unitize();
-        return *this;
+}
+public extension UnitizePrefixOrPostfix {
+    // Fancy prefix trick
+    public Circle operator /(Circle rhs) {
+        return rhs.unitize();
     }
 }
-extension Circle: Unitize {
-    associatedtype Output = Circle;
-    func unitize() -> Output {
-        AntiScalar geometric_anti_product = AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(1.0/this.round_weight_norm_squared().anti_square_root().e12345, 0.0, 0.0, 0.0)
+public extension Circle {
+    public Circle unitize() {
+        AntiScalar geometric_anti_product = AntiScalar(
+            /* e12345 */
+            1.0/this.round_weight_norm_squared().anti_square_root().e12345
         );
-        return Circle.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(geometric_anti_product.e12345) * this.group0.xyz, 0.0), 
+        return Circle(
+            /* e423, e431, e412 */
+            float3(geometric_anti_product.e12345) * this.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(geometric_anti_product.e12345) * this.group1, 
-            /* e235, e315, e125, 0 */
-            float4(float3(geometric_anti_product.e12345) * this.group2.xyz, 0.0)
+            /* e235, e315, e125 */
+            float3(geometric_anti_product.e12345) * this.group2.xyz
         );
     }
 }
-extension CircleRotor {
-    // Fancy infix trick
-    func operator/(_rhs: UnitizePrefixOrPostfix) -> CircleRotor {
+public extension CircleRotor {
+    // Fancy postfix trick
+    public CircleRotor operator /(UnitizePrefixOrPostfix rhs)  {
         return this.unitize();
     }
-    func operator/=(const UnitizePrefixOrPostfix& _rhs) -> CircleRotor& {
-        this = this.unitize();
-        return *this;
+}
+public extension UnitizePrefixOrPostfix {
+    // Fancy prefix trick
+    public CircleRotor operator /(CircleRotor rhs) {
+        return rhs.unitize();
     }
 }
-extension CircleRotor: Unitize {
-    associatedtype Output = CircleRotor;
-    func unitize() -> Output {
-        AntiScalar geometric_anti_product = AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(1.0/this.round_weight_norm_squared().anti_square_root().e12345, 0.0, 0.0, 0.0)
+public extension CircleRotor {
+    public CircleRotor unitize() {
+        AntiScalar geometric_anti_product = AntiScalar(
+            /* e12345 */
+            1.0/this.round_weight_norm_squared().anti_square_root().e12345
         );
-        return CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(geometric_anti_product.e12345) * this.group0.xyz, 0.0), 
+        return CircleRotor(
+            /* e423, e431, e412 */
+            float3(geometric_anti_product.e12345) * this.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(geometric_anti_product.e12345) * this.group1, 
             /* e235, e315, e125, e12345 */
@@ -110,53 +114,55 @@ extension CircleRotor: Unitize {
         );
     }
 }
-extension Dipole {
-    // Fancy infix trick
-    func operator/(_rhs: UnitizePrefixOrPostfix) -> Dipole {
+public extension Dipole {
+    // Fancy postfix trick
+    public Dipole operator /(UnitizePrefixOrPostfix rhs)  {
         return this.unitize();
     }
-    func operator/=(const UnitizePrefixOrPostfix& _rhs) -> Dipole& {
-        this = this.unitize();
-        return *this;
+}
+public extension UnitizePrefixOrPostfix {
+    // Fancy prefix trick
+    public Dipole operator /(Dipole rhs) {
+        return rhs.unitize();
     }
 }
-extension Dipole: Unitize {
-    associatedtype Output = Dipole;
-    func unitize() -> Output {
-        AntiScalar geometric_anti_product = AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(1.0/this.round_weight_norm_squared().anti_square_root().e12345, 0.0, 0.0, 0.0)
+public extension Dipole {
+    public Dipole unitize() {
+        AntiScalar geometric_anti_product = AntiScalar(
+            /* e12345 */
+            1.0/this.round_weight_norm_squared().anti_square_root().e12345
         );
-        return Dipole.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(geometric_anti_product.e12345) * this.group0.xyz, 0.0), 
+        return Dipole(
+            /* e41, e42, e43 */
+            float3(geometric_anti_product.e12345) * this.group0.xyz, 
             /* e23, e31, e12, e45 */
             float4(geometric_anti_product.e12345) * this.group1, 
-            /* e15, e25, e35, 0 */
-            float4(float3(geometric_anti_product.e12345) * this.group2.xyz, 0.0)
+            /* e15, e25, e35 */
+            float3(geometric_anti_product.e12345) * this.group2.xyz
         );
     }
 }
-extension DipoleInversion {
-    // Fancy infix trick
-    func operator/(_rhs: UnitizePrefixOrPostfix) -> DipoleInversion {
+public extension DipoleInversion {
+    // Fancy postfix trick
+    public DipoleInversion operator /(UnitizePrefixOrPostfix rhs)  {
         return this.unitize();
     }
-    func operator/=(const UnitizePrefixOrPostfix& _rhs) -> DipoleInversion& {
-        this = this.unitize();
-        return *this;
+}
+public extension UnitizePrefixOrPostfix {
+    // Fancy prefix trick
+    public DipoleInversion operator /(DipoleInversion rhs) {
+        return rhs.unitize();
     }
 }
-extension DipoleInversion: Unitize {
-    associatedtype Output = DipoleInversion;
-    func unitize() -> Output {
-        AntiScalar geometric_anti_product = AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(1.0/this.round_weight_norm_squared().anti_square_root().e12345, 0.0, 0.0, 0.0)
+public extension DipoleInversion {
+    public DipoleInversion unitize() {
+        AntiScalar geometric_anti_product = AntiScalar(
+            /* e12345 */
+            1.0/this.round_weight_norm_squared().anti_square_root().e12345
         );
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(geometric_anti_product.e12345) * this.group0.xyz, 0.0), 
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            float3(geometric_anti_product.e12345) * this.group0.xyz, 
             /* e23, e31, e12, e45 */
             float4(geometric_anti_product.e12345) * this.group1, 
             /* e15, e25, e35, e1234 */
@@ -166,117 +172,121 @@ extension DipoleInversion: Unitize {
         );
     }
 }
-extension MultiVector {
-    // Fancy infix trick
-    func operator/(_rhs: UnitizePrefixOrPostfix) -> MultiVector {
+public extension MultiVector {
+    // Fancy postfix trick
+    public MultiVector operator /(UnitizePrefixOrPostfix rhs)  {
         return this.unitize();
     }
-    func operator/=(const UnitizePrefixOrPostfix& _rhs) -> MultiVector& {
-        this = this.unitize();
-        return *this;
+}
+public extension UnitizePrefixOrPostfix {
+    // Fancy prefix trick
+    public MultiVector operator /(MultiVector rhs) {
+        return rhs.unitize();
     }
 }
-extension MultiVector: Unitize {
-    associatedtype Output = MultiVector;
-    func unitize() -> Output {
-        AntiScalar geometric_anti_product = AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(1.0/this.round_weight_norm_squared().anti_square_root().e12345, 0.0, 0.0, 0.0)
+public extension MultiVector {
+    public MultiVector unitize() {
+        AntiScalar geometric_anti_product = AntiScalar(
+            /* e12345 */
+            1.0/this.round_weight_norm_squared().anti_square_root().e12345
         );
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(geometric_anti_product.e12345) * this.group0.xy, 0.0, 0.0), 
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(geometric_anti_product.e12345) * this.group0.xy, 
             /* e1, e2, e3, e4 */
             float4(geometric_anti_product.e12345) * this.group1, 
-            /* e5, 0, 0, 0 */
-            float4(geometric_anti_product.e12345 * this.e5, 0.0, 0.0, 0.0), 
+            /* e5 */
+            geometric_anti_product.e12345 * this.e5, 
             /* e15, e25, e35, e45 */
             float4(geometric_anti_product.e12345) * this.group3, 
-            /* e41, e42, e43, 0 */
-            float4(float3(geometric_anti_product.e12345) * this.group4.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(float3(geometric_anti_product.e12345) * this.group5.xyz, 0.0), 
+            /* e41, e42, e43 */
+            float3(geometric_anti_product.e12345) * this.group4.xyz, 
+            /* e23, e31, e12 */
+            float3(geometric_anti_product.e12345) * this.group5.xyz, 
             /* e415, e425, e435, e321 */
             float4(geometric_anti_product.e12345) * this.group6, 
-            /* e423, e431, e412, 0 */
-            float4(float3(geometric_anti_product.e12345) * this.group7.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(float3(geometric_anti_product.e12345) * this.group8.xyz, 0.0), 
+            /* e423, e431, e412 */
+            float3(geometric_anti_product.e12345) * this.group7.xyz, 
+            /* e235, e315, e125 */
+            float3(geometric_anti_product.e12345) * this.group8.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(geometric_anti_product.e12345) * this.group9, 
-            /* e1234, 0, 0, 0 */
-            float4(geometric_anti_product.e12345 * this.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            geometric_anti_product.e12345 * this.e1234
         );
     }
 }
-extension RoundPoint {
-    // Fancy infix trick
-    func operator/(_rhs: UnitizePrefixOrPostfix) -> RoundPoint {
+public extension RoundPoint {
+    // Fancy postfix trick
+    public RoundPoint operator /(UnitizePrefixOrPostfix rhs)  {
         return this.unitize();
     }
-    func operator/=(const UnitizePrefixOrPostfix& _rhs) -> RoundPoint& {
-        this = this.unitize();
-        return *this;
+}
+public extension UnitizePrefixOrPostfix {
+    // Fancy prefix trick
+    public RoundPoint operator /(RoundPoint rhs) {
+        return rhs.unitize();
     }
 }
-extension RoundPoint: Unitize {
-    associatedtype Output = RoundPoint;
-    func unitize() -> Output {
-        AntiScalar geometric_anti_product = AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(1.0/this.round_weight_norm_squared().anti_square_root().e12345, 0.0, 0.0, 0.0)
+public extension RoundPoint {
+    public RoundPoint unitize() {
+        AntiScalar geometric_anti_product = AntiScalar(
+            /* e12345 */
+            1.0/this.round_weight_norm_squared().anti_square_root().e12345
         );
-        return RoundPoint.from_groups(
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4(geometric_anti_product.e12345) * this.group0, 
-            /* e5, 0, 0, 0 */
-            float4(geometric_anti_product.e12345 * this.e5, 0.0, 0.0, 0.0)
+            /* e5 */
+            geometric_anti_product.e12345 * this.e5
         );
     }
 }
-extension Sphere {
-    // Fancy infix trick
-    func operator/(_rhs: UnitizePrefixOrPostfix) -> Sphere {
+public extension Sphere {
+    // Fancy postfix trick
+    public Sphere operator /(UnitizePrefixOrPostfix rhs)  {
         return this.unitize();
     }
-    func operator/=(const UnitizePrefixOrPostfix& _rhs) -> Sphere& {
-        this = this.unitize();
-        return *this;
+}
+public extension UnitizePrefixOrPostfix {
+    // Fancy prefix trick
+    public Sphere operator /(Sphere rhs) {
+        return rhs.unitize();
     }
 }
-extension Sphere: Unitize {
-    associatedtype Output = Sphere;
-    func unitize() -> Output {
-        AntiScalar geometric_anti_product = AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(1.0/this.round_weight_norm_squared().anti_square_root().e12345, 0.0, 0.0, 0.0)
+public extension Sphere {
+    public Sphere unitize() {
+        AntiScalar geometric_anti_product = AntiScalar(
+            /* e12345 */
+            1.0/this.round_weight_norm_squared().anti_square_root().e12345
         );
-        return Sphere.from_groups(
+        return Sphere(
             /* e4235, e4315, e4125, e3215 */
             float4(geometric_anti_product.e12345) * this.group0, 
-            /* e1234, 0, 0, 0 */
-            float4(geometric_anti_product.e12345 * this.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            geometric_anti_product.e12345 * this.e1234
         );
     }
 }
-extension VersorEven {
-    // Fancy infix trick
-    func operator/(_rhs: UnitizePrefixOrPostfix) -> VersorEven {
+public extension VersorEven {
+    // Fancy postfix trick
+    public VersorEven operator /(UnitizePrefixOrPostfix rhs)  {
         return this.unitize();
     }
-    func operator/=(const UnitizePrefixOrPostfix& _rhs) -> VersorEven& {
-        this = this.unitize();
-        return *this;
+}
+public extension UnitizePrefixOrPostfix {
+    // Fancy prefix trick
+    public VersorEven operator /(VersorEven rhs) {
+        return rhs.unitize();
     }
 }
-extension VersorEven: Unitize {
-    associatedtype Output = VersorEven;
-    func unitize() -> Output {
-        AntiScalar geometric_anti_product = AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(1.0/this.round_weight_norm_squared().anti_square_root().e12345, 0.0, 0.0, 0.0)
+public extension VersorEven {
+    public VersorEven unitize() {
+        AntiScalar geometric_anti_product = AntiScalar(
+            /* e12345 */
+            1.0/this.round_weight_norm_squared().anti_square_root().e12345
         );
-        return VersorEven.from_groups(
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(geometric_anti_product.e12345) * this.group0, 
             /* e415, e425, e435, e321 */
@@ -288,24 +298,25 @@ extension VersorEven: Unitize {
         );
     }
 }
-extension VersorOdd {
-    // Fancy infix trick
-    func operator/(_rhs: UnitizePrefixOrPostfix) -> VersorOdd {
+public extension VersorOdd {
+    // Fancy postfix trick
+    public VersorOdd operator /(UnitizePrefixOrPostfix rhs)  {
         return this.unitize();
     }
-    func operator/=(const UnitizePrefixOrPostfix& _rhs) -> VersorOdd& {
-        this = this.unitize();
-        return *this;
+}
+public extension UnitizePrefixOrPostfix {
+    // Fancy prefix trick
+    public VersorOdd operator /(VersorOdd rhs) {
+        return rhs.unitize();
     }
 }
-extension VersorOdd: Unitize {
-    associatedtype Output = VersorOdd;
-    func unitize() -> Output {
-        AntiScalar geometric_anti_product = AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(1.0/this.round_weight_norm_squared().anti_square_root().e12345, 0.0, 0.0, 0.0)
+public extension VersorOdd {
+    public VersorOdd unitize() {
+        AntiScalar geometric_anti_product = AntiScalar(
+            /* e12345 */
+            1.0/this.round_weight_norm_squared().anti_square_root().e12345
         );
-        return VersorOdd.from_groups(
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(geometric_anti_product.e12345) * this.group0, 
             /* e23, e31, e12, e45 */

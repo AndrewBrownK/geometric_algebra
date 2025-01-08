@@ -1,14 +1,27 @@
 implementing cga3d;
-using data::*;
+using data;
 
 /// AntiMotor
 public struct AntiMotor {
     // e23, e31, e12, scalar
-    internal group0: float4,
+    internal float4 group0;
     // e15, e25, e35, e3215
-    internal group1: float4
+    internal float4 group1;
+
+    __init(
+        float e23, float e31, float e12, float scalar, float e15, float e25, float e35, float e3215
+    ) {
+        group0 = float4(e23, e31, e12, scalar);
+        group1 = float4(e15, e25, e35, e3215);
+    }
+    internal __init(
+        float4 g0, float4 g1
+    ) {
+        group0 = g0;
+        group1 = g1;
+    }
 }
-extension AntiMotor {
+public extension AntiMotor {
     public property e23: float {
         get { return group0[0]; }
         set { group0[0] = newValue; }
@@ -41,29 +54,20 @@ extension AntiMotor {
         get { return group1[3]; }
         set { group1[3] = newValue; }
     }
-    public static func from_elements(
-        e23: float, e31: float, e12: float, scalar: float, e15: float, e25: float, e35: float, e3215: float
-    ) -> AntiMotor {
-        return AntiMotor { float4(e23, e31, e12, scalar), float4(e15, e25, e35, e3215) };
-    }
-    internal static func from_groups(
-        g0: float4, g1: float4
-    ) -> AntiMotor {
-        return AntiMotor {
-            group0: g0, group1: g1
-        };
-    }
 }
-extension AntiMotor: IComparable {
-    bool lessThan(IComparable another) {
-        AntiMotor other = (AntiMotor)another;
-        if (this.group0 != other.group0)
-            return this.group0.lessThan(other.group0);
-        return this.group1.lessThan(other.group1);
+public extension AntiMotor: IComparable {
+    public bool equals(AntiMotor other) {
+        return equalsHelper(this.group0, other.group0) && equalsHelper(this.group1, other.group1);
     }
-    bool equals(IComparable another) {
-        AntiMotor other = (AntiMotor)another;
-        return this.group0.equals(other.group0) && this.group1.equals(other.group1);
+    public bool lessThan(AntiMotor other) {
+        if (!equalsHelper(this.group0, other.group0))
+            return lessThanHelper(this.group0, other.group0);
+        return lessThanHelper(this.group1, other.group1);
+    }
+    public bool lessThanOrEquals(AntiMotor other) {
+        if (!equalsHelper(this.group0, other.group0))
+            return lessThanOrEqualsHelper(this.group0, other.group0);
+        return lessThanOrEqualsHelper(this.group1, other.group1);
     }
 }
 __include "impls/anti_motor";

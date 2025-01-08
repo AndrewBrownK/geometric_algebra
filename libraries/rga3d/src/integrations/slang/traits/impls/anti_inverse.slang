@@ -14,7 +14,7 @@ public extension AntiInversePrefixOrPostfix {
 }
 public extension AntiScalar {
     public AntiScalar anti_inverse() {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             1.0/this.e1234
         );
@@ -34,7 +34,7 @@ public extension AntiInversePrefixOrPostfix {
 }
 public extension DualNum {
     public DualNum anti_inverse() {
-        return DualNum.from_groups(
+        return DualNum(
             /* scalar, e1234 */
             float2(pow(this.e1234, -2)) * this.group0.xy
         );
@@ -54,17 +54,17 @@ public extension AntiInversePrefixOrPostfix {
 }
 public extension Flector {
     public Flector anti_inverse() {
-        Flector anti_reverse = Flector.from_groups(
+        Flector anti_reverse = Flector(
             /* e1, e2, e3, e4 */
             this.group0 * float4(-1.0), 
             /* e423, e431, e412, e321 */
             this.group1
         );
-        AntiScalar other = AntiScalar.from_groups(
+        AntiScalar other = AntiScalar(
             /* e1234 */
             pow(this.e4, 2) + pow(this.e423, 2) + pow(this.e431, 2) + pow(this.e412, 2)
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4(other.e1234) * anti_reverse.group0, 
             /* e423, e431, e412, e321 */
@@ -86,17 +86,17 @@ public extension AntiInversePrefixOrPostfix {
 }
 public extension Line {
     public Line anti_inverse() {
-        Line anti_reverse = Line.from_groups(
+        Line anti_reverse = Line(
             /* e41, e42, e43 */
             this.group0.xyz * float3(-1.0), 
             /* e23, e31, e12 */
             this.group1.xyz * float3(-1.0)
         );
-        AntiScalar other = AntiScalar.from_groups(
+        AntiScalar other = AntiScalar(
             /* e1234 */
             pow(this.e41, 2) + pow(this.e42, 2) + pow(this.e43, 2)
         );
-        return Line.from_groups(
+        return Line(
             /* e41, e42, e43 */
             float3(other.e1234) * anti_reverse.group0.xyz, 
             /* e23, e31, e12 */
@@ -118,17 +118,17 @@ public extension AntiInversePrefixOrPostfix {
 }
 public extension Motor {
     public Motor anti_inverse() {
-        Motor anti_reverse = Motor.from_groups(
+        Motor anti_reverse = Motor(
             /* e41, e42, e43, e1234 */
             this.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, scalar */
             this.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        AntiScalar other = AntiScalar.from_groups(
+        AntiScalar other = AntiScalar(
             /* e1234 */
             pow(this.e41, 2) + pow(this.e42, 2) + pow(this.e43, 2) + pow(this.e1234, 2)
         );
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(other.e1234) * anti_reverse.group0, 
             /* e23, e31, e12, scalar */
@@ -150,7 +150,7 @@ public extension AntiInversePrefixOrPostfix {
 }
 public extension MultiVector {
     public MultiVector anti_inverse() {
-        MultiVector anti_reverse = MultiVector.from_groups(
+        MultiVector anti_reverse = MultiVector(
             /* scalar, e1234 */
             this.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -162,11 +162,11 @@ public extension MultiVector {
             /* e423, e431, e412, e321 */
             this.group4
         );
-        AntiScalar other = AntiScalar.from_groups(
+        AntiScalar other = AntiScalar(
             /* e1234 */
             pow(this.e1234, 2) + pow(this.e4, 2) + pow(this.e41, 2) + pow(this.e42, 2) + pow(this.e43, 2) + pow(this.e423, 2) + pow(this.e431, 2) + pow(this.e412, 2)
         );
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(other.e1234) * anti_reverse.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -194,7 +194,7 @@ public extension AntiInversePrefixOrPostfix {
 }
 public extension Origin {
     public Origin anti_inverse() {
-        return Origin.from_groups(
+        return Origin(
             /* e4 */
             1.0/this.e4 * -1.0
         );
@@ -214,7 +214,7 @@ public extension AntiInversePrefixOrPostfix {
 }
 public extension Plane {
     public Plane anti_inverse() {
-        return Plane.from_groups(
+        return Plane(
             /* e423, e431, e412, e321 */
             float4(pow(this.e423, 2) + pow(this.e431, 2) + pow(this.e412, 2)) * this.group0
         );
@@ -234,7 +234,7 @@ public extension AntiInversePrefixOrPostfix {
 }
 public extension Point {
     public Point anti_inverse() {
-        return Point.from_groups(
+        return Point(
             /* e1, e2, e3, e4 */
             float4(pow(this.e4, -2)) * float4(this.e1 * -1.0, this.e2 * -1.0, this.e3 * -1.0, this.e4 * -1.0)
         );

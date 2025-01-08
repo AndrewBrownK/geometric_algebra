@@ -5,21 +5,17 @@ using data;
 public struct Horizon {
     // e321, 0, 0, 0
     internal float4 group0;
+
+    __init(
+        float e321
+    ) {
+        group0 = float4(e321, 0.0, 0.0, 0.0);
+    }
 }
 public extension Horizon {
     public property e321: float {
         get { return group0[0]; }
         set { group0[0] = newValue; }
-    }
-    public static Horizon from_elements(
-        float e321
-    ) {
-        return Horizon(float4(e321, 0.0, 0.0, 0.0));
-    }
-    internal static Horizon from_groups(
-        float g0
-    ) {
-        return Horizon(float4(g0, 0.0, 0.0, 0.0));
     }
 }
 public extension Horizon: IComparable {

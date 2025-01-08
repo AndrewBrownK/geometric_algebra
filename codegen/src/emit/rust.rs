@@ -20,7 +20,7 @@ use crate::ast::traits::{
 };
 use crate::ast::RawVariableDeclaration;
 use crate::emit::sort_trait_impls;
-use crate::shader_support::emit_shader_support;
+use crate::shader_support::{emit_shader_support, emit_slang_support};
 use crate::utility::CollectResults;
 use crate::SIMD_SRC;
 
@@ -42,6 +42,9 @@ pub struct Rust {
     /// TODO this should depend on GLSL language generation
     /// Dependencies added: naga, naga_oil, anyhow, bytemuck, encase
     pub glsl: bool,
+
+    /// TODO document
+    pub slang: bool,
 
     /// Generate rust-to-sql integration.
     /// TODO this should depend on SQL language generation
@@ -75,6 +78,7 @@ impl Rust {
 
             wgsl: false,
             glsl: false,
+            slang: false,
             sql: false,
             eq_ord_hash: false,
             nearly_eq_ord: false,
@@ -89,6 +93,7 @@ impl Rust {
     pub fn all_features(mut self) -> Self {
         self.wgsl = true;
         self.glsl = true;
+        self.slang = true;
         self.sql = true;
         self.eq_ord_hash = true;
         self.nearly_eq_ord = true;
@@ -97,10 +102,10 @@ impl Rust {
     }
 
     #[allow(non_upper_case_globals)]
-    pub fn write_crate<P: AsRef<Path>, const AntiScalar: BasisElement>(
+    pub fn write_crate<P: AsRef<Path> + Clone, const AntiScalar: BasisElement>(
         self,
         crate_folder: P,
-        algebra_name: &str,
+        algebra_name: &'static str,
         version_major: usize,
         version_minor: usize,
         version_patch: usize,
@@ -114,8 +119,8 @@ impl Rust {
         let file_path = crate_folder.as_ref().to_path_buf();
         let rt = tokio::runtime::Runtime::new().expect("tokio works");
         let e = rt.block_on(async move {
-            self.write_cargo_toml(crate_folder, algebra_name, version_major, version_minor, version_patch, version_pre, description, repository, authors)
-                .await?;
+            self.write_cargo_toml(crate_folder.clone(), algebra_name, version_major, version_minor, version_patch, version_pre, description, repository, authors)?;
+            self.write_build_rs(crate_folder, algebra_name)?;
             self.write_src(file_path.join(Path::new("src")), algebra_name, multi_vecs, impls).await
         });
         if let Err(e) = e {
@@ -123,7 +128,7 @@ impl Rust {
         }
     }
 
-    async fn write_cargo_toml<P: AsRef<Path>>(
+    fn write_cargo_toml<P: AsRef<Path>>(
         &self,
         crate_folder: P,
         algebra_name: &str,
@@ -173,16 +178,20 @@ default = []
 wgsl = []
 glsl = []
 sql = []
+slang = []
+
+[build-dependencies]
+anyhow = "1.0.95"
 
 [dependencies]
 "#
         )?;
-        if self.wgsl || self.glsl {
+        if self.wgsl || self.glsl || self.slang {
             writeln!(
                 &mut file,
-                r#"naga_oil = {{ version =  "0.13.0", features = ["prune", "glsl"] }}
-naga = "0.19.2"
-anyhow = "1.0.86"
+                r#"# naga_oil = {{ version =  "0.14.0", features = ["prune", "glsl"] }}
+# naga = "0.20.0"
+# anyhow = "1.0.95"
 bytemuck = {{ version = "1.16.3", features = ["derive"] }}
 encase = "0.9.0""#
             )?;
@@ -208,11 +217,35 @@ postgres-types = "0.2.7""#
         Ok(())
     }
 
+    fn write_build_rs<P: AsRef<Path>>(
+        &self,
+        crate_folder: P,
+        algebra_name: &'static str,
+    ) -> anyhow::Result<()> {
+        let crate_folder = crate_folder.as_ref().to_path_buf();
+        let file_path = crate_folder.join(Path::new("build.rs"));
+        let file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
+        let mut file = BufWriter::new(file);
+        write!(&mut file, r#"fn main() {{
+    // Create a symlink in the build output to the integration source files
+
+//    let src_dir = "src/integrations";
+//    let Ok(out_dir) = std::env::var("OUT_DIR") else {{ return }};
+//    let dest_dir = std::path::Path::new(&out_dir).join("{algebra_name}");
+//    #[cfg(unix)]
+//    std::os::unix::fs::symlink(src_dir, &dest_dir).unwrap();
+//    #[cfg(windows)]
+//    std::os::windows::fs::symlink_dir(src_dir, &dest_dir).unwrap();
+}}
+"#)?;
+        Ok(())
+    }
+
     #[allow(non_upper_case_globals)]
     async fn write_src<P: AsRef<Path>, const AntiScalar: BasisElement>(
         mut self,
         src_folder: P,
-        algebra_name: &str,
+        algebra_name: &'static str,
         multi_vecs: Arc<MultiVecRepository<AntiScalar>>,
         impls: Arc<TraitImplRegistry>,
     ) -> anyhow::Result<()> {
@@ -758,24 +791,11 @@ postgres-types = "0.2.7""#
             let file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
             let mut file = BufWriter::new(file);
             writeln!(&mut file, "pub mod data;")?;
-            writeln!(&mut file, "pub mod traits;")?;
-            writeln!(&mut file, "pub mod simd;")?;
-            if self.wgsl || self.glsl || self.sql {
-                writeln!(&mut file, "pub mod integrations {{")?;
-                if self.wgsl {
-                    writeln!(&mut file, "    #[cfg(feature = \"wgsl\")]")?;
-                    writeln!(&mut file, "    pub mod wgsl;")?;
-                }
-                if self.glsl {
-                    writeln!(&mut file, "    #[cfg(feature = \"glsl\")]")?;
-                    writeln!(&mut file, "    pub mod glsl;")?;
-                }
-                if self.sql {
-                    writeln!(&mut file, "    #[cfg(feature = \"sql\")]")?;
-                    writeln!(&mut file, "    pub mod sql;")?;
-                }
-                writeln!(&mut file, "}}")?;
+            if self.wgsl || self.glsl || self.sql || self.slang {
+                writeln!(&mut file, "pub mod integrations;")?;
             }
+            writeln!(&mut file, "pub mod simd;")?;
+            writeln!(&mut file, "pub mod traits;")?;
             writeln!(&mut file, "#[allow(non_camel_case_types)]")?;
             writeln!(&mut file, "pub mod elements {{")?;
             let mut els = multi_vecs.full_multi_vector().elements();
@@ -785,7 +805,7 @@ postgres-types = "0.2.7""#
             }
             writeln!(&mut file, "}}")?;
             writeln!(&mut file, "#[test]")?;
-            writeln!(&mut file, "fn double_check_this_crate_compiles() {{}}")?;
+            writeln!(&mut file, "fn double_check_this_crate_compiles() {{}}\n")?;
             tx3.send(file_path)?;
             Ok(())
         });
@@ -806,47 +826,37 @@ postgres-types = "0.2.7""#
         });
 
         // integrations....
-        if self.wgsl {
+        if self.wgsl || self.glsl || self.sql || self.slang {
             let src_folder2 = src_folder.clone();
             let tx2 = started_file.clone();
             let tx3 = finished_file.clone();
-            let algebra_name = algebra_name.to_string();
             join_set.spawn(async move {
-                let file_path = src_folder2.join(Path::new("integrations/wgsl.rs"));
+                let file_path = src_folder2.join(Path::new("integrations.rs"));
                 tx2.send(file_path.clone())?;
                 let file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
                 let mut file = BufWriter::new(file);
-                emit_shader_support(&mut file, algebra_name.as_str(), "wgsl")?;
-                tx3.send(file_path)?;
-                Ok(())
-            });
-        }
-        if self.glsl {
-            let src_folder2 = src_folder.clone();
-            let tx2 = started_file.clone();
-            let tx3 = finished_file.clone();
-            let algebra_name = algebra_name.to_string();
-            join_set.spawn(async move {
-                let file_path = src_folder2.join(Path::new("integrations/glsl.rs"));
-                tx2.send(file_path.clone())?;
-                let file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
-                let mut file = BufWriter::new(file);
-                emit_shader_support(&mut file, algebra_name.as_str(), "glsl")?;
-                tx3.send(file_path)?;
-                Ok(())
-            });
-        }
-        if self.sql {
-            let src_folder2 = src_folder.clone();
-            let tx2 = started_file.clone();
-            let tx3 = finished_file.clone();
-            // let algebra_name = algebra_name.to_string();
-            join_set.spawn(async move {
-                let file_path = src_folder2.join(Path::new("integrations/sql.rs"));
-                tx2.send(file_path.clone())?;
-                let mut file = fs::OpenOptions::new().write(true).create(true).truncate(true).open(&file_path)?;
-                // TODO
-                writeln!(&mut file, "// TODO")?;
+                if self.wgsl {
+                    writeln!(&mut file, "    #[cfg(feature = \"wgsl\")]")?;
+                    writeln!(&mut file, "    pub mod wgsl {{")?;
+                    emit_shader_support(&mut file, algebra_name, "wgsl")?;
+                    writeln!(&mut file, "    }}")?;
+                }
+                if self.glsl {
+                    writeln!(&mut file, "    #[cfg(feature = \"glsl\")]")?;
+                    writeln!(&mut file, "    pub mod glsl {{")?;
+                    emit_shader_support(&mut file, algebra_name, "glsl")?;
+                    writeln!(&mut file, "    }}")?;
+                }
+                if self.slang {
+                    writeln!(&mut file, "    #[cfg(feature = \"slang\")]")?;
+                    writeln!(&mut file, "    pub mod slang {{")?;
+                    emit_slang_support(&mut file, algebra_name)?;
+                    writeln!(&mut file, "    }}")?;
+                }
+                if self.sql {
+                    writeln!(&mut file, "    #[cfg(feature = \"sql\")]")?;
+                    writeln!(&mut file, "    pub mod sql;")?;
+                }
                 tx3.send(file_path)?;
                 Ok(())
             });
@@ -2040,7 +2050,7 @@ impl TryFrom<{other}> for {owner} {{
 
         write!(w, "#[repr(C)]")?;
         write!(w, "#[derive(Clone, Copy")?;
-        if self.wgsl || self.glsl {
+        if self.wgsl || self.glsl || self.slang {
             write!(w, ", encase::ShaderType")?;
         }
         writeln!(w, ")]")?;
@@ -2418,7 +2428,7 @@ impl std::hash::Hash for {ucc} {{
             )?;
         }
 
-        if self.wgsl || self.glsl {
+        if self.wgsl || self.glsl || self.slang {
             writeln!(w,
             r#"
 unsafe impl bytemuck::Zeroable for {ucc} {{}}

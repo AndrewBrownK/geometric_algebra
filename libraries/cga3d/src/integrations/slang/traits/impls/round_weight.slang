@@ -1,38 +1,46 @@
-extension AntiCircleRotor {
-    // Fancy infix trick
-    func operator/(_rhs: RoundWeightPrefixOrPostfix) -> Dipole {
+implementing cga3d;
+using traits;
+public extension AntiCircleRotor {
+    // Fancy postfix trick
+    public Dipole operator /(RoundWeightPrefixOrPostfix rhs)  {
         return this.round_weight();
     }
 }
-extension AntiCircleRotor: RoundWeight {
-    associatedtype Output = Dipole;
-    func round_weight() -> Output {
-        return Dipole.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(this.group0.xyz, 0.0), 
+public extension RoundWeightPrefixOrPostfix {
+    // Fancy prefix trick
+    public Dipole operator /(AntiCircleRotor rhs) {
+        return rhs.round_weight();
+    }
+}
+public extension AntiCircleRotor {
+    public Dipole round_weight() {
+        return Dipole(
+            /* e41, e42, e43 */
+            this.group0.xyz, 
             /* e23, e31, e12, e45 */
             float4(0.0), 
-            /* e15, e25, e35, 0 */
-            float4(0.0)
+            /* e15, e25, e35 */
+            float3(0.0)
         );
     }
 }
-extension AntiDipoleInversion {
-    // Fancy infix trick
-    func operator/(_rhs: RoundWeightPrefixOrPostfix) -> AntiDipoleInversion {
+public extension AntiDipoleInversion {
+    // Fancy postfix trick
+    public AntiDipoleInversion operator /(RoundWeightPrefixOrPostfix rhs)  {
         return this.round_weight();
     }
-    func operator/=(const RoundWeightPrefixOrPostfix& _rhs) -> AntiDipoleInversion& {
-        this = this.round_weight();
-        return *this;
+}
+public extension RoundWeightPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiDipoleInversion operator /(AntiDipoleInversion rhs) {
+        return rhs.round_weight();
     }
 }
-extension AntiDipoleInversion: RoundWeight {
-    associatedtype Output = AntiDipoleInversion;
-    func round_weight() -> Output {
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz, 0.0), 
+public extension AntiDipoleInversion {
+    public AntiDipoleInversion round_weight() {
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            this.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(0.0), 
             /* e235, e315, e125, e4 */
@@ -42,87 +50,95 @@ extension AntiDipoleInversion: RoundWeight {
         );
     }
 }
-extension Circle {
-    // Fancy infix trick
-    func operator/(_rhs: RoundWeightPrefixOrPostfix) -> Circle {
+public extension Circle {
+    // Fancy postfix trick
+    public Circle operator /(RoundWeightPrefixOrPostfix rhs)  {
         return this.round_weight();
     }
-    func operator/=(const RoundWeightPrefixOrPostfix& _rhs) -> Circle& {
-        this = this.round_weight();
-        return *this;
+}
+public extension RoundWeightPrefixOrPostfix {
+    // Fancy prefix trick
+    public Circle operator /(Circle rhs) {
+        return rhs.round_weight();
     }
 }
-extension Circle: RoundWeight {
-    associatedtype Output = Circle;
-    func round_weight() -> Output {
-        return Circle.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz, 0.0), 
+public extension Circle {
+    public Circle round_weight() {
+        return Circle(
+            /* e423, e431, e412 */
+            this.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0)
+            /* e235, e315, e125 */
+            float3(0.0)
         );
     }
 }
-extension CircleRotor {
-    // Fancy infix trick
-    func operator/(_rhs: RoundWeightPrefixOrPostfix) -> Circle {
+public extension CircleRotor {
+    // Fancy postfix trick
+    public Circle operator /(RoundWeightPrefixOrPostfix rhs)  {
         return this.round_weight();
     }
 }
-extension CircleRotor: RoundWeight {
-    associatedtype Output = Circle;
-    func round_weight() -> Output {
-        return Circle.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz, 0.0), 
+public extension RoundWeightPrefixOrPostfix {
+    // Fancy prefix trick
+    public Circle operator /(CircleRotor rhs) {
+        return rhs.round_weight();
+    }
+}
+public extension CircleRotor {
+    public Circle round_weight() {
+        return Circle(
+            /* e423, e431, e412 */
+            this.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0)
+            /* e235, e315, e125 */
+            float3(0.0)
         );
     }
 }
-extension Dipole {
-    // Fancy infix trick
-    func operator/(_rhs: RoundWeightPrefixOrPostfix) -> Dipole {
+public extension Dipole {
+    // Fancy postfix trick
+    public Dipole operator /(RoundWeightPrefixOrPostfix rhs)  {
         return this.round_weight();
     }
-    func operator/=(const RoundWeightPrefixOrPostfix& _rhs) -> Dipole& {
-        this = this.round_weight();
-        return *this;
+}
+public extension RoundWeightPrefixOrPostfix {
+    // Fancy prefix trick
+    public Dipole operator /(Dipole rhs) {
+        return rhs.round_weight();
     }
 }
-extension Dipole: RoundWeight {
-    associatedtype Output = Dipole;
-    func round_weight() -> Output {
-        return Dipole.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(this.group0.xyz, 0.0), 
+public extension Dipole {
+    public Dipole round_weight() {
+        return Dipole(
+            /* e41, e42, e43 */
+            this.group0.xyz, 
             /* e23, e31, e12, e45 */
             float4(0.0), 
-            /* e15, e25, e35, 0 */
-            float4(0.0)
+            /* e15, e25, e35 */
+            float3(0.0)
         );
     }
 }
-extension DipoleInversion {
-    // Fancy infix trick
-    func operator/(_rhs: RoundWeightPrefixOrPostfix) -> DipoleInversion {
+public extension DipoleInversion {
+    // Fancy postfix trick
+    public DipoleInversion operator /(RoundWeightPrefixOrPostfix rhs)  {
         return this.round_weight();
     }
-    func operator/=(const RoundWeightPrefixOrPostfix& _rhs) -> DipoleInversion& {
-        this = this.round_weight();
-        return *this;
+}
+public extension RoundWeightPrefixOrPostfix {
+    // Fancy prefix trick
+    public DipoleInversion operator /(DipoleInversion rhs) {
+        return rhs.round_weight();
     }
 }
-extension DipoleInversion: RoundWeight {
-    associatedtype Output = DipoleInversion;
-    func round_weight() -> Output {
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(this.group0.xyz, 0.0), 
+public extension DipoleInversion {
+    public DipoleInversion round_weight() {
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            this.group0.xyz, 
             /* e23, e31, e12, e45 */
             float4(0.0), 
             /* e15, e25, e35, e1234 */
@@ -132,99 +148,107 @@ extension DipoleInversion: RoundWeight {
         );
     }
 }
-extension MultiVector {
-    // Fancy infix trick
-    func operator/(_rhs: RoundWeightPrefixOrPostfix) -> MultiVector {
+public extension MultiVector {
+    // Fancy postfix trick
+    public MultiVector operator /(RoundWeightPrefixOrPostfix rhs)  {
         return this.round_weight();
     }
-    func operator/=(const RoundWeightPrefixOrPostfix& _rhs) -> MultiVector& {
-        this = this.round_weight();
-        return *this;
+}
+public extension RoundWeightPrefixOrPostfix {
+    // Fancy prefix trick
+    public MultiVector operator /(MultiVector rhs) {
+        return rhs.round_weight();
     }
 }
-extension MultiVector: RoundWeight {
-    associatedtype Output = MultiVector;
-    func round_weight() -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(0.0), 
+public extension MultiVector {
+    public MultiVector round_weight() {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(0.0), 
             /* e1, e2, e3, e4 */
             float4(float3(0.0), this.e4), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(this.group4.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            this.group4.xyz, 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(this.group7.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0), 
+            /* e423, e431, e412 */
+            this.group7.xyz, 
+            /* e235, e315, e125 */
+            float3(0.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(this.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            this.e1234
         );
     }
 }
-extension RoundPoint {
-    // Fancy infix trick
-    func operator/(_rhs: RoundWeightPrefixOrPostfix) -> RoundPoint {
+public extension RoundPoint {
+    // Fancy postfix trick
+    public RoundPoint operator /(RoundWeightPrefixOrPostfix rhs)  {
         return this.round_weight();
     }
-    func operator/=(const RoundWeightPrefixOrPostfix& _rhs) -> RoundPoint& {
-        this = this.round_weight();
-        return *this;
+}
+public extension RoundWeightPrefixOrPostfix {
+    // Fancy prefix trick
+    public RoundPoint operator /(RoundPoint rhs) {
+        return rhs.round_weight();
     }
 }
-extension RoundPoint: RoundWeight {
-    associatedtype Output = RoundPoint;
-    func round_weight() -> Output {
-        return RoundPoint.from_groups(
+public extension RoundPoint {
+    public RoundPoint round_weight() {
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), this.e4), 
-            /* e5, 0, 0, 0 */
-            float4(0.0)
+            /* e5 */
+            0.0
         );
     }
 }
-extension Sphere {
-    // Fancy infix trick
-    func operator/(_rhs: RoundWeightPrefixOrPostfix) -> Sphere {
+public extension Sphere {
+    // Fancy postfix trick
+    public Sphere operator /(RoundWeightPrefixOrPostfix rhs)  {
         return this.round_weight();
     }
-    func operator/=(const RoundWeightPrefixOrPostfix& _rhs) -> Sphere& {
-        this = this.round_weight();
-        return *this;
+}
+public extension RoundWeightPrefixOrPostfix {
+    // Fancy prefix trick
+    public Sphere operator /(Sphere rhs) {
+        return rhs.round_weight();
     }
 }
-extension Sphere: RoundWeight {
-    associatedtype Output = Sphere;
-    func round_weight() -> Output {
-        return Sphere.from_groups(
+public extension Sphere {
+    public Sphere round_weight() {
+        return Sphere(
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(this.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            this.e1234
         );
     }
 }
-extension VersorEven {
-    // Fancy infix trick
-    func operator/(_rhs: RoundWeightPrefixOrPostfix) -> AntiDipoleInversion {
+public extension VersorEven {
+    // Fancy postfix trick
+    public AntiDipoleInversion operator /(RoundWeightPrefixOrPostfix rhs)  {
         return this.round_weight();
     }
 }
-extension VersorEven: RoundWeight {
-    associatedtype Output = AntiDipoleInversion;
-    func round_weight() -> Output {
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz, 0.0), 
+public extension RoundWeightPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiDipoleInversion operator /(VersorEven rhs) {
+        return rhs.round_weight();
+    }
+}
+public extension VersorEven {
+    public AntiDipoleInversion round_weight() {
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            this.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(0.0), 
             /* e235, e315, e125, e4 */
@@ -234,18 +258,23 @@ extension VersorEven: RoundWeight {
         );
     }
 }
-extension VersorOdd {
-    // Fancy infix trick
-    func operator/(_rhs: RoundWeightPrefixOrPostfix) -> DipoleInversion {
+public extension VersorOdd {
+    // Fancy postfix trick
+    public DipoleInversion operator /(RoundWeightPrefixOrPostfix rhs)  {
         return this.round_weight();
     }
 }
-extension VersorOdd: RoundWeight {
-    associatedtype Output = DipoleInversion;
-    func round_weight() -> Output {
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(this.group0.xyz, 0.0), 
+public extension RoundWeightPrefixOrPostfix {
+    // Fancy prefix trick
+    public DipoleInversion operator /(VersorOdd rhs) {
+        return rhs.round_weight();
+    }
+}
+public extension VersorOdd {
+    public DipoleInversion round_weight() {
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            this.group0.xyz, 
             /* e23, e31, e12, e45 */
             float4(0.0), 
             /* e15, e25, e35, e1234 */

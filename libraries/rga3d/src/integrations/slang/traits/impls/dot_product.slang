@@ -14,7 +14,7 @@ public extension DotProductInfixPartial<DualNum> {
 }
 public extension DualNum {
     public Scalar dot_product(DualNum other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             other.scalar * this.scalar
         );
@@ -22,7 +22,7 @@ public extension DualNum {
 }
 public extension DualNum {
     public Scalar dot_product(Motor other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             this.scalar * other.scalar
         );
@@ -30,7 +30,7 @@ public extension DualNum {
 }
 public extension DualNum {
     public Scalar dot_product(MultiVector other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             this.scalar * other.scalar
         );
@@ -38,7 +38,7 @@ public extension DualNum {
 }
 public extension DualNum {
     public Scalar dot_product(Scalar other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             this.scalar * other.scalar
         );
@@ -58,7 +58,7 @@ public extension DotProductInfixPartial<Flector> {
 }
 public extension Flector {
     public Scalar dot_product(Flector other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             (other.e1 * this.e1) + (other.e2 * this.e2) + (other.e3 * this.e3) + (other.e321 * this.e321)
         );
@@ -66,7 +66,7 @@ public extension Flector {
 }
 public extension Flector {
     public Scalar dot_product(Horizon other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             this.e321 * other.e321
         );
@@ -74,7 +74,7 @@ public extension Flector {
 }
 public extension Flector {
     public Scalar dot_product(MultiVector other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             (this.e1 * other.e1) + (this.e2 * other.e2) + (this.e3 * other.e3) + (this.e321 * other.e321)
         );
@@ -82,7 +82,7 @@ public extension Flector {
 }
 public extension Flector {
     public Scalar dot_product(Plane other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             this.e321 * other.e321
         );
@@ -90,7 +90,7 @@ public extension Flector {
 }
 public extension Flector {
     public Scalar dot_product(Point other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             (this.e1 * other.e1) + (this.e2 * other.e2) + (this.e3 * other.e3)
         );
@@ -110,7 +110,7 @@ public extension DotProductInfixPartial<Horizon> {
 }
 public extension Horizon {
     public Scalar dot_product(Flector other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             other.e321 * this.e321
         );
@@ -118,7 +118,7 @@ public extension Horizon {
 }
 public extension Horizon {
     public Scalar dot_product(Horizon other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             other.e321 * this.e321
         );
@@ -126,7 +126,7 @@ public extension Horizon {
 }
 public extension Horizon {
     public Scalar dot_product(MultiVector other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             this.e321 * other.e321
         );
@@ -134,7 +134,7 @@ public extension Horizon {
 }
 public extension Horizon {
     public Scalar dot_product(Plane other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             this.e321 * other.e321
         );
@@ -154,7 +154,7 @@ public extension DotProductInfixPartial<Line> {
 }
 public extension Line {
     public Scalar dot_product(Line other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             (other.e23 * this.e23) + (other.e31 * this.e31) + (other.e12 * this.e12)
         );
@@ -162,7 +162,7 @@ public extension Line {
 }
 public extension Line {
     public Scalar dot_product(Motor other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             (this.e23 * other.e23) + (this.e31 * other.e31) + (this.e12 * other.e12)
         );
@@ -170,7 +170,7 @@ public extension Line {
 }
 public extension Line {
     public Scalar dot_product(MultiVector other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             (this.e23 * other.e23) + (this.e31 * other.e31) + (this.e12 * other.e12)
         );
@@ -190,7 +190,7 @@ public extension DotProductInfixPartial<Motor> {
 }
 public extension Motor {
     public Scalar dot_product(DualNum other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             other.scalar * this.scalar
         );
@@ -198,7 +198,7 @@ public extension Motor {
 }
 public extension Motor {
     public Scalar dot_product(Line other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             (other.e23 * this.e23) + (other.e31 * this.e31) + (other.e12 * this.e12)
         );
@@ -206,7 +206,7 @@ public extension Motor {
 }
 public extension Motor {
     public Scalar dot_product(Motor other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             (other.e23 * this.e23) + (other.e31 * this.e31) + (other.e12 * this.e12) + (other.scalar * this.scalar)
         );
@@ -214,7 +214,7 @@ public extension Motor {
 }
 public extension Motor {
     public Scalar dot_product(MultiVector other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             (this.e23 * other.e23) + (this.e31 * other.e31) + (this.e12 * other.e12) + (this.scalar * other.scalar)
         );
@@ -222,7 +222,7 @@ public extension Motor {
 }
 public extension Motor {
     public Scalar dot_product(Scalar other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             this.scalar * other.scalar
         );
@@ -242,7 +242,7 @@ public extension DotProductInfixPartial<MultiVector> {
 }
 public extension MultiVector {
     public Scalar dot_product(DualNum other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             other.scalar * this.scalar
         );
@@ -250,7 +250,7 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public Scalar dot_product(Flector other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             (other.e1 * this.e1) + (other.e2 * this.e2) + (other.e3 * this.e3) + (other.e321 * this.e321)
         );
@@ -258,7 +258,7 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public Scalar dot_product(Horizon other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             other.e321 * this.e321
         );
@@ -266,7 +266,7 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public Scalar dot_product(Line other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             (other.e23 * this.e23) + (other.e31 * this.e31) + (other.e12 * this.e12)
         );
@@ -274,7 +274,7 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public Scalar dot_product(Motor other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             (other.e23 * this.e23) + (other.e31 * this.e31) + (other.e12 * this.e12) + (other.scalar * this.scalar)
         );
@@ -282,7 +282,7 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public Scalar dot_product(MultiVector other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             (other.scalar * this.scalar) + (other.e1 * this.e1) + (other.e2 * this.e2) + (other.e3 * this.e3) + (other.e23 * this.e23) + (other.e31 * this.e31) + (other.e12 * this.e12) + (other.e321 * this.e321)
         );
@@ -290,7 +290,7 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public Scalar dot_product(Plane other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             this.e321 * other.e321
         );
@@ -298,7 +298,7 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public Scalar dot_product(Point other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             (this.e1 * other.e1) + (this.e2 * other.e2) + (this.e3 * other.e3)
         );
@@ -306,7 +306,7 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public Scalar dot_product(Scalar other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             this.scalar * other.scalar
         );
@@ -326,7 +326,7 @@ public extension DotProductInfixPartial<Plane> {
 }
 public extension Plane {
     public Scalar dot_product(Flector other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             other.e321 * this.e321
         );
@@ -334,7 +334,7 @@ public extension Plane {
 }
 public extension Plane {
     public Scalar dot_product(Horizon other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             other.e321 * this.e321
         );
@@ -342,7 +342,7 @@ public extension Plane {
 }
 public extension Plane {
     public Scalar dot_product(MultiVector other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             other.e321 * this.e321
         );
@@ -350,7 +350,7 @@ public extension Plane {
 }
 public extension Plane {
     public Scalar dot_product(Plane other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             other.e321 * this.e321
         );
@@ -370,7 +370,7 @@ public extension DotProductInfixPartial<Point> {
 }
 public extension Point {
     public Scalar dot_product(Flector other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             (other.e1 * this.e1) + (other.e2 * this.e2) + (other.e3 * this.e3)
         );
@@ -378,7 +378,7 @@ public extension Point {
 }
 public extension Point {
     public Scalar dot_product(MultiVector other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             (other.e1 * this.e1) + (other.e2 * this.e2) + (other.e3 * this.e3)
         );
@@ -386,7 +386,7 @@ public extension Point {
 }
 public extension Point {
     public Scalar dot_product(Point other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             (other.e1 * this.e1) + (other.e2 * this.e2) + (other.e3 * this.e3)
         );
@@ -406,7 +406,7 @@ public extension DotProductInfixPartial<Scalar> {
 }
 public extension Scalar {
     public Scalar dot_product(DualNum other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             other.scalar * this.scalar
         );
@@ -414,7 +414,7 @@ public extension Scalar {
 }
 public extension Scalar {
     public Scalar dot_product(Motor other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             other.scalar * this.scalar
         );
@@ -422,7 +422,7 @@ public extension Scalar {
 }
 public extension Scalar {
     public Scalar dot_product(MultiVector other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             other.scalar * this.scalar
         );
@@ -430,7 +430,7 @@ public extension Scalar {
 }
 public extension Scalar {
     public Scalar dot_product(Scalar other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             other.scalar * this.scalar
         );

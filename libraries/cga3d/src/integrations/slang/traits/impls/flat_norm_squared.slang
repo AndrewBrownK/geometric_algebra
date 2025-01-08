@@ -1,566 +1,642 @@
-using traits::FlatBulkNormSquared;
-using traits::FlatWeightNormSquared;
-extension AntiCircleRotor {
-    // Fancy infix trick
-    func operator/(_rhs: FlatNormSquaredPrefixOrPostfix) -> MultiVector {
+implementing cga3d;
+using traits;
+public extension AntiCircleRotor {
+    // Fancy postfix trick
+    public MultiVector operator /(FlatNormSquaredPrefixOrPostfix rhs)  {
         return this.flat_norm_squared();
     }
 }
-extension AntiCircleRotor: FlatNormSquared {
-    associatedtype Output = MultiVector;
-    func flat_norm_squared() -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(this.flat_bulk_norm_squared().scalar, this.flat_weight_norm_squared().e12345), 0.0, 0.0), 
+public extension FlatNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public MultiVector operator /(AntiCircleRotor rhs) {
+        return rhs.flat_norm_squared();
+    }
+}
+public extension AntiCircleRotor {
+    public MultiVector flat_norm_squared() {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(this.flat_bulk_norm_squared().scalar, this.flat_weight_norm_squared().e12345), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(0.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension AntiDipoleInversion {
-    // Fancy infix trick
-    func operator/(_rhs: FlatNormSquaredPrefixOrPostfix) -> MultiVector {
+public extension AntiDipoleInversion {
+    // Fancy postfix trick
+    public MultiVector operator /(FlatNormSquaredPrefixOrPostfix rhs)  {
         return this.flat_norm_squared();
     }
 }
-extension AntiDipoleInversion: FlatNormSquared {
-    associatedtype Output = MultiVector;
-    func flat_norm_squared() -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(this.flat_bulk_norm_squared().scalar, this.flat_weight_norm_squared().e12345), 0.0, 0.0), 
+public extension FlatNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public MultiVector operator /(AntiDipoleInversion rhs) {
+        return rhs.flat_norm_squared();
+    }
+}
+public extension AntiDipoleInversion {
+    public MultiVector flat_norm_squared() {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(this.flat_bulk_norm_squared().scalar, this.flat_weight_norm_squared().e12345), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(0.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension Circle {
-    // Fancy infix trick
-    func operator/(_rhs: FlatNormSquaredPrefixOrPostfix) -> MultiVector {
+public extension Circle {
+    // Fancy postfix trick
+    public MultiVector operator /(FlatNormSquaredPrefixOrPostfix rhs)  {
         return this.flat_norm_squared();
     }
 }
-extension Circle: FlatNormSquared {
-    associatedtype Output = MultiVector;
-    func flat_norm_squared() -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(this.flat_bulk_norm_squared().scalar, this.flat_weight_norm_squared().e12345), 0.0, 0.0), 
+public extension FlatNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public MultiVector operator /(Circle rhs) {
+        return rhs.flat_norm_squared();
+    }
+}
+public extension Circle {
+    public MultiVector flat_norm_squared() {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(this.flat_bulk_norm_squared().scalar, this.flat_weight_norm_squared().e12345), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(0.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension CircleRotor {
-    // Fancy infix trick
-    func operator/(_rhs: FlatNormSquaredPrefixOrPostfix) -> MultiVector {
+public extension CircleRotor {
+    // Fancy postfix trick
+    public MultiVector operator /(FlatNormSquaredPrefixOrPostfix rhs)  {
         return this.flat_norm_squared();
     }
 }
-extension CircleRotor: FlatNormSquared {
-    associatedtype Output = MultiVector;
-    func flat_norm_squared() -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(this.flat_bulk_norm_squared().scalar, this.flat_weight_norm_squared().e12345), 0.0, 0.0), 
+public extension FlatNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public MultiVector operator /(CircleRotor rhs) {
+        return rhs.flat_norm_squared();
+    }
+}
+public extension CircleRotor {
+    public MultiVector flat_norm_squared() {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(this.flat_bulk_norm_squared().scalar, this.flat_weight_norm_squared().e12345), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(0.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension Dipole {
-    // Fancy infix trick
-    func operator/(_rhs: FlatNormSquaredPrefixOrPostfix) -> MultiVector {
+public extension Dipole {
+    // Fancy postfix trick
+    public MultiVector operator /(FlatNormSquaredPrefixOrPostfix rhs)  {
         return this.flat_norm_squared();
     }
 }
-extension Dipole: FlatNormSquared {
-    associatedtype Output = MultiVector;
-    func flat_norm_squared() -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(this.flat_bulk_norm_squared().scalar, this.flat_weight_norm_squared().e12345), 0.0, 0.0), 
+public extension FlatNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public MultiVector operator /(Dipole rhs) {
+        return rhs.flat_norm_squared();
+    }
+}
+public extension Dipole {
+    public MultiVector flat_norm_squared() {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(this.flat_bulk_norm_squared().scalar, this.flat_weight_norm_squared().e12345), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(0.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension DipoleInversion {
-    // Fancy infix trick
-    func operator/(_rhs: FlatNormSquaredPrefixOrPostfix) -> MultiVector {
+public extension DipoleInversion {
+    // Fancy postfix trick
+    public MultiVector operator /(FlatNormSquaredPrefixOrPostfix rhs)  {
         return this.flat_norm_squared();
     }
 }
-extension DipoleInversion: FlatNormSquared {
-    associatedtype Output = MultiVector;
-    func flat_norm_squared() -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(this.flat_bulk_norm_squared().scalar, this.flat_weight_norm_squared().e12345), 0.0, 0.0), 
+public extension FlatNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public MultiVector operator /(DipoleInversion rhs) {
+        return rhs.flat_norm_squared();
+    }
+}
+public extension DipoleInversion {
+    public MultiVector flat_norm_squared() {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(this.flat_bulk_norm_squared().scalar, this.flat_weight_norm_squared().e12345), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(0.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension DualNum {
-    // Fancy infix trick
-    func operator/(_rhs: FlatNormSquaredPrefixOrPostfix) -> MultiVector {
+public extension DualNum {
+    // Fancy postfix trick
+    public MultiVector operator /(FlatNormSquaredPrefixOrPostfix rhs)  {
         return this.flat_norm_squared();
     }
 }
-extension DualNum: FlatNormSquared {
-    associatedtype Output = MultiVector;
-    func flat_norm_squared() -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(this.flat_bulk_norm_squared().scalar, this.flat_weight_norm_squared().e12345), 0.0, 0.0), 
+public extension FlatNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public MultiVector operator /(DualNum rhs) {
+        return rhs.flat_norm_squared();
+    }
+}
+public extension DualNum {
+    public MultiVector flat_norm_squared() {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(this.flat_bulk_norm_squared().scalar, this.flat_weight_norm_squared().e12345), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(0.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension FlatPoint {
-    // Fancy infix trick
-    func operator/(_rhs: FlatNormSquaredPrefixOrPostfix) -> MultiVector {
+public extension FlatPoint {
+    // Fancy postfix trick
+    public MultiVector operator /(FlatNormSquaredPrefixOrPostfix rhs)  {
         return this.flat_norm_squared();
     }
 }
-extension FlatPoint: FlatNormSquared {
-    associatedtype Output = MultiVector;
-    func flat_norm_squared() -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(this.flat_bulk_norm_squared().scalar, this.flat_weight_norm_squared().e12345), 0.0, 0.0), 
+public extension FlatNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public MultiVector operator /(FlatPoint rhs) {
+        return rhs.flat_norm_squared();
+    }
+}
+public extension FlatPoint {
+    public MultiVector flat_norm_squared() {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(this.flat_bulk_norm_squared().scalar, this.flat_weight_norm_squared().e12345), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(0.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension Flector {
-    // Fancy infix trick
-    func operator/(_rhs: FlatNormSquaredPrefixOrPostfix) -> MultiVector {
+public extension Flector {
+    // Fancy postfix trick
+    public MultiVector operator /(FlatNormSquaredPrefixOrPostfix rhs)  {
         return this.flat_norm_squared();
     }
 }
-extension Flector: FlatNormSquared {
-    associatedtype Output = MultiVector;
-    func flat_norm_squared() -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(this.flat_bulk_norm_squared().scalar, this.flat_weight_norm_squared().e12345), 0.0, 0.0), 
+public extension FlatNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public MultiVector operator /(Flector rhs) {
+        return rhs.flat_norm_squared();
+    }
+}
+public extension Flector {
+    public MultiVector flat_norm_squared() {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(this.flat_bulk_norm_squared().scalar, this.flat_weight_norm_squared().e12345), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(0.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension Line {
-    // Fancy infix trick
-    func operator/(_rhs: FlatNormSquaredPrefixOrPostfix) -> MultiVector {
+public extension Line {
+    // Fancy postfix trick
+    public MultiVector operator /(FlatNormSquaredPrefixOrPostfix rhs)  {
         return this.flat_norm_squared();
     }
 }
-extension Line: FlatNormSquared {
-    associatedtype Output = MultiVector;
-    func flat_norm_squared() -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(this.flat_bulk_norm_squared().scalar, this.flat_weight_norm_squared().e12345), 0.0, 0.0), 
+public extension FlatNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public MultiVector operator /(Line rhs) {
+        return rhs.flat_norm_squared();
+    }
+}
+public extension Line {
+    public MultiVector flat_norm_squared() {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(this.flat_bulk_norm_squared().scalar, this.flat_weight_norm_squared().e12345), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(0.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension Motor {
-    // Fancy infix trick
-    func operator/(_rhs: FlatNormSquaredPrefixOrPostfix) -> MultiVector {
+public extension Motor {
+    // Fancy postfix trick
+    public MultiVector operator /(FlatNormSquaredPrefixOrPostfix rhs)  {
         return this.flat_norm_squared();
     }
 }
-extension Motor: FlatNormSquared {
-    associatedtype Output = MultiVector;
-    func flat_norm_squared() -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(this.flat_bulk_norm_squared().scalar, this.flat_weight_norm_squared().e12345), 0.0, 0.0), 
+public extension FlatNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public MultiVector operator /(Motor rhs) {
+        return rhs.flat_norm_squared();
+    }
+}
+public extension Motor {
+    public MultiVector flat_norm_squared() {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(this.flat_bulk_norm_squared().scalar, this.flat_weight_norm_squared().e12345), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(0.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension MultiVector {
-    // Fancy infix trick
-    func operator/(_rhs: FlatNormSquaredPrefixOrPostfix) -> MultiVector {
+public extension MultiVector {
+    // Fancy postfix trick
+    public MultiVector operator /(FlatNormSquaredPrefixOrPostfix rhs)  {
         return this.flat_norm_squared();
     }
-    func operator/=(const FlatNormSquaredPrefixOrPostfix& _rhs) -> MultiVector& {
-        this = this.flat_norm_squared();
-        return *this;
+}
+public extension FlatNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public MultiVector operator /(MultiVector rhs) {
+        return rhs.flat_norm_squared();
     }
 }
-extension MultiVector: FlatNormSquared {
-    associatedtype Output = MultiVector;
-    func flat_norm_squared() -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(this.flat_bulk_norm_squared().scalar, this.flat_weight_norm_squared().e12345), 0.0, 0.0), 
+public extension MultiVector {
+    public MultiVector flat_norm_squared() {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(this.flat_bulk_norm_squared().scalar, this.flat_weight_norm_squared().e12345), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(0.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension Plane {
-    // Fancy infix trick
-    func operator/(_rhs: FlatNormSquaredPrefixOrPostfix) -> MultiVector {
+public extension Plane {
+    // Fancy postfix trick
+    public MultiVector operator /(FlatNormSquaredPrefixOrPostfix rhs)  {
         return this.flat_norm_squared();
     }
 }
-extension Plane: FlatNormSquared {
-    associatedtype Output = MultiVector;
-    func flat_norm_squared() -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(this.flat_bulk_norm_squared().scalar, this.flat_weight_norm_squared().e12345), 0.0, 0.0), 
+public extension FlatNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public MultiVector operator /(Plane rhs) {
+        return rhs.flat_norm_squared();
+    }
+}
+public extension Plane {
+    public MultiVector flat_norm_squared() {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(this.flat_bulk_norm_squared().scalar, this.flat_weight_norm_squared().e12345), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(0.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension Sphere {
-    // Fancy infix trick
-    func operator/(_rhs: FlatNormSquaredPrefixOrPostfix) -> MultiVector {
+public extension Sphere {
+    // Fancy postfix trick
+    public MultiVector operator /(FlatNormSquaredPrefixOrPostfix rhs)  {
         return this.flat_norm_squared();
     }
 }
-extension Sphere: FlatNormSquared {
-    associatedtype Output = MultiVector;
-    func flat_norm_squared() -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(this.flat_bulk_norm_squared().scalar, this.flat_weight_norm_squared().e12345), 0.0, 0.0), 
+public extension FlatNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public MultiVector operator /(Sphere rhs) {
+        return rhs.flat_norm_squared();
+    }
+}
+public extension Sphere {
+    public MultiVector flat_norm_squared() {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(this.flat_bulk_norm_squared().scalar, this.flat_weight_norm_squared().e12345), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(0.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension VersorEven {
-    // Fancy infix trick
-    func operator/(_rhs: FlatNormSquaredPrefixOrPostfix) -> MultiVector {
+public extension VersorEven {
+    // Fancy postfix trick
+    public MultiVector operator /(FlatNormSquaredPrefixOrPostfix rhs)  {
         return this.flat_norm_squared();
     }
 }
-extension VersorEven: FlatNormSquared {
-    associatedtype Output = MultiVector;
-    func flat_norm_squared() -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(this.flat_bulk_norm_squared().scalar, this.flat_weight_norm_squared().e12345), 0.0, 0.0), 
+public extension FlatNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public MultiVector operator /(VersorEven rhs) {
+        return rhs.flat_norm_squared();
+    }
+}
+public extension VersorEven {
+    public MultiVector flat_norm_squared() {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(this.flat_bulk_norm_squared().scalar, this.flat_weight_norm_squared().e12345), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(0.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension VersorOdd {
-    // Fancy infix trick
-    func operator/(_rhs: FlatNormSquaredPrefixOrPostfix) -> MultiVector {
+public extension VersorOdd {
+    // Fancy postfix trick
+    public MultiVector operator /(FlatNormSquaredPrefixOrPostfix rhs)  {
         return this.flat_norm_squared();
     }
 }
-extension VersorOdd: FlatNormSquared {
-    associatedtype Output = MultiVector;
-    func flat_norm_squared() -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(this.flat_bulk_norm_squared().scalar, this.flat_weight_norm_squared().e12345), 0.0, 0.0), 
+public extension FlatNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public MultiVector operator /(VersorOdd rhs) {
+        return rhs.flat_norm_squared();
+    }
+}
+public extension VersorOdd {
+    public MultiVector flat_norm_squared() {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(this.flat_bulk_norm_squared().scalar, this.flat_weight_norm_squared().e12345), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(0.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }

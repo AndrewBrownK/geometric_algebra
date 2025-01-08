@@ -14,7 +14,7 @@ public extension AntiSquareRootPrefixOrPostfix {
 }
 public extension AntiScalar {
     public AntiScalar anti_square_root() {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             pow(this.e1234, 0.5)
         );

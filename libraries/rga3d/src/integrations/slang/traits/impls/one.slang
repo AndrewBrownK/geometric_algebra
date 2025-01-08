@@ -2,7 +2,7 @@ implementing rga3d;
 using traits;
 public extension DualNum {
     public DualNum one() {
-        return DualNum.from_groups(
+        return DualNum(
             /* scalar, e1234 */
             float2(1.0, 0.0)
         );
@@ -10,7 +10,7 @@ public extension DualNum {
 }
 public extension Motor {
     public Motor one() {
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(0.0), 
             /* e23, e31, e12, scalar */
@@ -20,7 +20,7 @@ public extension Motor {
 }
 public extension MultiVector {
     public MultiVector one() {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(1.0, 0.0), 
             /* e1, e2, e3, e4 */
@@ -36,7 +36,7 @@ public extension MultiVector {
 }
 public extension Scalar {
     public Scalar one() {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             1.0
         );

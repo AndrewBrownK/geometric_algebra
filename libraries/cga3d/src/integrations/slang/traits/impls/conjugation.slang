@@ -1,19 +1,22 @@
-extension AntiCircleRotor {
-    // Fancy infix trick
-    func operator/(_rhs: ConjugationPrefixOrPostfix) -> AntiCircleRotor {
+implementing cga3d;
+using traits;
+public extension AntiCircleRotor {
+    // Fancy postfix trick
+    public AntiCircleRotor operator /(ConjugationPrefixOrPostfix rhs)  {
         return this.conjugation();
     }
-    func operator/=(const ConjugationPrefixOrPostfix& _rhs) -> AntiCircleRotor& {
-        this = this.conjugation();
-        return *this;
+}
+public extension ConjugationPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiCircleRotor operator /(AntiCircleRotor rhs) {
+        return rhs.conjugation();
     }
 }
-extension AntiCircleRotor: Conjugation {
-    associatedtype Output = AntiCircleRotor;
-    func conjugation() -> Output {
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(this.group0.xyz * float3(-1.0), 0.0), 
+public extension AntiCircleRotor {
+    public AntiCircleRotor conjugation() {
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            this.group0.xyz * float3(-1.0), 
             /* e23, e31, e12, e45 */
             this.group1 * float4(-1.0), 
             /* e15, e25, e35, scalar */
@@ -21,22 +24,23 @@ extension AntiCircleRotor: Conjugation {
         );
     }
 }
-extension AntiDipoleInversion {
-    // Fancy infix trick
-    func operator/(_rhs: ConjugationPrefixOrPostfix) -> AntiDipoleInversion {
+public extension AntiDipoleInversion {
+    // Fancy postfix trick
+    public AntiDipoleInversion operator /(ConjugationPrefixOrPostfix rhs)  {
         return this.conjugation();
     }
-    func operator/=(const ConjugationPrefixOrPostfix& _rhs) -> AntiDipoleInversion& {
-        this = this.conjugation();
-        return *this;
+}
+public extension ConjugationPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiDipoleInversion operator /(AntiDipoleInversion rhs) {
+        return rhs.conjugation();
     }
 }
-extension AntiDipoleInversion: Conjugation {
-    associatedtype Output = AntiDipoleInversion;
-    func conjugation() -> Output {
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz, 0.0), 
+public extension AntiDipoleInversion {
+    public AntiDipoleInversion conjugation() {
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            this.group0.xyz, 
             /* e415, e425, e435, e321 */
             this.group1, 
             /* e235, e315, e125, e4 */
@@ -46,52 +50,55 @@ extension AntiDipoleInversion: Conjugation {
         );
     }
 }
-extension AntiDualNum {
-    // Fancy infix trick
-    func operator/(_rhs: ConjugationPrefixOrPostfix) -> AntiDualNum {
+public extension AntiDualNum {
+    // Fancy postfix trick
+    public AntiDualNum operator /(ConjugationPrefixOrPostfix rhs)  {
         return this.conjugation();
     }
-    func operator/=(const ConjugationPrefixOrPostfix& _rhs) -> AntiDualNum& {
-        this = this.conjugation();
-        return *this;
+}
+public extension ConjugationPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiDualNum operator /(AntiDualNum rhs) {
+        return rhs.conjugation();
     }
 }
-extension AntiDualNum: Conjugation {
-    associatedtype Output = AntiDualNum;
-    func conjugation() -> Output {
+public extension AntiDualNum {
+    public AntiDualNum conjugation() {
         return this;
     }
 }
-extension AntiFlatPoint {
-    // Fancy infix trick
-    func operator/(_rhs: ConjugationPrefixOrPostfix) -> AntiFlatPoint {
+public extension AntiFlatPoint {
+    // Fancy postfix trick
+    public AntiFlatPoint operator /(ConjugationPrefixOrPostfix rhs)  {
         return this.conjugation();
     }
-    func operator/=(const ConjugationPrefixOrPostfix& _rhs) -> AntiFlatPoint& {
-        this = this.conjugation();
-        return *this;
+}
+public extension ConjugationPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiFlatPoint operator /(AntiFlatPoint rhs) {
+        return rhs.conjugation();
     }
 }
-extension AntiFlatPoint: Conjugation {
-    associatedtype Output = AntiFlatPoint;
-    func conjugation() -> Output {
+public extension AntiFlatPoint {
+    public AntiFlatPoint conjugation() {
         return this;
     }
 }
-extension AntiFlector {
-    // Fancy infix trick
-    func operator/(_rhs: ConjugationPrefixOrPostfix) -> AntiFlector {
+public extension AntiFlector {
+    // Fancy postfix trick
+    public AntiFlector operator /(ConjugationPrefixOrPostfix rhs)  {
         return this.conjugation();
     }
-    func operator/=(const ConjugationPrefixOrPostfix& _rhs) -> AntiFlector& {
-        this = this.conjugation();
-        return *this;
+}
+public extension ConjugationPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiFlector operator /(AntiFlector rhs) {
+        return rhs.conjugation();
     }
 }
-extension AntiFlector: Conjugation {
-    associatedtype Output = AntiFlector;
-    func conjugation() -> Output {
-        return AntiFlector.from_groups(
+public extension AntiFlector {
+    public AntiFlector conjugation() {
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             this.group0, 
             /* e1, e2, e3, e5 */
@@ -99,41 +106,43 @@ extension AntiFlector: Conjugation {
         );
     }
 }
-extension AntiLine {
-    // Fancy infix trick
-    func operator/(_rhs: ConjugationPrefixOrPostfix) -> AntiLine {
+public extension AntiLine {
+    // Fancy postfix trick
+    public AntiLine operator /(ConjugationPrefixOrPostfix rhs)  {
         return this.conjugation();
     }
-    func operator/=(const ConjugationPrefixOrPostfix& _rhs) -> AntiLine& {
-        this = this.conjugation();
-        return *this;
+}
+public extension ConjugationPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiLine operator /(AntiLine rhs) {
+        return rhs.conjugation();
     }
 }
-extension AntiLine: Conjugation {
-    associatedtype Output = AntiLine;
-    func conjugation() -> Output {
-        return AntiLine.from_groups(
-            /* e23, e31, e12, 0 */
-            float4(this.group0.xyz * float3(-1.0), 0.0), 
-            /* e15, e25, e35, 0 */
-            float4(this.group1.xyz * float3(-1.0), 0.0)
+public extension AntiLine {
+    public AntiLine conjugation() {
+        return AntiLine(
+            /* e23, e31, e12 */
+            this.group0.xyz * float3(-1.0), 
+            /* e15, e25, e35 */
+            this.group1.xyz * float3(-1.0)
         );
     }
 }
-extension AntiMotor {
-    // Fancy infix trick
-    func operator/(_rhs: ConjugationPrefixOrPostfix) -> AntiMotor {
+public extension AntiMotor {
+    // Fancy postfix trick
+    public AntiMotor operator /(ConjugationPrefixOrPostfix rhs)  {
         return this.conjugation();
     }
-    func operator/=(const ConjugationPrefixOrPostfix& _rhs) -> AntiMotor& {
-        this = this.conjugation();
-        return *this;
+}
+public extension ConjugationPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiMotor operator /(AntiMotor rhs) {
+        return rhs.conjugation();
     }
 }
-extension AntiMotor: Conjugation {
-    associatedtype Output = AntiMotor;
-    func conjugation() -> Output {
-        return AntiMotor.from_groups(
+public extension AntiMotor {
+    public AntiMotor conjugation() {
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             this.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e15, e25, e35, e3215 */
@@ -141,76 +150,80 @@ extension AntiMotor: Conjugation {
         );
     }
 }
-extension AntiPlane {
-    // Fancy infix trick
-    func operator/(_rhs: ConjugationPrefixOrPostfix) -> AntiPlane {
+public extension AntiPlane {
+    // Fancy postfix trick
+    public AntiPlane operator /(ConjugationPrefixOrPostfix rhs)  {
         return this.conjugation();
     }
-    func operator/=(const ConjugationPrefixOrPostfix& _rhs) -> AntiPlane& {
-        this = this.conjugation();
-        return *this;
+}
+public extension ConjugationPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiPlane operator /(AntiPlane rhs) {
+        return rhs.conjugation();
     }
 }
-extension AntiPlane: Conjugation {
-    associatedtype Output = AntiPlane;
-    func conjugation() -> Output {
-        return AntiPlane.from_groups(
+public extension AntiPlane {
+    public AntiPlane conjugation() {
+        return AntiPlane(
             /* e1, e2, e3, e5 */
             this.group0 * float4(-1.0)
         );
     }
 }
-extension AntiScalar {
-    // Fancy infix trick
-    func operator/(_rhs: ConjugationPrefixOrPostfix) -> AntiScalar {
+public extension AntiScalar {
+    // Fancy postfix trick
+    public AntiScalar operator /(ConjugationPrefixOrPostfix rhs)  {
         return this.conjugation();
     }
-    func operator/=(const ConjugationPrefixOrPostfix& _rhs) -> AntiScalar& {
-        this = this.conjugation();
-        return *this;
+}
+public extension ConjugationPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiScalar operator /(AntiScalar rhs) {
+        return rhs.conjugation();
     }
 }
-extension AntiScalar: Conjugation {
-    associatedtype Output = AntiScalar;
-    func conjugation() -> Output {
-        return AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(this.e12345 * -1.0, 0.0, 0.0, 0.0)
+public extension AntiScalar {
+    public AntiScalar conjugation() {
+        return AntiScalar(
+            /* e12345 */
+            this.e12345 * -1.0
         );
     }
 }
-extension Circle {
-    // Fancy infix trick
-    func operator/(_rhs: ConjugationPrefixOrPostfix) -> Circle {
+public extension Circle {
+    // Fancy postfix trick
+    public Circle operator /(ConjugationPrefixOrPostfix rhs)  {
         return this.conjugation();
     }
-    func operator/=(const ConjugationPrefixOrPostfix& _rhs) -> Circle& {
-        this = this.conjugation();
-        return *this;
+}
+public extension ConjugationPrefixOrPostfix {
+    // Fancy prefix trick
+    public Circle operator /(Circle rhs) {
+        return rhs.conjugation();
     }
 }
-extension Circle: Conjugation {
-    associatedtype Output = Circle;
-    func conjugation() -> Output {
+public extension Circle {
+    public Circle conjugation() {
         return this;
     }
 }
-extension CircleRotor {
-    // Fancy infix trick
-    func operator/(_rhs: ConjugationPrefixOrPostfix) -> CircleRotor {
+public extension CircleRotor {
+    // Fancy postfix trick
+    public CircleRotor operator /(ConjugationPrefixOrPostfix rhs)  {
         return this.conjugation();
     }
-    func operator/=(const ConjugationPrefixOrPostfix& _rhs) -> CircleRotor& {
-        this = this.conjugation();
-        return *this;
+}
+public extension ConjugationPrefixOrPostfix {
+    // Fancy prefix trick
+    public CircleRotor operator /(CircleRotor rhs) {
+        return rhs.conjugation();
     }
 }
-extension CircleRotor: Conjugation {
-    associatedtype Output = CircleRotor;
-    func conjugation() -> Output {
-        return CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz, 0.0), 
+public extension CircleRotor {
+    public CircleRotor conjugation() {
+        return CircleRotor(
+            /* e423, e431, e412 */
+            this.group0.xyz, 
             /* e415, e425, e435, e321 */
             this.group1, 
             /* e235, e315, e125, e12345 */
@@ -218,45 +231,47 @@ extension CircleRotor: Conjugation {
         );
     }
 }
-extension Dipole {
-    // Fancy infix trick
-    func operator/(_rhs: ConjugationPrefixOrPostfix) -> Dipole {
+public extension Dipole {
+    // Fancy postfix trick
+    public Dipole operator /(ConjugationPrefixOrPostfix rhs)  {
         return this.conjugation();
     }
-    func operator/=(const ConjugationPrefixOrPostfix& _rhs) -> Dipole& {
-        this = this.conjugation();
-        return *this;
+}
+public extension ConjugationPrefixOrPostfix {
+    // Fancy prefix trick
+    public Dipole operator /(Dipole rhs) {
+        return rhs.conjugation();
     }
 }
-extension Dipole: Conjugation {
-    associatedtype Output = Dipole;
-    func conjugation() -> Output {
-        return Dipole.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(this.group0.xyz * float3(-1.0), 0.0), 
+public extension Dipole {
+    public Dipole conjugation() {
+        return Dipole(
+            /* e41, e42, e43 */
+            this.group0.xyz * float3(-1.0), 
             /* e23, e31, e12, e45 */
             this.group1 * float4(-1.0), 
-            /* e15, e25, e35, 0 */
-            float4(this.group2.xyz * float3(-1.0), 0.0)
+            /* e15, e25, e35 */
+            this.group2.xyz * float3(-1.0)
         );
     }
 }
-extension DipoleInversion {
-    // Fancy infix trick
-    func operator/(_rhs: ConjugationPrefixOrPostfix) -> DipoleInversion {
+public extension DipoleInversion {
+    // Fancy postfix trick
+    public DipoleInversion operator /(ConjugationPrefixOrPostfix rhs)  {
         return this.conjugation();
     }
-    func operator/=(const ConjugationPrefixOrPostfix& _rhs) -> DipoleInversion& {
-        this = this.conjugation();
-        return *this;
+}
+public extension ConjugationPrefixOrPostfix {
+    // Fancy prefix trick
+    public DipoleInversion operator /(DipoleInversion rhs) {
+        return rhs.conjugation();
     }
 }
-extension DipoleInversion: Conjugation {
-    associatedtype Output = DipoleInversion;
-    func conjugation() -> Output {
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(this.group0.xyz * float3(-1.0), 0.0), 
+public extension DipoleInversion {
+    public DipoleInversion conjugation() {
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            this.group0.xyz * float3(-1.0), 
             /* e23, e31, e12, e45 */
             this.group1 * float4(-1.0), 
             /* e15, e25, e35, e1234 */
@@ -266,58 +281,61 @@ extension DipoleInversion: Conjugation {
         );
     }
 }
-extension DualNum {
-    // Fancy infix trick
-    func operator/(_rhs: ConjugationPrefixOrPostfix) -> DualNum {
+public extension DualNum {
+    // Fancy postfix trick
+    public DualNum operator /(ConjugationPrefixOrPostfix rhs)  {
         return this.conjugation();
     }
-    func operator/=(const ConjugationPrefixOrPostfix& _rhs) -> DualNum& {
-        this = this.conjugation();
-        return *this;
+}
+public extension ConjugationPrefixOrPostfix {
+    // Fancy prefix trick
+    public DualNum operator /(DualNum rhs) {
+        return rhs.conjugation();
     }
 }
-extension DualNum: Conjugation {
-    associatedtype Output = DualNum;
-    func conjugation() -> Output {
-        return DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(this.group0.xy * float2(-1.0), 0.0, 0.0)
+public extension DualNum {
+    public DualNum conjugation() {
+        return DualNum(
+            /* e5, e12345 */
+            this.group0.xy * float2(-1.0)
         );
     }
 }
-extension FlatPoint {
-    // Fancy infix trick
-    func operator/(_rhs: ConjugationPrefixOrPostfix) -> FlatPoint {
+public extension FlatPoint {
+    // Fancy postfix trick
+    public FlatPoint operator /(ConjugationPrefixOrPostfix rhs)  {
         return this.conjugation();
     }
-    func operator/=(const ConjugationPrefixOrPostfix& _rhs) -> FlatPoint& {
-        this = this.conjugation();
-        return *this;
+}
+public extension ConjugationPrefixOrPostfix {
+    // Fancy prefix trick
+    public FlatPoint operator /(FlatPoint rhs) {
+        return rhs.conjugation();
     }
 }
-extension FlatPoint: Conjugation {
-    associatedtype Output = FlatPoint;
-    func conjugation() -> Output {
-        return FlatPoint.from_groups(
+public extension FlatPoint {
+    public FlatPoint conjugation() {
+        return FlatPoint(
             /* e15, e25, e35, e45 */
             this.group0 * float4(-1.0)
         );
     }
 }
-extension Flector {
-    // Fancy infix trick
-    func operator/(_rhs: ConjugationPrefixOrPostfix) -> Flector {
+public extension Flector {
+    // Fancy postfix trick
+    public Flector operator /(ConjugationPrefixOrPostfix rhs)  {
         return this.conjugation();
     }
-    func operator/=(const ConjugationPrefixOrPostfix& _rhs) -> Flector& {
-        this = this.conjugation();
-        return *this;
+}
+public extension ConjugationPrefixOrPostfix {
+    // Fancy prefix trick
+    public Flector operator /(Flector rhs) {
+        return rhs.conjugation();
     }
 }
-extension Flector: Conjugation {
-    associatedtype Output = Flector;
-    func conjugation() -> Output {
-        return Flector.from_groups(
+public extension Flector {
+    public Flector conjugation() {
+        return Flector(
             /* e15, e25, e35, e45 */
             this.group0 * float4(-1.0), 
             /* e4235, e4315, e4125, e3215 */
@@ -325,36 +343,38 @@ extension Flector: Conjugation {
         );
     }
 }
-extension Line {
-    // Fancy infix trick
-    func operator/(_rhs: ConjugationPrefixOrPostfix) -> Line {
+public extension Line {
+    // Fancy postfix trick
+    public Line operator /(ConjugationPrefixOrPostfix rhs)  {
         return this.conjugation();
     }
-    func operator/=(const ConjugationPrefixOrPostfix& _rhs) -> Line& {
-        this = this.conjugation();
-        return *this;
+}
+public extension ConjugationPrefixOrPostfix {
+    // Fancy prefix trick
+    public Line operator /(Line rhs) {
+        return rhs.conjugation();
     }
 }
-extension Line: Conjugation {
-    associatedtype Output = Line;
-    func conjugation() -> Output {
+public extension Line {
+    public Line conjugation() {
         return this;
     }
 }
-extension Motor {
-    // Fancy infix trick
-    func operator/(_rhs: ConjugationPrefixOrPostfix) -> Motor {
+public extension Motor {
+    // Fancy postfix trick
+    public Motor operator /(ConjugationPrefixOrPostfix rhs)  {
         return this.conjugation();
     }
-    func operator/=(const ConjugationPrefixOrPostfix& _rhs) -> Motor& {
-        this = this.conjugation();
-        return *this;
+}
+public extension ConjugationPrefixOrPostfix {
+    // Fancy prefix trick
+    public Motor operator /(Motor rhs) {
+        return rhs.conjugation();
     }
 }
-extension Motor: Conjugation {
-    associatedtype Output = Motor;
-    func conjugation() -> Output {
-        return Motor.from_groups(
+public extension Motor {
+    public Motor conjugation() {
+        return Motor(
             /* e415, e425, e435, e12345 */
             this.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e235, e315, e125, e5 */
@@ -362,128 +382,134 @@ extension Motor: Conjugation {
         );
     }
 }
-extension MultiVector {
-    // Fancy infix trick
-    func operator/(_rhs: ConjugationPrefixOrPostfix) -> MultiVector {
+public extension MultiVector {
+    // Fancy postfix trick
+    public MultiVector operator /(ConjugationPrefixOrPostfix rhs)  {
         return this.conjugation();
     }
-    func operator/=(const ConjugationPrefixOrPostfix& _rhs) -> MultiVector& {
-        this = this.conjugation();
-        return *this;
+}
+public extension ConjugationPrefixOrPostfix {
+    // Fancy prefix trick
+    public MultiVector operator /(MultiVector rhs) {
+        return rhs.conjugation();
     }
 }
-extension MultiVector: Conjugation {
-    associatedtype Output = MultiVector;
-    func conjugation() -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(this.group0.xy * float2(1.0, -1.0), 0.0, 0.0), 
+public extension MultiVector {
+    public MultiVector conjugation() {
+        return MultiVector(
+            /* scalar, e12345 */
+            this.group0.xy * float2(1.0, -1.0), 
             /* e1, e2, e3, e4 */
             this.group1 * float4(-1.0), 
-            /* e5, 0, 0, 0 */
-            float4(this.e5 * -1.0, 0.0, 0.0, 0.0), 
+            /* e5 */
+            this.e5 * -1.0, 
             /* e15, e25, e35, e45 */
             this.group3 * float4(-1.0), 
-            /* e41, e42, e43, 0 */
-            float4(this.group4.xyz * float3(-1.0), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(this.group5.xyz * float3(-1.0), 0.0), 
+            /* e41, e42, e43 */
+            this.group4.xyz * float3(-1.0), 
+            /* e23, e31, e12 */
+            this.group5.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             this.group6, 
-            /* e423, e431, e412, 0 */
-            float4(this.group7.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group8.xyz, 0.0), 
+            /* e423, e431, e412 */
+            this.group7.xyz, 
+            /* e235, e315, e125 */
+            this.group8.xyz, 
             /* e4235, e4315, e4125, e3215 */
             this.group9, 
-            /* e1234, 0, 0, 0 */
-            float4(this.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            this.e1234
         );
     }
 }
-extension Plane {
-    // Fancy infix trick
-    func operator/(_rhs: ConjugationPrefixOrPostfix) -> Plane {
+public extension Plane {
+    // Fancy postfix trick
+    public Plane operator /(ConjugationPrefixOrPostfix rhs)  {
         return this.conjugation();
     }
-    func operator/=(const ConjugationPrefixOrPostfix& _rhs) -> Plane& {
-        this = this.conjugation();
-        return *this;
+}
+public extension ConjugationPrefixOrPostfix {
+    // Fancy prefix trick
+    public Plane operator /(Plane rhs) {
+        return rhs.conjugation();
     }
 }
-extension Plane: Conjugation {
-    associatedtype Output = Plane;
-    func conjugation() -> Output {
+public extension Plane {
+    public Plane conjugation() {
         return this;
     }
 }
-extension RoundPoint {
-    // Fancy infix trick
-    func operator/(_rhs: ConjugationPrefixOrPostfix) -> RoundPoint {
+public extension RoundPoint {
+    // Fancy postfix trick
+    public RoundPoint operator /(ConjugationPrefixOrPostfix rhs)  {
         return this.conjugation();
     }
-    func operator/=(const ConjugationPrefixOrPostfix& _rhs) -> RoundPoint& {
-        this = this.conjugation();
-        return *this;
+}
+public extension ConjugationPrefixOrPostfix {
+    // Fancy prefix trick
+    public RoundPoint operator /(RoundPoint rhs) {
+        return rhs.conjugation();
     }
 }
-extension RoundPoint: Conjugation {
-    associatedtype Output = RoundPoint;
-    func conjugation() -> Output {
-        return RoundPoint.from_groups(
+public extension RoundPoint {
+    public RoundPoint conjugation() {
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             this.group0 * float4(-1.0), 
-            /* e5, 0, 0, 0 */
-            float4(this.e5 * -1.0, 0.0, 0.0, 0.0)
+            /* e5 */
+            this.e5 * -1.0
         );
     }
 }
-extension Scalar {
-    // Fancy infix trick
-    func operator/(_rhs: ConjugationPrefixOrPostfix) -> Scalar {
+public extension Scalar {
+    // Fancy postfix trick
+    public Scalar operator /(ConjugationPrefixOrPostfix rhs)  {
         return this.conjugation();
     }
-    func operator/=(const ConjugationPrefixOrPostfix& _rhs) -> Scalar& {
-        this = this.conjugation();
-        return *this;
+}
+public extension ConjugationPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(Scalar rhs) {
+        return rhs.conjugation();
     }
 }
-extension Scalar: Conjugation {
-    associatedtype Output = Scalar;
-    func conjugation() -> Output {
+public extension Scalar {
+    public Scalar conjugation() {
         return this;
     }
 }
-extension Sphere {
-    // Fancy infix trick
-    func operator/(_rhs: ConjugationPrefixOrPostfix) -> Sphere {
+public extension Sphere {
+    // Fancy postfix trick
+    public Sphere operator /(ConjugationPrefixOrPostfix rhs)  {
         return this.conjugation();
     }
-    func operator/=(const ConjugationPrefixOrPostfix& _rhs) -> Sphere& {
-        this = this.conjugation();
-        return *this;
+}
+public extension ConjugationPrefixOrPostfix {
+    // Fancy prefix trick
+    public Sphere operator /(Sphere rhs) {
+        return rhs.conjugation();
     }
 }
-extension Sphere: Conjugation {
-    associatedtype Output = Sphere;
-    func conjugation() -> Output {
+public extension Sphere {
+    public Sphere conjugation() {
         return this;
     }
 }
-extension VersorEven {
-    // Fancy infix trick
-    func operator/(_rhs: ConjugationPrefixOrPostfix) -> VersorEven {
+public extension VersorEven {
+    // Fancy postfix trick
+    public VersorEven operator /(ConjugationPrefixOrPostfix rhs)  {
         return this.conjugation();
     }
-    func operator/=(const ConjugationPrefixOrPostfix& _rhs) -> VersorEven& {
-        this = this.conjugation();
-        return *this;
+}
+public extension ConjugationPrefixOrPostfix {
+    // Fancy prefix trick
+    public VersorEven operator /(VersorEven rhs) {
+        return rhs.conjugation();
     }
 }
-extension VersorEven: Conjugation {
-    associatedtype Output = VersorEven;
-    func conjugation() -> Output {
-        return VersorEven.from_groups(
+public extension VersorEven {
+    public VersorEven conjugation() {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             this.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e415, e425, e435, e321 */
@@ -495,20 +521,21 @@ extension VersorEven: Conjugation {
         );
     }
 }
-extension VersorOdd {
-    // Fancy infix trick
-    func operator/(_rhs: ConjugationPrefixOrPostfix) -> VersorOdd {
+public extension VersorOdd {
+    // Fancy postfix trick
+    public VersorOdd operator /(ConjugationPrefixOrPostfix rhs)  {
         return this.conjugation();
     }
-    func operator/=(const ConjugationPrefixOrPostfix& _rhs) -> VersorOdd& {
-        this = this.conjugation();
-        return *this;
+}
+public extension ConjugationPrefixOrPostfix {
+    // Fancy prefix trick
+    public VersorOdd operator /(VersorOdd rhs) {
+        return rhs.conjugation();
     }
 }
-extension VersorOdd: Conjugation {
-    associatedtype Output = VersorOdd;
-    func conjugation() -> Output {
-        return VersorOdd.from_groups(
+public extension VersorOdd {
+    public VersorOdd conjugation() {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             this.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, e45 */

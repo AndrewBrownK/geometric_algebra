@@ -1,38 +1,36 @@
-using traits::GeometricProduct;
-using traits::RightDual;
-extension CircleRotor: Add<AntiCircleRotor> {
-    associatedtype Output = MultiVector;
-    func operator+(other: AntiCircleRotor) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(other.scalar, this.e12345), 0.0, 0.0), 
+implementing cga3d;
+using traits;
+public extension CircleRotor {
+    public MultiVector operator +(AntiCircleRotor other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(other.scalar, this.e12345), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(other.e15, other.e25, other.e35, other.e45), 
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group1.xyz, 0.0), 
+            /* e41, e42, e43 */
+            other.group0.xyz, 
+            /* e23, e31, e12 */
+            other.group1.xyz, 
             /* e415, e425, e435, e321 */
             this.group1, 
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group2.xyz, 0.0), 
+            /* e423, e431, e412 */
+            this.group0.xyz, 
+            /* e235, e315, e125 */
+            this.group2.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension CircleRotor: Add<AntiDipoleInversion> {
-    associatedtype Output = VersorEven;
-    func operator+(other: AntiDipoleInversion) -> Output {
-        return VersorEven.from_groups(
+public extension CircleRotor {
+    public VersorEven operator +(AntiDipoleInversion other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((other.group0.xyz + this.group0.xyz), this.e12345), 
             /* e415, e425, e435, e321 */
@@ -44,41 +42,39 @@ extension CircleRotor: Add<AntiDipoleInversion> {
         );
     }
 }
-extension CircleRotor: Add<AntiDualNum> {
-    associatedtype Output = MultiVector;
-    func operator+(other: AntiDualNum) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(other.scalar, this.e12345), 0.0, 0.0), 
+public extension CircleRotor {
+    public MultiVector operator +(AntiDualNum other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(other.scalar, this.e12345), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             this.group1, 
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group2.xyz, 0.0), 
+            /* e423, e431, e412 */
+            this.group0.xyz, 
+            /* e235, e315, e125 */
+            this.group2.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(float3(0.0), other.e3215), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension CircleRotor: Add<AntiFlatPoint> {
-    associatedtype Output = CircleRotor;
-    func operator+(other: AntiFlatPoint) -> Output {
-        return CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz, 0.0), 
+public extension CircleRotor {
+    public CircleRotor operator +(AntiFlatPoint other) {
+        return CircleRotor(
+            /* e423, e431, e412 */
+            this.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(this.group1.xyz, other.e321 + this.e321), 
             /* e235, e315, e125, e12345 */
@@ -86,23 +82,9 @@ extension CircleRotor: Add<AntiFlatPoint> {
         );
     }
 }
-extension CircleRotor {
-    associatedtype Output = CircleRotor;
-    func operator+=(const AntiFlatPoint& other) {
-        *this = CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz, 0.0), 
-            /* e415, e425, e435, e321 */
-            float4(this.group1.xyz, other.e321 + this.e321), 
-            /* e235, e315, e125, e12345 */
-            float4((other.group0.xyz + this.group2.xyz), this.e12345)
-        );
-    }
-}
-extension CircleRotor: Add<AntiFlector> {
-    associatedtype Output = VersorEven;
-    func operator+(other: AntiFlector) -> Output {
-        return VersorEven.from_groups(
+public extension CircleRotor {
+    public VersorEven operator +(AntiFlector other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(this.group0.xyz, this.e12345), 
             /* e415, e425, e435, e321 */
@@ -114,68 +96,65 @@ extension CircleRotor: Add<AntiFlector> {
         );
     }
 }
-extension CircleRotor: Add<AntiLine> {
-    associatedtype Output = MultiVector;
-    func operator+(other: AntiLine) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(0.0, this.e12345), 0.0, 0.0), 
+public extension CircleRotor {
+    public MultiVector operator +(AntiLine other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(0.0, this.e12345), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(other.group1.xyz, 0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group0.xyz, 0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            other.group0.xyz, 
             /* e415, e425, e435, e321 */
             this.group1, 
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group2.xyz, 0.0), 
+            /* e423, e431, e412 */
+            this.group0.xyz, 
+            /* e235, e315, e125 */
+            this.group2.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension CircleRotor: Add<AntiMotor> {
-    associatedtype Output = MultiVector;
-    func operator+(other: AntiMotor) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(other.scalar, this.e12345), 0.0, 0.0), 
+public extension CircleRotor {
+    public MultiVector operator +(AntiMotor other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(other.scalar, this.e12345), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(other.group1.xyz, 0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group0.xyz, 0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            other.group0.xyz, 
             /* e415, e425, e435, e321 */
             this.group1, 
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group2.xyz, 0.0), 
+            /* e423, e431, e412 */
+            this.group0.xyz, 
+            /* e235, e315, e125 */
+            this.group2.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(float3(0.0), other.e3215), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension CircleRotor: Add<AntiPlane> {
-    associatedtype Output = VersorEven;
-    func operator+(other: AntiPlane) -> Output {
-        return VersorEven.from_groups(
+public extension CircleRotor {
+    public VersorEven operator +(AntiPlane other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(this.group0.xyz, this.e12345), 
             /* e415, e425, e435, e321 */
@@ -187,12 +166,11 @@ extension CircleRotor: Add<AntiPlane> {
         );
     }
 }
-extension CircleRotor: Add<AntiScalar> {
-    associatedtype Output = CircleRotor;
-    func operator+(other: AntiScalar) -> Output {
-        return CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz, 0.0), 
+public extension CircleRotor {
+    public CircleRotor operator +(AntiScalar other) {
+        return CircleRotor(
+            /* e423, e431, e412 */
+            this.group0.xyz, 
             /* e415, e425, e435, e321 */
             this.group1, 
             /* e235, e315, e125, e12345 */
@@ -200,25 +178,11 @@ extension CircleRotor: Add<AntiScalar> {
         );
     }
 }
-extension CircleRotor {
-    associatedtype Output = CircleRotor;
-    func operator+=(const AntiScalar& other) {
-        *this = CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz, 0.0), 
-            /* e415, e425, e435, e321 */
-            this.group1, 
-            /* e235, e315, e125, e12345 */
-            this.group2 + float4(float3(0.0), other.e12345)
-        );
-    }
-}
-extension CircleRotor: Add<Circle> {
-    associatedtype Output = CircleRotor;
-    func operator+(other: Circle) -> Output {
-        return CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz + this.group0.xyz, 0.0), 
+public extension CircleRotor {
+    public CircleRotor operator +(Circle other) {
+        return CircleRotor(
+            /* e423, e431, e412 */
+            other.group0.xyz + this.group0.xyz, 
             /* e415, e425, e435, e321 */
             other.group1 + this.group1, 
             /* e235, e315, e125, e12345 */
@@ -226,25 +190,11 @@ extension CircleRotor: Add<Circle> {
         );
     }
 }
-extension CircleRotor {
-    associatedtype Output = CircleRotor;
-    func operator+=(const Circle& other) {
-        *this = CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz + this.group0.xyz, 0.0), 
-            /* e415, e425, e435, e321 */
-            other.group1 + this.group1, 
-            /* e235, e315, e125, e12345 */
-            float4((other.group2.xyz + this.group2.xyz), this.e12345)
-        );
-    }
-}
-extension CircleRotor: Add<CircleRotor> {
-    associatedtype Output = CircleRotor;
-    func operator+(other: CircleRotor) -> Output {
-        return CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz + this.group0.xyz, 0.0), 
+public extension CircleRotor {
+    public CircleRotor operator +(CircleRotor other) {
+        return CircleRotor(
+            /* e423, e431, e412 */
+            other.group0.xyz + this.group0.xyz, 
             /* e415, e425, e435, e321 */
             other.group1 + this.group1, 
             /* e235, e315, e125, e12345 */
@@ -252,81 +202,65 @@ extension CircleRotor: Add<CircleRotor> {
         );
     }
 }
-extension CircleRotor {
-    associatedtype Output = CircleRotor;
-    func operator+=(const CircleRotor& other) {
-        *this = CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz + this.group0.xyz, 0.0), 
-            /* e415, e425, e435, e321 */
-            other.group1 + this.group1, 
-            /* e235, e315, e125, e12345 */
-            other.group2 + this.group2
-        );
-    }
-}
-extension CircleRotor: Add<Dipole> {
-    associatedtype Output = MultiVector;
-    func operator+(other: Dipole) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(0.0, this.e12345), 0.0, 0.0), 
+public extension CircleRotor {
+    public MultiVector operator +(Dipole other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(0.0, this.e12345), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(other.group2.xyz, other.e45), 
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group1.xyz, 0.0), 
+            /* e41, e42, e43 */
+            other.group0.xyz, 
+            /* e23, e31, e12 */
+            other.group1.xyz, 
             /* e415, e425, e435, e321 */
             this.group1, 
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group2.xyz, 0.0), 
+            /* e423, e431, e412 */
+            this.group0.xyz, 
+            /* e235, e315, e125 */
+            this.group2.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension CircleRotor: Add<DipoleInversion> {
-    associatedtype Output = MultiVector;
-    func operator+(other: DipoleInversion) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(0.0, this.e12345), 0.0, 0.0), 
+public extension CircleRotor {
+    public MultiVector operator +(DipoleInversion other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(0.0, this.e12345), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(other.e15, other.e25, other.e35, other.e45), 
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group1.xyz, 0.0), 
+            /* e41, e42, e43 */
+            other.group0.xyz, 
+            /* e23, e31, e12 */
+            other.group1.xyz, 
             /* e415, e425, e435, e321 */
             this.group1, 
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group2.xyz, 0.0), 
+            /* e423, e431, e412 */
+            this.group0.xyz, 
+            /* e235, e315, e125 */
+            this.group2.xyz, 
             /* e4235, e4315, e4125, e3215 */
             other.group3, 
-            /* e1234, 0, 0, 0 */
-            float4(other.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e1234
         );
     }
 }
-extension CircleRotor: Add<DualNum> {
-    associatedtype Output = VersorEven;
-    func operator+(other: DualNum) -> Output {
-        return VersorEven.from_groups(
+public extension CircleRotor {
+    public VersorEven operator +(DualNum other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(this.group0.xyz, this.e12345 + other.e12345), 
             /* e415, e425, e435, e321 */
@@ -338,70 +272,67 @@ extension CircleRotor: Add<DualNum> {
         );
     }
 }
-extension CircleRotor: Add<FlatPoint> {
-    associatedtype Output = MultiVector;
-    func operator+(other: FlatPoint) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(0.0, this.e12345), 0.0, 0.0), 
+public extension CircleRotor {
+    public MultiVector operator +(FlatPoint other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(0.0, this.e12345), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             other.group0, 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             this.group1, 
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group2.xyz, 0.0), 
+            /* e423, e431, e412 */
+            this.group0.xyz, 
+            /* e235, e315, e125 */
+            this.group2.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension CircleRotor: Add<Flector> {
-    associatedtype Output = MultiVector;
-    func operator+(other: Flector) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(0.0, this.e12345), 0.0, 0.0), 
+public extension CircleRotor {
+    public MultiVector operator +(Flector other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(0.0, this.e12345), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             other.group0, 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             this.group1, 
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group2.xyz, 0.0), 
+            /* e423, e431, e412 */
+            this.group0.xyz, 
+            /* e235, e315, e125 */
+            this.group2.xyz, 
             /* e4235, e4315, e4125, e3215 */
             other.group1, 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension CircleRotor: Add<Line> {
-    associatedtype Output = CircleRotor;
-    func operator+(other: Line) -> Output {
-        return CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz, 0.0), 
+public extension CircleRotor {
+    public CircleRotor operator +(Line other) {
+        return CircleRotor(
+            /* e423, e431, e412 */
+            this.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4((other.group0.xyz + this.group1.xyz), this.e321), 
             /* e235, e315, e125, e12345 */
@@ -409,23 +340,9 @@ extension CircleRotor: Add<Line> {
         );
     }
 }
-extension CircleRotor {
-    associatedtype Output = CircleRotor;
-    func operator+=(const Line& other) {
-        *this = CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz, 0.0), 
-            /* e415, e425, e435, e321 */
-            float4((other.group0.xyz + this.group1.xyz), this.e321), 
-            /* e235, e315, e125, e12345 */
-            float4((other.group1.xyz + this.group2.xyz), this.e12345)
-        );
-    }
-}
-extension CircleRotor: Add<Motor> {
-    associatedtype Output = VersorEven;
-    func operator+(other: Motor) -> Output {
-        return VersorEven.from_groups(
+public extension CircleRotor {
+    public VersorEven operator +(Motor other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(this.group0.xyz, this.e12345 + other.e12345), 
             /* e415, e425, e435, e321 */
@@ -437,68 +354,65 @@ extension CircleRotor: Add<Motor> {
         );
     }
 }
-extension CircleRotor: Add<MultiVector> {
-    associatedtype Output = MultiVector;
-    func operator+(other: MultiVector) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(0.0, this.e12345) + other.group0.xy, 0.0, 0.0), 
+public extension CircleRotor {
+    public MultiVector operator +(MultiVector other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(0.0, this.e12345) + other.group0.xy, 
             /* e1, e2, e3, e4 */
             other.group1, 
-            /* e5, 0, 0, 0 */
-            float4(other.e5, 0.0, 0.0, 0.0), 
+            /* e5 */
+            other.e5, 
             /* e15, e25, e35, e45 */
             other.group3, 
-            /* e41, e42, e43, 0 */
-            float4(other.group4.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group5.xyz, 0.0), 
+            /* e41, e42, e43 */
+            other.group4.xyz, 
+            /* e23, e31, e12 */
+            other.group5.xyz, 
             /* e415, e425, e435, e321 */
             this.group1 + other.group6, 
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz + other.group7.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group8.xyz + this.group2.xyz, 0.0), 
+            /* e423, e431, e412 */
+            this.group0.xyz + other.group7.xyz, 
+            /* e235, e315, e125 */
+            other.group8.xyz + this.group2.xyz, 
             /* e4235, e4315, e4125, e3215 */
             other.group9, 
-            /* e1234, 0, 0, 0 */
-            float4(other.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e1234
         );
     }
 }
-extension CircleRotor: Add<Plane> {
-    associatedtype Output = MultiVector;
-    func operator+(other: Plane) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(0.0, this.e12345), 0.0, 0.0), 
+public extension CircleRotor {
+    public MultiVector operator +(Plane other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(0.0, this.e12345), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             this.group1, 
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group2.xyz, 0.0), 
+            /* e423, e431, e412 */
+            this.group0.xyz, 
+            /* e235, e315, e125 */
+            this.group2.xyz, 
             /* e4235, e4315, e4125, e3215 */
             other.group0, 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension CircleRotor: Add<RoundPoint> {
-    associatedtype Output = VersorEven;
-    func operator+(other: RoundPoint) -> Output {
-        return VersorEven.from_groups(
+public extension CircleRotor {
+    public VersorEven operator +(RoundPoint other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(this.group0.xyz, this.e12345), 
             /* e415, e425, e435, e321 */
@@ -510,68 +424,65 @@ extension CircleRotor: Add<RoundPoint> {
         );
     }
 }
-extension CircleRotor: Add<Scalar> {
-    associatedtype Output = MultiVector;
-    func operator+(other: Scalar) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(other.scalar, this.e12345), 0.0, 0.0), 
+public extension CircleRotor {
+    public MultiVector operator +(Scalar other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(other.scalar, this.e12345), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             this.group1, 
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group2.xyz, 0.0), 
+            /* e423, e431, e412 */
+            this.group0.xyz, 
+            /* e235, e315, e125 */
+            this.group2.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension CircleRotor: Add<Sphere> {
-    associatedtype Output = MultiVector;
-    func operator+(other: Sphere) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(0.0, this.e12345), 0.0, 0.0), 
+public extension CircleRotor {
+    public MultiVector operator +(Sphere other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(0.0, this.e12345), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             this.group1, 
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group2.xyz, 0.0), 
+            /* e423, e431, e412 */
+            this.group0.xyz, 
+            /* e235, e315, e125 */
+            this.group2.xyz, 
             /* e4235, e4315, e4125, e3215 */
             other.group0, 
-            /* e1234, 0, 0, 0 */
-            float4(other.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e1234
         );
     }
 }
-extension CircleRotor: Add<VersorEven> {
-    associatedtype Output = VersorEven;
-    func operator+(other: VersorEven) -> Output {
-        return VersorEven.from_groups(
+public extension CircleRotor {
+    public VersorEven operator +(VersorEven other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             other.group0 + float4(this.group0.xyz, this.e12345), 
             /* e415, e425, e435, e321 */
@@ -583,197 +494,164 @@ extension CircleRotor: Add<VersorEven> {
         );
     }
 }
-extension CircleRotor: Add<VersorOdd> {
-    associatedtype Output = MultiVector;
-    func operator+(other: VersorOdd) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(other.scalar, this.e12345), 0.0, 0.0), 
+public extension CircleRotor {
+    public MultiVector operator +(VersorOdd other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(other.scalar, this.e12345), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(other.e15, other.e25, other.e35, other.e45), 
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group1.xyz, 0.0), 
+            /* e41, e42, e43 */
+            other.group0.xyz, 
+            /* e23, e31, e12 */
+            other.group1.xyz, 
             /* e415, e425, e435, e321 */
             this.group1, 
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group2.xyz, 0.0), 
+            /* e423, e431, e412 */
+            this.group0.xyz, 
+            /* e235, e315, e125 */
+            this.group2.xyz, 
             /* e4235, e4315, e4125, e3215 */
             other.group3, 
-            /* e1234, 0, 0, 0 */
-            float4(other.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e1234
         );
     }
 }
-extension CircleRotor: Mul<AntiCircleRotor> {
-    associatedtype Output = VersorEven;
-    func operator*(other: AntiCircleRotor) -> Output {
+public extension CircleRotor {
+    public VersorEven operator *(AntiCircleRotor other) {
         return this.geometric_product(other);
     }
 }
-extension CircleRotor: Mul<AntiDipoleInversion> {
-    associatedtype Output = VersorOdd;
-    func operator*(other: AntiDipoleInversion) -> Output {
+public extension CircleRotor {
+    public VersorOdd operator *(AntiDipoleInversion other) {
         return this.geometric_product(other);
     }
 }
-extension CircleRotor: Mul<AntiDualNum> {
-    associatedtype Output = VersorEven;
-    func operator*(other: AntiDualNum) -> Output {
+public extension CircleRotor {
+    public VersorEven operator *(AntiDualNum other) {
         return this.geometric_product(other);
     }
 }
-extension CircleRotor: Mul<AntiFlatPoint> {
-    associatedtype Output = VersorOdd;
-    func operator*(other: AntiFlatPoint) -> Output {
+public extension CircleRotor {
+    public VersorOdd operator *(AntiFlatPoint other) {
         return this.geometric_product(other);
     }
 }
-extension CircleRotor: Mul<AntiFlector> {
-    associatedtype Output = VersorOdd;
-    func operator*(other: AntiFlector) -> Output {
+public extension CircleRotor {
+    public VersorOdd operator *(AntiFlector other) {
         return this.geometric_product(other);
     }
 }
-extension CircleRotor: Mul<AntiLine> {
-    associatedtype Output = VersorEven;
-    func operator*(other: AntiLine) -> Output {
+public extension CircleRotor {
+    public VersorEven operator *(AntiLine other) {
         return this.geometric_product(other);
     }
 }
-extension CircleRotor: Mul<AntiMotor> {
-    associatedtype Output = VersorEven;
-    func operator*(other: AntiMotor) -> Output {
+public extension CircleRotor {
+    public VersorEven operator *(AntiMotor other) {
         return this.geometric_product(other);
     }
 }
-extension CircleRotor: Mul<AntiPlane> {
-    associatedtype Output = DipoleInversion;
-    func operator*(other: AntiPlane) -> Output {
+public extension CircleRotor {
+    public DipoleInversion operator *(AntiPlane other) {
         return this.geometric_product(other);
     }
 }
-extension CircleRotor: Mul<AntiScalar> {
-    associatedtype Output = AntiCircleRotor;
-    func operator*(other: AntiScalar) -> Output {
+public extension CircleRotor {
+    public AntiCircleRotor operator *(AntiScalar other) {
         return this.geometric_product(other);
     }
 }
-extension CircleRotor: Mul<Circle> {
-    associatedtype Output = VersorOdd;
-    func operator*(other: Circle) -> Output {
+public extension CircleRotor {
+    public VersorOdd operator *(Circle other) {
         return this.geometric_product(other);
     }
 }
-extension CircleRotor: Mul<CircleRotor> {
-    associatedtype Output = VersorOdd;
-    func operator*(other: CircleRotor) -> Output {
+public extension CircleRotor {
+    public VersorOdd operator *(CircleRotor other) {
         return this.geometric_product(other);
     }
 }
-extension CircleRotor: Mul<Dipole> {
-    associatedtype Output = VersorEven;
-    func operator*(other: Dipole) -> Output {
+public extension CircleRotor {
+    public VersorEven operator *(Dipole other) {
         return this.geometric_product(other);
     }
 }
-extension CircleRotor: Mul<DipoleInversion> {
-    associatedtype Output = VersorEven;
-    func operator*(other: DipoleInversion) -> Output {
+public extension CircleRotor {
+    public VersorEven operator *(DipoleInversion other) {
         return this.geometric_product(other);
     }
 }
-extension CircleRotor: Mul<DualNum> {
-    associatedtype Output = VersorOdd;
-    func operator*(other: DualNum) -> Output {
+public extension CircleRotor {
+    public VersorOdd operator *(DualNum other) {
         return this.geometric_product(other);
     }
 }
-extension CircleRotor: Mul<FlatPoint> {
-    associatedtype Output = VersorEven;
-    func operator*(other: FlatPoint) -> Output {
+public extension CircleRotor {
+    public VersorEven operator *(FlatPoint other) {
         return this.geometric_product(other);
     }
 }
-extension CircleRotor: Mul<Flector> {
-    associatedtype Output = VersorEven;
-    func operator*(other: Flector) -> Output {
+public extension CircleRotor {
+    public VersorEven operator *(Flector other) {
         return this.geometric_product(other);
     }
 }
-extension CircleRotor: Mul<Line> {
-    associatedtype Output = VersorOdd;
-    func operator*(other: Line) -> Output {
+public extension CircleRotor {
+    public VersorOdd operator *(Line other) {
         return this.geometric_product(other);
     }
 }
-extension CircleRotor: Mul<Motor> {
-    associatedtype Output = VersorOdd;
-    func operator*(other: Motor) -> Output {
+public extension CircleRotor {
+    public VersorOdd operator *(Motor other) {
         return this.geometric_product(other);
     }
 }
-extension CircleRotor: Mul<MultiVector> {
-    associatedtype Output = MultiVector;
-    func operator*(other: MultiVector) -> Output {
+public extension CircleRotor {
+    public MultiVector operator *(MultiVector other) {
         return this.geometric_product(other);
     }
 }
-extension CircleRotor: Mul<Plane> {
-    associatedtype Output = AntiDipoleInversion;
-    func operator*(other: Plane) -> Output {
+public extension CircleRotor {
+    public AntiDipoleInversion operator *(Plane other) {
         return this.geometric_product(other);
     }
 }
-extension CircleRotor: Mul<RoundPoint> {
-    associatedtype Output = DipoleInversion;
-    func operator*(other: RoundPoint) -> Output {
+public extension CircleRotor {
+    public DipoleInversion operator *(RoundPoint other) {
         return this.geometric_product(other);
     }
 }
-extension CircleRotor: Mul<Scalar> {
-    associatedtype Output = CircleRotor;
-    func operator*(other: Scalar) -> Output {
+public extension CircleRotor {
+    public CircleRotor operator *(Scalar other) {
         return this.geometric_product(other);
     }
 }
-extension CircleRotor {
-    associatedtype Output = CircleRotor;
-    func operator*=(const Scalar& other) {
-        *this = this.geometric_product(other);
-    }
-}
-extension CircleRotor: Mul<Sphere> {
-    associatedtype Output = AntiDipoleInversion;
-    func operator*(other: Sphere) -> Output {
+public extension CircleRotor {
+    public AntiDipoleInversion operator *(Sphere other) {
         return this.geometric_product(other);
     }
 }
-extension CircleRotor: Mul<VersorEven> {
-    associatedtype Output = VersorOdd;
-    func operator*(other: VersorEven) -> Output {
+public extension CircleRotor {
+    public VersorOdd operator *(VersorEven other) {
         return this.geometric_product(other);
     }
 }
-extension CircleRotor: Mul<VersorOdd> {
-    associatedtype Output = VersorEven;
-    func operator*(other: VersorOdd) -> Output {
+public extension CircleRotor {
+    public VersorEven operator *(VersorOdd other) {
         return this.geometric_product(other);
     }
 }
-extension CircleRotor: Neg {
-    associatedtype Output = CircleRotor;
-    func neg() -> Output {
-        return CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz * float3(-1.0), 0.0), 
+public extension CircleRotor {
+    public CircleRotor neg() {
+        return CircleRotor(
+            /* e423, e431, e412 */
+            this.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             this.group1 * float4(-1.0), 
             /* e235, e315, e125, e12345 */
@@ -781,45 +659,42 @@ extension CircleRotor: Neg {
         );
     }
 }
-extension CircleRotor: Not {
-    associatedtype Output = AntiCircleRotor;
-    func not() -> Output {
+public extension CircleRotor {
+    public AntiCircleRotor not() {
         return this.right_dual();
     }
 }
-extension CircleRotor: Sub<AntiCircleRotor> {
-    associatedtype Output = MultiVector;
-    func operator-(other: AntiCircleRotor) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(other.scalar, this.e12345) * float2(-1.0, 1.0), 0.0, 0.0), 
+public extension CircleRotor {
+    public MultiVector operator -(AntiCircleRotor other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(other.scalar, this.e12345) * float2(-1.0, 1.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(other.group2.xyz, other.e45) * float4(-1.0), 
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group1.xyz * float3(-1.0), 0.0), 
+            /* e41, e42, e43 */
+            other.group0.xyz * float3(-1.0), 
+            /* e23, e31, e12 */
+            other.group1.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             this.group1, 
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group2.xyz, 0.0), 
+            /* e423, e431, e412 */
+            this.group0.xyz, 
+            /* e235, e315, e125 */
+            this.group2.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension CircleRotor: Sub<AntiDipoleInversion> {
-    associatedtype Output = VersorEven;
-    func operator-(other: AntiDipoleInversion) -> Output {
-        return VersorEven.from_groups(
+public extension CircleRotor {
+    public VersorEven operator -(AntiDipoleInversion other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(other.e423 * -1.0, other.e431 * -1.0, other.e412 * -1.0, 0.0) + float4(this.group0.xyz, this.e12345), 
             /* e415, e425, e435, e321 */
@@ -831,41 +706,39 @@ extension CircleRotor: Sub<AntiDipoleInversion> {
         );
     }
 }
-extension CircleRotor: Sub<AntiDualNum> {
-    associatedtype Output = MultiVector;
-    func operator-(other: AntiDualNum) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(other.scalar, this.e12345) * float2(-1.0, 1.0), 0.0, 0.0), 
+public extension CircleRotor {
+    public MultiVector operator -(AntiDualNum other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(other.scalar, this.e12345) * float2(-1.0, 1.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             this.group1, 
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group2.xyz, 0.0), 
+            /* e423, e431, e412 */
+            this.group0.xyz, 
+            /* e235, e315, e125 */
+            this.group2.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(float3(0.0), other.e3215 * -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension CircleRotor: Sub<AntiFlatPoint> {
-    associatedtype Output = CircleRotor;
-    func operator-(other: AntiFlatPoint) -> Output {
-        return CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz, 0.0), 
+public extension CircleRotor {
+    public CircleRotor operator -(AntiFlatPoint other) {
+        return CircleRotor(
+            /* e423, e431, e412 */
+            this.group0.xyz, 
             /* e415, e425, e435, e321 */
             this.group1 + float4(float3(0.0), other.e321 * -1.0), 
             /* e235, e315, e125, e12345 */
@@ -873,23 +746,9 @@ extension CircleRotor: Sub<AntiFlatPoint> {
         );
     }
 }
-extension CircleRotor {
-    associatedtype Output = CircleRotor;
-    func operator-=(const AntiFlatPoint& other) {
-        *this = CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz, 0.0), 
-            /* e415, e425, e435, e321 */
-            this.group1 + float4(float3(0.0), other.e321 * -1.0), 
-            /* e235, e315, e125, e12345 */
-            float4(other.e235 * -1.0, other.e315 * -1.0, other.e125 * -1.0, 0.0) + this.group2
-        );
-    }
-}
-extension CircleRotor: Sub<AntiFlector> {
-    associatedtype Output = VersorEven;
-    func operator-(other: AntiFlector) -> Output {
-        return VersorEven.from_groups(
+public extension CircleRotor {
+    public VersorEven operator -(AntiFlector other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(this.group0.xyz, this.e12345), 
             /* e415, e425, e435, e321 */
@@ -901,68 +760,65 @@ extension CircleRotor: Sub<AntiFlector> {
         );
     }
 }
-extension CircleRotor: Sub<AntiLine> {
-    associatedtype Output = MultiVector;
-    func operator-(other: AntiLine) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(0.0, this.e12345), 0.0, 0.0), 
+public extension CircleRotor {
+    public MultiVector operator -(AntiLine other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(0.0, this.e12345), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4((other.group1.xyz * float3(-1.0)), 0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             this.group1, 
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group2.xyz, 0.0), 
+            /* e423, e431, e412 */
+            this.group0.xyz, 
+            /* e235, e315, e125 */
+            this.group2.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension CircleRotor: Sub<AntiMotor> {
-    associatedtype Output = MultiVector;
-    func operator-(other: AntiMotor) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(other.scalar, this.e12345) * float2(-1.0, 1.0), 0.0, 0.0), 
+public extension CircleRotor {
+    public MultiVector operator -(AntiMotor other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(other.scalar, this.e12345) * float2(-1.0, 1.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4((other.group1.xyz * float3(-1.0)), 0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             this.group1, 
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group2.xyz, 0.0), 
+            /* e423, e431, e412 */
+            this.group0.xyz, 
+            /* e235, e315, e125 */
+            this.group2.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(float3(0.0), other.e3215 * -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension CircleRotor: Sub<AntiPlane> {
-    associatedtype Output = VersorEven;
-    func operator-(other: AntiPlane) -> Output {
-        return VersorEven.from_groups(
+public extension CircleRotor {
+    public VersorEven operator -(AntiPlane other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(this.group0.xyz, this.e12345), 
             /* e415, e425, e435, e321 */
@@ -974,12 +830,11 @@ extension CircleRotor: Sub<AntiPlane> {
         );
     }
 }
-extension CircleRotor: Sub<AntiScalar> {
-    associatedtype Output = CircleRotor;
-    func operator-(other: AntiScalar) -> Output {
-        return CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz, 0.0), 
+public extension CircleRotor {
+    public CircleRotor operator -(AntiScalar other) {
+        return CircleRotor(
+            /* e423, e431, e412 */
+            this.group0.xyz, 
             /* e415, e425, e435, e321 */
             this.group1, 
             /* e235, e315, e125, e12345 */
@@ -987,25 +842,11 @@ extension CircleRotor: Sub<AntiScalar> {
         );
     }
 }
-extension CircleRotor {
-    associatedtype Output = CircleRotor;
-    func operator-=(const AntiScalar& other) {
-        *this = CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz, 0.0), 
-            /* e415, e425, e435, e321 */
-            this.group1, 
-            /* e235, e315, e125, e12345 */
-            this.group2 + float4(float3(0.0), other.e12345 * -1.0)
-        );
-    }
-}
-extension CircleRotor: Sub<Circle> {
-    associatedtype Output = CircleRotor;
-    func operator-(other: Circle) -> Output {
-        return CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz - other.group0.xyz, 0.0), 
+public extension CircleRotor {
+    public CircleRotor operator -(Circle other) {
+        return CircleRotor(
+            /* e423, e431, e412 */
+            this.group0.xyz - other.group0.xyz, 
             /* e415, e425, e435, e321 */
             this.group1 - other.group1, 
             /* e235, e315, e125, e12345 */
@@ -1013,25 +854,11 @@ extension CircleRotor: Sub<Circle> {
         );
     }
 }
-extension CircleRotor {
-    associatedtype Output = CircleRotor;
-    func operator-=(const Circle& other) {
-        *this = CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz - other.group0.xyz, 0.0), 
-            /* e415, e425, e435, e321 */
-            this.group1 - other.group1, 
-            /* e235, e315, e125, e12345 */
-            float4(other.e235 * -1.0, other.e315 * -1.0, other.e125 * -1.0, 0.0) + this.group2
-        );
-    }
-}
-extension CircleRotor: Sub<CircleRotor> {
-    associatedtype Output = CircleRotor;
-    func operator-(other: CircleRotor) -> Output {
-        return CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz - other.group0.xyz, 0.0), 
+public extension CircleRotor {
+    public CircleRotor operator -(CircleRotor other) {
+        return CircleRotor(
+            /* e423, e431, e412 */
+            this.group0.xyz - other.group0.xyz, 
             /* e415, e425, e435, e321 */
             this.group1 - other.group1, 
             /* e235, e315, e125, e12345 */
@@ -1039,81 +866,65 @@ extension CircleRotor: Sub<CircleRotor> {
         );
     }
 }
-extension CircleRotor {
-    associatedtype Output = CircleRotor;
-    func operator-=(const CircleRotor& other) {
-        *this = CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz - other.group0.xyz, 0.0), 
-            /* e415, e425, e435, e321 */
-            this.group1 - other.group1, 
-            /* e235, e315, e125, e12345 */
-            this.group2 - other.group2
-        );
-    }
-}
-extension CircleRotor: Sub<Dipole> {
-    associatedtype Output = MultiVector;
-    func operator-(other: Dipole) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(0.0, this.e12345), 0.0, 0.0), 
+public extension CircleRotor {
+    public MultiVector operator -(Dipole other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(0.0, this.e12345), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(other.group2.xyz, other.e45) * float4(-1.0), 
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group1.xyz * float3(-1.0), 0.0), 
+            /* e41, e42, e43 */
+            other.group0.xyz * float3(-1.0), 
+            /* e23, e31, e12 */
+            other.group1.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             this.group1, 
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group2.xyz, 0.0), 
+            /* e423, e431, e412 */
+            this.group0.xyz, 
+            /* e235, e315, e125 */
+            this.group2.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension CircleRotor: Sub<DipoleInversion> {
-    associatedtype Output = MultiVector;
-    func operator-(other: DipoleInversion) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(0.0, this.e12345), 0.0, 0.0), 
+public extension CircleRotor {
+    public MultiVector operator -(DipoleInversion other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(0.0, this.e12345), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(other.group2.xyz, other.e45) * float4(-1.0), 
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group1.xyz * float3(-1.0), 0.0), 
+            /* e41, e42, e43 */
+            other.group0.xyz * float3(-1.0), 
+            /* e23, e31, e12 */
+            other.group1.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             this.group1, 
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group2.xyz, 0.0), 
+            /* e423, e431, e412 */
+            this.group0.xyz, 
+            /* e235, e315, e125 */
+            this.group2.xyz, 
             /* e4235, e4315, e4125, e3215 */
             other.group3 * float4(-1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e1234 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e1234 * -1.0
         );
     }
 }
-extension CircleRotor: Sub<DualNum> {
-    associatedtype Output = VersorEven;
-    func operator-(other: DualNum) -> Output {
-        return VersorEven.from_groups(
+public extension CircleRotor {
+    public VersorEven operator -(DualNum other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(this.group0.xyz, this.e12345 - other.e12345), 
             /* e415, e425, e435, e321 */
@@ -1125,70 +936,67 @@ extension CircleRotor: Sub<DualNum> {
         );
     }
 }
-extension CircleRotor: Sub<FlatPoint> {
-    associatedtype Output = MultiVector;
-    func operator-(other: FlatPoint) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(0.0, this.e12345), 0.0, 0.0), 
+public extension CircleRotor {
+    public MultiVector operator -(FlatPoint other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(0.0, this.e12345), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             other.group0 * float4(-1.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             this.group1, 
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group2.xyz, 0.0), 
+            /* e423, e431, e412 */
+            this.group0.xyz, 
+            /* e235, e315, e125 */
+            this.group2.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension CircleRotor: Sub<Flector> {
-    associatedtype Output = MultiVector;
-    func operator-(other: Flector) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(0.0, this.e12345), 0.0, 0.0), 
+public extension CircleRotor {
+    public MultiVector operator -(Flector other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(0.0, this.e12345), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             other.group0 * float4(-1.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             this.group1, 
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group2.xyz, 0.0), 
+            /* e423, e431, e412 */
+            this.group0.xyz, 
+            /* e235, e315, e125 */
+            this.group2.xyz, 
             /* e4235, e4315, e4125, e3215 */
             other.group1 * float4(-1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension CircleRotor: Sub<Line> {
-    associatedtype Output = CircleRotor;
-    func operator-(other: Line) -> Output {
-        return CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz, 0.0), 
+public extension CircleRotor {
+    public CircleRotor operator -(Line other) {
+        return CircleRotor(
+            /* e423, e431, e412 */
+            this.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(other.e415 * -1.0, other.e425 * -1.0, other.e435 * -1.0, 0.0) + this.group1, 
             /* e235, e315, e125, e12345 */
@@ -1196,23 +1004,9 @@ extension CircleRotor: Sub<Line> {
         );
     }
 }
-extension CircleRotor {
-    associatedtype Output = CircleRotor;
-    func operator-=(const Line& other) {
-        *this = CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz, 0.0), 
-            /* e415, e425, e435, e321 */
-            float4(other.e415 * -1.0, other.e425 * -1.0, other.e435 * -1.0, 0.0) + this.group1, 
-            /* e235, e315, e125, e12345 */
-            float4(other.e235 * -1.0, other.e315 * -1.0, other.e125 * -1.0, 0.0) + this.group2
-        );
-    }
-}
-extension CircleRotor: Sub<Motor> {
-    associatedtype Output = VersorEven;
-    func operator-(other: Motor) -> Output {
-        return VersorEven.from_groups(
+public extension CircleRotor {
+    public VersorEven operator -(Motor other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(this.group0.xyz, this.e12345 - other.e12345), 
             /* e415, e425, e435, e321 */
@@ -1224,68 +1018,65 @@ extension CircleRotor: Sub<Motor> {
         );
     }
 }
-extension CircleRotor: Sub<MultiVector> {
-    associatedtype Output = MultiVector;
-    func operator-(other: MultiVector) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(other.scalar, this.e12345 - other.e12345) * float2(-1.0, 1.0), 0.0, 0.0), 
+public extension CircleRotor {
+    public MultiVector operator -(MultiVector other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(other.scalar, this.e12345 - other.e12345) * float2(-1.0, 1.0), 
             /* e1, e2, e3, e4 */
             other.group1 * float4(-1.0), 
-            /* e5, 0, 0, 0 */
-            float4(other.e5 * -1.0, 0.0, 0.0, 0.0), 
+            /* e5 */
+            other.e5 * -1.0, 
             /* e15, e25, e35, e45 */
             other.group3 * float4(-1.0), 
-            /* e41, e42, e43, 0 */
-            float4(other.group4.xyz * float3(-1.0), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group5.xyz * float3(-1.0), 0.0), 
+            /* e41, e42, e43 */
+            other.group4.xyz * float3(-1.0), 
+            /* e23, e31, e12 */
+            other.group5.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             this.group1 - other.group6, 
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz - other.group7.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group2.xyz - other.group8.xyz, 0.0), 
+            /* e423, e431, e412 */
+            this.group0.xyz - other.group7.xyz, 
+            /* e235, e315, e125 */
+            this.group2.xyz - other.group8.xyz, 
             /* e4235, e4315, e4125, e3215 */
             other.group9 * float4(-1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e1234 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e1234 * -1.0
         );
     }
 }
-extension CircleRotor: Sub<Plane> {
-    associatedtype Output = MultiVector;
-    func operator-(other: Plane) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(0.0, this.e12345), 0.0, 0.0), 
+public extension CircleRotor {
+    public MultiVector operator -(Plane other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(0.0, this.e12345), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             this.group1, 
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group2.xyz, 0.0), 
+            /* e423, e431, e412 */
+            this.group0.xyz, 
+            /* e235, e315, e125 */
+            this.group2.xyz, 
             /* e4235, e4315, e4125, e3215 */
             other.group0 * float4(-1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension CircleRotor: Sub<RoundPoint> {
-    associatedtype Output = VersorEven;
-    func operator-(other: RoundPoint) -> Output {
-        return VersorEven.from_groups(
+public extension CircleRotor {
+    public VersorEven operator -(RoundPoint other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(this.group0.xyz, this.e12345), 
             /* e415, e425, e435, e321 */
@@ -1297,68 +1088,65 @@ extension CircleRotor: Sub<RoundPoint> {
         );
     }
 }
-extension CircleRotor: Sub<Scalar> {
-    associatedtype Output = MultiVector;
-    func operator-(other: Scalar) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(other.scalar, this.e12345) * float2(-1.0, 1.0), 0.0, 0.0), 
+public extension CircleRotor {
+    public MultiVector operator -(Scalar other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(other.scalar, this.e12345) * float2(-1.0, 1.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             this.group1, 
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group2.xyz, 0.0), 
+            /* e423, e431, e412 */
+            this.group0.xyz, 
+            /* e235, e315, e125 */
+            this.group2.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension CircleRotor: Sub<Sphere> {
-    associatedtype Output = MultiVector;
-    func operator-(other: Sphere) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(0.0, this.e12345), 0.0, 0.0), 
+public extension CircleRotor {
+    public MultiVector operator -(Sphere other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(0.0, this.e12345), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             this.group1, 
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group2.xyz, 0.0), 
+            /* e423, e431, e412 */
+            this.group0.xyz, 
+            /* e235, e315, e125 */
+            this.group2.xyz, 
             /* e4235, e4315, e4125, e3215 */
             other.group0 * float4(-1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e1234 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e1234 * -1.0
         );
     }
 }
-extension CircleRotor: Sub<VersorEven> {
-    associatedtype Output = VersorEven;
-    func operator-(other: VersorEven) -> Output {
-        return VersorEven.from_groups(
+public extension CircleRotor {
+    public VersorEven operator -(VersorEven other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(this.group0.xyz, this.e12345) - other.group0, 
             /* e415, e425, e435, e321 */
@@ -1370,32 +1158,31 @@ extension CircleRotor: Sub<VersorEven> {
         );
     }
 }
-extension CircleRotor: Sub<VersorOdd> {
-    associatedtype Output = MultiVector;
-    func operator-(other: VersorOdd) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(other.scalar, this.e12345) * float2(-1.0, 1.0), 0.0, 0.0), 
+public extension CircleRotor {
+    public MultiVector operator -(VersorOdd other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(other.scalar, this.e12345) * float2(-1.0, 1.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(other.group2.xyz, other.e45) * float4(-1.0), 
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group1.xyz * float3(-1.0), 0.0), 
+            /* e41, e42, e43 */
+            other.group0.xyz * float3(-1.0), 
+            /* e23, e31, e12 */
+            other.group1.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             this.group1, 
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group2.xyz, 0.0), 
+            /* e423, e431, e412 */
+            this.group0.xyz, 
+            /* e235, e315, e125 */
+            this.group2.xyz, 
             /* e4235, e4315, e4125, e3215 */
             other.group3 * float4(-1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e1234 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e1234 * -1.0
         );
     }
 }

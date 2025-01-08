@@ -1,15 +1,20 @@
-using traits::GeometricProduct;
-using traits::Reverse;
-extension AntiCircleRotor {
-    // Fancy infix trick
-    func operator/(_rhs: SandwichInfix) -> SandwichInfixPartial<AntiCircleRotor> {
-        return SandwichInfixPartial { a: this };
+implementing cga3d;
+using traits;
+public extension AntiCircleRotor {
+    // Fancy infix trick (first half)
+    public SandwichInfixPartial<AntiCircleRotor> operator /(SandwichInfix rhs) {
+        return SandwichInfixPartial<AntiCircleRotor>(this);
     }
 }
-extension AntiCircleRotor: Sandwich<AntiCircleRotor> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: AntiCircleRotor) -> Output {
-        return VersorOdd.from_groups(
+public extension SandwichInfixPartial<AntiCircleRotor> {
+    // Fancy infix trick (second half)
+    public VersorOdd operator /(AntiCircleRotor rhs) {
+        return this.a.sandwich(rhs);
+    }
+}
+public extension AntiCircleRotor {
+    public VersorOdd sandwich(AntiCircleRotor other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4((other.e31 * this.e43) + (other.e45 * this.e41) + (other.scalar * this.e41), (other.e12 * this.e41) + (other.e45 * this.e42) + (other.scalar * this.e42), (other.e23 * this.e42) + (other.e45 * this.e43) + (other.scalar * this.e43), -(other.e23 * this.e23) - (other.e31 * this.e31) - (other.e12 * this.e12) - (other.e15 * this.e41) - (other.e25 * this.e42) - (other.e35 * this.e43)) + (float4(this.group1.zx, this.scalar, this.scalar) * float4(other.group0.xyz.yzz, other.scalar)) + (float4(this.group2.ww, this.e31, this.e45) * float4(other.group0.xyz.xyx, other.e45)) - float4((other.group0.xyz.xxy * this.group1.wzx), other.e41 * this.e15) - float4((other.group0.xyz.zyz * this.group1.yww), other.e42 * this.e25) - float4((this.group0.xyz.yzx * other.group1.zxy), other.e43 * this.e35), 
             /* e23, e31, e12, e45 */
@@ -21,10 +26,9 @@ extension AntiCircleRotor: Sandwich<AntiCircleRotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiCircleRotor: Sandwich<AntiDipoleInversion> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiDipoleInversion) -> Output {
-        return VersorEven.from_groups(
+public extension AntiCircleRotor {
+    public VersorEven sandwich(AntiDipoleInversion other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((this.e42 * other.e3) + (this.e43 * other.e425) + (this.e23 * other.e4) + (this.e12 * other.e431) + (this.scalar * other.e423), (this.e41 * other.e435) + (this.e43 * other.e1) + (this.e23 * other.e412) + (this.e31 * other.e4) + (this.scalar * other.e431), (this.e41 * other.e2) + (this.e42 * other.e415) + (this.e31 * other.e423) + (this.e12 * other.e4) + (this.scalar * other.e412), -(this.e23 * other.e415) - (this.e31 * other.e425) - (this.e12 * other.e435) - (this.e45 * other.e321) - (this.e35 * other.e412)) - (float4(this.e41) * float4(other.e321, other.e3, other.e425, other.e235)) - (float4(this.e42) * float4(other.group1.zw, other.e1, other.e315)) - (float4(this.e43) * float4(other.e2, other.e415, other.e321, other.e125)) - float4((other.group0.xyz.xxy * this.group1.wzx), this.e15 * other.e423) - float4((other.group0.xyz.zyz * this.group1.yww), this.e25 * other.e431), 
             /* e415, e425, e435, e321 */
@@ -36,10 +40,9 @@ extension AntiCircleRotor: Sandwich<AntiDipoleInversion> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiCircleRotor: Sandwich<AntiDualNum> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: AntiDualNum) -> Output {
-        return VersorOdd.from_groups(
+public extension AntiCircleRotor {
+    public VersorOdd sandwich(AntiDualNum other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(other.scalar) * float4(this.group0.xyz, this.scalar), 
             /* e23, e31, e12, e45 */
@@ -51,10 +54,9 @@ extension AntiCircleRotor: Sandwich<AntiDualNum> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiCircleRotor: Sandwich<AntiFlatPoint> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiFlatPoint) -> Output {
-        return VersorEven.from_groups(
+public extension AntiCircleRotor {
+    public VersorEven sandwich(AntiFlatPoint other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((float3(other.e321) * this.group0.xyz * float3(-1.0)), -(this.e41 * other.e235) - (this.e42 * other.e315) - (this.e43 * other.e125) - (this.e45 * other.e321)), 
             /* e415, e425, e435, e321 */
@@ -66,10 +68,9 @@ extension AntiCircleRotor: Sandwich<AntiFlatPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiCircleRotor: Sandwich<AntiFlector> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiFlector) -> Output {
-        return VersorEven.from_groups(
+public extension AntiCircleRotor {
+    public VersorEven sandwich(AntiFlector other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(this.e42 * other.e3, this.e43 * other.e1, this.e41 * other.e2, -(this.e43 * other.e125) - (this.e45 * other.e321)) - (float4(other.e321, other.e3, other.e1, other.e235) * float4(this.group0.xyz.xxy, this.e41)) - (float4(other.e2, other.e321, other.e321, other.e315) * float4(this.group0.xyz.zyz, this.e42)), 
             /* e415, e425, e435, e321 */
@@ -81,10 +82,9 @@ extension AntiCircleRotor: Sandwich<AntiFlector> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiCircleRotor: Sandwich<AntiLine> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: AntiLine) -> Output {
-        return VersorOdd.from_groups(
+public extension AntiCircleRotor {
+    public VersorOdd sandwich(AntiLine other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(this.e43 * other.e31, this.e41 * other.e12, this.e42 * other.e23, -(this.e42 * other.e25) - (this.e43 * other.e35) - (this.e23 * other.e23) - (this.e31 * other.e31) - (this.e12 * other.e12)) - float4((this.group0.xyz.yzx * other.group0.xyz.zxy), this.e41 * other.e15), 
             /* e23, e31, e12, e45 */
@@ -96,10 +96,9 @@ extension AntiCircleRotor: Sandwich<AntiLine> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiCircleRotor: Sandwich<AntiMotor> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: AntiMotor) -> Output {
-        return VersorOdd.from_groups(
+public extension AntiCircleRotor {
+    public VersorOdd sandwich(AntiMotor other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(this.e43 * other.e31, this.e42 * other.scalar, this.e43 * other.scalar, -(this.e42 * other.e25) - (this.e43 * other.e35) - (this.e23 * other.e23) - (this.e31 * other.e31) - (this.e12 * other.e12)) + (other.group0.wzxw * float4(this.group0.xyz.xxy, this.scalar)) - float4((this.group0.xyz.yzx * other.group0.zxy), this.e41 * other.e15), 
             /* e23, e31, e12, e45 */
@@ -111,12 +110,11 @@ extension AntiCircleRotor: Sandwich<AntiMotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiCircleRotor: Sandwich<AntiPlane> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiPlane) -> Output {
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4((this.group0.xyz.yzx * other.group0.zxy) - (this.group0.xyz.zxy * other.group0.yzx), 0.0), 
+public extension AntiCircleRotor {
+    public VersorEven sandwich(AntiPlane other) {
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            (this.group0.xyz.yzx * other.group0.zxy) - (this.group0.xyz.zxy * other.group0.yzx), 
             /* e415, e425, e435, e321 */
             float4(this.e41 * other.e5, this.e42 * other.e5, this.e43 * other.e5, -(this.e31 * other.e2) - (this.e12 * other.e3)) - (this.group1.wwwx * other.group0.xyzx), 
             /* e235, e315, e125, e4 */
@@ -126,12 +124,11 @@ extension AntiCircleRotor: Sandwich<AntiPlane> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiCircleRotor: Sandwich<AntiScalar> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiScalar) -> Output {
-        return CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(other.e12345) * this.group0.xyz, 0.0), 
+public extension AntiCircleRotor {
+    public VersorEven sandwich(AntiScalar other) {
+        return CircleRotor(
+            /* e423, e431, e412 */
+            float3(other.e12345) * this.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(other.e12345) * this.group1 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e235, e315, e125, e12345 */
@@ -139,10 +136,9 @@ extension AntiCircleRotor: Sandwich<AntiScalar> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiCircleRotor: Sandwich<Circle> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: Circle) -> Output {
-        return VersorEven.from_groups(
+public extension AntiCircleRotor {
+    public VersorEven sandwich(Circle other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((this.e43 * other.e425) + (this.e12 * other.e431) + (this.scalar * other.e423), (this.e41 * other.e435) + (this.e23 * other.e412) + (this.scalar * other.e431), (this.e42 * other.e415) + (this.e31 * other.e423) + (this.scalar * other.e412), -(this.e23 * other.e415) - (this.e31 * other.e425) - (this.e12 * other.e435) - (this.e45 * other.e321) - (this.e25 * other.e431) - (this.e35 * other.e412)) - float4((this.group0.xyz.xyx * other.group1.wwy), this.e41 * other.e235) - float4((this.group0.xyz.yzz * other.group1.zxw), this.e42 * other.e315) - float4((other.group0.xyz.xxy * this.group1.wzx), this.e43 * other.e125) - float4((other.group0.xyz.zyz * this.group1.yww), this.e15 * other.e423), 
             /* e415, e425, e435, e321 */
@@ -154,10 +150,9 @@ extension AntiCircleRotor: Sandwich<Circle> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiCircleRotor: Sandwich<CircleRotor> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: CircleRotor) -> Output {
-        return VersorEven.from_groups(
+public extension AntiCircleRotor {
+    public VersorEven sandwich(CircleRotor other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((this.e43 * other.e425) + (this.e12 * other.e431) + (this.scalar * other.e423), (this.e42 * other.e12345) + (this.e23 * other.e412) + (this.scalar * other.e431), (this.e43 * other.e12345) + (this.e31 * other.e423) + (this.scalar * other.e412), -(this.e23 * other.e415) - (this.e31 * other.e425) - (this.e12 * other.e435) - (this.e45 * other.e321) - (this.e25 * other.e431) - (this.e35 * other.e412)) + (float4(other.e12345, other.e435, other.e415, other.e12345) * float4(this.group0.xyz.xxy, this.scalar)) - float4((this.group0.xyz.xyx * other.group1.wwy), this.e41 * other.e235) - float4((this.group0.xyz.yzz * other.group1.zxw), this.e42 * other.e315) - float4((other.group0.xyz.xxy * this.group1.wzx), this.e43 * other.e125) - float4((other.group0.xyz.zyz * this.group1.yww), this.e15 * other.e423), 
             /* e415, e425, e435, e321 */
@@ -169,10 +164,9 @@ extension AntiCircleRotor: Sandwich<CircleRotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiCircleRotor: Sandwich<Dipole> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Dipole) -> Output {
-        return VersorOdd.from_groups(
+public extension AntiCircleRotor {
+    public VersorOdd sandwich(Dipole other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4((this.e43 * other.e31) + (this.e12 * other.e42) + (this.scalar * other.e41), (this.e42 * other.e45) + (this.e23 * other.e43) + (this.scalar * other.e42), (this.e43 * other.e45) + (this.e31 * other.e41) + (this.scalar * other.e43), -(this.e23 * other.e23) - (this.e31 * other.e31) - (this.e12 * other.e12) - (this.e15 * other.e41) - (this.e25 * other.e42) - (this.e35 * other.e43)) + (other.group1.wzxw * float4(this.group0.xyz.xxy, this.e45)) - float4((this.group0.xyz.yzx * other.group1.zxy), this.e41 * other.e15) - float4((other.group0.xyz.xxy * this.group1.wzx), this.e42 * other.e25) - float4((other.group0.xyz.zyz * this.group1.yww), this.e43 * other.e35), 
             /* e23, e31, e12, e45 */
@@ -184,10 +178,9 @@ extension AntiCircleRotor: Sandwich<Dipole> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiCircleRotor: Sandwich<DipoleInversion> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: DipoleInversion) -> Output {
-        return VersorOdd.from_groups(
+public extension AntiCircleRotor {
+    public VersorOdd sandwich(DipoleInversion other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4((this.e43 * other.e31) + (this.e43 * other.e4315) + (this.e23 * other.e1234) + (this.e12 * other.e42) + (this.scalar * other.e41), (this.e41 * other.e4125) + (this.e42 * other.e45) + (this.e23 * other.e43) + (this.e31 * other.e1234) + (this.scalar * other.e42), (this.e42 * other.e4235) + (this.e43 * other.e45) + (this.e31 * other.e41) + (this.e12 * other.e1234) + (this.scalar * other.e43), -(this.e23 * other.e23) - (this.e31 * other.e31) - (this.e12 * other.e12) - (this.e25 * other.e42) - (this.e35 * other.e43)) + (other.group1.wzxw * float4(this.group0.xyz.xxy, this.e45)) - float4((this.group0.xyz.yzx * other.group1.zxy), this.e41 * other.e15) - float4((this.group0.xyz.yzx * other.group3.zxy), this.e42 * other.e25) - float4((other.group0.xyz.xxy * this.group1.wzx), this.e43 * other.e35) - float4((other.group0.xyz.zyz * this.group1.yww), this.e15 * other.e41), 
             /* e23, e31, e12, e45 */
@@ -199,10 +192,9 @@ extension AntiCircleRotor: Sandwich<DipoleInversion> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiCircleRotor: Sandwich<DualNum> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: DualNum) -> Output {
-        return VersorEven.from_groups(
+public extension AntiCircleRotor {
+    public VersorEven sandwich(DualNum other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(other.e12345) * float4(this.group0.xyz, this.scalar), 
             /* e415, e425, e435, e321 */
@@ -214,10 +206,9 @@ extension AntiCircleRotor: Sandwich<DualNum> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiCircleRotor: Sandwich<FlatPoint> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: FlatPoint) -> Output {
-        return VersorOdd.from_groups(
+public extension AntiCircleRotor {
+    public VersorOdd sandwich(FlatPoint other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4((float3(other.e45) * this.group0.xyz), (this.e45 * other.e45) - (this.e41 * other.e15) - (this.e42 * other.e25) - (this.e43 * other.e35)), 
             /* e23, e31, e12, e45 */
@@ -229,10 +220,9 @@ extension AntiCircleRotor: Sandwich<FlatPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiCircleRotor: Sandwich<Flector> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Flector) -> Output {
-        return VersorOdd.from_groups(
+public extension AntiCircleRotor {
+    public VersorOdd sandwich(Flector other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(this.e43 * other.e4315, this.e42 * other.e45, this.e43 * other.e45, -(this.e42 * other.e25) - (this.e43 * other.e35)) + (float4(other.e45, other.e4125, other.e4235, other.e45) * float4(this.group0.xyz.xxy, this.e45)) - float4((this.group0.xyz.yzx * other.group1.zxy), this.e41 * other.e15), 
             /* e23, e31, e12, e45 */
@@ -244,10 +234,9 @@ extension AntiCircleRotor: Sandwich<Flector> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiCircleRotor: Sandwich<Line> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: Line) -> Output {
-        return VersorEven.from_groups(
+public extension AntiCircleRotor {
+    public VersorEven sandwich(Line other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(this.e43 * other.e425, this.e41 * other.e435, this.e42 * other.e415, -(this.e42 * other.e315) - (this.e43 * other.e125) - (this.e23 * other.e415) - (this.e31 * other.e425) - (this.e12 * other.e435)) - float4((this.group0.xyz.yzx * other.group0.xyz.zxy), this.e41 * other.e235), 
             /* e415, e425, e435, e321 */
@@ -259,10 +248,9 @@ extension AntiCircleRotor: Sandwich<Line> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiCircleRotor: Sandwich<Motor> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: Motor) -> Output {
-        return VersorEven.from_groups(
+public extension AntiCircleRotor {
+    public VersorEven sandwich(Motor other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(this.e43 * other.e425, this.e42 * other.e12345, this.e43 * other.e12345, -(this.e42 * other.e315) - (this.e43 * other.e125) - (this.e23 * other.e415) - (this.e31 * other.e425) - (this.e12 * other.e435)) + (other.group0.wzxw * float4(this.group0.xyz.xxy, this.scalar)) - float4((this.group0.xyz.yzx * other.group0.zxy), this.e41 * other.e235), 
             /* e415, e425, e435, e321 */
@@ -274,41 +262,39 @@ extension AntiCircleRotor: Sandwich<Motor> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiCircleRotor: Sandwich<MultiVector> {
-    associatedtype Output = MultiVector;
-    func sandwich(other: MultiVector) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(this.e45 * other.e45, this.e45 * other.e321 * -1.0) + (float2(this.scalar) * other.group0.xy) - (float2(this.e41) * float2(other.e15, other.e235)) - (float2(this.e42) * float2(other.e25, other.e315)) - (float2(this.e43) * float2(other.e35, other.e125)) - (float2(this.e23) * float2(other.e23, other.e415)) - (float2(this.e31) * float2(other.e31, other.e425)) - (float2(this.e12) * float2(other.e12, other.e435)) - (float2(this.e15) * float2(other.e41, other.e423)) - (float2(this.e25) * float2(other.e42, other.e431)) - (float2(this.e35) * float2(other.e43, other.e412)), 0.0, 0.0), 
+public extension AntiCircleRotor {
+    public MultiVector sandwich(MultiVector other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(this.e45 * other.e45, this.e45 * other.e321 * -1.0) + (float2(this.scalar) * other.group0.xy) - (float2(this.e41) * float2(other.e15, other.e235)) - (float2(this.e42) * float2(other.e25, other.e315)) - (float2(this.e43) * float2(other.e35, other.e125)) - (float2(this.e23) * float2(other.e23, other.e415)) - (float2(this.e31) * float2(other.e31, other.e425)) - (float2(this.e12) * float2(other.e12, other.e435)) - (float2(this.e15) * float2(other.e41, other.e423)) - (float2(this.e25) * float2(other.e42, other.e431)) - (float2(this.e35) * float2(other.e43, other.e412)), 
             /* e1, e2, e3, e4 */
             float4((this.e12 * other.e2) + (this.scalar * other.e1), (this.e31 * other.e321) + (this.scalar * other.e2), (this.e12 * other.e321) + (this.scalar * other.e3), -(this.e12 * other.e412) - (this.e45 * other.e4)) + (float4(other.e5, other.e125, other.e235, other.e1) * float4(this.group0.xyz.xxy, this.e41)) + (float4(other.e321, other.e3, other.e1, other.e4) * float4(this.group1.xxy, this.scalar)) + (float4(other.e315, other.e5, other.e5, other.e2) * float4(this.group0.xyz.zyz, this.e42)) + float4((other.group7.xyz.zxy * this.group2.yzx), this.e43 * other.e3) - float4((this.group0.xyz.yzx * other.group8.xyz.zxy), this.e41 * other.e415) - float4((other.group7.xyz.yzx * this.group2.zxy), this.e42 * other.e425) - float4((this.group1.yzx * other.group1.zxy), this.e43 * other.e435) - float4((this.group1.www * other.group6.xyz), this.e23 * other.e423) - float4((other.group1.www * this.group2.xyz), this.e31 * other.e431), 
-            /* e5, 0, 0, 0 */
-            float4((this.e45 * other.e5) + (this.scalar * other.e5) - (this.e23 * other.e235) - (this.e31 * other.e315) - (this.e12 * other.e125) - (this.e15 * other.e1) - (this.e15 * other.e415) - (this.e25 * other.e2) - (this.e25 * other.e425) - (this.e35 * other.e3) - (this.e35 * other.e435), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (this.e45 * other.e5) + (this.scalar * other.e5) - (this.e23 * other.e235) - (this.e31 * other.e315) - (this.e12 * other.e125) - (this.e15 * other.e1) - (this.e15 * other.e415) - (this.e25 * other.e2) - (this.e25 * other.e425) - (this.e35 * other.e3) - (this.e35 * other.e435), 
             /* e15, e25, e35, e45 */
             float4((this.e25 * other.e4125) + (this.scalar * other.e15), (this.e35 * other.e4235) + (this.scalar * other.e25), (this.e15 * other.e4315) + (this.scalar * other.e35), -(this.e31 * other.e4315) - (this.e12 * other.e4125)) + (float4(other.scalar) * float4(this.group2.xyz, this.e45)) + (float4(other.e25, other.e3215, other.e3215, other.e35) * float4(this.group1.zyz, this.e43)) + (float4(other.e3215, other.e35, other.e15, other.e25) * float4(this.group1.xxy, this.e42)) + (other.group3 * float4(this.group1.www, this.scalar)) + float4((other.group5.xyz.yzx * this.group2.zxy), this.e41 * other.e15) - (float4(other.e45, other.e4125, other.e4235, this.e35) * float4(this.group2.xxy, other.e43)) - (float4(other.e4315, other.e45, other.e45, other.e4235) * float4(this.group2.zyz, this.e23)) - (this.group2.yzxx * float4(other.group5.xyz.zxy, other.e41)) - float4((this.group1.yzx * other.group3.zxy), this.e25 * other.e42), 
-            /* e41, e42, e43, 0 */
-            float4((float3(other.scalar) * this.group0.xyz) + (float3(other.e1234) * this.group1.xyz) + (float3(this.e12, this.e23, this.scalar) * other.group4.xyz.yzz) + (float3(this.scalar, this.scalar, this.e31) * other.group4.xyz.xyx) + (float3(other.e45, other.e12, other.e23) * this.group0.xyz.xxy) + (float3(other.e31, other.e4125, other.e4235) * this.group0.xyz.zxy) + (float3(other.e4315, other.e45, other.e45) * this.group0.xyz.zyz) - (this.group0.xyz.yzx * other.group5.xyz.zxy) - (this.group0.xyz.yzx * other.group9.zxy) - (other.group4.xyz.xxy * this.group1.wzx) - (other.group4.xyz.zyz * this.group1.yww), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(this.e45) * other.group9.xyz) + (float3(other.scalar) * this.group1.xyz) + (float3(other.e1234) * this.group2.xyz) + (float3(this.e12, this.e23, this.scalar) * other.group5.xyz.yzz) + (float3(this.scalar, this.scalar, this.e31) * other.group5.xyz.xyx) + (float3(other.e25, other.e3215, other.e3215) * this.group0.xyz.zyz) + (float3(other.e3215, other.e35, other.e15) * this.group0.xyz.xxy) + (other.group4.xyz.yzx * this.group2.zxy) - (this.group0.xyz.yzx * other.group3.zxy) - (other.group4.xyz.zxy * this.group2.yzx) - (other.group5.xyz.zxy * this.group1.yzx), 0.0), 
+            /* e41, e42, e43 */
+            (float3(other.scalar) * this.group0.xyz) + (float3(other.e1234) * this.group1.xyz) + (float3(this.e12, this.e23, this.scalar) * other.group4.xyz.yzz) + (float3(this.scalar, this.scalar, this.e31) * other.group4.xyz.xyx) + (float3(other.e45, other.e12, other.e23) * this.group0.xyz.xxy) + (float3(other.e31, other.e4125, other.e4235) * this.group0.xyz.zxy) + (float3(other.e4315, other.e45, other.e45) * this.group0.xyz.zyz) - (this.group0.xyz.yzx * other.group5.xyz.zxy) - (this.group0.xyz.yzx * other.group9.zxy) - (other.group4.xyz.xxy * this.group1.wzx) - (other.group4.xyz.zyz * this.group1.yww), 
+            /* e23, e31, e12 */
+            (float3(this.e45) * other.group9.xyz) + (float3(other.scalar) * this.group1.xyz) + (float3(other.e1234) * this.group2.xyz) + (float3(this.e12, this.e23, this.scalar) * other.group5.xyz.yzz) + (float3(this.scalar, this.scalar, this.e31) * other.group5.xyz.xyx) + (float3(other.e25, other.e3215, other.e3215) * this.group0.xyz.zyz) + (float3(other.e3215, other.e35, other.e15) * this.group0.xyz.xxy) + (other.group4.xyz.yzx * this.group2.zxy) - (this.group0.xyz.yzx * other.group3.zxy) - (other.group4.xyz.zxy * this.group2.yzx) - (other.group5.xyz.zxy * this.group1.yzx), 
             /* e415, e425, e435, e321 */
             float4((this.e12 * other.e425) + (this.e15 * other.e4) + (this.scalar * other.e415), (this.e23 * other.e435) + (this.e25 * other.e4) + (this.scalar * other.e425), (this.e31 * other.e415) + (this.e35 * other.e4) + (this.scalar * other.e435), -(this.e23 * other.e1) - (this.e31 * other.e2) - (this.e12 * other.e3)) + (float4(other.e5, other.e125, other.e235, this.e25) * float4(this.group0.xyz.xxy, other.e431)) + (float4(other.e315, other.e5, other.e5, this.e35) * float4(this.group0.xyz.zyz, other.e412)) + (float4(other.group0.xy.yy, other.e12345, other.e423) * float4(this.group1.xyz, this.e15)) + float4((other.group7.xyz.yzx * this.group2.zxy), this.scalar * other.e321) - float4((this.group0.xyz.yzx * other.group8.xyz.zxy), this.e45 * other.e12345) - float4((other.group7.xyz.zxy * this.group2.yzx), this.e41 * other.e235) - float4((this.group1.yzx * other.group6.zxy), this.e42 * other.e315) - float4((this.group1.www * other.group1.xyz), this.e43 * other.e125), 
-            /* e423, e431, e412, 0 */
-            float4((float3(other.e12345) * this.group0.xyz) + (float3(other.e4) * this.group1.xyz) + (float3(this.e12, this.e23, this.scalar) * other.group7.xyz.yzz) + (float3(this.scalar, this.scalar, this.e31) * other.group7.xyz.xyx) + (float3(other.e3, other.e435, other.e2) * this.group0.xyz.yxx) + (float3(other.e425, other.e1, other.e415) * this.group0.xyz.zzy) - (float3(this.e41) * float3(other.e321, other.e3, other.e425)) - (float3(this.e42) * float3(other.e435, other.e321, other.e1)) - (float3(this.e43) * float3(other.e2, other.e415, other.e321)) - (other.group7.xyz.xxy * this.group1.wzx) - (other.group7.xyz.zyz * this.group1.yww), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(other.e12345) * this.group2.xyz) + (float3(other.e5) * this.group1.xyz) + (float3(this.e12, this.e23, this.scalar) * other.group8.xyz.yzz) + (float3(this.scalar, this.scalar, this.e45) * other.group8.xyz) + (float3(other.e2, other.e435, other.e415) * this.group2.zxy) + (float3(other.e321, other.e3, other.e1) * this.group2.xxy) + (other.group8.xyz.xyx * this.group1.wwy) + (this.group2.zyz * other.group6.yww) - (other.group8.xyz.zxy * this.group1.yzx) - (this.group2.yzx * other.group1.zxy) - (this.group2.yzx * other.group6.zxy), 0.0), 
+            /* e423, e431, e412 */
+            (float3(other.e12345) * this.group0.xyz) + (float3(other.e4) * this.group1.xyz) + (float3(this.e12, this.e23, this.scalar) * other.group7.xyz.yzz) + (float3(this.scalar, this.scalar, this.e31) * other.group7.xyz.xyx) + (float3(other.e3, other.e435, other.e2) * this.group0.xyz.yxx) + (float3(other.e425, other.e1, other.e415) * this.group0.xyz.zzy) - (float3(this.e41) * float3(other.e321, other.e3, other.e425)) - (float3(this.e42) * float3(other.e435, other.e321, other.e1)) - (float3(this.e43) * float3(other.e2, other.e415, other.e321)) - (other.group7.xyz.xxy * this.group1.wzx) - (other.group7.xyz.zyz * this.group1.yww), 
+            /* e235, e315, e125 */
+            (float3(other.e12345) * this.group2.xyz) + (float3(other.e5) * this.group1.xyz) + (float3(this.e12, this.e23, this.scalar) * other.group8.xyz.yzz) + (float3(this.scalar, this.scalar, this.e45) * other.group8.xyz) + (float3(other.e2, other.e435, other.e415) * this.group2.zxy) + (float3(other.e321, other.e3, other.e1) * this.group2.xxy) + (other.group8.xyz.xyx * this.group1.wwy) + (this.group2.zyz * other.group6.yww) - (other.group8.xyz.zxy * this.group1.yzx) - (this.group2.yzx * other.group1.zxy) - (this.group2.yzx * other.group6.zxy), 
             /* e4235, e4315, e4125, e3215 */
             float4((this.e15 * other.e1234) + (this.scalar * other.e4235), (this.e25 * other.e1234) + (this.scalar * other.e4315), (this.e35 * other.e1234) + (this.scalar * other.e4125), -(this.e31 * other.e25) - (this.e12 * other.e35)) + (float4(other.e45, other.e4125, other.e4235, other.e4125) * float4(this.group1.xxy, this.e35)) + (float4(other.e4315, other.e45, other.e45, other.e3215) * float4(this.group1.zyz, this.scalar)) + float4((other.group5.xyz * this.group1.www), this.e25 * other.e4315) + float4((this.group0.xyz.yzx * other.group3.zxy), this.e45 * other.e3215) + float4((other.group4.xyz.yzx * this.group2.zxy), this.e15 * other.e4235) - (float4(other.e25, other.e3215, other.e3215, this.e25) * float4(this.group0.xyz.zyz, other.e31)) - (float4(other.e3215, other.e35, other.e15, this.e15) * float4(this.group0.xyz.xxy, other.e23)) - (this.group1.yzxx * float4(other.group9.zxy, other.e15)) - (this.group2.yzxz * float4(other.group4.xyz.zxy, other.e12)), 
-            /* e1234, 0, 0, 0 */
-            float4((this.scalar * other.e1234) - (this.e41 * other.e23) - (this.e41 * other.e4235) - (this.e42 * other.e31) - (this.e42 * other.e4315) - (this.e43 * other.e12) - (this.e43 * other.e4125) - (this.e23 * other.e41) - (this.e31 * other.e42) - (this.e12 * other.e43) - (this.e45 * other.e1234), 0.0, 0.0, 0.0)
+            /* e1234 */
+            (this.scalar * other.e1234) - (this.e41 * other.e23) - (this.e41 * other.e4235) - (this.e42 * other.e31) - (this.e42 * other.e4315) - (this.e43 * other.e12) - (this.e43 * other.e4125) - (this.e23 * other.e41) - (this.e31 * other.e42) - (this.e12 * other.e43) - (this.e45 * other.e1234)
         ).geometric_product(this.reverse());
     }
 }
-extension AntiCircleRotor: Sandwich<Plane> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Plane) -> Output {
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4((this.group0.xyz.zxy * other.group0.yzx) - (this.group0.xyz.yzx * other.group0.zxy), 0.0), 
+public extension AntiCircleRotor {
+    public VersorOdd sandwich(Plane other) {
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            (this.group0.xyz.zxy * other.group0.yzx) - (this.group0.xyz.yzx * other.group0.zxy), 
             /* e23, e31, e12, e45 */
             float4((this.e41 * other.e3215) + (this.e45 * other.e4235), (this.e42 * other.e3215) + (this.e45 * other.e4315), (this.e43 * other.e3215) + (this.e45 * other.e4125), -(this.e23 * other.e4235) - (this.e31 * other.e4315) - (this.e12 * other.e4125)), 
             /* e15, e25, e35, e1234 */
@@ -318,12 +304,11 @@ extension AntiCircleRotor: Sandwich<Plane> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiCircleRotor: Sandwich<RoundPoint> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: RoundPoint) -> Output {
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4((float3(other.e4) * this.group1.xyz) + (this.group0.xyz.yzx * other.group0.zxy) - (this.group0.xyz.zxy * other.group0.yzx), 0.0), 
+public extension AntiCircleRotor {
+    public VersorEven sandwich(RoundPoint other) {
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            (float3(other.e4) * this.group1.xyz) + (this.group0.xyz.yzx * other.group0.zxy) - (this.group0.xyz.zxy * other.group0.yzx), 
             /* e415, e425, e435, e321 */
             float4((this.e41 * other.e5) + (this.e15 * other.e4), (this.e42 * other.e5) + (this.e25 * other.e4), (this.e43 * other.e5) + (this.e35 * other.e4), -(this.e31 * other.e2) - (this.e12 * other.e3)) - (this.group1.wwwx * other.group0.xyzx), 
             /* e235, e315, e125, e4 */
@@ -333,12 +318,11 @@ extension AntiCircleRotor: Sandwich<RoundPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiCircleRotor: Sandwich<Scalar> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Scalar) -> Output {
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(other.scalar) * this.group0.xyz, 0.0), 
+public extension AntiCircleRotor {
+    public VersorOdd sandwich(Scalar other) {
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            float3(other.scalar) * this.group0.xyz, 
             /* e23, e31, e12, e45 */
             float4(other.scalar) * this.group1, 
             /* e15, e25, e35, scalar */
@@ -346,12 +330,11 @@ extension AntiCircleRotor: Sandwich<Scalar> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiCircleRotor: Sandwich<Sphere> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Sphere) -> Output {
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4((float3(other.e1234) * this.group1.xyz) + (this.group0.xyz.zxy * other.group0.yzx) - (this.group0.xyz.yzx * other.group0.zxy), 0.0), 
+public extension AntiCircleRotor {
+    public VersorOdd sandwich(Sphere other) {
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            (float3(other.e1234) * this.group1.xyz) + (this.group0.xyz.zxy * other.group0.yzx) - (this.group0.xyz.yzx * other.group0.zxy), 
             /* e23, e31, e12, e45 */
             float4((this.e41 * other.e3215) + (this.e45 * other.e4235) + (this.e15 * other.e1234), (this.e42 * other.e3215) + (this.e45 * other.e4315) + (this.e25 * other.e1234), (this.e43 * other.e3215) + (this.e45 * other.e4125) + (this.e35 * other.e1234), -(this.e23 * other.e4235) - (this.e31 * other.e4315) - (this.e12 * other.e4125)), 
             /* e15, e25, e35, e1234 */
@@ -361,10 +344,9 @@ extension AntiCircleRotor: Sandwich<Sphere> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiCircleRotor: Sandwich<VersorEven> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: VersorEven) -> Output {
-        return VersorEven.from_groups(
+public extension AntiCircleRotor {
+    public VersorEven sandwich(VersorEven other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((this.e42 * other.e3) + (this.e43 * other.e425) + (this.e23 * other.e4) + (this.e12 * other.e431) + (this.scalar * other.e423), (this.e42 * other.e12345) + (this.e43 * other.e1) + (this.e23 * other.e412) + (this.e31 * other.e4) + (this.scalar * other.e431), (this.e42 * other.e415) + (this.e43 * other.e12345) + (this.e31 * other.e423) + (this.e12 * other.e4) + (this.scalar * other.e412), -(this.e12 * other.e435) - (this.e45 * other.e321) - (this.e15 * other.e423) - (this.e25 * other.e431) - (this.e35 * other.e412)) + (float4(other.e12345, other.e435, other.e2, other.e12345) * float4(this.group0.xyz.xxx, this.scalar)) - (float4(this.e41) * float4(other.e321, other.e3, other.e425, other.e235)) - (float4(this.e42) * float4(other.group1.zw, other.e1, other.e315)) - (float4(this.e43) * float4(other.e2, other.e415, other.e321, other.e125)) - (this.group1.yzxx * float4(other.group0.zxy, other.e415)) - (this.group1.wwwy * float4(other.group0.xyz, other.e425)), 
             /* e415, e425, e435, e321 */
@@ -376,10 +358,9 @@ extension AntiCircleRotor: Sandwich<VersorEven> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiCircleRotor: Sandwich<VersorOdd> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: VersorOdd) -> Output {
-        return VersorOdd.from_groups(
+public extension AntiCircleRotor {
+    public VersorOdd sandwich(VersorOdd other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4((this.e43 * other.e31) + (this.e43 * other.e4315) + (this.e23 * other.e1234) + (this.e12 * other.e42) + (this.scalar * other.e41), (this.e42 * other.scalar) + (this.e42 * other.e45) + (this.e23 * other.e43) + (this.e31 * other.e1234) + (this.scalar * other.e42), (this.e43 * other.scalar) + (this.e43 * other.e45) + (this.e31 * other.e41) + (this.e12 * other.e1234) + (this.scalar * other.e43), -(this.e31 * other.e31) - (this.e12 * other.e12) - (this.e15 * other.e41) - (this.e25 * other.e42) - (this.e35 * other.e43)) + (float4(other.scalar, other.e12, other.e23, other.e45) * float4(this.group0.xyz.xxy, this.e45)) + (float4(other.e45, other.e4125, other.e4235, other.scalar) * float4(this.group0.xyz.xxy, this.scalar)) - (this.group1.wwwx * float4(other.group0.xyz, other.e23)) - float4((this.group0.xyz.yzx * other.group1.zxy), this.e41 * other.e15) - float4((this.group0.xyz.yzx * other.group3.zxy), this.e42 * other.e25) - float4((this.group1.yzx * other.group0.zxy), this.e43 * other.e35), 
             /* e23, e31, e12, e45 */
@@ -391,16 +372,21 @@ extension AntiCircleRotor: Sandwich<VersorOdd> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiDipoleInversion {
-    // Fancy infix trick
-    func operator/(_rhs: SandwichInfix) -> SandwichInfixPartial<AntiDipoleInversion> {
-        return SandwichInfixPartial { a: this };
+public extension AntiDipoleInversion {
+    // Fancy infix trick (first half)
+    public SandwichInfixPartial<AntiDipoleInversion> operator /(SandwichInfix rhs) {
+        return SandwichInfixPartial<AntiDipoleInversion>(this);
     }
 }
-extension AntiDipoleInversion: Sandwich<AntiCircleRotor> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: AntiCircleRotor) -> Output {
-        return VersorEven.from_groups(
+public extension SandwichInfixPartial<AntiDipoleInversion> {
+    // Fancy infix trick (second half)
+    public VersorOdd operator /(AntiCircleRotor rhs) {
+        return this.a.sandwich(rhs);
+    }
+}
+public extension AntiDipoleInversion {
+    public VersorOdd sandwich(AntiCircleRotor other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((other.e41 * this.e321) + (other.e42 * this.e435) + (other.e42 * this.e3) + (other.e23 * this.e4) + (other.e31 * this.e412) + (other.e45 * this.e423) + (other.scalar * this.e423), (other.e42 * this.e321) + (other.e43 * this.e415) + (other.e43 * this.e1) + (other.e31 * this.e4) + (other.e12 * this.e423) + (other.e45 * this.e431) + (other.scalar * this.e431), (other.e41 * this.e425) + (other.e41 * this.e2) + (other.e43 * this.e321) + (other.e23 * this.e431) + (other.e12 * this.e4) + (other.e45 * this.e412) + (other.scalar * this.e412), -(other.e23 * this.e415) - (other.e31 * this.e425) - (other.e12 * this.e435) - (other.e45 * this.e321) - (other.e15 * this.e423) - (other.e25 * this.e431) - (other.e35 * this.e412)) - float4((other.group0.xyz.zxy * this.group1.yzx), other.e41 * this.e235) - float4((other.group0.xyz.zxy * this.group3.yzx), other.e42 * this.e315) - float4((this.group0.xyz.yzx * other.group1.zxy), other.e43 * this.e125), 
             /* e415, e425, e435, e321 */
@@ -412,10 +398,9 @@ extension AntiDipoleInversion: Sandwich<AntiCircleRotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiDipoleInversion: Sandwich<AntiDipoleInversion> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiDipoleInversion) -> Output {
-        return VersorOdd.from_groups(
+public extension AntiDipoleInversion {
+    public VersorEven sandwich(AntiDipoleInversion other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(-(other.e415 * this.e4) - (other.e425 * this.e412) - (other.e4 * this.e415) - (other.e4 * this.e1) - (other.e3 * this.e431), -(other.e425 * this.e4) - (other.e435 * this.e423) - (other.e4 * this.e425) - (other.e4 * this.e2) - (other.e1 * this.e412), -(other.e415 * this.e431) - (other.e435 * this.e4) - (other.e4 * this.e435) - (other.e4 * this.e3) - (other.e2 * this.e423), (other.e415 * this.e415) + (other.e425 * this.e425) + (other.e435 * this.e435) + (other.e1 * this.e1) + (other.e2 * this.e2) + (other.e3 * this.e3)) + (float4(other.e321, other.e3, other.e425, this.e125) * float4(this.group0.xyz.xxx, other.e412)) + (float4(other.e2, other.e415, other.e321, other.e315) * float4(this.group0.xyz.zzz, this.e431)) + (float4(other.group1.zw, other.e1, other.e235) * float4(this.group0.xyz.yyy, this.e423)) + float4((other.group0.xyz.zxy * this.group1.yzx), other.e423 * this.e235) + float4((other.group0.xyz.zxy * this.group3.yzx), other.e431 * this.e315) + float4((this.group2.www * other.group3.xyz), other.e125 * this.e412) - (this.group1.wwyw * float4(other.group0.xyz.xyx, other.e321)) - (float4(this.group1.zx, this.e2, this.e5) * float4(other.group0.xyz.yzx, other.e4)) - (float4(this.group3.zx, this.e321, this.e4) * float4(other.group0.xyz.yzz, other.e5)), 
             /* e23, e31, e12, e45 */
@@ -427,10 +412,9 @@ extension AntiDipoleInversion: Sandwich<AntiDipoleInversion> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiDipoleInversion: Sandwich<AntiDualNum> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: AntiDualNum) -> Output {
-        return VersorEven.from_groups(
+public extension AntiDipoleInversion {
+    public VersorOdd sandwich(AntiDualNum other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(other.group0.xy.yy, other.scalar, other.e3215) * float4(this.group0.xyz, this.e4), 
             /* e415, e425, e435, e321 */
@@ -442,10 +426,9 @@ extension AntiDipoleInversion: Sandwich<AntiDualNum> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiDipoleInversion: Sandwich<AntiFlatPoint> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiFlatPoint) -> Output {
-        return VersorOdd.from_groups(
+public extension AntiDipoleInversion {
+    public VersorEven sandwich(AntiFlatPoint other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4((float3(other.e321) * this.group0.xyz), (this.e423 * other.e235) + (this.e431 * other.e315) + (this.e412 * other.e125) - (this.e321 * other.e321)), 
             /* e23, e31, e12, e45 */
@@ -457,10 +440,9 @@ extension AntiDipoleInversion: Sandwich<AntiFlatPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiDipoleInversion: Sandwich<AntiFlector> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiFlector) -> Output {
-        return VersorOdd.from_groups(
+public extension AntiDipoleInversion {
+    public VersorEven sandwich(AntiFlector other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             (float4(other.e321, other.e3, other.e1, other.e235) * float4(this.group0.xyz.xxy, this.e423)) + (float4(other.e2, other.e321, other.e321, other.e315) * float4(this.group0.xyz.zyz, this.e431)) + float4(float3(0.0), (this.e1 * other.e1) + (this.e2 * other.e2) + (this.e3 * other.e3) - (this.e4 * other.e5)) + float4((this.group2.www * other.group1.xyz), this.e412 * other.e125) - float4((this.group0.xyz.yzx * other.group1.zxy), this.e321 * other.e321), 
             /* e23, e31, e12, e45 */
@@ -472,10 +454,9 @@ extension AntiDipoleInversion: Sandwich<AntiFlector> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiDipoleInversion: Sandwich<AntiLine> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: AntiLine) -> Output {
-        return VersorEven.from_groups(
+public extension AntiDipoleInversion {
+    public VersorOdd sandwich(AntiLine other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((this.e412 * other.e31) + (this.e4 * other.e23), (this.e423 * other.e12) + (this.e4 * other.e31), (this.e431 * other.e23) + (this.e4 * other.e12), -(this.e431 * other.e25) - (this.e412 * other.e35) - (this.e415 * other.e23) - (this.e425 * other.e31) - (this.e435 * other.e12)) - float4((this.group0.xyz.yzx * other.group0.xyz.zxy), this.e423 * other.e15), 
             /* e415, e425, e435, e321 */
@@ -487,10 +468,9 @@ extension AntiDipoleInversion: Sandwich<AntiLine> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiDipoleInversion: Sandwich<AntiMotor> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: AntiMotor) -> Output {
-        return VersorEven.from_groups(
+public extension AntiDipoleInversion {
+    public VersorOdd sandwich(AntiMotor other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((this.e412 * other.e31) + (this.e4 * other.e23), (this.e431 * other.scalar) + (this.e4 * other.e31), (this.e412 * other.scalar) + (this.e4 * other.e12), -(this.e431 * other.e25) - (this.e412 * other.e35) - (this.e415 * other.e23) - (this.e425 * other.e31) - (this.e435 * other.e12)) + float4((this.group0.xyz.xxy * other.group0.wzx), this.e4 * other.e3215) - float4((this.group0.xyz.yzx * other.group0.zxy), this.e423 * other.e15), 
             /* e415, e425, e435, e321 */
@@ -502,10 +482,9 @@ extension AntiDipoleInversion: Sandwich<AntiMotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiDipoleInversion: Sandwich<AntiPlane> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiPlane) -> Output {
-        return VersorOdd.from_groups(
+public extension AntiDipoleInversion {
+    public VersorEven sandwich(AntiPlane other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             (other.group0.xyzy * float4(this.group2.www, this.e2)) + (other.group0.yzxx * float4(this.group0.xyz.zxy, this.e1)) + float4(float3(0.0), this.e3 * other.e3) - (other.group0.zxyw * float4(this.group0.xyz.yzx, this.e4)), 
             /* e23, e31, e12, e45 */
@@ -517,12 +496,11 @@ extension AntiDipoleInversion: Sandwich<AntiPlane> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiDipoleInversion: Sandwich<AntiScalar> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiScalar) -> Output {
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(other.e12345) * this.group0.xyz * float3(-1.0), 0.0), 
+public extension AntiDipoleInversion {
+    public VersorEven sandwich(AntiScalar other) {
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            float3(other.e12345) * this.group0.xyz * float3(-1.0), 
             /* e23, e31, e12, e45 */
             float4(other.e12345) * this.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e15, e25, e35, e1234 */
@@ -532,10 +510,9 @@ extension AntiDipoleInversion: Sandwich<AntiScalar> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiDipoleInversion: Sandwich<Circle> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: Circle) -> Output {
-        return VersorOdd.from_groups(
+public extension AntiDipoleInversion {
+    public VersorEven sandwich(Circle other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(-(this.e435 * other.e431) - (this.e321 * other.e423) - (this.e4 * other.e415) - (this.e3 * other.e431), -(this.e415 * other.e412) - (this.e321 * other.e431) - (this.e4 * other.e425) - (this.e1 * other.e412), -(this.e425 * other.e423) - (this.e321 * other.e412) - (this.e4 * other.e435) - (this.e2 * other.e423), (this.e415 * other.e415) + (this.e425 * other.e425) + (this.e435 * other.e435) + (this.e315 * other.e431) + (this.e125 * other.e412)) + float4((this.group0.xyz.xyx * other.group1.wwy), this.e423 * other.e235) + float4((this.group0.xyz.yzz * other.group1.zxw), this.e431 * other.e315) + float4((other.group0.xyz.zxy * this.group1.yzx), this.e412 * other.e125) + float4((other.group0.xyz.zxy * this.group3.yzx), this.e235 * other.e423) - (other.group1.yzxw * float4(this.group0.xyz.zxy, this.e321)), 
             /* e23, e31, e12, e45 */
@@ -547,10 +524,9 @@ extension AntiDipoleInversion: Sandwich<Circle> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiDipoleInversion: Sandwich<CircleRotor> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: CircleRotor) -> Output {
-        return VersorOdd.from_groups(
+public extension AntiDipoleInversion {
+    public VersorEven sandwich(CircleRotor other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(-(this.e412 * other.e425) - (this.e435 * other.e431) - (this.e321 * other.e423) - (this.e4 * other.e415) - (this.e3 * other.e431), -(this.e431 * other.e12345) - (this.e415 * other.e412) - (this.e321 * other.e431) - (this.e4 * other.e425) - (this.e1 * other.e412), -(this.e412 * other.e12345) - (this.e425 * other.e423) - (this.e321 * other.e412) - (this.e4 * other.e435) - (this.e2 * other.e423), (this.e415 * other.e415) + (this.e425 * other.e425) + (this.e435 * other.e435) + (this.e315 * other.e431) + (this.e125 * other.e412)) + float4((this.group0.xyz.xyx * other.group1.wwy), this.e423 * other.e235) + float4((this.group0.xyz.yzz * other.group1.zxw), this.e431 * other.e315) + float4((other.group0.xyz.zxy * this.group1.yzx), this.e412 * other.e125) + float4((other.group0.xyz.zxy * this.group3.yzx), this.e235 * other.e423) - (float4(other.e12345, other.e435, other.e415, other.e321) * float4(this.group0.xyz.xxy, this.e321)), 
             /* e23, e31, e12, e45 */
@@ -562,10 +538,9 @@ extension AntiDipoleInversion: Sandwich<CircleRotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiDipoleInversion: Sandwich<Dipole> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Dipole) -> Output {
-        return VersorEven.from_groups(
+public extension AntiDipoleInversion {
+    public VersorOdd sandwich(Dipole other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((this.e423 * other.e45) + (this.e412 * other.e31) + (this.e435 * other.e42) + (this.e321 * other.e41) + (this.e4 * other.e23) + (this.e3 * other.e42), (this.e423 * other.e12) + (this.e431 * other.e45) + (this.e415 * other.e43) + (this.e321 * other.e42) + (this.e4 * other.e31) + (this.e1 * other.e43), (this.e431 * other.e23) + (this.e412 * other.e45) + (this.e425 * other.e41) + (this.e321 * other.e43) + (this.e4 * other.e12) + (this.e2 * other.e41), -(this.e415 * other.e23) - (this.e425 * other.e31) - (this.e435 * other.e12) - (this.e321 * other.e45) - (this.e235 * other.e41) - (this.e315 * other.e42) - (this.e125 * other.e43)) - float4((this.group0.xyz.yzx * other.group1.zxy), this.e423 * other.e15) - float4((other.group0.xyz.zxy * this.group1.yzx), this.e431 * other.e25) - float4((other.group0.xyz.zxy * this.group3.yzx), this.e412 * other.e35), 
             /* e415, e425, e435, e321 */
@@ -577,10 +552,9 @@ extension AntiDipoleInversion: Sandwich<Dipole> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiDipoleInversion: Sandwich<DipoleInversion> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: DipoleInversion) -> Output {
-        return VersorEven.from_groups(
+public extension AntiDipoleInversion {
+    public VersorOdd sandwich(DipoleInversion other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((this.e415 * other.e1234) + (this.e4 * other.e23) + (this.e4 * other.e4235) + (this.e1 * other.e1234) + (this.e3 * other.e42), (this.e425 * other.e1234) + (this.e4 * other.e31) + (this.e4 * other.e4315) + (this.e1 * other.e43) + (this.e2 * other.e1234), (this.e435 * other.e1234) + (this.e321 * other.e43) + (this.e4 * other.e12) + (this.e4 * other.e4125) + (this.e3 * other.e1234), -(this.e415 * other.e23) - (this.e425 * other.e31) - (this.e435 * other.e12) - (this.e321 * other.e45) - (this.e315 * other.e42) - (this.e125 * other.e43)) + (float4(other.e31, other.e4125, other.e4235, other.e4235) * float4(this.group0.xyz.zxy, this.e1)) + (float4(other.e4315, other.e45, other.e45, other.e4315) * float4(this.group0.xyz.zyz, this.e2)) + (float4(this.group1.zx, this.e2, other.e1234) * float4(other.group0.xyz.yzx, this.e5)) + float4((this.group0.xyz.xxy * other.group1.wzx), this.e4 * other.e3215) + float4((other.group0.xyz.xyx * this.group1.wwy), this.e3 * other.e4125) - float4((this.group0.xyz.yzx * other.group1.zxy), this.e423 * other.e15) - float4((this.group0.xyz.yzx * other.group3.zxy), this.e431 * other.e25) - float4((other.group0.xyz.zxy * this.group1.yzx), this.e412 * other.e35) - float4((other.group0.xyz.zxy * this.group3.yzx), this.e235 * other.e41), 
             /* e415, e425, e435, e321 */
@@ -592,10 +566,9 @@ extension AntiDipoleInversion: Sandwich<DipoleInversion> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiDipoleInversion: Sandwich<DualNum> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: DualNum) -> Output {
-        return VersorOdd.from_groups(
+public extension AntiDipoleInversion {
+    public VersorEven sandwich(DualNum other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(other.group0.xy.yy, other.e12345, other.e5) * float4(this.group0.xyz, this.e4) * float4(-1.0), 
             /* e23, e31, e12, e45 */
@@ -607,10 +580,9 @@ extension AntiDipoleInversion: Sandwich<DualNum> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiDipoleInversion: Sandwich<FlatPoint> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: FlatPoint) -> Output {
-        return VersorEven.from_groups(
+public extension AntiDipoleInversion {
+    public VersorOdd sandwich(FlatPoint other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((float3(other.e45) * this.group0.xyz), -(this.e423 * other.e15) - (this.e431 * other.e25) - (this.e412 * other.e35) - (this.e321 * other.e45)), 
             /* e415, e425, e435, e321 */
@@ -622,10 +594,9 @@ extension AntiDipoleInversion: Sandwich<FlatPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiDipoleInversion: Sandwich<Flector> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Flector) -> Output {
-        return VersorEven.from_groups(
+public extension AntiDipoleInversion {
+    public VersorOdd sandwich(Flector other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             (float4(other.e45, other.e4125, other.e4235, other.e3215) * float4(this.group0.xyz.xxy, this.e4)) + (float4(other.e4315, other.e45, other.e45, other.e4235) * float4(this.group0.xyz.zyz, this.e1)) + (other.group1.xyzy * float4(this.group2.www, this.e2)) + float4(float3(0.0), (this.e3 * other.e4125) - (this.e431 * other.e25) - (this.e412 * other.e35) - (this.e321 * other.e45)) - float4((this.group0.xyz.yzx * other.group1.zxy), this.e423 * other.e15), 
             /* e415, e425, e435, e321 */
@@ -637,10 +608,9 @@ extension AntiDipoleInversion: Sandwich<Flector> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiDipoleInversion: Sandwich<Line> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: Line) -> Output {
-        return VersorOdd.from_groups(
+public extension AntiDipoleInversion {
+    public VersorEven sandwich(Line other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(-(this.e412 * other.e425) - (this.e4 * other.e415), -(this.e423 * other.e435) - (this.e4 * other.e425), -(this.e431 * other.e415) - (this.e4 * other.e435), (this.e431 * other.e315) + (this.e412 * other.e125) + (this.e415 * other.e415) + (this.e425 * other.e425) + (this.e435 * other.e435)) + float4((this.group0.xyz.yzx * other.group0.xyz.zxy), this.e423 * other.e235), 
             /* e23, e31, e12, e45 */
@@ -652,10 +622,9 @@ extension AntiDipoleInversion: Sandwich<Line> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiDipoleInversion: Sandwich<Motor> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: Motor) -> Output {
-        return VersorOdd.from_groups(
+public extension AntiDipoleInversion {
+    public VersorEven sandwich(Motor other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(-(this.e412 * other.e425) - (this.e4 * other.e415), -(this.e431 * other.e12345) - (this.e4 * other.e425), -(this.e412 * other.e12345) - (this.e4 * other.e435), (this.e431 * other.e315) + (this.e412 * other.e125) + (this.e415 * other.e415) + (this.e425 * other.e425) + (this.e435 * other.e435)) + float4((this.group0.xyz.yzx * other.group0.zxy), this.e423 * other.e235) - float4((this.group0.xyz.xxy * other.group0.wzx), this.e4 * other.e5), 
             /* e23, e31, e12, e45 */
@@ -667,39 +636,37 @@ extension AntiDipoleInversion: Sandwich<Motor> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiDipoleInversion: Sandwich<MultiVector> {
-    associatedtype Output = MultiVector;
-    func sandwich(other: MultiVector) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((this.e423 * other.e235) + (this.e431 * other.e315) + (this.e412 * other.e125) + (this.e415 * other.e415) + (this.e425 * other.e425) + (this.e435 * other.e435) + (this.e315 * other.e431) + (this.e125 * other.e412) - (this.e5 * other.e4), (this.e5 * other.e1234) - (this.e423 * other.e15) - (this.e431 * other.e25) - (this.e412 * other.e35) - (this.e425 * other.e31) - (this.e435 * other.e12) - (this.e321 * other.e45) - (this.e315 * other.e42) - (this.e125 * other.e43)) + (float2(this.e1) * float2(other.e1, other.e4235)) + (float2(this.e2) * float2(other.e2, other.e4315)) + (float2(this.e3) * float2(other.e3, other.e4125)) + (float2(other.e423, other.e3215) * this.group2.xw) - (float2(other.e5, other.e41) * this.group2.wx) - (float2(other.e321, other.e23) * this.group1.wx), 0.0, 0.0), 
+public extension AntiDipoleInversion {
+    public MultiVector sandwich(MultiVector other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((this.e423 * other.e235) + (this.e431 * other.e315) + (this.e412 * other.e125) + (this.e415 * other.e415) + (this.e425 * other.e425) + (this.e435 * other.e435) + (this.e315 * other.e431) + (this.e125 * other.e412) - (this.e5 * other.e4), (this.e5 * other.e1234) - (this.e423 * other.e15) - (this.e431 * other.e25) - (this.e412 * other.e35) - (this.e425 * other.e31) - (this.e435 * other.e12) - (this.e321 * other.e45) - (this.e315 * other.e42) - (this.e125 * other.e43)) + (float2(this.e1) * float2(other.e1, other.e4235)) + (float2(this.e2) * float2(other.e2, other.e4315)) + (float2(this.e3) * float2(other.e3, other.e4125)) + (float2(other.e423, other.e3215) * this.group2.xw) - (float2(other.e5, other.e41) * this.group2.wx) - (float2(other.e321, other.e23) * this.group1.wx), 
             /* e1, e2, e3, e4 */
             float4((this.e425 * other.e4125) + (this.e321 * other.e23) + (this.e315 * other.e43) + (this.e4 * other.e15) + (this.e3 * other.e31), (this.e435 * other.e4235) + (this.e321 * other.e31) + (this.e125 * other.e41) + (this.e4 * other.e25) + (this.e1 * other.e12), (this.e415 * other.e4315) + (this.e321 * other.e12) + (this.e235 * other.e42) + (this.e4 * other.e35) + (this.e2 * other.e23), -(this.e425 * other.e42) - (this.e435 * other.e43) - (this.e1 * other.e41) - (this.e2 * other.e42) - (this.e3 * other.e43)) + (float4(other.scalar) * float4(this.group3.xyz, this.e4)) + (float4(other.e25, other.e3215, other.e3215, other.e45) * float4(this.group0.xyz.zyz, this.e4)) + (float4(other.e3215, other.e35, other.e15, other.e1234) * float4(this.group0.xyz.xxy, this.e321)) - (float4(other.e45, other.e4125, other.e4235, other.e12) * float4(this.group1.xxy, this.e412)) - (float4(other.e4315, other.e45, other.e45, other.e4125) * float4(this.group1.zyz, this.e412)) - (float4(this.group2.zx, this.e5, other.e31) * float4(other.group4.xyz.yzz, this.e431)) - (float4(this.group3.ww, this.e315, other.e4235) * float4(other.group4.xyz.xyx, this.e423)) - float4((float3(other.e1234) * this.group2.xyz), this.e415 * other.e41) - float4((this.group0.xyz.yzx * other.group3.zxy), this.e423 * other.e23) - float4((other.group5.xyz.zxy * this.group3.yzx), this.e431 * other.e4315), 
-            /* e5, 0, 0, 0 */
-            float4((this.e235 * other.e4235) + (this.e315 * other.e4315) + (this.e125 * other.e4125) + (this.e1 * other.e15) + (this.e2 * other.e25) + (this.e3 * other.e35) + (this.e5 * other.scalar) - (this.e415 * other.e15) - (this.e425 * other.e25) - (this.e435 * other.e35) - (this.e321 * other.e3215) - (this.e235 * other.e23) - (this.e315 * other.e31) - (this.e125 * other.e12) - (this.e5 * other.e45), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (this.e235 * other.e4235) + (this.e315 * other.e4315) + (this.e125 * other.e4125) + (this.e1 * other.e15) + (this.e2 * other.e25) + (this.e3 * other.e35) + (this.e5 * other.scalar) - (this.e415 * other.e15) - (this.e425 * other.e25) - (this.e435 * other.e35) - (this.e321 * other.e3215) - (this.e235 * other.e23) - (this.e315 * other.e31) - (this.e125 * other.e12) - (this.e5 * other.e45), 
             /* e15, e25, e35, e45 */
             float4(this.e1 * other.e5, this.e2 * other.e5, this.e3 * other.e5, this.e5 * other.e4 * -1.0) + (float4(this.e425, this.e1, this.e321, this.e315) * float4(other.group8.xyz.zzz, other.e431)) + (float4(this.e3, this.e321, this.e415, this.e235) * float4(other.group8.xyz.yyy, other.e423)) + (this.group2.yzxw * float4(other.group6.zxy, other.e5)) + (float4(this.group1.wz, this.e2, this.e321) * float4(other.group8.xyz.xxx, other.e12345)) + float4((this.group2.yzx * other.group1.zxy), this.e125 * other.e412) - (float4(this.e435, this.e3, this.e425, other.e315) * float4(other.group8.xyz.yxx, this.e431)) - (float4(this.e2, this.e415, this.e1, other.e125) * float4(other.group8.xyz.zzy, this.e412)) - (float4(other.e2, other.e435, other.e415, other.e3) * float4(this.group2.zxy, this.e435)) - (float4(other.e321, other.e3, other.e1, other.e2) * float4(this.group2.xxy, this.e425)) - (this.group1.xyzx * float4(float3(other.e5), other.e1)) - (this.group3.wwwy * float4(other.group1.xyz, other.e425)) - (this.group3.wwwz * other.group6.xyzz) - (other.group6.ywwx * float4(this.group2.zyz, this.e1)) - (float4(other.group0.xy.yy, other.e12345, this.e423) * float4(this.group2.xyz, other.e235)), 
-            /* e41, e42, e43, 0 */
-            float4((float3(this.e423) * float3(other.e321, other.e3, other.e425)) + (float3(this.e431) * float3(other.e435, other.e321, other.e1)) + (float3(this.e412) * float3(other.e2, other.e415, other.e321)) + (float3(this.e4) * other.group1.xyz) + (other.group7.xyz.zxy * this.group1.yzx) + (other.group7.xyz.zxy * this.group3.yzx) - (float3(this.e4) * other.group6.xyz) - (float3(other.e12345) * this.group0.xyz) - (float3(other.e4) * this.group1.xyz) - (float3(other.e4) * this.group3.xyz) - (float3(this.e435, this.e415, this.e2) * other.group7.xyz.yzx) - (float3(this.e3, this.e1, this.e321) * other.group7.xyz.yzz) - (float3(other.e3, other.e435, other.e2) * this.group0.xyz.yxx) - (float3(other.e425, other.e1, other.e415) * this.group0.xyz.zzy) - (other.group7.xyz.xyx * this.group1.wwy), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((this.group0.xyz.yzx * other.group8.xyz.zxy) + (other.group7.xyz.zxy * this.group2.yzx) + (this.group1.yzx * other.group6.zxy) + (this.group3.yzx * other.group1.zxy) - (float3(this.e321) * other.group1.xyz) - (float3(this.e4) * other.group8.xyz) - (float3(other.e12345) * this.group1.xyz) - (float3(other.e4) * this.group2.xyz) - (float3(this.e125, this.e235, this.e5) * other.group7.xyz.yzz) - (float3(this.e5, this.e5, this.e315) * other.group7.xyz.xyx) - (float3(other.e2, other.e321, other.e321) * this.group3.zyz) - (float3(other.e5, other.e125, other.e235) * this.group0.xyz.xxy) - (float3(other.e321, other.e3, other.e1) * this.group3.xxy) - (float3(other.e315, other.e5, other.e5) * this.group0.xyz.zyz) - (this.group1.zxy * other.group6.yzx), 0.0), 
+            /* e41, e42, e43 */
+            (float3(this.e423) * float3(other.e321, other.e3, other.e425)) + (float3(this.e431) * float3(other.e435, other.e321, other.e1)) + (float3(this.e412) * float3(other.e2, other.e415, other.e321)) + (float3(this.e4) * other.group1.xyz) + (other.group7.xyz.zxy * this.group1.yzx) + (other.group7.xyz.zxy * this.group3.yzx) - (float3(this.e4) * other.group6.xyz) - (float3(other.e12345) * this.group0.xyz) - (float3(other.e4) * this.group1.xyz) - (float3(other.e4) * this.group3.xyz) - (float3(this.e435, this.e415, this.e2) * other.group7.xyz.yzx) - (float3(this.e3, this.e1, this.e321) * other.group7.xyz.yzz) - (float3(other.e3, other.e435, other.e2) * this.group0.xyz.yxx) - (float3(other.e425, other.e1, other.e415) * this.group0.xyz.zzy) - (other.group7.xyz.xyx * this.group1.wwy), 
+            /* e23, e31, e12 */
+            (this.group0.xyz.yzx * other.group8.xyz.zxy) + (other.group7.xyz.zxy * this.group2.yzx) + (this.group1.yzx * other.group6.zxy) + (this.group3.yzx * other.group1.zxy) - (float3(this.e321) * other.group1.xyz) - (float3(this.e4) * other.group8.xyz) - (float3(other.e12345) * this.group1.xyz) - (float3(other.e4) * this.group2.xyz) - (float3(this.e125, this.e235, this.e5) * other.group7.xyz.yzz) - (float3(this.e5, this.e5, this.e315) * other.group7.xyz.xyx) - (float3(other.e2, other.e321, other.e321) * this.group3.zyz) - (float3(other.e5, other.e125, other.e235) * this.group0.xyz.xxy) - (float3(other.e321, other.e3, other.e1) * this.group3.xxy) - (float3(other.e315, other.e5, other.e5) * this.group0.xyz.zyz) - (this.group1.zxy * other.group6.yzx), 
             /* e415, e425, e435, e321 */
             float4(this.e2 * other.e4125, this.e3 * other.e4235, this.e1 * other.e4315, this.e5 * other.e1234 * -1.0) + (float4(this.e4) * float4(other.group3.xyz, other.e3215)) + (float4(other.scalar) * this.group1) + (float4(other.e25, other.e3215, other.e3215, this.e315) * float4(this.group0.xyz.zyz, other.e42)) + (float4(other.e3215, other.e35, other.e15, this.e235) * float4(this.group0.xyz.xxy, other.e41)) + (float4(this.group2.zx, this.e5, other.e4235) * float4(other.group4.xyz.yzz, this.e415)) + (float4(this.group3.ww, this.e315, this.e125) * float4(other.group4.xyz.xyx, other.e43)) + float4((float3(other.e1234) * this.group2.xyz), this.e435 * other.e4125) + float4((other.group5.xyz.yzx * this.group1.zxy), this.e425 * other.e4315) - (float4(other.e45, other.e4125, other.e4235, this.e2) * float4(this.group3.xxy, other.e31)) - (float4(other.e4315, other.e45, other.e45, this.e3) * float4(this.group3.zyz, other.e12)) - (other.group3.zxyx * float4(this.group0.xyz.yzx, this.e423)) - float4((other.group4.xyz.zxy * this.group2.yzx), this.e431 * other.e25) - float4((other.group5.xyz.zxy * this.group1.yzx), this.e412 * other.e35) - float4((this.group1.www * other.group9.xyz), this.e1 * other.e23), 
-            /* e423, e431, e412, 0 */
-            float4((float3(this.e4) * other.group5.xyz) + (float3(this.e4) * other.group9.xyz) + (float3(other.scalar) * this.group0.xyz) + (float3(other.e1234) * this.group1.xyz) + (float3(other.e1234) * this.group3.xyz) + (float3(this.e435, this.e415, this.e2) * other.group4.xyz.yzx) + (float3(this.e3, this.e1, this.e321) * other.group4.xyz.yzz) + (float3(other.e45, other.e12, other.e23) * this.group0.xyz.xxy) + (float3(other.e31, other.e4125, other.e4235) * this.group0.xyz.zxy) + (float3(other.e4315, other.e45, other.e45) * this.group0.xyz.zyz) + (other.group4.xyz.xyx * this.group1.wwy) - (this.group0.xyz.yzx * other.group5.xyz.zxy) - (this.group0.xyz.yzx * other.group9.zxy) - (other.group4.xyz.zxy * this.group1.yzx) - (other.group4.xyz.zxy * this.group3.yzx), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(other.scalar) * this.group2.xyz) + (float3(this.e125, this.e235, this.e5) * other.group5.xyz.yzz) + (float3(this.e5, this.e5, this.e315) * other.group5.xyz.xyx) + (float3(other.e25, other.e3215, other.e3215) * this.group1.zyz) + (float3(other.e3215, other.e35, other.e15) * this.group1.xxy) + (this.group2.yzx * other.group9.zxy) + (this.group3.yzx * other.group3.zxy) - (float3(this.e321) * other.group3.xyz) - (float3(this.e5) * other.group9.xyz) - (float3(other.e25, other.e3215, other.e3215) * this.group3.zyz) - (float3(other.e45, other.e4125, other.e4235) * this.group2.xxy) - (float3(other.e4315, other.e45, other.e45) * this.group2.zyz) - (float3(other.e3215, other.e35, other.e15) * this.group3.xxy) - (other.group5.xyz.zxy * this.group2.yzx) - (this.group1.yzx * other.group3.zxy), 0.0), 
+            /* e423, e431, e412 */
+            (float3(this.e4) * other.group5.xyz) + (float3(this.e4) * other.group9.xyz) + (float3(other.scalar) * this.group0.xyz) + (float3(other.e1234) * this.group1.xyz) + (float3(other.e1234) * this.group3.xyz) + (float3(this.e435, this.e415, this.e2) * other.group4.xyz.yzx) + (float3(this.e3, this.e1, this.e321) * other.group4.xyz.yzz) + (float3(other.e45, other.e12, other.e23) * this.group0.xyz.xxy) + (float3(other.e31, other.e4125, other.e4235) * this.group0.xyz.zxy) + (float3(other.e4315, other.e45, other.e45) * this.group0.xyz.zyz) + (other.group4.xyz.xyx * this.group1.wwy) - (this.group0.xyz.yzx * other.group5.xyz.zxy) - (this.group0.xyz.yzx * other.group9.zxy) - (other.group4.xyz.zxy * this.group1.yzx) - (other.group4.xyz.zxy * this.group3.yzx), 
+            /* e235, e315, e125 */
+            (float3(other.scalar) * this.group2.xyz) + (float3(this.e125, this.e235, this.e5) * other.group5.xyz.yzz) + (float3(this.e5, this.e5, this.e315) * other.group5.xyz.xyx) + (float3(other.e25, other.e3215, other.e3215) * this.group1.zyz) + (float3(other.e3215, other.e35, other.e15) * this.group1.xxy) + (this.group2.yzx * other.group9.zxy) + (this.group3.yzx * other.group3.zxy) - (float3(this.e321) * other.group3.xyz) - (float3(this.e5) * other.group9.xyz) - (float3(other.e25, other.e3215, other.e3215) * this.group3.zyz) - (float3(other.e45, other.e4125, other.e4235) * this.group2.xxy) - (float3(other.e4315, other.e45, other.e45) * this.group2.zyz) - (float3(other.e3215, other.e35, other.e15) * this.group3.xxy) - (other.group5.xyz.zxy * this.group2.yzx) - (this.group1.yzx * other.group3.zxy), 
             /* e4235, e4315, e4125, e3215 */
             float4(this.e2 * other.e435 * -1.0, this.e3 * other.e415 * -1.0, this.e1 * other.e425 * -1.0, this.e125 * other.e435) + (float4(other.e2, other.e321, other.e321, other.e2) * float4(this.group1.zyz, this.e315)) + (float4(other.e5, other.e125, other.e235, this.e425) * float4(this.group0.xyz.xxy, other.e315)) + (float4(other.e321, other.e3, other.e1, other.e415) * float4(this.group1.xxy, this.e235)) + (float4(other.e315, other.e5, other.e5, this.e435) * float4(this.group0.xyz.zyz, other.e125)) + (other.group6.xyzy * float4(this.group1.www, this.e315)) + (float4(other.group0.xy.yy, other.e12345, other.e235) * float4(this.group3.xyz, this.e415)) + float4((other.group8.xyz * this.group2.www), this.e235 * other.e1) + float4((other.group7.xyz.zxy * this.group2.yzx), this.e321 * other.e5) + float4((this.group3.zxy * other.group6.yzx), this.e125 * other.e3) - (float4(this.group2.zx, this.e5, this.e2) * float4(other.group7.xyz.yzz, other.e315)) - (float4(this.group3.ww, this.e315, this.e1) * float4(other.group7.xyz.xyx, other.e235)) - float4((this.group0.xyz.yzx * other.group8.xyz.zxy), this.e5 * other.e12345) - float4((this.group1.yzx * other.group1.zxy), this.e3 * other.e125) - float4((other.group1.www * this.group2.xyz), this.e5 * other.e321), 
-            /* e1234, 0, 0, 0 */
-            float4((this.e423 * other.e415) + (this.e431 * other.e425) + (this.e412 * other.e435) + (this.e415 * other.e423) + (this.e425 * other.e431) + (this.e435 * other.e412) + (this.e4 * other.e321) + (this.e1 * other.e423) + (this.e2 * other.e431) + (this.e3 * other.e412) - (this.e423 * other.e1) - (this.e431 * other.e2) - (this.e412 * other.e3) - (this.e321 * other.e4) - (this.e4 * other.e12345), 0.0, 0.0, 0.0)
+            /* e1234 */
+            (this.e423 * other.e415) + (this.e431 * other.e425) + (this.e412 * other.e435) + (this.e415 * other.e423) + (this.e425 * other.e431) + (this.e435 * other.e412) + (this.e4 * other.e321) + (this.e1 * other.e423) + (this.e2 * other.e431) + (this.e3 * other.e412) - (this.e423 * other.e1) - (this.e431 * other.e2) - (this.e412 * other.e3) - (this.e321 * other.e4) - (this.e4 * other.e12345)
         ).geometric_product(this.reverse());
     }
 }
-extension AntiDipoleInversion: Sandwich<Plane> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Plane) -> Output {
-        return VersorEven.from_groups(
+public extension AntiDipoleInversion {
+    public VersorOdd sandwich(Plane other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(this.e431 * other.e4125 * -1.0, this.e412 * other.e4235 * -1.0, this.e423 * other.e4315 * -1.0, (this.e2 * other.e4315) + (this.e3 * other.e4125)) + (other.group0.xyzx * float4(this.group2.www, this.e1)) + (other.group0.yzxw * float4(this.group0.xyz.zxy, this.e4)), 
             /* e415, e425, e435, e321 */
@@ -711,10 +678,9 @@ extension AntiDipoleInversion: Sandwich<Plane> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiDipoleInversion: Sandwich<RoundPoint> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: RoundPoint) -> Output {
-        return VersorOdd.from_groups(
+public extension AntiDipoleInversion {
+    public VersorEven sandwich(RoundPoint other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(this.e1 * other.e4 * -1.0, this.e2 * other.e4 * -1.0, this.e3 * other.e4 * -1.0, this.e3 * other.e3) + (other.group0.xyzy * float4(this.group2.www, this.e2)) + (other.group0.yzxx * float4(this.group0.xyz.zxy, this.e1)) - (float4(other.e4) * float4(this.group1.xyz, this.e5)) - float4((this.group0.xyz.yzx * other.group0.zxy), this.e4 * other.e5), 
             /* e23, e31, e12, e45 */
@@ -726,12 +692,11 @@ extension AntiDipoleInversion: Sandwich<RoundPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiDipoleInversion: Sandwich<Scalar> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Scalar) -> Output {
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(other.scalar) * this.group0.xyz, 0.0), 
+public extension AntiDipoleInversion {
+    public VersorOdd sandwich(Scalar other) {
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(other.scalar) * this.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(other.scalar) * this.group1, 
             /* e235, e315, e125, e4 */
@@ -741,10 +706,9 @@ extension AntiDipoleInversion: Sandwich<Scalar> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiDipoleInversion: Sandwich<Sphere> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Sphere) -> Output {
-        return VersorEven.from_groups(
+public extension AntiDipoleInversion {
+    public VersorOdd sandwich(Sphere other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(this.e431 * other.e4125 * -1.0, this.e412 * other.e4235 * -1.0, this.e423 * other.e4315 * -1.0, this.e5 * other.e1234) + (this.group3.xyzz * float4(float3(other.e1234), other.e4125)) + (other.group0.xyzy * float4(this.group2.www, this.e2)) + (other.group0.yzxw * float4(this.group0.xyz.zxy, this.e4)) + float4((float3(other.e1234) * this.group1.xyz), this.e1 * other.e4235), 
             /* e415, e425, e435, e321 */
@@ -756,10 +720,9 @@ extension AntiDipoleInversion: Sandwich<Sphere> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiDipoleInversion: Sandwich<VersorEven> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: VersorEven) -> Output {
-        return VersorOdd.from_groups(
+public extension AntiDipoleInversion {
+    public VersorEven sandwich(VersorEven other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(-(this.e415 * other.e4) - (this.e435 * other.e431) - (this.e321 * other.e423) - (this.e4 * other.e415) - (this.e1 * other.e4) - (this.e3 * other.e431), -(this.e415 * other.e412) - (this.e425 * other.e4) - (this.e321 * other.e431) - (this.e4 * other.e425) - (this.e1 * other.e412) - (this.e2 * other.e4), -(this.e425 * other.e423) - (this.e435 * other.e4) - (this.e321 * other.e412) - (this.e4 * other.e435) - (this.e2 * other.e423) - (this.e3 * other.e4), (this.e235 * other.e423) + (this.e315 * other.e431) + (this.e125 * other.e412) + (this.e1 * other.e1) + (this.e2 * other.e2) + (this.e3 * other.e3)) + (float4(this.e423) * float4(other.e321, other.e3, other.e425, other.e235)) + (float4(this.e431) * float4(other.group1.zw, other.e1, other.e315)) + (float4(this.e412) * float4(other.e2, other.e415, other.e321, other.e125)) + (this.group1.yzxx * float4(other.group0.zxy, other.e415)) + float4((this.group2.www * other.group3.xyz), this.e425 * other.e425) + float4((this.group3.yzx * other.group0.zxy), this.e435 * other.e435) - (float4(other.e12345, other.e435, other.e2, other.e321) * float4(this.group0.xyz.xxx, this.e321)) - (float4(other.e425, other.e1, other.e12345, other.e4) * float4(this.group0.xyz.zzz, this.e5)) - (float4(other.e3, other.e12345, other.e415, other.e5) * float4(this.group0.xyz.yyy, this.e4)), 
             /* e23, e31, e12, e45 */
@@ -771,10 +734,9 @@ extension AntiDipoleInversion: Sandwich<VersorEven> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiDipoleInversion: Sandwich<VersorOdd> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: VersorOdd) -> Output {
-        return VersorEven.from_groups(
+public extension AntiDipoleInversion {
+    public VersorOdd sandwich(VersorOdd other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((this.e435 * other.e42) + (this.e321 * other.e41) + (this.e4 * other.e23) + (this.e4 * other.e4235) + (this.e1 * other.e1234) + (this.e3 * other.e42), (this.e425 * other.e1234) + (this.e321 * other.e42) + (this.e4 * other.e31) + (this.e4 * other.e4315) + (this.e1 * other.e43) + (this.e2 * other.e1234), (this.e435 * other.e1234) + (this.e321 * other.e43) + (this.e4 * other.e12) + (this.e4 * other.e4125) + (this.e2 * other.e41) + (this.e3 * other.e1234), -(this.e425 * other.e31) - (this.e435 * other.e12) - (this.e321 * other.e45) - (this.e235 * other.e41) - (this.e315 * other.e42) - (this.e125 * other.e43)) + (float4(other.scalar, other.e12, other.e23, other.e3215) * float4(this.group0.xyz.xxy, this.e4)) + (float4(other.e31, other.scalar, other.scalar, other.e4315) * float4(this.group0.xyz.zyz, this.e2)) + (float4(other.e45, other.e4125, other.e4235, other.e4235) * float4(this.group0.xyz.xxy, this.e1)) + (float4(other.e1234, other.e43, other.e41, other.e1234) * float4(this.group1.xxy, this.e5)) + (float4(other.e4315, other.e45, other.e45, other.e4125) * float4(this.group0.xyz.zyz, this.e3)) - float4((this.group0.xyz.yzx * other.group1.zxy), this.e423 * other.e15) - float4((this.group0.xyz.yzx * other.group3.zxy), this.e431 * other.e25) - float4((this.group1.yzx * other.group0.zxy), this.e412 * other.e35) - float4((this.group3.yzx * other.group0.zxy), this.e415 * other.e23), 
             /* e415, e425, e435, e321 */
@@ -786,16 +748,21 @@ extension AntiDipoleInversion: Sandwich<VersorOdd> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiDualNum {
-    // Fancy infix trick
-    func operator/(_rhs: SandwichInfix) -> SandwichInfixPartial<AntiDualNum> {
-        return SandwichInfixPartial { a: this };
+public extension AntiDualNum {
+    // Fancy infix trick (first half)
+    public SandwichInfixPartial<AntiDualNum> operator /(SandwichInfix rhs) {
+        return SandwichInfixPartial<AntiDualNum>(this);
     }
 }
-extension AntiDualNum: Sandwich<AntiCircleRotor> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: AntiCircleRotor) -> Output {
-        return VersorOdd.from_groups(
+public extension SandwichInfixPartial<AntiDualNum> {
+    // Fancy infix trick (second half)
+    public VersorOdd operator /(AntiCircleRotor rhs) {
+        return this.a.sandwich(rhs);
+    }
+}
+public extension AntiDualNum {
+    public VersorOdd sandwich(AntiCircleRotor other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(this.scalar) * float4(other.group0.xyz, other.scalar), 
             /* e23, e31, e12, e45 */
@@ -807,10 +774,9 @@ extension AntiDualNum: Sandwich<AntiCircleRotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiDualNum: Sandwich<AntiDipoleInversion> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiDipoleInversion) -> Output {
-        return VersorEven.from_groups(
+public extension AntiDualNum {
+    public VersorEven sandwich(AntiDipoleInversion other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(this.group0.xy.yy, this.scalar, this.e3215) * float4(other.group0.xyz, other.e4), 
             /* e415, e425, e435, e321 */
@@ -822,19 +788,17 @@ extension AntiDualNum: Sandwich<AntiDipoleInversion> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiDualNum: Sandwich<AntiDualNum> {
-    associatedtype Output = AntiDualNum;
-    func sandwich(other: AntiDualNum) -> Output {
-        return AntiDualNum.from_groups(
-            /* e3215, scalar, 0, 0 */
-            float4(float2((other.e3215 * this.scalar) + (other.scalar * this.e3215), other.scalar * this.scalar), 0.0, 0.0)
+public extension AntiDualNum {
+    public AntiDualNum sandwich(AntiDualNum other) {
+        return AntiDualNum(
+            /* e3215, scalar */
+            float2((other.e3215 * this.scalar) + (other.scalar * this.e3215), other.scalar * this.scalar)
         ).geometric_product(this.reverse());
     }
 }
-extension AntiDualNum: Sandwich<AntiFlatPoint> {
-    associatedtype Output = AntiFlector;
-    func sandwich(other: AntiFlatPoint) -> Output {
-        return AntiFlector.from_groups(
+public extension AntiDualNum {
+    public AntiFlector sandwich(AntiFlatPoint other) {
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(this.scalar) * other.group0, 
             /* e1, e2, e3, e5 */
@@ -842,10 +806,9 @@ extension AntiDualNum: Sandwich<AntiFlatPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiDualNum: Sandwich<AntiFlector> {
-    associatedtype Output = AntiFlector;
-    func sandwich(other: AntiFlector) -> Output {
-        return AntiFlector.from_groups(
+public extension AntiDualNum {
+    public AntiFlector sandwich(AntiFlector other) {
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(((float3(this.e3215) * other.group1.xyz) + (float3(this.scalar) * other.group0.xyz)), this.scalar * other.e321), 
             /* e1, e2, e3, e5 */
@@ -853,21 +816,19 @@ extension AntiDualNum: Sandwich<AntiFlector> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiDualNum: Sandwich<AntiLine> {
-    associatedtype Output = AntiLine;
-    func sandwich(other: AntiLine) -> Output {
-        return AntiLine.from_groups(
-            /* e23, e31, e12, 0 */
-            float4(float3(this.scalar) * other.group0.xyz, 0.0), 
-            /* e15, e25, e35, 0 */
-            float4((float3(this.e3215) * other.group0.xyz) + (float3(this.scalar) * other.group1.xyz), 0.0)
+public extension AntiDualNum {
+    public AntiLine sandwich(AntiLine other) {
+        return AntiLine(
+            /* e23, e31, e12 */
+            float3(this.scalar) * other.group0.xyz, 
+            /* e15, e25, e35 */
+            (float3(this.e3215) * other.group0.xyz) + (float3(this.scalar) * other.group1.xyz)
         ).geometric_product(this.reverse());
     }
 }
-extension AntiDualNum: Sandwich<AntiMotor> {
-    associatedtype Output = AntiMotor;
-    func sandwich(other: AntiMotor) -> Output {
-        return AntiMotor.from_groups(
+public extension AntiDualNum {
+    public AntiMotor sandwich(AntiMotor other) {
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(this.scalar) * other.group0, 
             /* e15, e25, e35, e3215 */
@@ -875,10 +836,9 @@ extension AntiDualNum: Sandwich<AntiMotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiDualNum: Sandwich<AntiPlane> {
-    associatedtype Output = AntiFlector;
-    func sandwich(other: AntiPlane) -> Output {
-        return AntiFlector.from_groups(
+public extension AntiDualNum {
+    public AntiFlector sandwich(AntiPlane other) {
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(this.group0.xy.xx, this.e3215, 0.0) * float4(float3(1.0), 0.0) * float4(other.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
             /* e1, e2, e3, e5 */
@@ -886,21 +846,19 @@ extension AntiDualNum: Sandwich<AntiPlane> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiDualNum: Sandwich<AntiScalar> {
-    associatedtype Output = DualNum;
-    func sandwich(other: AntiScalar) -> Output {
-        return DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(float2(other.e12345) * this.group0.xy, 0.0, 0.0)
+public extension AntiDualNum {
+    public DualNum sandwich(AntiScalar other) {
+        return DualNum(
+            /* e5, e12345 */
+            float2(other.e12345) * this.group0.xy
         ).geometric_product(this.reverse());
     }
 }
-extension AntiDualNum: Sandwich<Circle> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: Circle) -> Output {
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(this.scalar) * other.group0.xyz, 0.0), 
+public extension AntiDualNum {
+    public VersorEven sandwich(Circle other) {
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(this.scalar) * other.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(((float3(this.e3215) * other.group0.xyz) + (float3(this.scalar) * other.group1.xyz)), this.scalar * other.e321), 
             /* e235, e315, e125, e4 */
@@ -910,10 +868,9 @@ extension AntiDualNum: Sandwich<Circle> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiDualNum: Sandwich<CircleRotor> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: CircleRotor) -> Output {
-        return VersorEven.from_groups(
+public extension AntiDualNum {
+    public VersorEven sandwich(CircleRotor other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(this.scalar) * float4(other.group0.xyz, other.e12345), 
             /* e415, e425, e435, e321 */
@@ -925,12 +882,11 @@ extension AntiDualNum: Sandwich<CircleRotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiDualNum: Sandwich<Dipole> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Dipole) -> Output {
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(this.scalar) * other.group0.xyz, 0.0), 
+public extension AntiDualNum {
+    public VersorOdd sandwich(Dipole other) {
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            float3(this.scalar) * other.group0.xyz, 
             /* e23, e31, e12, e45 */
             float4(((float3(this.e3215) * other.group0.xyz) + (float3(this.scalar) * other.group1.xyz)), this.scalar * other.e45), 
             /* e15, e25, e35, e1234 */
@@ -940,10 +896,9 @@ extension AntiDualNum: Sandwich<Dipole> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiDualNum: Sandwich<DipoleInversion> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: DipoleInversion) -> Output {
-        return VersorOdd.from_groups(
+public extension AntiDualNum {
+    public VersorOdd sandwich(DipoleInversion other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(this.group0.xy.yy, this.scalar, this.e3215) * float4(other.group0.xyz, other.e1234), 
             /* e23, e31, e12, e45 */
@@ -955,19 +910,17 @@ extension AntiDualNum: Sandwich<DipoleInversion> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiDualNum: Sandwich<DualNum> {
-    associatedtype Output = DualNum;
-    func sandwich(other: DualNum) -> Output {
-        return DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(float2((this.e3215 * other.e12345) + (this.scalar * other.e5), this.scalar * other.e12345), 0.0, 0.0)
+public extension AntiDualNum {
+    public DualNum sandwich(DualNum other) {
+        return DualNum(
+            /* e5, e12345 */
+            float2((this.e3215 * other.e12345) + (this.scalar * other.e5), this.scalar * other.e12345)
         ).geometric_product(this.reverse());
     }
 }
-extension AntiDualNum: Sandwich<FlatPoint> {
-    associatedtype Output = Flector;
-    func sandwich(other: FlatPoint) -> Output {
-        return Flector.from_groups(
+public extension AntiDualNum {
+    public Flector sandwich(FlatPoint other) {
+        return Flector(
             /* e15, e25, e35, e45 */
             float4(this.scalar) * other.group0, 
             /* e4235, e4315, e4125, e3215 */
@@ -975,10 +928,9 @@ extension AntiDualNum: Sandwich<FlatPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiDualNum: Sandwich<Flector> {
-    associatedtype Output = Flector;
-    func sandwich(other: Flector) -> Output {
-        return Flector.from_groups(
+public extension AntiDualNum {
+    public Flector sandwich(Flector other) {
+        return Flector(
             /* e15, e25, e35, e45 */
             float4(((float3(this.scalar) * other.group0.xyz) - (float3(this.e3215) * other.group1.xyz)), this.scalar * other.e45), 
             /* e4235, e4315, e4125, e3215 */
@@ -986,21 +938,19 @@ extension AntiDualNum: Sandwich<Flector> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiDualNum: Sandwich<Line> {
-    associatedtype Output = Line;
-    func sandwich(other: Line) -> Output {
-        return Line.from_groups(
-            /* e415, e425, e435, 0 */
-            float4(float3(this.scalar) * other.group0.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(this.e3215) * other.group0.xyz) + (float3(this.scalar) * other.group1.xyz), 0.0)
+public extension AntiDualNum {
+    public Line sandwich(Line other) {
+        return Line(
+            /* e415, e425, e435 */
+            float3(this.scalar) * other.group0.xyz, 
+            /* e235, e315, e125 */
+            (float3(this.e3215) * other.group0.xyz) + (float3(this.scalar) * other.group1.xyz)
         ).geometric_product(this.reverse());
     }
 }
-extension AntiDualNum: Sandwich<Motor> {
-    associatedtype Output = Motor;
-    func sandwich(other: Motor) -> Output {
-        return Motor.from_groups(
+public extension AntiDualNum {
+    public Motor sandwich(Motor other) {
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4(this.scalar) * other.group0, 
             /* e235, e315, e125, e5 */
@@ -1008,39 +958,37 @@ extension AntiDualNum: Sandwich<Motor> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiDualNum: Sandwich<MultiVector> {
-    associatedtype Output = MultiVector;
-    func sandwich(other: MultiVector) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4((float2(this.e3215) * float2(other.e1234, other.e4)) + (float2(this.scalar) * other.group0.xy), 0.0, 0.0), 
+public extension AntiDualNum {
+    public MultiVector sandwich(MultiVector other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            (float2(this.e3215) * float2(other.e1234, other.e4)) + (float2(this.scalar) * other.group0.xy), 
             /* e1, e2, e3, e4 */
             float4(((float3(this.scalar) * other.group1.xyz) - (float3(this.e3215) * other.group7.xyz)), this.scalar * other.e4), 
-            /* e5, 0, 0, 0 */
-            float4((this.e3215 * other.e12345) + (this.e3215 * other.e321) + (this.scalar * other.e5), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (this.e3215 * other.e12345) + (this.e3215 * other.e321) + (this.scalar * other.e5), 
             /* e15, e25, e35, e45 */
             float4(this.e3215 * other.e4235 * -1.0, this.e3215 * other.e4315 * -1.0, this.e3215 * other.e4125 * -1.0, 0.0) + (float4(this.e3215) * float4(other.group5.xyz, other.e1234)) + (float4(this.scalar) * other.group3), 
-            /* e41, e42, e43, 0 */
-            float4(float3(this.scalar) * other.group4.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(this.e3215) * other.group4.xyz) + (float3(this.scalar) * other.group5.xyz), 0.0), 
+            /* e41, e42, e43 */
+            float3(this.scalar) * other.group4.xyz, 
+            /* e23, e31, e12 */
+            (float3(this.e3215) * other.group4.xyz) + (float3(this.scalar) * other.group5.xyz), 
             /* e415, e425, e435, e321 */
             float4(this.scalar * other.e415, this.scalar * other.e425, this.scalar * other.e435, this.e3215 * other.e4 * -1.0) + (float4(this.group0.xy.xx, this.e3215, this.scalar) * float4(other.group7.xyz, other.e321)), 
-            /* e423, e431, e412, 0 */
-            float4(float3(this.scalar) * other.group7.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(this.e3215) * other.group1.xyz) + (float3(this.e3215) * other.group6.xyz) + (float3(this.scalar) * other.group8.xyz), 0.0), 
+            /* e423, e431, e412 */
+            float3(this.scalar) * other.group7.xyz, 
+            /* e235, e315, e125 */
+            (float3(this.e3215) * other.group1.xyz) + (float3(this.e3215) * other.group6.xyz) + (float3(this.scalar) * other.group8.xyz), 
             /* e4235, e4315, e4125, e3215 */
             (float4(this.e3215) * float4(other.group4.xyz, other.scalar)) + (float4(this.scalar) * other.group9) + float4(float3(0.0), this.e3215 * other.e45 * -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(this.scalar * other.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            this.scalar * other.e1234
         ).geometric_product(this.reverse());
     }
 }
-extension AntiDualNum: Sandwich<Plane> {
-    associatedtype Output = Flector;
-    func sandwich(other: Plane) -> Output {
-        return Flector.from_groups(
+public extension AntiDualNum {
+    public Flector sandwich(Plane other) {
+        return Flector(
             /* e15, e25, e35, e45 */
             float4(this.group0.xy.xx, this.e3215, 0.0) * float4(float3(1.0), 0.0) * float4(other.group0.xyz, 0.0) * float4(-1.0, -1.0, -1.0, 0.0), 
             /* e4235, e4315, e4125, e3215 */
@@ -1048,10 +996,9 @@ extension AntiDualNum: Sandwich<Plane> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiDualNum: Sandwich<RoundPoint> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: RoundPoint) -> Output {
-        return VersorEven.from_groups(
+public extension AntiDualNum {
+    public VersorEven sandwich(RoundPoint other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(float3(0.0), this.e3215 * other.e4), 
             /* e415, e425, e435, e321 */
@@ -1063,19 +1010,17 @@ extension AntiDualNum: Sandwich<RoundPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiDualNum: Sandwich<Scalar> {
-    associatedtype Output = AntiDualNum;
-    func sandwich(other: Scalar) -> Output {
-        return AntiDualNum.from_groups(
-            /* e3215, scalar, 0, 0 */
-            float4(float2(other.scalar) * this.group0.xy, 0.0, 0.0)
+public extension AntiDualNum {
+    public AntiDualNum sandwich(Scalar other) {
+        return AntiDualNum(
+            /* e3215, scalar */
+            float2(other.scalar) * this.group0.xy
         ).geometric_product(this.reverse());
     }
 }
-extension AntiDualNum: Sandwich<Sphere> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Sphere) -> Output {
-        return VersorOdd.from_groups(
+public extension AntiDualNum {
+    public VersorOdd sandwich(Sphere other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(float3(0.0), this.e3215 * other.e1234), 
             /* e23, e31, e12, e45 */
@@ -1087,10 +1032,9 @@ extension AntiDualNum: Sandwich<Sphere> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiDualNum: Sandwich<VersorEven> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: VersorEven) -> Output {
-        return VersorEven.from_groups(
+public extension AntiDualNum {
+    public VersorEven sandwich(VersorEven other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(this.group0.xy.yy, this.scalar, (this.e3215 * other.e4) + (this.scalar * other.e12345)) * float4(other.group0.xyz, 1.0), 
             /* e415, e425, e435, e321 */
@@ -1102,10 +1046,9 @@ extension AntiDualNum: Sandwich<VersorEven> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiDualNum: Sandwich<VersorOdd> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: VersorOdd) -> Output {
-        return VersorOdd.from_groups(
+public extension AntiDualNum {
+    public VersorOdd sandwich(VersorOdd other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(this.group0.xy.yy, this.scalar, (this.e3215 * other.e1234) + (this.scalar * other.scalar)) * float4(other.group0.xyz, 1.0), 
             /* e23, e31, e12, e45 */
@@ -1117,16 +1060,21 @@ extension AntiDualNum: Sandwich<VersorOdd> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiFlatPoint {
-    // Fancy infix trick
-    func operator/(_rhs: SandwichInfix) -> SandwichInfixPartial<AntiFlatPoint> {
-        return SandwichInfixPartial { a: this };
+public extension AntiFlatPoint {
+    // Fancy infix trick (first half)
+    public SandwichInfixPartial<AntiFlatPoint> operator /(SandwichInfix rhs) {
+        return SandwichInfixPartial<AntiFlatPoint>(this);
     }
 }
-extension AntiFlatPoint: Sandwich<AntiCircleRotor> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: AntiCircleRotor) -> Output {
-        return VersorEven.from_groups(
+public extension SandwichInfixPartial<AntiFlatPoint> {
+    // Fancy infix trick (second half)
+    public VersorOdd operator /(AntiCircleRotor rhs) {
+        return this.a.sandwich(rhs);
+    }
+}
+public extension AntiFlatPoint {
+    public VersorOdd sandwich(AntiCircleRotor other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((float3(this.e321) * other.group0.xyz), -(other.e41 * this.e235) - (other.e42 * this.e315) - (other.e43 * this.e125) - (other.e45 * this.e321)), 
             /* e415, e425, e435, e321 */
@@ -1138,10 +1086,9 @@ extension AntiFlatPoint: Sandwich<AntiCircleRotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiFlatPoint: Sandwich<AntiDipoleInversion> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiDipoleInversion) -> Output {
-        return VersorOdd.from_groups(
+public extension AntiFlatPoint {
+    public VersorEven sandwich(AntiDipoleInversion other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4((float3(this.e321) * other.group0.xyz * float3(-1.0)), (other.e423 * this.e235) + (other.e431 * this.e315) + (other.e412 * this.e125) - (other.e321 * this.e321)), 
             /* e23, e31, e12, e45 */
@@ -1153,10 +1100,9 @@ extension AntiFlatPoint: Sandwich<AntiDipoleInversion> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiFlatPoint: Sandwich<AntiDualNum> {
-    associatedtype Output = AntiMotor;
-    func sandwich(other: AntiDualNum) -> Output {
-        return AntiFlector.from_groups(
+public extension AntiFlatPoint {
+    public AntiMotor sandwich(AntiDualNum other) {
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(other.scalar) * this.group0, 
             /* e1, e2, e3, e5 */
@@ -1164,10 +1110,9 @@ extension AntiFlatPoint: Sandwich<AntiDualNum> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiFlatPoint: Sandwich<AntiFlatPoint> {
-    associatedtype Output = AntiFlector;
-    func sandwich(other: AntiFlatPoint) -> Output {
-        return AntiMotor.from_groups(
+public extension AntiFlatPoint {
+    public AntiFlector sandwich(AntiFlatPoint other) {
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(float3(0.0), other.e321 * this.e321 * -1.0), 
             /* e15, e25, e35, e3215 */
@@ -1175,10 +1120,9 @@ extension AntiFlatPoint: Sandwich<AntiFlatPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiFlatPoint: Sandwich<AntiFlector> {
-    associatedtype Output = AntiFlector;
-    func sandwich(other: AntiFlector) -> Output {
-        return AntiMotor.from_groups(
+public extension AntiFlatPoint {
+    public AntiFlector sandwich(AntiFlector other) {
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(this.e321) * float4(other.group1.xyz, other.e321) * float4(-1.0), 
             /* e15, e25, e35, e3215 */
@@ -1186,10 +1130,9 @@ extension AntiFlatPoint: Sandwich<AntiFlector> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiFlatPoint: Sandwich<AntiLine> {
-    associatedtype Output = AntiMotor;
-    func sandwich(other: AntiLine) -> Output {
-        return AntiFlector.from_groups(
+public extension AntiFlatPoint {
+    public AntiMotor sandwich(AntiLine other) {
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4((other.group0.xyz.yzx * this.group0.zxy), 0.0) - float4((float3(this.e321) * other.group1.xyz), 0.0) - float4((other.group0.xyz.zxy * this.group0.yzx), 0.0), 
             /* e1, e2, e3, e5 */
@@ -1197,10 +1140,9 @@ extension AntiFlatPoint: Sandwich<AntiLine> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiFlatPoint: Sandwich<AntiMotor> {
-    associatedtype Output = AntiMotor;
-    func sandwich(other: AntiMotor) -> Output {
-        return AntiFlector.from_groups(
+public extension AntiFlatPoint {
+    public AntiMotor sandwich(AntiMotor other) {
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(((this.group0.xxy * other.group0.wzx) + (this.group0.zyz * other.group0.yww) - (float3(this.e321) * other.group1.xyz) - (this.group0.yzx * other.group0.zxy)), this.e321 * other.scalar), 
             /* e1, e2, e3, e5 */
@@ -1208,10 +1150,9 @@ extension AntiFlatPoint: Sandwich<AntiMotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiFlatPoint: Sandwich<AntiPlane> {
-    associatedtype Output = AntiFlector;
-    func sandwich(other: AntiPlane) -> Output {
-        return AntiMotor.from_groups(
+public extension AntiFlatPoint {
+    public AntiFlector sandwich(AntiPlane other) {
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(float3(1.0), 0.0) * float4(this.group0.www, 0.0) * float4(other.group0.xyz, 0.0) * float4(-1.0, -1.0, -1.0, 0.0), 
             /* e15, e25, e35, e3215 */
@@ -1219,19 +1160,17 @@ extension AntiFlatPoint: Sandwich<AntiPlane> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiFlatPoint: Sandwich<AntiScalar> {
-    associatedtype Output = Motor;
-    func sandwich(other: AntiScalar) -> Output {
-        return FlatPoint.from_groups(
+public extension AntiFlatPoint {
+    public Motor sandwich(AntiScalar other) {
+        return FlatPoint(
             /* e15, e25, e35, e45 */
             float4(other.e12345) * this.group0 * float4(-1.0, -1.0, -1.0, 1.0)
         ).geometric_product(this.reverse());
     }
 }
-extension AntiFlatPoint: Sandwich<Circle> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: Circle) -> Output {
-        return VersorOdd.from_groups(
+public extension AntiFlatPoint {
+    public VersorEven sandwich(Circle other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4((float3(this.e321) * other.group0.xyz * float3(-1.0)), (this.e235 * other.e423) + (this.e315 * other.e431) + (this.e125 * other.e412) - (this.e321 * other.e321)), 
             /* e23, e31, e12, e45 */
@@ -1243,10 +1182,9 @@ extension AntiFlatPoint: Sandwich<Circle> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiFlatPoint: Sandwich<CircleRotor> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: CircleRotor) -> Output {
-        return VersorOdd.from_groups(
+public extension AntiFlatPoint {
+    public VersorEven sandwich(CircleRotor other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4((float3(this.e321) * other.group0.xyz * float3(-1.0)), (this.e235 * other.e423) + (this.e315 * other.e431) + (this.e125 * other.e412) - (this.e321 * other.e321)), 
             /* e23, e31, e12, e45 */
@@ -1258,10 +1196,9 @@ extension AntiFlatPoint: Sandwich<CircleRotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiFlatPoint: Sandwich<Dipole> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Dipole) -> Output {
-        return VersorEven.from_groups(
+public extension AntiFlatPoint {
+    public VersorOdd sandwich(Dipole other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((float3(this.e321) * other.group0.xyz), -(this.e235 * other.e41) - (this.e315 * other.e42) - (this.e125 * other.e43) - (this.e321 * other.e45)), 
             /* e415, e425, e435, e321 */
@@ -1273,10 +1210,9 @@ extension AntiFlatPoint: Sandwich<Dipole> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiFlatPoint: Sandwich<DipoleInversion> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: DipoleInversion) -> Output {
-        return VersorEven.from_groups(
+public extension AntiFlatPoint {
+    public VersorOdd sandwich(DipoleInversion other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((float3(this.e321) * other.group0.xyz), -(this.e235 * other.e41) - (this.e315 * other.e42) - (this.e125 * other.e43) - (this.e321 * other.e45)), 
             /* e415, e425, e435, e321 */
@@ -1288,10 +1224,9 @@ extension AntiFlatPoint: Sandwich<DipoleInversion> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiFlatPoint: Sandwich<DualNum> {
-    associatedtype Output = Motor;
-    func sandwich(other: DualNum) -> Output {
-        return Flector.from_groups(
+public extension AntiFlatPoint {
+    public Motor sandwich(DualNum other) {
+        return Flector(
             /* e15, e25, e35, e45 */
             float4(other.e12345) * this.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e4235, e4315, e4125, e3215 */
@@ -1299,10 +1234,9 @@ extension AntiFlatPoint: Sandwich<DualNum> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiFlatPoint: Sandwich<FlatPoint> {
-    associatedtype Output = Flector;
-    func sandwich(other: FlatPoint) -> Output {
-        return Motor.from_groups(
+public extension AntiFlatPoint {
+    public Flector sandwich(FlatPoint other) {
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4(float3(0.0), this.e321 * other.e45 * -1.0), 
             /* e235, e315, e125, e5 */
@@ -1310,10 +1244,9 @@ extension AntiFlatPoint: Sandwich<FlatPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiFlatPoint: Sandwich<Flector> {
-    associatedtype Output = Flector;
-    func sandwich(other: Flector) -> Output {
-        return Motor.from_groups(
+public extension AntiFlatPoint {
+    public Flector sandwich(Flector other) {
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4(this.e321) * float4(other.group1.xyz, other.e45) * float4(-1.0), 
             /* e235, e315, e125, e5 */
@@ -1321,10 +1254,9 @@ extension AntiFlatPoint: Sandwich<Flector> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiFlatPoint: Sandwich<Line> {
-    associatedtype Output = Motor;
-    func sandwich(other: Line) -> Output {
-        return Flector.from_groups(
+public extension AntiFlatPoint {
+    public Motor sandwich(Line other) {
+        return Flector(
             /* e15, e25, e35, e45 */
             float4((float3(this.e321) * other.group1.xyz), 0.0) + float4((other.group0.xyz.zxy * this.group0.yzx), 0.0) - float4((other.group0.xyz.yzx * this.group0.zxy), 0.0), 
             /* e4235, e4315, e4125, e3215 */
@@ -1332,10 +1264,9 @@ extension AntiFlatPoint: Sandwich<Line> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiFlatPoint: Sandwich<Motor> {
-    associatedtype Output = Motor;
-    func sandwich(other: Motor) -> Output {
-        return Flector.from_groups(
+public extension AntiFlatPoint {
+    public Motor sandwich(Motor other) {
+        return Flector(
             /* e15, e25, e35, e45 */
             float4(((float3(this.e321) * other.group1.xyz) + (this.group0.yzx * other.group0.zxy) - (this.group0.xxy * other.group0.wzx) - (this.group0.zyz * other.group0.yww)), this.e321 * other.e12345), 
             /* e4235, e4315, e4125, e3215 */
@@ -1343,39 +1274,37 @@ extension AntiFlatPoint: Sandwich<Motor> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiFlatPoint: Sandwich<MultiVector> {
-    associatedtype Output = MultiVector;
-    func sandwich(other: MultiVector) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((this.e235 * other.e423) + (this.e315 * other.e431) + (this.e125 * other.e412), -(this.e315 * other.e42) - (this.e125 * other.e43) - (this.e321 * other.e45)) - (float2(other.e321, other.e41) * this.group0.wx), 0.0, 0.0), 
+public extension AntiFlatPoint {
+    public MultiVector sandwich(MultiVector other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((this.e235 * other.e423) + (this.e315 * other.e431) + (this.e125 * other.e412), -(this.e315 * other.e42) - (this.e125 * other.e43) - (this.e321 * other.e45)) - (float2(other.e321, other.e41) * this.group0.wx), 
             /* e1, e2, e3, e4 */
             float4(((float3(this.e321) * other.group5.xyz) + (other.group4.xyz.zxy * this.group0.yzx) - (float3(other.e1234) * this.group0.xyz) - (other.group4.xyz.yzx * this.group0.zxy)), this.e321 * other.e1234), 
-            /* e5, 0, 0, 0 */
-            float4((this.e235 * other.e4235) + (this.e315 * other.e4315) + (this.e125 * other.e4125) - (this.e235 * other.e23) - (this.e315 * other.e31) - (this.e125 * other.e12) - (this.e321 * other.e3215), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (this.e235 * other.e4235) + (this.e315 * other.e4315) + (this.e125 * other.e4125) - (this.e235 * other.e23) - (this.e315 * other.e31) - (this.e125 * other.e12) - (this.e321 * other.e3215), 
             /* e15, e25, e35, e45 */
             float4(-(this.e235 * other.e12345) - (this.e235 * other.e321) - (this.e125 * other.e2) - (this.e125 * other.e425), -(this.e235 * other.e3) - (this.e235 * other.e435) - (this.e315 * other.e12345) - (this.e315 * other.e321), -(this.e315 * other.e1) - (this.e315 * other.e415) - (this.e125 * other.e12345) - (this.e125 * other.e321), this.e125 * other.e412) + (float4(this.e321) * float4(other.group8.xyz, other.e12345)) + float4((this.group0.yzx * other.group1.zxy), this.e235 * other.e423) + float4((this.group0.yzx * other.group6.zxy), this.e315 * other.e431), 
-            /* e41, e42, e43, 0 */
-            float4(float3(this.e321) * other.group7.xyz * float3(-1.0), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((other.group7.xyz.zxy * this.group0.yzx) - (float3(this.e321) * other.group1.xyz) - (float3(other.e4) * this.group0.xyz) - (other.group7.xyz.yzx * this.group0.zxy), 0.0), 
+            /* e41, e42, e43 */
+            float3(this.e321) * other.group7.xyz * float3(-1.0), 
+            /* e23, e31, e12 */
+            (other.group7.xyz.zxy * this.group0.yzx) - (float3(this.e321) * other.group1.xyz) - (float3(other.e4) * this.group0.xyz) - (other.group7.xyz.yzx * this.group0.zxy), 
             /* e415, e425, e435, e321 */
             float4(-(this.e315 * other.e43) - (this.e321 * other.e4235), -(this.e125 * other.e41) - (this.e321 * other.e4315), -(this.e235 * other.e42) - (this.e321 * other.e4125), (this.e315 * other.e42) + (this.e125 * other.e43)) + (this.group0.zxyw * float4(other.group4.xyz.yzx, other.scalar)) + float4((float3(other.e1234) * this.group0.xyz), this.e235 * other.e41), 
-            /* e423, e431, e412, 0 */
-            float4(float3(this.e321) * other.group4.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(other.scalar) * this.group0.xyz) + (other.group5.xyz.yzx * this.group0.zxy) + (this.group0.yzx * other.group9.zxy) - (float3(this.e321) * other.group3.xyz) - (float3(other.e45, other.e4125, other.e4235) * this.group0.xxy) - (float3(other.e4315, other.e45, other.e45) * this.group0.zyz) - (other.group5.xyz.zxy * this.group0.yzx), 0.0), 
+            /* e423, e431, e412 */
+            float3(this.e321) * other.group4.xyz, 
+            /* e235, e315, e125 */
+            (float3(other.scalar) * this.group0.xyz) + (other.group5.xyz.yzx * this.group0.zxy) + (this.group0.yzx * other.group9.zxy) - (float3(this.e321) * other.group3.xyz) - (float3(other.e45, other.e4125, other.e4235) * this.group0.xxy) - (float3(other.e4315, other.e45, other.e45) * this.group0.zyz) - (other.group5.xyz.zxy * this.group0.yzx), 
             /* e4235, e4315, e4125, e3215 */
             float4(-(this.e235 * other.e4) - (this.e125 * other.e431), -(this.e235 * other.e412) - (this.e315 * other.e4), -(this.e315 * other.e423) - (this.e125 * other.e4), (this.e315 * other.e2) + (this.e315 * other.e425) + (this.e125 * other.e3) + (this.e125 * other.e435) + (this.e321 * other.e5)) + (this.group0.wwwx * other.group6.xyzx) + float4((other.group7.xyz.zxy * this.group0.yzx), this.e235 * other.e1), 
-            /* e1234, 0, 0, 0 */
-            float4(this.e321 * other.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            this.e321 * other.e4 * -1.0
         ).geometric_product(this.reverse());
     }
 }
-extension AntiFlatPoint: Sandwich<Plane> {
-    associatedtype Output = Flector;
-    func sandwich(other: Plane) -> Output {
-        return Motor.from_groups(
+public extension AntiFlatPoint {
+    public Flector sandwich(Plane other) {
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4(float3(1.0), 0.0) * float4(this.group0.www, 0.0) * float4(other.group0.xyz, 0.0) * float4(-1.0, -1.0, -1.0, 0.0), 
             /* e235, e315, e125, e5 */
@@ -1383,12 +1312,11 @@ extension AntiFlatPoint: Sandwich<Plane> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiFlatPoint: Sandwich<RoundPoint> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: RoundPoint) -> Output {
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
+public extension AntiFlatPoint {
+    public VersorEven sandwich(RoundPoint other) {
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            float3(0.0), 
             /* e23, e31, e12, e45 */
             float4((-(float3(this.e321) * other.group0.xyz) - (float3(other.e4) * this.group0.xyz)), 0.0), 
             /* e15, e25, e35, e1234 */
@@ -1398,21 +1326,19 @@ extension AntiFlatPoint: Sandwich<RoundPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiFlatPoint: Sandwich<Scalar> {
-    associatedtype Output = AntiMotor;
-    func sandwich(other: Scalar) -> Output {
-        return AntiFlatPoint.from_groups(
+public extension AntiFlatPoint {
+    public AntiMotor sandwich(Scalar other) {
+        return AntiFlatPoint(
             /* e235, e315, e125, e321 */
             float4(other.scalar) * this.group0
         ).geometric_product(this.reverse());
     }
 }
-extension AntiFlatPoint: Sandwich<Sphere> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Sphere) -> Output {
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
+public extension AntiFlatPoint {
+    public VersorOdd sandwich(Sphere other) {
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(((float3(other.e1234) * this.group0.xyz) - (float3(this.e321) * other.group0.xyz)), 0.0), 
             /* e235, e315, e125, e4 */
@@ -1422,10 +1348,9 @@ extension AntiFlatPoint: Sandwich<Sphere> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiFlatPoint: Sandwich<VersorEven> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: VersorEven) -> Output {
-        return VersorOdd.from_groups(
+public extension AntiFlatPoint {
+    public VersorEven sandwich(VersorEven other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4((this.group0.www * other.group0.xyz * float3(-1.0)), (this.e235 * other.e423) + (this.e315 * other.e431) + (this.e125 * other.e412) - (this.e321 * other.e321)), 
             /* e23, e31, e12, e45 */
@@ -1437,10 +1362,9 @@ extension AntiFlatPoint: Sandwich<VersorEven> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiFlatPoint: Sandwich<VersorOdd> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: VersorOdd) -> Output {
-        return VersorEven.from_groups(
+public extension AntiFlatPoint {
+    public VersorOdd sandwich(VersorOdd other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((this.group0.www * other.group0.xyz), -(this.e235 * other.e41) - (this.e315 * other.e42) - (this.e125 * other.e43) - (this.e321 * other.e45)), 
             /* e415, e425, e435, e321 */
@@ -1452,16 +1376,21 @@ extension AntiFlatPoint: Sandwich<VersorOdd> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiFlector {
-    // Fancy infix trick
-    func operator/(_rhs: SandwichInfix) -> SandwichInfixPartial<AntiFlector> {
-        return SandwichInfixPartial { a: this };
+public extension AntiFlector {
+    // Fancy infix trick (first half)
+    public SandwichInfixPartial<AntiFlector> operator /(SandwichInfix rhs) {
+        return SandwichInfixPartial<AntiFlector>(this);
     }
 }
-extension AntiFlector: Sandwich<AntiCircleRotor> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: AntiCircleRotor) -> Output {
-        return VersorEven.from_groups(
+public extension SandwichInfixPartial<AntiFlector> {
+    // Fancy infix trick (second half)
+    public VersorOdd operator /(AntiCircleRotor rhs) {
+        return this.a.sandwich(rhs);
+    }
+}
+public extension AntiFlector {
+    public VersorOdd sandwich(AntiCircleRotor other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((other.e41 * this.e321) + (other.e42 * this.e3), (other.e42 * this.e321) + (other.e43 * this.e1), (other.e41 * this.e2) + (other.e43 * this.e321), -(other.e42 * this.e315) - (other.e43 * this.e125) - (other.e45 * this.e321)) - float4((other.group0.xyz.zxy * this.group1.yzx), other.e41 * this.e235), 
             /* e415, e425, e435, e321 */
@@ -1473,10 +1402,9 @@ extension AntiFlector: Sandwich<AntiCircleRotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiFlector: Sandwich<AntiDipoleInversion> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiDipoleInversion) -> Output {
-        return VersorOdd.from_groups(
+public extension AntiFlector {
+    public VersorEven sandwich(AntiDipoleInversion other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(other.e4 * this.e1 * -1.0, other.e4 * this.e2 * -1.0, other.e4 * this.e3 * -1.0, (other.e431 * this.e315) + (other.e412 * this.e125) + (other.e1 * this.e1) + (other.e2 * this.e2) + (other.e3 * this.e3)) + float4((other.group0.xyz.zxy * this.group1.yzx), other.e423 * this.e235) - (float4(this.group0.ww, this.e2, this.e321) * float4(other.group0.xyz.xyx, other.e321)) - (float4(this.group1.zx, this.e321, this.e5) * float4(other.group0.xyz.yzz, other.e4)), 
             /* e23, e31, e12, e45 */
@@ -1488,10 +1416,9 @@ extension AntiFlector: Sandwich<AntiDipoleInversion> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiFlector: Sandwich<AntiDualNum> {
-    associatedtype Output = AntiMotor;
-    func sandwich(other: AntiDualNum) -> Output {
-        return AntiFlector.from_groups(
+public extension AntiFlector {
+    public AntiMotor sandwich(AntiDualNum other) {
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(((float3(other.scalar) * this.group0.xyz) - (float3(other.e3215) * this.group1.xyz)), other.scalar * this.e321), 
             /* e1, e2, e3, e5 */
@@ -1499,10 +1426,9 @@ extension AntiFlector: Sandwich<AntiDualNum> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiFlector: Sandwich<AntiFlatPoint> {
-    associatedtype Output = AntiFlector;
-    func sandwich(other: AntiFlatPoint) -> Output {
-        return AntiMotor.from_groups(
+public extension AntiFlector {
+    public AntiFlector sandwich(AntiFlatPoint other) {
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(other.e321) * float4(this.group1.xyz, this.e321) * float4(-1.0), 
             /* e15, e25, e35, e3215 */
@@ -1510,10 +1436,9 @@ extension AntiFlector: Sandwich<AntiFlatPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiFlector: Sandwich<AntiFlector> {
-    associatedtype Output = AntiFlector;
-    func sandwich(other: AntiFlector) -> Output {
-        return AntiMotor.from_groups(
+public extension AntiFlector {
+    public AntiFlector sandwich(AntiFlector other) {
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(-(other.e1 * this.e321) - (other.e2 * this.e3), -(other.e2 * this.e321) - (other.e3 * this.e1), -(other.e1 * this.e2) - (other.e3 * this.e321), (other.e2 * this.e2) + (other.e3 * this.e3)) + (other.group1.zxyx * this.group1.yzxx) - (float4(other.e321) * float4(this.group1.xyz, this.e321)), 
             /* e15, e25, e35, e3215 */
@@ -1521,10 +1446,9 @@ extension AntiFlector: Sandwich<AntiFlector> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiFlector: Sandwich<AntiLine> {
-    associatedtype Output = AntiMotor;
-    func sandwich(other: AntiLine) -> Output {
-        return AntiFlector.from_groups(
+public extension AntiFlector {
+    public AntiMotor sandwich(AntiLine other) {
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4((this.e125 * other.e31) + (this.e2 * other.e35) + (this.e5 * other.e23), (this.e235 * other.e12) + (this.e3 * other.e15) + (this.e5 * other.e31), (this.e315 * other.e23) + (this.e1 * other.e25) + (this.e5 * other.e12), 0.0) - (float4(this.group0.ww, this.e2, this.e2) * float4(other.group1.xyz.xyx, other.e31)) - (float4(this.group1.zx, this.e321, this.e3) * float4(other.group1.xyz.yzz, other.e12)) - float4((other.group0.xyz.zxy * this.group0.yzx), this.e1 * other.e23), 
             /* e1, e2, e3, e5 */
@@ -1532,10 +1456,9 @@ extension AntiFlector: Sandwich<AntiLine> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiFlector: Sandwich<AntiMotor> {
-    associatedtype Output = AntiMotor;
-    func sandwich(other: AntiMotor) -> Output {
-        return AntiFlector.from_groups(
+public extension AntiFlector {
+    public AntiMotor sandwich(AntiMotor other) {
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4((this.e125 * other.e31) + (this.e2 * other.e35) + (this.e5 * other.e23) - (this.e3 * other.e25), (this.e315 * other.scalar) + (this.e3 * other.e15) + (this.e5 * other.e31) - (this.e2 * other.e3215), (this.e125 * other.scalar) + (this.e1 * other.e25) + (this.e5 * other.e12) - (this.e3 * other.e3215), 0.0) + (this.group0.xxyw * other.group0.wzxw) - (this.group1.xxyz * float4(other.group1.wzx, other.e12)) - (other.group0.zxyx * float4(this.group0.yzx, this.e1)) - float4((this.group0.www * other.group1.xyz), this.e2 * other.e31), 
             /* e1, e2, e3, e5 */
@@ -1543,10 +1466,9 @@ extension AntiFlector: Sandwich<AntiMotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiFlector: Sandwich<AntiPlane> {
-    associatedtype Output = AntiFlector;
-    func sandwich(other: AntiPlane) -> Output {
-        return AntiMotor.from_groups(
+public extension AntiFlector {
+    public AntiFlector sandwich(AntiPlane other) {
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(-(this.e321 * other.e1) - (this.e3 * other.e2), -(this.e321 * other.e2) - (this.e1 * other.e3), -(this.e321 * other.e3) - (this.e2 * other.e1), (this.e2 * other.e2) + (this.e3 * other.e3)) + (this.group1.yzxx * other.group0.zxyx), 
             /* e15, e25, e35, e3215 */
@@ -1554,10 +1476,9 @@ extension AntiFlector: Sandwich<AntiPlane> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiFlector: Sandwich<AntiScalar> {
-    associatedtype Output = Motor;
-    func sandwich(other: AntiScalar) -> Output {
-        return Flector.from_groups(
+public extension AntiFlector {
+    public Motor sandwich(AntiScalar other) {
+        return Flector(
             /* e15, e25, e35, e45 */
             float4(other.e12345) * this.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e4235, e4315, e4125, e3215 */
@@ -1565,10 +1486,9 @@ extension AntiFlector: Sandwich<AntiScalar> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiFlector: Sandwich<Circle> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: Circle) -> Output {
-        return VersorOdd.from_groups(
+public extension AntiFlector {
+    public VersorEven sandwich(Circle other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(this.e3 * other.e431 * -1.0, this.e1 * other.e412 * -1.0, this.e321 * other.e412 * -1.0, (this.e315 * other.e431) + (this.e125 * other.e412)) + float4((other.group0.xyz.zxy * this.group1.yzx), this.e235 * other.e423) - (float4(this.group0.ww, this.e2, other.e321) * float4(other.group0.xyz.xyx, this.e321)), 
             /* e23, e31, e12, e45 */
@@ -1580,10 +1500,9 @@ extension AntiFlector: Sandwich<Circle> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiFlector: Sandwich<CircleRotor> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: CircleRotor) -> Output {
-        return VersorOdd.from_groups(
+public extension AntiFlector {
+    public VersorEven sandwich(CircleRotor other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(this.e3 * other.e431 * -1.0, this.e1 * other.e412 * -1.0, this.e321 * other.e412 * -1.0, (this.e315 * other.e431) + (this.e125 * other.e412)) + float4((other.group0.xyz.zxy * this.group1.yzx), this.e235 * other.e423) - (float4(this.group0.ww, this.e2, other.e321) * float4(other.group0.xyz.xyx, this.e321)), 
             /* e23, e31, e12, e45 */
@@ -1595,10 +1514,9 @@ extension AntiFlector: Sandwich<CircleRotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiFlector: Sandwich<Dipole> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Dipole) -> Output {
-        return VersorEven.from_groups(
+public extension AntiFlector {
+    public VersorOdd sandwich(Dipole other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((this.e321 * other.e41) + (this.e3 * other.e42), (this.e321 * other.e42) + (this.e1 * other.e43), (this.e321 * other.e43) + (this.e2 * other.e41), -(this.e315 * other.e42) - (this.e125 * other.e43) - (this.e321 * other.e45)) - float4((other.group0.xyz.zxy * this.group1.yzx), this.e235 * other.e41), 
             /* e415, e425, e435, e321 */
@@ -1610,10 +1528,9 @@ extension AntiFlector: Sandwich<Dipole> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiFlector: Sandwich<DipoleInversion> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: DipoleInversion) -> Output {
-        return VersorEven.from_groups(
+public extension AntiFlector {
+    public VersorOdd sandwich(DipoleInversion other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             (this.group1.xyzz * float4(other.group2.www, other.e4125)) + (float4(this.group0.ww, this.e2, other.e4235) * float4(other.group0.xyz.xyx, this.e1)) + (float4(this.group1.zx, this.e321, other.e4315) * float4(other.group0.xyz.yzz, this.e2)) + float4(float3(0.0), (this.e5 * other.e1234) - (this.e315 * other.e42) - (this.e125 * other.e43) - (this.e321 * other.e45)) - float4((other.group0.xyz.zxy * this.group1.yzx), this.e235 * other.e41), 
             /* e415, e425, e435, e321 */
@@ -1625,10 +1542,9 @@ extension AntiFlector: Sandwich<DipoleInversion> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiFlector: Sandwich<DualNum> {
-    associatedtype Output = Motor;
-    func sandwich(other: DualNum) -> Output {
-        return Flector.from_groups(
+public extension AntiFlector {
+    public Motor sandwich(DualNum other) {
+        return Flector(
             /* e15, e25, e35, e45 */
             float4(((float3(other.e5) * this.group1.xyz) - (float3(other.e12345) * this.group0.xyz)), this.e321 * other.e12345), 
             /* e4235, e4315, e4125, e3215 */
@@ -1636,10 +1552,9 @@ extension AntiFlector: Sandwich<DualNum> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiFlector: Sandwich<FlatPoint> {
-    associatedtype Output = Flector;
-    func sandwich(other: FlatPoint) -> Output {
-        return Motor.from_groups(
+public extension AntiFlector {
+    public Flector sandwich(FlatPoint other) {
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4(other.e45) * float4(this.group1.xyz, this.e321) * float4(-1.0), 
             /* e235, e315, e125, e5 */
@@ -1647,10 +1562,9 @@ extension AntiFlector: Sandwich<FlatPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiFlector: Sandwich<Flector> {
-    associatedtype Output = Flector;
-    func sandwich(other: Flector) -> Output {
-        return Motor.from_groups(
+public extension AntiFlector {
+    public Flector sandwich(Flector other) {
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4(-(this.e1 * other.e45) - (this.e3 * other.e4315), -(this.e1 * other.e4125) - (this.e2 * other.e45), -(this.e2 * other.e4235) - (this.e3 * other.e45), (this.e2 * other.e4315) + (this.e3 * other.e4125)) + (this.group1.yzxx * other.group1.zxyx) - (float4(this.e321) * float4(other.group1.xyz, other.e45)), 
             /* e235, e315, e125, e5 */
@@ -1658,10 +1572,9 @@ extension AntiFlector: Sandwich<Flector> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiFlector: Sandwich<Line> {
-    associatedtype Output = Motor;
-    func sandwich(other: Line) -> Output {
-        return Flector.from_groups(
+public extension AntiFlector {
+    public Motor sandwich(Line other) {
+        return Flector(
             /* e15, e25, e35, e45 */
             float4((this.e315 * other.e435) + (this.e321 * other.e235) + (this.e3 * other.e315), (this.e125 * other.e415) + (this.e321 * other.e315) + (this.e1 * other.e125), (this.e235 * other.e425) + (this.e321 * other.e125) + (this.e2 * other.e235), 0.0) - (this.group1.yzxz * float4(other.group1.xyz.zxy, other.e435)) - (float4(this.group0.zx, this.e5, this.e2) * float4(other.group0.xyz.yzz, other.e425)) - (float4(this.group1.ww, this.e315, this.e1) * float4(other.group0.xyz.xyx, other.e415)), 
             /* e4235, e4315, e4125, e3215 */
@@ -1669,10 +1582,9 @@ extension AntiFlector: Sandwich<Line> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiFlector: Sandwich<Motor> {
-    associatedtype Output = Motor;
-    func sandwich(other: Motor) -> Output {
-        return Flector.from_groups(
+public extension AntiFlector {
+    public Motor sandwich(Motor other) {
+        return Flector(
             /* e15, e25, e35, e45 */
             float4((this.e321 * other.e235) + (this.e1 * other.e5) + (this.e3 * other.e315) - (this.e5 * other.e415), (this.e321 * other.e315) + (this.e1 * other.e125) + (this.e2 * other.e5) - (this.e5 * other.e425), (this.e321 * other.e125) + (this.e2 * other.e235) + (this.e3 * other.e5) - (this.e5 * other.e435), 0.0) + (this.group0.yzxw * other.group0.zxyw) - (this.group1.yzxz * float4(other.group1.zxy, other.e435)) - (other.group0.ywwy * float4(this.group0.zyz, this.e2)) - (other.group0.wzxx * float4(this.group0.xxy, this.e1)), 
             /* e4235, e4315, e4125, e3215 */
@@ -1680,39 +1592,37 @@ extension AntiFlector: Sandwich<Motor> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiFlector: Sandwich<MultiVector> {
-    associatedtype Output = MultiVector;
-    func sandwich(other: MultiVector) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((this.e235 * other.e423) + (this.e315 * other.e431) + (this.e125 * other.e412) - (this.e5 * other.e4), (this.e5 * other.e1234) - (this.e315 * other.e42) - (this.e125 * other.e43) - (this.e321 * other.e45)) + (float2(this.e1) * float2(other.e1, other.e4235)) + (float2(this.e2) * float2(other.e2, other.e4315)) + (float2(this.e3) * float2(other.e3, other.e4125)) - (float2(other.e321, other.e41) * this.group0.wx), 0.0, 0.0), 
+public extension AntiFlector {
+    public MultiVector sandwich(MultiVector other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((this.e235 * other.e423) + (this.e315 * other.e431) + (this.e125 * other.e412) - (this.e5 * other.e4), (this.e5 * other.e1234) - (this.e315 * other.e42) - (this.e125 * other.e43) - (this.e321 * other.e45)) + (float2(this.e1) * float2(other.e1, other.e4235)) + (float2(this.e2) * float2(other.e2, other.e4315)) + (float2(this.e3) * float2(other.e3, other.e4125)) - (float2(other.e321, other.e41) * this.group0.wx), 
             /* e1, e2, e3, e4 */
             float4((this.e315 * other.e43) + (this.e321 * other.e23) + (this.e3 * other.e31) - (this.e235 * other.e1234), (this.e125 * other.e41) + (this.e321 * other.e31) + (this.e1 * other.e12) - (this.e315 * other.e1234), (this.e235 * other.e42) + (this.e321 * other.e12) + (this.e2 * other.e23) - (this.e125 * other.e1234), 0.0) + (float4(other.group0.xy.xx, other.scalar, this.e321) * float4(this.group1.xyz, other.e1234)) - (this.group1.yzxz * float4(other.group5.xyz.zxy, other.e43)) - (float4(this.group0.zx, this.e5, this.e2) * float4(other.group4.xyz.yzz, other.e42)) - (float4(this.group1.ww, this.e315, this.e1) * float4(other.group4.xyz.xyx, other.e41)), 
-            /* e5, 0, 0, 0 */
-            float4((this.e235 * other.e4235) + (this.e315 * other.e4315) + (this.e125 * other.e4125) + (this.e1 * other.e15) + (this.e2 * other.e25) + (this.e3 * other.e35) + (this.e5 * other.scalar) - (this.e235 * other.e23) - (this.e315 * other.e31) - (this.e125 * other.e12) - (this.e321 * other.e3215) - (this.e5 * other.e45), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (this.e235 * other.e4235) + (this.e315 * other.e4315) + (this.e125 * other.e4125) + (this.e1 * other.e15) + (this.e2 * other.e25) + (this.e3 * other.e35) + (this.e5 * other.scalar) - (this.e235 * other.e23) - (this.e315 * other.e31) - (this.e125 * other.e12) - (this.e321 * other.e3215) - (this.e5 * other.e45), 
             /* e15, e25, e35, e45 */
             float4((this.e1 * other.e5) - (this.e125 * other.e425) - (this.e5 * other.e1) - (this.e5 * other.e415), (this.e2 * other.e5) - (this.e315 * other.e321) - (this.e5 * other.e2) - (this.e5 * other.e425), (this.e3 * other.e5) - (this.e125 * other.e321) - (this.e5 * other.e3) - (this.e5 * other.e435), 0.0) + (float4(this.group0.ww, this.e2, this.e321) * float4(other.group8.xyz.xyx, other.e12345)) + (float4(this.group1.zx, this.e321, this.e235) * float4(other.group8.xyz.yzz, other.e423)) + float4((this.group0.yzx * other.group1.zxy), this.e315 * other.e431) + float4((this.group0.yzx * other.group6.zxy), this.e125 * other.e412) - (float4(other.e2, other.e435, other.e415, other.e4) * float4(this.group0.zxy, this.e5)) - (float4(other.e321, other.e3, other.e1, other.e435) * float4(this.group0.xxy, this.e3)) - (float4(other.group0.xy.yy, other.e12345, this.e1) * float4(this.group0.xyz, other.e415)) - float4((other.group8.xyz.zxy * this.group1.yzx), this.e2 * other.e425), 
-            /* e41, e42, e43, 0 */
-            float4((other.group7.xyz.zxy * this.group1.yzx) - (float3(other.e4) * this.group1.xyz) - (float3(this.e321, this.e321, this.e2) * other.group7.xyz.xyx) - (float3(this.e3, this.e1, this.e321) * other.group7.xyz.yzz), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((other.group7.xyz.zxy * this.group0.yzx) + (this.group1.yzx * other.group1.zxy) - (float3(this.e321) * other.group1.xyz) - (float3(other.e4) * this.group0.xyz) - (float3(this.e125, this.e235, this.e5) * other.group7.xyz.yzz) - (float3(this.e5, this.e5, this.e315) * other.group7.xyz.xyx) - (float3(other.e2, other.e321, other.e321) * this.group1.zyz) - (float3(other.e321, other.e3, other.e1) * this.group1.xxy), 0.0), 
+            /* e41, e42, e43 */
+            (other.group7.xyz.zxy * this.group1.yzx) - (float3(other.e4) * this.group1.xyz) - (float3(this.e321, this.e321, this.e2) * other.group7.xyz.xyx) - (float3(this.e3, this.e1, this.e321) * other.group7.xyz.yzz), 
+            /* e23, e31, e12 */
+            (other.group7.xyz.zxy * this.group0.yzx) + (this.group1.yzx * other.group1.zxy) - (float3(this.e321) * other.group1.xyz) - (float3(other.e4) * this.group0.xyz) - (float3(this.e125, this.e235, this.e5) * other.group7.xyz.yzz) - (float3(this.e5, this.e5, this.e315) * other.group7.xyz.xyx) - (float3(other.e2, other.e321, other.e321) * this.group1.zyz) - (float3(other.e321, other.e3, other.e1) * this.group1.xxy), 
             /* e415, e425, e435, e321 */
             (float4(this.group0.zx, this.e5, this.e235) * float4(other.group4.xyz.yzz, other.e41)) + (float4(this.group1.ww, this.e315, this.e321) * float4(other.group4.xyz.xyx, other.scalar)) + float4((float3(other.e1234) * this.group0.xyz), this.e315 * other.e42) + float4((this.group1.yzx * other.group9.zxy), this.e125 * other.e43) - (float4(other.e45, other.e4125, other.e4235, this.e3) * float4(this.group1.xxy, other.e12)) - (float4(other.e4315, other.e45, other.e45, other.e1234) * this.group1.zyzw) - float4((other.group4.xyz.zxy * this.group0.yzx), this.e1 * other.e23) - float4((this.group0.www * other.group9.xyz), this.e2 * other.e31), 
-            /* e423, e431, e412, 0 */
-            float4((float3(other.e1234) * this.group1.xyz) + (float3(this.e321, this.e321, this.e2) * other.group4.xyz.xyx) + (float3(this.e3, this.e1, this.e321) * other.group4.xyz.yzz) - (other.group4.xyz.zxy * this.group1.yzx), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(other.scalar) * this.group0.xyz) + (float3(this.e125, this.e235, this.e5) * other.group5.xyz.yzz) + (float3(this.e5, this.e5, this.e315) * other.group5.xyz.xyx) + (this.group0.yzx * other.group9.zxy) + (this.group1.yzx * other.group3.zxy) - (float3(this.e321) * other.group3.xyz) - (float3(this.e5) * other.group9.xyz) - (float3(other.e25, other.e3215, other.e3215) * this.group1.zyz) - (float3(other.e45, other.e4125, other.e4235) * this.group0.xxy) - (float3(other.e4315, other.e45, other.e45) * this.group0.zyz) - (float3(other.e3215, other.e35, other.e15) * this.group1.xxy) - (other.group5.xyz.zxy * this.group0.yzx), 0.0), 
+            /* e423, e431, e412 */
+            (float3(other.e1234) * this.group1.xyz) + (float3(this.e321, this.e321, this.e2) * other.group4.xyz.xyx) + (float3(this.e3, this.e1, this.e321) * other.group4.xyz.yzz) - (other.group4.xyz.zxy * this.group1.yzx), 
+            /* e235, e315, e125 */
+            (float3(other.scalar) * this.group0.xyz) + (float3(this.e125, this.e235, this.e5) * other.group5.xyz.yzz) + (float3(this.e5, this.e5, this.e315) * other.group5.xyz.xyx) + (this.group0.yzx * other.group9.zxy) + (this.group1.yzx * other.group3.zxy) - (float3(this.e321) * other.group3.xyz) - (float3(this.e5) * other.group9.xyz) - (float3(other.e25, other.e3215, other.e3215) * this.group1.zyz) - (float3(other.e45, other.e4125, other.e4235) * this.group0.xxy) - (float3(other.e4315, other.e45, other.e45) * this.group0.zyz) - (float3(other.e3215, other.e35, other.e15) * this.group1.xxy) - (other.group5.xyz.zxy * this.group0.yzx), 
             /* e4235, e4315, e4125, e3215 */
             (this.group0.wwwy * float4(other.group6.xyz, other.e2)) + (other.group6.yzxy * float4(this.group1.zxy, this.e315)) + (float4(other.group0.xy.yy, other.e12345, this.e235) * float4(this.group1.xyz, other.e1)) + float4(float3(0.0), (this.e125 * other.e3) + (this.e125 * other.e435) + (this.e321 * other.e5) - (this.e5 * other.e321)) + float4((other.group7.xyz.zxy * this.group0.yzx), this.e235 * other.e415) - (float4(this.group0.zx, this.e5, this.e1) * float4(other.group7.xyz.yzz, other.e235)) - (float4(this.group1.ww, this.e315, this.e5) * float4(other.group7.xyz.xyx, other.e12345)) - float4((this.group1.yzx * other.group6.zxy), this.e3 * other.e125) - float4((other.group1.www * this.group0.xyz), this.e2 * other.e315), 
-            /* e1234, 0, 0, 0 */
-            float4((this.e1 * other.e423) + (this.e2 * other.e431) + (this.e3 * other.e412) - (this.e321 * other.e4), 0.0, 0.0, 0.0)
+            /* e1234 */
+            (this.e1 * other.e423) + (this.e2 * other.e431) + (this.e3 * other.e412) - (this.e321 * other.e4)
         ).geometric_product(this.reverse());
     }
 }
-extension AntiFlector: Sandwich<Plane> {
-    associatedtype Output = Flector;
-    func sandwich(other: Plane) -> Output {
-        return Motor.from_groups(
+public extension AntiFlector {
+    public Flector sandwich(Plane other) {
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4(-(this.e321 * other.e4235) - (this.e3 * other.e4315), -(this.e321 * other.e4315) - (this.e1 * other.e4125), -(this.e321 * other.e4125) - (this.e2 * other.e4235), (this.e2 * other.e4315) + (this.e3 * other.e4125)) + (this.group1.yzxx * other.group0.zxyx), 
             /* e235, e315, e125, e5 */
@@ -1720,10 +1630,9 @@ extension AntiFlector: Sandwich<Plane> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiFlector: Sandwich<RoundPoint> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: RoundPoint) -> Output {
-        return VersorOdd.from_groups(
+public extension AntiFlector {
+    public VersorEven sandwich(RoundPoint other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4((float3(other.e4) * this.group1.xyz * float3(-1.0)), (this.e1 * other.e1) + (this.e2 * other.e2) + (this.e3 * other.e3) - (this.e5 * other.e4)), 
             /* e23, e31, e12, e45 */
@@ -1735,10 +1644,9 @@ extension AntiFlector: Sandwich<RoundPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiFlector: Sandwich<Scalar> {
-    associatedtype Output = AntiMotor;
-    func sandwich(other: Scalar) -> Output {
-        return AntiFlector.from_groups(
+public extension AntiFlector {
+    public AntiMotor sandwich(Scalar other) {
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(other.scalar) * this.group0, 
             /* e1, e2, e3, e5 */
@@ -1746,10 +1654,9 @@ extension AntiFlector: Sandwich<Scalar> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiFlector: Sandwich<Sphere> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Sphere) -> Output {
-        return VersorEven.from_groups(
+public extension AntiFlector {
+    public VersorOdd sandwich(Sphere other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((float3(other.e1234) * this.group1.xyz), (this.e1 * other.e4235) + (this.e2 * other.e4315) + (this.e3 * other.e4125) + (this.e5 * other.e1234)), 
             /* e415, e425, e435, e321 */
@@ -1761,10 +1668,9 @@ extension AntiFlector: Sandwich<Sphere> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiFlector: Sandwich<VersorEven> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: VersorEven) -> Output {
-        return VersorOdd.from_groups(
+public extension AntiFlector {
+    public VersorEven sandwich(VersorEven other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(this.e3 * other.e431 * -1.0, this.e2 * other.e4 * -1.0, this.e3 * other.e4 * -1.0, (this.e315 * other.e431) + (this.e125 * other.e412) + (this.e1 * other.e1) + (this.e2 * other.e2) + (this.e3 * other.e3)) + (other.group0.zxyx * float4(this.group1.yzx, this.e235)) - (float4(this.e321) * float4(other.group0.xyz, other.e321)) - (float4(other.e4, other.e412, other.e423, other.e4) * this.group1.xxyw), 
             /* e23, e31, e12, e45 */
@@ -1776,10 +1682,9 @@ extension AntiFlector: Sandwich<VersorEven> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiFlector: Sandwich<VersorOdd> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: VersorOdd) -> Output {
-        return VersorEven.from_groups(
+public extension AntiFlector {
+    public VersorOdd sandwich(VersorOdd other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             (float4(other.e42, other.e1234, other.e1234, other.e4125) * this.group1.zyzz) + (float4(other.e1234, other.e43, other.e41, other.e4315) * this.group1.xxyy) + float4(float3(0.0), (this.e5 * other.e1234) - (this.e315 * other.e42) - (this.e125 * other.e43) - (this.e321 * other.e45)) + float4((this.group0.www * other.group0.xyz), this.e1 * other.e4235) - (other.group0.zxyx * float4(this.group1.yzx, this.e235)), 
             /* e415, e425, e435, e321 */
@@ -1791,16 +1696,21 @@ extension AntiFlector: Sandwich<VersorOdd> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiLine {
-    // Fancy infix trick
-    func operator/(_rhs: SandwichInfix) -> SandwichInfixPartial<AntiLine> {
-        return SandwichInfixPartial { a: this };
+public extension AntiLine {
+    // Fancy infix trick (first half)
+    public SandwichInfixPartial<AntiLine> operator /(SandwichInfix rhs) {
+        return SandwichInfixPartial<AntiLine>(this);
     }
 }
-extension AntiLine: Sandwich<AntiCircleRotor> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: AntiCircleRotor) -> Output {
-        return VersorOdd.from_groups(
+public extension SandwichInfixPartial<AntiLine> {
+    // Fancy infix trick (second half)
+    public VersorOdd operator /(AntiCircleRotor rhs) {
+        return this.a.sandwich(rhs);
+    }
+}
+public extension AntiLine {
+    public VersorOdd sandwich(AntiCircleRotor other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(other.e42 * this.e12, other.e43 * this.e23, other.e41 * this.e31, -(other.e42 * this.e25) - (other.e43 * this.e35) - (other.e23 * this.e23) - (other.e31 * this.e31) - (other.e12 * this.e12)) - float4((other.group0.xyz.zxy * this.group0.xyz.yzx), other.e41 * this.e15), 
             /* e23, e31, e12, e45 */
@@ -1812,10 +1722,9 @@ extension AntiLine: Sandwich<AntiCircleRotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiLine: Sandwich<AntiDipoleInversion> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiDipoleInversion) -> Output {
-        return VersorEven.from_groups(
+public extension AntiLine {
+    public VersorEven sandwich(AntiDipoleInversion other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((other.e431 * this.e12) + (other.e4 * this.e23), (other.e412 * this.e23) + (other.e4 * this.e31), (other.e423 * this.e31) + (other.e4 * this.e12), -(other.e431 * this.e25) - (other.e412 * this.e35) - (other.e415 * this.e23) - (other.e425 * this.e31) - (other.e435 * this.e12)) - float4((other.group0.xyz.zxy * this.group0.xyz.yzx), other.e423 * this.e15), 
             /* e415, e425, e435, e321 */
@@ -1827,21 +1736,19 @@ extension AntiLine: Sandwich<AntiDipoleInversion> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiLine: Sandwich<AntiDualNum> {
-    associatedtype Output = AntiMotor;
-    func sandwich(other: AntiDualNum) -> Output {
-        return AntiLine.from_groups(
-            /* e23, e31, e12, 0 */
-            float4(float3(other.scalar) * this.group0.xyz, 0.0), 
-            /* e15, e25, e35, 0 */
-            float4((float3(other.e3215) * this.group0.xyz) + (float3(other.scalar) * this.group1.xyz), 0.0)
+public extension AntiLine {
+    public AntiMotor sandwich(AntiDualNum other) {
+        return AntiLine(
+            /* e23, e31, e12 */
+            float3(other.scalar) * this.group0.xyz, 
+            /* e15, e25, e35 */
+            (float3(other.e3215) * this.group0.xyz) + (float3(other.scalar) * this.group1.xyz)
         ).geometric_product(this.reverse());
     }
 }
-extension AntiLine: Sandwich<AntiFlatPoint> {
-    associatedtype Output = AntiFlector;
-    func sandwich(other: AntiFlatPoint) -> Output {
-        return AntiFlector.from_groups(
+public extension AntiLine {
+    public AntiFlector sandwich(AntiFlatPoint other) {
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4((float3(other.e321) * this.group1.xyz), 0.0) + float4((this.group0.xyz.zxy * other.group0.yzx), 0.0) - float4((this.group0.xyz.yzx * other.group0.zxy), 0.0), 
             /* e1, e2, e3, e5 */
@@ -1849,10 +1756,9 @@ extension AntiLine: Sandwich<AntiFlatPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiLine: Sandwich<AntiFlector> {
-    associatedtype Output = AntiFlector;
-    func sandwich(other: AntiFlector) -> Output {
-        return AntiFlector.from_groups(
+public extension AntiLine {
+    public AntiFlector sandwich(AntiFlector other) {
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4((other.e315 * this.e12) + (other.e321 * this.e15) + (other.e2 * this.e35) + (other.e5 * this.e23), (other.e125 * this.e23) + (other.e321 * this.e25) + (other.e3 * this.e15) + (other.e5 * this.e31), (other.e235 * this.e31) + (other.e321 * this.e35) + (other.e1 * this.e25) + (other.e5 * this.e12), other.e3 * this.e12 * -1.0) - (other.group1.zxyy * float4(this.group1.xyz.yzx, this.e31)) - float4((this.group0.xyz.yzx * other.group0.zxy), other.e1 * this.e23), 
             /* e1, e2, e3, e5 */
@@ -1860,10 +1766,9 @@ extension AntiLine: Sandwich<AntiFlector> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiLine: Sandwich<AntiLine> {
-    associatedtype Output = AntiMotor;
-    func sandwich(other: AntiLine) -> Output {
-        return AntiMotor.from_groups(
+public extension AntiLine {
+    public AntiMotor sandwich(AntiLine other) {
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(other.e31 * this.e12, other.e12 * this.e23, other.e23 * this.e31, -(other.e31 * this.e31) - (other.e12 * this.e12)) - float4((other.group0.xyz.zxy * this.group0.xyz.yzx), other.e23 * this.e23), 
             /* e15, e25, e35, e3215 */
@@ -1871,10 +1776,9 @@ extension AntiLine: Sandwich<AntiLine> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiLine: Sandwich<AntiMotor> {
-    associatedtype Output = AntiMotor;
-    func sandwich(other: AntiMotor) -> Output {
-        return AntiMotor.from_groups(
+public extension AntiLine {
+    public AntiMotor sandwich(AntiMotor other) {
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4((this.e23 * other.scalar) + (this.e12 * other.e31), (this.e23 * other.e12) + (this.e31 * other.scalar), (this.e31 * other.e23) + (this.e12 * other.scalar), -(this.e31 * other.e31) - (this.e12 * other.e12)) - (other.group0.zxyx * float4(this.group0.xyz.yzx, this.e23)), 
             /* e15, e25, e35, e3215 */
@@ -1882,10 +1786,9 @@ extension AntiLine: Sandwich<AntiMotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiLine: Sandwich<AntiPlane> {
-    associatedtype Output = AntiFlector;
-    func sandwich(other: AntiPlane) -> Output {
-        return AntiFlector.from_groups(
+public extension AntiLine {
+    public AntiFlector sandwich(AntiPlane other) {
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4((this.e23 * other.e5) + (this.e35 * other.e2), (this.e31 * other.e5) + (this.e15 * other.e3), (this.e12 * other.e5) + (this.e25 * other.e1), -(this.e31 * other.e2) - (this.e12 * other.e3)) - (other.group0.zxyx * float4(this.group1.xyz.yzx, this.e23)), 
             /* e1, e2, e3, e5 */
@@ -1893,21 +1796,19 @@ extension AntiLine: Sandwich<AntiPlane> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiLine: Sandwich<AntiScalar> {
-    associatedtype Output = Motor;
-    func sandwich(other: AntiScalar) -> Output {
-        return Line.from_groups(
-            /* e415, e425, e435, 0 */
-            float4(float3(other.e12345) * this.group0.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(float3(other.e12345) * this.group1.xyz, 0.0)
+public extension AntiLine {
+    public Motor sandwich(AntiScalar other) {
+        return Line(
+            /* e415, e425, e435 */
+            float3(other.e12345) * this.group0.xyz, 
+            /* e235, e315, e125 */
+            float3(other.e12345) * this.group1.xyz
         ).geometric_product(this.reverse());
     }
 }
-extension AntiLine: Sandwich<Circle> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: Circle) -> Output {
-        return VersorEven.from_groups(
+public extension AntiLine {
+    public VersorEven sandwich(Circle other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(this.e12 * other.e431, this.e23 * other.e412, this.e31 * other.e423, -(this.e31 * other.e425) - (this.e12 * other.e435) - (this.e15 * other.e423) - (this.e25 * other.e431) - (this.e35 * other.e412)) - float4((this.group0.xyz.yzx * other.group0.xyz.zxy), this.e23 * other.e415), 
             /* e415, e425, e435, e321 */
@@ -1919,10 +1820,9 @@ extension AntiLine: Sandwich<Circle> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiLine: Sandwich<CircleRotor> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: CircleRotor) -> Output {
-        return VersorEven.from_groups(
+public extension AntiLine {
+    public VersorEven sandwich(CircleRotor other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(this.e12 * other.e431, this.e23 * other.e412, this.e31 * other.e423, -(this.e31 * other.e425) - (this.e12 * other.e435) - (this.e15 * other.e423) - (this.e25 * other.e431) - (this.e35 * other.e412)) - float4((this.group0.xyz.yzx * other.group0.xyz.zxy), this.e23 * other.e415), 
             /* e415, e425, e435, e321 */
@@ -1934,10 +1834,9 @@ extension AntiLine: Sandwich<CircleRotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiLine: Sandwich<Dipole> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Dipole) -> Output {
-        return VersorOdd.from_groups(
+public extension AntiLine {
+    public VersorOdd sandwich(Dipole other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(this.e12 * other.e42, this.e23 * other.e43, this.e31 * other.e41, -(this.e31 * other.e31) - (this.e12 * other.e12) - (this.e15 * other.e41) - (this.e25 * other.e42) - (this.e35 * other.e43)) - float4((this.group0.xyz.yzx * other.group0.xyz.zxy), this.e23 * other.e23), 
             /* e23, e31, e12, e45 */
@@ -1949,10 +1848,9 @@ extension AntiLine: Sandwich<Dipole> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiLine: Sandwich<DipoleInversion> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: DipoleInversion) -> Output {
-        return VersorOdd.from_groups(
+public extension AntiLine {
+    public VersorOdd sandwich(DipoleInversion other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4((this.e23 * other.e1234) + (this.e12 * other.e42), (this.e23 * other.e43) + (this.e31 * other.e1234), (this.e31 * other.e41) + (this.e12 * other.e1234), -(this.e31 * other.e31) - (this.e12 * other.e12) - (this.e15 * other.e41) - (this.e25 * other.e42) - (this.e35 * other.e43)) - float4((this.group0.xyz.yzx * other.group0.xyz.zxy), this.e23 * other.e23), 
             /* e23, e31, e12, e45 */
@@ -1964,21 +1862,19 @@ extension AntiLine: Sandwich<DipoleInversion> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiLine: Sandwich<DualNum> {
-    associatedtype Output = Motor;
-    func sandwich(other: DualNum) -> Output {
-        return Line.from_groups(
-            /* e415, e425, e435, 0 */
-            float4(float3(other.e12345) * this.group0.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(other.e5) * this.group0.xyz) + (float3(other.e12345) * this.group1.xyz), 0.0)
+public extension AntiLine {
+    public Motor sandwich(DualNum other) {
+        return Line(
+            /* e415, e425, e435 */
+            float3(other.e12345) * this.group0.xyz, 
+            /* e235, e315, e125 */
+            (float3(other.e5) * this.group0.xyz) + (float3(other.e12345) * this.group1.xyz)
         ).geometric_product(this.reverse());
     }
 }
-extension AntiLine: Sandwich<FlatPoint> {
-    associatedtype Output = Flector;
-    func sandwich(other: FlatPoint) -> Output {
-        return Flector.from_groups(
+public extension AntiLine {
+    public Flector sandwich(FlatPoint other) {
+        return Flector(
             /* e15, e25, e35, e45 */
             float4((this.group0.xyz.zxy * other.group0.yzx), 0.0) - float4((float3(other.e45) * this.group1.xyz), 0.0) - float4((this.group0.xyz.yzx * other.group0.zxy), 0.0), 
             /* e4235, e4315, e4125, e3215 */
@@ -1986,10 +1882,9 @@ extension AntiLine: Sandwich<FlatPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiLine: Sandwich<Flector> {
-    associatedtype Output = Flector;
-    func sandwich(other: Flector) -> Output {
-        return Flector.from_groups(
+public extension AntiLine {
+    public Flector sandwich(Flector other) {
+        return Flector(
             /* e15, e25, e35, e45 */
             float4((this.e23 * other.e3215) + (this.e12 * other.e25) + (this.e25 * other.e4125), (this.e23 * other.e35) + (this.e31 * other.e3215) + (this.e35 * other.e4235), (this.e31 * other.e15) + (this.e12 * other.e3215) + (this.e15 * other.e4315), 0.0) - (float4(other.e45, other.e4125, other.e4235, other.e4315) * float4(this.group1.xyz.xxy, this.e31)) - (float4(other.e4315, other.e45, other.e45, other.e4125) * float4(this.group1.xyz.zyz, this.e12)) - float4((this.group0.xyz.yzx * other.group0.zxy), this.e23 * other.e4235), 
             /* e4235, e4315, e4125, e3215 */
@@ -1997,10 +1892,9 @@ extension AntiLine: Sandwich<Flector> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiLine: Sandwich<Line> {
-    associatedtype Output = Motor;
-    func sandwich(other: Line) -> Output {
-        return Motor.from_groups(
+public extension AntiLine {
+    public Motor sandwich(Line other) {
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4(this.e12 * other.e425, this.e23 * other.e435, this.e31 * other.e415, -(this.e31 * other.e425) - (this.e12 * other.e435)) - float4((this.group0.xyz.yzx * other.group0.xyz.zxy), this.e23 * other.e415), 
             /* e235, e315, e125, e5 */
@@ -2008,10 +1902,9 @@ extension AntiLine: Sandwich<Line> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiLine: Sandwich<Motor> {
-    associatedtype Output = Motor;
-    func sandwich(other: Motor) -> Output {
-        return Motor.from_groups(
+public extension AntiLine {
+    public Motor sandwich(Motor other) {
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4((this.e23 * other.e12345) + (this.e12 * other.e425), (this.e23 * other.e435) + (this.e31 * other.e12345), (this.e31 * other.e415) + (this.e12 * other.e12345), -(this.e31 * other.e425) - (this.e12 * other.e435)) - (other.group0.zxyx * float4(this.group0.xyz.yzx, this.e23)), 
             /* e235, e315, e125, e5 */
@@ -2019,39 +1912,37 @@ extension AntiLine: Sandwich<Motor> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiLine: Sandwich<MultiVector> {
-    associatedtype Output = MultiVector;
-    func sandwich(other: MultiVector) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(-(float2(this.e23) * float2(other.e23, other.e415)) - (float2(this.e31) * float2(other.e31, other.e425)) - (float2(this.e12) * float2(other.e12, other.e435)) - (float2(this.e15) * float2(other.e41, other.e423)) - (float2(this.e25) * float2(other.e42, other.e431)) - (float2(this.e35) * float2(other.e43, other.e412)), 0.0, 0.0), 
+public extension AntiLine {
+    public MultiVector sandwich(MultiVector other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            -(float2(this.e23) * float2(other.e23, other.e415)) - (float2(this.e31) * float2(other.e31, other.e425)) - (float2(this.e12) * float2(other.e12, other.e435)) - (float2(this.e15) * float2(other.e41, other.e423)) - (float2(this.e25) * float2(other.e42, other.e431)) - (float2(this.e35) * float2(other.e43, other.e412)), 
             /* e1, e2, e3, e4 */
             float4((this.e23 * other.e321) + (this.e12 * other.e2) + (this.e25 * other.e412), (this.e23 * other.e3) + (this.e31 * other.e321) + (this.e35 * other.e423), (this.e31 * other.e1) + (this.e12 * other.e321) + (this.e15 * other.e431), 0.0) - (float4(other.e4, other.e412, other.e423, other.e431) * float4(this.group1.xyz.xxy, this.e31)) - (float4(other.e431, other.e4, other.e4, other.e412) * float4(this.group1.xyz.zyz, this.e12)) - float4((this.group0.xyz.yzx * other.group1.zxy), this.e23 * other.e423), 
-            /* e5, 0, 0, 0 */
-            float4(-(this.e23 * other.e235) - (this.e31 * other.e315) - (this.e12 * other.e125) - (this.e15 * other.e1) - (this.e15 * other.e415) - (this.e25 * other.e2) - (this.e25 * other.e425) - (this.e35 * other.e3) - (this.e35 * other.e435), 0.0, 0.0, 0.0), 
+            /* e5 */
+            -(this.e23 * other.e235) - (this.e31 * other.e315) - (this.e12 * other.e125) - (this.e15 * other.e1) - (this.e15 * other.e415) - (this.e25 * other.e2) - (this.e25 * other.e425) - (this.e35 * other.e3) - (this.e35 * other.e435), 
             /* e15, e25, e35, e45 */
             float4((this.e23 * other.e3215) + (this.e12 * other.e25) + (this.e15 * other.scalar) + (this.e25 * other.e4125) + (this.e35 * other.e31), (this.e23 * other.e35) + (this.e31 * other.e3215) + (this.e15 * other.e12) + (this.e25 * other.scalar) + (this.e35 * other.e4235), (this.e31 * other.e15) + (this.e12 * other.e3215) + (this.e15 * other.e4315) + (this.e25 * other.e23) + (this.e35 * other.scalar), -(this.e25 * other.e42) - (this.e35 * other.e43)) - (float4(other.e45, other.e4125, other.e31, other.e4315) * float4(this.group1.xyz.xxx, this.e31)) - (float4(other.e12, other.e45, other.e4235, other.e4125) * float4(this.group1.xyz.yyy, this.e12)) - (float4(other.e4315, other.e23, other.e45, other.e41) * float4(this.group1.xyz.zzz, this.e15)) - float4((this.group0.xyz.yzx * other.group3.zxy), this.e23 * other.e4235), 
-            /* e41, e42, e43, 0 */
-            float4((float3(other.e42, other.e1234, other.e1234) * this.group0.xyz.zyz) + (float3(other.e1234, other.e43, other.e41) * this.group0.xyz.xxy) - (this.group0.xyz.yzx * other.group4.xyz.zxy), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(other.scalar) * this.group0.xyz) + (float3(other.e42, other.e1234, other.e1234) * this.group1.xyz.zyz) + (float3(other.e1234, other.e43, other.e41) * this.group1.xyz.xxy) + (this.group0.xyz.zxy * other.group5.xyz.yzx) - (this.group0.xyz.yzx * other.group5.xyz.zxy) - (this.group1.xyz.yzx * other.group4.xyz.zxy), 0.0), 
+            /* e41, e42, e43 */
+            (float3(other.e42, other.e1234, other.e1234) * this.group0.xyz.zyz) + (float3(other.e1234, other.e43, other.e41) * this.group0.xyz.xxy) - (this.group0.xyz.yzx * other.group4.xyz.zxy), 
+            /* e23, e31, e12 */
+            (float3(other.scalar) * this.group0.xyz) + (float3(other.e42, other.e1234, other.e1234) * this.group1.xyz.zyz) + (float3(other.e1234, other.e43, other.e41) * this.group1.xyz.xxy) + (this.group0.xyz.zxy * other.group5.xyz.yzx) - (this.group0.xyz.yzx * other.group5.xyz.zxy) - (this.group1.xyz.yzx * other.group4.xyz.zxy), 
             /* e415, e425, e435, e321 */
             float4(this.e35 * other.e431, this.e25 * other.e4, this.e35 * other.e4, this.e12 * other.e3 * -1.0) + (float4(other.e4, other.e412, other.e423, other.e412) * float4(this.group1.xyz.xxy, this.e35)) + (float4(other.group0.xy.yy, other.e12345, this.e15) * float4(this.group0.xyz, other.e423)) + float4((this.group0.xyz.zxy * other.group6.yzx), this.e25 * other.e431) - float4((this.group0.xyz.yzx * other.group6.zxy), this.e23 * other.e1) - float4((this.group1.xyz.yzx * other.group7.xyz.zxy), this.e31 * other.e2), 
-            /* e423, e431, e412, 0 */
-            float4((float3(other.e4, other.e412, other.e423) * this.group0.xyz.xxy) + (float3(other.e431, other.e4, other.e4) * this.group0.xyz.zyz) - (this.group0.xyz.yzx * other.group7.xyz.zxy), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(other.e12345) * this.group1.xyz) + (float3(other.e2, other.e435, other.e415) * this.group1.xyz.zxy) + (float3(other.e5, other.e125, other.e235) * this.group0.xyz.xxy) + (float3(other.e321, other.e3, other.e1) * this.group1.xyz.xxy) + (float3(other.e315, other.e5, other.e5) * this.group0.xyz.zyz) + (this.group1.xyz.zyz * other.group6.yww) - (this.group0.xyz.yzx * other.group8.xyz.zxy) - (this.group1.xyz.yzx * other.group1.zxy) - (this.group1.xyz.yzx * other.group6.zxy), 0.0), 
+            /* e423, e431, e412 */
+            (float3(other.e4, other.e412, other.e423) * this.group0.xyz.xxy) + (float3(other.e431, other.e4, other.e4) * this.group0.xyz.zyz) - (this.group0.xyz.yzx * other.group7.xyz.zxy), 
+            /* e235, e315, e125 */
+            (float3(other.e12345) * this.group1.xyz) + (float3(other.e2, other.e435, other.e415) * this.group1.xyz.zxy) + (float3(other.e5, other.e125, other.e235) * this.group0.xyz.xxy) + (float3(other.e321, other.e3, other.e1) * this.group1.xyz.xxy) + (float3(other.e315, other.e5, other.e5) * this.group0.xyz.zyz) + (this.group1.xyz.zyz * other.group6.yww) - (this.group0.xyz.yzx * other.group8.xyz.zxy) - (this.group1.xyz.yzx * other.group1.zxy) - (this.group1.xyz.yzx * other.group6.zxy), 
             /* e4235, e4315, e4125, e3215 */
             float4(this.e35 * other.e42, this.e25 * other.e1234, this.e35 * other.e1234, -(this.e12 * other.e35) - (this.e15 * other.e23) - (this.e25 * other.e31) - (this.e35 * other.e12)) + (float4(other.e45, other.e4125, other.e4235, other.e4235) * float4(this.group0.xyz.xxy, this.e15)) + (float4(other.e4315, other.e45, other.e45, other.e4315) * float4(this.group0.xyz.zyz, this.e25)) + (float4(other.e1234, other.e43, other.e41, other.e4125) * float4(this.group1.xyz.xxy, this.e35)) - float4((this.group0.xyz.yzx * other.group9.zxy), this.e23 * other.e15) - float4((this.group1.xyz.yzx * other.group4.xyz.zxy), this.e31 * other.e25), 
-            /* e1234, 0, 0, 0 */
-            float4(-(this.e23 * other.e41) - (this.e31 * other.e42) - (this.e12 * other.e43), 0.0, 0.0, 0.0)
+            /* e1234 */
+            -(this.e23 * other.e41) - (this.e31 * other.e42) - (this.e12 * other.e43)
         ).geometric_product(this.reverse());
     }
 }
-extension AntiLine: Sandwich<Plane> {
-    associatedtype Output = Flector;
-    func sandwich(other: Plane) -> Output {
-        return Flector.from_groups(
+public extension AntiLine {
+    public Flector sandwich(Plane other) {
+        return Flector(
             /* e15, e25, e35, e45 */
             float4((this.e23 * other.e3215) + (this.e25 * other.e4125), (this.e31 * other.e3215) + (this.e35 * other.e4235), (this.e12 * other.e3215) + (this.e15 * other.e4315), -(this.e31 * other.e4315) - (this.e12 * other.e4125)) - (other.group0.yzxx * float4(this.group1.xyz.zxy, this.e23)), 
             /* e4235, e4315, e4125, e3215 */
@@ -2059,12 +1950,11 @@ extension AntiLine: Sandwich<Plane> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiLine: Sandwich<RoundPoint> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: RoundPoint) -> Output {
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(other.e4) * this.group0.xyz, 0.0), 
+public extension AntiLine {
+    public VersorEven sandwich(RoundPoint other) {
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(other.e4) * this.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4((float3(other.e4) * this.group1.xyz), -(this.e23 * other.e1) - (this.e31 * other.e2) - (this.e12 * other.e3)), 
             /* e235, e315, e125, e4 */
@@ -2074,23 +1964,21 @@ extension AntiLine: Sandwich<RoundPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiLine: Sandwich<Scalar> {
-    associatedtype Output = AntiMotor;
-    func sandwich(other: Scalar) -> Output {
-        return AntiLine.from_groups(
-            /* e23, e31, e12, 0 */
-            float4(float3(other.scalar) * this.group0.xyz, 0.0), 
-            /* e15, e25, e35, 0 */
-            float4(float3(other.scalar) * this.group1.xyz, 0.0)
+public extension AntiLine {
+    public AntiMotor sandwich(Scalar other) {
+        return AntiLine(
+            /* e23, e31, e12 */
+            float3(other.scalar) * this.group0.xyz, 
+            /* e15, e25, e35 */
+            float3(other.scalar) * this.group1.xyz
         ).geometric_product(this.reverse());
     }
 }
-extension AntiLine: Sandwich<Sphere> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Sphere) -> Output {
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(other.e1234) * this.group0.xyz, 0.0), 
+public extension AntiLine {
+    public VersorOdd sandwich(Sphere other) {
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            float3(other.e1234) * this.group0.xyz, 
             /* e23, e31, e12, e45 */
             float4((float3(other.e1234) * this.group1.xyz), -(this.e23 * other.e4235) - (this.e31 * other.e4315) - (this.e12 * other.e4125)), 
             /* e15, e25, e35, e1234 */
@@ -2100,10 +1988,9 @@ extension AntiLine: Sandwich<Sphere> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiLine: Sandwich<VersorEven> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: VersorEven) -> Output {
-        return VersorEven.from_groups(
+public extension AntiLine {
+    public VersorEven sandwich(VersorEven other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((this.e23 * other.e4) + (this.e12 * other.e431), (this.e23 * other.e412) + (this.e31 * other.e4), (this.e31 * other.e423) + (this.e12 * other.e4), -(this.e31 * other.e425) - (this.e12 * other.e435) - (this.e15 * other.e423) - (this.e25 * other.e431) - (this.e35 * other.e412)) - float4((this.group0.xyz.yzx * other.group0.zxy), this.e23 * other.e415), 
             /* e415, e425, e435, e321 */
@@ -2115,10 +2002,9 @@ extension AntiLine: Sandwich<VersorEven> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiLine: Sandwich<VersorOdd> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: VersorOdd) -> Output {
-        return VersorOdd.from_groups(
+public extension AntiLine {
+    public VersorOdd sandwich(VersorOdd other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4((this.e23 * other.e1234) + (this.e12 * other.e42), (this.e23 * other.e43) + (this.e31 * other.e1234), (this.e31 * other.e41) + (this.e12 * other.e1234), -(this.e31 * other.e31) - (this.e12 * other.e12) - (this.e15 * other.e41) - (this.e25 * other.e42) - (this.e35 * other.e43)) - float4((this.group0.xyz.yzx * other.group0.zxy), this.e23 * other.e23), 
             /* e23, e31, e12, e45 */
@@ -2130,16 +2016,21 @@ extension AntiLine: Sandwich<VersorOdd> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiMotor {
-    // Fancy infix trick
-    func operator/(_rhs: SandwichInfix) -> SandwichInfixPartial<AntiMotor> {
-        return SandwichInfixPartial { a: this };
+public extension AntiMotor {
+    // Fancy infix trick (first half)
+    public SandwichInfixPartial<AntiMotor> operator /(SandwichInfix rhs) {
+        return SandwichInfixPartial<AntiMotor>(this);
     }
 }
-extension AntiMotor: Sandwich<AntiCircleRotor> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: AntiCircleRotor) -> Output {
-        return VersorOdd.from_groups(
+public extension SandwichInfixPartial<AntiMotor> {
+    // Fancy infix trick (second half)
+    public VersorOdd operator /(AntiCircleRotor rhs) {
+        return this.a.sandwich(rhs);
+    }
+}
+public extension AntiMotor {
+    public VersorOdd sandwich(AntiCircleRotor other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(other.e42 * this.e12, other.e43 * this.e23, other.e43 * this.scalar, -(other.e42 * this.e25) - (other.e43 * this.e35) - (other.e23 * this.e23) - (other.e31 * this.e31) - (other.e12 * this.e12)) + (this.group0.wwyw * float4(other.group0.xyz.xyx, other.scalar)) - float4((other.group0.xyz.zxy * this.group0.yzx), other.e41 * this.e15), 
             /* e23, e31, e12, e45 */
@@ -2151,10 +2042,9 @@ extension AntiMotor: Sandwich<AntiCircleRotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiMotor: Sandwich<AntiDipoleInversion> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiDipoleInversion) -> Output {
-        return VersorEven.from_groups(
+public extension AntiMotor {
+    public VersorEven sandwich(AntiDipoleInversion other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((other.e431 * this.e12) + (other.e4 * this.e23), (other.e412 * this.e23) + (other.e4 * this.e31), (other.e412 * this.scalar) + (other.e4 * this.e12), -(other.e431 * this.e25) - (other.e412 * this.e35) - (other.e415 * this.e23) - (other.e425 * this.e31) - (other.e435 * this.e12)) + float4((other.group0.xyz.xyx * this.group0.wwy), other.e4 * this.e3215) - float4((other.group0.xyz.zxy * this.group0.yzx), other.e423 * this.e15), 
             /* e415, e425, e435, e321 */
@@ -2166,10 +2056,9 @@ extension AntiMotor: Sandwich<AntiDipoleInversion> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiMotor: Sandwich<AntiDualNum> {
-    associatedtype Output = AntiMotor;
-    func sandwich(other: AntiDualNum) -> Output {
-        return AntiMotor.from_groups(
+public extension AntiMotor {
+    public AntiMotor sandwich(AntiDualNum other) {
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(other.scalar) * this.group0, 
             /* e15, e25, e35, e3215 */
@@ -2177,10 +2066,9 @@ extension AntiMotor: Sandwich<AntiDualNum> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiMotor: Sandwich<AntiFlatPoint> {
-    associatedtype Output = AntiFlector;
-    func sandwich(other: AntiFlatPoint) -> Output {
-        return AntiFlector.from_groups(
+public extension AntiMotor {
+    public AntiFlector sandwich(AntiFlatPoint other) {
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(((float3(other.e321) * this.group1.xyz) + (other.group0.xyx * this.group0.wwy) + (other.group0.yzz * this.group0.zxw) - (other.group0.zxy * this.group0.yzx)), other.e321 * this.scalar), 
             /* e1, e2, e3, e5 */
@@ -2188,10 +2076,9 @@ extension AntiMotor: Sandwich<AntiFlatPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiMotor: Sandwich<AntiFlector> {
-    associatedtype Output = AntiFlector;
-    func sandwich(other: AntiFlector) -> Output {
-        return AntiFlector.from_groups(
+public extension AntiMotor {
+    public AntiFlector sandwich(AntiFlector other) {
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4((other.e315 * this.e12) + (other.e321 * this.e15) + (other.e1 * this.e3215) + (other.e2 * this.e35) + (other.e5 * this.e23), (other.e125 * this.e23) + (other.e321 * this.e25) + (other.e2 * this.e3215) + (other.e3 * this.e15) + (other.e5 * this.e31), (other.e125 * this.scalar) + (other.e321 * this.e35) + (other.e1 * this.e25) + (other.e3 * this.e3215) + (other.e5 * this.e12), other.e3 * this.e12 * -1.0) + (other.group0.xyxw * this.group0.wwyw) - (other.group1.zxyy * float4(this.group1.yzx, this.e31)) - (this.group0.yzxx * float4(other.group0.zxy, other.e1)), 
             /* e1, e2, e3, e5 */
@@ -2199,10 +2086,9 @@ extension AntiMotor: Sandwich<AntiFlector> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiMotor: Sandwich<AntiLine> {
-    associatedtype Output = AntiMotor;
-    func sandwich(other: AntiLine) -> Output {
-        return AntiMotor.from_groups(
+public extension AntiMotor {
+    public AntiMotor sandwich(AntiLine other) {
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4((other.e23 * this.scalar) + (other.e31 * this.e12), (other.e31 * this.scalar) + (other.e12 * this.e23), (other.e23 * this.e31) + (other.e12 * this.scalar), -(other.e31 * this.e31) - (other.e12 * this.e12)) - (this.group0.yzxx * float4(other.group0.xyz.zxy, other.e23)), 
             /* e15, e25, e35, e3215 */
@@ -2210,10 +2096,9 @@ extension AntiMotor: Sandwich<AntiLine> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiMotor: Sandwich<AntiMotor> {
-    associatedtype Output = AntiMotor;
-    func sandwich(other: AntiMotor) -> Output {
-        return AntiMotor.from_groups(
+public extension AntiMotor {
+    public AntiMotor sandwich(AntiMotor other) {
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4((other.e31 * this.e12) + (other.scalar * this.e23), (other.e12 * this.e23) + (other.scalar * this.e31), (other.e12 * this.scalar) + (other.scalar * this.e12), -(other.e31 * this.e31) - (other.e12 * this.e12)) + (other.group0.xyxw * this.group0.wwyw) - (other.group0.zxyx * this.group0.yzxx), 
             /* e15, e25, e35, e3215 */
@@ -2221,10 +2106,9 @@ extension AntiMotor: Sandwich<AntiMotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiMotor: Sandwich<AntiPlane> {
-    associatedtype Output = AntiFlector;
-    func sandwich(other: AntiPlane) -> Output {
-        return AntiFlector.from_groups(
+public extension AntiMotor {
+    public AntiFlector sandwich(AntiPlane other) {
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4((this.e23 * other.e5) + (this.e35 * other.e2) + (this.e3215 * other.e1), (this.e31 * other.e5) + (this.e15 * other.e3) + (this.e3215 * other.e2), (this.e12 * other.e5) + (this.e25 * other.e1) + (this.e3215 * other.e3), -(this.e31 * other.e2) - (this.e12 * other.e3)) - (other.group0.zxyx * float4(this.group1.yzx, this.e23)), 
             /* e1, e2, e3, e5 */
@@ -2232,10 +2116,9 @@ extension AntiMotor: Sandwich<AntiPlane> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiMotor: Sandwich<AntiScalar> {
-    associatedtype Output = Motor;
-    func sandwich(other: AntiScalar) -> Output {
-        return Motor.from_groups(
+public extension AntiMotor {
+    public Motor sandwich(AntiScalar other) {
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4(other.e12345) * this.group0, 
             /* e235, e315, e125, e5 */
@@ -2243,10 +2126,9 @@ extension AntiMotor: Sandwich<AntiScalar> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiMotor: Sandwich<Circle> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: Circle) -> Output {
-        return VersorEven.from_groups(
+public extension AntiMotor {
+    public VersorEven sandwich(Circle other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((this.e12 * other.e431) + (this.scalar * other.e423), (this.e23 * other.e412) + (this.scalar * other.e431), (this.e31 * other.e423) + (this.scalar * other.e412), -(this.e23 * other.e415) - (this.e31 * other.e425) - (this.e12 * other.e435) - (this.e25 * other.e431) - (this.e35 * other.e412)) - float4((other.group0.xyz.zxy * this.group0.yzx), this.e15 * other.e423), 
             /* e415, e425, e435, e321 */
@@ -2258,10 +2140,9 @@ extension AntiMotor: Sandwich<Circle> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiMotor: Sandwich<CircleRotor> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: CircleRotor) -> Output {
-        return VersorEven.from_groups(
+public extension AntiMotor {
+    public VersorEven sandwich(CircleRotor other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(this.e12 * other.e431, this.e23 * other.e412, this.scalar * other.e412, -(this.e23 * other.e415) - (this.e31 * other.e425) - (this.e12 * other.e435) - (this.e25 * other.e431) - (this.e35 * other.e412)) + float4((other.group0.xyz.xyx * this.group0.wwy), this.scalar * other.e12345) - float4((other.group0.xyz.zxy * this.group0.yzx), this.e15 * other.e423), 
             /* e415, e425, e435, e321 */
@@ -2273,10 +2154,9 @@ extension AntiMotor: Sandwich<CircleRotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiMotor: Sandwich<Dipole> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Dipole) -> Output {
-        return VersorOdd.from_groups(
+public extension AntiMotor {
+    public VersorOdd sandwich(Dipole other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4((this.e12 * other.e42) + (this.scalar * other.e41), (this.e23 * other.e43) + (this.scalar * other.e42), (this.e31 * other.e41) + (this.scalar * other.e43), -(this.e23 * other.e23) - (this.e31 * other.e31) - (this.e12 * other.e12) - (this.e25 * other.e42) - (this.e35 * other.e43)) - float4((other.group0.xyz.zxy * this.group0.yzx), this.e15 * other.e41), 
             /* e23, e31, e12, e45 */
@@ -2288,10 +2168,9 @@ extension AntiMotor: Sandwich<Dipole> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiMotor: Sandwich<DipoleInversion> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: DipoleInversion) -> Output {
-        return VersorOdd.from_groups(
+public extension AntiMotor {
+    public VersorOdd sandwich(DipoleInversion other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4((this.e23 * other.e1234) + (this.e12 * other.e42), (this.e23 * other.e43) + (this.e31 * other.e1234), (this.e12 * other.e1234) + (this.scalar * other.e43), -(this.e23 * other.e23) - (this.e31 * other.e31) - (this.e12 * other.e12) - (this.e25 * other.e42) - (this.e35 * other.e43)) + float4((other.group0.xyz.xyx * this.group0.wwy), this.e3215 * other.e1234) - float4((other.group0.xyz.zxy * this.group0.yzx), this.e15 * other.e41), 
             /* e23, e31, e12, e45 */
@@ -2303,10 +2182,9 @@ extension AntiMotor: Sandwich<DipoleInversion> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiMotor: Sandwich<DualNum> {
-    associatedtype Output = Motor;
-    func sandwich(other: DualNum) -> Output {
-        return Motor.from_groups(
+public extension AntiMotor {
+    public Motor sandwich(DualNum other) {
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4(other.e12345) * this.group0, 
             /* e235, e315, e125, e5 */
@@ -2314,10 +2192,9 @@ extension AntiMotor: Sandwich<DualNum> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiMotor: Sandwich<FlatPoint> {
-    associatedtype Output = Flector;
-    func sandwich(other: FlatPoint) -> Output {
-        return Flector.from_groups(
+public extension AntiMotor {
+    public Flector sandwich(FlatPoint other) {
+        return Flector(
             /* e15, e25, e35, e45 */
             float4(((float3(this.scalar) * other.group0.xyz) + (this.group0.zxy * other.group0.yzx) - (float3(other.e45) * this.group1.xyz) - (this.group0.yzx * other.group0.zxy)), this.scalar * other.e45), 
             /* e4235, e4315, e4125, e3215 */
@@ -2325,10 +2202,9 @@ extension AntiMotor: Sandwich<FlatPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiMotor: Sandwich<Flector> {
-    associatedtype Output = Flector;
-    func sandwich(other: Flector) -> Output {
-        return Flector.from_groups(
+public extension AntiMotor {
+    public Flector sandwich(Flector other) {
+        return Flector(
             /* e15, e25, e35, e45 */
             float4((this.e12 * other.e25) + (this.scalar * other.e15) + (this.e25 * other.e4125) - (this.e3215 * other.e4235), (this.e31 * other.e3215) + (this.scalar * other.e25) + (this.e35 * other.e4235) - (this.e3215 * other.e4315), (this.e12 * other.e3215) + (this.scalar * other.e35) + (this.e15 * other.e4315) - (this.e3215 * other.e4125), 0.0) + (float4(other.e3215, other.e35, other.e15, other.e45) * this.group0.xxyw) - (float4(other.e45, other.e4125, other.e4235, other.e4315) * float4(this.group1.xxy, this.e31)) - (float4(other.e4315, other.e45, other.e45, other.e4125) * float4(this.group1.zyz, this.e12)) - (this.group0.yzxx * float4(other.group0.zxy, other.e4235)), 
             /* e4235, e4315, e4125, e3215 */
@@ -2336,10 +2212,9 @@ extension AntiMotor: Sandwich<Flector> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiMotor: Sandwich<Line> {
-    associatedtype Output = Motor;
-    func sandwich(other: Line) -> Output {
-        return Motor.from_groups(
+public extension AntiMotor {
+    public Motor sandwich(Line other) {
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4((this.e12 * other.e425) + (this.scalar * other.e415), (this.e23 * other.e435) + (this.scalar * other.e425), (this.e31 * other.e415) + (this.scalar * other.e435), -(this.e31 * other.e425) - (this.e12 * other.e435)) - (this.group0.yzxx * float4(other.group0.xyz.zxy, other.e415)), 
             /* e235, e315, e125, e5 */
@@ -2347,10 +2222,9 @@ extension AntiMotor: Sandwich<Line> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiMotor: Sandwich<Motor> {
-    associatedtype Output = Motor;
-    func sandwich(other: Motor) -> Output {
-        return Motor.from_groups(
+public extension AntiMotor {
+    public Motor sandwich(Motor other) {
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4((this.e12 * other.e425) + (this.scalar * other.e415), (this.e31 * other.e12345) + (this.scalar * other.e425), (this.e12 * other.e12345) + (this.scalar * other.e435), -(this.e31 * other.e425) - (this.e12 * other.e435)) + (this.group0.xxyw * other.group0.wzxw) - (this.group0.yzxx * other.group0.zxyx), 
             /* e235, e315, e125, e5 */
@@ -2358,39 +2232,37 @@ extension AntiMotor: Sandwich<Motor> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiMotor: Sandwich<MultiVector> {
-    associatedtype Output = MultiVector;
-    func sandwich(other: MultiVector) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4((float2(this.scalar) * other.group0.xy) + (float2(this.e3215) * float2(other.e1234, other.e4)) - (float2(this.e23) * float2(other.e23, other.e415)) - (float2(this.e31) * float2(other.e31, other.e425)) - (float2(this.e12) * float2(other.e12, other.e435)) - (float2(this.e15) * float2(other.e41, other.e423)) - (float2(this.e25) * float2(other.e42, other.e431)) - (float2(this.e35) * float2(other.e43, other.e412)), 0.0, 0.0), 
+public extension AntiMotor {
+    public MultiVector sandwich(MultiVector other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            (float2(this.scalar) * other.group0.xy) + (float2(this.e3215) * float2(other.e1234, other.e4)) - (float2(this.e23) * float2(other.e23, other.e415)) - (float2(this.e31) * float2(other.e31, other.e425)) - (float2(this.e12) * float2(other.e12, other.e435)) - (float2(this.e15) * float2(other.e41, other.e423)) - (float2(this.e25) * float2(other.e42, other.e431)) - (float2(this.e35) * float2(other.e43, other.e412)), 
             /* e1, e2, e3, e4 */
             float4((this.e23 * other.e321) + (this.e12 * other.e2) + (this.scalar * other.e1) - (this.e15 * other.e4), (this.e23 * other.e3) + (this.e31 * other.e321) + (this.scalar * other.e2) - (this.e25 * other.e4), (this.e31 * other.e1) + (this.e12 * other.e321) + (this.scalar * other.e3) - (this.e35 * other.e4), 0.0) + float4((other.group7.xyz.zxy * this.group1.yzx), this.scalar * other.e4) - float4((other.group7.xyz.xyx * this.group1.wwy), this.e23 * other.e423) - float4((other.group7.xyz.yzz * this.group1.zxw), this.e31 * other.e431) - float4((this.group0.yzx * other.group1.zxy), this.e12 * other.e412), 
-            /* e5, 0, 0, 0 */
-            float4((this.scalar * other.e5) + (this.e3215 * other.e12345) + (this.e3215 * other.e321) - (this.e23 * other.e235) - (this.e31 * other.e315) - (this.e12 * other.e125) - (this.e15 * other.e1) - (this.e15 * other.e415) - (this.e25 * other.e2) - (this.e25 * other.e425) - (this.e35 * other.e3) - (this.e35 * other.e435), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (this.scalar * other.e5) + (this.e3215 * other.e12345) + (this.e3215 * other.e321) - (this.e23 * other.e235) - (this.e31 * other.e315) - (this.e12 * other.e125) - (this.e15 * other.e1) - (this.e15 * other.e415) - (this.e25 * other.e2) - (this.e25 * other.e425) - (this.e35 * other.e3) - (this.e35 * other.e435), 
             /* e15, e25, e35, e45 */
             float4((this.e23 * other.e3215) + (this.e12 * other.e25) + (this.scalar * other.e15) + (this.e25 * other.e4125) + (this.e35 * other.e31), (this.e23 * other.e35) + (this.e31 * other.e3215) + (this.scalar * other.e25) + (this.e15 * other.e12) + (this.e35 * other.e4235), (this.e31 * other.e15) + (this.e12 * other.e3215) + (this.scalar * other.e35) + (this.e15 * other.e4315) + (this.e3215 * other.e12), this.e12 * other.e4125 * -1.0) + (float4(other.group0.xy.xx, other.scalar, this.scalar) * float4(this.group1.xyz, other.e45)) + float4((other.group5.xyz.xyx * this.group1.wwy), this.e3215 * other.e1234) - (float4(other.e45, other.e4125, other.e4235, this.e35) * float4(this.group1.xxy, other.e43)) - (float4(other.e4315, other.e45, other.e45, other.e4235) * float4(this.group1.zyz, this.e23)) - (this.group1.yzxx * float4(other.group5.xyz.zxy, other.e41)) - (other.group9.xyzy * float4(this.group1.www, this.e31)) - float4((this.group0.yzx * other.group3.zxy), this.e25 * other.e42), 
-            /* e41, e42, e43, 0 */
-            float4((float3(other.e1234) * this.group0.xyz) + (other.group4.xyz.xyx * this.group0.wwy) + (other.group4.xyz.yzz * this.group0.zxw) - (other.group4.xyz.zxy * this.group0.yzx), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(other.scalar) * this.group0.xyz) + (float3(other.e1234) * this.group1.xyz) + (other.group4.xyz.xyx * this.group1.wwy) + (other.group4.xyz.yzz * this.group1.zxw) + (other.group5.xyz.xyx * this.group0.wwy) + (other.group5.xyz.yzz * this.group0.zxw) - (other.group4.xyz.zxy * this.group1.yzx) - (other.group5.xyz.zxy * this.group0.yzx), 0.0), 
+            /* e41, e42, e43 */
+            (float3(other.e1234) * this.group0.xyz) + (other.group4.xyz.xyx * this.group0.wwy) + (other.group4.xyz.yzz * this.group0.zxw) - (other.group4.xyz.zxy * this.group0.yzx), 
+            /* e23, e31, e12 */
+            (float3(other.scalar) * this.group0.xyz) + (float3(other.e1234) * this.group1.xyz) + (other.group4.xyz.xyx * this.group1.wwy) + (other.group4.xyz.yzz * this.group1.zxw) + (other.group5.xyz.xyx * this.group0.wwy) + (other.group5.xyz.yzz * this.group0.zxw) - (other.group4.xyz.zxy * this.group1.yzx) - (other.group5.xyz.zxy * this.group0.yzx), 
             /* e415, e425, e435, e321 */
             float4((this.scalar * other.e415) + (this.e15 * other.e4), (this.scalar * other.e425) + (this.e25 * other.e4), (this.scalar * other.e435) + (this.e35 * other.e4), -(this.e12 * other.e3) - (this.e3215 * other.e4)) + (this.group0.zxyw * other.group6.yzxw) + (this.group1.zxwz * float4(other.group7.xyz.yzz, other.e412)) + (this.group1.wwyy * float4(other.group7.xyz.xyx, other.e431)) + (float4(other.group0.xy.yy, other.e12345, other.e423) * float4(this.group0.xyz, this.e15)) - (this.group0.yzxy * float4(other.group6.zxy, other.e2)) - float4((other.group7.xyz.zxy * this.group1.yzx), this.e23 * other.e1), 
-            /* e423, e431, e412, 0 */
-            float4((float3(other.e4) * this.group0.xyz) + (other.group7.xyz.xyx * this.group0.wwy) + (other.group7.xyz.yzz * this.group0.zxw) - (other.group7.xyz.zxy * this.group0.yzx), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(this.e3215) * other.group1.xyz) + (float3(this.e3215) * other.group6.xyz) + (float3(other.e12345) * this.group1.xyz) + (float3(other.e5) * this.group0.xyz) + (float3(other.e2, other.e435, other.e415) * this.group1.zxy) + (float3(other.e321, other.e3, other.e1) * this.group1.xxy) + (other.group8.xyz.xyx * this.group0.wwy) + (other.group8.xyz.yzz * this.group0.zxw) + (this.group1.zyz * other.group6.yww) - (other.group8.xyz.zxy * this.group0.yzx) - (this.group1.yzx * other.group1.zxy) - (this.group1.yzx * other.group6.zxy), 0.0), 
+            /* e423, e431, e412 */
+            (float3(other.e4) * this.group0.xyz) + (other.group7.xyz.xyx * this.group0.wwy) + (other.group7.xyz.yzz * this.group0.zxw) - (other.group7.xyz.zxy * this.group0.yzx), 
+            /* e235, e315, e125 */
+            (float3(this.e3215) * other.group1.xyz) + (float3(this.e3215) * other.group6.xyz) + (float3(other.e12345) * this.group1.xyz) + (float3(other.e5) * this.group0.xyz) + (float3(other.e2, other.e435, other.e415) * this.group1.zxy) + (float3(other.e321, other.e3, other.e1) * this.group1.xxy) + (other.group8.xyz.xyx * this.group0.wwy) + (other.group8.xyz.yzz * this.group0.zxw) + (this.group1.zyz * other.group6.yww) - (other.group8.xyz.zxy * this.group0.yzx) - (this.group1.yzx * other.group1.zxy) - (this.group1.yzx * other.group6.zxy), 
             /* e4235, e4315, e4125, e3215 */
             float4(this.e15 * other.e1234, this.e25 * other.e1234, this.e35 * other.e1234, -(this.e23 * other.e15) - (this.e31 * other.e25) - (this.e12 * other.e35) - (this.e35 * other.e12) - (this.e3215 * other.e45)) + (float4(other.e45, other.e4125, other.e4235, other.e4235) * float4(this.group0.xxy, this.e15)) + (float4(other.e4315, other.e45, other.e45, other.e4315) * float4(this.group0.zyz, this.e25)) + (this.group1.wwyw * float4(other.group4.xyz.xyx, other.scalar)) + (other.group9.xyzz * float4(this.group0.www, this.e35)) + float4((other.group4.xyz.yzz * this.group1.zxw), this.scalar * other.e3215) - (this.group1.yzxx * float4(other.group4.xyz.zxy, other.e23)) - float4((this.group0.yzx * other.group9.zxy), this.e25 * other.e31), 
-            /* e1234, 0, 0, 0 */
-            float4((this.scalar * other.e1234) - (this.e23 * other.e41) - (this.e31 * other.e42) - (this.e12 * other.e43), 0.0, 0.0, 0.0)
+            /* e1234 */
+            (this.scalar * other.e1234) - (this.e23 * other.e41) - (this.e31 * other.e42) - (this.e12 * other.e43)
         ).geometric_product(this.reverse());
     }
 }
-extension AntiMotor: Sandwich<Plane> {
-    associatedtype Output = Flector;
-    func sandwich(other: Plane) -> Output {
-        return Flector.from_groups(
+public extension AntiMotor {
+    public Flector sandwich(Plane other) {
+        return Flector(
             /* e15, e25, e35, e45 */
             float4((this.e23 * other.e3215) + (this.e25 * other.e4125), (this.e31 * other.e3215) + (this.e35 * other.e4235), (this.e12 * other.e3215) + (this.e15 * other.e4315), this.e12 * other.e4125 * -1.0) - (other.group0.xyzy * float4(this.group1.www, this.e31)) - (other.group0.yzxx * float4(this.group1.zxy, this.e23)), 
             /* e4235, e4315, e4125, e3215 */
@@ -2398,10 +2270,9 @@ extension AntiMotor: Sandwich<Plane> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiMotor: Sandwich<RoundPoint> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: RoundPoint) -> Output {
-        return VersorEven.from_groups(
+public extension AntiMotor {
+    public VersorEven sandwich(RoundPoint other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(other.e4) * float4(this.group0.xyz, this.e3215), 
             /* e415, e425, e435, e321 */
@@ -2413,10 +2284,9 @@ extension AntiMotor: Sandwich<RoundPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiMotor: Sandwich<Scalar> {
-    associatedtype Output = AntiMotor;
-    func sandwich(other: Scalar) -> Output {
-        return AntiMotor.from_groups(
+public extension AntiMotor {
+    public AntiMotor sandwich(Scalar other) {
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(other.scalar) * this.group0, 
             /* e15, e25, e35, e3215 */
@@ -2424,10 +2294,9 @@ extension AntiMotor: Sandwich<Scalar> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiMotor: Sandwich<Sphere> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Sphere) -> Output {
-        return VersorOdd.from_groups(
+public extension AntiMotor {
+    public VersorOdd sandwich(Sphere other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(other.e1234) * float4(this.group0.xyz, this.e3215), 
             /* e23, e31, e12, e45 */
@@ -2439,10 +2308,9 @@ extension AntiMotor: Sandwich<Sphere> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiMotor: Sandwich<VersorEven> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: VersorEven) -> Output {
-        return VersorEven.from_groups(
+public extension AntiMotor {
+    public VersorEven sandwich(VersorEven other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(this.scalar * other.e423, this.scalar * other.e431, this.scalar * other.e412, -(this.e31 * other.e425) - (this.e12 * other.e435) - (this.e15 * other.e423) - (this.e25 * other.e431) - (this.e35 * other.e412)) + (float4(other.e431, other.e4, other.e4, other.e4) * float4(this.group0.zyz, this.e3215)) + (float4(other.e4, other.e412, other.e423, other.e12345) * this.group0.xxyw) - (this.group0.yzxx * float4(other.group0.zxy, other.e415)), 
             /* e415, e425, e435, e321 */
@@ -2454,10 +2322,9 @@ extension AntiMotor: Sandwich<VersorEven> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiMotor: Sandwich<VersorOdd> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: VersorOdd) -> Output {
-        return VersorOdd.from_groups(
+public extension AntiMotor {
+    public VersorOdd sandwich(VersorOdd other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(this.scalar * other.e41, this.scalar * other.e42, this.scalar * other.e43, -(this.e31 * other.e31) - (this.e12 * other.e12) - (this.e15 * other.e41) - (this.e25 * other.e42) - (this.e35 * other.e43)) + (float4(other.e42, other.e1234, other.e1234, other.e1234) * float4(this.group0.zyz, this.e3215)) + (float4(other.e1234, other.e43, other.e41, other.scalar) * this.group0.xxyw) - (this.group0.yzxx * float4(other.group0.zxy, other.e23)), 
             /* e23, e31, e12, e45 */
@@ -2469,18 +2336,23 @@ extension AntiMotor: Sandwich<VersorOdd> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiPlane {
-    // Fancy infix trick
-    func operator/(_rhs: SandwichInfix) -> SandwichInfixPartial<AntiPlane> {
-        return SandwichInfixPartial { a: this };
+public extension AntiPlane {
+    // Fancy infix trick (first half)
+    public SandwichInfixPartial<AntiPlane> operator /(SandwichInfix rhs) {
+        return SandwichInfixPartial<AntiPlane>(this);
     }
 }
-extension AntiPlane: Sandwich<AntiCircleRotor> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: AntiCircleRotor) -> Output {
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4((other.group0.xyz.yzx * this.group0.zxy) - (other.group0.xyz.zxy * this.group0.yzx), 0.0), 
+public extension SandwichInfixPartial<AntiPlane> {
+    // Fancy infix trick (second half)
+    public VersorOdd operator /(AntiCircleRotor rhs) {
+        return this.a.sandwich(rhs);
+    }
+}
+public extension AntiPlane {
+    public VersorOdd sandwich(AntiCircleRotor other) {
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            (other.group0.xyz.yzx * this.group0.zxy) - (other.group0.xyz.zxy * this.group0.yzx), 
             /* e415, e425, e435, e321 */
             float4(other.e41 * this.e5, other.e42 * this.e5, other.e43 * this.e5, -(other.e31 * this.e2) - (other.e12 * this.e3)) - (other.group1.wwwx * this.group0.xyzx), 
             /* e235, e315, e125, e4 */
@@ -2490,10 +2362,9 @@ extension AntiPlane: Sandwich<AntiCircleRotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiPlane: Sandwich<AntiDipoleInversion> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiDipoleInversion) -> Output {
-        return VersorOdd.from_groups(
+public extension AntiPlane {
+    public VersorEven sandwich(AntiDipoleInversion other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(other.e4 * this.e1 * -1.0, other.e4 * this.e2 * -1.0, other.e4 * this.e3 * -1.0, (other.e2 * this.e2) + (other.e3 * this.e3)) + (this.group0.yzxx * float4(other.group0.xyz.zxy, other.e1)) - (this.group0.zxyw * float4(other.group0.xyz.yzx, other.e4)), 
             /* e23, e31, e12, e45 */
@@ -2505,10 +2376,9 @@ extension AntiPlane: Sandwich<AntiDipoleInversion> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiPlane: Sandwich<AntiDualNum> {
-    associatedtype Output = AntiMotor;
-    func sandwich(other: AntiDualNum) -> Output {
-        return AntiFlector.from_groups(
+public extension AntiPlane {
+    public AntiMotor sandwich(AntiDualNum other) {
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(other.group0.xy.xx, other.e3215, 0.0) * float4(float3(1.0), 0.0) * float4(this.group0.xyz, 0.0) * float4(-1.0, -1.0, -1.0, 0.0), 
             /* e1, e2, e3, e5 */
@@ -2516,10 +2386,9 @@ extension AntiPlane: Sandwich<AntiDualNum> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiPlane: Sandwich<AntiFlatPoint> {
-    associatedtype Output = AntiFlector;
-    func sandwich(other: AntiFlatPoint) -> Output {
-        return AntiMotor.from_groups(
+public extension AntiPlane {
+    public AntiFlector sandwich(AntiFlatPoint other) {
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(float3(1.0), 0.0) * float4(other.group0.www, 0.0) * float4(this.group0.xyz, 0.0) * float4(-1.0, -1.0, -1.0, 0.0), 
             /* e15, e25, e35, e3215 */
@@ -2527,10 +2396,9 @@ extension AntiPlane: Sandwich<AntiFlatPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiPlane: Sandwich<AntiFlector> {
-    associatedtype Output = AntiFlector;
-    func sandwich(other: AntiFlector) -> Output {
-        return AntiMotor.from_groups(
+public extension AntiPlane {
+    public AntiFlector sandwich(AntiFlector other) {
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(-(other.e321 * this.e1) - (other.e2 * this.e3), -(other.e321 * this.e2) - (other.e3 * this.e1), -(other.e321 * this.e3) - (other.e1 * this.e2), (other.e2 * this.e2) + (other.e3 * this.e3)) + (other.group1.zxyx * this.group0.yzxx), 
             /* e15, e25, e35, e3215 */
@@ -2538,10 +2406,9 @@ extension AntiPlane: Sandwich<AntiFlector> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiPlane: Sandwich<AntiLine> {
-    associatedtype Output = AntiMotor;
-    func sandwich(other: AntiLine) -> Output {
-        return AntiFlector.from_groups(
+public extension AntiPlane {
+    public AntiMotor sandwich(AntiLine other) {
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4((other.e23 * this.e5) + (other.e35 * this.e2), (other.e31 * this.e5) + (other.e15 * this.e3), (other.e12 * this.e5) + (other.e25 * this.e1), -(other.e31 * this.e2) - (other.e12 * this.e3)) - (this.group0.zxyx * float4(other.group1.xyz.yzx, other.e23)), 
             /* e1, e2, e3, e5 */
@@ -2549,10 +2416,9 @@ extension AntiPlane: Sandwich<AntiLine> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiPlane: Sandwich<AntiMotor> {
-    associatedtype Output = AntiMotor;
-    func sandwich(other: AntiMotor) -> Output {
-        return AntiFlector.from_groups(
+public extension AntiPlane {
+    public AntiMotor sandwich(AntiMotor other) {
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4((other.e23 * this.e5) + (other.e35 * this.e2), (other.e31 * this.e5) + (other.e15 * this.e3), (other.e12 * this.e5) + (other.e25 * this.e1), other.e12 * this.e3 * -1.0) - (this.group0.xyzy * float4(other.group1.www, other.e31)) - (this.group0.zxyx * float4(other.group1.yzx, other.e23)), 
             /* e1, e2, e3, e5 */
@@ -2560,10 +2426,9 @@ extension AntiPlane: Sandwich<AntiMotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiPlane: Sandwich<AntiPlane> {
-    associatedtype Output = AntiFlector;
-    func sandwich(other: AntiPlane) -> Output {
-        return AntiMotor.from_groups(
+public extension AntiPlane {
+    public AntiFlector sandwich(AntiPlane other) {
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(other.e2 * this.e3 * -1.0, other.e3 * this.e1 * -1.0, other.e1 * this.e2 * -1.0, (other.e2 * this.e2) + (other.e3 * this.e3)) + (other.group0.zxyx * this.group0.yzxx), 
             /* e15, e25, e35, e3215 */
@@ -2571,21 +2436,19 @@ extension AntiPlane: Sandwich<AntiPlane> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiPlane: Sandwich<AntiScalar> {
-    associatedtype Output = Motor;
-    func sandwich(other: AntiScalar) -> Output {
-        return Plane.from_groups(
+public extension AntiPlane {
+    public Motor sandwich(AntiScalar other) {
+        return Plane(
             /* e4235, e4315, e4125, e3215 */
             float4(other.e12345) * this.group0 * float4(1.0, 1.0, 1.0, -1.0)
         ).geometric_product(this.reverse());
     }
 }
-extension AntiPlane: Sandwich<Circle> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: Circle) -> Output {
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4((other.group0.xyz.zxy * this.group0.yzx) - (other.group0.xyz.yzx * this.group0.zxy), 0.0), 
+public extension AntiPlane {
+    public VersorEven sandwich(Circle other) {
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            (other.group0.xyz.zxy * this.group0.yzx) - (other.group0.xyz.yzx * this.group0.zxy), 
             /* e23, e31, e12, e45 */
             float4(float3(0.0), this.e3 * other.e435 * -1.0) - (this.group0.xyzy * other.group1.wwwy) - float4((other.group0.xyz * this.group0.www), this.e1 * other.e415), 
             /* e15, e25, e35, e1234 */
@@ -2595,12 +2458,11 @@ extension AntiPlane: Sandwich<Circle> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiPlane: Sandwich<CircleRotor> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: CircleRotor) -> Output {
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4((other.group0.xyz.zxy * this.group0.yzx) - (other.group0.xyz.yzx * this.group0.zxy), 0.0), 
+public extension AntiPlane {
+    public VersorEven sandwich(CircleRotor other) {
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            (other.group0.xyz.zxy * this.group0.yzx) - (other.group0.xyz.yzx * this.group0.zxy), 
             /* e23, e31, e12, e45 */
             float4(float3(0.0), this.e3 * other.e435 * -1.0) - (this.group0.xyzy * other.group1.wwwy) - float4((other.group0.xyz * this.group0.www), this.e1 * other.e415), 
             /* e15, e25, e35, e1234 */
@@ -2610,12 +2472,11 @@ extension AntiPlane: Sandwich<CircleRotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiPlane: Sandwich<Dipole> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Dipole) -> Output {
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4((other.group0.xyz.yzx * this.group0.zxy) - (other.group0.xyz.zxy * this.group0.yzx), 0.0), 
+public extension AntiPlane {
+    public VersorOdd sandwich(Dipole other) {
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            (other.group0.xyz.yzx * this.group0.zxy) - (other.group0.xyz.zxy * this.group0.yzx), 
             /* e415, e425, e435, e321 */
             float4(this.e5 * other.e41, this.e5 * other.e42, this.e5 * other.e43, -(this.e2 * other.e31) - (this.e3 * other.e12)) - (this.group0.xyzx * other.group1.wwwx), 
             /* e235, e315, e125, e4 */
@@ -2625,10 +2486,9 @@ extension AntiPlane: Sandwich<Dipole> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiPlane: Sandwich<DipoleInversion> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: DipoleInversion) -> Output {
-        return VersorEven.from_groups(
+public extension AntiPlane {
+    public VersorOdd sandwich(DipoleInversion other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(this.e2 * other.e43 * -1.0, this.e3 * other.e41 * -1.0, this.e1 * other.e42 * -1.0, (this.e3 * other.e4125) + (this.e5 * other.e1234)) + (this.group0.xyzy * float4(other.group2.www, other.e4315)) + float4((other.group0.xyz.yzx * this.group0.zxy), this.e1 * other.e4235), 
             /* e415, e425, e435, e321 */
@@ -2640,10 +2500,9 @@ extension AntiPlane: Sandwich<DipoleInversion> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiPlane: Sandwich<DualNum> {
-    associatedtype Output = Motor;
-    func sandwich(other: DualNum) -> Output {
-        return Flector.from_groups(
+public extension AntiPlane {
+    public Motor sandwich(DualNum other) {
+        return Flector(
             /* e15, e25, e35, e45 */
             float4(other.group0.xy.xx, other.e5, 0.0) * float4(float3(1.0), 0.0) * float4(this.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
             /* e4235, e4315, e4125, e3215 */
@@ -2651,10 +2510,9 @@ extension AntiPlane: Sandwich<DualNum> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiPlane: Sandwich<FlatPoint> {
-    associatedtype Output = Flector;
-    func sandwich(other: FlatPoint) -> Output {
-        return Motor.from_groups(
+public extension AntiPlane {
+    public Flector sandwich(FlatPoint other) {
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4(float3(1.0), 0.0) * float4(other.group0.www, 0.0) * float4(this.group0.xyz, 0.0) * float4(-1.0, -1.0, -1.0, 0.0), 
             /* e235, e315, e125, e5 */
@@ -2662,10 +2520,9 @@ extension AntiPlane: Sandwich<FlatPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiPlane: Sandwich<Flector> {
-    associatedtype Output = Flector;
-    func sandwich(other: Flector) -> Output {
-        return Motor.from_groups(
+public extension AntiPlane {
+    public Flector sandwich(Flector other) {
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4(-(this.e1 * other.e45) - (this.e3 * other.e4315), -(this.e1 * other.e4125) - (this.e2 * other.e45), -(this.e2 * other.e4235) - (this.e3 * other.e45), (this.e2 * other.e4315) + (this.e3 * other.e4125)) + (this.group0.yzxx * other.group1.zxyx), 
             /* e235, e315, e125, e5 */
@@ -2673,10 +2530,9 @@ extension AntiPlane: Sandwich<Flector> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiPlane: Sandwich<Line> {
-    associatedtype Output = Motor;
-    func sandwich(other: Line) -> Output {
-        return Flector.from_groups(
+public extension AntiPlane {
+    public Motor sandwich(Line other) {
+        return Flector(
             /* e15, e25, e35, e45 */
             float4(this.e3 * other.e315, this.e1 * other.e125, this.e2 * other.e235, this.e3 * other.e435 * -1.0) - (this.group0.yzxy * float4(other.group1.xyz.zxy, other.e425)) - (this.group0.wwwx * float4(other.group0.xyz, other.e415)), 
             /* e4235, e4315, e4125, e3215 */
@@ -2684,10 +2540,9 @@ extension AntiPlane: Sandwich<Line> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiPlane: Sandwich<Motor> {
-    associatedtype Output = Motor;
-    func sandwich(other: Motor) -> Output {
-        return Flector.from_groups(
+public extension AntiPlane {
+    public Motor sandwich(Motor other) {
+        return Flector(
             /* e15, e25, e35, e45 */
             float4((this.e1 * other.e5) + (this.e3 * other.e315), (this.e1 * other.e125) + (this.e2 * other.e5), (this.e2 * other.e235) + (this.e3 * other.e5), this.e3 * other.e435 * -1.0) - (this.group0.yzxx * float4(other.group1.zxy, other.e415)) - (this.group0.wwwy * other.group0.xyzy), 
             /* e4235, e4315, e4125, e3215 */
@@ -2695,39 +2550,37 @@ extension AntiPlane: Sandwich<Motor> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiPlane: Sandwich<MultiVector> {
-    associatedtype Output = MultiVector;
-    func sandwich(other: MultiVector) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(this.e5 * other.e4 * -1.0, this.e5 * other.e1234) + (float2(this.e1) * float2(other.e1, other.e4235)) + (float2(this.e2) * float2(other.e2, other.e4315)) + (float2(this.e3) * float2(other.e3, other.e4125)), 0.0, 0.0), 
+public extension AntiPlane {
+    public MultiVector sandwich(MultiVector other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(this.e5 * other.e4 * -1.0, this.e5 * other.e1234) + (float2(this.e1) * float2(other.e1, other.e4235)) + (float2(this.e2) * float2(other.e2, other.e4315)) + (float2(this.e3) * float2(other.e3, other.e4125)), 
             /* e1, e2, e3, e4 */
             float4((this.e1 * other.scalar) + (this.e3 * other.e31), (this.e1 * other.e12) + (this.e2 * other.scalar), (this.e2 * other.e23) + (this.e3 * other.scalar), this.e3 * other.e43 * -1.0) - (this.group0.yzxy * float4(other.group5.xyz.zxy, other.e42)) - (this.group0.wwwx * float4(other.group4.xyz, other.e41)), 
-            /* e5, 0, 0, 0 */
-            float4((this.e1 * other.e15) + (this.e2 * other.e25) + (this.e3 * other.e35) + (this.e5 * other.scalar) - (this.e5 * other.e45), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (this.e1 * other.e15) + (this.e2 * other.e25) + (this.e3 * other.e35) + (this.e5 * other.scalar) - (this.e5 * other.e45), 
             /* e15, e25, e35, e45 */
             float4((this.e1 * other.e5) + (this.e3 * other.e315), (this.e1 * other.e125) + (this.e2 * other.e5), (this.e2 * other.e235) + (this.e3 * other.e5), this.e5 * other.e4 * -1.0) - (this.group0.wwwy * float4(other.group1.xyz, other.e425)) - (this.group0.wwwz * other.group6.xyzz) - float4((other.group8.xyz.zxy * this.group0.yzx), this.e1 * other.e415), 
-            /* e41, e42, e43, 0 */
-            float4((other.group7.xyz.zxy * this.group0.yzx) - (float3(other.e4) * this.group0.xyz) - (other.group7.xyz.yzx * this.group0.zxy), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((this.group0.yzx * other.group1.zxy) - (float3(this.e5) * other.group7.xyz) - (float3(other.e2, other.e321, other.e321) * this.group0.zyz) - (float3(other.e321, other.e3, other.e1) * this.group0.xxy), 0.0), 
+            /* e41, e42, e43 */
+            (other.group7.xyz.zxy * this.group0.yzx) - (float3(other.e4) * this.group0.xyz) - (other.group7.xyz.yzx * this.group0.zxy), 
+            /* e23, e31, e12 */
+            (this.group0.yzx * other.group1.zxy) - (float3(this.e5) * other.group7.xyz) - (float3(other.e2, other.e321, other.e321) * this.group0.zyz) - (float3(other.e321, other.e3, other.e1) * this.group0.xxy), 
             /* e415, e425, e435, e321 */
             float4((this.e2 * other.e4125) + (this.e5 * other.e41), (this.e3 * other.e4235) + (this.e5 * other.e42), (this.e1 * other.e4315) + (this.e5 * other.e43), -(this.e3 * other.e12) - (this.e5 * other.e1234)) - (float4(other.e45, other.e4125, other.e4235, this.e1) * float4(this.group0.xxy, other.e23)) - (float4(other.e4315, other.e45, other.e45, this.e2) * float4(this.group0.zyz, other.e31)), 
-            /* e423, e431, e412, 0 */
-            float4((float3(other.e1234) * this.group0.xyz) + (other.group4.xyz.yzx * this.group0.zxy) - (other.group4.xyz.zxy * this.group0.yzx), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(this.e5) * other.group5.xyz) + (this.group0.yzx * other.group3.zxy) - (float3(this.e5) * other.group9.xyz) - (float3(other.e25, other.e3215, other.e3215) * this.group0.zyz) - (float3(other.e3215, other.e35, other.e15) * this.group0.xxy), 0.0), 
+            /* e423, e431, e412 */
+            (float3(other.e1234) * this.group0.xyz) + (other.group4.xyz.yzx * this.group0.zxy) - (other.group4.xyz.zxy * this.group0.yzx), 
+            /* e235, e315, e125 */
+            (float3(this.e5) * other.group5.xyz) + (this.group0.yzx * other.group3.zxy) - (float3(this.e5) * other.group9.xyz) - (float3(other.e25, other.e3215, other.e3215) * this.group0.zyz) - (float3(other.e3215, other.e35, other.e15) * this.group0.xxy), 
             /* e4235, e4315, e4125, e3215 */
             float4((this.e1 * other.e12345) + (this.e3 * other.e425), (this.e1 * other.e435) + (this.e2 * other.e12345), (this.e2 * other.e415) + (this.e3 * other.e12345), -(this.e2 * other.e315) - (this.e3 * other.e125) - (this.e5 * other.e321)) - (float4(this.e5) * float4(other.group7.xyz, other.e12345)) - float4((this.group0.yzx * other.group6.zxy), this.e1 * other.e235), 
-            /* e1234, 0, 0, 0 */
-            float4((this.e1 * other.e423) + (this.e2 * other.e431) + (this.e3 * other.e412), 0.0, 0.0, 0.0)
+            /* e1234 */
+            (this.e1 * other.e423) + (this.e2 * other.e431) + (this.e3 * other.e412)
         ).geometric_product(this.reverse());
     }
 }
-extension AntiPlane: Sandwich<Plane> {
-    associatedtype Output = Flector;
-    func sandwich(other: Plane) -> Output {
-        return Motor.from_groups(
+public extension AntiPlane {
+    public Flector sandwich(Plane other) {
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4(this.e3 * other.e4315 * -1.0, this.e1 * other.e4125 * -1.0, this.e2 * other.e4235 * -1.0, (this.e2 * other.e4315) + (this.e3 * other.e4125)) + (this.group0.yzxx * other.group0.zxyx), 
             /* e235, e315, e125, e5 */
@@ -2735,12 +2588,11 @@ extension AntiPlane: Sandwich<Plane> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiPlane: Sandwich<RoundPoint> {
-    associatedtype Output = AntiDipoleInversion;
-    func sandwich(other: RoundPoint) -> Output {
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(other.e4) * this.group0.xyz * float3(-1.0), 0.0), 
+public extension AntiPlane {
+    public AntiDipoleInversion sandwich(RoundPoint other) {
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            float3(other.e4) * this.group0.xyz * float3(-1.0), 
             /* e23, e31, e12, e45 */
             float4(((this.group0.yzx * other.group0.zxy) - (this.group0.zxy * other.group0.yzx)), this.e5 * other.e4 * -1.0), 
             /* e15, e25, e35, scalar */
@@ -2748,21 +2600,19 @@ extension AntiPlane: Sandwich<RoundPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiPlane: Sandwich<Scalar> {
-    associatedtype Output = AntiMotor;
-    func sandwich(other: Scalar) -> Output {
-        return AntiPlane.from_groups(
+public extension AntiPlane {
+    public AntiMotor sandwich(Scalar other) {
+        return AntiPlane(
             /* e1, e2, e3, e5 */
             float4(other.scalar) * this.group0
         ).geometric_product(this.reverse());
     }
 }
-extension AntiPlane: Sandwich<Sphere> {
-    associatedtype Output = DipoleInversion;
-    func sandwich(other: Sphere) -> Output {
-        return CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(other.e1234) * this.group0.xyz, 0.0), 
+public extension AntiPlane {
+    public DipoleInversion sandwich(Sphere other) {
+        return CircleRotor(
+            /* e423, e431, e412 */
+            float3(other.e1234) * this.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(((this.group0.yzx * other.group0.zxy) - (this.group0.zxy * other.group0.yzx)), this.e5 * other.e1234 * -1.0), 
             /* e235, e315, e125, e12345 */
@@ -2770,10 +2620,9 @@ extension AntiPlane: Sandwich<Sphere> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiPlane: Sandwich<VersorEven> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: VersorEven) -> Output {
-        return VersorOdd.from_groups(
+public extension AntiPlane {
+    public VersorEven sandwich(VersorEven other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(this.e3 * other.e431 * -1.0, this.e2 * other.e4 * -1.0, this.e3 * other.e4 * -1.0, (this.e2 * other.e2) + (this.e3 * other.e3)) + (this.group0.yzxx * float4(other.group0.zxy, other.e1)) - (float4(other.e4, other.e412, other.e423, other.e4) * this.group0.xxyw), 
             /* e23, e31, e12, e45 */
@@ -2785,10 +2634,9 @@ extension AntiPlane: Sandwich<VersorEven> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiPlane: Sandwich<VersorOdd> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: VersorOdd) -> Output {
-        return VersorEven.from_groups(
+public extension AntiPlane {
+    public VersorOdd sandwich(VersorOdd other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(this.e2 * other.e43 * -1.0, this.e3 * other.e41 * -1.0, this.e1 * other.e42 * -1.0, (this.e3 * other.e4125) + (this.e5 * other.e1234)) + (float4(other.e42, other.e1234, other.e1234, other.e4315) * this.group0.zyzy) + (float4(other.e1234, other.e43, other.e41, other.e4235) * this.group0.xxyx), 
             /* e415, e425, e435, e321 */
@@ -2800,18 +2648,23 @@ extension AntiPlane: Sandwich<VersorOdd> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiScalar {
-    // Fancy infix trick
-    func operator/(_rhs: SandwichInfix) -> SandwichInfixPartial<AntiScalar> {
-        return SandwichInfixPartial { a: this };
+public extension AntiScalar {
+    // Fancy infix trick (first half)
+    public SandwichInfixPartial<AntiScalar> operator /(SandwichInfix rhs) {
+        return SandwichInfixPartial<AntiScalar>(this);
     }
 }
-extension AntiScalar: Sandwich<AntiCircleRotor> {
-    associatedtype Output = AntiCircleRotor;
-    func sandwich(other: AntiCircleRotor) -> Output {
-        return CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(this.e12345) * other.group0.xyz, 0.0), 
+public extension SandwichInfixPartial<AntiScalar> {
+    // Fancy infix trick (second half)
+    public AntiCircleRotor operator /(AntiCircleRotor rhs) {
+        return this.a.sandwich(rhs);
+    }
+}
+public extension AntiScalar {
+    public AntiCircleRotor sandwich(AntiCircleRotor other) {
+        return CircleRotor(
+            /* e423, e431, e412 */
+            float3(this.e12345) * other.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(this.e12345) * other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e235, e315, e125, e12345 */
@@ -2819,12 +2672,11 @@ extension AntiScalar: Sandwich<AntiCircleRotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiScalar: Sandwich<AntiDipoleInversion> {
-    associatedtype Output = AntiDipoleInversion;
-    func sandwich(other: AntiDipoleInversion) -> Output {
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(this.e12345) * other.group0.xyz * float3(-1.0), 0.0), 
+public extension AntiScalar {
+    public AntiDipoleInversion sandwich(AntiDipoleInversion other) {
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            float3(this.e12345) * other.group0.xyz * float3(-1.0), 
             /* e23, e31, e12, e45 */
             float4(this.e12345) * other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e15, e25, e35, e1234 */
@@ -2834,28 +2686,25 @@ extension AntiScalar: Sandwich<AntiDipoleInversion> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiScalar: Sandwich<AntiDualNum> {
-    associatedtype Output = AntiDualNum;
-    func sandwich(other: AntiDualNum) -> Output {
-        return DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(float2(this.e12345) * other.group0.xy, 0.0, 0.0)
+public extension AntiScalar {
+    public AntiDualNum sandwich(AntiDualNum other) {
+        return DualNum(
+            /* e5, e12345 */
+            float2(this.e12345) * other.group0.xy
         ).geometric_product(this.reverse());
     }
 }
-extension AntiScalar: Sandwich<AntiFlatPoint> {
-    associatedtype Output = AntiFlatPoint;
-    func sandwich(other: AntiFlatPoint) -> Output {
-        return FlatPoint.from_groups(
+public extension AntiScalar {
+    public AntiFlatPoint sandwich(AntiFlatPoint other) {
+        return FlatPoint(
             /* e15, e25, e35, e45 */
             float4(this.e12345) * other.group0 * float4(-1.0, -1.0, -1.0, 1.0)
         ).geometric_product(this.reverse());
     }
 }
-extension AntiScalar: Sandwich<AntiFlector> {
-    associatedtype Output = AntiFlector;
-    func sandwich(other: AntiFlector) -> Output {
-        return Flector.from_groups(
+public extension AntiScalar {
+    public AntiFlector sandwich(AntiFlector other) {
+        return Flector(
             /* e15, e25, e35, e45 */
             float4(this.e12345) * other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e4235, e4315, e4125, e3215 */
@@ -2863,21 +2712,19 @@ extension AntiScalar: Sandwich<AntiFlector> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiScalar: Sandwich<AntiLine> {
-    associatedtype Output = AntiLine;
-    func sandwich(other: AntiLine) -> Output {
-        return Line.from_groups(
-            /* e415, e425, e435, 0 */
-            float4(float3(this.e12345) * other.group0.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(float3(this.e12345) * other.group1.xyz, 0.0)
+public extension AntiScalar {
+    public AntiLine sandwich(AntiLine other) {
+        return Line(
+            /* e415, e425, e435 */
+            float3(this.e12345) * other.group0.xyz, 
+            /* e235, e315, e125 */
+            float3(this.e12345) * other.group1.xyz
         ).geometric_product(this.reverse());
     }
 }
-extension AntiScalar: Sandwich<AntiMotor> {
-    associatedtype Output = AntiMotor;
-    func sandwich(other: AntiMotor) -> Output {
-        return Motor.from_groups(
+public extension AntiScalar {
+    public AntiMotor sandwich(AntiMotor other) {
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4(this.e12345) * other.group0, 
             /* e235, e315, e125, e5 */
@@ -2885,43 +2732,39 @@ extension AntiScalar: Sandwich<AntiMotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiScalar: Sandwich<AntiPlane> {
-    associatedtype Output = AntiPlane;
-    func sandwich(other: AntiPlane) -> Output {
-        return Plane.from_groups(
+public extension AntiScalar {
+    public AntiPlane sandwich(AntiPlane other) {
+        return Plane(
             /* e4235, e4315, e4125, e3215 */
             float4(this.e12345) * other.group0 * float4(1.0, 1.0, 1.0, -1.0)
         ).geometric_product(this.reverse());
     }
 }
-extension AntiScalar: Sandwich<AntiScalar> {
-    associatedtype Output = AntiScalar;
-    func sandwich(other: AntiScalar) -> Output {
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(other.e12345 * this.e12345 * -1.0, 0.0, 0.0, 0.0)
+public extension AntiScalar {
+    public AntiScalar sandwich(AntiScalar other) {
+        return Scalar(
+            /* scalar */
+            other.e12345 * this.e12345 * -1.0
         ).geometric_product(this.reverse());
     }
 }
-extension AntiScalar: Sandwich<Circle> {
-    associatedtype Output = Circle;
-    func sandwich(other: Circle) -> Output {
-        return Dipole.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(this.e12345) * other.group0.xyz * float3(-1.0), 0.0), 
+public extension AntiScalar {
+    public Circle sandwich(Circle other) {
+        return Dipole(
+            /* e41, e42, e43 */
+            float3(this.e12345) * other.group0.xyz * float3(-1.0), 
             /* e23, e31, e12, e45 */
             float4(this.e12345) * other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e15, e25, e35, 0 */
-            float4(float3(this.e12345) * other.group2.xyz * float3(-1.0), 0.0)
+            /* e15, e25, e35 */
+            float3(this.e12345) * other.group2.xyz * float3(-1.0)
         ).geometric_product(this.reverse());
     }
 }
-extension AntiScalar: Sandwich<CircleRotor> {
-    associatedtype Output = CircleRotor;
-    func sandwich(other: CircleRotor) -> Output {
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(this.e12345) * other.group0.xyz * float3(-1.0), 0.0), 
+public extension AntiScalar {
+    public CircleRotor sandwich(CircleRotor other) {
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            float3(this.e12345) * other.group0.xyz * float3(-1.0), 
             /* e23, e31, e12, e45 */
             float4(this.e12345) * other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e15, e25, e35, scalar */
@@ -2929,25 +2772,23 @@ extension AntiScalar: Sandwich<CircleRotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiScalar: Sandwich<Dipole> {
-    associatedtype Output = Dipole;
-    func sandwich(other: Dipole) -> Output {
-        return Circle.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(this.e12345) * other.group0.xyz, 0.0), 
+public extension AntiScalar {
+    public Dipole sandwich(Dipole other) {
+        return Circle(
+            /* e423, e431, e412 */
+            float3(this.e12345) * other.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(this.e12345) * other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e235, e315, e125, 0 */
-            float4(float3(this.e12345) * other.group2.xyz, 0.0)
+            /* e235, e315, e125 */
+            float3(this.e12345) * other.group2.xyz
         ).geometric_product(this.reverse());
     }
 }
-extension AntiScalar: Sandwich<DipoleInversion> {
-    associatedtype Output = DipoleInversion;
-    func sandwich(other: DipoleInversion) -> Output {
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(this.e12345) * other.group0.xyz, 0.0), 
+public extension AntiScalar {
+    public DipoleInversion sandwich(DipoleInversion other) {
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(this.e12345) * other.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(this.e12345) * other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e235, e315, e125, e4 */
@@ -2957,28 +2798,25 @@ extension AntiScalar: Sandwich<DipoleInversion> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiScalar: Sandwich<DualNum> {
-    associatedtype Output = DualNum;
-    func sandwich(other: DualNum) -> Output {
-        return AntiDualNum.from_groups(
-            /* e3215, scalar, 0, 0 */
-            float4(float2(this.e12345) * other.group0.xy * float2(-1.0), 0.0, 0.0)
+public extension AntiScalar {
+    public DualNum sandwich(DualNum other) {
+        return AntiDualNum(
+            /* e3215, scalar */
+            float2(this.e12345) * other.group0.xy * float2(-1.0)
         ).geometric_product(this.reverse());
     }
 }
-extension AntiScalar: Sandwich<FlatPoint> {
-    associatedtype Output = FlatPoint;
-    func sandwich(other: FlatPoint) -> Output {
-        return AntiFlatPoint.from_groups(
+public extension AntiScalar {
+    public FlatPoint sandwich(FlatPoint other) {
+        return AntiFlatPoint(
             /* e235, e315, e125, e321 */
             float4(this.e12345) * other.group0 * float4(1.0, 1.0, 1.0, -1.0)
         ).geometric_product(this.reverse());
     }
 }
-extension AntiScalar: Sandwich<Flector> {
-    associatedtype Output = Flector;
-    func sandwich(other: Flector) -> Output {
-        return AntiFlector.from_groups(
+public extension AntiScalar {
+    public Flector sandwich(Flector other) {
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(this.e12345) * other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e1, e2, e3, e5 */
@@ -2986,21 +2824,19 @@ extension AntiScalar: Sandwich<Flector> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiScalar: Sandwich<Line> {
-    associatedtype Output = Line;
-    func sandwich(other: Line) -> Output {
-        return AntiLine.from_groups(
-            /* e23, e31, e12, 0 */
-            float4(float3(this.e12345) * other.group0.xyz * float3(-1.0), 0.0), 
-            /* e15, e25, e35, 0 */
-            float4(float3(this.e12345) * other.group1.xyz * float3(-1.0), 0.0)
+public extension AntiScalar {
+    public Line sandwich(Line other) {
+        return AntiLine(
+            /* e23, e31, e12 */
+            float3(this.e12345) * other.group0.xyz * float3(-1.0), 
+            /* e15, e25, e35 */
+            float3(this.e12345) * other.group1.xyz * float3(-1.0)
         ).geometric_product(this.reverse());
     }
 }
-extension AntiScalar: Sandwich<Motor> {
-    associatedtype Output = Motor;
-    func sandwich(other: Motor) -> Output {
-        return AntiMotor.from_groups(
+public extension AntiScalar {
+    public Motor sandwich(Motor other) {
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(this.e12345) * other.group0 * float4(-1.0), 
             /* e15, e25, e35, e3215 */
@@ -3008,79 +2844,73 @@ extension AntiScalar: Sandwich<Motor> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiScalar: Sandwich<MultiVector> {
-    associatedtype Output = MultiVector;
-    func sandwich(other: MultiVector) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(this.e12345) * other.group0.xy.yx * float2(-1.0, 1.0), 0.0, 0.0), 
+public extension AntiScalar {
+    public MultiVector sandwich(MultiVector other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(this.e12345) * other.group0.xy.yx * float2(-1.0, 1.0), 
             /* e1, e2, e3, e4 */
             float4((float3(this.e12345) * other.group9.xyz * float3(-1.0)), this.e12345 * other.e1234), 
-            /* e5, 0, 0, 0 */
-            float4(this.e12345 * other.e3215, 0.0, 0.0, 0.0), 
+            /* e5 */
+            this.e12345 * other.e3215, 
             /* e15, e25, e35, e45 */
             float4(this.e12345) * float4(other.group8.xyz, other.e321) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e41, e42, e43, 0 */
-            float4(float3(this.e12345) * other.group7.xyz * float3(-1.0), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(float3(this.e12345) * other.group6.xyz * float3(-1.0), 0.0), 
+            /* e41, e42, e43 */
+            float3(this.e12345) * other.group7.xyz * float3(-1.0), 
+            /* e23, e31, e12 */
+            float3(this.e12345) * other.group6.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             float4(this.e12345) * float4(other.group5.xyz, other.e45) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e423, e431, e412, 0 */
-            float4(float3(this.e12345) * other.group4.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(float3(this.e12345) * other.group3.xyz, 0.0), 
+            /* e423, e431, e412 */
+            float3(this.e12345) * other.group4.xyz, 
+            /* e235, e315, e125 */
+            float3(this.e12345) * other.group3.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4((float3(this.e12345) * other.group1.xyz), this.e12345 * other.e5 * -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(this.e12345 * other.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            this.e12345 * other.e4 * -1.0
         ).geometric_product(this.reverse());
     }
 }
-extension AntiScalar: Sandwich<Plane> {
-    associatedtype Output = Plane;
-    func sandwich(other: Plane) -> Output {
-        return AntiPlane.from_groups(
+public extension AntiScalar {
+    public Plane sandwich(Plane other) {
+        return AntiPlane(
             /* e1, e2, e3, e5 */
             float4(this.e12345) * other.group0 * float4(-1.0, -1.0, -1.0, 1.0)
         ).geometric_product(this.reverse());
     }
 }
-extension AntiScalar: Sandwich<RoundPoint> {
-    associatedtype Output = RoundPoint;
-    func sandwich(other: RoundPoint) -> Output {
-        return Sphere.from_groups(
+public extension AntiScalar {
+    public RoundPoint sandwich(RoundPoint other) {
+        return Sphere(
             /* e4235, e4315, e4125, e3215 */
             float4((float3(this.e12345) * other.group0.xyz), this.e12345 * other.e5 * -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(this.e12345 * other.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            this.e12345 * other.e4 * -1.0
         ).geometric_product(this.reverse());
     }
 }
-extension AntiScalar: Sandwich<Scalar> {
-    associatedtype Output = Scalar;
-    func sandwich(other: Scalar) -> Output {
-        return AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(this.e12345 * other.scalar, 0.0, 0.0, 0.0)
+public extension AntiScalar {
+    public Scalar sandwich(Scalar other) {
+        return AntiScalar(
+            /* e12345 */
+            this.e12345 * other.scalar
         ).geometric_product(this.reverse());
     }
 }
-extension AntiScalar: Sandwich<Sphere> {
-    associatedtype Output = Sphere;
-    func sandwich(other: Sphere) -> Output {
-        return RoundPoint.from_groups(
+public extension AntiScalar {
+    public Sphere sandwich(Sphere other) {
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4((float3(this.e12345) * other.group0.xyz * float3(-1.0)), this.e12345 * other.e1234), 
-            /* e5, 0, 0, 0 */
-            float4(this.e12345 * other.e3215, 0.0, 0.0, 0.0)
+            /* e5 */
+            this.e12345 * other.e3215
         ).geometric_product(this.reverse());
     }
 }
-extension AntiScalar: Sandwich<VersorEven> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: VersorEven) -> Output {
-        return VersorOdd.from_groups(
+public extension AntiScalar {
+    public VersorEven sandwich(VersorEven other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(this.e12345) * other.group0 * float4(-1.0), 
             /* e23, e31, e12, e45 */
@@ -3092,10 +2922,9 @@ extension AntiScalar: Sandwich<VersorEven> {
         ).geometric_product(this.reverse());
     }
 }
-extension AntiScalar: Sandwich<VersorOdd> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: VersorOdd) -> Output {
-        return VersorEven.from_groups(
+public extension AntiScalar {
+    public VersorOdd sandwich(VersorOdd other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(this.e12345) * other.group0, 
             /* e415, e425, e435, e321 */
@@ -3107,16 +2936,21 @@ extension AntiScalar: Sandwich<VersorOdd> {
         ).geometric_product(this.reverse());
     }
 }
-extension Circle {
-    // Fancy infix trick
-    func operator/(_rhs: SandwichInfix) -> SandwichInfixPartial<Circle> {
-        return SandwichInfixPartial { a: this };
+public extension Circle {
+    // Fancy infix trick (first half)
+    public SandwichInfixPartial<Circle> operator /(SandwichInfix rhs) {
+        return SandwichInfixPartial<Circle>(this);
     }
 }
-extension Circle: Sandwich<AntiCircleRotor> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: AntiCircleRotor) -> Output {
-        return VersorEven.from_groups(
+public extension SandwichInfixPartial<Circle> {
+    // Fancy infix trick (second half)
+    public VersorOdd operator /(AntiCircleRotor rhs) {
+        return this.a.sandwich(rhs);
+    }
+}
+public extension Circle {
+    public VersorOdd sandwich(AntiCircleRotor other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((other.e41 * this.e321) + (other.e42 * this.e435) + (other.e31 * this.e412) + (other.e45 * this.e423) + (other.scalar * this.e423), (other.e42 * this.e321) + (other.e43 * this.e415) + (other.e12 * this.e423) + (other.e45 * this.e431) + (other.scalar * this.e431), (other.e41 * this.e425) + (other.e43 * this.e321) + (other.e23 * this.e431) + (other.e45 * this.e412) + (other.scalar * this.e412), -(other.e43 * this.e125) - (other.e23 * this.e415) - (other.e31 * this.e425) - (other.e12 * this.e435) - (other.e45 * this.e321) - (other.e15 * this.e423) - (other.e25 * this.e431) - (other.e35 * this.e412)) - float4((other.group0.xyz.zxy * this.group1.yzx), other.e41 * this.e235) - float4((this.group0.xyz.yzx * other.group1.zxy), other.e42 * this.e315), 
             /* e415, e425, e435, e321 */
@@ -3128,10 +2962,9 @@ extension Circle: Sandwich<AntiCircleRotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension Circle: Sandwich<AntiDipoleInversion> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiDipoleInversion) -> Output {
-        return VersorOdd.from_groups(
+public extension Circle {
+    public VersorEven sandwich(AntiDipoleInversion other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(-(other.e431 * this.e435) - (other.e425 * this.e412) - (other.e4 * this.e415) - (other.e3 * this.e431), -(other.e412 * this.e415) - (other.e435 * this.e423) - (other.e4 * this.e425) - (other.e1 * this.e412), -(other.e412 * this.e321) - (other.e415 * this.e431) - (other.e4 * this.e435) - (other.e2 * this.e423), (other.e415 * this.e415) + (other.e425 * this.e425) + (other.e435 * this.e435) + (other.e315 * this.e431) + (other.e125 * this.e412)) + (float4(other.e321, other.e3, other.e425, this.e315) * float4(this.group0.xyz.xxx, other.e431)) + (float4(other.e2, other.e415, other.e321, other.e235) * float4(this.group0.xyz.zzz, this.e423)) + (float4(other.group1.zw, other.e1, this.e125) * float4(this.group0.xyz.yyy, other.e412)) + float4((other.group0.xyz.zxy * this.group1.yzx), other.e423 * this.e235) - (this.group1.wwyw * float4(other.group0.xyz.xyx, other.e321)), 
             /* e23, e31, e12, e45 */
@@ -3143,12 +2976,11 @@ extension Circle: Sandwich<AntiDipoleInversion> {
         ).geometric_product(this.reverse());
     }
 }
-extension Circle: Sandwich<AntiDualNum> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: AntiDualNum) -> Output {
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(other.scalar) * this.group0.xyz, 0.0), 
+public extension Circle {
+    public VersorOdd sandwich(AntiDualNum other) {
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(other.scalar) * this.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(((float3(other.e3215) * this.group0.xyz) + (float3(other.scalar) * this.group1.xyz)), other.scalar * this.e321), 
             /* e235, e315, e125, e4 */
@@ -3158,10 +2990,9 @@ extension Circle: Sandwich<AntiDualNum> {
         ).geometric_product(this.reverse());
     }
 }
-extension Circle: Sandwich<AntiFlatPoint> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiFlatPoint) -> Output {
-        return VersorOdd.from_groups(
+public extension Circle {
+    public VersorEven sandwich(AntiFlatPoint other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4((float3(other.e321) * this.group0.xyz), (other.e235 * this.e423) + (other.e315 * this.e431) + (other.e125 * this.e412) - (other.e321 * this.e321)), 
             /* e23, e31, e12, e45 */
@@ -3173,10 +3004,9 @@ extension Circle: Sandwich<AntiFlatPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension Circle: Sandwich<AntiFlector> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiFlector) -> Output {
-        return VersorOdd.from_groups(
+public extension Circle {
+    public VersorEven sandwich(AntiFlector other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             (float4(other.e321, other.e3, other.e1, other.e235) * float4(this.group0.xyz.xxy, this.e423)) + (float4(other.e2, other.e321, other.e321, other.e315) * float4(this.group0.xyz.zyz, this.e431)) + float4(float3(0.0), other.e125 * this.e412) - float4((this.group0.xyz.yzx * other.group1.zxy), other.e321 * this.e321), 
             /* e23, e31, e12, e45 */
@@ -3188,10 +3018,9 @@ extension Circle: Sandwich<AntiFlector> {
         ).geometric_product(this.reverse());
     }
 }
-extension Circle: Sandwich<AntiLine> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: AntiLine) -> Output {
-        return VersorEven.from_groups(
+public extension Circle {
+    public VersorOdd sandwich(AntiLine other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(other.e31 * this.e412, other.e12 * this.e423, other.e23 * this.e431, -(other.e31 * this.e425) - (other.e12 * this.e435) - (other.e15 * this.e423) - (other.e25 * this.e431) - (other.e35 * this.e412)) - float4((other.group0.xyz.zxy * this.group0.xyz.yzx), other.e23 * this.e415), 
             /* e415, e425, e435, e321 */
@@ -3203,10 +3032,9 @@ extension Circle: Sandwich<AntiLine> {
         ).geometric_product(this.reverse());
     }
 }
-extension Circle: Sandwich<AntiMotor> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: AntiMotor) -> Output {
-        return VersorEven.from_groups(
+public extension Circle {
+    public VersorOdd sandwich(AntiMotor other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((other.e31 * this.e412) + (other.scalar * this.e423), (other.e12 * this.e423) + (other.scalar * this.e431), (other.e23 * this.e431) + (other.scalar * this.e412), -(other.e23 * this.e415) - (other.e31 * this.e425) - (other.e12 * this.e435) - (other.e25 * this.e431) - (other.e35 * this.e412)) - float4((this.group0.xyz.yzx * other.group0.zxy), other.e15 * this.e423), 
             /* e415, e425, e435, e321 */
@@ -3218,12 +3046,11 @@ extension Circle: Sandwich<AntiMotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension Circle: Sandwich<AntiPlane> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiPlane) -> Output {
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4((this.group0.xyz.zxy * other.group0.yzx) - (this.group0.xyz.yzx * other.group0.zxy), 0.0), 
+public extension Circle {
+    public VersorEven sandwich(AntiPlane other) {
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            (this.group0.xyz.zxy * other.group0.yzx) - (this.group0.xyz.yzx * other.group0.zxy), 
             /* e23, e31, e12, e45 */
             float4(float3(0.0), other.e3 * this.e435 * -1.0) - (other.group0.xyzy * this.group1.wwwy) - float4((this.group0.xyz * other.group0.www), other.e1 * this.e415), 
             /* e15, e25, e35, e1234 */
@@ -3233,23 +3060,21 @@ extension Circle: Sandwich<AntiPlane> {
         ).geometric_product(this.reverse());
     }
 }
-extension Circle: Sandwich<AntiScalar> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiScalar) -> Output {
-        return Dipole.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(other.e12345) * this.group0.xyz * float3(-1.0), 0.0), 
+public extension Circle {
+    public VersorEven sandwich(AntiScalar other) {
+        return Dipole(
+            /* e41, e42, e43 */
+            float3(other.e12345) * this.group0.xyz * float3(-1.0), 
             /* e23, e31, e12, e45 */
             float4(other.e12345) * this.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e15, e25, e35, 0 */
-            float4(float3(other.e12345) * this.group2.xyz * float3(-1.0), 0.0)
+            /* e15, e25, e35 */
+            float3(other.e12345) * this.group2.xyz * float3(-1.0)
         ).geometric_product(this.reverse());
     }
 }
-extension Circle: Sandwich<Circle> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: Circle) -> Output {
-        return VersorOdd.from_groups(
+public extension Circle {
+    public VersorEven sandwich(Circle other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(-(other.e431 * this.e435) - (other.e425 * this.e412), -(other.e412 * this.e415) - (other.e435 * this.e423), -(other.e412 * this.e321) - (other.e415 * this.e431), (other.e415 * this.e415) + (other.e425 * this.e425) + (other.e435 * this.e435) + (other.e235 * this.e423) + (other.e315 * this.e431) + (other.e125 * this.e412)) + float4((other.group0.xyz.zxy * this.group1.yzx), other.e423 * this.e235) + float4((this.group0.xyz.xyx * other.group1.wwy), other.e431 * this.e315) + float4((this.group0.xyz.yzz * other.group1.zxw), other.e412 * this.e125) - (this.group1.wwyw * float4(other.group0.xyz.xyx, other.e321)), 
             /* e23, e31, e12, e45 */
@@ -3261,10 +3086,9 @@ extension Circle: Sandwich<Circle> {
         ).geometric_product(this.reverse());
     }
 }
-extension Circle: Sandwich<CircleRotor> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: CircleRotor) -> Output {
-        return VersorOdd.from_groups(
+public extension Circle {
+    public VersorEven sandwich(CircleRotor other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(-(this.e412 * other.e425) - (this.e435 * other.e431) - (this.e321 * other.e423), -(this.e431 * other.e12345) - (this.e415 * other.e412) - (this.e321 * other.e431), -(this.e412 * other.e12345) - (this.e425 * other.e423) - (this.e321 * other.e412), (this.e415 * other.e415) + (this.e425 * other.e425) + (this.e435 * other.e435) + (this.e235 * other.e423) + (this.e315 * other.e431) + (this.e125 * other.e412)) + float4((this.group0.xyz.xyx * other.group1.wwy), this.e423 * other.e235) + float4((this.group0.xyz.yzz * other.group1.zxw), this.e431 * other.e315) + float4((other.group0.xyz.zxy * this.group1.yzx), this.e412 * other.e125) - (float4(other.e12345, other.e435, other.e415, other.e321) * float4(this.group0.xyz.xxy, this.e321)), 
             /* e23, e31, e12, e45 */
@@ -3276,10 +3100,9 @@ extension Circle: Sandwich<CircleRotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension Circle: Sandwich<Dipole> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Dipole) -> Output {
-        return VersorEven.from_groups(
+public extension Circle {
+    public VersorOdd sandwich(Dipole other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((this.e423 * other.e45) + (this.e412 * other.e31) + (this.e435 * other.e42) + (this.e321 * other.e41), (this.e423 * other.e12) + (this.e431 * other.e45) + (this.e415 * other.e43) + (this.e321 * other.e42), (this.e431 * other.e23) + (this.e412 * other.e45) + (this.e425 * other.e41) + (this.e321 * other.e43), -(this.e412 * other.e35) - (this.e415 * other.e23) - (this.e425 * other.e31) - (this.e435 * other.e12) - (this.e321 * other.e45) - (this.e235 * other.e41) - (this.e315 * other.e42) - (this.e125 * other.e43)) - float4((this.group0.xyz.yzx * other.group1.zxy), this.e423 * other.e15) - float4((other.group0.xyz.zxy * this.group1.yzx), this.e431 * other.e25), 
             /* e415, e425, e435, e321 */
@@ -3291,10 +3114,9 @@ extension Circle: Sandwich<Dipole> {
         ).geometric_product(this.reverse());
     }
 }
-extension Circle: Sandwich<DipoleInversion> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: DipoleInversion) -> Output {
-        return VersorEven.from_groups(
+public extension Circle {
+    public VersorOdd sandwich(DipoleInversion other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((this.e423 * other.e45) + (this.e412 * other.e31) + (this.e412 * other.e4315) + (this.e415 * other.e1234) + (this.e435 * other.e42) + (this.e321 * other.e41), (this.e423 * other.e12) + (this.e423 * other.e4125) + (this.e431 * other.e45) + (this.e415 * other.e43) + (this.e425 * other.e1234) + (this.e321 * other.e42), (this.e431 * other.e23) + (this.e431 * other.e4235) + (this.e412 * other.e45) + (this.e425 * other.e41) + (this.e435 * other.e1234) + (this.e321 * other.e43), -(this.e415 * other.e23) - (this.e425 * other.e31) - (this.e435 * other.e12) - (this.e321 * other.e45) - (this.e235 * other.e41) - (this.e315 * other.e42) - (this.e125 * other.e43)) - float4((this.group0.xyz.yzx * other.group1.zxy), this.e423 * other.e15) - float4((this.group0.xyz.yzx * other.group3.zxy), this.e431 * other.e25) - float4((other.group0.xyz.zxy * this.group1.yzx), this.e412 * other.e35), 
             /* e415, e425, e435, e321 */
@@ -3306,12 +3128,11 @@ extension Circle: Sandwich<DipoleInversion> {
         ).geometric_product(this.reverse());
     }
 }
-extension Circle: Sandwich<DualNum> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: DualNum) -> Output {
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(other.e12345) * this.group0.xyz * float3(-1.0), 0.0), 
+public extension Circle {
+    public VersorEven sandwich(DualNum other) {
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            float3(other.e12345) * this.group0.xyz * float3(-1.0), 
             /* e23, e31, e12, e45 */
             float4((-(float3(other.e5) * this.group0.xyz) - (float3(other.e12345) * this.group1.xyz)), this.e321 * other.e12345), 
             /* e15, e25, e35, e1234 */
@@ -3321,10 +3142,9 @@ extension Circle: Sandwich<DualNum> {
         ).geometric_product(this.reverse());
     }
 }
-extension Circle: Sandwich<FlatPoint> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: FlatPoint) -> Output {
-        return VersorEven.from_groups(
+public extension Circle {
+    public VersorOdd sandwich(FlatPoint other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((float3(other.e45) * this.group0.xyz), -(this.e423 * other.e15) - (this.e431 * other.e25) - (this.e412 * other.e35) - (this.e321 * other.e45)), 
             /* e415, e425, e435, e321 */
@@ -3336,10 +3156,9 @@ extension Circle: Sandwich<FlatPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension Circle: Sandwich<Flector> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Flector) -> Output {
-        return VersorEven.from_groups(
+public extension Circle {
+    public VersorOdd sandwich(Flector other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((this.e423 * other.e45) + (this.e412 * other.e4315), (this.e423 * other.e4125) + (this.e431 * other.e45), (this.e431 * other.e4235) + (this.e412 * other.e45), -(this.e431 * other.e25) - (this.e412 * other.e35) - (this.e321 * other.e45)) - float4((this.group0.xyz.yzx * other.group1.zxy), this.e423 * other.e15), 
             /* e415, e425, e435, e321 */
@@ -3351,10 +3170,9 @@ extension Circle: Sandwich<Flector> {
         ).geometric_product(this.reverse());
     }
 }
-extension Circle: Sandwich<Line> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: Line) -> Output {
-        return VersorOdd.from_groups(
+public extension Circle {
+    public VersorEven sandwich(Line other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(this.e412 * other.e425 * -1.0, this.e423 * other.e435 * -1.0, this.e431 * other.e415 * -1.0, (this.e431 * other.e315) + (this.e412 * other.e125) + (this.e415 * other.e415) + (this.e425 * other.e425) + (this.e435 * other.e435)) + float4((this.group0.xyz.yzx * other.group0.xyz.zxy), this.e423 * other.e235), 
             /* e23, e31, e12, e45 */
@@ -3366,10 +3184,9 @@ extension Circle: Sandwich<Line> {
         ).geometric_product(this.reverse());
     }
 }
-extension Circle: Sandwich<Motor> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: Motor) -> Output {
-        return VersorOdd.from_groups(
+public extension Circle {
+    public VersorEven sandwich(Motor other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(-(this.e423 * other.e12345) - (this.e412 * other.e425), -(this.e423 * other.e435) - (this.e431 * other.e12345), -(this.e431 * other.e415) - (this.e412 * other.e12345), (this.e431 * other.e315) + (this.e412 * other.e125) + (this.e415 * other.e415) + (this.e425 * other.e425) + (this.e435 * other.e435)) + float4((this.group0.xyz.yzx * other.group0.zxy), this.e423 * other.e235), 
             /* e23, e31, e12, e45 */
@@ -3381,41 +3198,39 @@ extension Circle: Sandwich<Motor> {
         ).geometric_product(this.reverse());
     }
 }
-extension Circle: Sandwich<MultiVector> {
-    associatedtype Output = MultiVector;
-    func sandwich(other: MultiVector) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((this.e423 * other.e235) + (this.e431 * other.e315) + (this.e412 * other.e125) + (this.e415 * other.e415) + (this.e425 * other.e425) + (this.e435 * other.e435) + (this.e235 * other.e423) + (this.e315 * other.e431) + (this.e125 * other.e412), -(this.e423 * other.e15) - (this.e431 * other.e25) - (this.e412 * other.e35) - (this.e425 * other.e31) - (this.e435 * other.e12) - (this.e321 * other.e45) - (this.e235 * other.e41) - (this.e315 * other.e42) - (this.e125 * other.e43)) - (float2(other.e321, other.e23) * this.group1.wx), 0.0, 0.0), 
+public extension Circle {
+    public MultiVector sandwich(MultiVector other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((this.e423 * other.e235) + (this.e431 * other.e315) + (this.e412 * other.e125) + (this.e415 * other.e415) + (this.e425 * other.e425) + (this.e435 * other.e435) + (this.e235 * other.e423) + (this.e315 * other.e431) + (this.e125 * other.e412), -(this.e423 * other.e15) - (this.e431 * other.e25) - (this.e412 * other.e35) - (this.e425 * other.e31) - (this.e435 * other.e12) - (this.e321 * other.e45) - (this.e235 * other.e41) - (this.e315 * other.e42) - (this.e125 * other.e43)) - (float2(other.e321, other.e23) * this.group1.wx), 
             /* e1, e2, e3, e4 */
             float4((this.e412 * other.e25) + (this.e425 * other.e4125) + (this.e321 * other.e23) + (this.e315 * other.e43), (this.e431 * other.e3215) + (this.e435 * other.e4235) + (this.e321 * other.e31) + (this.e125 * other.e41), (this.e412 * other.e3215) + (this.e415 * other.e4315) + (this.e321 * other.e12) + (this.e235 * other.e42), -(this.e412 * other.e4125) - (this.e415 * other.e41) - (this.e425 * other.e42) - (this.e435 * other.e43)) + (float4(other.e3215, other.e35, other.e15, other.e1234) * float4(this.group0.xyz.xxy, this.e321)) - (float4(other.e45, other.e4125, other.e4235, other.e4315) * float4(this.group1.xxy, this.e431)) - (float4(other.e42, other.e1234, other.e1234, other.e31) * float4(this.group2.xyz.zyz, this.e431)) - (float4(other.e4315, other.e45, other.e45, other.e12) * float4(this.group1.zyz, this.e412)) - (float4(other.e1234, other.e43, other.e41, other.e4235) * float4(this.group2.xyz.xxy, this.e423)) - float4((this.group0.xyz.yzx * other.group3.zxy), this.e423 * other.e23), 
-            /* e5, 0, 0, 0 */
-            float4((this.e235 * other.e4235) + (this.e315 * other.e4315) + (this.e125 * other.e4125) - (this.e415 * other.e15) - (this.e425 * other.e25) - (this.e435 * other.e35) - (this.e321 * other.e3215) - (this.e235 * other.e23) - (this.e315 * other.e31) - (this.e125 * other.e12), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (this.e235 * other.e4235) + (this.e315 * other.e4315) + (this.e125 * other.e4125) - (this.e415 * other.e15) - (this.e425 * other.e25) - (this.e435 * other.e35) - (this.e321 * other.e3215) - (this.e235 * other.e23) - (this.e315 * other.e31) - (this.e125 * other.e12), 
             /* e15, e25, e35, e45 */
             float4((this.group2.xyz.yzx * other.group1.zxy), this.e321 * other.e12345) + float4((this.group2.xyz.yzx * other.group6.zxy), this.e235 * other.e423) + float4((other.group8.xyz.xxy * this.group1.wzx), this.e315 * other.e431) + float4((other.group8.xyz.zyz * this.group1.yww), this.e125 * other.e412) - (float4(other.e2, other.e435, other.e415, other.e125) * float4(this.group2.xyz.zxy, this.e412)) - (float4(other.e321, other.e3, other.e1, other.e315) * float4(this.group2.xyz.xxy, this.e431)) - (this.group1.xyzz * float4(float3(other.e5), other.e3)) - (float4(other.group0.xy.yy, other.e12345, this.e423) * float4(this.group2.xyz, other.e235)) - float4((this.group2.xyz.zyz * other.group6.yww), this.e415 * other.e1) - float4((other.group8.xyz.yzx * this.group1.zxy), this.e425 * other.e2), 
-            /* e41, e42, e43, 0 */
-            float4((float3(this.e423) * float3(other.e321, other.e3, other.e425)) + (float3(this.e431) * float3(other.e435, other.e321, other.e1)) + (float3(this.e412) * float3(other.e2, other.e415, other.e321)) + (other.group7.xyz.zxy * this.group1.yzx) - (float3(other.e12345) * this.group0.xyz) - (float3(other.e4) * this.group1.xyz) - (float3(other.e3, other.e435, other.e2) * this.group0.xyz.yxx) - (float3(other.e425, other.e1, other.e415) * this.group0.xyz.zzy) - (other.group7.xyz.xyx * this.group1.wwy) - (other.group7.xyz.yzz * this.group1.zxw), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((this.group0.xyz.yzx * other.group8.xyz.zxy) + (this.group2.xyz.yzx * other.group7.xyz.zxy) + (this.group1.yzx * other.group6.zxy) - (float3(this.e321) * other.group1.xyz) - (float3(other.e12345) * this.group1.xyz) - (float3(other.e4, other.e412, other.e423) * this.group2.xyz.xxy) - (float3(other.e5, other.e125, other.e235) * this.group0.xyz.xxy) - (float3(other.e431, other.e4, other.e4) * this.group2.xyz.zyz) - (float3(other.e315, other.e5, other.e5) * this.group0.xyz.zyz) - (this.group1.zxy * other.group6.yzx), 0.0), 
+            /* e41, e42, e43 */
+            (float3(this.e423) * float3(other.e321, other.e3, other.e425)) + (float3(this.e431) * float3(other.e435, other.e321, other.e1)) + (float3(this.e412) * float3(other.e2, other.e415, other.e321)) + (other.group7.xyz.zxy * this.group1.yzx) - (float3(other.e12345) * this.group0.xyz) - (float3(other.e4) * this.group1.xyz) - (float3(other.e3, other.e435, other.e2) * this.group0.xyz.yxx) - (float3(other.e425, other.e1, other.e415) * this.group0.xyz.zzy) - (other.group7.xyz.xyx * this.group1.wwy) - (other.group7.xyz.yzz * this.group1.zxw), 
+            /* e23, e31, e12 */
+            (this.group0.xyz.yzx * other.group8.xyz.zxy) + (this.group2.xyz.yzx * other.group7.xyz.zxy) + (this.group1.yzx * other.group6.zxy) - (float3(this.e321) * other.group1.xyz) - (float3(other.e12345) * this.group1.xyz) - (float3(other.e4, other.e412, other.e423) * this.group2.xyz.xxy) - (float3(other.e5, other.e125, other.e235) * this.group0.xyz.xxy) - (float3(other.e431, other.e4, other.e4) * this.group2.xyz.zyz) - (float3(other.e315, other.e5, other.e5) * this.group0.xyz.zyz) - (this.group1.zxy * other.group6.yzx), 
             /* e415, e425, e435, e321 */
             float4(this.e321 * other.e4235 * -1.0, this.e321 * other.e4315 * -1.0, this.e321 * other.e4125 * -1.0, this.e435 * other.e4125) + (float4(other.scalar) * this.group1) + (float4(other.e25, other.e3215, other.e3215, other.e42) * float4(this.group0.xyz.zyz, this.e315)) + (float4(other.e42, other.e1234, other.e1234, other.e4235) * float4(this.group2.xyz.zyz, this.e415)) + (float4(other.e3215, other.e35, other.e15, other.e41) * float4(this.group0.xyz.xxy, this.e235)) + (float4(other.e1234, other.e43, other.e41, other.e43) * float4(this.group2.xyz.xxy, this.e125)) + float4((other.group5.xyz.yzx * this.group1.zxy), this.e425 * other.e4315) - (other.group3.zxyx * float4(this.group0.xyz.yzx, this.e423)) - float4((this.group2.xyz.yzx * other.group4.xyz.zxy), this.e431 * other.e25) - float4((other.group5.xyz.zxy * this.group1.yzx), this.e412 * other.e35), 
-            /* e423, e431, e412, 0 */
-            float4((float3(other.scalar) * this.group0.xyz) + (float3(other.e1234) * this.group1.xyz) + (float3(other.e45, other.e12, other.e23) * this.group0.xyz.xxy) + (float3(other.e31, other.e4125, other.e4235) * this.group0.xyz.zxy) + (float3(other.e4315, other.e45, other.e45) * this.group0.xyz.zyz) + (other.group4.xyz.xyx * this.group1.wwy) + (other.group4.xyz.yzz * this.group1.zxw) - (this.group0.xyz.yzx * other.group5.xyz.zxy) - (this.group0.xyz.yzx * other.group9.zxy) - (other.group4.xyz.zxy * this.group1.yzx), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(other.scalar) * this.group2.xyz) + (float3(other.e25, other.e3215, other.e3215) * this.group1.zyz) + (float3(other.e31, other.e4235, other.e23) * this.group2.xyz.zzy) + (float3(other.e4125, other.e12, other.e4315) * this.group2.xyz.yxx) + (float3(other.e3215, other.e35, other.e15) * this.group1.xxy) - (float3(this.e321) * other.group3.xyz) - (float3(this.e235) * float3(other.e45, other.e4125, other.e31)) - (float3(this.e315) * float3(other.e12, other.e45, other.e4235)) - (float3(this.e125) * float3(other.e4315, other.e23, other.e45)) - (this.group1.yzx * other.group3.zxy), 0.0), 
+            /* e423, e431, e412 */
+            (float3(other.scalar) * this.group0.xyz) + (float3(other.e1234) * this.group1.xyz) + (float3(other.e45, other.e12, other.e23) * this.group0.xyz.xxy) + (float3(other.e31, other.e4125, other.e4235) * this.group0.xyz.zxy) + (float3(other.e4315, other.e45, other.e45) * this.group0.xyz.zyz) + (other.group4.xyz.xyx * this.group1.wwy) + (other.group4.xyz.yzz * this.group1.zxw) - (this.group0.xyz.yzx * other.group5.xyz.zxy) - (this.group0.xyz.yzx * other.group9.zxy) - (other.group4.xyz.zxy * this.group1.yzx), 
+            /* e235, e315, e125 */
+            (float3(other.scalar) * this.group2.xyz) + (float3(other.e25, other.e3215, other.e3215) * this.group1.zyz) + (float3(other.e31, other.e4235, other.e23) * this.group2.xyz.zzy) + (float3(other.e4125, other.e12, other.e4315) * this.group2.xyz.yxx) + (float3(other.e3215, other.e35, other.e15) * this.group1.xxy) - (float3(this.e321) * other.group3.xyz) - (float3(this.e235) * float3(other.e45, other.e4125, other.e31)) - (float3(this.e315) * float3(other.e12, other.e45, other.e4235)) - (float3(this.e125) * float3(other.e4315, other.e23, other.e45)) - (this.group1.yzx * other.group3.zxy), 
             /* e4235, e4315, e4125, e3215 */
             float4(-(this.e431 * other.e125) - (this.e425 * other.e3) - (this.e235 * other.e4) - (this.e125 * other.e431), -(this.e412 * other.e235) - (this.e435 * other.e1) - (this.e235 * other.e412) - (this.e315 * other.e4), -(this.e423 * other.e315) - (this.e415 * other.e2) - (this.e315 * other.e423) - (this.e125 * other.e4), (this.e415 * other.e235) + (this.e425 * other.e315) + (this.e435 * other.e125) + (this.e321 * other.e5)) + (float4(other.e2, other.e321, other.e321, other.e3) * float4(this.group1.zyz, this.e125)) + (float4(other.e5, other.e125, other.e235, other.e1) * float4(this.group0.xyz.xxy, this.e235)) + (float4(other.e321, other.e3, other.e1, other.e425) * float4(this.group1.xxy, this.e315)) + (float4(other.e315, other.e5, other.e5, other.e415) * float4(this.group0.xyz.zyz, this.e235)) + (other.group6.xyzz * float4(this.group1.www, this.e125)) + float4((this.group2.xyz.yzx * other.group7.xyz.zxy), this.e315 * other.e2), 
-            /* e1234, 0, 0, 0 */
-            float4((this.e423 * other.e415) + (this.e431 * other.e425) + (this.e412 * other.e435) + (this.e415 * other.e423) + (this.e425 * other.e431) + (this.e435 * other.e412) - (this.e423 * other.e1) - (this.e431 * other.e2) - (this.e412 * other.e3) - (this.e321 * other.e4), 0.0, 0.0, 0.0)
+            /* e1234 */
+            (this.e423 * other.e415) + (this.e431 * other.e425) + (this.e412 * other.e435) + (this.e415 * other.e423) + (this.e425 * other.e431) + (this.e435 * other.e412) - (this.e423 * other.e1) - (this.e431 * other.e2) - (this.e412 * other.e3) - (this.e321 * other.e4)
         ).geometric_product(this.reverse());
     }
 }
-extension Circle: Sandwich<Plane> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Plane) -> Output {
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4((this.group0.xyz.zxy * other.group0.yzx) - (this.group0.xyz.yzx * other.group0.zxy), 0.0), 
+public extension Circle {
+    public VersorOdd sandwich(Plane other) {
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            (this.group0.xyz.zxy * other.group0.yzx) - (this.group0.xyz.yzx * other.group0.zxy), 
             /* e415, e425, e435, e321 */
             float4(this.e321 * other.e4235 * -1.0, this.e321 * other.e4315 * -1.0, this.e321 * other.e4125 * -1.0, (this.e425 * other.e4315) + (this.e435 * other.e4125)) + (other.group0.wwwx * float4(this.group0.xyz, this.e415)), 
             /* e235, e315, e125, e4 */
@@ -3425,12 +3240,11 @@ extension Circle: Sandwich<Plane> {
         ).geometric_product(this.reverse());
     }
 }
-extension Circle: Sandwich<RoundPoint> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: RoundPoint) -> Output {
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4((this.group0.xyz.zxy * other.group0.yzx) - (float3(other.e4) * this.group1.xyz) - (this.group0.xyz.yzx * other.group0.zxy), 0.0), 
+public extension Circle {
+    public VersorEven sandwich(RoundPoint other) {
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            (this.group0.xyz.zxy * other.group0.yzx) - (float3(other.e4) * this.group1.xyz) - (this.group0.xyz.yzx * other.group0.zxy), 
             /* e23, e31, e12, e45 */
             -(this.group1.wwwz * other.group0.xyzz) - (other.group0.wwwy * float4(this.group2.xyz, this.e425)) - float4((float3(other.e5) * this.group0.xyz), this.e415 * other.e1), 
             /* e15, e25, e35, e1234 */
@@ -3440,25 +3254,23 @@ extension Circle: Sandwich<RoundPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension Circle: Sandwich<Scalar> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Scalar) -> Output {
-        return Circle.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(other.scalar) * this.group0.xyz, 0.0), 
+public extension Circle {
+    public VersorOdd sandwich(Scalar other) {
+        return Circle(
+            /* e423, e431, e412 */
+            float3(other.scalar) * this.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(other.scalar) * this.group1, 
-            /* e235, e315, e125, 0 */
-            float4(float3(other.scalar) * this.group2.xyz, 0.0)
+            /* e235, e315, e125 */
+            float3(other.scalar) * this.group2.xyz
         ).geometric_product(this.reverse());
     }
 }
-extension Circle: Sandwich<Sphere> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Sphere) -> Output {
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4((float3(other.e1234) * this.group1.xyz) + (this.group0.xyz.zxy * other.group0.yzx) - (this.group0.xyz.yzx * other.group0.zxy), 0.0), 
+public extension Circle {
+    public VersorOdd sandwich(Sphere other) {
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            (float3(other.e1234) * this.group1.xyz) + (this.group0.xyz.zxy * other.group0.yzx) - (this.group0.xyz.yzx * other.group0.zxy), 
             /* e415, e425, e435, e321 */
             float4(this.e321 * other.e4235 * -1.0, this.e321 * other.e4315 * -1.0, this.e321 * other.e4125 * -1.0, this.e435 * other.e4125) + (other.group0.wwwx * float4(this.group0.xyz, this.e415)) + float4((float3(other.e1234) * this.group2.xyz), this.e425 * other.e4315), 
             /* e235, e315, e125, e4 */
@@ -3468,10 +3280,9 @@ extension Circle: Sandwich<Sphere> {
         ).geometric_product(this.reverse());
     }
 }
-extension Circle: Sandwich<VersorEven> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: VersorEven) -> Output {
-        return VersorOdd.from_groups(
+public extension Circle {
+    public VersorEven sandwich(VersorEven other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(-(this.e431 * other.e3) - (this.e412 * other.e425) - (this.e415 * other.e4) - (this.e435 * other.e431) - (this.e321 * other.e423), -(this.e431 * other.e12345) - (this.e412 * other.e1) - (this.e415 * other.e412) - (this.e425 * other.e4) - (this.e321 * other.e431), -(this.e431 * other.e415) - (this.e412 * other.e12345) - (this.e425 * other.e423) - (this.e435 * other.e4) - (this.e321 * other.e412), (this.e415 * other.e415) + (this.e425 * other.e425) + (this.e435 * other.e435) + (this.e315 * other.e431) + (this.e125 * other.e412)) + (float4(this.e423) * float4(other.e321, other.e3, other.e425, other.e235)) + (float4(this.e431) * float4(other.group1.zw, other.e1, other.e315)) + (float4(this.e412) * float4(other.e2, other.e415, other.e321, other.e125)) + (other.group0.zxyx * float4(this.group1.yzx, this.e235)) - (float4(other.e12345, other.e435, other.e2, other.e321) * float4(this.group0.xyz.xxx, this.e321)), 
             /* e23, e31, e12, e45 */
@@ -3483,10 +3294,9 @@ extension Circle: Sandwich<VersorEven> {
         ).geometric_product(this.reverse());
     }
 }
-extension Circle: Sandwich<VersorOdd> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: VersorOdd) -> Output {
-        return VersorEven.from_groups(
+public extension Circle {
+    public VersorOdd sandwich(VersorOdd other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((this.e423 * other.scalar) + (this.e423 * other.e45) + (this.e412 * other.e31) + (this.e412 * other.e4315) + (this.e415 * other.e1234) + (this.e435 * other.e42) + (this.e321 * other.e41), (this.e423 * other.e12) + (this.e423 * other.e4125) + (this.e431 * other.scalar) + (this.e431 * other.e45) + (this.e415 * other.e43) + (this.e425 * other.e1234) + (this.e321 * other.e42), (this.e431 * other.e23) + (this.e431 * other.e4235) + (this.e412 * other.scalar) + (this.e412 * other.e45) + (this.e425 * other.e41) + (this.e435 * other.e1234) + (this.e321 * other.e43), -(this.e415 * other.e23) - (this.e425 * other.e31) - (this.e435 * other.e12) - (this.e321 * other.e45) - (this.e235 * other.e41) - (this.e315 * other.e42) - (this.e125 * other.e43)) - float4((this.group0.xyz.yzx * other.group1.zxy), this.e423 * other.e15) - float4((this.group0.xyz.yzx * other.group3.zxy), this.e431 * other.e25) - float4((this.group1.yzx * other.group0.zxy), this.e412 * other.e35), 
             /* e415, e425, e435, e321 */
@@ -3498,16 +3308,21 @@ extension Circle: Sandwich<VersorOdd> {
         ).geometric_product(this.reverse());
     }
 }
-extension CircleRotor {
-    // Fancy infix trick
-    func operator/(_rhs: SandwichInfix) -> SandwichInfixPartial<CircleRotor> {
-        return SandwichInfixPartial { a: this };
+public extension CircleRotor {
+    // Fancy infix trick (first half)
+    public SandwichInfixPartial<CircleRotor> operator /(SandwichInfix rhs) {
+        return SandwichInfixPartial<CircleRotor>(this);
     }
 }
-extension CircleRotor: Sandwich<AntiCircleRotor> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: AntiCircleRotor) -> Output {
-        return VersorEven.from_groups(
+public extension SandwichInfixPartial<CircleRotor> {
+    // Fancy infix trick (second half)
+    public VersorOdd operator /(AntiCircleRotor rhs) {
+        return this.a.sandwich(rhs);
+    }
+}
+public extension CircleRotor {
+    public VersorOdd sandwich(AntiCircleRotor other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((other.e41 * this.e12345) + (other.e42 * this.e435) + (other.e31 * this.e412) + (other.e45 * this.e423) + (other.scalar * this.e423), (other.e42 * this.e12345) + (other.e43 * this.e415) + (other.e12 * this.e423) + (other.e45 * this.e431) + (other.scalar * this.e431), (other.e43 * this.e321) + (other.e43 * this.e12345) + (other.e23 * this.e431) + (other.e45 * this.e412) + (other.scalar * this.e412), -(other.e43 * this.e125) - (other.e23 * this.e415) - (other.e31 * this.e425) - (other.e12 * this.e435) - (other.e45 * this.e321) - (other.e15 * this.e423) - (other.e25 * this.e431) - (other.e35 * this.e412)) + float4((other.group0.xyz.xyx * this.group1.wwy), other.scalar * this.e12345) - float4((other.group0.xyz.zxy * this.group1.yzx), other.e41 * this.e235) - float4((this.group0.xyz.yzx * other.group1.zxy), other.e42 * this.e315), 
             /* e415, e425, e435, e321 */
@@ -3519,10 +3334,9 @@ extension CircleRotor: Sandwich<AntiCircleRotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension CircleRotor: Sandwich<AntiDipoleInversion> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiDipoleInversion) -> Output {
-        return VersorOdd.from_groups(
+public extension CircleRotor {
+    public VersorEven sandwich(AntiDipoleInversion other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(-(other.e423 * this.e12345) - (other.e431 * this.e435) - (other.e425 * this.e412) - (other.e4 * this.e415) - (other.e3 * this.e431), -(other.e431 * this.e12345) - (other.e412 * this.e415) - (other.e435 * this.e423) - (other.e4 * this.e425) - (other.e1 * this.e412), -(other.e412 * this.e321) - (other.e412 * this.e12345) - (other.e415 * this.e431) - (other.e4 * this.e435) - (other.e2 * this.e423), (other.e415 * this.e415) + (other.e425 * this.e425) + (other.e435 * this.e435) + (other.e315 * this.e431) + (other.e125 * this.e412)) + (float4(other.e321, other.e3, other.e425, this.e315) * float4(this.group0.xyz.xxx, other.e431)) + (float4(other.e2, other.e415, other.e321, other.e235) * float4(this.group0.xyz.zzz, this.e423)) + (float4(other.group1.zw, other.e1, this.e125) * float4(this.group0.xyz.yyy, other.e412)) + float4((other.group0.xyz.zxy * this.group1.yzx), other.e423 * this.e235) - (this.group1.wwyw * float4(other.group0.xyz.xyx, other.e321)), 
             /* e23, e31, e12, e45 */
@@ -3534,10 +3348,9 @@ extension CircleRotor: Sandwich<AntiDipoleInversion> {
         ).geometric_product(this.reverse());
     }
 }
-extension CircleRotor: Sandwich<AntiDualNum> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: AntiDualNum) -> Output {
-        return VersorEven.from_groups(
+public extension CircleRotor {
+    public VersorOdd sandwich(AntiDualNum other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(other.scalar) * float4(this.group0.xyz, this.e12345), 
             /* e415, e425, e435, e321 */
@@ -3549,10 +3362,9 @@ extension CircleRotor: Sandwich<AntiDualNum> {
         ).geometric_product(this.reverse());
     }
 }
-extension CircleRotor: Sandwich<AntiFlatPoint> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiFlatPoint) -> Output {
-        return VersorOdd.from_groups(
+public extension CircleRotor {
+    public VersorEven sandwich(AntiFlatPoint other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4((float3(other.e321) * this.group0.xyz), (other.e235 * this.e423) + (other.e315 * this.e431) + (other.e125 * this.e412) - (other.e321 * this.e321)), 
             /* e23, e31, e12, e45 */
@@ -3564,10 +3376,9 @@ extension CircleRotor: Sandwich<AntiFlatPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension CircleRotor: Sandwich<AntiFlector> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiFlector) -> Output {
-        return VersorOdd.from_groups(
+public extension CircleRotor {
+    public VersorEven sandwich(AntiFlector other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             (float4(other.e321, other.e3, other.e1, other.e235) * float4(this.group0.xyz.xxy, this.e423)) + (float4(other.e2, other.e321, other.e321, other.e315) * float4(this.group0.xyz.zyz, this.e431)) + float4(float3(0.0), other.e125 * this.e412) - float4((this.group0.xyz.yzx * other.group1.zxy), other.e321 * this.e321), 
             /* e23, e31, e12, e45 */
@@ -3579,10 +3390,9 @@ extension CircleRotor: Sandwich<AntiFlector> {
         ).geometric_product(this.reverse());
     }
 }
-extension CircleRotor: Sandwich<AntiLine> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: AntiLine) -> Output {
-        return VersorEven.from_groups(
+public extension CircleRotor {
+    public VersorOdd sandwich(AntiLine other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(other.e31 * this.e412, other.e12 * this.e423, other.e23 * this.e431, -(other.e31 * this.e425) - (other.e12 * this.e435) - (other.e15 * this.e423) - (other.e25 * this.e431) - (other.e35 * this.e412)) - float4((other.group0.xyz.zxy * this.group0.xyz.yzx), other.e23 * this.e415), 
             /* e415, e425, e435, e321 */
@@ -3594,10 +3404,9 @@ extension CircleRotor: Sandwich<AntiLine> {
         ).geometric_product(this.reverse());
     }
 }
-extension CircleRotor: Sandwich<AntiMotor> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: AntiMotor) -> Output {
-        return VersorEven.from_groups(
+public extension CircleRotor {
+    public VersorOdd sandwich(AntiMotor other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(other.e31 * this.e412, other.scalar * this.e431, other.scalar * this.e412, -(other.e23 * this.e415) - (other.e31 * this.e425) - (other.e12 * this.e435) - (other.e25 * this.e431) - (other.e35 * this.e412)) + float4((this.group0.xyz.xxy * other.group0.wzx), other.scalar * this.e12345) - float4((this.group0.xyz.yzx * other.group0.zxy), other.e15 * this.e423), 
             /* e415, e425, e435, e321 */
@@ -3609,12 +3418,11 @@ extension CircleRotor: Sandwich<AntiMotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension CircleRotor: Sandwich<AntiPlane> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiPlane) -> Output {
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4((this.group0.xyz.zxy * other.group0.yzx) - (this.group0.xyz.yzx * other.group0.zxy), 0.0), 
+public extension CircleRotor {
+    public VersorEven sandwich(AntiPlane other) {
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            (this.group0.xyz.zxy * other.group0.yzx) - (this.group0.xyz.yzx * other.group0.zxy), 
             /* e23, e31, e12, e45 */
             float4(float3(0.0), other.e3 * this.e435 * -1.0) - (other.group0.xyzy * this.group1.wwwy) - float4((this.group0.xyz * other.group0.www), other.e1 * this.e415), 
             /* e15, e25, e35, e1234 */
@@ -3624,12 +3432,11 @@ extension CircleRotor: Sandwich<AntiPlane> {
         ).geometric_product(this.reverse());
     }
 }
-extension CircleRotor: Sandwich<AntiScalar> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiScalar) -> Output {
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(other.e12345) * this.group0.xyz * float3(-1.0), 0.0), 
+public extension CircleRotor {
+    public VersorEven sandwich(AntiScalar other) {
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            float3(other.e12345) * this.group0.xyz * float3(-1.0), 
             /* e23, e31, e12, e45 */
             float4(other.e12345) * this.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e15, e25, e35, scalar */
@@ -3637,10 +3444,9 @@ extension CircleRotor: Sandwich<AntiScalar> {
         ).geometric_product(this.reverse());
     }
 }
-extension CircleRotor: Sandwich<Circle> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: Circle) -> Output {
-        return VersorOdd.from_groups(
+public extension CircleRotor {
+    public VersorEven sandwich(Circle other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(-(other.e423 * this.e12345) - (other.e431 * this.e435) - (other.e425 * this.e412), -(other.e431 * this.e12345) - (other.e412 * this.e415) - (other.e435 * this.e423), -(other.e412 * this.e321) - (other.e412 * this.e12345) - (other.e415 * this.e431), (other.e415 * this.e415) + (other.e425 * this.e425) + (other.e435 * this.e435) + (other.e235 * this.e423) + (other.e315 * this.e431) + (other.e125 * this.e412)) + float4((other.group0.xyz.zxy * this.group1.yzx), other.e423 * this.e235) + float4((this.group0.xyz.xyx * other.group1.wwy), other.e431 * this.e315) + float4((this.group0.xyz.yzz * other.group1.zxw), other.e412 * this.e125) - (this.group1.wwyw * float4(other.group0.xyz.xyx, other.e321)), 
             /* e23, e31, e12, e45 */
@@ -3652,10 +3458,9 @@ extension CircleRotor: Sandwich<Circle> {
         ).geometric_product(this.reverse());
     }
 }
-extension CircleRotor: Sandwich<CircleRotor> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: CircleRotor) -> Output {
-        return VersorOdd.from_groups(
+public extension CircleRotor {
+    public VersorEven sandwich(CircleRotor other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(-(other.e431 * this.e435) - (other.e425 * this.e412) - (other.e12345 * this.e423), -(other.e412 * this.e415) - (other.e435 * this.e423) - (other.e12345 * this.e431), -(other.e412 * this.e12345) - (other.e415 * this.e431) - (other.e12345 * this.e412), (other.e415 * this.e415) + (other.e425 * this.e425) + (other.e435 * this.e435) + (other.e235 * this.e423) + (other.e315 * this.e431) + (other.e125 * this.e412)) + float4((other.group0.xyz.zxy * this.group1.yzx), other.e423 * this.e235) + float4((this.group0.xyz.xyx * other.group1.wwy), other.e431 * this.e315) + float4((this.group0.xyz.yzz * other.group1.zxw), other.e412 * this.e125) - (this.group1.wwyw * float4(other.group0.xyz.xyx, other.e321)) - (float4(this.group2.ww, this.e321, this.e12345) * float4(other.group0.xyz, other.e12345)), 
             /* e23, e31, e12, e45 */
@@ -3667,10 +3472,9 @@ extension CircleRotor: Sandwich<CircleRotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension CircleRotor: Sandwich<Dipole> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Dipole) -> Output {
-        return VersorEven.from_groups(
+public extension CircleRotor {
+    public VersorOdd sandwich(Dipole other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((this.e423 * other.e45) + (this.e412 * other.e31) + (this.e435 * other.e42) + (this.e321 * other.e41) + (this.e12345 * other.e41), (this.e423 * other.e12) + (this.e431 * other.e45) + (this.e415 * other.e43) + (this.e321 * other.e42) + (this.e12345 * other.e42), (this.e431 * other.e23) + (this.e412 * other.e45) + (this.e425 * other.e41) + (this.e321 * other.e43) + (this.e12345 * other.e43), -(this.e412 * other.e35) - (this.e415 * other.e23) - (this.e425 * other.e31) - (this.e435 * other.e12) - (this.e321 * other.e45) - (this.e235 * other.e41) - (this.e315 * other.e42) - (this.e125 * other.e43)) - float4((this.group0.xyz.yzx * other.group1.zxy), this.e423 * other.e15) - float4((other.group0.xyz.zxy * this.group1.yzx), this.e431 * other.e25), 
             /* e415, e425, e435, e321 */
@@ -3682,10 +3486,9 @@ extension CircleRotor: Sandwich<Dipole> {
         ).geometric_product(this.reverse());
     }
 }
-extension CircleRotor: Sandwich<DipoleInversion> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: DipoleInversion) -> Output {
-        return VersorEven.from_groups(
+public extension CircleRotor {
+    public VersorOdd sandwich(DipoleInversion other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((this.e423 * other.e45) + (this.e412 * other.e31) + (this.e412 * other.e4315) + (this.e415 * other.e1234) + (this.e435 * other.e42) + (this.e321 * other.e41) + (this.e12345 * other.e41), (this.e423 * other.e12) + (this.e423 * other.e4125) + (this.e431 * other.e45) + (this.e415 * other.e43) + (this.e425 * other.e1234) + (this.e321 * other.e42) + (this.e12345 * other.e42), (this.e431 * other.e23) + (this.e431 * other.e4235) + (this.e412 * other.e45) + (this.e425 * other.e41) + (this.e435 * other.e1234) + (this.e321 * other.e43) + (this.e12345 * other.e43), -(this.e415 * other.e23) - (this.e425 * other.e31) - (this.e435 * other.e12) - (this.e321 * other.e45) - (this.e235 * other.e41) - (this.e315 * other.e42) - (this.e125 * other.e43)) - float4((this.group0.xyz.yzx * other.group1.zxy), this.e423 * other.e15) - float4((this.group0.xyz.yzx * other.group3.zxy), this.e431 * other.e25) - float4((other.group0.xyz.zxy * this.group1.yzx), this.e412 * other.e35), 
             /* e415, e425, e435, e321 */
@@ -3697,10 +3500,9 @@ extension CircleRotor: Sandwich<DipoleInversion> {
         ).geometric_product(this.reverse());
     }
 }
-extension CircleRotor: Sandwich<DualNum> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: DualNum) -> Output {
-        return VersorOdd.from_groups(
+public extension CircleRotor {
+    public VersorEven sandwich(DualNum other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(other.e12345) * float4(this.group0.xyz, this.e12345) * float4(-1.0), 
             /* e23, e31, e12, e45 */
@@ -3712,10 +3514,9 @@ extension CircleRotor: Sandwich<DualNum> {
         ).geometric_product(this.reverse());
     }
 }
-extension CircleRotor: Sandwich<FlatPoint> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: FlatPoint) -> Output {
-        return VersorEven.from_groups(
+public extension CircleRotor {
+    public VersorOdd sandwich(FlatPoint other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((float3(other.e45) * this.group0.xyz), -(this.e423 * other.e15) - (this.e431 * other.e25) - (this.e412 * other.e35) - (this.e321 * other.e45)), 
             /* e415, e425, e435, e321 */
@@ -3727,10 +3528,9 @@ extension CircleRotor: Sandwich<FlatPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension CircleRotor: Sandwich<Flector> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Flector) -> Output {
-        return VersorEven.from_groups(
+public extension CircleRotor {
+    public VersorOdd sandwich(Flector other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((this.e423 * other.e45) + (this.e412 * other.e4315), (this.e423 * other.e4125) + (this.e431 * other.e45), (this.e431 * other.e4235) + (this.e412 * other.e45), -(this.e431 * other.e25) - (this.e412 * other.e35) - (this.e321 * other.e45)) - float4((this.group0.xyz.yzx * other.group1.zxy), this.e423 * other.e15), 
             /* e415, e425, e435, e321 */
@@ -3742,10 +3542,9 @@ extension CircleRotor: Sandwich<Flector> {
         ).geometric_product(this.reverse());
     }
 }
-extension CircleRotor: Sandwich<Line> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: Line) -> Output {
-        return VersorOdd.from_groups(
+public extension CircleRotor {
+    public VersorEven sandwich(Line other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(this.e412 * other.e425 * -1.0, this.e423 * other.e435 * -1.0, this.e431 * other.e415 * -1.0, (this.e431 * other.e315) + (this.e412 * other.e125) + (this.e415 * other.e415) + (this.e425 * other.e425) + (this.e435 * other.e435)) + float4((this.group0.xyz.yzx * other.group0.xyz.zxy), this.e423 * other.e235), 
             /* e23, e31, e12, e45 */
@@ -3757,10 +3556,9 @@ extension CircleRotor: Sandwich<Line> {
         ).geometric_product(this.reverse());
     }
 }
-extension CircleRotor: Sandwich<Motor> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: Motor) -> Output {
-        return VersorOdd.from_groups(
+public extension CircleRotor {
+    public VersorEven sandwich(Motor other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(this.e412 * other.e425 * -1.0, this.e431 * other.e12345 * -1.0, this.e412 * other.e12345 * -1.0, (this.e431 * other.e315) + (this.e412 * other.e125) + (this.e415 * other.e415) + (this.e425 * other.e425) + (this.e435 * other.e435)) + float4((this.group0.xyz.yzx * other.group0.zxy), this.e423 * other.e235) - (other.group0.wzxw * float4(this.group0.xyz.xxy, this.e12345)), 
             /* e23, e31, e12, e45 */
@@ -3772,41 +3570,39 @@ extension CircleRotor: Sandwich<Motor> {
         ).geometric_product(this.reverse());
     }
 }
-extension CircleRotor: Sandwich<MultiVector> {
-    associatedtype Output = MultiVector;
-    func sandwich(other: MultiVector) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((this.e423 * other.e235) + (this.e431 * other.e315) + (this.e412 * other.e125) + (this.e415 * other.e415) + (this.e425 * other.e425) + (this.e435 * other.e435) + (this.e315 * other.e431) + (this.e125 * other.e412), -(this.e423 * other.e15) - (this.e431 * other.e25) - (this.e412 * other.e35) - (this.e425 * other.e31) - (this.e435 * other.e12) - (this.e321 * other.e45) - (this.e315 * other.e42) - (this.e125 * other.e43)) + (float2(other.e423, other.scalar) * this.group2.xw) - (float2(other.e12345, other.e41) * this.group2.wx) - (float2(other.e321, other.e23) * this.group1.wx), 0.0, 0.0), 
+public extension CircleRotor {
+    public MultiVector sandwich(MultiVector other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((this.e423 * other.e235) + (this.e431 * other.e315) + (this.e412 * other.e125) + (this.e415 * other.e415) + (this.e425 * other.e425) + (this.e435 * other.e435) + (this.e315 * other.e431) + (this.e125 * other.e412), -(this.e423 * other.e15) - (this.e431 * other.e25) - (this.e412 * other.e35) - (this.e425 * other.e31) - (this.e435 * other.e12) - (this.e321 * other.e45) - (this.e315 * other.e42) - (this.e125 * other.e43)) + (float2(other.e423, other.scalar) * this.group2.xw) - (float2(other.e12345, other.e41) * this.group2.wx) - (float2(other.e321, other.e23) * this.group1.wx), 
             /* e1, e2, e3, e4 */
             float4((this.e425 * other.e4125) + (this.e321 * other.e23) + (this.e315 * other.e43), (this.e435 * other.e4235) + (this.e321 * other.e31) + (this.e125 * other.e41), (this.e415 * other.e4315) + (this.e321 * other.e12) + (this.e235 * other.e42), -(this.e415 * other.e41) - (this.e425 * other.e42) - (this.e435 * other.e43)) + (float4(other.e25, other.e3215, other.e3215, other.e1234) * float4(this.group0.xyz.zyz, this.e12345)) + (float4(other.e3215, other.e35, other.e15, other.e1234) * float4(this.group0.xyz.xxy, this.e321)) - (float4(other.e45, other.e4125, other.e4235, other.e31) * float4(this.group1.xxy, this.e431)) - (float4(other.e4315, other.e45, other.e45, other.e4315) * float4(this.group1.zyz, this.e431)) - (other.group9.xyzz * float4(this.group2.www, this.e412)) - float4((float3(other.e1234) * this.group2.xyz), this.e412 * other.e12) - float4((this.group0.xyz.yzx * other.group3.zxy), this.e423 * other.e23) - float4((other.group4.xyz.yzx * this.group2.zxy), this.e423 * other.e4235), 
-            /* e5, 0, 0, 0 */
-            float4((this.e235 * other.e4235) + (this.e315 * other.e4315) + (this.e125 * other.e4125) + (this.e12345 * other.e3215) - (this.e415 * other.e15) - (this.e425 * other.e25) - (this.e435 * other.e35) - (this.e321 * other.e3215) - (this.e235 * other.e23) - (this.e315 * other.e31) - (this.e125 * other.e12), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (this.e235 * other.e4235) + (this.e315 * other.e4315) + (this.e125 * other.e4125) + (this.e12345 * other.e3215) - (this.e415 * other.e15) - (this.e425 * other.e25) - (this.e435 * other.e35) - (this.e321 * other.e3215) - (this.e235 * other.e23) - (this.e315 * other.e31) - (this.e125 * other.e12), 
             /* e15, e25, e35, e45 */
             float4(this.e125 * other.e425 * -1.0, this.e315 * other.e321 * -1.0, this.e125 * other.e321 * -1.0, this.e12345 * other.e321) + (this.group1.wzxw * float4(other.group8.xyz.xxy, other.e12345)) + float4((other.group8.xyz.zyz * this.group1.yww), this.e235 * other.e423) + float4((this.group2.yzx * other.group1.zxy), this.e315 * other.e431) + float4((this.group2.yzx * other.group6.zxy), this.e125 * other.e412) - (float4(other.e2, other.e435, other.e415, other.e3) * float4(this.group2.zxy, this.e435)) - (float4(other.e321, other.e3, other.e1, other.e2) * float4(this.group2.xxy, this.e425)) - (this.group1.xyzx * float4(float3(other.e5), other.e1)) - (float4(other.group0.xy.yy, other.e12345, this.e423) * float4(this.group2.xyz, other.e235)) - (float4(this.group1.zx, this.e12345, other.e125) * float4(other.group8.xyz.yzz, this.e412)) - (float4(this.group2.ww, this.e425, other.e315) * float4(other.group8.xyz.xyx, this.e431)), 
-            /* e41, e42, e43, 0 */
-            float4((float3(this.e423) * float3(other.e321, other.e3, other.e425)) + (float3(this.e431) * float3(other.e435, other.e321, other.e1)) + (float3(this.e412) * float3(other.e2, other.e415, other.e321)) + (other.group7.xyz.zxy * this.group1.yzx) - (float3(other.e12345) * this.group0.xyz) - (float3(other.e4) * this.group1.xyz) - (float3(this.e435, this.e415, this.e12345) * other.group7.xyz.yzz) - (float3(this.e12345, this.e12345, this.e321) * other.group7.xyz) - (float3(other.e3, other.e435, other.e2) * this.group0.xyz.yxx) - (float3(other.e425, other.e1, other.e415) * this.group0.xyz.zzy) - (other.group7.xyz.xyx * this.group1.wwy), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((this.group0.xyz.yzx * other.group8.xyz.zxy) + (other.group7.xyz.zxy * this.group2.yzx) + (this.group1.yzx * other.group6.zxy) - (float3(this.e321) * other.group1.xyz) - (float3(this.e12345) * other.group6.xyz) - (float3(other.e12345) * this.group1.xyz) - (float3(other.e4) * this.group2.xyz) - (float3(other.e5, other.e125, other.e235) * this.group0.xyz.xxy) - (float3(other.e315, other.e5, other.e5) * this.group0.xyz.zyz) - (other.group7.xyz.yzx * this.group2.zxy) - (this.group1.zxy * other.group6.yzx), 0.0), 
+            /* e41, e42, e43 */
+            (float3(this.e423) * float3(other.e321, other.e3, other.e425)) + (float3(this.e431) * float3(other.e435, other.e321, other.e1)) + (float3(this.e412) * float3(other.e2, other.e415, other.e321)) + (other.group7.xyz.zxy * this.group1.yzx) - (float3(other.e12345) * this.group0.xyz) - (float3(other.e4) * this.group1.xyz) - (float3(this.e435, this.e415, this.e12345) * other.group7.xyz.yzz) - (float3(this.e12345, this.e12345, this.e321) * other.group7.xyz) - (float3(other.e3, other.e435, other.e2) * this.group0.xyz.yxx) - (float3(other.e425, other.e1, other.e415) * this.group0.xyz.zzy) - (other.group7.xyz.xyx * this.group1.wwy), 
+            /* e23, e31, e12 */
+            (this.group0.xyz.yzx * other.group8.xyz.zxy) + (other.group7.xyz.zxy * this.group2.yzx) + (this.group1.yzx * other.group6.zxy) - (float3(this.e321) * other.group1.xyz) - (float3(this.e12345) * other.group6.xyz) - (float3(other.e12345) * this.group1.xyz) - (float3(other.e4) * this.group2.xyz) - (float3(other.e5, other.e125, other.e235) * this.group0.xyz.xxy) - (float3(other.e315, other.e5, other.e5) * this.group0.xyz.zyz) - (other.group7.xyz.yzx * this.group2.zxy) - (this.group1.zxy * other.group6.yzx), 
             /* e415, e425, e435, e321 */
             (float4(other.scalar) * this.group1) + (float4(other.e25, other.e3215, other.e3215, this.e315) * float4(this.group0.xyz.zyz, other.e42)) + (float4(other.e3215, other.e35, other.e15, this.e235) * float4(this.group0.xyz.xxy, other.e41)) + (this.group2.zxyz * float4(other.group4.xyz.yzx, other.e43)) + (float4(this.group1.zx, this.e12345, other.e4315) * float4(other.group5.xyz.yzz, this.e425)) + (float4(this.group2.ww, this.e425, other.e4235) * float4(other.group5.xyz.xyx, this.e415)) + float4((float3(other.e1234) * this.group2.xyz), this.e435 * other.e4125) - (other.group3.zxyx * float4(this.group0.xyz.yzx, this.e423)) - float4((other.group4.xyz.zxy * this.group2.yzx), this.e431 * other.e25) - float4((other.group5.xyz.zxy * this.group1.yzx), this.e412 * other.e35) - float4((this.group1.www * other.group9.xyz), this.e12345 * other.e45), 
-            /* e423, e431, e412, 0 */
-            float4((float3(other.scalar) * this.group0.xyz) + (float3(other.e1234) * this.group1.xyz) + (float3(this.e435, this.e415, this.e12345) * other.group4.xyz.yzz) + (float3(this.e12345, this.e12345, this.e321) * other.group4.xyz) + (float3(other.e45, other.e12, other.e23) * this.group0.xyz.xxy) + (float3(other.e31, other.e4125, other.e4235) * this.group0.xyz.zxy) + (float3(other.e4315, other.e45, other.e45) * this.group0.xyz.zyz) + (other.group4.xyz.xyx * this.group1.wwy) - (this.group0.xyz.yzx * other.group5.xyz.zxy) - (this.group0.xyz.yzx * other.group9.zxy) - (other.group4.xyz.zxy * this.group1.yzx), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(this.e12345) * other.group3.xyz) + (float3(other.scalar) * this.group2.xyz) + (float3(other.e25, other.e3215, other.e3215) * this.group1.zyz) + (float3(other.e3215, other.e35, other.e15) * this.group1.xxy) + (other.group5.xyz.yzx * this.group2.zxy) + (this.group2.yzx * other.group9.zxy) - (float3(this.e321) * other.group3.xyz) - (float3(other.e45, other.e4125, other.e4235) * this.group2.xxy) - (float3(other.e4315, other.e45, other.e45) * this.group2.zyz) - (other.group5.xyz.zxy * this.group2.yzx) - (this.group1.yzx * other.group3.zxy), 0.0), 
+            /* e423, e431, e412 */
+            (float3(other.scalar) * this.group0.xyz) + (float3(other.e1234) * this.group1.xyz) + (float3(this.e435, this.e415, this.e12345) * other.group4.xyz.yzz) + (float3(this.e12345, this.e12345, this.e321) * other.group4.xyz) + (float3(other.e45, other.e12, other.e23) * this.group0.xyz.xxy) + (float3(other.e31, other.e4125, other.e4235) * this.group0.xyz.zxy) + (float3(other.e4315, other.e45, other.e45) * this.group0.xyz.zyz) + (other.group4.xyz.xyx * this.group1.wwy) - (this.group0.xyz.yzx * other.group5.xyz.zxy) - (this.group0.xyz.yzx * other.group9.zxy) - (other.group4.xyz.zxy * this.group1.yzx), 
+            /* e235, e315, e125 */
+            (float3(this.e12345) * other.group3.xyz) + (float3(other.scalar) * this.group2.xyz) + (float3(other.e25, other.e3215, other.e3215) * this.group1.zyz) + (float3(other.e3215, other.e35, other.e15) * this.group1.xxy) + (other.group5.xyz.yzx * this.group2.zxy) + (this.group2.yzx * other.group9.zxy) - (float3(this.e321) * other.group3.xyz) - (float3(other.e45, other.e4125, other.e4235) * this.group2.xxy) - (float3(other.e4315, other.e45, other.e45) * this.group2.zyz) - (other.group5.xyz.zxy * this.group2.yzx) - (this.group1.yzx * other.group3.zxy), 
             /* e4235, e4315, e4125, e3215 */
             float4(-(this.e425 * other.e3) - (this.e235 * other.e4) - (this.e125 * other.e431), -(this.e435 * other.e1) - (this.e235 * other.e412) - (this.e315 * other.e4), -(this.e415 * other.e2) - (this.e315 * other.e423) - (this.e125 * other.e4), (this.e315 * other.e425) + (this.e125 * other.e3) + (this.e125 * other.e435)) + (float4(other.e2, other.e321, other.e321, other.e1) * float4(this.group1.zyz, this.e235)) + (float4(other.e5, other.e125, other.e235, this.e415) * float4(this.group0.xyz.xxy, other.e235)) + (float4(other.e321, other.e3, other.e1, other.e5) * this.group1.xxyw) + (float4(other.e315, other.e5, other.e5, this.e425) * float4(this.group0.xyz.zyz, other.e315)) + (this.group2.wwwy * other.group1.xyzy) + (other.group6.xyzx * float4(this.group1.www, this.e235)) + float4((other.group7.xyz.zxy * this.group2.yzx), this.e435 * other.e125) - float4((this.group0.xyz.yzx * other.group8.xyz.zxy), this.e12345 * other.e5), 
-            /* e1234, 0, 0, 0 */
-            float4((this.e423 * other.e415) + (this.e431 * other.e425) + (this.e412 * other.e435) + (this.e415 * other.e423) + (this.e425 * other.e431) + (this.e435 * other.e412) - (this.e423 * other.e1) - (this.e431 * other.e2) - (this.e412 * other.e3) - (this.e321 * other.e4) - (this.e12345 * other.e4), 0.0, 0.0, 0.0)
+            /* e1234 */
+            (this.e423 * other.e415) + (this.e431 * other.e425) + (this.e412 * other.e435) + (this.e415 * other.e423) + (this.e425 * other.e431) + (this.e435 * other.e412) - (this.e423 * other.e1) - (this.e431 * other.e2) - (this.e412 * other.e3) - (this.e321 * other.e4) - (this.e12345 * other.e4)
         ).geometric_product(this.reverse());
     }
 }
-extension CircleRotor: Sandwich<Plane> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Plane) -> Output {
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4((this.group0.xyz.zxy * other.group0.yzx) - (this.group0.xyz.yzx * other.group0.zxy), 0.0), 
+public extension CircleRotor {
+    public VersorOdd sandwich(Plane other) {
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            (this.group0.xyz.zxy * other.group0.yzx) - (this.group0.xyz.yzx * other.group0.zxy), 
             /* e415, e425, e435, e321 */
             float4(this.e321 * other.e4235 * -1.0, this.e321 * other.e4315 * -1.0, this.e321 * other.e4125 * -1.0, (this.e425 * other.e4315) + (this.e435 * other.e4125)) + (other.group0.wwwx * float4(this.group0.xyz, this.e415)), 
             /* e235, e315, e125, e4 */
@@ -3816,12 +3612,11 @@ extension CircleRotor: Sandwich<Plane> {
         ).geometric_product(this.reverse());
     }
 }
-extension CircleRotor: Sandwich<RoundPoint> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: RoundPoint) -> Output {
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4((this.group0.xyz.zxy * other.group0.yzx) - (float3(other.e4) * this.group1.xyz) - (this.group0.xyz.yzx * other.group0.zxy), 0.0), 
+public extension CircleRotor {
+    public VersorEven sandwich(RoundPoint other) {
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            (this.group0.xyz.zxy * other.group0.yzx) - (float3(other.e4) * this.group1.xyz) - (this.group0.xyz.yzx * other.group0.zxy), 
             /* e23, e31, e12, e45 */
             -(this.group1.wwwy * other.group0.xyzy) - (other.group0.wwwz * float4(this.group2.xyz, this.e435)) - float4((float3(other.e5) * this.group0.xyz), this.e415 * other.e1), 
             /* e15, e25, e35, e1234 */
@@ -3831,12 +3626,11 @@ extension CircleRotor: Sandwich<RoundPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension CircleRotor: Sandwich<Scalar> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Scalar) -> Output {
-        return CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(other.scalar) * this.group0.xyz, 0.0), 
+public extension CircleRotor {
+    public VersorOdd sandwich(Scalar other) {
+        return CircleRotor(
+            /* e423, e431, e412 */
+            float3(other.scalar) * this.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(other.scalar) * this.group1, 
             /* e235, e315, e125, e12345 */
@@ -3844,12 +3638,11 @@ extension CircleRotor: Sandwich<Scalar> {
         ).geometric_product(this.reverse());
     }
 }
-extension CircleRotor: Sandwich<Sphere> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Sphere) -> Output {
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4((float3(other.e1234) * this.group1.xyz) + (this.group0.xyz.zxy * other.group0.yzx) - (this.group0.xyz.yzx * other.group0.zxy), 0.0), 
+public extension CircleRotor {
+    public VersorOdd sandwich(Sphere other) {
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            (float3(other.e1234) * this.group1.xyz) + (this.group0.xyz.zxy * other.group0.yzx) - (this.group0.xyz.yzx * other.group0.zxy), 
             /* e415, e425, e435, e321 */
             float4(this.e321 * other.e4235 * -1.0, this.e321 * other.e4315 * -1.0, this.e321 * other.e4125 * -1.0, this.e435 * other.e4125) + (other.group0.wwwx * float4(this.group0.xyz, this.e415)) + float4((float3(other.e1234) * this.group2.xyz), this.e425 * other.e4315), 
             /* e235, e315, e125, e4 */
@@ -3859,10 +3652,9 @@ extension CircleRotor: Sandwich<Sphere> {
         ).geometric_product(this.reverse());
     }
 }
-extension CircleRotor: Sandwich<VersorEven> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: VersorEven) -> Output {
-        return VersorOdd.from_groups(
+public extension CircleRotor {
+    public VersorEven sandwich(VersorEven other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(-(this.e412 * other.e425) - (this.e415 * other.e4) - (this.e435 * other.e431) - (this.e321 * other.e423) - (this.e12345 * other.e423), -(this.e412 * other.e1) - (this.e415 * other.e412) - (this.e425 * other.e4) - (this.e321 * other.e431) - (this.e12345 * other.e431), -(this.e412 * other.e12345) - (this.e425 * other.e423) - (this.e435 * other.e4) - (this.e321 * other.e412) - (this.e12345 * other.e412), (this.e425 * other.e425) + (this.e435 * other.e435) + (this.e235 * other.e423) + (this.e315 * other.e431) + (this.e125 * other.e412)) + (float4(this.e423) * float4(other.e321, other.e3, other.e425, other.e235)) + (float4(this.e431) * float4(other.group1.zw, other.e1, other.e315)) + (float4(this.e412) * float4(other.e2, other.e415, other.e321, other.e125)) + (this.group1.yzxx * float4(other.group0.zxy, other.e415)) - (float4(other.e12345, other.e435, other.e2, other.e321) * float4(this.group0.xyz.xxx, this.e321)) - (float4(other.e3, other.e12345, other.e415, other.e12345) * float4(this.group0.xyz.yyy, this.e12345)), 
             /* e23, e31, e12, e45 */
@@ -3874,10 +3666,9 @@ extension CircleRotor: Sandwich<VersorEven> {
         ).geometric_product(this.reverse());
     }
 }
-extension CircleRotor: Sandwich<VersorOdd> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: VersorOdd) -> Output {
-        return VersorEven.from_groups(
+public extension CircleRotor {
+    public VersorOdd sandwich(VersorOdd other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((this.e423 * other.e45) + (this.e412 * other.e31) + (this.e412 * other.e4315) + (this.e415 * other.e1234) + (this.e435 * other.e42) + (this.e321 * other.e41) + (this.e12345 * other.e41), (this.e423 * other.e4125) + (this.e431 * other.scalar) + (this.e431 * other.e45) + (this.e415 * other.e43) + (this.e425 * other.e1234) + (this.e321 * other.e42) + (this.e12345 * other.e42), (this.e431 * other.e4235) + (this.e412 * other.scalar) + (this.e412 * other.e45) + (this.e425 * other.e41) + (this.e435 * other.e1234) + (this.e321 * other.e43) + (this.e12345 * other.e43), -(this.e415 * other.e23) - (this.e425 * other.e31) - (this.e435 * other.e12) - (this.e321 * other.e45) - (this.e235 * other.e41) - (this.e315 * other.e42) - (this.e125 * other.e43)) + (float4(other.scalar, other.e12, other.e23, other.scalar) * float4(this.group0.xyz.xxy, this.e12345)) - float4((this.group0.xyz.yzx * other.group1.zxy), this.e423 * other.e15) - float4((this.group0.xyz.yzx * other.group3.zxy), this.e431 * other.e25) - float4((this.group1.yzx * other.group0.zxy), this.e412 * other.e35), 
             /* e415, e425, e435, e321 */
@@ -3889,16 +3680,21 @@ extension CircleRotor: Sandwich<VersorOdd> {
         ).geometric_product(this.reverse());
     }
 }
-extension Dipole {
-    // Fancy infix trick
-    func operator/(_rhs: SandwichInfix) -> SandwichInfixPartial<Dipole> {
-        return SandwichInfixPartial { a: this };
+public extension Dipole {
+    // Fancy infix trick (first half)
+    public SandwichInfixPartial<Dipole> operator /(SandwichInfix rhs) {
+        return SandwichInfixPartial<Dipole>(this);
     }
 }
-extension Dipole: Sandwich<AntiCircleRotor> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: AntiCircleRotor) -> Output {
-        return VersorOdd.from_groups(
+public extension SandwichInfixPartial<Dipole> {
+    // Fancy infix trick (second half)
+    public VersorOdd operator /(AntiCircleRotor rhs) {
+        return this.a.sandwich(rhs);
+    }
+}
+public extension Dipole {
+    public VersorOdd sandwich(AntiCircleRotor other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4((other.e31 * this.e43) + (other.e45 * this.e41) + (other.scalar * this.e41), (other.e12 * this.e41) + (other.e45 * this.e42) + (other.scalar * this.e42), (other.e23 * this.e42) + (other.e45 * this.e43) + (other.scalar * this.e43), -(other.e23 * this.e23) - (other.e31 * this.e31) - (other.e12 * this.e12) - (other.e15 * this.e41) - (other.e25 * this.e42) - (other.e35 * this.e43)) + (this.group1.zxyw * float4(other.group0.xyz.yzx, other.e45)) - float4((other.group0.xyz.xxy * this.group1.wzx), other.e41 * this.e15) - float4((other.group0.xyz.zyz * this.group1.yww), other.e42 * this.e25) - float4((this.group0.xyz.yzx * other.group1.zxy), other.e43 * this.e35), 
             /* e23, e31, e12, e45 */
@@ -3910,10 +3706,9 @@ extension Dipole: Sandwich<AntiCircleRotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension Dipole: Sandwich<AntiDipoleInversion> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiDipoleInversion) -> Output {
-        return VersorEven.from_groups(
+public extension Dipole {
+    public VersorEven sandwich(AntiDipoleInversion other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((other.e431 * this.e12) + (other.e425 * this.e43) + (other.e4 * this.e23) + (other.e3 * this.e42), (other.e412 * this.e23) + (other.e435 * this.e41) + (other.e4 * this.e31) + (other.e1 * this.e43), (other.e423 * this.e31) + (other.e415 * this.e42) + (other.e4 * this.e12) + (other.e2 * this.e41), -(other.e415 * this.e23) - (other.e425 * this.e31) - (other.e435 * this.e12) - (other.e321 * this.e45) - (other.e125 * this.e43)) - (float4(other.e321, other.e3, other.e425, this.e35) * float4(this.group0.xyz.xxx, other.e412)) - (float4(other.e2, other.e415, other.e321, other.e315) * float4(this.group0.xyz.zzz, this.e42)) - (float4(other.group1.zw, other.e1, other.e235) * float4(this.group0.xyz.yyy, this.e41)) - float4((other.group0.xyz.xxy * this.group1.wzx), other.e423 * this.e15) - float4((other.group0.xyz.zyz * this.group1.yww), other.e431 * this.e25), 
             /* e415, e425, e435, e321 */
@@ -3925,12 +3720,11 @@ extension Dipole: Sandwich<AntiDipoleInversion> {
         ).geometric_product(this.reverse());
     }
 }
-extension Dipole: Sandwich<AntiDualNum> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: AntiDualNum) -> Output {
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(other.scalar) * this.group0.xyz, 0.0), 
+public extension Dipole {
+    public VersorOdd sandwich(AntiDualNum other) {
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            float3(other.scalar) * this.group0.xyz, 
             /* e23, e31, e12, e45 */
             float4(((float3(other.e3215) * this.group0.xyz) + (float3(other.scalar) * this.group1.xyz)), other.scalar * this.e45), 
             /* e15, e25, e35, e1234 */
@@ -3940,10 +3734,9 @@ extension Dipole: Sandwich<AntiDualNum> {
         ).geometric_product(this.reverse());
     }
 }
-extension Dipole: Sandwich<AntiFlatPoint> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiFlatPoint) -> Output {
-        return VersorEven.from_groups(
+public extension Dipole {
+    public VersorEven sandwich(AntiFlatPoint other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((float3(other.e321) * this.group0.xyz * float3(-1.0)), -(other.e235 * this.e41) - (other.e315 * this.e42) - (other.e125 * this.e43) - (other.e321 * this.e45)), 
             /* e415, e425, e435, e321 */
@@ -3955,10 +3748,9 @@ extension Dipole: Sandwich<AntiFlatPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension Dipole: Sandwich<AntiFlector> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiFlector) -> Output {
-        return VersorEven.from_groups(
+public extension Dipole {
+    public VersorEven sandwich(AntiFlector other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(other.e3 * this.e42, other.e1 * this.e43, other.e2 * this.e41, -(other.e125 * this.e43) - (other.e321 * this.e45)) - (float4(other.e321, other.e3, other.e1, other.e235) * float4(this.group0.xyz.xxy, this.e41)) - (float4(other.e2, other.e321, other.e321, other.e315) * float4(this.group0.xyz.zyz, this.e42)), 
             /* e415, e425, e435, e321 */
@@ -3970,10 +3762,9 @@ extension Dipole: Sandwich<AntiFlector> {
         ).geometric_product(this.reverse());
     }
 }
-extension Dipole: Sandwich<AntiLine> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: AntiLine) -> Output {
-        return VersorOdd.from_groups(
+public extension Dipole {
+    public VersorOdd sandwich(AntiLine other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(other.e31 * this.e43, other.e12 * this.e41, other.e23 * this.e42, -(other.e31 * this.e31) - (other.e12 * this.e12) - (other.e15 * this.e41) - (other.e25 * this.e42) - (other.e35 * this.e43)) - float4((other.group0.xyz.zxy * this.group0.xyz.yzx), other.e23 * this.e23), 
             /* e23, e31, e12, e45 */
@@ -3985,10 +3776,9 @@ extension Dipole: Sandwich<AntiLine> {
         ).geometric_product(this.reverse());
     }
 }
-extension Dipole: Sandwich<AntiMotor> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: AntiMotor) -> Output {
-        return VersorOdd.from_groups(
+public extension Dipole {
+    public VersorOdd sandwich(AntiMotor other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4((other.e31 * this.e43) + (other.scalar * this.e41), (other.e12 * this.e41) + (other.scalar * this.e42), (other.e23 * this.e42) + (other.scalar * this.e43), -(other.e23 * this.e23) - (other.e31 * this.e31) - (other.e12 * this.e12) - (other.e25 * this.e42) - (other.e35 * this.e43)) - float4((this.group0.xyz.yzx * other.group0.zxy), other.e15 * this.e41), 
             /* e23, e31, e12, e45 */
@@ -4000,12 +3790,11 @@ extension Dipole: Sandwich<AntiMotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension Dipole: Sandwich<AntiPlane> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiPlane) -> Output {
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4((this.group0.xyz.yzx * other.group0.zxy) - (this.group0.xyz.zxy * other.group0.yzx), 0.0), 
+public extension Dipole {
+    public VersorEven sandwich(AntiPlane other) {
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            (this.group0.xyz.yzx * other.group0.zxy) - (this.group0.xyz.zxy * other.group0.yzx), 
             /* e415, e425, e435, e321 */
             float4(other.e5 * this.e41, other.e5 * this.e42, other.e5 * this.e43, -(other.e2 * this.e31) - (other.e3 * this.e12)) - (other.group0.xyzx * this.group1.wwwx), 
             /* e235, e315, e125, e4 */
@@ -4015,23 +3804,21 @@ extension Dipole: Sandwich<AntiPlane> {
         ).geometric_product(this.reverse());
     }
 }
-extension Dipole: Sandwich<AntiScalar> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiScalar) -> Output {
-        return Circle.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(other.e12345) * this.group0.xyz, 0.0), 
+public extension Dipole {
+    public VersorEven sandwich(AntiScalar other) {
+        return Circle(
+            /* e423, e431, e412 */
+            float3(other.e12345) * this.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(other.e12345) * this.group1 * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e235, e315, e125, 0 */
-            float4(float3(other.e12345) * this.group2.xyz, 0.0)
+            /* e235, e315, e125 */
+            float3(other.e12345) * this.group2.xyz
         ).geometric_product(this.reverse());
     }
 }
-extension Dipole: Sandwich<Circle> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: Circle) -> Output {
-        return VersorEven.from_groups(
+public extension Dipole {
+    public VersorEven sandwich(Circle other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((other.e431 * this.e12) + (other.e425 * this.e43), (other.e412 * this.e23) + (other.e435 * this.e41), (other.e423 * this.e31) + (other.e415 * this.e42), -(other.e415 * this.e23) - (other.e425 * this.e31) - (other.e435 * this.e12) - (other.e321 * this.e45) - (other.e315 * this.e42) - (other.e125 * this.e43)) - float4((other.group0.xyz.xxy * this.group1.wzx), other.e423 * this.e15) - float4((other.group0.xyz.zyz * this.group1.yww), other.e431 * this.e25) - float4((this.group0.xyz.xyx * other.group1.wwy), other.e412 * this.e35) - float4((this.group0.xyz.yzz * other.group1.zxw), other.e235 * this.e41), 
             /* e415, e425, e435, e321 */
@@ -4043,10 +3830,9 @@ extension Dipole: Sandwich<Circle> {
         ).geometric_product(this.reverse());
     }
 }
-extension Dipole: Sandwich<CircleRotor> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: CircleRotor) -> Output {
-        return VersorEven.from_groups(
+public extension Dipole {
+    public VersorEven sandwich(CircleRotor other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((other.e431 * this.e12) + (other.e425 * this.e43) + (other.e12345 * this.e41), (other.e412 * this.e23) + (other.e435 * this.e41) + (other.e12345 * this.e42), (other.e423 * this.e31) + (other.e415 * this.e42) + (other.e12345 * this.e43), -(other.e415 * this.e23) - (other.e425 * this.e31) - (other.e435 * this.e12) - (other.e321 * this.e45) - (other.e315 * this.e42) - (other.e125 * this.e43)) - float4((other.group0.xyz.xxy * this.group1.wzx), other.e423 * this.e15) - float4((other.group0.xyz.zyz * this.group1.yww), other.e431 * this.e25) - float4((this.group0.xyz.xyx * other.group1.wwy), other.e412 * this.e35) - float4((this.group0.xyz.yzz * other.group1.zxw), other.e235 * this.e41), 
             /* e415, e425, e435, e321 */
@@ -4058,10 +3844,9 @@ extension Dipole: Sandwich<CircleRotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension Dipole: Sandwich<Dipole> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Dipole) -> Output {
-        return VersorOdd.from_groups(
+public extension Dipole {
+    public VersorOdd sandwich(Dipole other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4((other.e31 * this.e43) + (other.e45 * this.e41), (other.e12 * this.e41) + (other.e45 * this.e42), (other.e23 * this.e42) + (other.e45 * this.e43), -(other.e23 * this.e23) - (other.e31 * this.e31) - (other.e12 * this.e12) - (other.e15 * this.e41) - (other.e25 * this.e42) - (other.e35 * this.e43)) + (this.group1.zxyw * float4(other.group0.xyz.yzx, other.e45)) - float4((other.group0.xyz.xxy * this.group1.wzx), other.e41 * this.e15) - float4((other.group0.xyz.zyz * this.group1.yww), other.e42 * this.e25) - float4((this.group0.xyz.yzx * other.group1.zxy), other.e43 * this.e35), 
             /* e23, e31, e12, e45 */
@@ -4073,10 +3858,9 @@ extension Dipole: Sandwich<Dipole> {
         ).geometric_product(this.reverse());
     }
 }
-extension Dipole: Sandwich<DipoleInversion> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: DipoleInversion) -> Output {
-        return VersorOdd.from_groups(
+public extension Dipole {
+    public VersorOdd sandwich(DipoleInversion other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4((this.e43 * other.e31) + (this.e43 * other.e4315) + (this.e23 * other.e1234) + (this.e12 * other.e42), (this.e41 * other.e4125) + (this.e42 * other.e45) + (this.e23 * other.e43) + (this.e31 * other.e1234), (this.e42 * other.e4235) + (this.e43 * other.e45) + (this.e31 * other.e41) + (this.e12 * other.e1234), -(this.e23 * other.e23) - (this.e31 * other.e31) - (this.e12 * other.e12) - (this.e25 * other.e42) - (this.e35 * other.e43)) + (other.group1.wzxw * float4(this.group0.xyz.xxy, this.e45)) - float4((this.group0.xyz.yzx * other.group1.zxy), this.e41 * other.e15) - float4((this.group0.xyz.yzx * other.group3.zxy), this.e42 * other.e25) - float4((other.group0.xyz.xxy * this.group1.wzx), this.e43 * other.e35) - float4((other.group0.xyz.zyz * this.group1.yww), this.e15 * other.e41), 
             /* e23, e31, e12, e45 */
@@ -4088,12 +3872,11 @@ extension Dipole: Sandwich<DipoleInversion> {
         ).geometric_product(this.reverse());
     }
 }
-extension Dipole: Sandwich<DualNum> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: DualNum) -> Output {
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(other.e12345) * this.group0.xyz, 0.0), 
+public extension Dipole {
+    public VersorEven sandwich(DualNum other) {
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(other.e12345) * this.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(((float3(other.e5) * this.group0.xyz) + (float3(other.e12345) * this.group1.xyz)), this.e45 * other.e12345 * -1.0), 
             /* e235, e315, e125, e4 */
@@ -4103,10 +3886,9 @@ extension Dipole: Sandwich<DualNum> {
         ).geometric_product(this.reverse());
     }
 }
-extension Dipole: Sandwich<FlatPoint> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: FlatPoint) -> Output {
-        return VersorOdd.from_groups(
+public extension Dipole {
+    public VersorOdd sandwich(FlatPoint other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4((float3(other.e45) * this.group0.xyz), (this.e45 * other.e45) - (this.e41 * other.e15) - (this.e42 * other.e25) - (this.e43 * other.e35)), 
             /* e23, e31, e12, e45 */
@@ -4118,10 +3900,9 @@ extension Dipole: Sandwich<FlatPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension Dipole: Sandwich<Flector> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Flector) -> Output {
-        return VersorOdd.from_groups(
+public extension Dipole {
+    public VersorOdd sandwich(Flector other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(this.e43 * other.e4315, this.e42 * other.e45, this.e43 * other.e45, -(this.e42 * other.e25) - (this.e43 * other.e35)) + (float4(other.e45, other.e4125, other.e4235, other.e45) * float4(this.group0.xyz.xxy, this.e45)) - float4((this.group0.xyz.yzx * other.group1.zxy), this.e41 * other.e15), 
             /* e23, e31, e12, e45 */
@@ -4133,10 +3914,9 @@ extension Dipole: Sandwich<Flector> {
         ).geometric_product(this.reverse());
     }
 }
-extension Dipole: Sandwich<Line> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: Line) -> Output {
-        return VersorEven.from_groups(
+public extension Dipole {
+    public VersorEven sandwich(Line other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(this.e43 * other.e425, this.e41 * other.e435, this.e42 * other.e415, -(this.e42 * other.e315) - (this.e43 * other.e125) - (this.e23 * other.e415) - (this.e31 * other.e425) - (this.e12 * other.e435)) - float4((this.group0.xyz.yzx * other.group0.xyz.zxy), this.e41 * other.e235), 
             /* e415, e425, e435, e321 */
@@ -4148,10 +3928,9 @@ extension Dipole: Sandwich<Line> {
         ).geometric_product(this.reverse());
     }
 }
-extension Dipole: Sandwich<Motor> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: Motor) -> Output {
-        return VersorEven.from_groups(
+public extension Dipole {
+    public VersorEven sandwich(Motor other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((this.e41 * other.e12345) + (this.e43 * other.e425), (this.e41 * other.e435) + (this.e42 * other.e12345), (this.e42 * other.e415) + (this.e43 * other.e12345), -(this.e42 * other.e315) - (this.e43 * other.e125) - (this.e23 * other.e415) - (this.e31 * other.e425) - (this.e12 * other.e435)) - float4((this.group0.xyz.yzx * other.group0.zxy), this.e41 * other.e235), 
             /* e415, e425, e435, e321 */
@@ -4163,41 +3942,39 @@ extension Dipole: Sandwich<Motor> {
         ).geometric_product(this.reverse());
     }
 }
-extension Dipole: Sandwich<MultiVector> {
-    associatedtype Output = MultiVector;
-    func sandwich(other: MultiVector) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(this.e45 * other.e45, this.e45 * other.e321 * -1.0) - (float2(this.e41) * float2(other.e15, other.e235)) - (float2(this.e42) * float2(other.e25, other.e315)) - (float2(this.e43) * float2(other.e35, other.e125)) - (float2(this.e23) * float2(other.e23, other.e415)) - (float2(this.e31) * float2(other.e31, other.e425)) - (float2(this.e12) * float2(other.e12, other.e435)) - (float2(this.e15) * float2(other.e41, other.e423)) - (float2(this.e25) * float2(other.e42, other.e431)) - (float2(this.e35) * float2(other.e43, other.e412)), 0.0, 0.0), 
+public extension Dipole {
+    public MultiVector sandwich(MultiVector other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(this.e45 * other.e45, this.e45 * other.e321 * -1.0) - (float2(this.e41) * float2(other.e15, other.e235)) - (float2(this.e42) * float2(other.e25, other.e315)) - (float2(this.e43) * float2(other.e35, other.e125)) - (float2(this.e23) * float2(other.e23, other.e415)) - (float2(this.e31) * float2(other.e31, other.e425)) - (float2(this.e12) * float2(other.e12, other.e435)) - (float2(this.e15) * float2(other.e41, other.e423)) - (float2(this.e25) * float2(other.e42, other.e431)) - (float2(this.e35) * float2(other.e43, other.e412)), 
             /* e1, e2, e3, e4 */
             float4((this.e23 * other.e321) + (this.e12 * other.e2), (this.e23 * other.e3) + (this.e31 * other.e321), (this.e31 * other.e1) + (this.e12 * other.e321), -(this.e12 * other.e412) - (this.e45 * other.e4)) + (float4(other.e5, other.e125, other.e235, other.e1) * float4(this.group0.xyz.xxy, this.e41)) + (float4(other.e315, other.e5, other.e5, other.e2) * float4(this.group0.xyz.zyz, this.e42)) + float4((this.group2.xyz.yzx * other.group7.xyz.zxy), this.e43 * other.e3) - (float4(other.e4, other.e412, other.e423, other.e425) * float4(this.group2.xyz.xxy, this.e42)) - (float4(other.e431, other.e4, other.e4, other.e435) * float4(this.group2.xyz.zyz, this.e43)) - float4((this.group0.xyz.yzx * other.group8.xyz.zxy), this.e41 * other.e415) - float4((this.group1.yzx * other.group1.zxy), this.e23 * other.e423) - float4((this.group1.www * other.group6.xyz), this.e31 * other.e431), 
-            /* e5, 0, 0, 0 */
-            float4((this.e45 * other.e5) - (this.e23 * other.e235) - (this.e31 * other.e315) - (this.e12 * other.e125) - (this.e15 * other.e1) - (this.e15 * other.e415) - (this.e25 * other.e2) - (this.e25 * other.e425) - (this.e35 * other.e3) - (this.e35 * other.e435), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (this.e45 * other.e5) - (this.e23 * other.e235) - (this.e31 * other.e315) - (this.e12 * other.e125) - (this.e15 * other.e1) - (this.e15 * other.e415) - (this.e25 * other.e2) - (this.e25 * other.e425) - (this.e35 * other.e3) - (this.e35 * other.e435), 
             /* e15, e25, e35, e45 */
             float4((this.e12 * other.e25) + (this.e45 * other.e15), (this.e31 * other.e3215) + (this.e45 * other.e25), (this.e12 * other.e3215) + (this.e45 * other.e35), -(this.e31 * other.e4315) - (this.e12 * other.e4125)) + (float4(other.scalar) * float4(this.group2.xyz, this.e45)) + (float4(other.e31, other.e4235, other.e23, other.e25) * float4(this.group2.xyz.zzy, this.e42)) + (float4(other.e4125, other.e12, other.e4315, other.e15) * float4(this.group2.xyz.yxx, this.e41)) + (float4(other.e3215, other.e35, other.e15, other.e35) * float4(this.group1.xxy, this.e43)) - (float4(this.e15) * float4(other.e45, other.e4125, other.e31, other.e41)) - (float4(this.e25) * float4(other.e12, other.e45, other.e4235, other.e42)) - (float4(this.e35) * float4(other.e4315, other.e23, other.e45, other.e43)) - (this.group1.yzxx * float4(other.group3.zxy, other.e4235)), 
-            /* e41, e42, e43, 0 */
-            float4((float3(other.scalar) * this.group0.xyz) + (float3(other.e1234) * this.group1.xyz) + (float3(other.e45, other.e12, other.e23) * this.group0.xyz.xxy) + (float3(other.e31, other.e4125, other.e4235) * this.group0.xyz.zxy) + (float3(other.e4315, other.e45, other.e45) * this.group0.xyz.zyz) + (other.group4.xyz.yzx * this.group1.zxy) - (this.group0.xyz.yzx * other.group5.xyz.zxy) - (this.group0.xyz.yzx * other.group9.zxy) - (other.group4.xyz.xxy * this.group1.wzx) - (other.group4.xyz.zyz * this.group1.yww), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(this.e45) * other.group9.xyz) + (float3(other.scalar) * this.group1.xyz) + (float3(other.e25, other.e3215, other.e3215) * this.group0.xyz.zyz) + (float3(other.e42, other.e1234, other.e1234) * this.group2.xyz.zyz) + (float3(other.e3215, other.e35, other.e15) * this.group0.xyz.xxy) + (float3(other.e1234, other.e43, other.e41) * this.group2.xyz.xxy) + (other.group5.xyz.yzx * this.group1.zxy) - (this.group0.xyz.yzx * other.group3.zxy) - (this.group2.xyz.yzx * other.group4.xyz.zxy) - (other.group5.xyz.zxy * this.group1.yzx), 0.0), 
+            /* e41, e42, e43 */
+            (float3(other.scalar) * this.group0.xyz) + (float3(other.e1234) * this.group1.xyz) + (float3(other.e45, other.e12, other.e23) * this.group0.xyz.xxy) + (float3(other.e31, other.e4125, other.e4235) * this.group0.xyz.zxy) + (float3(other.e4315, other.e45, other.e45) * this.group0.xyz.zyz) + (other.group4.xyz.yzx * this.group1.zxy) - (this.group0.xyz.yzx * other.group5.xyz.zxy) - (this.group0.xyz.yzx * other.group9.zxy) - (other.group4.xyz.xxy * this.group1.wzx) - (other.group4.xyz.zyz * this.group1.yww), 
+            /* e23, e31, e12 */
+            (float3(this.e45) * other.group9.xyz) + (float3(other.scalar) * this.group1.xyz) + (float3(other.e25, other.e3215, other.e3215) * this.group0.xyz.zyz) + (float3(other.e42, other.e1234, other.e1234) * this.group2.xyz.zyz) + (float3(other.e3215, other.e35, other.e15) * this.group0.xyz.xxy) + (float3(other.e1234, other.e43, other.e41) * this.group2.xyz.xxy) + (other.group5.xyz.yzx * this.group1.zxy) - (this.group0.xyz.yzx * other.group3.zxy) - (this.group2.xyz.yzx * other.group4.xyz.zxy) - (other.group5.xyz.zxy * this.group1.yzx), 
             /* e415, e425, e435, e321 */
             float4((this.e12 * other.e425) + (this.e15 * other.e4) + (this.e35 * other.e431), (this.e23 * other.e435) + (this.e15 * other.e412) + (this.e25 * other.e4), (this.e31 * other.e415) + (this.e25 * other.e423) + (this.e35 * other.e4), -(this.e23 * other.e1) - (this.e31 * other.e2) - (this.e12 * other.e3)) + (float4(other.e5, other.e125, other.e235, other.e431) * float4(this.group0.xyz.xxy, this.e25)) + (float4(other.e315, other.e5, other.e5, other.e412) * float4(this.group0.xyz.zyz, this.e35)) + (float4(other.group0.xy.yy, other.e12345, this.e15) * float4(this.group1.xyz, other.e423)) - float4((this.group0.xyz.yzx * other.group8.xyz.zxy), this.e45 * other.e12345) - float4((this.group2.xyz.yzx * other.group7.xyz.zxy), this.e41 * other.e235) - float4((this.group1.yzx * other.group6.zxy), this.e42 * other.e315) - float4((this.group1.www * other.group1.xyz), this.e43 * other.e125), 
-            /* e423, e431, e412, 0 */
-            float4((float3(other.e12345) * this.group0.xyz) + (float3(other.e4) * this.group1.xyz) + (float3(other.e3, other.e435, other.e2) * this.group0.xyz.yxx) + (float3(other.e425, other.e1, other.e415) * this.group0.xyz.zzy) + (other.group7.xyz.yzx * this.group1.zxy) - (float3(this.e41) * float3(other.e321, other.e3, other.e425)) - (float3(this.e42) * float3(other.e435, other.e321, other.e1)) - (float3(this.e43) * float3(other.e2, other.e415, other.e321)) - (other.group7.xyz.xxy * this.group1.wzx) - (other.group7.xyz.zyz * this.group1.yww), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(other.e12345) * this.group2.xyz) + (float3(other.e5) * this.group1.xyz) + (float3(other.e2, other.e435, other.e415) * this.group2.xyz.zxy) + (float3(other.e321, other.e3, other.e1) * this.group2.xyz.xxy) + (this.group2.xyz.zyz * other.group6.yww) + (other.group8.xyz.xyx * this.group1.wwy) + (other.group8.xyz.yzz * this.group1.zxw) - (this.group2.xyz.yzx * other.group1.zxy) - (this.group2.xyz.yzx * other.group6.zxy) - (other.group8.xyz.zxy * this.group1.yzx), 0.0), 
+            /* e423, e431, e412 */
+            (float3(other.e12345) * this.group0.xyz) + (float3(other.e4) * this.group1.xyz) + (float3(other.e3, other.e435, other.e2) * this.group0.xyz.yxx) + (float3(other.e425, other.e1, other.e415) * this.group0.xyz.zzy) + (other.group7.xyz.yzx * this.group1.zxy) - (float3(this.e41) * float3(other.e321, other.e3, other.e425)) - (float3(this.e42) * float3(other.e435, other.e321, other.e1)) - (float3(this.e43) * float3(other.e2, other.e415, other.e321)) - (other.group7.xyz.xxy * this.group1.wzx) - (other.group7.xyz.zyz * this.group1.yww), 
+            /* e235, e315, e125 */
+            (float3(other.e12345) * this.group2.xyz) + (float3(other.e5) * this.group1.xyz) + (float3(other.e2, other.e435, other.e415) * this.group2.xyz.zxy) + (float3(other.e321, other.e3, other.e1) * this.group2.xyz.xxy) + (this.group2.xyz.zyz * other.group6.yww) + (other.group8.xyz.xyx * this.group1.wwy) + (other.group8.xyz.yzz * this.group1.zxw) - (this.group2.xyz.yzx * other.group1.zxy) - (this.group2.xyz.yzx * other.group6.zxy) - (other.group8.xyz.zxy * this.group1.yzx), 
             /* e4235, e4315, e4125, e3215 */
             float4((this.e23 * other.e45) + (this.e12 * other.e4315), (this.e23 * other.e4125) + (this.e31 * other.e45), (this.e31 * other.e4235) + (this.e12 * other.e45), -(this.e31 * other.e25) - (this.e12 * other.e35)) + (float4(other.e42, other.e1234, other.e1234, other.e4125) * float4(this.group2.xyz.zyz, this.e35)) + (float4(other.e1234, other.e43, other.e41, other.e4315) * float4(this.group2.xyz.xxy, this.e25)) + float4((other.group5.xyz * this.group1.www), this.e45 * other.e3215) + float4((this.group0.xyz.yzx * other.group3.zxy), this.e15 * other.e4235) - (float4(other.e25, other.e3215, other.e3215, other.e31) * float4(this.group0.xyz.zyz, this.e25)) - (float4(other.e3215, other.e35, other.e15, other.e23) * float4(this.group0.xyz.xxy, this.e15)) - (this.group1.yzxx * float4(other.group9.zxy, other.e15)) - float4((this.group2.xyz.yzx * other.group4.xyz.zxy), this.e35 * other.e12), 
-            /* e1234, 0, 0, 0 */
-            float4(-(this.e41 * other.e23) - (this.e41 * other.e4235) - (this.e42 * other.e31) - (this.e42 * other.e4315) - (this.e43 * other.e12) - (this.e43 * other.e4125) - (this.e23 * other.e41) - (this.e31 * other.e42) - (this.e12 * other.e43) - (this.e45 * other.e1234), 0.0, 0.0, 0.0)
+            /* e1234 */
+            -(this.e41 * other.e23) - (this.e41 * other.e4235) - (this.e42 * other.e31) - (this.e42 * other.e4315) - (this.e43 * other.e12) - (this.e43 * other.e4125) - (this.e23 * other.e41) - (this.e31 * other.e42) - (this.e12 * other.e43) - (this.e45 * other.e1234)
         ).geometric_product(this.reverse());
     }
 }
-extension Dipole: Sandwich<Plane> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Plane) -> Output {
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4((this.group0.xyz.zxy * other.group0.yzx) - (this.group0.xyz.yzx * other.group0.zxy), 0.0), 
+public extension Dipole {
+    public VersorOdd sandwich(Plane other) {
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            (this.group0.xyz.zxy * other.group0.yzx) - (this.group0.xyz.yzx * other.group0.zxy), 
             /* e23, e31, e12, e45 */
             float4((this.e41 * other.e3215) + (this.e45 * other.e4235), (this.e42 * other.e3215) + (this.e45 * other.e4315), (this.e43 * other.e3215) + (this.e45 * other.e4125), -(this.e23 * other.e4235) - (this.e31 * other.e4315) - (this.e12 * other.e4125)), 
             /* e15, e25, e35, e1234 */
@@ -4207,12 +3984,11 @@ extension Dipole: Sandwich<Plane> {
         ).geometric_product(this.reverse());
     }
 }
-extension Dipole: Sandwich<RoundPoint> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: RoundPoint) -> Output {
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4((float3(other.e4) * this.group1.xyz) + (this.group0.xyz.yzx * other.group0.zxy) - (this.group0.xyz.zxy * other.group0.yzx), 0.0), 
+public extension Dipole {
+    public VersorEven sandwich(RoundPoint other) {
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            (float3(other.e4) * this.group1.xyz) + (this.group0.xyz.yzx * other.group0.zxy) - (this.group0.xyz.zxy * other.group0.yzx), 
             /* e415, e425, e435, e321 */
             float4((this.e41 * other.e5) + (this.e15 * other.e4), (this.e42 * other.e5) + (this.e25 * other.e4), (this.e43 * other.e5) + (this.e35 * other.e4), -(this.e31 * other.e2) - (this.e12 * other.e3)) - (this.group1.wwwx * other.group0.xyzx), 
             /* e235, e315, e125, e4 */
@@ -4222,25 +3998,23 @@ extension Dipole: Sandwich<RoundPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension Dipole: Sandwich<Scalar> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Scalar) -> Output {
-        return Dipole.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(other.scalar) * this.group0.xyz, 0.0), 
+public extension Dipole {
+    public VersorOdd sandwich(Scalar other) {
+        return Dipole(
+            /* e41, e42, e43 */
+            float3(other.scalar) * this.group0.xyz, 
             /* e23, e31, e12, e45 */
             float4(other.scalar) * this.group1, 
-            /* e15, e25, e35, 0 */
-            float4(float3(other.scalar) * this.group2.xyz, 0.0)
+            /* e15, e25, e35 */
+            float3(other.scalar) * this.group2.xyz
         ).geometric_product(this.reverse());
     }
 }
-extension Dipole: Sandwich<Sphere> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Sphere) -> Output {
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4((float3(other.e1234) * this.group1.xyz) + (this.group0.xyz.zxy * other.group0.yzx) - (this.group0.xyz.yzx * other.group0.zxy), 0.0), 
+public extension Dipole {
+    public VersorOdd sandwich(Sphere other) {
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            (float3(other.e1234) * this.group1.xyz) + (this.group0.xyz.zxy * other.group0.yzx) - (this.group0.xyz.yzx * other.group0.zxy), 
             /* e23, e31, e12, e45 */
             float4((this.e41 * other.e3215) + (this.e45 * other.e4235) + (this.e15 * other.e1234), (this.e42 * other.e3215) + (this.e45 * other.e4315) + (this.e25 * other.e1234), (this.e43 * other.e3215) + (this.e45 * other.e4125) + (this.e35 * other.e1234), -(this.e23 * other.e4235) - (this.e31 * other.e4315) - (this.e12 * other.e4125)), 
             /* e15, e25, e35, e1234 */
@@ -4250,10 +4024,9 @@ extension Dipole: Sandwich<Sphere> {
         ).geometric_product(this.reverse());
     }
 }
-extension Dipole: Sandwich<VersorEven> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: VersorEven) -> Output {
-        return VersorEven.from_groups(
+public extension Dipole {
+    public VersorEven sandwich(VersorEven other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((this.e41 * other.e12345) + (this.e42 * other.e3) + (this.e43 * other.e425) + (this.e23 * other.e4) + (this.e12 * other.e431), (this.e41 * other.e435) + (this.e42 * other.e12345) + (this.e43 * other.e1) + (this.e23 * other.e412) + (this.e31 * other.e4), (this.e41 * other.e2) + (this.e42 * other.e415) + (this.e43 * other.e12345) + (this.e31 * other.e423) + (this.e12 * other.e4), -(this.e23 * other.e415) - (this.e31 * other.e425) - (this.e12 * other.e435) - (this.e45 * other.e321) - (this.e35 * other.e412)) - (float4(this.e41) * float4(other.e321, other.e3, other.e425, other.e235)) - (float4(this.e42) * float4(other.group1.zw, other.e1, other.e315)) - (float4(this.e43) * float4(other.e2, other.e415, other.e321, other.e125)) - (other.group0.xyzy * float4(this.group1.www, this.e25)) - (other.group0.zxyx * float4(this.group1.yzx, this.e15)), 
             /* e415, e425, e435, e321 */
@@ -4265,10 +4038,9 @@ extension Dipole: Sandwich<VersorEven> {
         ).geometric_product(this.reverse());
     }
 }
-extension Dipole: Sandwich<VersorOdd> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: VersorOdd) -> Output {
-        return VersorOdd.from_groups(
+public extension Dipole {
+    public VersorOdd sandwich(VersorOdd other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4((this.e41 * other.e45) + (this.e43 * other.e31) + (this.e43 * other.e4315) + (this.e23 * other.e1234) + (this.e12 * other.e42), (this.e41 * other.e4125) + (this.e42 * other.scalar) + (this.e42 * other.e45) + (this.e23 * other.e43) + (this.e31 * other.e1234), (this.e42 * other.e4235) + (this.e43 * other.scalar) + (this.e43 * other.e45) + (this.e31 * other.e41) + (this.e12 * other.e1234), -(this.e23 * other.e23) - (this.e31 * other.e31) - (this.e12 * other.e12) - (this.e25 * other.e42) - (this.e35 * other.e43)) + (float4(other.scalar, other.e12, other.e23, other.e45) * float4(this.group0.xyz.xxy, this.e45)) - (other.group0.xyzx * float4(this.group1.www, this.e15)) - float4((this.group0.xyz.yzx * other.group1.zxy), this.e41 * other.e15) - float4((this.group0.xyz.yzx * other.group3.zxy), this.e42 * other.e25) - float4((this.group1.yzx * other.group0.zxy), this.e43 * other.e35), 
             /* e23, e31, e12, e45 */
@@ -4280,16 +4052,21 @@ extension Dipole: Sandwich<VersorOdd> {
         ).geometric_product(this.reverse());
     }
 }
-extension DipoleInversion {
-    // Fancy infix trick
-    func operator/(_rhs: SandwichInfix) -> SandwichInfixPartial<DipoleInversion> {
-        return SandwichInfixPartial { a: this };
+public extension DipoleInversion {
+    // Fancy infix trick (first half)
+    public SandwichInfixPartial<DipoleInversion> operator /(SandwichInfix rhs) {
+        return SandwichInfixPartial<DipoleInversion>(this);
     }
 }
-extension DipoleInversion: Sandwich<AntiCircleRotor> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: AntiCircleRotor) -> Output {
-        return VersorOdd.from_groups(
+public extension SandwichInfixPartial<DipoleInversion> {
+    // Fancy infix trick (second half)
+    public VersorOdd operator /(AntiCircleRotor rhs) {
+        return this.a.sandwich(rhs);
+    }
+}
+public extension DipoleInversion {
+    public VersorOdd sandwich(AntiCircleRotor other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4((other.e43 * this.e4315) + (other.e23 * this.e1234) + (other.e31 * this.e43) + (other.e45 * this.e41) + (other.scalar * this.e41), (other.e43 * this.e23) + (other.e31 * this.e1234) + (other.e12 * this.e41) + (other.e45 * this.e42) + (other.scalar * this.e42), (other.e42 * this.e4235) + (other.e23 * this.e42) + (other.e12 * this.e1234) + (other.e45 * this.e43) + (other.scalar * this.e43), -(other.e23 * this.e23) - (other.e31 * this.e31) - (other.e12 * this.e12) - (other.e25 * this.e42) - (other.e35 * this.e43)) + (float4(this.e12, this.e4125, this.e31, this.e45) * float4(other.group0.xyz.yxx, other.e45)) - (float4(other.e41) * float4(this.group1.wz, this.e4315, this.e15)) - (float4(other.e42) * float4(this.e4125, this.e45, this.e23, this.e25)) - (float4(other.e43) * float4(this.e31, this.e4235, this.e45, this.e35)) - float4((this.group0.xyz.yzx * other.group1.zxy), other.e15 * this.e41), 
             /* e23, e31, e12, e45 */
@@ -4301,10 +4078,9 @@ extension DipoleInversion: Sandwich<AntiCircleRotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension DipoleInversion: Sandwich<AntiDipoleInversion> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiDipoleInversion) -> Output {
-        return VersorEven.from_groups(
+public extension DipoleInversion {
+    public VersorEven sandwich(AntiDipoleInversion other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(other.e4 * this.e23, other.e4 * this.e31, other.e4 * this.e12, -(other.e435 * this.e12) - (other.e321 * this.e45)) + (float4(this.e1234) * float4(other.group1.xyz, other.e5)) + (float4(other.e425, other.e1, other.e415, this.e4125) * float4(this.group0.xyz.zzy, other.e3)) + (float4(other.e3, other.e435, other.e2, this.e4315) * float4(this.group0.xyz.yxx, other.e2)) + (float4(this.e12, this.e4125, this.e31, this.e3215) * float4(other.group0.xyz.yxx, other.e4)) + (float4(this.e4315, this.e23, this.e4235, this.e4235) * float4(other.group0.xyz.zzy, other.e1)) - (float4(other.e423) * float4(this.group1.wz, this.e4315, this.e15)) - (float4(other.e431) * float4(this.e4125, this.e45, this.e23, this.e25)) - (float4(other.e412) * float4(this.e31, this.e4235, this.e45, this.e35)) - (float4(this.e41) * float4(other.e321, other.e3, other.e425, other.e235)) - (float4(this.e42) * float4(other.group1.zw, other.e1, other.e315)) - (float4(this.e43) * float4(other.e2, other.e415, other.e321, other.e125)) - float4((other.group2.www * this.group3.xyz), other.e415 * this.e23) - float4((this.group2.www * other.group3.xyz), other.e425 * this.e31), 
             /* e415, e425, e435, e321 */
@@ -4316,10 +4092,9 @@ extension DipoleInversion: Sandwich<AntiDipoleInversion> {
         ).geometric_product(this.reverse());
     }
 }
-extension DipoleInversion: Sandwich<AntiDualNum> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: AntiDualNum) -> Output {
-        return VersorOdd.from_groups(
+public extension DipoleInversion {
+    public VersorOdd sandwich(AntiDualNum other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(other.group0.xy.yy, other.scalar, other.e3215) * float4(this.group0.xyz, this.e1234), 
             /* e23, e31, e12, e45 */
@@ -4331,10 +4106,9 @@ extension DipoleInversion: Sandwich<AntiDualNum> {
         ).geometric_product(this.reverse());
     }
 }
-extension DipoleInversion: Sandwich<AntiFlatPoint> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiFlatPoint) -> Output {
-        return VersorEven.from_groups(
+public extension DipoleInversion {
+    public VersorEven sandwich(AntiFlatPoint other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((float3(other.e321) * this.group0.xyz * float3(-1.0)), -(other.e235 * this.e41) - (other.e315 * this.e42) - (other.e125 * this.e43) - (other.e321 * this.e45)), 
             /* e415, e425, e435, e321 */
@@ -4346,10 +4120,9 @@ extension DipoleInversion: Sandwich<AntiFlatPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension DipoleInversion: Sandwich<AntiFlector> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiFlector) -> Output {
-        return VersorEven.from_groups(
+public extension DipoleInversion {
+    public VersorEven sandwich(AntiFlector other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(float3(0.0), (other.e2 * this.e4315) + (other.e3 * this.e4125) + (other.e5 * this.e1234) - (other.e321 * this.e45)) + float4((this.group0.xyz.yzx * other.group1.zxy), other.e1 * this.e4235) - (float4(other.e321, other.e3, other.e1, other.e235) * float4(this.group0.xyz.xxy, this.e41)) - (float4(other.e2, other.e321, other.e321, other.e315) * float4(this.group0.xyz.zyz, this.e42)) - float4((this.group2.www * other.group1.xyz), other.e125 * this.e43), 
             /* e415, e425, e435, e321 */
@@ -4361,10 +4134,9 @@ extension DipoleInversion: Sandwich<AntiFlector> {
         ).geometric_product(this.reverse());
     }
 }
-extension DipoleInversion: Sandwich<AntiLine> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: AntiLine) -> Output {
-        return VersorOdd.from_groups(
+public extension DipoleInversion {
+    public VersorOdd sandwich(AntiLine other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4((other.e23 * this.e1234) + (other.e31 * this.e43), (other.e31 * this.e1234) + (other.e12 * this.e41), (other.e23 * this.e42) + (other.e12 * this.e1234), -(other.e31 * this.e31) - (other.e12 * this.e12) - (other.e15 * this.e41) - (other.e25 * this.e42) - (other.e35 * this.e43)) - float4((other.group0.xyz.zxy * this.group0.xyz.yzx), other.e23 * this.e23), 
             /* e23, e31, e12, e45 */
@@ -4376,10 +4148,9 @@ extension DipoleInversion: Sandwich<AntiLine> {
         ).geometric_product(this.reverse());
     }
 }
-extension DipoleInversion: Sandwich<AntiMotor> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: AntiMotor) -> Output {
-        return VersorOdd.from_groups(
+public extension DipoleInversion {
+    public VersorOdd sandwich(AntiMotor other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4((other.e23 * this.e1234) + (other.e31 * this.e43), (other.e31 * this.e1234) + (other.scalar * this.e42), (other.e12 * this.e1234) + (other.scalar * this.e43), -(other.e23 * this.e23) - (other.e31 * this.e31) - (other.e12 * this.e12) - (other.e25 * this.e42) - (other.e35 * this.e43)) + float4((this.group0.xyz.xxy * other.group0.wzx), other.e3215 * this.e1234) - float4((this.group0.xyz.yzx * other.group0.zxy), other.e15 * this.e41), 
             /* e23, e31, e12, e45 */
@@ -4391,10 +4162,9 @@ extension DipoleInversion: Sandwich<AntiMotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension DipoleInversion: Sandwich<AntiPlane> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiPlane) -> Output {
-        return VersorEven.from_groups(
+public extension DipoleInversion {
+    public VersorEven sandwich(AntiPlane other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(-(other.e1 * this.e1234) - (other.e2 * this.e43), -(other.e2 * this.e1234) - (other.e3 * this.e41), -(other.e1 * this.e42) - (other.e3 * this.e1234), (other.e2 * this.e4315) + (other.e3 * this.e4125) + (other.e5 * this.e1234)) + float4((this.group0.xyz.yzx * other.group0.zxy), other.e1 * this.e4235), 
             /* e415, e425, e435, e321 */
@@ -4406,12 +4176,11 @@ extension DipoleInversion: Sandwich<AntiPlane> {
         ).geometric_product(this.reverse());
     }
 }
-extension DipoleInversion: Sandwich<AntiScalar> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiScalar) -> Output {
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(other.e12345) * this.group0.xyz, 0.0), 
+public extension DipoleInversion {
+    public VersorEven sandwich(AntiScalar other) {
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(other.e12345) * this.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(other.e12345) * this.group1 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e235, e315, e125, e4 */
@@ -4421,10 +4190,9 @@ extension DipoleInversion: Sandwich<AntiScalar> {
         ).geometric_product(this.reverse());
     }
 }
-extension DipoleInversion: Sandwich<Circle> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: Circle) -> Output {
-        return VersorEven.from_groups(
+public extension DipoleInversion {
+    public VersorEven sandwich(Circle other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((other.e431 * this.e12) + (other.e412 * this.e4315) + (other.e415 * this.e1234) + (other.e425 * this.e43), (other.e423 * this.e4125) + (other.e412 * this.e23) + (other.e425 * this.e1234) + (other.e435 * this.e41), (other.e423 * this.e31) + (other.e431 * this.e4235) + (other.e415 * this.e42) + (other.e435 * this.e1234), -(other.e415 * this.e23) - (other.e425 * this.e31) - (other.e435 * this.e12) - (other.e321 * this.e45) - (other.e125 * this.e43)) - (float4(other.e423) * float4(this.group1.wz, this.e4315, this.e15)) - (float4(other.e431) * float4(this.e4125, this.e45, this.e23, this.e25)) - (float4(other.e412) * float4(this.e31, this.e4235, this.e45, this.e35)) - float4((this.group0.xyz.xyx * other.group1.wwy), other.e235 * this.e41) - float4((this.group0.xyz.yzz * other.group1.zxw), other.e315 * this.e42), 
             /* e415, e425, e435, e321 */
@@ -4436,10 +4204,9 @@ extension DipoleInversion: Sandwich<Circle> {
         ).geometric_product(this.reverse());
     }
 }
-extension DipoleInversion: Sandwich<CircleRotor> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: CircleRotor) -> Output {
-        return VersorEven.from_groups(
+public extension DipoleInversion {
+    public VersorEven sandwich(CircleRotor other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((other.e431 * this.e12) + (other.e412 * this.e4315) + (other.e415 * this.e1234) + (other.e425 * this.e43) + (other.e12345 * this.e41), (other.e423 * this.e4125) + (other.e412 * this.e23) + (other.e425 * this.e1234) + (other.e435 * this.e41) + (other.e12345 * this.e42), (other.e423 * this.e31) + (other.e431 * this.e4235) + (other.e415 * this.e42) + (other.e435 * this.e1234) + (other.e12345 * this.e43), -(other.e415 * this.e23) - (other.e425 * this.e31) - (other.e435 * this.e12) - (other.e321 * this.e45) - (other.e125 * this.e43)) - (float4(other.e423) * float4(this.group1.wz, this.e4315, this.e15)) - (float4(other.e431) * float4(this.e4125, this.e45, this.e23, this.e25)) - (float4(other.e412) * float4(this.e31, this.e4235, this.e45, this.e35)) - float4((this.group0.xyz.xyx * other.group1.wwy), other.e235 * this.e41) - float4((this.group0.xyz.yzz * other.group1.zxw), other.e315 * this.e42), 
             /* e415, e425, e435, e321 */
@@ -4451,10 +4218,9 @@ extension DipoleInversion: Sandwich<CircleRotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension DipoleInversion: Sandwich<Dipole> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Dipole) -> Output {
-        return VersorOdd.from_groups(
+public extension DipoleInversion {
+    public VersorOdd sandwich(Dipole other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4((other.e43 * this.e4315) + (other.e23 * this.e1234) + (other.e31 * this.e43) + (other.e45 * this.e41), (other.e43 * this.e23) + (other.e31 * this.e1234) + (other.e12 * this.e41) + (other.e45 * this.e42), (other.e42 * this.e4235) + (other.e23 * this.e42) + (other.e12 * this.e1234) + (other.e45 * this.e43), -(other.e23 * this.e23) - (other.e31 * this.e31) - (other.e12 * this.e12) - (other.e25 * this.e42) - (other.e35 * this.e43)) + (float4(this.e12, this.e4125, this.e31, this.e45) * float4(other.group0.xyz.yxx, other.e45)) - (float4(other.e41) * float4(this.group1.wz, this.e4315, this.e15)) - (float4(other.e42) * float4(this.e4125, this.e45, this.e23, this.e25)) - (float4(other.e43) * float4(this.e31, this.e4235, this.e45, this.e35)) - float4((this.group0.xyz.yzx * other.group1.zxy), other.e15 * this.e41), 
             /* e23, e31, e12, e45 */
@@ -4466,10 +4232,9 @@ extension DipoleInversion: Sandwich<Dipole> {
         ).geometric_product(this.reverse());
     }
 }
-extension DipoleInversion: Sandwich<DipoleInversion> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: DipoleInversion) -> Output {
-        return VersorOdd.from_groups(
+public extension DipoleInversion {
+    public VersorOdd sandwich(DipoleInversion other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4((other.e23 * this.e1234) + (other.e31 * this.e43) + (other.e1234 * this.e23) + (other.e4235 * this.e1234) + (other.e4315 * this.e43), (other.e31 * this.e1234) + (other.e45 * this.e42) + (other.e1234 * this.e31) + (other.e4315 * this.e1234) + (other.e4125 * this.e41), (other.e12 * this.e1234) + (other.e45 * this.e43) + (other.e1234 * this.e12) + (other.e4235 * this.e42) + (other.e4125 * this.e1234), -(other.e23 * this.e23) - (other.e31 * this.e31) - (other.e12 * this.e12) - (other.e4235 * this.e4235) - (other.e4315 * this.e4315) - (other.e4125 * this.e4125)) + (float4(this.e12, this.e4125, this.e31, this.e45) * float4(other.group0.xyz.yxx, other.e45)) + (float4(this.e4315, this.e23, this.e4235, this.e3215) * float4(other.group0.xyz.zzy, other.e1234)) + float4((this.group0.xyz.xxy * other.group1.wzx), other.e3215 * this.e1234) - (float4(other.e41) * float4(this.group1.wz, this.e4315, this.e15)) - (float4(other.e42) * float4(this.e4125, this.e45, this.e23, this.e25)) - (float4(other.e43) * float4(this.e31, this.e4235, this.e45, this.e35)) - float4((this.group0.xyz.yzx * other.group1.zxy), other.e15 * this.e41) - float4((this.group0.xyz.yzx * other.group3.zxy), other.e25 * this.e42) - float4((other.group2.www * this.group3.xyz), other.e35 * this.e43), 
             /* e23, e31, e12, e45 */
@@ -4481,10 +4246,9 @@ extension DipoleInversion: Sandwich<DipoleInversion> {
         ).geometric_product(this.reverse());
     }
 }
-extension DipoleInversion: Sandwich<DualNum> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: DualNum) -> Output {
-        return VersorEven.from_groups(
+public extension DipoleInversion {
+    public VersorEven sandwich(DualNum other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(other.group0.xy.yy, other.e12345, other.e5) * float4(this.group0.xyz, this.e1234), 
             /* e415, e425, e435, e321 */
@@ -4496,10 +4260,9 @@ extension DipoleInversion: Sandwich<DualNum> {
         ).geometric_product(this.reverse());
     }
 }
-extension DipoleInversion: Sandwich<FlatPoint> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: FlatPoint) -> Output {
-        return VersorOdd.from_groups(
+public extension DipoleInversion {
+    public VersorOdd sandwich(FlatPoint other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4((float3(other.e45) * this.group0.xyz), (this.e45 * other.e45) - (this.e41 * other.e15) - (this.e42 * other.e25) - (this.e43 * other.e35)), 
             /* e23, e31, e12, e45 */
@@ -4511,10 +4274,9 @@ extension DipoleInversion: Sandwich<FlatPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension DipoleInversion: Sandwich<Flector> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Flector) -> Output {
-        return VersorOdd.from_groups(
+public extension DipoleInversion {
+    public VersorOdd sandwich(Flector other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(this.e1234 * other.e4235, this.e1234 * other.e4315, this.e1234 * other.e4125, -(this.e42 * other.e25) - (this.e43 * other.e35) - (this.e4235 * other.e4235) - (this.e4315 * other.e4315) - (this.e4125 * other.e4125)) + (float4(other.e45, other.e4125, other.e4235, other.e45) * float4(this.group0.xyz.xxy, this.e45)) + (float4(other.e4315, other.e45, other.e45, other.e3215) * float4(this.group0.xyz.zyz, this.e1234)) - float4((this.group0.xyz.yzx * other.group1.zxy), this.e41 * other.e15), 
             /* e23, e31, e12, e45 */
@@ -4526,10 +4288,9 @@ extension DipoleInversion: Sandwich<Flector> {
         ).geometric_product(this.reverse());
     }
 }
-extension DipoleInversion: Sandwich<Line> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: Line) -> Output {
-        return VersorEven.from_groups(
+public extension DipoleInversion {
+    public VersorEven sandwich(Line other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((this.e43 * other.e425) + (this.e1234 * other.e415), (this.e41 * other.e435) + (this.e1234 * other.e425), (this.e42 * other.e415) + (this.e1234 * other.e435), -(this.e42 * other.e315) - (this.e43 * other.e125) - (this.e23 * other.e415) - (this.e31 * other.e425) - (this.e12 * other.e435)) - float4((this.group0.xyz.yzx * other.group0.xyz.zxy), this.e41 * other.e235), 
             /* e415, e425, e435, e321 */
@@ -4541,10 +4302,9 @@ extension DipoleInversion: Sandwich<Line> {
         ).geometric_product(this.reverse());
     }
 }
-extension DipoleInversion: Sandwich<Motor> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: Motor) -> Output {
-        return VersorEven.from_groups(
+public extension DipoleInversion {
+    public VersorEven sandwich(Motor other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((this.e43 * other.e425) + (this.e1234 * other.e415), (this.e42 * other.e12345) + (this.e1234 * other.e425), (this.e43 * other.e12345) + (this.e1234 * other.e435), -(this.e42 * other.e315) - (this.e43 * other.e125) - (this.e23 * other.e415) - (this.e31 * other.e425) - (this.e12 * other.e435)) + float4((this.group0.xyz.xxy * other.group0.wzx), this.e1234 * other.e5) - float4((this.group0.xyz.yzx * other.group0.zxy), this.e41 * other.e235), 
             /* e415, e425, e435, e321 */
@@ -4556,39 +4316,37 @@ extension DipoleInversion: Sandwich<Motor> {
         ).geometric_product(this.reverse());
     }
 }
-extension DipoleInversion: Sandwich<MultiVector> {
-    associatedtype Output = MultiVector;
-    func sandwich(other: MultiVector) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((this.e45 * other.e45) - (this.e4235 * other.e4235) - (this.e4315 * other.e4315) - (this.e4125 * other.e4125), (this.e4315 * other.e2) + (this.e4125 * other.e3) + (this.e3215 * other.e4) - (this.e45 * other.e321)) + (float2(this.e1234) * float2(other.e3215, other.e5)) + (float2(other.e1234, other.e1) * this.group3.wx) - (float2(this.e41) * float2(other.e15, other.e235)) - (float2(this.e42) * float2(other.e25, other.e315)) - (float2(this.e43) * float2(other.e35, other.e125)) - (float2(this.e23) * float2(other.e23, other.e415)) - (float2(this.e31) * float2(other.e31, other.e425)) - (float2(this.e12) * float2(other.e12, other.e435)) - (float2(this.e15) * float2(other.e41, other.e423)) - (float2(this.e25) * float2(other.e42, other.e431)) - (float2(this.e35) * float2(other.e43, other.e412)), 0.0, 0.0), 
+public extension DipoleInversion {
+    public MultiVector sandwich(MultiVector other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((this.e45 * other.e45) - (this.e4235 * other.e4235) - (this.e4315 * other.e4315) - (this.e4125 * other.e4125), (this.e4315 * other.e2) + (this.e4125 * other.e3) + (this.e3215 * other.e4) - (this.e45 * other.e321)) + (float2(this.e1234) * float2(other.e3215, other.e5)) + (float2(other.e1234, other.e1) * this.group3.wx) - (float2(this.e41) * float2(other.e15, other.e235)) - (float2(this.e42) * float2(other.e25, other.e315)) - (float2(this.e43) * float2(other.e35, other.e125)) - (float2(this.e23) * float2(other.e23, other.e415)) - (float2(this.e31) * float2(other.e31, other.e425)) - (float2(this.e12) * float2(other.e12, other.e435)) - (float2(this.e15) * float2(other.e41, other.e423)) - (float2(this.e25) * float2(other.e42, other.e431)) - (float2(this.e35) * float2(other.e43, other.e412)), 
             /* e1, e2, e3, e4 */
             (float4(other.e2, other.e321, other.e321, this.e4315) * float4(this.group1.zyz, other.e431)) + (float4(other.e5, other.e125, other.e235, this.e1234) * float4(this.group0.xyz.xxy, other.e12345)) + (float4(other.e321, other.e3, other.e1, this.e4235) * float4(this.group1.xxy, other.e423)) + (float4(other.e315, other.e5, other.e5, other.e1) * float4(this.group0.xyz.zyz, this.e41)) + float4((other.group8.xyz * this.group2.www), this.e43 * other.e3) + float4((other.group7.xyz.zxy * this.group2.yzx), this.e42 * other.e2) + float4((this.group3.yzx * other.group6.zxy), this.e4125 * other.e412) - (float4(other.e4) * float4(this.group2.xyz, this.e45)) - (other.group6.yzxw * float4(this.group3.zxy, this.e1234)) - (float4(other.group0.xy.yy, other.e12345, this.e41) * float4(this.group3.xyz, other.e415)) - (float4(this.group2.zx, this.e3215, this.e23) * float4(other.group7.xyz.yzz, other.e423)) - (float4(this.group3.ww, this.e25, other.e435) * float4(other.group7.xyz.xyx, this.e43)) - float4((this.group0.xyz.yzx * other.group8.xyz.zxy), this.e42 * other.e425) - float4((this.group1.yzx * other.group1.zxy), this.e31 * other.e431) - float4((this.group1.www * other.group6.xyz), this.e12 * other.e412), 
-            /* e5, 0, 0, 0 */
-            float4((this.e45 * other.e5) + (this.e3215 * other.e12345) + (this.e3215 * other.e321) - (this.e23 * other.e235) - (this.e31 * other.e315) - (this.e12 * other.e125) - (this.e15 * other.e1) - (this.e15 * other.e415) - (this.e25 * other.e2) - (this.e25 * other.e425) - (this.e35 * other.e3) - (this.e35 * other.e435) - (this.e4235 * other.e235) - (this.e4315 * other.e315) - (this.e4125 * other.e125), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (this.e45 * other.e5) + (this.e3215 * other.e12345) + (this.e3215 * other.e321) - (this.e23 * other.e235) - (this.e31 * other.e315) - (this.e12 * other.e125) - (this.e15 * other.e1) - (this.e15 * other.e415) - (this.e25 * other.e2) - (this.e25 * other.e425) - (this.e35 * other.e3) - (this.e35 * other.e435) - (this.e4235 * other.e235) - (this.e4315 * other.e315) - (this.e4125 * other.e125), 
             /* e15, e25, e35, e45 */
             float4((this.e45 * other.e15) + (this.e25 * other.e4125) + (this.e4235 * other.e3215) + (this.e4125 * other.e25), (this.e45 * other.e25) + (this.e35 * other.e4235) + (this.e4235 * other.e35) + (this.e4315 * other.e3215), (this.e45 * other.e35) + (this.e15 * other.e4315) + (this.e4315 * other.e15) + (this.e4125 * other.e3215), -(this.e23 * other.e4235) - (this.e31 * other.e4315) - (this.e12 * other.e4125) - (this.e1234 * other.e3215)) + (float4(other.scalar) * float4(this.group2.xyz, this.e45)) + (float4(other.e25, other.e3215, other.e3215, other.e1234) * float4(this.group1.zyz, this.e3215)) + (float4(other.e3215, other.e35, other.e15, other.e35) * float4(this.group1.xxy, this.e43)) + (float4(this.group2.zx, this.e3215, other.e25) * float4(other.group5.xyz.yzz, this.e42)) + (float4(this.group3.ww, this.e25, other.e15) * float4(other.group5.xyz.xyx, this.e41)) - (float4(other.e45, other.e4125, other.e4235, this.e35) * float4(this.group2.xxy, other.e43)) - (float4(other.e4315, other.e45, other.e45, this.e4235) * float4(this.group2.zyz, other.e23)) - (this.group2.yzxx * float4(other.group5.xyz.zxy, other.e41)) - float4((this.group1.yzx * other.group3.zxy), this.e25 * other.e42) - float4((this.group3.yzx * other.group3.zxy), this.e4315 * other.e31) - float4((this.group3.www * other.group9.xyz), this.e4125 * other.e12), 
-            /* e41, e42, e43, 0 */
-            float4((float3(this.e1234) * other.group5.xyz) + (float3(this.e1234) * other.group9.xyz) + (float3(other.scalar) * this.group0.xyz) + (float3(other.e1234) * this.group1.xyz) + (float3(this.e12, this.e4125, this.e31) * other.group4.xyz.yxx) + (float3(this.e4315, this.e23, this.e4235) * other.group4.xyz.zzy) + (float3(other.e45, other.e12, other.e23) * this.group0.xyz.xxy) + (float3(other.e31, other.e4125, other.e4235) * this.group0.xyz.zxy) + (float3(other.e4315, other.e45, other.e45) * this.group0.xyz.zyz) - (float3(other.e41) * float3(this.e45, this.e12, this.e4315)) - (float3(other.e42) * float3(this.e4125, this.e45, this.e23)) - (float3(other.e43) * float3(this.e31, this.e4235, this.e45)) - (float3(other.e1234) * this.group3.xyz) - (this.group0.xyz.yzx * other.group5.xyz.zxy) - (this.group0.xyz.yzx * other.group9.zxy), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(this.e45) * other.group9.xyz) + (float3(this.e1234) * other.group3.xyz) + (float3(other.scalar) * this.group1.xyz) + (float3(other.e1234) * this.group2.xyz) + (float3(this.e35, this.e15, this.e3215) * other.group4.xyz.yzz) + (float3(this.e3215, this.e3215, this.e25) * other.group4.xyz.xyx) + (float3(other.e25, other.e3215, other.e3215) * this.group0.xyz.zyz) + (float3(other.e45, other.e4125, other.e4235) * this.group3.xxy) + (float3(other.e4315, other.e45, other.e45) * this.group3.zyz) + (float3(other.e3215, other.e35, other.e15) * this.group0.xyz.xxy) + (other.group5.xyz.yzx * this.group1.zxy) - (this.group0.xyz.yzx * other.group3.zxy) - (other.group4.xyz.zxy * this.group2.yzx) - (other.group5.xyz.zxy * this.group1.yzx) - (this.group3.yzx * other.group9.zxy), 0.0), 
+            /* e41, e42, e43 */
+            (float3(this.e1234) * other.group5.xyz) + (float3(this.e1234) * other.group9.xyz) + (float3(other.scalar) * this.group0.xyz) + (float3(other.e1234) * this.group1.xyz) + (float3(this.e12, this.e4125, this.e31) * other.group4.xyz.yxx) + (float3(this.e4315, this.e23, this.e4235) * other.group4.xyz.zzy) + (float3(other.e45, other.e12, other.e23) * this.group0.xyz.xxy) + (float3(other.e31, other.e4125, other.e4235) * this.group0.xyz.zxy) + (float3(other.e4315, other.e45, other.e45) * this.group0.xyz.zyz) - (float3(other.e41) * float3(this.e45, this.e12, this.e4315)) - (float3(other.e42) * float3(this.e4125, this.e45, this.e23)) - (float3(other.e43) * float3(this.e31, this.e4235, this.e45)) - (float3(other.e1234) * this.group3.xyz) - (this.group0.xyz.yzx * other.group5.xyz.zxy) - (this.group0.xyz.yzx * other.group9.zxy), 
+            /* e23, e31, e12 */
+            (float3(this.e45) * other.group9.xyz) + (float3(this.e1234) * other.group3.xyz) + (float3(other.scalar) * this.group1.xyz) + (float3(other.e1234) * this.group2.xyz) + (float3(this.e35, this.e15, this.e3215) * other.group4.xyz.yzz) + (float3(this.e3215, this.e3215, this.e25) * other.group4.xyz.xyx) + (float3(other.e25, other.e3215, other.e3215) * this.group0.xyz.zyz) + (float3(other.e45, other.e4125, other.e4235) * this.group3.xxy) + (float3(other.e4315, other.e45, other.e45) * this.group3.zyz) + (float3(other.e3215, other.e35, other.e15) * this.group0.xyz.xxy) + (other.group5.xyz.yzx * this.group1.zxy) - (this.group0.xyz.yzx * other.group3.zxy) - (other.group4.xyz.zxy * this.group2.yzx) - (other.group5.xyz.zxy * this.group1.yzx) - (this.group3.yzx * other.group9.zxy), 
             /* e415, e425, e435, e321 */
             float4((this.e15 * other.e4) + (this.e4315 * other.e3), (this.e25 * other.e4) + (this.e4125 * other.e1), (this.e35 * other.e4) + (this.e4235 * other.e2), -(this.e12 * other.e3) - (this.e3215 * other.e4)) + (float4(other.e5, other.e125, other.e235, this.e25) * float4(this.group0.xyz.xxy, other.e431)) + (float4(other.e315, other.e5, other.e5, this.e35) * float4(this.group0.xyz.zyz, other.e412)) + (other.group6.yzxz * float4(this.group1.zxy, this.e4125)) + (float4(other.group0.xy.yy, other.e12345, other.e423) * float4(this.group1.xyz, this.e15)) + (float4(this.group2.zx, this.e3215, other.e415) * float4(other.group7.xyz.yzz, this.e4235)) + (float4(this.group3.ww, this.e25, other.e5) * float4(other.group7.xyz.xyx, this.e1234)) + float4((other.group8.xyz * this.group2.www), this.e4315 * other.e425) - (float4(other.e2, other.e321, other.e321, other.e2) * float4(this.group3.zyz, this.e31)) - (float4(other.e321, other.e3, other.e1, other.e1) * float4(this.group3.xxy, this.e23)) - float4((this.group0.xyz.yzx * other.group8.xyz.zxy), this.e45 * other.e12345) - float4((other.group7.xyz.zxy * this.group2.yzx), this.e41 * other.e235) - float4((this.group1.yzx * other.group6.zxy), this.e42 * other.e315) - float4((this.group1.www * other.group1.xyz), this.e43 * other.e125), 
-            /* e423, e431, e412, 0 */
-            float4((float3(this.e1234) * other.group6.xyz) + (float3(other.e12345) * this.group0.xyz) + (float3(other.e4) * this.group1.xyz) + (float3(this.e12, this.e4125, this.e31) * other.group7.xyz.yxx) + (float3(this.e4315, this.e23, this.e4235) * other.group7.xyz.zzy) + (float3(other.e3, other.e435, other.e2) * this.group0.xyz.yxx) + (float3(other.e425, other.e1, other.e415) * this.group0.xyz.zzy) - (float3(this.e41) * float3(other.e321, other.e3, other.e425)) - (float3(this.e42) * float3(other.e435, other.e321, other.e1)) - (float3(this.e43) * float3(other.e2, other.e415, other.e321)) - (float3(this.e1234) * other.group1.xyz) - (float3(other.e4) * this.group3.xyz) - (float3(other.e423) * float3(this.e45, this.e12, this.e4315)) - (float3(other.e431) * float3(this.e4125, this.e45, this.e23)) - (float3(other.e412) * float3(this.e31, this.e4235, this.e45)), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(this.e3215) * other.group1.xyz) + (float3(this.e3215) * other.group6.xyz) + (float3(other.e12345) * this.group2.xyz) + (float3(other.e5) * this.group1.xyz) + (float3(other.e5) * this.group3.xyz) + (float3(this.e12, this.e23, this.e4315) * other.group8.xyz.yzx) + (float3(this.e4125, this.e4235, this.e45) * other.group8.xyz.yzz) + (float3(other.e2, other.e435, other.e415) * this.group2.zxy) + (float3(other.e321, other.e3, other.e1) * this.group2.xxy) + (other.group8.xyz.xyx * this.group1.wwy) + (this.group2.zyz * other.group6.yww) - (other.group8.xyz.zxy * this.group1.yzx) - (other.group8.xyz.zxy * this.group3.yzx) - (this.group2.yzx * other.group1.zxy) - (this.group2.yzx * other.group6.zxy), 0.0), 
+            /* e423, e431, e412 */
+            (float3(this.e1234) * other.group6.xyz) + (float3(other.e12345) * this.group0.xyz) + (float3(other.e4) * this.group1.xyz) + (float3(this.e12, this.e4125, this.e31) * other.group7.xyz.yxx) + (float3(this.e4315, this.e23, this.e4235) * other.group7.xyz.zzy) + (float3(other.e3, other.e435, other.e2) * this.group0.xyz.yxx) + (float3(other.e425, other.e1, other.e415) * this.group0.xyz.zzy) - (float3(this.e41) * float3(other.e321, other.e3, other.e425)) - (float3(this.e42) * float3(other.e435, other.e321, other.e1)) - (float3(this.e43) * float3(other.e2, other.e415, other.e321)) - (float3(this.e1234) * other.group1.xyz) - (float3(other.e4) * this.group3.xyz) - (float3(other.e423) * float3(this.e45, this.e12, this.e4315)) - (float3(other.e431) * float3(this.e4125, this.e45, this.e23)) - (float3(other.e412) * float3(this.e31, this.e4235, this.e45)), 
+            /* e235, e315, e125 */
+            (float3(this.e3215) * other.group1.xyz) + (float3(this.e3215) * other.group6.xyz) + (float3(other.e12345) * this.group2.xyz) + (float3(other.e5) * this.group1.xyz) + (float3(other.e5) * this.group3.xyz) + (float3(this.e12, this.e23, this.e4315) * other.group8.xyz.yzx) + (float3(this.e4125, this.e4235, this.e45) * other.group8.xyz.yzz) + (float3(other.e2, other.e435, other.e415) * this.group2.zxy) + (float3(other.e321, other.e3, other.e1) * this.group2.xxy) + (other.group8.xyz.xyx * this.group1.wwy) + (this.group2.zyz * other.group6.yww) - (other.group8.xyz.zxy * this.group1.yzx) - (other.group8.xyz.zxy * this.group3.yzx) - (this.group2.yzx * other.group1.zxy) - (this.group2.yzx * other.group6.zxy), 
             /* e4235, e4315, e4125, e3215 */
             float4((this.e23 * other.e45) + (this.e12 * other.e4315) + (this.e15 * other.e1234) + (this.e4125 * other.e31), (this.e23 * other.e4125) + (this.e31 * other.e45) + (this.e25 * other.e1234) + (this.e4235 * other.e12), (this.e31 * other.e4235) + (this.e12 * other.e45) + (this.e45 * other.e12) + (this.e35 * other.e1234), -(this.e4235 * other.e15) - (this.e4315 * other.e25) - (this.e4125 * other.e35) - (this.e3215 * other.e45)) + (float4(other.scalar) * this.group3) + (float4(this.group1.ww, this.e4315, other.e4125) * float4(other.group5.xyz.xyx, this.e35)) + (float4(this.group2.zx, this.e3215, other.e4315) * float4(other.group4.xyz.yzz, this.e25)) + (float4(this.group3.ww, this.e25, other.e4235) * float4(other.group4.xyz.xyx, this.e15)) + float4((this.group0.xyz.yzx * other.group3.zxy), this.e45 * other.e3215) - (float4(other.e25, other.e3215, other.e3215, this.e25) * float4(this.group0.xyz.zyz, other.e31)) - (float4(other.e3215, other.e35, other.e15, this.e15) * float4(this.group0.xyz.xxy, other.e23)) - (this.group1.yzxy * float4(other.group9.zxy, other.e25)) - (this.group2.yzxz * float4(other.group4.xyz.zxy, other.e12)) - (other.group3.xyzz * float4(this.group2.www, this.e12)) - float4((other.group5.xyz.zxy * this.group3.yzx), this.e23 * other.e15), 
-            /* e1234, 0, 0, 0 */
-            float4((this.e1234 * other.scalar) + (this.e1234 * other.e45) + (this.e4235 * other.e41) + (this.e4315 * other.e42) + (this.e4125 * other.e43) - (this.e41 * other.e23) - (this.e41 * other.e4235) - (this.e42 * other.e31) - (this.e42 * other.e4315) - (this.e43 * other.e12) - (this.e43 * other.e4125) - (this.e23 * other.e41) - (this.e31 * other.e42) - (this.e12 * other.e43) - (this.e45 * other.e1234), 0.0, 0.0, 0.0)
+            /* e1234 */
+            (this.e1234 * other.scalar) + (this.e1234 * other.e45) + (this.e4235 * other.e41) + (this.e4315 * other.e42) + (this.e4125 * other.e43) - (this.e41 * other.e23) - (this.e41 * other.e4235) - (this.e42 * other.e31) - (this.e42 * other.e4315) - (this.e43 * other.e12) - (this.e43 * other.e4125) - (this.e23 * other.e41) - (this.e31 * other.e42) - (this.e12 * other.e43) - (this.e45 * other.e1234)
         ).geometric_product(this.reverse());
     }
 }
-extension DipoleInversion: Sandwich<Plane> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Plane) -> Output {
-        return VersorOdd.from_groups(
+public extension DipoleInversion {
+    public VersorOdd sandwich(Plane other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(this.e1234 * other.e4235, this.e1234 * other.e4315, this.e1234 * other.e4125, -(this.e4315 * other.e4315) - (this.e4125 * other.e4125)) + (other.group0.yzxw * float4(this.group0.xyz.zxy, this.e1234)) - (other.group0.zxyx * float4(this.group0.xyz.yzx, this.e4235)), 
             /* e23, e31, e12, e45 */
@@ -4600,10 +4358,9 @@ extension DipoleInversion: Sandwich<Plane> {
         ).geometric_product(this.reverse());
     }
 }
-extension DipoleInversion: Sandwich<RoundPoint> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: RoundPoint) -> Output {
-        return VersorEven.from_groups(
+public extension DipoleInversion {
+    public VersorEven sandwich(RoundPoint other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(-(this.e43 * other.e2) - (this.e1234 * other.e1) - (this.e4235 * other.e4), -(this.e41 * other.e3) - (this.e1234 * other.e2) - (this.e4315 * other.e4), -(this.e42 * other.e1) - (this.e1234 * other.e3) - (this.e4125 * other.e4), (this.e4315 * other.e2) + (this.e4125 * other.e3) + (this.e3215 * other.e4)) + (other.group0.wwwx * float4(this.group1.xyz, this.e4235)) + float4((this.group0.xyz.yzx * other.group0.zxy), this.e1234 * other.e5), 
             /* e415, e425, e435, e321 */
@@ -4615,12 +4372,11 @@ extension DipoleInversion: Sandwich<RoundPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension DipoleInversion: Sandwich<Scalar> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Scalar) -> Output {
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(other.scalar) * this.group0.xyz, 0.0), 
+public extension DipoleInversion {
+    public VersorOdd sandwich(Scalar other) {
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            float3(other.scalar) * this.group0.xyz, 
             /* e23, e31, e12, e45 */
             float4(other.scalar) * this.group1, 
             /* e15, e25, e35, e1234 */
@@ -4630,10 +4386,9 @@ extension DipoleInversion: Sandwich<Scalar> {
         ).geometric_product(this.reverse());
     }
 }
-extension DipoleInversion: Sandwich<Sphere> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Sphere) -> Output {
-        return VersorOdd.from_groups(
+public extension DipoleInversion {
+    public VersorOdd sandwich(Sphere other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(this.e1234 * other.e4235, this.e1234 * other.e4315, this.e1234 * other.e4125, this.e4125 * other.e4125 * -1.0) + (float4(other.e1234) * float4(this.group1.xyz, this.e3215)) + (other.group0.yzxw * float4(this.group0.xyz.zxy, this.e1234)) - (this.group3.xyzy * float4(float3(other.e1234), other.e4315)) - (other.group0.zxyx * float4(this.group0.xyz.yzx, this.e4235)), 
             /* e23, e31, e12, e45 */
@@ -4645,10 +4400,9 @@ extension DipoleInversion: Sandwich<Sphere> {
         ).geometric_product(this.reverse());
     }
 }
-extension DipoleInversion: Sandwich<VersorEven> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: VersorEven) -> Output {
-        return VersorEven.from_groups(
+public extension DipoleInversion {
+    public VersorEven sandwich(VersorEven other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((this.e1234 * other.e415) + (this.e4315 * other.e412), (this.e1234 * other.e425) + (this.e4125 * other.e423), (this.e1234 * other.e435) + (this.e4235 * other.e431), -(this.e25 * other.e431) - (this.e35 * other.e412)) + (float4(other.e431, other.e4, other.e4, other.e4) * float4(this.group1.zyz, this.e3215)) + (float4(other.e12345, other.e435, other.e2, other.e5) * float4(this.group0.xyz.xxx, this.e1234)) + (float4(other.e425, other.e1, other.e12345, other.e2) * float4(this.group0.xyz.zzz, this.e4315)) + (float4(other.e3, other.e12345, other.e415, other.e1) * float4(this.group0.xyz.yyy, this.e4235)) + (float4(other.e4, other.e412, other.e423, other.e3) * float4(this.group1.xxy, this.e4125)) - (float4(this.e41) * float4(other.e321, other.e3, other.e425, other.e235)) - (float4(this.e42) * float4(other.group1.zw, other.e1, other.e315)) - (float4(this.e43) * float4(other.e2, other.e415, other.e321, other.e125)) - (float4(other.e431, other.e4, other.e4, other.e423) * float4(this.group3.zyz, this.e15)) - (float4(other.e4, other.e412, other.e423, other.e321) * float4(this.group3.xxy, this.e45)) - (this.group1.yzxx * float4(other.group0.zxy, other.e415)) - (this.group1.wwwy * float4(other.group0.xyz, other.e425)) - float4((this.group2.www * other.group3.xyz), this.e12 * other.e435), 
             /* e415, e425, e435, e321 */
@@ -4660,10 +4414,9 @@ extension DipoleInversion: Sandwich<VersorEven> {
         ).geometric_product(this.reverse());
     }
 }
-extension DipoleInversion: Sandwich<VersorOdd> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: VersorOdd) -> Output {
-        return VersorOdd.from_groups(
+public extension DipoleInversion {
+    public VersorOdd sandwich(VersorOdd other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4((this.e43 * other.e4315) + (this.e23 * other.e1234) + (this.e12 * other.e42) + (this.e1234 * other.e23) + (this.e1234 * other.e4235) + (this.e4315 * other.e43), (this.e42 * other.e45) + (this.e23 * other.e43) + (this.e31 * other.e1234) + (this.e1234 * other.e31) + (this.e1234 * other.e4315) + (this.e4125 * other.e41), (this.e43 * other.e45) + (this.e31 * other.e41) + (this.e12 * other.e1234) + (this.e1234 * other.e12) + (this.e1234 * other.e4125) + (this.e4235 * other.e42), -(this.e15 * other.e41) - (this.e25 * other.e42) - (this.e35 * other.e43) - (this.e4235 * other.e4235) - (this.e4315 * other.e4315) - (this.e4125 * other.e4125)) + (float4(other.scalar, other.e12, other.e23, other.e45) * float4(this.group0.xyz.xxy, this.e45)) + (float4(other.e31, other.scalar, other.scalar, other.e1234) * float4(this.group0.xyz.zyz, this.e3215)) + (float4(other.e45, other.e4125, other.e4235, other.e3215) * float4(this.group0.xyz.xxy, this.e1234)) - (float4(other.e42, other.e1234, other.e1234, other.e12) * float4(this.group3.zyz, this.e12)) - (float4(other.e1234, other.e43, other.e41, other.e31) * float4(this.group3.xxy, this.e31)) - (this.group1.wwwx * float4(other.group0.xyz, other.e23)) - float4((this.group0.xyz.yzx * other.group1.zxy), this.e41 * other.e15) - float4((this.group0.xyz.yzx * other.group3.zxy), this.e42 * other.e25) - float4((this.group1.yzx * other.group0.zxy), this.e43 * other.e35), 
             /* e23, e31, e12, e45 */
@@ -4675,16 +4428,21 @@ extension DipoleInversion: Sandwich<VersorOdd> {
         ).geometric_product(this.reverse());
     }
 }
-extension DualNum {
-    // Fancy infix trick
-    func operator/(_rhs: SandwichInfix) -> SandwichInfixPartial<DualNum> {
-        return SandwichInfixPartial { a: this };
+public extension DualNum {
+    // Fancy infix trick (first half)
+    public SandwichInfixPartial<DualNum> operator /(SandwichInfix rhs) {
+        return SandwichInfixPartial<DualNum>(this);
     }
 }
-extension DualNum: Sandwich<AntiCircleRotor> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: AntiCircleRotor) -> Output {
-        return VersorEven.from_groups(
+public extension SandwichInfixPartial<DualNum> {
+    // Fancy infix trick (second half)
+    public VersorOdd operator /(AntiCircleRotor rhs) {
+        return this.a.sandwich(rhs);
+    }
+}
+public extension DualNum {
+    public VersorOdd sandwich(AntiCircleRotor other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(this.e12345) * float4(other.group0.xyz, other.scalar), 
             /* e415, e425, e435, e321 */
@@ -4696,10 +4454,9 @@ extension DualNum: Sandwich<AntiCircleRotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension DualNum: Sandwich<AntiDipoleInversion> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiDipoleInversion) -> Output {
-        return VersorOdd.from_groups(
+public extension DualNum {
+    public VersorEven sandwich(AntiDipoleInversion other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(this.group0.xy.yy, this.e12345, this.e5) * float4(other.group0.xyz, other.e4) * float4(-1.0), 
             /* e23, e31, e12, e45 */
@@ -4711,19 +4468,17 @@ extension DualNum: Sandwich<AntiDipoleInversion> {
         ).geometric_product(this.reverse());
     }
 }
-extension DualNum: Sandwich<AntiDualNum> {
-    associatedtype Output = AntiDualNum;
-    func sandwich(other: AntiDualNum) -> Output {
-        return DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(float2((other.e3215 * this.e12345) + (other.scalar * this.e5), other.scalar * this.e12345), 0.0, 0.0)
+public extension DualNum {
+    public AntiDualNum sandwich(AntiDualNum other) {
+        return DualNum(
+            /* e5, e12345 */
+            float2((other.e3215 * this.e12345) + (other.scalar * this.e5), other.scalar * this.e12345)
         ).geometric_product(this.reverse());
     }
 }
-extension DualNum: Sandwich<AntiFlatPoint> {
-    associatedtype Output = AntiFlector;
-    func sandwich(other: AntiFlatPoint) -> Output {
-        return Flector.from_groups(
+public extension DualNum {
+    public AntiFlector sandwich(AntiFlatPoint other) {
+        return Flector(
             /* e15, e25, e35, e45 */
             float4(this.e12345) * other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e4235, e4315, e4125, e3215 */
@@ -4731,10 +4486,9 @@ extension DualNum: Sandwich<AntiFlatPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension DualNum: Sandwich<AntiFlector> {
-    associatedtype Output = AntiFlector;
-    func sandwich(other: AntiFlector) -> Output {
-        return Flector.from_groups(
+public extension DualNum {
+    public AntiFlector sandwich(AntiFlector other) {
+        return Flector(
             /* e15, e25, e35, e45 */
             float4((-(float3(this.e5) * other.group1.xyz) - (float3(this.e12345) * other.group0.xyz)), other.e321 * this.e12345), 
             /* e4235, e4315, e4125, e3215 */
@@ -4742,21 +4496,19 @@ extension DualNum: Sandwich<AntiFlector> {
         ).geometric_product(this.reverse());
     }
 }
-extension DualNum: Sandwich<AntiLine> {
-    associatedtype Output = AntiLine;
-    func sandwich(other: AntiLine) -> Output {
-        return Line.from_groups(
-            /* e415, e425, e435, 0 */
-            float4(float3(this.e12345) * other.group0.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(this.e5) * other.group0.xyz) + (float3(this.e12345) * other.group1.xyz), 0.0)
+public extension DualNum {
+    public AntiLine sandwich(AntiLine other) {
+        return Line(
+            /* e415, e425, e435 */
+            float3(this.e12345) * other.group0.xyz, 
+            /* e235, e315, e125 */
+            (float3(this.e5) * other.group0.xyz) + (float3(this.e12345) * other.group1.xyz)
         ).geometric_product(this.reverse());
     }
 }
-extension DualNum: Sandwich<AntiMotor> {
-    associatedtype Output = AntiMotor;
-    func sandwich(other: AntiMotor) -> Output {
-        return Motor.from_groups(
+public extension DualNum {
+    public AntiMotor sandwich(AntiMotor other) {
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4(this.e12345) * other.group0, 
             /* e235, e315, e125, e5 */
@@ -4764,10 +4516,9 @@ extension DualNum: Sandwich<AntiMotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension DualNum: Sandwich<AntiPlane> {
-    associatedtype Output = AntiFlector;
-    func sandwich(other: AntiPlane) -> Output {
-        return Flector.from_groups(
+public extension DualNum {
+    public AntiFlector sandwich(AntiPlane other) {
+        return Flector(
             /* e15, e25, e35, e45 */
             float4(this.group0.xy.xx, this.e5, 0.0) * float4(float3(1.0), 0.0) * float4(other.group0.xyz, 0.0) * float4(-1.0, -1.0, -1.0, 0.0), 
             /* e4235, e4315, e4125, e3215 */
@@ -4775,21 +4526,19 @@ extension DualNum: Sandwich<AntiPlane> {
         ).geometric_product(this.reverse());
     }
 }
-extension DualNum: Sandwich<AntiScalar> {
-    associatedtype Output = DualNum;
-    func sandwich(other: AntiScalar) -> Output {
-        return AntiDualNum.from_groups(
-            /* e3215, scalar, 0, 0 */
-            float4(float2(other.e12345) * this.group0.xy * float2(-1.0), 0.0, 0.0)
+public extension DualNum {
+    public DualNum sandwich(AntiScalar other) {
+        return AntiDualNum(
+            /* e3215, scalar */
+            float2(other.e12345) * this.group0.xy * float2(-1.0)
         ).geometric_product(this.reverse());
     }
 }
-extension DualNum: Sandwich<Circle> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: Circle) -> Output {
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(this.e12345) * other.group0.xyz * float3(-1.0), 0.0), 
+public extension DualNum {
+    public VersorEven sandwich(Circle other) {
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            float3(this.e12345) * other.group0.xyz * float3(-1.0), 
             /* e23, e31, e12, e45 */
             float4((-(float3(this.e5) * other.group0.xyz) - (float3(this.e12345) * other.group1.xyz)), other.e321 * this.e12345), 
             /* e15, e25, e35, e1234 */
@@ -4799,10 +4548,9 @@ extension DualNum: Sandwich<Circle> {
         ).geometric_product(this.reverse());
     }
 }
-extension DualNum: Sandwich<CircleRotor> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: CircleRotor) -> Output {
-        return VersorOdd.from_groups(
+public extension DualNum {
+    public VersorEven sandwich(CircleRotor other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(this.e12345) * float4(other.group0.xyz, other.e12345) * float4(-1.0), 
             /* e23, e31, e12, e45 */
@@ -4814,12 +4562,11 @@ extension DualNum: Sandwich<CircleRotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension DualNum: Sandwich<Dipole> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Dipole) -> Output {
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(this.e12345) * other.group0.xyz, 0.0), 
+public extension DualNum {
+    public VersorOdd sandwich(Dipole other) {
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(this.e12345) * other.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(((float3(this.e5) * other.group0.xyz) + (float3(this.e12345) * other.group1.xyz)), other.e45 * this.e12345 * -1.0), 
             /* e235, e315, e125, e4 */
@@ -4829,10 +4576,9 @@ extension DualNum: Sandwich<Dipole> {
         ).geometric_product(this.reverse());
     }
 }
-extension DualNum: Sandwich<DipoleInversion> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: DipoleInversion) -> Output {
-        return VersorEven.from_groups(
+public extension DualNum {
+    public VersorOdd sandwich(DipoleInversion other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(this.group0.xy.yy, this.e12345, this.e5) * float4(other.group0.xyz, other.e1234), 
             /* e415, e425, e435, e321 */
@@ -4844,19 +4590,17 @@ extension DualNum: Sandwich<DipoleInversion> {
         ).geometric_product(this.reverse());
     }
 }
-extension DualNum: Sandwich<DualNum> {
-    associatedtype Output = DualNum;
-    func sandwich(other: DualNum) -> Output {
-        return AntiDualNum.from_groups(
-            /* e3215, scalar, 0, 0 */
-            float4(float2(-(other.e5 * this.e12345) - (other.e12345 * this.e5), other.e12345 * this.e12345) * float2(1.0, -1.0), 0.0, 0.0)
+public extension DualNum {
+    public DualNum sandwich(DualNum other) {
+        return AntiDualNum(
+            /* e3215, scalar */
+            float2(-(other.e5 * this.e12345) - (other.e12345 * this.e5), other.e12345 * this.e12345) * float2(1.0, -1.0)
         ).geometric_product(this.reverse());
     }
 }
-extension DualNum: Sandwich<FlatPoint> {
-    associatedtype Output = Flector;
-    func sandwich(other: FlatPoint) -> Output {
-        return AntiFlector.from_groups(
+public extension DualNum {
+    public Flector sandwich(FlatPoint other) {
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(this.e12345) * other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e1, e2, e3, e5 */
@@ -4864,10 +4608,9 @@ extension DualNum: Sandwich<FlatPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension DualNum: Sandwich<Flector> {
-    associatedtype Output = Flector;
-    func sandwich(other: Flector) -> Output {
-        return AntiFlector.from_groups(
+public extension DualNum {
+    public Flector sandwich(Flector other) {
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(((float3(this.e12345) * other.group0.xyz) - (float3(this.e5) * other.group1.xyz)), this.e12345 * other.e45 * -1.0), 
             /* e1, e2, e3, e5 */
@@ -4875,21 +4618,19 @@ extension DualNum: Sandwich<Flector> {
         ).geometric_product(this.reverse());
     }
 }
-extension DualNum: Sandwich<Line> {
-    associatedtype Output = Line;
-    func sandwich(other: Line) -> Output {
-        return AntiLine.from_groups(
-            /* e23, e31, e12, 0 */
-            float4(float3(this.e12345) * other.group0.xyz * float3(-1.0), 0.0), 
-            /* e15, e25, e35, 0 */
-            float4(-(float3(this.e5) * other.group0.xyz) - (float3(this.e12345) * other.group1.xyz), 0.0)
+public extension DualNum {
+    public Line sandwich(Line other) {
+        return AntiLine(
+            /* e23, e31, e12 */
+            float3(this.e12345) * other.group0.xyz * float3(-1.0), 
+            /* e15, e25, e35 */
+            -(float3(this.e5) * other.group0.xyz) - (float3(this.e12345) * other.group1.xyz)
         ).geometric_product(this.reverse());
     }
 }
-extension DualNum: Sandwich<Motor> {
-    associatedtype Output = Motor;
-    func sandwich(other: Motor) -> Output {
-        return AntiMotor.from_groups(
+public extension DualNum {
+    public Motor sandwich(Motor other) {
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(this.e12345) * other.group0 * float4(-1.0), 
             /* e15, e25, e35, e3215 */
@@ -4897,39 +4638,37 @@ extension DualNum: Sandwich<Motor> {
         ).geometric_product(this.reverse());
     }
 }
-extension DualNum: Sandwich<MultiVector> {
-    associatedtype Output = MultiVector;
-    func sandwich(other: MultiVector) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(-(this.e5 * other.e4) - (this.e12345 * other.e12345), (this.e5 * other.e1234) + (this.e12345 * other.scalar)), 0.0, 0.0), 
+public extension DualNum {
+    public MultiVector sandwich(MultiVector other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(-(this.e5 * other.e4) - (this.e12345 * other.e12345), (this.e5 * other.e1234) + (this.e12345 * other.scalar)), 
             /* e1, e2, e3, e4 */
             float4((-(float3(this.e5) * other.group4.xyz) - (float3(this.e12345) * other.group9.xyz)), this.e12345 * other.e1234), 
-            /* e5, 0, 0, 0 */
-            float4((this.e5 * other.scalar) + (this.e12345 * other.e3215) - (this.e5 * other.e45), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (this.e5 * other.scalar) + (this.e12345 * other.e3215) - (this.e5 * other.e45), 
             /* e15, e25, e35, e45 */
             float4(-(this.e5 * other.e415) - (this.e12345 * other.e235), -(this.e5 * other.e425) - (this.e12345 * other.e315), -(this.e5 * other.e435) - (this.e12345 * other.e125), this.e12345 * other.e321) - (float4(this.e5) * other.group1), 
-            /* e41, e42, e43, 0 */
-            float4(float3(this.e12345) * other.group7.xyz * float3(-1.0), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(-(float3(this.e5) * other.group7.xyz) - (float3(this.e12345) * other.group6.xyz), 0.0), 
+            /* e41, e42, e43 */
+            float3(this.e12345) * other.group7.xyz * float3(-1.0), 
+            /* e23, e31, e12 */
+            -(float3(this.e5) * other.group7.xyz) - (float3(this.e12345) * other.group6.xyz), 
             /* e415, e425, e435, e321 */
             float4((this.e5 * other.e41) + (this.e12345 * other.e23), (this.e5 * other.e42) + (this.e12345 * other.e31), (this.e5 * other.e43) + (this.e12345 * other.e12), -(this.e5 * other.e1234) - (this.e12345 * other.e45)), 
-            /* e423, e431, e412, 0 */
-            float4(float3(this.e12345) * other.group4.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(this.e5) * other.group5.xyz) + (float3(this.e12345) * other.group3.xyz) - (float3(this.e5) * other.group9.xyz), 0.0), 
+            /* e423, e431, e412 */
+            float3(this.e12345) * other.group4.xyz, 
+            /* e235, e315, e125 */
+            (float3(this.e5) * other.group5.xyz) + (float3(this.e12345) * other.group3.xyz) - (float3(this.e5) * other.group9.xyz), 
             /* e4235, e4315, e4125, e3215 */
             float4(this.e12345 * other.e1, this.e12345 * other.e2, this.e12345 * other.e3, -(this.e5 * other.e321) - (this.e12345 * other.e5)) - (float4(this.e5) * float4(other.group7.xyz, other.e12345)), 
-            /* e1234, 0, 0, 0 */
-            float4(this.e12345 * other.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            this.e12345 * other.e4 * -1.0
         ).geometric_product(this.reverse());
     }
 }
-extension DualNum: Sandwich<Plane> {
-    associatedtype Output = Flector;
-    func sandwich(other: Plane) -> Output {
-        return AntiFlector.from_groups(
+public extension DualNum {
+    public Flector sandwich(Plane other) {
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(this.group0.xy.xx, this.e5, 0.0) * float4(float3(1.0), 0.0) * float4(other.group0.xyz, 0.0) * float4(-1.0, -1.0, -1.0, 0.0), 
             /* e1, e2, e3, e5 */
@@ -4937,10 +4676,9 @@ extension DualNum: Sandwich<Plane> {
         ).geometric_product(this.reverse());
     }
 }
-extension DualNum: Sandwich<RoundPoint> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: RoundPoint) -> Output {
-        return VersorOdd.from_groups(
+public extension DualNum {
+    public VersorEven sandwich(RoundPoint other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(float3(0.0), this.e5 * other.e4 * -1.0), 
             /* e23, e31, e12, e45 */
@@ -4952,19 +4690,17 @@ extension DualNum: Sandwich<RoundPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension DualNum: Sandwich<Scalar> {
-    associatedtype Output = AntiDualNum;
-    func sandwich(other: Scalar) -> Output {
-        return DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(float2(other.scalar) * this.group0.xy, 0.0, 0.0)
+public extension DualNum {
+    public AntiDualNum sandwich(Scalar other) {
+        return DualNum(
+            /* e5, e12345 */
+            float2(other.scalar) * this.group0.xy
         ).geometric_product(this.reverse());
     }
 }
-extension DualNum: Sandwich<Sphere> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Sphere) -> Output {
-        return VersorEven.from_groups(
+public extension DualNum {
+    public VersorOdd sandwich(Sphere other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(float3(0.0), this.e5 * other.e1234), 
             /* e415, e425, e435, e321 */
@@ -4976,10 +4712,9 @@ extension DualNum: Sandwich<Sphere> {
         ).geometric_product(this.reverse());
     }
 }
-extension DualNum: Sandwich<VersorEven> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: VersorEven) -> Output {
-        return VersorOdd.from_groups(
+public extension DualNum {
+    public VersorEven sandwich(VersorEven other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(this.group0.xy.yy, this.e12345, -(this.e5 * other.e4) - (this.e12345 * other.e12345)) * float4(other.group0.xyz, 1.0) * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, e45 */
@@ -4991,10 +4726,9 @@ extension DualNum: Sandwich<VersorEven> {
         ).geometric_product(this.reverse());
     }
 }
-extension DualNum: Sandwich<VersorOdd> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: VersorOdd) -> Output {
-        return VersorEven.from_groups(
+public extension DualNum {
+    public VersorOdd sandwich(VersorOdd other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(this.group0.xy.yy, this.e12345, (this.e5 * other.e1234) + (this.e12345 * other.scalar)) * float4(other.group0.xyz, 1.0), 
             /* e415, e425, e435, e321 */
@@ -5006,16 +4740,21 @@ extension DualNum: Sandwich<VersorOdd> {
         ).geometric_product(this.reverse());
     }
 }
-extension FlatPoint {
-    // Fancy infix trick
-    func operator/(_rhs: SandwichInfix) -> SandwichInfixPartial<FlatPoint> {
-        return SandwichInfixPartial { a: this };
+public extension FlatPoint {
+    // Fancy infix trick (first half)
+    public SandwichInfixPartial<FlatPoint> operator /(SandwichInfix rhs) {
+        return SandwichInfixPartial<FlatPoint>(this);
     }
 }
-extension FlatPoint: Sandwich<AntiCircleRotor> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: AntiCircleRotor) -> Output {
-        return VersorOdd.from_groups(
+public extension SandwichInfixPartial<FlatPoint> {
+    // Fancy infix trick (second half)
+    public VersorOdd operator /(AntiCircleRotor rhs) {
+        return this.a.sandwich(rhs);
+    }
+}
+public extension FlatPoint {
+    public VersorOdd sandwich(AntiCircleRotor other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4((float3(this.e45) * other.group0.xyz * float3(-1.0)), (other.e45 * this.e45) - (other.e41 * this.e15) - (other.e42 * this.e25) - (other.e43 * this.e35)), 
             /* e23, e31, e12, e45 */
@@ -5027,10 +4766,9 @@ extension FlatPoint: Sandwich<AntiCircleRotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension FlatPoint: Sandwich<AntiDipoleInversion> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiDipoleInversion) -> Output {
-        return VersorEven.from_groups(
+public extension FlatPoint {
+    public VersorEven sandwich(AntiDipoleInversion other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((float3(this.e45) * other.group0.xyz * float3(-1.0)), -(other.e423 * this.e15) - (other.e431 * this.e25) - (other.e412 * this.e35) - (other.e321 * this.e45)), 
             /* e415, e425, e435, e321 */
@@ -5042,10 +4780,9 @@ extension FlatPoint: Sandwich<AntiDipoleInversion> {
         ).geometric_product(this.reverse());
     }
 }
-extension FlatPoint: Sandwich<AntiDualNum> {
-    associatedtype Output = AntiMotor;
-    func sandwich(other: AntiDualNum) -> Output {
-        return Flector.from_groups(
+public extension FlatPoint {
+    public AntiMotor sandwich(AntiDualNum other) {
+        return Flector(
             /* e15, e25, e35, e45 */
             float4(other.scalar) * this.group0, 
             /* e4235, e4315, e4125, e3215 */
@@ -5053,10 +4790,9 @@ extension FlatPoint: Sandwich<AntiDualNum> {
         ).geometric_product(this.reverse());
     }
 }
-extension FlatPoint: Sandwich<AntiFlatPoint> {
-    associatedtype Output = AntiFlector;
-    func sandwich(other: AntiFlatPoint) -> Output {
-        return Motor.from_groups(
+public extension FlatPoint {
+    public AntiFlector sandwich(AntiFlatPoint other) {
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4(float3(0.0), other.e321 * this.e45 * -1.0), 
             /* e235, e315, e125, e5 */
@@ -5064,10 +4800,9 @@ extension FlatPoint: Sandwich<AntiFlatPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension FlatPoint: Sandwich<AntiFlector> {
-    associatedtype Output = AntiFlector;
-    func sandwich(other: AntiFlector) -> Output {
-        return Motor.from_groups(
+public extension FlatPoint {
+    public AntiFlector sandwich(AntiFlector other) {
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4(this.e45) * float4(other.group1.xyz, other.e321) * float4(-1.0), 
             /* e235, e315, e125, e5 */
@@ -5075,10 +4810,9 @@ extension FlatPoint: Sandwich<AntiFlector> {
         ).geometric_product(this.reverse());
     }
 }
-extension FlatPoint: Sandwich<AntiLine> {
-    associatedtype Output = AntiMotor;
-    func sandwich(other: AntiLine) -> Output {
-        return Flector.from_groups(
+public extension FlatPoint {
+    public AntiMotor sandwich(AntiLine other) {
+        return Flector(
             /* e15, e25, e35, e45 */
             float4((float3(this.e45) * other.group1.xyz), 0.0) + float4((other.group0.xyz.yzx * this.group0.zxy), 0.0) - float4((other.group0.xyz.zxy * this.group0.yzx), 0.0), 
             /* e4235, e4315, e4125, e3215 */
@@ -5086,10 +4820,9 @@ extension FlatPoint: Sandwich<AntiLine> {
         ).geometric_product(this.reverse());
     }
 }
-extension FlatPoint: Sandwich<AntiMotor> {
-    associatedtype Output = AntiMotor;
-    func sandwich(other: AntiMotor) -> Output {
-        return Flector.from_groups(
+public extension FlatPoint {
+    public AntiMotor sandwich(AntiMotor other) {
+        return Flector(
             /* e15, e25, e35, e45 */
             float4(((float3(other.scalar) * this.group0.xyz) + (float3(this.e45) * other.group1.xyz) + (other.group0.yzx * this.group0.zxy) - (other.group0.zxy * this.group0.yzx)), other.scalar * this.e45), 
             /* e4235, e4315, e4125, e3215 */
@@ -5097,10 +4830,9 @@ extension FlatPoint: Sandwich<AntiMotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension FlatPoint: Sandwich<AntiPlane> {
-    associatedtype Output = AntiFlector;
-    func sandwich(other: AntiPlane) -> Output {
-        return Motor.from_groups(
+public extension FlatPoint {
+    public AntiFlector sandwich(AntiPlane other) {
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4(float3(1.0), 0.0) * float4(this.group0.www, 0.0) * float4(other.group0.xyz, 0.0) * float4(-1.0, -1.0, -1.0, 0.0), 
             /* e235, e315, e125, e5 */
@@ -5108,19 +4840,17 @@ extension FlatPoint: Sandwich<AntiPlane> {
         ).geometric_product(this.reverse());
     }
 }
-extension FlatPoint: Sandwich<AntiScalar> {
-    associatedtype Output = Motor;
-    func sandwich(other: AntiScalar) -> Output {
-        return AntiFlatPoint.from_groups(
+public extension FlatPoint {
+    public Motor sandwich(AntiScalar other) {
+        return AntiFlatPoint(
             /* e235, e315, e125, e321 */
             float4(other.e12345) * this.group0 * float4(1.0, 1.0, 1.0, -1.0)
         ).geometric_product(this.reverse());
     }
 }
-extension FlatPoint: Sandwich<Circle> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: Circle) -> Output {
-        return VersorEven.from_groups(
+public extension FlatPoint {
+    public VersorEven sandwich(Circle other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((float3(this.e45) * other.group0.xyz * float3(-1.0)), -(other.e423 * this.e15) - (other.e431 * this.e25) - (other.e412 * this.e35) - (other.e321 * this.e45)), 
             /* e415, e425, e435, e321 */
@@ -5132,10 +4862,9 @@ extension FlatPoint: Sandwich<Circle> {
         ).geometric_product(this.reverse());
     }
 }
-extension FlatPoint: Sandwich<CircleRotor> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: CircleRotor) -> Output {
-        return VersorEven.from_groups(
+public extension FlatPoint {
+    public VersorEven sandwich(CircleRotor other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((float3(this.e45) * other.group0.xyz * float3(-1.0)), -(other.e423 * this.e15) - (other.e431 * this.e25) - (other.e412 * this.e35) - (other.e321 * this.e45)), 
             /* e415, e425, e435, e321 */
@@ -5147,10 +4876,9 @@ extension FlatPoint: Sandwich<CircleRotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension FlatPoint: Sandwich<Dipole> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Dipole) -> Output {
-        return VersorOdd.from_groups(
+public extension FlatPoint {
+    public VersorOdd sandwich(Dipole other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4((float3(this.e45) * other.group0.xyz * float3(-1.0)), (other.e45 * this.e45) - (other.e41 * this.e15) - (other.e42 * this.e25) - (other.e43 * this.e35)), 
             /* e23, e31, e12, e45 */
@@ -5162,10 +4890,9 @@ extension FlatPoint: Sandwich<Dipole> {
         ).geometric_product(this.reverse());
     }
 }
-extension FlatPoint: Sandwich<DipoleInversion> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: DipoleInversion) -> Output {
-        return VersorOdd.from_groups(
+public extension FlatPoint {
+    public VersorOdd sandwich(DipoleInversion other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4((float3(this.e45) * other.group0.xyz * float3(-1.0)), (other.e45 * this.e45) - (other.e41 * this.e15) - (other.e42 * this.e25) - (other.e43 * this.e35)), 
             /* e23, e31, e12, e45 */
@@ -5177,10 +4904,9 @@ extension FlatPoint: Sandwich<DipoleInversion> {
         ).geometric_product(this.reverse());
     }
 }
-extension FlatPoint: Sandwich<DualNum> {
-    associatedtype Output = Motor;
-    func sandwich(other: DualNum) -> Output {
-        return AntiFlector.from_groups(
+public extension FlatPoint {
+    public Motor sandwich(DualNum other) {
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(other.e12345) * this.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e1, e2, e3, e5 */
@@ -5188,10 +4914,9 @@ extension FlatPoint: Sandwich<DualNum> {
         ).geometric_product(this.reverse());
     }
 }
-extension FlatPoint: Sandwich<FlatPoint> {
-    associatedtype Output = Flector;
-    func sandwich(other: FlatPoint) -> Output {
-        return AntiMotor.from_groups(
+public extension FlatPoint {
+    public Flector sandwich(FlatPoint other) {
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(float3(0.0), other.e45 * this.e45), 
             /* e15, e25, e35, e3215 */
@@ -5199,10 +4924,9 @@ extension FlatPoint: Sandwich<FlatPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension FlatPoint: Sandwich<Flector> {
-    associatedtype Output = Flector;
-    func sandwich(other: Flector) -> Output {
-        return AntiMotor.from_groups(
+public extension FlatPoint {
+    public Flector sandwich(Flector other) {
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(this.e45) * float4(other.group1.xyz, other.e45), 
             /* e15, e25, e35, e3215 */
@@ -5210,10 +4934,9 @@ extension FlatPoint: Sandwich<Flector> {
         ).geometric_product(this.reverse());
     }
 }
-extension FlatPoint: Sandwich<Line> {
-    associatedtype Output = Motor;
-    func sandwich(other: Line) -> Output {
-        return AntiFlector.from_groups(
+public extension FlatPoint {
+    public Motor sandwich(Line other) {
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4((float3(this.e45) * other.group1.xyz), 0.0) + float4((other.group0.xyz.yzx * this.group0.zxy), 0.0) - float4((other.group0.xyz.zxy * this.group0.yzx), 0.0), 
             /* e1, e2, e3, e5 */
@@ -5221,10 +4944,9 @@ extension FlatPoint: Sandwich<Line> {
         ).geometric_product(this.reverse());
     }
 }
-extension FlatPoint: Sandwich<Motor> {
-    associatedtype Output = Motor;
-    func sandwich(other: Motor) -> Output {
-        return AntiFlector.from_groups(
+public extension FlatPoint {
+    public Motor sandwich(Motor other) {
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(((float3(this.e45) * other.group1.xyz) + (this.group0.xxy * other.group0.wzx) + (this.group0.zyz * other.group0.yww) - (this.group0.yzx * other.group0.zxy)), this.e45 * other.e12345 * -1.0), 
             /* e1, e2, e3, e5 */
@@ -5232,39 +4954,37 @@ extension FlatPoint: Sandwich<Motor> {
         ).geometric_product(this.reverse());
     }
 }
-extension FlatPoint: Sandwich<MultiVector> {
-    associatedtype Output = MultiVector;
-    func sandwich(other: MultiVector) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(this.e45 * other.e45, this.e45 * other.e321 * -1.0) - (float2(this.e15) * float2(other.e41, other.e423)) - (float2(this.e25) * float2(other.e42, other.e431)) - (float2(this.e35) * float2(other.e43, other.e412)), 0.0, 0.0), 
+public extension FlatPoint {
+    public MultiVector sandwich(MultiVector other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(this.e45 * other.e45, this.e45 * other.e321 * -1.0) - (float2(this.e15) * float2(other.e41, other.e423)) - (float2(this.e25) * float2(other.e42, other.e431)) - (float2(this.e35) * float2(other.e43, other.e412)), 
             /* e1, e2, e3, e4 */
             float4(((other.group7.xyz.zxy * this.group0.yzx) - (float3(this.e45) * other.group6.xyz) - (float3(other.e4) * this.group0.xyz) - (other.group7.xyz.yzx * this.group0.zxy)), this.e45 * other.e4 * -1.0), 
-            /* e5, 0, 0, 0 */
-            float4((this.e45 * other.e5) - (this.e15 * other.e1) - (this.e15 * other.e415) - (this.e25 * other.e2) - (this.e25 * other.e425) - (this.e35 * other.e3) - (this.e35 * other.e435), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (this.e45 * other.e5) - (this.e15 * other.e1) - (this.e15 * other.e415) - (this.e25 * other.e2) - (this.e25 * other.e425) - (this.e35 * other.e3) - (this.e35 * other.e435), 
             /* e15, e25, e35, e45 */
             float4((this.e25 * other.e4125) + (this.e35 * other.e31) + (this.e45 * other.e15), (this.e15 * other.e12) + (this.e35 * other.e4235) + (this.e45 * other.e25), (this.e15 * other.e4315) + (this.e25 * other.e23) + (this.e45 * other.e35), 0.0) + (float4(other.scalar) * this.group0) - (float4(other.e45, other.e4125, other.e4235, this.e25) * float4(this.group0.xxy, other.e42)) - (float4(other.e4315, other.e45, other.e45, this.e35) * float4(this.group0.zyz, other.e43)) - (this.group0.yzxx * float4(other.group5.xyz.zxy, other.e41)), 
-            /* e41, e42, e43, 0 */
-            float4(float3(this.e45) * other.group4.xyz * float3(-1.0), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(this.e45) * other.group9.xyz) + (float3(other.e1234) * this.group0.xyz) + (other.group4.xyz.yzx * this.group0.zxy) - (other.group4.xyz.zxy * this.group0.yzx), 0.0), 
+            /* e41, e42, e43 */
+            float3(this.e45) * other.group4.xyz * float3(-1.0), 
+            /* e23, e31, e12 */
+            (float3(this.e45) * other.group9.xyz) + (float3(other.e1234) * this.group0.xyz) + (other.group4.xyz.yzx * this.group0.zxy) - (other.group4.xyz.zxy * this.group0.yzx), 
             /* e415, e425, e435, e321 */
             float4(this.e45 * other.e1 * -1.0, this.e45 * other.e2 * -1.0, this.e45 * other.e3 * -1.0, this.e35 * other.e412) + (this.group0.zxyx * float4(other.group7.xyz.yzx, other.e423)) + float4((other.group1.www * this.group0.xyz), this.e25 * other.e431) - (this.group0.yzxw * float4(other.group7.xyz.zxy, other.e12345)), 
-            /* e423, e431, e412, 0 */
-            float4(float3(this.e45) * other.group7.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(this.e45) * other.group8.xyz) + (float3(other.e12345) * this.group0.xyz) + (float3(other.e2, other.e435, other.e415) * this.group0.zxy) + (float3(other.e321, other.e3, other.e1) * this.group0.xxy) + (this.group0.zyz * other.group6.yww) - (this.group0.yzx * other.group1.zxy) - (this.group0.yzx * other.group6.zxy), 0.0), 
+            /* e423, e431, e412 */
+            float3(this.e45) * other.group7.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            (float3(this.e45) * other.group8.xyz) + (float3(other.e12345) * this.group0.xyz) + (float3(other.e2, other.e435, other.e415) * this.group0.zxy) + (float3(other.e321, other.e3, other.e1) * this.group0.xxy) + (this.group0.zyz * other.group6.yww) - (this.group0.yzx * other.group1.zxy) - (this.group0.yzx * other.group6.zxy), 
             /* e4235, e4315, e4125, e3215 */
             (this.group0.xyzz * float4(float3(other.e1234), other.e4125)) + float4(float3(0.0), (this.e45 * other.e3215) - (this.e25 * other.e31) - (this.e35 * other.e12)) + float4((other.group5.xyz * this.group0.www), this.e25 * other.e4315) + float4((other.group4.xyz.yzx * this.group0.zxy), this.e15 * other.e4235) - (this.group0.yzxx * float4(other.group4.xyz.zxy, other.e23)), 
-            /* e1234, 0, 0, 0 */
-            float4(this.e45 * other.e1234 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            this.e45 * other.e1234 * -1.0
         ).geometric_product(this.reverse());
     }
 }
-extension FlatPoint: Sandwich<Plane> {
-    associatedtype Output = Flector;
-    func sandwich(other: Plane) -> Output {
-        return AntiMotor.from_groups(
+public extension FlatPoint {
+    public Flector sandwich(Plane other) {
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(float3(1.0), 0.0) * float4(this.group0.www, 0.0) * float4(other.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
             /* e15, e25, e35, e3215 */
@@ -5272,12 +4992,11 @@ extension FlatPoint: Sandwich<Plane> {
         ).geometric_product(this.reverse());
     }
 }
-extension FlatPoint: Sandwich<RoundPoint> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: RoundPoint) -> Output {
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
+public extension FlatPoint {
+    public VersorEven sandwich(RoundPoint other) {
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(((float3(other.e4) * this.group0.xyz) - (float3(this.e45) * other.group0.xyz)), 0.0), 
             /* e235, e315, e125, e4 */
@@ -5287,21 +5006,19 @@ extension FlatPoint: Sandwich<RoundPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension FlatPoint: Sandwich<Scalar> {
-    associatedtype Output = AntiMotor;
-    func sandwich(other: Scalar) -> Output {
-        return FlatPoint.from_groups(
+public extension FlatPoint {
+    public AntiMotor sandwich(Scalar other) {
+        return FlatPoint(
             /* e15, e25, e35, e45 */
             float4(other.scalar) * this.group0
         ).geometric_product(this.reverse());
     }
 }
-extension FlatPoint: Sandwich<Sphere> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Sphere) -> Output {
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
+public extension FlatPoint {
+    public VersorOdd sandwich(Sphere other) {
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            float3(0.0), 
             /* e23, e31, e12, e45 */
             float4(((float3(this.e45) * other.group0.xyz) + (float3(other.e1234) * this.group0.xyz)), 0.0), 
             /* e15, e25, e35, e1234 */
@@ -5311,10 +5028,9 @@ extension FlatPoint: Sandwich<Sphere> {
         ).geometric_product(this.reverse());
     }
 }
-extension FlatPoint: Sandwich<VersorEven> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: VersorEven) -> Output {
-        return VersorEven.from_groups(
+public extension FlatPoint {
+    public VersorEven sandwich(VersorEven other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((this.group0.www * other.group0.xyz * float3(-1.0)), -(this.e15 * other.e423) - (this.e25 * other.e431) - (this.e35 * other.e412) - (this.e45 * other.e321)), 
             /* e415, e425, e435, e321 */
@@ -5326,10 +5042,9 @@ extension FlatPoint: Sandwich<VersorEven> {
         ).geometric_product(this.reverse());
     }
 }
-extension FlatPoint: Sandwich<VersorOdd> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: VersorOdd) -> Output {
-        return VersorOdd.from_groups(
+public extension FlatPoint {
+    public VersorOdd sandwich(VersorOdd other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4((this.group0.www * other.group0.xyz * float3(-1.0)), (this.e45 * other.e45) - (this.e15 * other.e41) - (this.e25 * other.e42) - (this.e35 * other.e43)), 
             /* e23, e31, e12, e45 */
@@ -5341,16 +5056,21 @@ extension FlatPoint: Sandwich<VersorOdd> {
         ).geometric_product(this.reverse());
     }
 }
-extension Flector {
-    // Fancy infix trick
-    func operator/(_rhs: SandwichInfix) -> SandwichInfixPartial<Flector> {
-        return SandwichInfixPartial { a: this };
+public extension Flector {
+    // Fancy infix trick (first half)
+    public SandwichInfixPartial<Flector> operator /(SandwichInfix rhs) {
+        return SandwichInfixPartial<Flector>(this);
     }
 }
-extension Flector: Sandwich<AntiCircleRotor> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: AntiCircleRotor) -> Output {
-        return VersorOdd.from_groups(
+public extension SandwichInfixPartial<Flector> {
+    // Fancy infix trick (second half)
+    public VersorOdd operator /(AntiCircleRotor rhs) {
+        return this.a.sandwich(rhs);
+    }
+}
+public extension Flector {
+    public VersorOdd sandwich(AntiCircleRotor other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(float3(0.0), other.e43 * this.e35 * -1.0) + float4((other.group0.xyz.zxy * this.group1.yzx), other.e45 * this.e45) - (float4(this.group0.ww, this.e4315, this.e15) * float4(other.group0.xyz.xyx, other.e41)) - (float4(this.group1.zx, this.e45, this.e25) * float4(other.group0.xyz.yzz, other.e42)), 
             /* e23, e31, e12, e45 */
@@ -5362,10 +5082,9 @@ extension Flector: Sandwich<AntiCircleRotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension Flector: Sandwich<AntiDipoleInversion> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiDipoleInversion) -> Output {
-        return VersorEven.from_groups(
+public extension Flector {
+    public VersorEven sandwich(AntiDipoleInversion other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             (this.group1.yzxw * float4(other.group0.xyz.zxy, other.e4)) + float4(float3(0.0), (other.e1 * this.e4235) + (other.e2 * this.e4315) + (other.e3 * this.e4125) - (other.e321 * this.e45)) - (float4(this.group0.ww, this.e4315, this.e15) * float4(other.group0.xyz.xyx, other.e423)) - (float4(this.group1.zx, this.e45, this.e25) * float4(other.group0.xyz.yzz, other.e431)) - float4((other.group2.www * this.group1.xyz), other.e412 * this.e35), 
             /* e415, e425, e435, e321 */
@@ -5377,10 +5096,9 @@ extension Flector: Sandwich<AntiDipoleInversion> {
         ).geometric_product(this.reverse());
     }
 }
-extension Flector: Sandwich<AntiDualNum> {
-    associatedtype Output = AntiMotor;
-    func sandwich(other: AntiDualNum) -> Output {
-        return Flector.from_groups(
+public extension Flector {
+    public AntiMotor sandwich(AntiDualNum other) {
+        return Flector(
             /* e15, e25, e35, e45 */
             float4(((float3(other.e3215) * this.group1.xyz) + (float3(other.scalar) * this.group0.xyz)), other.scalar * this.e45), 
             /* e4235, e4315, e4125, e3215 */
@@ -5388,10 +5106,9 @@ extension Flector: Sandwich<AntiDualNum> {
         ).geometric_product(this.reverse());
     }
 }
-extension Flector: Sandwich<AntiFlatPoint> {
-    associatedtype Output = AntiFlector;
-    func sandwich(other: AntiFlatPoint) -> Output {
-        return Motor.from_groups(
+public extension Flector {
+    public AntiFlector sandwich(AntiFlatPoint other) {
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4(other.e321) * float4(this.group1.xyz, this.e45) * float4(-1.0), 
             /* e235, e315, e125, e5 */
@@ -5399,10 +5116,9 @@ extension Flector: Sandwich<AntiFlatPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension Flector: Sandwich<AntiFlector> {
-    associatedtype Output = AntiFlector;
-    func sandwich(other: AntiFlector) -> Output {
-        return Motor.from_groups(
+public extension Flector {
+    public AntiFlector sandwich(AntiFlector other) {
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4(-(other.e1 * this.e45) - (other.e2 * this.e4125), -(other.e2 * this.e45) - (other.e3 * this.e4235), -(other.e1 * this.e4315) - (other.e3 * this.e45), (other.e2 * this.e4315) + (other.e3 * this.e4125)) + (other.group1.zxyx * this.group1.yzxx) - (float4(other.e321) * float4(this.group1.xyz, this.e45)), 
             /* e235, e315, e125, e5 */
@@ -5410,10 +5126,9 @@ extension Flector: Sandwich<AntiFlector> {
         ).geometric_product(this.reverse());
     }
 }
-extension Flector: Sandwich<AntiLine> {
-    associatedtype Output = AntiMotor;
-    func sandwich(other: AntiLine) -> Output {
-        return Flector.from_groups(
+public extension Flector {
+    public AntiMotor sandwich(AntiLine other) {
+        return Flector(
             /* e15, e25, e35, e45 */
             float4((other.e23 * this.e3215) + (other.e31 * this.e35) + (other.e15 * this.e45) + (other.e25 * this.e4125), (other.e31 * this.e3215) + (other.e12 * this.e15) + (other.e25 * this.e45) + (other.e35 * this.e4235), (other.e23 * this.e25) + (other.e12 * this.e3215) + (other.e15 * this.e4315) + (other.e35 * this.e45), other.e12 * this.e4125 * -1.0) - (this.group1.yzxy * float4(other.group1.xyz.zxy, other.e31)) - float4((other.group0.xyz.zxy * this.group0.yzx), other.e23 * this.e4235), 
             /* e4235, e4315, e4125, e3215 */
@@ -5421,10 +5136,9 @@ extension Flector: Sandwich<AntiLine> {
         ).geometric_product(this.reverse());
     }
 }
-extension Flector: Sandwich<AntiMotor> {
-    associatedtype Output = AntiMotor;
-    func sandwich(other: AntiMotor) -> Output {
-        return Flector.from_groups(
+public extension Flector {
+    public AntiMotor sandwich(AntiMotor other) {
+        return Flector(
             /* e15, e25, e35, e45 */
             float4((other.e31 * this.e35) + (other.scalar * this.e15) + (other.e15 * this.e45) + (other.e25 * this.e4125) + (other.e3215 * this.e4235), (other.e12 * this.e15) + (other.scalar * this.e25) + (other.e25 * this.e45) + (other.e35 * this.e4235) + (other.e3215 * this.e4315), (other.e12 * this.e3215) + (other.scalar * this.e35) + (other.e15 * this.e4315) + (other.e35 * this.e45) + (other.e3215 * this.e4125), other.e12 * this.e4125 * -1.0) + (other.group0.xyxw * float4(this.group1.ww, this.e25, this.e45)) - (other.group0.zxyx * float4(this.group0.yzx, this.e4235)) - (this.group1.yzxy * float4(other.group1.zxy, other.e31)), 
             /* e4235, e4315, e4125, e3215 */
@@ -5432,10 +5146,9 @@ extension Flector: Sandwich<AntiMotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension Flector: Sandwich<AntiPlane> {
-    associatedtype Output = AntiFlector;
-    func sandwich(other: AntiPlane) -> Output {
-        return Motor.from_groups(
+public extension Flector {
+    public AntiFlector sandwich(AntiPlane other) {
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4(-(other.e1 * this.e45) - (other.e2 * this.e4125), -(other.e2 * this.e45) - (other.e3 * this.e4235), -(other.e1 * this.e4315) - (other.e3 * this.e45), (other.e2 * this.e4315) + (other.e3 * this.e4125)) + (other.group0.zxyx * this.group1.yzxx), 
             /* e235, e315, e125, e5 */
@@ -5443,10 +5156,9 @@ extension Flector: Sandwich<AntiPlane> {
         ).geometric_product(this.reverse());
     }
 }
-extension Flector: Sandwich<AntiScalar> {
-    associatedtype Output = Motor;
-    func sandwich(other: AntiScalar) -> Output {
-        return AntiFlector.from_groups(
+public extension Flector {
+    public Motor sandwich(AntiScalar other) {
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(other.e12345) * this.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e1, e2, e3, e5 */
@@ -5454,10 +5166,9 @@ extension Flector: Sandwich<AntiScalar> {
         ).geometric_product(this.reverse());
     }
 }
-extension Flector: Sandwich<Circle> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: Circle) -> Output {
-        return VersorEven.from_groups(
+public extension Flector {
+    public VersorEven sandwich(Circle other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(other.e412 * this.e4315, other.e423 * this.e4125, other.e431 * this.e4235, -(other.e412 * this.e35) - (other.e321 * this.e45)) - (float4(this.group0.ww, this.e4315, this.e15) * float4(other.group0.xyz.xyx, other.e423)) - (float4(this.group1.zx, this.e45, this.e25) * float4(other.group0.xyz.yzz, other.e431)), 
             /* e415, e425, e435, e321 */
@@ -5469,10 +5180,9 @@ extension Flector: Sandwich<Circle> {
         ).geometric_product(this.reverse());
     }
 }
-extension Flector: Sandwich<CircleRotor> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: CircleRotor) -> Output {
-        return VersorEven.from_groups(
+public extension Flector {
+    public VersorEven sandwich(CircleRotor other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(other.e412 * this.e4315, other.e423 * this.e4125, other.e431 * this.e4235, -(other.e412 * this.e35) - (other.e321 * this.e45)) - (float4(this.group0.ww, this.e4315, this.e15) * float4(other.group0.xyz.xyx, other.e423)) - (float4(this.group1.zx, this.e45, this.e25) * float4(other.group0.xyz.yzz, other.e431)), 
             /* e415, e425, e435, e321 */
@@ -5484,10 +5194,9 @@ extension Flector: Sandwich<CircleRotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension Flector: Sandwich<Dipole> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Dipole) -> Output {
-        return VersorOdd.from_groups(
+public extension Flector {
+    public VersorOdd sandwich(Dipole other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(float3(0.0), other.e43 * this.e35 * -1.0) + float4((other.group0.xyz.zxy * this.group1.yzx), other.e45 * this.e45) - (float4(this.group0.ww, this.e4315, this.e15) * float4(other.group0.xyz.xyx, other.e41)) - (float4(this.group1.zx, this.e45, this.e25) * float4(other.group0.xyz.yzz, other.e42)), 
             /* e23, e31, e12, e45 */
@@ -5499,10 +5208,9 @@ extension Flector: Sandwich<Dipole> {
         ).geometric_product(this.reverse());
     }
 }
-extension Flector: Sandwich<DipoleInversion> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: DipoleInversion) -> Output {
-        return VersorOdd.from_groups(
+public extension Flector {
+    public VersorOdd sandwich(DipoleInversion other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(float3(0.0), (other.e1234 * this.e3215) - (other.e4235 * this.e4235) - (other.e4315 * this.e4315) - (other.e4125 * this.e4125)) + float4((other.group0.xyz.zxy * this.group1.yzx), other.e45 * this.e45) - (float4(this.group0.ww, this.e4315, this.e15) * float4(other.group0.xyz.xyx, other.e41)) - (float4(this.group1.zx, this.e45, this.e25) * float4(other.group0.xyz.yzz, other.e42)) - float4((other.group2.www * this.group1.xyz), other.e43 * this.e35), 
             /* e23, e31, e12, e45 */
@@ -5514,10 +5222,9 @@ extension Flector: Sandwich<DipoleInversion> {
         ).geometric_product(this.reverse());
     }
 }
-extension Flector: Sandwich<DualNum> {
-    associatedtype Output = Motor;
-    func sandwich(other: DualNum) -> Output {
-        return AntiFlector.from_groups(
+public extension Flector {
+    public Motor sandwich(DualNum other) {
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(((float3(other.e5) * this.group1.xyz) + (float3(other.e12345) * this.group0.xyz)), other.e12345 * this.e45 * -1.0), 
             /* e1, e2, e3, e5 */
@@ -5525,10 +5232,9 @@ extension Flector: Sandwich<DualNum> {
         ).geometric_product(this.reverse());
     }
 }
-extension Flector: Sandwich<FlatPoint> {
-    associatedtype Output = Flector;
-    func sandwich(other: FlatPoint) -> Output {
-        return AntiMotor.from_groups(
+public extension Flector {
+    public Flector sandwich(FlatPoint other) {
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(other.e45) * float4(this.group1.xyz, this.e45), 
             /* e15, e25, e35, e3215 */
@@ -5536,10 +5242,9 @@ extension Flector: Sandwich<FlatPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension Flector: Sandwich<Flector> {
-    associatedtype Output = Flector;
-    func sandwich(other: Flector) -> Output {
-        return AntiMotor.from_groups(
+public extension Flector {
+    public Flector sandwich(Flector other) {
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4((other.e4235 * this.e45) + (other.e4315 * this.e4125), (other.e4315 * this.e45) + (other.e4125 * this.e4235), (other.e4235 * this.e4315) + (other.e4125 * this.e45), -(other.e4315 * this.e4315) - (other.e4125 * this.e4125)) + (float4(other.e45) * float4(this.group1.xyz, this.e45)) - (other.group1.zxyx * this.group1.yzxx), 
             /* e15, e25, e35, e3215 */
@@ -5547,10 +5252,9 @@ extension Flector: Sandwich<Flector> {
         ).geometric_product(this.reverse());
     }
 }
-extension Flector: Sandwich<Line> {
-    associatedtype Output = Motor;
-    func sandwich(other: Line) -> Output {
-        return AntiFlector.from_groups(
+public extension Flector {
+    public Motor sandwich(Line other) {
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4((this.e4125 * other.e315) - (this.e25 * other.e435) - (this.e4315 * other.e125), (this.e4235 * other.e125) - (this.e35 * other.e415) - (this.e4125 * other.e235), (this.e45 * other.e125) - (this.e15 * other.e425) - (this.e4235 * other.e315), 0.0) + (float4(this.group0.zx, this.e3215, this.e4315) * float4(other.group0.xyz.yzz, other.e425)) + (float4(this.group0.ww, this.e4315, this.e4125) * float4(other.group1.xyz.xyx, other.e435)) + (float4(this.group1.ww, this.e25, this.e4235) * float4(other.group0.xyz.xyx, other.e415)), 
             /* e1, e2, e3, e5 */
@@ -5558,10 +5262,9 @@ extension Flector: Sandwich<Line> {
         ).geometric_product(this.reverse());
     }
 }
-extension Flector: Sandwich<Motor> {
-    associatedtype Output = Motor;
-    func sandwich(other: Motor) -> Output {
-        return AntiFlector.from_groups(
+public extension Flector {
+    public Motor sandwich(Motor other) {
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4((this.e4235 * other.e5) + (this.e4125 * other.e315) + (this.e3215 * other.e415) - (this.e4315 * other.e125), (this.e4235 * other.e125) + (this.e4315 * other.e5) + (this.e3215 * other.e425) - (this.e4125 * other.e235), (this.e4315 * other.e235) + (this.e4125 * other.e5) + (this.e3215 * other.e435) - (this.e4235 * other.e315), 0.0) + (other.group0.ywwy * float4(this.group0.zyz, this.e4315)) + (other.group0.wzxx * float4(this.group0.xxy, this.e4235)) + float4((this.group0.www * other.group1.xyz), this.e4125 * other.e435) - (this.group0.yzxw * other.group0.zxyw), 
             /* e1, e2, e3, e5 */
@@ -5569,39 +5272,37 @@ extension Flector: Sandwich<Motor> {
         ).geometric_product(this.reverse());
     }
 }
-extension Flector: Sandwich<MultiVector> {
-    associatedtype Output = MultiVector;
-    func sandwich(other: MultiVector) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((this.e45 * other.e45) - (this.e4235 * other.e4235) - (this.e4315 * other.e4315) - (this.e4125 * other.e4125), (this.e4315 * other.e2) + (this.e4125 * other.e3) + (this.e3215 * other.e4) - (this.e45 * other.e321)) + (float2(other.e1234, other.e1) * this.group1.wx) - (float2(this.e15) * float2(other.e41, other.e423)) - (float2(this.e25) * float2(other.e42, other.e431)) - (float2(this.e35) * float2(other.e43, other.e412)), 0.0, 0.0), 
+public extension Flector {
+    public MultiVector sandwich(MultiVector other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((this.e45 * other.e45) - (this.e4235 * other.e4235) - (this.e4315 * other.e4315) - (this.e4125 * other.e4125), (this.e4315 * other.e2) + (this.e4125 * other.e3) + (this.e3215 * other.e4) - (this.e45 * other.e321)) + (float2(other.e1234, other.e1) * this.group1.wx) - (float2(this.e15) * float2(other.e41, other.e423)) - (float2(this.e25) * float2(other.e42, other.e431)) - (float2(this.e35) * float2(other.e43, other.e412)), 
             /* e1, e2, e3, e4 */
             float4(-(this.e15 * other.e4) - (this.e35 * other.e431) - (this.e45 * other.e415) - (this.e4125 * other.e425) - (this.e3215 * other.e423), -(this.e15 * other.e412) - (this.e25 * other.e4) - (this.e45 * other.e425) - (this.e4235 * other.e435) - (this.e3215 * other.e431), -(this.e25 * other.e423) - (this.e35 * other.e4) - (this.e45 * other.e435) - (this.e4315 * other.e415) - (this.e3215 * other.e412), this.e4125 * other.e412) + float4((other.group7.xyz.zxy * this.group0.yzx), this.e4235 * other.e423) + float4((this.group1.yzx * other.group6.zxy), this.e4315 * other.e431) - (float4(other.group0.xy.yy, other.e12345, this.e45) * float4(this.group1.xyz, other.e4)), 
-            /* e5, 0, 0, 0 */
-            float4((this.e45 * other.e5) + (this.e3215 * other.e12345) + (this.e3215 * other.e321) - (this.e15 * other.e1) - (this.e15 * other.e415) - (this.e25 * other.e2) - (this.e25 * other.e425) - (this.e35 * other.e3) - (this.e35 * other.e435) - (this.e4235 * other.e235) - (this.e4315 * other.e315) - (this.e4125 * other.e125), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (this.e45 * other.e5) + (this.e3215 * other.e12345) + (this.e3215 * other.e321) - (this.e15 * other.e1) - (this.e15 * other.e415) - (this.e25 * other.e2) - (this.e25 * other.e425) - (this.e35 * other.e3) - (this.e35 * other.e435) - (this.e4235 * other.e235) - (this.e4315 * other.e315) - (this.e4125 * other.e125), 
             /* e15, e25, e35, e45 */
             float4((this.e25 * other.e4125) + (this.e35 * other.e31) + (this.e45 * other.e15) + (this.e4235 * other.e3215) + (this.e4125 * other.e25), (this.e15 * other.e12) + (this.e35 * other.e4235) + (this.e45 * other.e25) + (this.e4235 * other.e35) + (this.e4315 * other.e3215), (this.e15 * other.e4315) + (this.e45 * other.e35) + (this.e4315 * other.e15) + (this.e4125 * other.e3215) + (this.e3215 * other.e12), this.e4125 * other.e12 * -1.0) + (float4(other.scalar) * this.group0) + (float4(this.group1.ww, this.e25, other.e1234) * float4(other.group5.xyz.xyx, this.e3215)) - (float4(other.e45, other.e4125, other.e4235, this.e25) * float4(this.group0.xxy, other.e42)) - (float4(other.e4315, other.e45, other.e45, this.e35) * float4(this.group0.zyz, other.e43)) - (this.group0.yzxx * float4(other.group5.xyz.zxy, other.e41)) - float4((this.group1.yzx * other.group3.zxy), this.e4235 * other.e23) - float4((this.group1.www * other.group9.xyz), this.e4315 * other.e31), 
-            /* e41, e42, e43, 0 */
-            float4((other.group4.xyz.zxy * this.group1.yzx) - (float3(other.e1234) * this.group1.xyz) - (float3(this.e45, this.e45, this.e4315) * other.group4.xyz.xyx) - (float3(this.e4125, this.e4235, this.e45) * other.group4.xyz.yzz), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(this.e45) * other.group9.xyz) + (float3(other.e1234) * this.group0.xyz) + (float3(this.e35, this.e15, this.e3215) * other.group4.xyz.yzz) + (float3(this.e3215, this.e3215, this.e25) * other.group4.xyz.xyx) + (float3(other.e45, other.e4125, other.e4235) * this.group1.xxy) + (float3(other.e4315, other.e45, other.e45) * this.group1.zyz) - (other.group4.xyz.zxy * this.group0.yzx) - (this.group1.yzx * other.group9.zxy), 0.0), 
+            /* e41, e42, e43 */
+            (other.group4.xyz.zxy * this.group1.yzx) - (float3(other.e1234) * this.group1.xyz) - (float3(this.e45, this.e45, this.e4315) * other.group4.xyz.xyx) - (float3(this.e4125, this.e4235, this.e45) * other.group4.xyz.yzz), 
+            /* e23, e31, e12 */
+            (float3(this.e45) * other.group9.xyz) + (float3(other.e1234) * this.group0.xyz) + (float3(this.e35, this.e15, this.e3215) * other.group4.xyz.yzz) + (float3(this.e3215, this.e3215, this.e25) * other.group4.xyz.xyx) + (float3(other.e45, other.e4125, other.e4235) * this.group1.xxy) + (float3(other.e4315, other.e45, other.e45) * this.group1.zyz) - (other.group4.xyz.zxy * this.group0.yzx) - (this.group1.yzx * other.group9.zxy), 
             /* e415, e425, e435, e321 */
             float4(-(this.e4235 * other.e321) - (this.e4125 * other.e2), -(this.e4235 * other.e3) - (this.e4315 * other.e321), -(this.e4315 * other.e1) - (this.e4125 * other.e321), (this.e4315 * other.e425) + (this.e4125 * other.e435)) + (this.group1.yzxx * float4(other.group1.zxy, other.e415)) + (float4(this.group0.zx, this.e3215, this.e25) * float4(other.group7.xyz.yzz, other.e431)) + (float4(this.group1.ww, this.e25, this.e15) * float4(other.group7.xyz.xyx, other.e423)) + float4((other.group1.www * this.group0.xyz), this.e35 * other.e412) - (other.group1 * float4(this.group0.www, this.e3215)) - (this.group0.yzxw * float4(other.group7.xyz.zxy, other.e12345)), 
-            /* e423, e431, e412, 0 */
-            float4((other.group7.xyz.zxy * this.group1.yzx) - (float3(other.e4) * this.group1.xyz) - (float3(this.e45, this.e45, this.e4315) * other.group7.xyz.xyx) - (float3(this.e4125, this.e4235, this.e45) * other.group7.xyz.yzz), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(this.e3215) * other.group1.xyz) + (float3(this.e3215) * other.group6.xyz) + (float3(other.e12345) * this.group0.xyz) + (float3(other.e5) * this.group1.xyz) + (float3(this.e45, this.e45, this.e4315) * other.group8.xyz.xyx) + (float3(this.e4125, this.e4235, this.e45) * other.group8.xyz.yzz) + (float3(other.e2, other.e435, other.e415) * this.group0.zxy) + (float3(other.e321, other.e3, other.e1) * this.group0.xxy) + (this.group0.zyz * other.group6.yww) - (other.group8.xyz.zxy * this.group1.yzx) - (this.group0.yzx * other.group1.zxy) - (this.group0.yzx * other.group6.zxy), 0.0), 
+            /* e423, e431, e412 */
+            (other.group7.xyz.zxy * this.group1.yzx) - (float3(other.e4) * this.group1.xyz) - (float3(this.e45, this.e45, this.e4315) * other.group7.xyz.xyx) - (float3(this.e4125, this.e4235, this.e45) * other.group7.xyz.yzz), 
+            /* e235, e315, e125 */
+            (float3(this.e3215) * other.group1.xyz) + (float3(this.e3215) * other.group6.xyz) + (float3(other.e12345) * this.group0.xyz) + (float3(other.e5) * this.group1.xyz) + (float3(this.e45, this.e45, this.e4315) * other.group8.xyz.xyx) + (float3(this.e4125, this.e4235, this.e45) * other.group8.xyz.yzz) + (float3(other.e2, other.e435, other.e415) * this.group0.zxy) + (float3(other.e321, other.e3, other.e1) * this.group0.xxy) + (this.group0.zyz * other.group6.yww) - (other.group8.xyz.zxy * this.group1.yzx) - (this.group0.yzx * other.group1.zxy) - (this.group0.yzx * other.group6.zxy), 
             /* e4235, e4315, e4125, e3215 */
             float4(this.e15 * other.e1234, this.e25 * other.e1234, this.e35 * other.e1234, -(this.e35 * other.e12) - (this.e4235 * other.e15) - (this.e4315 * other.e25) - (this.e4125 * other.e35) - (this.e3215 * other.e45)) + (float4(other.scalar) * this.group1) + (float4(this.group0.zx, this.e3215, other.e4315) * float4(other.group4.xyz.yzz, this.e25)) + (float4(this.group0.ww, this.e4315, other.e4125) * float4(other.group5.xyz.xyx, this.e35)) + (float4(this.group1.zx, this.e45, other.e3215) * float4(other.group5.xyz.yzz, this.e45)) + (float4(this.group1.ww, this.e25, other.e4235) * float4(other.group4.xyz.xyx, this.e15)) - (this.group0.yzxx * float4(other.group4.xyz.zxy, other.e23)) - float4((other.group5.xyz.zxy * this.group1.yzx), this.e25 * other.e31), 
-            /* e1234, 0, 0, 0 */
-            float4((this.e4235 * other.e41) + (this.e4315 * other.e42) + (this.e4125 * other.e43) - (this.e45 * other.e1234), 0.0, 0.0, 0.0)
+            /* e1234 */
+            (this.e4235 * other.e41) + (this.e4315 * other.e42) + (this.e4125 * other.e43) - (this.e45 * other.e1234)
         ).geometric_product(this.reverse());
     }
 }
-extension Flector: Sandwich<Plane> {
-    associatedtype Output = Flector;
-    func sandwich(other: Plane) -> Output {
-        return AntiMotor.from_groups(
+public extension Flector {
+    public Flector sandwich(Plane other) {
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4((this.e45 * other.e4235) + (this.e4125 * other.e4315), (this.e45 * other.e4315) + (this.e4235 * other.e4125), (this.e45 * other.e4125) + (this.e4315 * other.e4235), -(this.e4315 * other.e4315) - (this.e4125 * other.e4125)) - (this.group1.yzxx * other.group0.zxyx), 
             /* e15, e25, e35, e3215 */
@@ -5609,10 +5310,9 @@ extension Flector: Sandwich<Plane> {
         ).geometric_product(this.reverse());
     }
 }
-extension Flector: Sandwich<RoundPoint> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: RoundPoint) -> Output {
-        return VersorEven.from_groups(
+public extension Flector {
+    public VersorEven sandwich(RoundPoint other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((float3(other.e4) * this.group1.xyz * float3(-1.0)), (this.e4235 * other.e1) + (this.e4315 * other.e2) + (this.e4125 * other.e3) + (this.e3215 * other.e4)), 
             /* e415, e425, e435, e321 */
@@ -5624,10 +5324,9 @@ extension Flector: Sandwich<RoundPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension Flector: Sandwich<Scalar> {
-    associatedtype Output = AntiMotor;
-    func sandwich(other: Scalar) -> Output {
-        return Flector.from_groups(
+public extension Flector {
+    public AntiMotor sandwich(Scalar other) {
+        return Flector(
             /* e15, e25, e35, e45 */
             float4(other.scalar) * this.group0, 
             /* e4235, e4315, e4125, e3215 */
@@ -5635,10 +5334,9 @@ extension Flector: Sandwich<Scalar> {
         ).geometric_product(this.reverse());
     }
 }
-extension Flector: Sandwich<Sphere> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Sphere) -> Output {
-        return VersorOdd.from_groups(
+public extension Flector {
+    public VersorOdd sandwich(Sphere other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4((float3(other.e1234) * this.group1.xyz * float3(-1.0)), (this.e3215 * other.e1234) - (this.e4235 * other.e4235) - (this.e4315 * other.e4315) - (this.e4125 * other.e4125)), 
             /* e23, e31, e12, e45 */
@@ -5650,10 +5348,9 @@ extension Flector: Sandwich<Sphere> {
         ).geometric_product(this.reverse());
     }
 }
-extension Flector: Sandwich<VersorEven> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: VersorEven) -> Output {
-        return VersorEven.from_groups(
+public extension Flector {
+    public VersorEven sandwich(VersorEven other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             (this.group1.yzxx * float4(other.group0.zxy, other.e1)) + float4(float3(0.0), (this.e4315 * other.e2) + (this.e4125 * other.e3) + (this.e3215 * other.e4) - (this.e45 * other.e321)) - (float4(other.e431, other.e4, other.e4, other.e412) * float4(this.group1.zyz, this.e35)) - (float4(other.e4, other.e412, other.e423, other.e431) * float4(this.group1.xxy, this.e25)) - (this.group0.wwwx * other.group0.xyzx), 
             /* e415, e425, e435, e321 */
@@ -5665,10 +5362,9 @@ extension Flector: Sandwich<VersorEven> {
         ).geometric_product(this.reverse());
     }
 }
-extension Flector: Sandwich<VersorOdd> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: VersorOdd) -> Output {
-        return VersorOdd.from_groups(
+public extension Flector {
+    public VersorOdd sandwich(VersorOdd other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(float3(0.0), (this.e3215 * other.e1234) - (this.e4235 * other.e4235) - (this.e4315 * other.e4315) - (this.e4125 * other.e4125)) + float4((this.group1.yzx * other.group0.zxy), this.e45 * other.e45) - (float4(other.e42, other.e1234, other.e1234, other.e43) * float4(this.group1.zyz, this.e35)) - (float4(other.e1234, other.e43, other.e41, other.e42) * float4(this.group1.xxy, this.e25)) - (this.group0.wwwx * other.group0.xyzx), 
             /* e23, e31, e12, e45 */
@@ -5680,16 +5376,21 @@ extension Flector: Sandwich<VersorOdd> {
         ).geometric_product(this.reverse());
     }
 }
-extension Line {
-    // Fancy infix trick
-    func operator/(_rhs: SandwichInfix) -> SandwichInfixPartial<Line> {
-        return SandwichInfixPartial { a: this };
+public extension Line {
+    // Fancy infix trick (first half)
+    public SandwichInfixPartial<Line> operator /(SandwichInfix rhs) {
+        return SandwichInfixPartial<Line>(this);
     }
 }
-extension Line: Sandwich<AntiCircleRotor> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: AntiCircleRotor) -> Output {
-        return VersorEven.from_groups(
+public extension SandwichInfixPartial<Line> {
+    // Fancy infix trick (second half)
+    public VersorOdd operator /(AntiCircleRotor rhs) {
+        return this.a.sandwich(rhs);
+    }
+}
+public extension Line {
+    public VersorOdd sandwich(AntiCircleRotor other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(other.e42 * this.e435, other.e43 * this.e415, other.e41 * this.e425, -(other.e42 * this.e315) - (other.e43 * this.e125) - (other.e23 * this.e415) - (other.e31 * this.e425) - (other.e12 * this.e435)) - float4((other.group0.xyz.zxy * this.group0.xyz.yzx), other.e41 * this.e235), 
             /* e415, e425, e435, e321 */
@@ -5701,10 +5402,9 @@ extension Line: Sandwich<AntiCircleRotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension Line: Sandwich<AntiDipoleInversion> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiDipoleInversion) -> Output {
-        return VersorOdd.from_groups(
+public extension Line {
+    public VersorEven sandwich(AntiDipoleInversion other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(-(other.e431 * this.e435) - (other.e4 * this.e415), -(other.e412 * this.e415) - (other.e4 * this.e425), -(other.e423 * this.e425) - (other.e4 * this.e435), (other.e431 * this.e315) + (other.e412 * this.e125) + (other.e415 * this.e415) + (other.e425 * this.e425) + (other.e435 * this.e435)) + float4((other.group0.xyz.zxy * this.group0.xyz.yzx), other.e423 * this.e235), 
             /* e23, e31, e12, e45 */
@@ -5716,21 +5416,19 @@ extension Line: Sandwich<AntiDipoleInversion> {
         ).geometric_product(this.reverse());
     }
 }
-extension Line: Sandwich<AntiDualNum> {
-    associatedtype Output = AntiMotor;
-    func sandwich(other: AntiDualNum) -> Output {
-        return Line.from_groups(
-            /* e415, e425, e435, 0 */
-            float4(float3(other.scalar) * this.group0.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(other.e3215) * this.group0.xyz) + (float3(other.scalar) * this.group1.xyz), 0.0)
+public extension Line {
+    public AntiMotor sandwich(AntiDualNum other) {
+        return Line(
+            /* e415, e425, e435 */
+            float3(other.scalar) * this.group0.xyz, 
+            /* e235, e315, e125 */
+            (float3(other.e3215) * this.group0.xyz) + (float3(other.scalar) * this.group1.xyz)
         ).geometric_product(this.reverse());
     }
 }
-extension Line: Sandwich<AntiFlatPoint> {
-    associatedtype Output = AntiFlector;
-    func sandwich(other: AntiFlatPoint) -> Output {
-        return Flector.from_groups(
+public extension Line {
+    public AntiFlector sandwich(AntiFlatPoint other) {
+        return Flector(
             /* e15, e25, e35, e45 */
             float4((this.group0.xyz.yzx * other.group0.zxy), 0.0) - float4((float3(other.e321) * this.group1.xyz), 0.0) - float4((this.group0.xyz.zxy * other.group0.yzx), 0.0), 
             /* e4235, e4315, e4125, e3215 */
@@ -5738,10 +5436,9 @@ extension Line: Sandwich<AntiFlatPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension Line: Sandwich<AntiFlector> {
-    associatedtype Output = AntiFlector;
-    func sandwich(other: AntiFlector) -> Output {
-        return Flector.from_groups(
+public extension Line {
+    public AntiFlector sandwich(AntiFlector other) {
+        return Flector(
             /* e15, e25, e35, e45 */
             float4((other.e125 * this.e425) + (other.e3 * this.e315) - (other.e2 * this.e125), (other.e235 * this.e435) + (other.e1 * this.e125) - (other.e321 * this.e315), (other.e315 * this.e415) + (other.e2 * this.e235) - (other.e321 * this.e125), 0.0) - (float4(other.e315, other.e5, other.e5, other.e2) * float4(this.group0.xyz.zyz, this.e425)) - (float4(other.e321, other.e3, other.e1, other.e3) * float4(this.group1.xyz.xxy, this.e435)) - (float4(other.e5, other.e125, other.e235, other.e1) * float4(this.group0.xyz.xxy, this.e415)), 
             /* e4235, e4315, e4125, e3215 */
@@ -5749,10 +5446,9 @@ extension Line: Sandwich<AntiFlector> {
         ).geometric_product(this.reverse());
     }
 }
-extension Line: Sandwich<AntiLine> {
-    associatedtype Output = AntiMotor;
-    func sandwich(other: AntiLine) -> Output {
-        return Motor.from_groups(
+public extension Line {
+    public AntiMotor sandwich(AntiLine other) {
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4(other.e31 * this.e435, other.e12 * this.e415, other.e23 * this.e425, -(other.e31 * this.e425) - (other.e12 * this.e435)) - float4((other.group0.xyz.zxy * this.group0.xyz.yzx), other.e23 * this.e415), 
             /* e235, e315, e125, e5 */
@@ -5760,10 +5456,9 @@ extension Line: Sandwich<AntiLine> {
         ).geometric_product(this.reverse());
     }
 }
-extension Line: Sandwich<AntiMotor> {
-    associatedtype Output = AntiMotor;
-    func sandwich(other: AntiMotor) -> Output {
-        return Motor.from_groups(
+public extension Line {
+    public AntiMotor sandwich(AntiMotor other) {
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4((other.e31 * this.e435) + (other.scalar * this.e415), (other.e12 * this.e415) + (other.scalar * this.e425), (other.e23 * this.e425) + (other.scalar * this.e435), -(other.e31 * this.e425) - (other.e12 * this.e435)) - (other.group0.zxyx * float4(this.group0.xyz.yzx, this.e415)), 
             /* e235, e315, e125, e5 */
@@ -5771,10 +5466,9 @@ extension Line: Sandwich<AntiMotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension Line: Sandwich<AntiPlane> {
-    associatedtype Output = AntiFlector;
-    func sandwich(other: AntiPlane) -> Output {
-        return Flector.from_groups(
+public extension Line {
+    public AntiFlector sandwich(AntiPlane other) {
+        return Flector(
             /* e15, e25, e35, e45 */
             float4(other.e3 * this.e315, other.e1 * this.e125, other.e2 * this.e235, other.e3 * this.e435 * -1.0) - (other.group0.yzxy * float4(this.group1.xyz.zxy, this.e425)) - (other.group0.wwwx * float4(this.group0.xyz, this.e415)), 
             /* e4235, e4315, e4125, e3215 */
@@ -5782,21 +5476,19 @@ extension Line: Sandwich<AntiPlane> {
         ).geometric_product(this.reverse());
     }
 }
-extension Line: Sandwich<AntiScalar> {
-    associatedtype Output = Motor;
-    func sandwich(other: AntiScalar) -> Output {
-        return AntiLine.from_groups(
-            /* e23, e31, e12, 0 */
-            float4(float3(other.e12345) * this.group0.xyz * float3(-1.0), 0.0), 
-            /* e15, e25, e35, 0 */
-            float4(float3(other.e12345) * this.group1.xyz * float3(-1.0), 0.0)
+public extension Line {
+    public Motor sandwich(AntiScalar other) {
+        return AntiLine(
+            /* e23, e31, e12 */
+            float3(other.e12345) * this.group0.xyz * float3(-1.0), 
+            /* e15, e25, e35 */
+            float3(other.e12345) * this.group1.xyz * float3(-1.0)
         ).geometric_product(this.reverse());
     }
 }
-extension Line: Sandwich<Circle> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: Circle) -> Output {
-        return VersorOdd.from_groups(
+public extension Line {
+    public VersorEven sandwich(Circle other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(other.e431 * this.e435 * -1.0, other.e412 * this.e415 * -1.0, other.e423 * this.e425 * -1.0, (other.e431 * this.e315) + (other.e412 * this.e125) + (other.e415 * this.e415) + (other.e425 * this.e425) + (other.e435 * this.e435)) + float4((other.group0.xyz.zxy * this.group0.xyz.yzx), other.e423 * this.e235), 
             /* e23, e31, e12, e45 */
@@ -5808,10 +5500,9 @@ extension Line: Sandwich<Circle> {
         ).geometric_product(this.reverse());
     }
 }
-extension Line: Sandwich<CircleRotor> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: CircleRotor) -> Output {
-        return VersorOdd.from_groups(
+public extension Line {
+    public VersorEven sandwich(CircleRotor other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(other.e431 * this.e435 * -1.0, other.e412 * this.e415 * -1.0, other.e423 * this.e425 * -1.0, (other.e431 * this.e315) + (other.e412 * this.e125) + (other.e415 * this.e415) + (other.e425 * this.e425) + (other.e435 * this.e435)) + float4((other.group0.xyz.zxy * this.group0.xyz.yzx), other.e423 * this.e235), 
             /* e23, e31, e12, e45 */
@@ -5823,10 +5514,9 @@ extension Line: Sandwich<CircleRotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension Line: Sandwich<Dipole> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Dipole) -> Output {
-        return VersorEven.from_groups(
+public extension Line {
+    public VersorOdd sandwich(Dipole other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(other.e42 * this.e435, other.e43 * this.e415, other.e41 * this.e425, -(other.e42 * this.e315) - (other.e43 * this.e125) - (other.e23 * this.e415) - (other.e31 * this.e425) - (other.e12 * this.e435)) - float4((other.group0.xyz.zxy * this.group0.xyz.yzx), other.e41 * this.e235), 
             /* e415, e425, e435, e321 */
@@ -5838,10 +5528,9 @@ extension Line: Sandwich<Dipole> {
         ).geometric_product(this.reverse());
     }
 }
-extension Line: Sandwich<DipoleInversion> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: DipoleInversion) -> Output {
-        return VersorEven.from_groups(
+public extension Line {
+    public VersorOdd sandwich(DipoleInversion other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((other.e42 * this.e435) + (other.e1234 * this.e415), (other.e43 * this.e415) + (other.e1234 * this.e425), (other.e41 * this.e425) + (other.e1234 * this.e435), -(other.e42 * this.e315) - (other.e43 * this.e125) - (other.e23 * this.e415) - (other.e31 * this.e425) - (other.e12 * this.e435)) - float4((other.group0.xyz.zxy * this.group0.xyz.yzx), other.e41 * this.e235), 
             /* e415, e425, e435, e321 */
@@ -5853,21 +5542,19 @@ extension Line: Sandwich<DipoleInversion> {
         ).geometric_product(this.reverse());
     }
 }
-extension Line: Sandwich<DualNum> {
-    associatedtype Output = Motor;
-    func sandwich(other: DualNum) -> Output {
-        return AntiLine.from_groups(
-            /* e23, e31, e12, 0 */
-            float4(float3(other.e12345) * this.group0.xyz * float3(-1.0), 0.0), 
-            /* e15, e25, e35, 0 */
-            float4(-(float3(other.e5) * this.group0.xyz) - (float3(other.e12345) * this.group1.xyz), 0.0)
+public extension Line {
+    public Motor sandwich(DualNum other) {
+        return AntiLine(
+            /* e23, e31, e12 */
+            float3(other.e12345) * this.group0.xyz * float3(-1.0), 
+            /* e15, e25, e35 */
+            -(float3(other.e5) * this.group0.xyz) - (float3(other.e12345) * this.group1.xyz)
         ).geometric_product(this.reverse());
     }
 }
-extension Line: Sandwich<FlatPoint> {
-    associatedtype Output = Flector;
-    func sandwich(other: FlatPoint) -> Output {
-        return AntiFlector.from_groups(
+public extension Line {
+    public Flector sandwich(FlatPoint other) {
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4((this.group0.xyz.zxy * other.group0.yzx), 0.0) - float4((float3(other.e45) * this.group1.xyz), 0.0) - float4((this.group0.xyz.yzx * other.group0.zxy), 0.0), 
             /* e1, e2, e3, e5 */
@@ -5875,10 +5562,9 @@ extension Line: Sandwich<FlatPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension Line: Sandwich<Flector> {
-    associatedtype Output = Flector;
-    func sandwich(other: Flector) -> Output {
-        return AntiFlector.from_groups(
+public extension Line {
+    public Flector sandwich(Flector other) {
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(-(other.e35 * this.e425) - (other.e45 * this.e235) - (other.e4315 * this.e125), -(other.e15 * this.e435) - (other.e45 * this.e315) - (other.e4125 * this.e235), -(other.e25 * this.e415) - (other.e45 * this.e125) - (other.e4235 * this.e315), 0.0) + (float4(other.e25, other.e3215, other.e3215, other.e4315) * float4(this.group0.xyz.zyz, this.e425)) + (float4(other.e3215, other.e35, other.e15, other.e4235) * float4(this.group0.xyz.xxy, this.e415)) + (other.group1.zxyz * float4(this.group1.xyz.yzx, this.e435)), 
             /* e1, e2, e3, e5 */
@@ -5886,10 +5572,9 @@ extension Line: Sandwich<Flector> {
         ).geometric_product(this.reverse());
     }
 }
-extension Line: Sandwich<Line> {
-    associatedtype Output = Motor;
-    func sandwich(other: Line) -> Output {
-        return AntiMotor.from_groups(
+public extension Line {
+    public Motor sandwich(Line other) {
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(other.e425 * this.e435 * -1.0, other.e435 * this.e415 * -1.0, other.e415 * this.e425 * -1.0, (other.e425 * this.e425) + (other.e435 * this.e435)) + float4((other.group0.xyz.zxy * this.group0.xyz.yzx), other.e415 * this.e415), 
             /* e15, e25, e35, e3215 */
@@ -5897,10 +5582,9 @@ extension Line: Sandwich<Line> {
         ).geometric_product(this.reverse());
     }
 }
-extension Line: Sandwich<Motor> {
-    associatedtype Output = Motor;
-    func sandwich(other: Motor) -> Output {
-        return AntiMotor.from_groups(
+public extension Line {
+    public Motor sandwich(Motor other) {
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(-(this.e415 * other.e12345) - (this.e435 * other.e425), -(this.e415 * other.e435) - (this.e425 * other.e12345), -(this.e425 * other.e415) - (this.e435 * other.e12345), (this.e425 * other.e425) + (this.e435 * other.e435)) + (other.group0.zxyx * float4(this.group0.xyz.yzx, this.e415)), 
             /* e15, e25, e35, e3215 */
@@ -5908,39 +5592,37 @@ extension Line: Sandwich<Motor> {
         ).geometric_product(this.reverse());
     }
 }
-extension Line: Sandwich<MultiVector> {
-    associatedtype Output = MultiVector;
-    func sandwich(other: MultiVector) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((this.e415 * other.e415) + (this.e425 * other.e425) + (this.e435 * other.e435) + (this.e235 * other.e423) + (this.e315 * other.e431) + (this.e125 * other.e412), -(this.e415 * other.e23) - (this.e425 * other.e31) - (this.e435 * other.e12) - (this.e235 * other.e41) - (this.e315 * other.e42) - (this.e125 * other.e43)), 0.0, 0.0), 
+public extension Line {
+    public MultiVector sandwich(MultiVector other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((this.e415 * other.e415) + (this.e425 * other.e425) + (this.e435 * other.e435) + (this.e235 * other.e423) + (this.e315 * other.e431) + (this.e125 * other.e412), -(this.e415 * other.e23) - (this.e425 * other.e31) - (this.e435 * other.e12) - (this.e235 * other.e41) - (this.e315 * other.e42) - (this.e125 * other.e43)), 
             /* e1, e2, e3, e4 */
             float4((this.e425 * other.e4125) + (this.e315 * other.e43) - (this.e125 * other.e42), (this.e435 * other.e4235) + (this.e125 * other.e41) - (this.e315 * other.e1234), (this.e415 * other.e4315) + (this.e235 * other.e42) - (this.e125 * other.e1234), 0.0) - (float4(other.e45, other.e4125, other.e4235, other.e41) * float4(this.group0.xyz.xxy, this.e415)) - (float4(other.e4315, other.e45, other.e45, other.e42) * float4(this.group0.xyz.zyz, this.e425)) - (float4(other.e1234, other.e43, other.e41, other.e43) * float4(this.group1.xyz.xxy, this.e435)), 
-            /* e5, 0, 0, 0 */
-            float4((this.e235 * other.e4235) + (this.e315 * other.e4315) + (this.e125 * other.e4125) - (this.e415 * other.e15) - (this.e425 * other.e25) - (this.e435 * other.e35) - (this.e235 * other.e23) - (this.e315 * other.e31) - (this.e125 * other.e12), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (this.e235 * other.e4235) + (this.e315 * other.e4315) + (this.e125 * other.e4125) - (this.e415 * other.e15) - (this.e425 * other.e25) - (this.e435 * other.e35) - (this.e235 * other.e23) - (this.e315 * other.e31) - (this.e125 * other.e12), 
             /* e15, e25, e35, e45 */
             float4(-(this.e235 * other.e321) - (this.e125 * other.e2) - (this.e125 * other.e425), -(this.e235 * other.e3) - (this.e235 * other.e435) - (this.e315 * other.e321), -(this.e315 * other.e1) - (this.e315 * other.e415) - (this.e125 * other.e321), 0.0) + float4((this.group0.xyz.yzx * other.group8.xyz.zxy), this.e235 * other.e423) + float4((this.group1.xyz.yzx * other.group1.zxy), this.e315 * other.e431) + float4((this.group1.xyz.yzx * other.group6.zxy), this.e125 * other.e412) - (float4(other.e5, other.e125, other.e235, other.e2) * float4(this.group0.xyz.xxy, this.e425)) - (float4(other.e315, other.e5, other.e5, other.e3) * float4(this.group0.xyz.zyz, this.e435)) - (float4(other.group0.xy.yy, other.e12345, this.e415) * float4(this.group1.xyz, other.e1)), 
-            /* e41, e42, e43, 0 */
-            float4((this.group0.xyz.yzx * other.group7.xyz.zxy) - (float3(other.e4, other.e412, other.e423) * this.group0.xyz.xxy) - (float3(other.e431, other.e4, other.e4) * this.group0.xyz.zyz), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((this.group0.xyz.yzx * other.group6.zxy) + (this.group1.xyz.yzx * other.group7.xyz.zxy) - (float3(other.e12345) * this.group0.xyz) - (float3(other.e4, other.e412, other.e423) * this.group1.xyz.xxy) - (float3(other.e431, other.e4, other.e4) * this.group1.xyz.zyz) - (this.group0.xyz.zxy * other.group6.yzx), 0.0), 
+            /* e41, e42, e43 */
+            (this.group0.xyz.yzx * other.group7.xyz.zxy) - (float3(other.e4, other.e412, other.e423) * this.group0.xyz.xxy) - (float3(other.e431, other.e4, other.e4) * this.group0.xyz.zyz), 
+            /* e23, e31, e12 */
+            (this.group0.xyz.yzx * other.group6.zxy) + (this.group1.xyz.yzx * other.group7.xyz.zxy) - (float3(other.e12345) * this.group0.xyz) - (float3(other.e4, other.e412, other.e423) * this.group1.xyz.xxy) - (float3(other.e431, other.e4, other.e4) * this.group1.xyz.zyz) - (this.group0.xyz.zxy * other.group6.yzx), 
             /* e415, e425, e435, e321 */
             float4(-(this.e425 * other.e12) - (this.e315 * other.e43), -(this.e435 * other.e23) - (this.e125 * other.e41), -(this.e415 * other.e31) - (this.e235 * other.e42), (this.e315 * other.e42) + (this.e125 * other.e43)) + (float4(other.e42, other.e1234, other.e1234, other.e41) * float4(this.group1.xyz.zyz, this.e235)) + (float4(other.e1234, other.e43, other.e41, other.e4125) * float4(this.group1.xyz.xxy, this.e435)) + (float4(other.group0.xy.xx, other.scalar, this.e415) * float4(this.group0.xyz, other.e4235)) + float4((this.group0.xyz.zxy * other.group5.xyz.yzx), this.e425 * other.e4315), 
-            /* e423, e431, e412, 0 */
-            float4((float3(other.e42, other.e1234, other.e1234) * this.group0.xyz.zyz) + (float3(other.e1234, other.e43, other.e41) * this.group0.xyz.xxy) - (this.group0.xyz.yzx * other.group4.xyz.zxy), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(other.scalar) * this.group1.xyz) + (float3(other.e25, other.e3215, other.e3215) * this.group0.xyz.zyz) + (float3(other.e31, other.e4235, other.e23) * this.group1.xyz.zzy) + (float3(other.e4125, other.e12, other.e4315) * this.group1.xyz.yxx) + (float3(other.e3215, other.e35, other.e15) * this.group0.xyz.xxy) - (float3(this.e235) * float3(other.e45, other.e4125, other.e31)) - (float3(this.e315) * float3(other.e12, other.e45, other.e4235)) - (float3(this.e125) * float3(other.e4315, other.e23, other.e45)) - (this.group0.xyz.yzx * other.group3.zxy), 0.0), 
+            /* e423, e431, e412 */
+            (float3(other.e42, other.e1234, other.e1234) * this.group0.xyz.zyz) + (float3(other.e1234, other.e43, other.e41) * this.group0.xyz.xxy) - (this.group0.xyz.yzx * other.group4.xyz.zxy), 
+            /* e235, e315, e125 */
+            (float3(other.scalar) * this.group1.xyz) + (float3(other.e25, other.e3215, other.e3215) * this.group0.xyz.zyz) + (float3(other.e31, other.e4235, other.e23) * this.group1.xyz.zzy) + (float3(other.e4125, other.e12, other.e4315) * this.group1.xyz.yxx) + (float3(other.e3215, other.e35, other.e15) * this.group0.xyz.xxy) - (float3(this.e235) * float3(other.e45, other.e4125, other.e31)) - (float3(this.e315) * float3(other.e12, other.e45, other.e4235)) - (float3(this.e125) * float3(other.e4315, other.e23, other.e45)) - (this.group0.xyz.yzx * other.group3.zxy), 
             /* e4235, e4315, e4125, e3215 */
             float4(-(this.e425 * other.e3) - (this.e235 * other.e4) - (this.e125 * other.e431), -(this.e435 * other.e1) - (this.e235 * other.e412) - (this.e315 * other.e4), -(this.e415 * other.e2) - (this.e315 * other.e423) - (this.e125 * other.e4), (this.e235 * other.e1) + (this.e235 * other.e415) + (this.e315 * other.e2) + (this.e315 * other.e425) + (this.e125 * other.e3) + (this.e125 * other.e435)) + (float4(other.e2, other.e321, other.e321, other.e315) * float4(this.group0.xyz.zyz, this.e425)) + (float4(other.e321, other.e3, other.e1, other.e235) * float4(this.group0.xyz.xxy, this.e415)) + float4((this.group1.xyz.yzx * other.group7.xyz.zxy), this.e435 * other.e125), 
-            /* e1234, 0, 0, 0 */
-            float4((this.e415 * other.e423) + (this.e425 * other.e431) + (this.e435 * other.e412), 0.0, 0.0, 0.0)
+            /* e1234 */
+            (this.e415 * other.e423) + (this.e425 * other.e431) + (this.e435 * other.e412)
         ).geometric_product(this.reverse());
     }
 }
-extension Line: Sandwich<Plane> {
-    associatedtype Output = Flector;
-    func sandwich(other: Plane) -> Output {
-        return AntiFlector.from_groups(
+public extension Line {
+    public Flector sandwich(Plane other) {
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(this.e125 * other.e4315 * -1.0, this.e235 * other.e4125 * -1.0, this.e315 * other.e4235 * -1.0, this.e435 * other.e4125) + (other.group0.zxyy * float4(this.group1.xyz.yzx, this.e425)) + (other.group0.wwwx * float4(this.group0.xyz, this.e415)), 
             /* e1, e2, e3, e5 */
@@ -5948,12 +5630,11 @@ extension Line: Sandwich<Plane> {
         ).geometric_product(this.reverse());
     }
 }
-extension Line: Sandwich<RoundPoint> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: RoundPoint) -> Output {
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(other.e4) * this.group0.xyz * float3(-1.0), 0.0), 
+public extension Line {
+    public VersorEven sandwich(RoundPoint other) {
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            float3(other.e4) * this.group0.xyz * float3(-1.0), 
             /* e23, e31, e12, e45 */
             float4((float3(other.e4) * this.group1.xyz * float3(-1.0)), -(this.e415 * other.e1) - (this.e425 * other.e2) - (this.e435 * other.e3)), 
             /* e15, e25, e35, e1234 */
@@ -5963,23 +5644,21 @@ extension Line: Sandwich<RoundPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension Line: Sandwich<Scalar> {
-    associatedtype Output = AntiMotor;
-    func sandwich(other: Scalar) -> Output {
-        return Line.from_groups(
-            /* e415, e425, e435, 0 */
-            float4(float3(other.scalar) * this.group0.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(float3(other.scalar) * this.group1.xyz, 0.0)
+public extension Line {
+    public AntiMotor sandwich(Scalar other) {
+        return Line(
+            /* e415, e425, e435 */
+            float3(other.scalar) * this.group0.xyz, 
+            /* e235, e315, e125 */
+            float3(other.scalar) * this.group1.xyz
         ).geometric_product(this.reverse());
     }
 }
-extension Line: Sandwich<Sphere> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Sphere) -> Output {
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(other.e1234) * this.group0.xyz, 0.0), 
+public extension Line {
+    public VersorOdd sandwich(Sphere other) {
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(other.e1234) * this.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4((float3(other.e1234) * this.group1.xyz), (this.e415 * other.e4235) + (this.e425 * other.e4315) + (this.e435 * other.e4125)), 
             /* e235, e315, e125, e4 */
@@ -5989,10 +5668,9 @@ extension Line: Sandwich<Sphere> {
         ).geometric_product(this.reverse());
     }
 }
-extension Line: Sandwich<VersorEven> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: VersorEven) -> Output {
-        return VersorOdd.from_groups(
+public extension Line {
+    public VersorEven sandwich(VersorEven other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(-(this.e415 * other.e4) - (this.e435 * other.e431), -(this.e415 * other.e412) - (this.e425 * other.e4), -(this.e425 * other.e423) - (this.e435 * other.e4), (this.e425 * other.e425) + (this.e435 * other.e435) + (this.e235 * other.e423) + (this.e315 * other.e431) + (this.e125 * other.e412)) + float4((this.group0.xyz.yzx * other.group0.zxy), this.e415 * other.e415), 
             /* e23, e31, e12, e45 */
@@ -6004,10 +5682,9 @@ extension Line: Sandwich<VersorEven> {
         ).geometric_product(this.reverse());
     }
 }
-extension Line: Sandwich<VersorOdd> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: VersorOdd) -> Output {
-        return VersorEven.from_groups(
+public extension Line {
+    public VersorOdd sandwich(VersorOdd other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((this.e415 * other.e1234) + (this.e435 * other.e42), (this.e415 * other.e43) + (this.e425 * other.e1234), (this.e425 * other.e41) + (this.e435 * other.e1234), -(this.e425 * other.e31) - (this.e435 * other.e12) - (this.e235 * other.e41) - (this.e315 * other.e42) - (this.e125 * other.e43)) - float4((this.group0.xyz.yzx * other.group0.zxy), this.e415 * other.e23), 
             /* e415, e425, e435, e321 */
@@ -6019,16 +5696,21 @@ extension Line: Sandwich<VersorOdd> {
         ).geometric_product(this.reverse());
     }
 }
-extension Motor {
-    // Fancy infix trick
-    func operator/(_rhs: SandwichInfix) -> SandwichInfixPartial<Motor> {
-        return SandwichInfixPartial { a: this };
+public extension Motor {
+    // Fancy infix trick (first half)
+    public SandwichInfixPartial<Motor> operator /(SandwichInfix rhs) {
+        return SandwichInfixPartial<Motor>(this);
     }
 }
-extension Motor: Sandwich<AntiCircleRotor> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: AntiCircleRotor) -> Output {
-        return VersorEven.from_groups(
+public extension SandwichInfixPartial<Motor> {
+    // Fancy infix trick (second half)
+    public VersorOdd operator /(AntiCircleRotor rhs) {
+        return this.a.sandwich(rhs);
+    }
+}
+public extension Motor {
+    public VersorOdd sandwich(AntiCircleRotor other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(other.e42 * this.e435, other.e43 * this.e415, other.e43 * this.e12345, -(other.e42 * this.e315) - (other.e43 * this.e125) - (other.e23 * this.e415) - (other.e31 * this.e425) - (other.e12 * this.e435)) + (this.group0.wwyw * float4(other.group0.xyz.xyx, other.scalar)) - float4((other.group0.xyz.zxy * this.group0.yzx), other.e41 * this.e235), 
             /* e415, e425, e435, e321 */
@@ -6040,10 +5722,9 @@ extension Motor: Sandwich<AntiCircleRotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension Motor: Sandwich<AntiDipoleInversion> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiDipoleInversion) -> Output {
-        return VersorOdd.from_groups(
+public extension Motor {
+    public VersorEven sandwich(AntiDipoleInversion other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(-(other.e431 * this.e435) - (other.e4 * this.e415), -(other.e412 * this.e415) - (other.e4 * this.e425), -(other.e412 * this.e12345) - (other.e4 * this.e435), (other.e431 * this.e315) + (other.e412 * this.e125) + (other.e415 * this.e415) + (other.e425 * this.e425) + (other.e435 * this.e435)) + float4((other.group0.xyz.zxy * this.group0.yzx), other.e423 * this.e235) - float4((other.group0.xyz.xyx * this.group0.wwy), other.e4 * this.e5), 
             /* e23, e31, e12, e45 */
@@ -6055,10 +5736,9 @@ extension Motor: Sandwich<AntiDipoleInversion> {
         ).geometric_product(this.reverse());
     }
 }
-extension Motor: Sandwich<AntiDualNum> {
-    associatedtype Output = AntiMotor;
-    func sandwich(other: AntiDualNum) -> Output {
-        return Motor.from_groups(
+public extension Motor {
+    public AntiMotor sandwich(AntiDualNum other) {
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4(other.scalar) * this.group0, 
             /* e235, e315, e125, e5 */
@@ -6066,10 +5746,9 @@ extension Motor: Sandwich<AntiDualNum> {
         ).geometric_product(this.reverse());
     }
 }
-extension Motor: Sandwich<AntiFlatPoint> {
-    associatedtype Output = AntiFlector;
-    func sandwich(other: AntiFlatPoint) -> Output {
-        return Flector.from_groups(
+public extension Motor {
+    public AntiFlector sandwich(AntiFlatPoint other) {
+        return Flector(
             /* e15, e25, e35, e45 */
             float4(((other.group0.zxy * this.group0.yzx) - (float3(other.e321) * this.group1.xyz) - (other.group0.xyx * this.group0.wwy) - (other.group0.yzz * this.group0.zxw)), other.e321 * this.e12345), 
             /* e4235, e4315, e4125, e3215 */
@@ -6077,10 +5756,9 @@ extension Motor: Sandwich<AntiFlatPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension Motor: Sandwich<AntiFlector> {
-    associatedtype Output = AntiFlector;
-    func sandwich(other: AntiFlector) -> Output {
-        return Flector.from_groups(
+public extension Motor {
+    public AntiFlector sandwich(AntiFlector other) {
+        return Flector(
             /* e15, e25, e35, e45 */
             float4((other.e3 * this.e315) - (other.e1 * this.e5) - (other.e2 * this.e125) - (other.e5 * this.e415), (other.e1 * this.e125) - (other.e2 * this.e5) - (other.e3 * this.e235) - (other.e5 * this.e425), (other.e2 * this.e235) - (other.e1 * this.e315) - (other.e3 * this.e5) - (other.e5 * this.e435), 0.0) + (other.group0.zxyw * this.group0.yzxw) - (this.group0.zxwy * float4(other.group0.yzz, other.e2)) - (this.group0.wwyx * float4(other.group0.xyx, other.e1)) - float4((other.group0.www * this.group1.xyz), other.e3 * this.e435), 
             /* e4235, e4315, e4125, e3215 */
@@ -6088,10 +5766,9 @@ extension Motor: Sandwich<AntiFlector> {
         ).geometric_product(this.reverse());
     }
 }
-extension Motor: Sandwich<AntiLine> {
-    associatedtype Output = AntiMotor;
-    func sandwich(other: AntiLine) -> Output {
-        return Motor.from_groups(
+public extension Motor {
+    public AntiMotor sandwich(AntiLine other) {
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4((other.e23 * this.e12345) + (other.e31 * this.e435), (other.e31 * this.e12345) + (other.e12 * this.e415), (other.e23 * this.e425) + (other.e12 * this.e12345), -(other.e31 * this.e425) - (other.e12 * this.e435)) - (this.group0.yzxx * float4(other.group0.xyz.zxy, other.e23)), 
             /* e235, e315, e125, e5 */
@@ -6099,10 +5776,9 @@ extension Motor: Sandwich<AntiLine> {
         ).geometric_product(this.reverse());
     }
 }
-extension Motor: Sandwich<AntiMotor> {
-    associatedtype Output = AntiMotor;
-    func sandwich(other: AntiMotor) -> Output {
-        return Motor.from_groups(
+public extension Motor {
+    public AntiMotor sandwich(AntiMotor other) {
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4((other.e31 * this.e435) + (other.scalar * this.e415), (other.e12 * this.e415) + (other.scalar * this.e425), (other.e12 * this.e12345) + (other.scalar * this.e435), -(other.e31 * this.e425) - (other.e12 * this.e435)) + (other.group0.xyxw * this.group0.wwyw) - (other.group0.zxyx * this.group0.yzxx), 
             /* e235, e315, e125, e5 */
@@ -6110,10 +5786,9 @@ extension Motor: Sandwich<AntiMotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension Motor: Sandwich<AntiPlane> {
-    associatedtype Output = AntiFlector;
-    func sandwich(other: AntiPlane) -> Output {
-        return Flector.from_groups(
+public extension Motor {
+    public AntiFlector sandwich(AntiPlane other) {
+        return Flector(
             /* e15, e25, e35, e45 */
             float4(other.e3 * this.e315, other.e1 * this.e125, other.e2 * this.e235, 0.0) - (other.group0.xyxx * float4(this.group1.wwy, this.e415)) - (other.group0.yzzy * float4(this.group1.zxw, this.e425)) - (other.group0.wwwz * this.group0.xyzz), 
             /* e4235, e4315, e4125, e3215 */
@@ -6121,10 +5796,9 @@ extension Motor: Sandwich<AntiPlane> {
         ).geometric_product(this.reverse());
     }
 }
-extension Motor: Sandwich<AntiScalar> {
-    associatedtype Output = Motor;
-    func sandwich(other: AntiScalar) -> Output {
-        return AntiMotor.from_groups(
+public extension Motor {
+    public Motor sandwich(AntiScalar other) {
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(other.e12345) * this.group0 * float4(-1.0), 
             /* e15, e25, e35, e3215 */
@@ -6132,10 +5806,9 @@ extension Motor: Sandwich<AntiScalar> {
         ).geometric_product(this.reverse());
     }
 }
-extension Motor: Sandwich<Circle> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: Circle) -> Output {
-        return VersorOdd.from_groups(
+public extension Motor {
+    public VersorEven sandwich(Circle other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(-(other.e423 * this.e12345) - (other.e431 * this.e435), -(other.e431 * this.e12345) - (other.e412 * this.e415), -(other.e423 * this.e425) - (other.e412 * this.e12345), (other.e431 * this.e315) + (other.e412 * this.e125) + (other.e415 * this.e415) + (other.e425 * this.e425) + (other.e435 * this.e435)) + float4((other.group0.xyz.zxy * this.group0.yzx), other.e423 * this.e235), 
             /* e23, e31, e12, e45 */
@@ -6147,10 +5820,9 @@ extension Motor: Sandwich<Circle> {
         ).geometric_product(this.reverse());
     }
 }
-extension Motor: Sandwich<CircleRotor> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: CircleRotor) -> Output {
-        return VersorOdd.from_groups(
+public extension Motor {
+    public VersorEven sandwich(CircleRotor other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(other.e431 * this.e435 * -1.0, other.e412 * this.e415 * -1.0, other.e412 * this.e12345 * -1.0, (other.e431 * this.e315) + (other.e412 * this.e125) + (other.e415 * this.e415) + (other.e425 * this.e425) + (other.e435 * this.e435)) + float4((other.group0.xyz.zxy * this.group0.yzx), other.e423 * this.e235) - (this.group0.wwyw * float4(other.group0.xyz.xyx, other.e12345)), 
             /* e23, e31, e12, e45 */
@@ -6162,10 +5834,9 @@ extension Motor: Sandwich<CircleRotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension Motor: Sandwich<Dipole> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Dipole) -> Output {
-        return VersorEven.from_groups(
+public extension Motor {
+    public VersorOdd sandwich(Dipole other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((other.e41 * this.e12345) + (other.e42 * this.e435), (other.e42 * this.e12345) + (other.e43 * this.e415), (other.e41 * this.e425) + (other.e43 * this.e12345), -(other.e42 * this.e315) - (other.e43 * this.e125) - (other.e23 * this.e415) - (other.e31 * this.e425) - (other.e12 * this.e435)) - float4((other.group0.xyz.zxy * this.group0.yzx), other.e41 * this.e235), 
             /* e415, e425, e435, e321 */
@@ -6177,10 +5848,9 @@ extension Motor: Sandwich<Dipole> {
         ).geometric_product(this.reverse());
     }
 }
-extension Motor: Sandwich<DipoleInversion> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: DipoleInversion) -> Output {
-        return VersorEven.from_groups(
+public extension Motor {
+    public VersorOdd sandwich(DipoleInversion other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((other.e42 * this.e435) + (other.e1234 * this.e415), (other.e43 * this.e415) + (other.e1234 * this.e425), (other.e43 * this.e12345) + (other.e1234 * this.e435), -(other.e42 * this.e315) - (other.e43 * this.e125) - (other.e23 * this.e415) - (other.e31 * this.e425) - (other.e12 * this.e435)) + float4((other.group0.xyz.xyx * this.group0.wwy), other.e1234 * this.e5) - float4((other.group0.xyz.zxy * this.group0.yzx), other.e41 * this.e235), 
             /* e415, e425, e435, e321 */
@@ -6192,10 +5862,9 @@ extension Motor: Sandwich<DipoleInversion> {
         ).geometric_product(this.reverse());
     }
 }
-extension Motor: Sandwich<DualNum> {
-    associatedtype Output = Motor;
-    func sandwich(other: DualNum) -> Output {
-        return AntiMotor.from_groups(
+public extension Motor {
+    public Motor sandwich(DualNum other) {
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(other.e12345) * this.group0 * float4(-1.0), 
             /* e15, e25, e35, e3215 */
@@ -6203,10 +5872,9 @@ extension Motor: Sandwich<DualNum> {
         ).geometric_product(this.reverse());
     }
 }
-extension Motor: Sandwich<FlatPoint> {
-    associatedtype Output = Flector;
-    func sandwich(other: FlatPoint) -> Output {
-        return AntiFlector.from_groups(
+public extension Motor {
+    public Flector sandwich(FlatPoint other) {
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(((other.group0.xyx * this.group0.wwy) + (other.group0.yzz * this.group0.zxw) - (float3(other.e45) * this.group1.xyz) - (other.group0.zxy * this.group0.yzx)), other.e45 * this.e12345 * -1.0), 
             /* e1, e2, e3, e5 */
@@ -6214,10 +5882,9 @@ extension Motor: Sandwich<FlatPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension Motor: Sandwich<Flector> {
-    associatedtype Output = Flector;
-    func sandwich(other: Flector) -> Output {
-        return AntiFlector.from_groups(
+public extension Motor {
+    public Flector sandwich(Flector other) {
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4((other.e3215 * this.e415) - (other.e45 * this.e235) - (other.e4235 * this.e5) - (other.e4315 * this.e125), (other.e3215 * this.e425) - (other.e45 * this.e315) - (other.e4315 * this.e5) - (other.e4125 * this.e235), (other.e3215 * this.e435) - (other.e45 * this.e125) - (other.e4235 * this.e315) - (other.e4125 * this.e5), 0.0) + (other.group1.zxyz * float4(this.group1.yzx, this.e435)) + (this.group0.zxwy * float4(other.group0.yzz, other.e4315)) + (this.group0.wwyx * float4(other.group0.xyx, other.e4235)) - (other.group0.zxyw * this.group0.yzxw), 
             /* e1, e2, e3, e5 */
@@ -6225,10 +5892,9 @@ extension Motor: Sandwich<Flector> {
         ).geometric_product(this.reverse());
     }
 }
-extension Motor: Sandwich<Line> {
-    associatedtype Output = Motor;
-    func sandwich(other: Line) -> Output {
-        return AntiMotor.from_groups(
+public extension Motor {
+    public Motor sandwich(Line other) {
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(-(other.e415 * this.e12345) - (other.e425 * this.e435), -(other.e425 * this.e12345) - (other.e435 * this.e415), -(other.e415 * this.e425) - (other.e435 * this.e12345), (other.e425 * this.e425) + (other.e435 * this.e435)) + (this.group0.yzxx * float4(other.group0.xyz.zxy, other.e415)), 
             /* e15, e25, e35, e3215 */
@@ -6236,10 +5902,9 @@ extension Motor: Sandwich<Line> {
         ).geometric_product(this.reverse());
     }
 }
-extension Motor: Sandwich<Motor> {
-    associatedtype Output = Motor;
-    func sandwich(other: Motor) -> Output {
-        return AntiMotor.from_groups(
+public extension Motor {
+    public Motor sandwich(Motor other) {
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(-(other.e425 * this.e435) - (other.e12345 * this.e415), -(other.e435 * this.e415) - (other.e12345 * this.e425), -(other.e435 * this.e12345) - (other.e12345 * this.e435), (other.e425 * this.e425) + (other.e435 * this.e435)) + (other.group0.zxyx * this.group0.yzxx) - (other.group0.xyxw * this.group0.wwyw), 
             /* e15, e25, e35, e3215 */
@@ -6247,39 +5912,37 @@ extension Motor: Sandwich<Motor> {
         ).geometric_product(this.reverse());
     }
 }
-extension Motor: Sandwich<MultiVector> {
-    associatedtype Output = MultiVector;
-    func sandwich(other: MultiVector) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((this.e425 * other.e425) + (this.e435 * other.e435) + (this.e315 * other.e431) + (this.e125 * other.e412), -(this.e425 * other.e31) - (this.e435 * other.e12) - (this.e315 * other.e42) - (this.e125 * other.e43)) + (float2(other.e415, other.scalar) * this.group0.xw) + (float2(other.e423, other.e1234) * this.group1.xw) - (float2(other.e12345, other.e23) * this.group0.wx) - (float2(other.e4, other.e41) * this.group1.wx), 0.0, 0.0), 
+public extension Motor {
+    public MultiVector sandwich(MultiVector other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((this.e425 * other.e425) + (this.e435 * other.e435) + (this.e315 * other.e431) + (this.e125 * other.e412), -(this.e425 * other.e31) - (this.e435 * other.e12) - (this.e315 * other.e42) - (this.e125 * other.e43)) + (float2(other.e415, other.scalar) * this.group0.xw) + (float2(other.e423, other.e1234) * this.group1.xw) - (float2(other.e12345, other.e23) * this.group0.wx) - (float2(other.e4, other.e41) * this.group1.wx), 
             /* e1, e2, e3, e4 */
             float4((this.e425 * other.e4125) - (this.e435 * other.e4315) - (this.e12345 * other.e4235) - (this.e235 * other.e1234), (this.e435 * other.e4235) - (this.e425 * other.e45) - (this.e12345 * other.e4315) - (this.e315 * other.e1234), (this.e415 * other.e4315) - (this.e435 * other.e45) - (this.e12345 * other.e4125) - (this.e125 * other.e1234), 0.0) + float4((other.group4.xyz.zxy * this.group1.yzx), this.e12345 * other.e1234) - (float4(other.e45, other.e4125, other.e4235, this.e435) * float4(this.group0.xxy, other.e43)) - float4((other.group4.xyz.xyx * this.group1.wwy), this.e415 * other.e41) - float4((other.group4.xyz.yzz * this.group1.zxw), this.e425 * other.e42), 
-            /* e5, 0, 0, 0 */
-            float4((this.e12345 * other.e3215) + (this.e235 * other.e4235) + (this.e315 * other.e4315) + (this.e125 * other.e4125) + (this.e5 * other.scalar) - (this.e415 * other.e15) - (this.e425 * other.e25) - (this.e435 * other.e35) - (this.e235 * other.e23) - (this.e315 * other.e31) - (this.e125 * other.e12) - (this.e5 * other.e45), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (this.e12345 * other.e3215) + (this.e235 * other.e4235) + (this.e315 * other.e4315) + (this.e125 * other.e4125) + (this.e5 * other.scalar) - (this.e415 * other.e15) - (this.e425 * other.e25) - (this.e435 * other.e35) - (this.e235 * other.e23) - (this.e315 * other.e31) - (this.e125 * other.e12) - (this.e5 * other.e45), 
             /* e15, e25, e35, e45 */
             float4(-(this.e235 * other.e321) - (this.e125 * other.e2) - (this.e125 * other.e425) - (this.e5 * other.e1) - (this.e5 * other.e415), -(this.e235 * other.e3) - (this.e235 * other.e435) - (this.e315 * other.e321) - (this.e5 * other.e2) - (this.e5 * other.e425), -(this.e315 * other.e1) - (this.e315 * other.e415) - (this.e125 * other.e321) - (this.e5 * other.e3) - (this.e5 * other.e435), this.e12345 * other.e321) + float4((other.group8.xyz.zxy * this.group0.yzx), this.e235 * other.e423) + float4((this.group1.yzx * other.group1.zxy), this.e315 * other.e431) + float4((this.group1.yzx * other.group6.zxy), this.e125 * other.e412) - (float4(other.group0.xy.yy, other.e12345, this.e415) * float4(this.group1.xyz, other.e1)) - float4((float3(other.e5) * this.group0.xyz), this.e5 * other.e4) - float4((other.group8.xyz.xyx * this.group0.wwy), this.e425 * other.e2) - float4((other.group8.xyz.yzz * this.group0.zxw), this.e435 * other.e3), 
-            /* e41, e42, e43, 0 */
-            float4((other.group7.xyz.zxy * this.group0.yzx) - (float3(other.e4) * this.group0.xyz) - (other.group7.xyz.xyx * this.group0.wwy) - (other.group7.xyz.yzz * this.group0.zxw), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((other.group7.xyz.zxy * this.group1.yzx) + (this.group0.yzx * other.group6.zxy) - (float3(this.e12345) * other.group6.xyz) - (float3(other.e12345) * this.group0.xyz) - (float3(other.e4) * this.group1.xyz) - (other.group7.xyz.xyx * this.group1.wwy) - (other.group7.xyz.yzz * this.group1.zxw) - (this.group0.zxy * other.group6.yzx), 0.0), 
+            /* e41, e42, e43 */
+            (other.group7.xyz.zxy * this.group0.yzx) - (float3(other.e4) * this.group0.xyz) - (other.group7.xyz.xyx * this.group0.wwy) - (other.group7.xyz.yzz * this.group0.zxw), 
+            /* e23, e31, e12 */
+            (other.group7.xyz.zxy * this.group1.yzx) + (this.group0.yzx * other.group6.zxy) - (float3(this.e12345) * other.group6.xyz) - (float3(other.e12345) * this.group0.xyz) - (float3(other.e4) * this.group1.xyz) - (other.group7.xyz.xyx * this.group1.wwy) - (other.group7.xyz.yzz * this.group1.zxw) - (this.group0.zxy * other.group6.yzx), 
             /* e415, e425, e435, e321 */
             (this.group1.zxwz * float4(other.group4.xyz.yzz, other.e43)) + (this.group1.wwyy * float4(other.group4.xyz.xyx, other.e42)) + (float4(other.group0.xy.xx, other.scalar, other.e41) * float4(this.group0.xyz, this.e235)) + float4((float3(other.e1234) * this.group1.xyz), this.e435 * other.e4125) + float4((other.group5.xyz.xyx * this.group0.wwy), this.e415 * other.e4235) + float4((other.group5.xyz.yzz * this.group0.zxw), this.e425 * other.e4315) - float4((other.group4.xyz.zxy * this.group1.yzx), this.e12345 * other.e45) - float4((other.group5.xyz.zxy * this.group0.yzx), this.e5 * other.e1234), 
-            /* e423, e431, e412, 0 */
-            float4((float3(other.e1234) * this.group0.xyz) + (other.group4.xyz.xyx * this.group0.wwy) + (other.group4.xyz.yzz * this.group0.zxw) - (other.group4.xyz.zxy * this.group0.yzx), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(this.e12345) * other.group3.xyz) + (float3(other.scalar) * this.group1.xyz) + (float3(other.e25, other.e3215, other.e3215) * this.group0.zyz) + (float3(other.e3215, other.e35, other.e15) * this.group0.xxy) + (other.group5.xyz.xyx * this.group1.wwy) + (other.group5.xyz.yzz * this.group1.zxw) + (this.group1.yzx * other.group9.zxy) - (float3(this.e5) * other.group9.xyz) - (float3(other.e45, other.e4125, other.e4235) * this.group1.xxy) - (float3(other.e4315, other.e45, other.e45) * this.group1.zyz) - (other.group5.xyz.zxy * this.group1.yzx) - (this.group0.yzx * other.group3.zxy), 0.0), 
+            /* e423, e431, e412 */
+            (float3(other.e1234) * this.group0.xyz) + (other.group4.xyz.xyx * this.group0.wwy) + (other.group4.xyz.yzz * this.group0.zxw) - (other.group4.xyz.zxy * this.group0.yzx), 
+            /* e235, e315, e125 */
+            (float3(this.e12345) * other.group3.xyz) + (float3(other.scalar) * this.group1.xyz) + (float3(other.e25, other.e3215, other.e3215) * this.group0.zyz) + (float3(other.e3215, other.e35, other.e15) * this.group0.xxy) + (other.group5.xyz.xyx * this.group1.wwy) + (other.group5.xyz.yzz * this.group1.zxw) + (this.group1.yzx * other.group9.zxy) - (float3(this.e5) * other.group9.xyz) - (float3(other.e45, other.e4125, other.e4235) * this.group1.xxy) - (float3(other.e4315, other.e45, other.e45) * this.group1.zyz) - (other.group5.xyz.zxy * this.group1.yzx) - (this.group0.yzx * other.group3.zxy), 
             /* e4235, e4315, e4125, e3215 */
             float4(this.e235 * other.e4 * -1.0, this.e315 * other.e4 * -1.0, this.e125 * other.e4 * -1.0, (this.e235 * other.e415) + (this.e315 * other.e2) + (this.e315 * other.e425) + (this.e125 * other.e3) + (this.e125 * other.e435)) + (float4(other.e2, other.e321, other.e321, this.e435) * float4(this.group0.zyz, other.e125)) + (float4(other.e321, other.e3, other.e1, this.e425) * float4(this.group0.xxy, other.e315)) + (other.group1.xyzx * float4(this.group0.www, this.e235)) + float4((other.group7.xyz.zxy * this.group1.yzx), this.e415 * other.e235) - (this.group1.wwyw * float4(other.group7.xyz.xyx, other.e12345)) - float4((other.group7.xyz.yzz * this.group1.zxw), this.e12345 * other.e5) - float4((this.group0.yzx * other.group1.zxy), this.e5 * other.e321), 
-            /* e1234, 0, 0, 0 */
-            float4((this.e415 * other.e423) + (this.e425 * other.e431) + (this.e435 * other.e412) - (this.e12345 * other.e4), 0.0, 0.0, 0.0)
+            /* e1234 */
+            (this.e415 * other.e423) + (this.e425 * other.e431) + (this.e435 * other.e412) - (this.e12345 * other.e4)
         ).geometric_product(this.reverse());
     }
 }
-extension Motor: Sandwich<Plane> {
-    associatedtype Output = Flector;
-    func sandwich(other: Plane) -> Output {
-        return AntiFlector.from_groups(
+public extension Motor {
+    public Flector sandwich(Plane other) {
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(-(this.e125 * other.e4315) - (this.e5 * other.e4235), -(this.e235 * other.e4125) - (this.e5 * other.e4315), -(this.e315 * other.e4235) - (this.e5 * other.e4125), this.e435 * other.e4125) + (this.group0.xyzx * other.group0.wwwx) + (other.group0.zxyy * float4(this.group1.yzx, this.e425)), 
             /* e1, e2, e3, e5 */
@@ -6287,10 +5950,9 @@ extension Motor: Sandwich<Plane> {
         ).geometric_product(this.reverse());
     }
 }
-extension Motor: Sandwich<RoundPoint> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: RoundPoint) -> Output {
-        return VersorOdd.from_groups(
+public extension Motor {
+    public VersorEven sandwich(RoundPoint other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(other.e4) * float4(this.group0.xyz, this.e5) * float4(-1.0), 
             /* e23, e31, e12, e45 */
@@ -6302,10 +5964,9 @@ extension Motor: Sandwich<RoundPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension Motor: Sandwich<Scalar> {
-    associatedtype Output = AntiMotor;
-    func sandwich(other: Scalar) -> Output {
-        return Motor.from_groups(
+public extension Motor {
+    public AntiMotor sandwich(Scalar other) {
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4(other.scalar) * this.group0, 
             /* e235, e315, e125, e5 */
@@ -6313,10 +5974,9 @@ extension Motor: Sandwich<Scalar> {
         ).geometric_product(this.reverse());
     }
 }
-extension Motor: Sandwich<Sphere> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Sphere) -> Output {
-        return VersorEven.from_groups(
+public extension Motor {
+    public VersorOdd sandwich(Sphere other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(other.e1234) * float4(this.group0.xyz, this.e5), 
             /* e415, e425, e435, e321 */
@@ -6328,10 +5988,9 @@ extension Motor: Sandwich<Sphere> {
         ).geometric_product(this.reverse());
     }
 }
-extension Motor: Sandwich<VersorEven> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: VersorEven) -> Output {
-        return VersorOdd.from_groups(
+public extension Motor {
+    public VersorEven sandwich(VersorEven other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(this.e12345 * other.e423 * -1.0, this.e12345 * other.e431 * -1.0, this.e12345 * other.e412 * -1.0, (this.e425 * other.e425) + (this.e435 * other.e435) + (this.e235 * other.e423) + (this.e315 * other.e431) + (this.e125 * other.e412)) + (this.group0.yzxx * float4(other.group0.zxy, other.e415)) - (float4(other.e431, other.e4, other.e4, other.e4) * float4(this.group0.zyz, this.e5)) - (float4(other.e4, other.e412, other.e423, other.e12345) * this.group0.xxyw), 
             /* e23, e31, e12, e45 */
@@ -6343,10 +6002,9 @@ extension Motor: Sandwich<VersorEven> {
         ).geometric_product(this.reverse());
     }
 }
-extension Motor: Sandwich<VersorOdd> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: VersorOdd) -> Output {
-        return VersorEven.from_groups(
+public extension Motor {
+    public VersorOdd sandwich(VersorOdd other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(this.e12345 * other.e41, this.e12345 * other.e42, this.e12345 * other.e43, -(this.e425 * other.e31) - (this.e435 * other.e12) - (this.e235 * other.e41) - (this.e315 * other.e42) - (this.e125 * other.e43)) + (float4(other.e42, other.e1234, other.e1234, other.e1234) * float4(this.group0.zyz, this.e5)) + (float4(other.e1234, other.e43, other.e41, other.scalar) * this.group0.xxyw) - (this.group0.yzxx * float4(other.group0.zxy, other.e23)), 
             /* e415, e425, e435, e321 */
@@ -6358,749 +6016,735 @@ extension Motor: Sandwich<VersorOdd> {
         ).geometric_product(this.reverse());
     }
 }
-extension MultiVector {
-    // Fancy infix trick
-    func operator/(_rhs: SandwichInfix) -> SandwichInfixPartial<MultiVector> {
-        return SandwichInfixPartial { a: this };
+public extension MultiVector {
+    // Fancy infix trick (first half)
+    public SandwichInfixPartial<MultiVector> operator /(SandwichInfix rhs) {
+        return SandwichInfixPartial<MultiVector>(this);
     }
 }
-extension MultiVector: Sandwich<AntiCircleRotor> {
-    associatedtype Output = MultiVector;
-    func sandwich(other: AntiCircleRotor) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(other.e45 * this.e45, other.e45 * this.e321 * -1.0) + (float2(other.scalar) * this.group0.xy) - (float2(other.e41) * float2(this.e15, this.e235)) - (float2(other.e42) * float2(this.e25, this.e315)) - (float2(other.e43) * float2(this.e35, this.e125)) - (float2(other.e23) * float2(this.e23, this.e415)) - (float2(other.e31) * float2(this.e31, this.e425)) - (float2(other.e12) * float2(this.e12, this.e435)) - (float2(other.e15) * float2(this.e41, this.e423)) - (float2(other.e25) * float2(this.e42, this.e431)) - (float2(other.e35) * float2(this.e43, this.e412)), 0.0, 0.0), 
+public extension SandwichInfixPartial<MultiVector> {
+    // Fancy infix trick (second half)
+    public MultiVector operator /(AntiCircleRotor rhs) {
+        return this.a.sandwich(rhs);
+    }
+}
+public extension MultiVector {
+    public MultiVector sandwich(AntiCircleRotor other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(other.e45 * this.e45, other.e45 * this.e321 * -1.0) + (float2(other.scalar) * this.group0.xy) - (float2(other.e41) * float2(this.e15, this.e235)) - (float2(other.e42) * float2(this.e25, this.e315)) - (float2(other.e43) * float2(this.e35, this.e125)) - (float2(other.e23) * float2(this.e23, this.e415)) - (float2(other.e31) * float2(this.e31, this.e425)) - (float2(other.e12) * float2(this.e12, this.e435)) - (float2(other.e15) * float2(this.e41, this.e423)) - (float2(other.e25) * float2(this.e42, this.e431)) - (float2(other.e35) * float2(this.e43, this.e412)), 
             /* e1, e2, e3, e4 */
             float4((other.e23 * this.e321) + (other.e31 * this.e3) + (other.e15 * this.e4) + (other.scalar * this.e1), (other.e31 * this.e321) + (other.e12 * this.e1) + (other.e25 * this.e4) + (other.scalar * this.e2), (other.e23 * this.e2) + (other.e12 * this.e321) + (other.e35 * this.e4) + (other.scalar * this.e3), -(other.e43 * this.e435) - (other.e23 * this.e423) - (other.e31 * this.e431) - (other.e12 * this.e412)) + float4((other.group0.xyz.zxy * this.group8.xyz.yzx), other.e45 * this.e4) + float4((this.group7.xyz.zxy * other.group2.yzx), other.scalar * this.e4) - (float4(float2(this.e5), this.e315, this.e1) * float4(other.group0.xyz.xyx, other.e41)) - (float4(this.group8.xyz.zx, this.e5, this.e415) * float4(other.group0.xyz.yzz, other.e41)) - float4((this.group7.xyz.yzx * other.group2.zxy), other.e42 * this.e2) - float4((other.group1.zxy * this.group1.yzx), other.e42 * this.e425) - float4((other.group1.www * this.group6.xyz), other.e43 * this.e3), 
-            /* e5, 0, 0, 0 */
-            float4((other.e15 * this.e1) + (other.e25 * this.e2) + (other.e35 * this.e3) + (other.scalar * this.e5) - (other.e23 * this.e235) - (other.e31 * this.e315) - (other.e12 * this.e125) - (other.e45 * this.e5) - (other.e15 * this.e415) - (other.e25 * this.e425) - (other.e35 * this.e435), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (other.e15 * this.e1) + (other.e25 * this.e2) + (other.e35 * this.e3) + (other.scalar * this.e5) - (other.e23 * this.e235) - (other.e31 * this.e315) - (other.e12 * this.e125) - (other.e45 * this.e5) - (other.e15 * this.e415) - (other.e25 * this.e425) - (other.e35 * this.e435), 
             /* e15, e25, e35, e45 */
             float4((other.e25 * this.e4125) + (other.scalar * this.e15), (other.e35 * this.e4235) + (other.scalar * this.e25), (other.e35 * this.e45) + (other.scalar * this.e35), -(other.e31 * this.e4315) - (other.e12 * this.e4125)) + (float4(this.scalar) * float4(other.group2.xyz, other.e45)) + (other.group2.xyxw * float4(this.group3.ww, this.e4315, this.e45)) + (other.group2.yzxx * float4(this.group5.xyz.zxy, this.e41)) + (float4(this.group3.zx, this.e3215, other.e35) * float4(other.group1.yzz, this.e43)) + (float4(this.group9.ww, this.e25, other.e25) * float4(other.group1.xyx, this.e42)) - (this.group3.xyzz * float4(other.group1.www, other.e43)) - (this.group3.yzxy * float4(other.group1.zxy, other.e42)) - (this.group9.yzxx * float4(other.group2.zxy, other.e23)) - float4((this.group5.xyz.yzx * other.group2.zxy), other.e41 * this.e15), 
-            /* e41, e42, e43, 0 */
-            float4((float3(this.scalar) * other.group0.xyz) + (float3(this.e1234) * other.group1.xyz) + (float3(other.e31, other.scalar, other.scalar) * this.group4.xyz.zyz) + (float3(other.scalar, other.e45, other.e45) * this.group4.xyz) + (float3(this.e12, this.e4125, this.e31) * other.group0.xyz.yxx) + (float3(this.e4315, this.e23, this.e4235) * other.group0.xyz.zzy) + (this.group4.xyz.xxy * other.group1.wzx) - (float3(other.e41) * float3(this.e45, this.e12, this.e4315)) - (float3(other.e42) * float3(this.e4125, this.e45, this.e23)) - (float3(other.e43) * float3(this.e31, this.e4235, this.e45)) - (this.group4.xyz.yzx * other.group1.zxy), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(other.e45) * this.group9.xyz) + (float3(this.scalar) * other.group1.xyz) + (float3(this.e1234) * other.group2.xyz) + (float3(other.e31, other.scalar, other.scalar) * this.group5.xyz.zyz) + (float3(other.scalar, other.e12, other.e23) * this.group5.xyz.xxy) + (float3(this.e35, this.e15, this.e3215) * other.group0.xyz.yzz) + (float3(this.e3215, this.e3215, this.e25) * other.group0.xyz.xyx) + (this.group4.xyz.zxy * other.group2.yzx) - (other.group0.xyz.zxy * this.group3.yzx) - (this.group4.xyz.yzx * other.group2.zxy) - (this.group5.xyz.yzx * other.group1.zxy), 0.0), 
+            /* e41, e42, e43 */
+            (float3(this.scalar) * other.group0.xyz) + (float3(this.e1234) * other.group1.xyz) + (float3(other.e31, other.scalar, other.scalar) * this.group4.xyz.zyz) + (float3(other.scalar, other.e45, other.e45) * this.group4.xyz) + (float3(this.e12, this.e4125, this.e31) * other.group0.xyz.yxx) + (float3(this.e4315, this.e23, this.e4235) * other.group0.xyz.zzy) + (this.group4.xyz.xxy * other.group1.wzx) - (float3(other.e41) * float3(this.e45, this.e12, this.e4315)) - (float3(other.e42) * float3(this.e4125, this.e45, this.e23)) - (float3(other.e43) * float3(this.e31, this.e4235, this.e45)) - (this.group4.xyz.yzx * other.group1.zxy), 
+            /* e23, e31, e12 */
+            (float3(other.e45) * this.group9.xyz) + (float3(this.scalar) * other.group1.xyz) + (float3(this.e1234) * other.group2.xyz) + (float3(other.e31, other.scalar, other.scalar) * this.group5.xyz.zyz) + (float3(other.scalar, other.e12, other.e23) * this.group5.xyz.xxy) + (float3(this.e35, this.e15, this.e3215) * other.group0.xyz.yzz) + (float3(this.e3215, this.e3215, this.e25) * other.group0.xyz.xyx) + (this.group4.xyz.zxy * other.group2.yzx) - (other.group0.xyz.zxy * this.group3.yzx) - (this.group4.xyz.yzx * other.group2.zxy) - (this.group5.xyz.yzx * other.group1.zxy), 
             /* e415, e425, e435, e321 */
             float4((other.e31 * this.e435) + (other.e15 * this.e4) + (other.scalar * this.e415), (other.e12 * this.e415) + (other.e25 * this.e4) + (other.scalar * this.e425), (other.e23 * this.e425) + (other.e35 * this.e4) + (other.scalar * this.e435), -(other.e23 * this.e1) - (other.e31 * this.e2) - (other.e12 * this.e3)) + (float4(float2(this.e5), this.e315, this.e315) * float4(other.group0.xyz.xyx, other.e42)) + (float4(this.group0.xy.yy, this.e12345, other.e41) * float4(other.group1.xyz, this.e235)) + (float4(this.group8.xyz.zx, this.e5, this.e125) * float4(other.group0.xyz.yzz, other.e43)) + float4((this.group7.xyz.zxy * other.group2.yzx), other.scalar * this.e321) - (other.group2.zxyx * float4(this.group7.xyz.yzx, this.e423)) - float4((other.group0.xyz.zxy * this.group8.xyz.yzx), other.e45 * this.e12345) - float4((other.group1.zxy * this.group6.yzx), other.e25 * this.e431) - float4((other.group1.www * this.group1.xyz), other.e35 * this.e412), 
-            /* e423, e431, e412, 0 */
-            float4((float3(this.e12345) * other.group0.xyz) + (float3(this.e4) * other.group1.xyz) + (float3(other.e31, other.scalar, other.scalar) * this.group7.xyz.zyz) + (float3(other.scalar, other.e45, other.e45) * this.group7.xyz) + (float3(this.e3, this.e1, this.e425) * other.group0.xyz.yzx) + (float3(this.e321, this.e321, this.e2) * other.group0.xyz.xyx) + (other.group0.xyz.yzz * this.group6.zxw) + (this.group7.xyz.xxy * other.group1.wzx) - (other.group0.xyz.zxy * this.group1.yzx) - (other.group0.xyz.zxy * this.group6.yzx) - (this.group7.xyz.yzx * other.group1.zxy), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(this.e12345) * other.group2.xyz) + (float3(this.e5) * other.group1.xyz) + (float3(other.e31, other.scalar, other.scalar) * this.group8.xyz.zyz) + (float3(other.scalar, other.e12, other.e23) * this.group8.xyz.xxy) + (float3(this.e2, this.e415, this.e1) * other.group2.zzy) + (float3(this.e435, this.e3, this.e425) * other.group2.yxx) - (float3(other.e15) * float3(this.e321, this.e435, this.e2)) - (float3(other.e25) * float3(this.e3, this.e321, this.e415)) - (float3(other.e35) * float3(this.e425, this.e1, this.e321)) - (this.group8.xyz.xyx * other.group1.wwy) - (this.group8.xyz.yzz * other.group1.zxw), 0.0), 
+            /* e423, e431, e412 */
+            (float3(this.e12345) * other.group0.xyz) + (float3(this.e4) * other.group1.xyz) + (float3(other.e31, other.scalar, other.scalar) * this.group7.xyz.zyz) + (float3(other.scalar, other.e45, other.e45) * this.group7.xyz) + (float3(this.e3, this.e1, this.e425) * other.group0.xyz.yzx) + (float3(this.e321, this.e321, this.e2) * other.group0.xyz.xyx) + (other.group0.xyz.yzz * this.group6.zxw) + (this.group7.xyz.xxy * other.group1.wzx) - (other.group0.xyz.zxy * this.group1.yzx) - (other.group0.xyz.zxy * this.group6.yzx) - (this.group7.xyz.yzx * other.group1.zxy), 
+            /* e235, e315, e125 */
+            (float3(this.e12345) * other.group2.xyz) + (float3(this.e5) * other.group1.xyz) + (float3(other.e31, other.scalar, other.scalar) * this.group8.xyz.zyz) + (float3(other.scalar, other.e12, other.e23) * this.group8.xyz.xxy) + (float3(this.e2, this.e415, this.e1) * other.group2.zzy) + (float3(this.e435, this.e3, this.e425) * other.group2.yxx) - (float3(other.e15) * float3(this.e321, this.e435, this.e2)) - (float3(other.e25) * float3(this.e3, this.e321, this.e415)) - (float3(other.e35) * float3(this.e425, this.e1, this.e321)) - (this.group8.xyz.xyx * other.group1.wwy) - (this.group8.xyz.yzz * other.group1.zxw), 
             /* e4235, e4315, e4125, e3215 */
             float4((other.e42 * this.e35) + (other.e23 * this.e45) + (other.e31 * this.e4125) + (other.e45 * this.e23) + (other.e35 * this.e42) + (other.scalar * this.e4235), (other.e43 * this.e15) + (other.e31 * this.e45) + (other.e12 * this.e4235) + (other.e45 * this.e31) + (other.e15 * this.e43) + (other.scalar * this.e4315), (other.e43 * this.e3215) + (other.e23 * this.e4315) + (other.e12 * this.e45) + (other.e45 * this.e12) + (other.e25 * this.e41) + (other.scalar * this.e4125), -(other.e31 * this.e25) - (other.e12 * this.e35) - (other.e45 * this.e3215) - (other.e15 * this.e4235) - (other.e25 * this.e4315) - (other.e35 * this.e4125)) + (float4(this.group9.ww, this.e25, this.e3215) * float4(other.group0.xyz.xyx, other.scalar)) - (other.group2.yzxy * float4(this.group4.xyz.zxy, this.e31)) - float4((float3(this.e1234) * other.group2.xyz), other.e23 * this.e15) - float4((other.group0.xyz.zxy * this.group3.yzx), other.e15 * this.e23) - float4((other.group1.zxy * this.group9.yzx), other.e35 * this.e12), 
-            /* e1234, 0, 0, 0 */
-            float4((other.e41 * this.e4235) + (other.e42 * this.e4315) + (other.e43 * this.e4125) + (other.e45 * this.e1234) + (other.scalar * this.e1234) - (other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43), 0.0, 0.0, 0.0)
+            /* e1234 */
+            (other.e41 * this.e4235) + (other.e42 * this.e4315) + (other.e43 * this.e4125) + (other.e45 * this.e1234) + (other.scalar * this.e1234) - (other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43)
         ).geometric_product(this.reverse());
     }
 }
-extension MultiVector: Sandwich<AntiDipoleInversion> {
-    associatedtype Output = MultiVector;
-    func sandwich(other: AntiDipoleInversion) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((other.e423 * this.e235) + (other.e431 * this.e315) + (other.e412 * this.e125) + (other.e415 * this.e415) + (other.e425 * this.e425) + (other.e435 * this.e435) + (other.e315 * this.e431) + (other.e125 * this.e412) - (other.e5 * this.e4), (other.e5 * this.e1234) - (other.e423 * this.e15) - (other.e431 * this.e25) - (other.e412 * this.e35) - (other.e425 * this.e31) - (other.e435 * this.e12) - (other.e321 * this.e45) - (other.e315 * this.e42) - (other.e125 * this.e43)) + (float2(other.e1) * float2(this.e1, this.e4235)) + (float2(other.e2) * float2(this.e2, this.e4315)) + (float2(other.e3) * float2(this.e3, this.e4125)) + (float2(this.e423, this.e3215) * other.group2.xw) - (float2(this.e5, this.e41) * other.group2.wx) - (float2(this.e321, this.e23) * other.group1.wx), 0.0, 0.0), 
+public extension MultiVector {
+    public MultiVector sandwich(AntiDipoleInversion other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((other.e423 * this.e235) + (other.e431 * this.e315) + (other.e412 * this.e125) + (other.e415 * this.e415) + (other.e425 * this.e425) + (other.e435 * this.e435) + (other.e315 * this.e431) + (other.e125 * this.e412) - (other.e5 * this.e4), (other.e5 * this.e1234) - (other.e423 * this.e15) - (other.e431 * this.e25) - (other.e412 * this.e35) - (other.e425 * this.e31) - (other.e435 * this.e12) - (other.e321 * this.e45) - (other.e315 * this.e42) - (other.e125 * this.e43)) + (float2(other.e1) * float2(this.e1, this.e4235)) + (float2(other.e2) * float2(this.e2, this.e4315)) + (float2(other.e3) * float2(this.e3, this.e4125)) + (float2(this.e423, this.e3215) * other.group2.xw) - (float2(this.e5, this.e41) * other.group2.wx) - (float2(this.e321, this.e23) * other.group1.wx), 
             /* e1, e2, e3, e4 */
             float4(other.e235 * this.e1234, other.e315 * this.e1234, other.e125 * this.e1234, other.e4 * this.e45 * -1.0) + (float4(this.scalar) * float4(other.group3.xyz, other.e4)) + (float4(other.e321, other.e3, other.e1, other.e1) * float4(this.group5.xyz.xxy, this.e41)) + (float4(other.e315, other.e5, other.e5, this.e4125) * float4(this.group4.xyz.zyz, other.e412)) + (float4(other.e2, other.e321, other.e321, other.e2) * float4(this.group5.xyz.zyz, this.e42)) + (float4(other.e5, other.e125, other.e235, this.e4315) * float4(this.group4.xyz.xxy, other.e431)) + float4((other.group0.xyz.zxy * this.group3.yzx), other.e423 * this.e4235) + float4((other.group1.zxy * this.group9.yzx), other.e3 * this.e43) - (float4(this.group3.zx, this.e3215, this.e31) * float4(other.group0.xyz.yzz, other.e431)) - (float4(this.group3.ww, this.e4315, other.e425) * float4(other.group1.xyx, this.e42)) - (float4(this.group9.zx, this.e45, other.e435) * float4(other.group1.yzz, this.e43)) - (float4(this.group9.ww, this.e25, this.e23) * float4(other.group0.xyz.xyx, other.e423)) - float4((this.group4.xyz.yzx * other.group2.zxy), other.e412 * this.e12) - float4((this.group5.xyz.yzx * other.group3.zxy), other.e415 * this.e41) - float4((other.group2.www * this.group3.xyz), other.e321 * this.e1234), 
-            /* e5, 0, 0, 0 */
-            float4((other.e321 * this.e3215) + (other.e5 * this.scalar) + (other.e5 * this.e45) - (other.e415 * this.e15) - (other.e425 * this.e25) - (other.e435 * this.e35) - (other.e235 * this.e23) - (other.e235 * this.e4235) - (other.e315 * this.e31) - (other.e315 * this.e4315) - (other.e125 * this.e12) - (other.e125 * this.e4125) - (other.e1 * this.e15) - (other.e2 * this.e25) - (other.e3 * this.e35), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (other.e321 * this.e3215) + (other.e5 * this.scalar) + (other.e5 * this.e45) - (other.e415 * this.e15) - (other.e425 * this.e25) - (other.e435 * this.e35) - (other.e235 * this.e23) - (other.e235 * this.e4235) - (other.e315 * this.e31) - (other.e315 * this.e4315) - (other.e125 * this.e12) - (other.e125 * this.e4125) - (other.e1 * this.e15) - (other.e2 * this.e25) - (other.e3 * this.e35), 
             /* e15, e25, e35, e45 */
             float4(other.e5 * this.e1, other.e5 * this.e2, other.e5 * this.e3, other.e3 * this.e435 * -1.0) + (float4(this.e3, this.e321, this.e415, this.e125) * float4(other.group2.yyy, other.e412)) + (float4(this.e425, this.e1, this.e321, this.e4) * float4(other.group2.zzz, other.e5)) + (other.group1.zxyw * float4(this.group8.xyz.yzx, this.e12345)) + (float4(this.group6.wz, this.e2, this.e315) * float4(other.group2.xxx, other.e431)) + float4((this.group8.xyz.yzx * other.group3.zxy), other.e423 * this.e235) - (float4(other.e425, other.e3, other.e1, other.e125) * float4(this.group8.xyz.zxy, this.e412)) - (float4(other.e2, other.e321, other.e321, this.e1) * float4(this.group8.xyz.zyz, other.e415)) - (float4(this.e2, this.e415, this.e1, this.e5) * other.group2.zzyw) - (float4(this.e435, this.e3, this.e425, this.e3) * float4(other.group2.yxx, other.e435)) - (other.group1.xyzy * float4(float3(this.e5), this.e2)) - (other.group2.xyzx * float4(this.group0.xy.yy, this.e12345, this.e423)) - (other.group3.xyzx * float4(float3(this.e5), this.e415)) - (other.group3.wwwy * this.group6.xyzy) - float4((this.group8.xyz.xxy * other.group1.wzx), other.e315 * this.e431), 
-            /* e41, e42, e43, 0 */
-            float4((float3(this.e4) * other.group3.xyz) + (float3(this.e423) * float3(other.e321, other.e3, other.e425)) + (float3(this.e431) * float3(other.e435, other.e321, other.e1)) + (float3(this.e412) * float3(other.e2, other.e415, other.e321)) + (other.group0.xyz.zxy * this.group1.yzx) + (other.group0.xyz.zxy * this.group6.yzx) - (float3(other.e4) * this.group1.xyz) - (float3(other.e4) * this.group6.xyz) - (float3(this.e12345) * other.group0.xyz) - (float3(this.e4) * other.group1.xyz) - (float3(other.e425, other.e1, other.e415) * this.group7.xyz.zzy) - (float3(other.e3, other.e435, other.e2) * this.group7.xyz.yxx) - (float3(this.e3, this.e1, this.e425) * other.group0.xyz.yzx) - (float3(this.e321, this.e321, this.e2) * other.group0.xyz.xyx) - (other.group0.xyz.yzz * this.group6.zxw), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((other.group0.xyz.zxy * this.group8.xyz.yzx) + (this.group7.xyz.yzx * other.group2.zxy) + (other.group1.zxy * this.group6.yzx) + (other.group3.zxy * this.group1.yzx) - (float3(other.e321) * this.group1.xyz) - (float3(other.e4) * this.group8.xyz) - (float3(this.e12345) * other.group1.xyz) - (float3(this.e4) * other.group2.xyz) - (float3(other.e315, other.e5, other.e5) * this.group7.xyz.zyz) - (float3(other.e5, other.e125, other.e235) * this.group7.xyz.xxy) - (float3(this.e3, this.e1, this.e321) * other.group3.yzz) - (float3(this.e321, this.e321, this.e2) * other.group3.xyx) - (other.group0.xyz.xyx * float3(float2(this.e5), this.e315)) - (other.group0.xyz.yzz * float3(this.group8.xyz.zx, this.e5)) - (other.group1.yzx * this.group6.zxy), 0.0), 
+            /* e41, e42, e43 */
+            (float3(this.e4) * other.group3.xyz) + (float3(this.e423) * float3(other.e321, other.e3, other.e425)) + (float3(this.e431) * float3(other.e435, other.e321, other.e1)) + (float3(this.e412) * float3(other.e2, other.e415, other.e321)) + (other.group0.xyz.zxy * this.group1.yzx) + (other.group0.xyz.zxy * this.group6.yzx) - (float3(other.e4) * this.group1.xyz) - (float3(other.e4) * this.group6.xyz) - (float3(this.e12345) * other.group0.xyz) - (float3(this.e4) * other.group1.xyz) - (float3(other.e425, other.e1, other.e415) * this.group7.xyz.zzy) - (float3(other.e3, other.e435, other.e2) * this.group7.xyz.yxx) - (float3(this.e3, this.e1, this.e425) * other.group0.xyz.yzx) - (float3(this.e321, this.e321, this.e2) * other.group0.xyz.xyx) - (other.group0.xyz.yzz * this.group6.zxw), 
+            /* e23, e31, e12 */
+            (other.group0.xyz.zxy * this.group8.xyz.yzx) + (this.group7.xyz.yzx * other.group2.zxy) + (other.group1.zxy * this.group6.yzx) + (other.group3.zxy * this.group1.yzx) - (float3(other.e321) * this.group1.xyz) - (float3(other.e4) * this.group8.xyz) - (float3(this.e12345) * other.group1.xyz) - (float3(this.e4) * other.group2.xyz) - (float3(other.e315, other.e5, other.e5) * this.group7.xyz.zyz) - (float3(other.e5, other.e125, other.e235) * this.group7.xyz.xxy) - (float3(this.e3, this.e1, this.e321) * other.group3.yzz) - (float3(this.e321, this.e321, this.e2) * other.group3.xyx) - (other.group0.xyz.xyx * float3(float2(this.e5), this.e315)) - (other.group0.xyz.yzz * float3(this.group8.xyz.zx, this.e5)) - (other.group1.yzx * this.group6.zxy), 
             /* e415, e425, e435, e321 */
             float4(other.e3 * this.e4315, other.e1 * this.e4125, other.e2 * this.e4235, other.e4 * this.e3215 * -1.0) + (float4(this.scalar) * other.group1) + (float4(other.e315, other.e5, other.e5, this.e4235) * float4(this.group4.xyz.zyz, other.e415)) + (float4(other.e5, other.e125, other.e235, this.e35) * float4(this.group4.xyz.xxy, other.e412)) + (float4(this.group3.zx, this.e3215, this.e25) * float4(other.group0.xyz.yzz, other.e431)) + (float4(this.group9.ww, this.e25, this.e15) * float4(other.group0.xyz.xyx, other.e423)) + float4((float3(this.e1234) * other.group2.xyz), other.e435 * this.e4125) + float4((this.group5.xyz.zxy * other.group1.yzx), other.e425 * this.e4315) + float4((other.group2.www * this.group3.xyz), other.e5 * this.e1234) - (other.group2.zxyy * float4(this.group4.xyz.yzx, this.e42)) - (float4(this.group3.ww, this.e4315, other.e2) * float4(other.group3.xyx, this.e31)) - (float4(this.group9.zx, this.e45, other.e3) * float4(other.group3.yzz, this.e12)) - float4((other.group0.xyz.zxy * this.group3.yzx), other.e235 * this.e41) - float4((this.group5.xyz.yzx * other.group1.zxy), other.e125 * this.e43) - float4((other.group1.www * this.group9.xyz), other.e1 * this.e23), 
-            /* e423, e431, e412, 0 */
-            float4((float3(other.e4) * this.group5.xyz) + (float3(this.scalar) * other.group0.xyz) + (float3(this.e1234) * other.group1.xyz) + (float3(other.e425, other.e1, other.e415) * this.group4.xyz.zzy) + (float3(other.e3, other.e435, other.e2) * this.group4.xyz.yxx) + (float3(this.e12, this.e4125, this.e31) * other.group0.xyz.yxx) + (float3(this.e4315, this.e23, this.e4235) * other.group0.xyz.zzy) - (float3(other.e423) * float3(this.e45, this.e12, this.e4315)) - (float3(other.e431) * float3(this.e4125, this.e45, this.e23)) - (float3(other.e412) * float3(this.e31, this.e4235, this.e45)) - (float3(other.e4) * this.group9.xyz) - (float3(this.e41) * float3(other.e321, other.e3, other.e425)) - (float3(this.e42) * float3(other.e435, other.e321, other.e1)) - (float3(this.e43) * float3(other.e2, other.e415, other.e321)) - (float3(this.e1234) * other.group3.xyz), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(other.e321) * this.group3.xyz) + (float3(other.e5) * this.group9.xyz) + (float3(this.scalar) * other.group2.xyz) + (float3(other.e315, other.e5, other.e5) * this.group5.xyz.zyz) + (float3(other.e5, other.e125, other.e235) * this.group5.xyz.xxy) + (float3(this.e35, this.e15, this.e3215) * other.group1.yzz) + (float3(this.e35, this.e15, this.e3215) * other.group3.yzz) + (float3(this.e45, this.e45, this.e4315) * other.group2.xyx) + (float3(this.e4125, this.e4235, this.e45) * other.group2.yzz) + (float3(this.e3215, this.e3215, this.e25) * other.group1.xyx) + (float3(this.e3215, this.e3215, this.e25) * other.group3.xyx) - (this.group5.xyz.yzx * other.group2.zxy) - (other.group1.zxy * this.group3.yzx) - (other.group2.zxy * this.group9.yzx) - (other.group3.zxy * this.group3.yzx), 0.0), 
+            /* e423, e431, e412 */
+            (float3(other.e4) * this.group5.xyz) + (float3(this.scalar) * other.group0.xyz) + (float3(this.e1234) * other.group1.xyz) + (float3(other.e425, other.e1, other.e415) * this.group4.xyz.zzy) + (float3(other.e3, other.e435, other.e2) * this.group4.xyz.yxx) + (float3(this.e12, this.e4125, this.e31) * other.group0.xyz.yxx) + (float3(this.e4315, this.e23, this.e4235) * other.group0.xyz.zzy) - (float3(other.e423) * float3(this.e45, this.e12, this.e4315)) - (float3(other.e431) * float3(this.e4125, this.e45, this.e23)) - (float3(other.e412) * float3(this.e31, this.e4235, this.e45)) - (float3(other.e4) * this.group9.xyz) - (float3(this.e41) * float3(other.e321, other.e3, other.e425)) - (float3(this.e42) * float3(other.e435, other.e321, other.e1)) - (float3(this.e43) * float3(other.e2, other.e415, other.e321)) - (float3(this.e1234) * other.group3.xyz), 
+            /* e235, e315, e125 */
+            (float3(other.e321) * this.group3.xyz) + (float3(other.e5) * this.group9.xyz) + (float3(this.scalar) * other.group2.xyz) + (float3(other.e315, other.e5, other.e5) * this.group5.xyz.zyz) + (float3(other.e5, other.e125, other.e235) * this.group5.xyz.xxy) + (float3(this.e35, this.e15, this.e3215) * other.group1.yzz) + (float3(this.e35, this.e15, this.e3215) * other.group3.yzz) + (float3(this.e45, this.e45, this.e4315) * other.group2.xyx) + (float3(this.e4125, this.e4235, this.e45) * other.group2.yzz) + (float3(this.e3215, this.e3215, this.e25) * other.group1.xyx) + (float3(this.e3215, this.e3215, this.e25) * other.group3.xyx) - (this.group5.xyz.yzx * other.group2.zxy) - (other.group1.zxy * this.group3.yzx) - (other.group2.zxy * this.group9.yzx) - (other.group3.zxy * this.group3.yzx), 
             /* e4235, e4315, e4125, e3215 */
             float4(other.e3 * this.e425 * -1.0, other.e1 * this.e435 * -1.0, other.e2 * this.e415 * -1.0, other.e5 * this.e321) + (float4(other.e315, other.e5, other.e5, other.e2) * float4(this.group7.xyz.zyz, this.e315)) + (float4(other.e5, other.e125, other.e235, other.e425) * float4(this.group7.xyz.xxy, this.e315)) + (other.group2.xyzy * float4(this.group1.www, this.e425)) + (this.group6.xyzx * float4(other.group1.www, other.e235)) + (this.group6.zxyz * float4(other.group3.yzx, other.e125)) + (float4(this.group0.xy.yy, this.e12345, this.e235) * float4(other.group3.xyz, other.e415)) + (float4(this.group1.zx, this.e321, other.e3) * float4(other.group1.yzz, this.e125)) + (float4(this.group6.ww, this.e2, other.e435) * float4(other.group1.xyx, this.e125)) + float4((other.group0.xyz.zxy * this.group8.xyz.yzx), other.e1 * this.e235) - (this.group1.yzxz * float4(other.group1.zxy, other.e125)) - (float4(float2(this.e5), this.e315, other.e5) * float4(other.group0.xyz.xyx, this.e12345)) - (float4(this.group8.xyz.zx, this.e5, this.e5) * float4(other.group0.xyz.yzz, other.e321)) - float4((this.group8.xyz * other.group2.www), other.e315 * this.e2) - float4((this.group7.xyz.yzx * other.group2.zxy), other.e235 * this.e1), 
-            /* e1234, 0, 0, 0 */
-            float4((other.e423 * this.e1) + (other.e423 * this.e415) + (other.e431 * this.e2) + (other.e431 * this.e425) + (other.e412 * this.e3) + (other.e412 * this.e435) + (other.e415 * this.e423) + (other.e425 * this.e431) + (other.e435 * this.e412) + (other.e321 * this.e4) - (other.e4 * this.e12345) - (other.e4 * this.e321) - (other.e1 * this.e423) - (other.e2 * this.e431) - (other.e3 * this.e412), 0.0, 0.0, 0.0)
+            /* e1234 */
+            (other.e423 * this.e1) + (other.e423 * this.e415) + (other.e431 * this.e2) + (other.e431 * this.e425) + (other.e412 * this.e3) + (other.e412 * this.e435) + (other.e415 * this.e423) + (other.e425 * this.e431) + (other.e435 * this.e412) + (other.e321 * this.e4) - (other.e4 * this.e12345) - (other.e4 * this.e321) - (other.e1 * this.e423) - (other.e2 * this.e431) - (other.e3 * this.e412)
         ).geometric_product(this.reverse());
     }
 }
-extension MultiVector: Sandwich<AntiDualNum> {
-    associatedtype Output = MultiVector;
-    func sandwich(other: AntiDualNum) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4((float2(other.e3215) * float2(this.e1234, this.e4)) + (float2(other.scalar) * this.group0.xy), 0.0, 0.0), 
+public extension MultiVector {
+    public MultiVector sandwich(AntiDualNum other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            (float2(other.e3215) * float2(this.e1234, this.e4)) + (float2(other.scalar) * this.group0.xy), 
             /* e1, e2, e3, e4 */
             float4(((float3(other.e3215) * this.group7.xyz) + (float3(other.scalar) * this.group1.xyz)), other.scalar * this.e4), 
-            /* e5, 0, 0, 0 */
-            float4((other.e3215 * this.e12345) + (other.scalar * this.e5) - (other.e3215 * this.e321), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (other.e3215 * this.e12345) + (other.scalar * this.e5) - (other.e3215 * this.e321), 
             /* e15, e25, e35, e45 */
             float4((other.e3215 * this.e4235) + (other.scalar * this.e15), (other.e3215 * this.e4315) + (other.scalar * this.e25), (other.e3215 * this.e4125) + (other.scalar * this.e35), other.e3215 * this.e1234 * -1.0) + (float4(other.group0.xy.xx, other.e3215, other.scalar) * float4(this.group5.xyz, this.e45)), 
-            /* e41, e42, e43, 0 */
-            float4(float3(other.scalar) * this.group4.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(other.e3215) * this.group4.xyz) + (float3(other.scalar) * this.group5.xyz), 0.0), 
+            /* e41, e42, e43 */
+            float3(other.scalar) * this.group4.xyz, 
+            /* e23, e31, e12 */
+            (float3(other.e3215) * this.group4.xyz) + (float3(other.scalar) * this.group5.xyz), 
             /* e415, e425, e435, e321 */
             (float4(other.e3215) * float4(this.group7.xyz, this.e4)) + (float4(other.scalar) * this.group6), 
-            /* e423, e431, e412, 0 */
-            float4(float3(other.scalar) * this.group7.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(other.e3215) * this.group6.xyz) + (float3(other.scalar) * this.group8.xyz) - (float3(other.e3215) * this.group1.xyz), 0.0), 
+            /* e423, e431, e412 */
+            float3(other.scalar) * this.group7.xyz, 
+            /* e235, e315, e125 */
+            (float3(other.e3215) * this.group6.xyz) + (float3(other.scalar) * this.group8.xyz) - (float3(other.e3215) * this.group1.xyz), 
             /* e4235, e4315, e4125, e3215 */
             float4(other.e3215 * this.e41 * -1.0, other.e3215 * this.e42 * -1.0, other.e3215 * this.e43 * -1.0, (other.e3215 * this.e45) + (other.scalar * this.e3215)) + (float4(other.group0.xy.yy, other.scalar, other.e3215) * float4(this.group9.xyz, this.scalar)), 
-            /* e1234, 0, 0, 0 */
-            float4(other.scalar * this.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.scalar * this.e1234
         ).geometric_product(this.reverse());
     }
 }
-extension MultiVector: Sandwich<AntiFlatPoint> {
-    associatedtype Output = MultiVector;
-    func sandwich(other: AntiFlatPoint) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((other.e235 * this.e423) + (other.e315 * this.e431) + (other.e125 * this.e412), -(other.e315 * this.e42) - (other.e125 * this.e43) - (other.e321 * this.e45)) - (float2(this.e321, this.e41) * other.group0.wx), 0.0, 0.0), 
+public extension MultiVector {
+    public MultiVector sandwich(AntiFlatPoint other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((other.e235 * this.e423) + (other.e315 * this.e431) + (other.e125 * this.e412), -(other.e315 * this.e42) - (other.e125 * this.e43) - (other.e321 * this.e45)) - (float2(this.e321, this.e41) * other.group0.wx), 
             /* e1, e2, e3, e4 */
             float4(((float3(other.e321) * this.group5.xyz) + (float3(this.e1234) * other.group0.xyz) + (this.group4.xyz.zxy * other.group0.yzx) - (this.group4.xyz.yzx * other.group0.zxy)), other.e321 * this.e1234 * -1.0), 
-            /* e5, 0, 0, 0 */
-            float4((other.e321 * this.e3215) - (other.e235 * this.e23) - (other.e235 * this.e4235) - (other.e315 * this.e31) - (other.e315 * this.e4315) - (other.e125 * this.e12) - (other.e125 * this.e4125), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (other.e321 * this.e3215) - (other.e235 * this.e23) - (other.e235 * this.e4235) - (other.e315 * this.e31) - (other.e315 * this.e4315) - (other.e125 * this.e12) - (other.e125 * this.e4125), 
             /* e15, e25, e35, e45 */
             float4((other.e315 * this.e3) + (other.e125 * this.e425) - (other.e125 * this.e2), (other.e315 * this.e321) + (other.e125 * this.e1) - (other.e125 * this.e415), (other.e315 * this.e415) + (other.e125 * this.e321) - (other.e315 * this.e1), 0.0) + (float4(this.group6.wz, this.e2, other.e321) * float4(other.group0.xxx, this.e12345)) - (float4(this.e435, this.e3, this.e425, other.e125) * float4(other.group0.yxx, this.e412)) - (other.group0.xyzx * float4(this.group0.xy.yy, this.e12345, this.e423)) - (other.group0.wwwy * float4(this.group8.xyz, this.e431)), 
-            /* e41, e42, e43, 0 */
-            float4(float3(other.e321) * this.group7.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((this.group7.xyz.yzx * other.group0.zxy) - (float3(other.e321) * this.group1.xyz) - (float3(this.e4) * other.group0.xyz) - (this.group7.xyz.zxy * other.group0.yzx), 0.0), 
+            /* e41, e42, e43 */
+            float3(other.e321) * this.group7.xyz, 
+            /* e23, e31, e12 */
+            (this.group7.xyz.yzx * other.group0.zxy) - (float3(other.e321) * this.group1.xyz) - (float3(this.e4) * other.group0.xyz) - (this.group7.xyz.zxy * other.group0.yzx), 
             /* e415, e425, e435, e321 */
             float4(other.e235 * this.e1234, other.e315 * this.e1234, other.e125 * this.e1234, other.e125 * this.e43 * -1.0) + (other.group0.yzxw * float4(this.group4.xyz.zxy, this.scalar)) - (other.group0.zxyx * float4(this.group4.xyz.yzx, this.e41)) - float4((other.group0.www * this.group9.xyz), other.e315 * this.e42), 
-            /* e423, e431, e412, 0 */
-            float4(float3(other.e321) * this.group4.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(other.e321) * this.group3.xyz) + (float3(this.scalar) * other.group0.xyz) + (float3(this.e45, this.e45, this.e4315) * other.group0.xyx) + (float3(this.e4125, this.e4235, this.e45) * other.group0.yzz) + (this.group5.xyz.zxy * other.group0.yzx) - (this.group5.xyz.yzx * other.group0.zxy) - (other.group0.zxy * this.group9.yzx), 0.0), 
+            /* e423, e431, e412 */
+            float3(other.e321) * this.group4.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            (float3(other.e321) * this.group3.xyz) + (float3(this.scalar) * other.group0.xyz) + (float3(this.e45, this.e45, this.e4315) * other.group0.xyx) + (float3(this.e4125, this.e4235, this.e45) * other.group0.yzz) + (this.group5.xyz.zxy * other.group0.yzx) - (this.group5.xyz.yzx * other.group0.zxy) - (other.group0.zxy * this.group9.yzx), 
             /* e4235, e4315, e4125, e3215 */
             (other.group0.xyzy * float4(this.group1.www, this.e425)) + (other.group0.wwwz * this.group6.xyzz) + float4(float3(0.0), -(other.e315 * this.e2) - (other.e125 * this.e3) - (other.e321 * this.e5)) + float4((this.group7.xyz.zxy * other.group0.yzx), other.e235 * this.e415) - float4((this.group7.xyz.yzx * other.group0.zxy), other.e235 * this.e1), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e321 * this.e4, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e321 * this.e4
         ).geometric_product(this.reverse());
     }
 }
-extension MultiVector: Sandwich<AntiFlector> {
-    associatedtype Output = MultiVector;
-    func sandwich(other: AntiFlector) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((other.e235 * this.e423) + (other.e315 * this.e431) + (other.e125 * this.e412) - (other.e5 * this.e4), (other.e5 * this.e1234) - (other.e315 * this.e42) - (other.e125 * this.e43) - (other.e321 * this.e45)) + (float2(other.e1) * float2(this.e1, this.e4235)) + (float2(other.e2) * float2(this.e2, this.e4315)) + (float2(other.e3) * float2(this.e3, this.e4125)) - (float2(this.e321, this.e41) * other.group0.wx), 0.0, 0.0), 
+public extension MultiVector {
+    public MultiVector sandwich(AntiFlector other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((other.e235 * this.e423) + (other.e315 * this.e431) + (other.e125 * this.e412) - (other.e5 * this.e4), (other.e5 * this.e1234) - (other.e315 * this.e42) - (other.e125 * this.e43) - (other.e321 * this.e45)) + (float2(other.e1) * float2(this.e1, this.e4235)) + (float2(other.e2) * float2(this.e2, this.e4315)) + (float2(other.e3) * float2(this.e3, this.e4125)) - (float2(this.e321, this.e41) * other.group0.wx), 
             /* e1, e2, e3, e4 */
             float4((other.e235 * this.e1234) + (other.e321 * this.e23) + (other.e2 * this.e12) - (other.e3 * this.e31), (other.e315 * this.e1234) + (other.e321 * this.e31) + (other.e3 * this.e23) - (other.e1 * this.e12), (other.e125 * this.e1234) + (other.e321 * this.e12) + (other.e1 * this.e31) - (other.e2 * this.e23), 0.0) + (float4(other.e315, other.e5, other.e5, other.e3) * float4(this.group4.xyz.zyz, this.e43)) + (float4(other.e5, other.e125, other.e235, other.e2) * float4(this.group4.xyz.xxy, this.e42)) + (other.group1.xyzx * float4(this.group0.xy.xx, this.scalar, this.e41)) - float4((this.group4.xyz.yzx * other.group0.zxy), other.e321 * this.e1234), 
-            /* e5, 0, 0, 0 */
-            float4((other.e321 * this.e3215) + (other.e5 * this.scalar) + (other.e5 * this.e45) - (other.e235 * this.e23) - (other.e235 * this.e4235) - (other.e315 * this.e31) - (other.e315 * this.e4315) - (other.e125 * this.e12) - (other.e125 * this.e4125) - (other.e1 * this.e15) - (other.e2 * this.e25) - (other.e3 * this.e35), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (other.e321 * this.e3215) + (other.e5 * this.scalar) + (other.e5 * this.e45) - (other.e235 * this.e23) - (other.e235 * this.e4235) - (other.e315 * this.e31) - (other.e315 * this.e4315) - (other.e125 * this.e12) - (other.e125 * this.e4125) - (other.e1 * this.e15) - (other.e2 * this.e25) - (other.e3 * this.e35), 
             /* e15, e25, e35, e45 */
             float4((other.e315 * this.e3) + (other.e125 * this.e425) + (other.e5 * this.e1) - (other.e5 * this.e415), (other.e315 * this.e321) + (other.e125 * this.e1) + (other.e5 * this.e2) - (other.e5 * this.e425), (other.e315 * this.e415) + (other.e125 * this.e321) + (other.e5 * this.e3) - (other.e5 * this.e435), 0.0) + (float4(this.group6.wz, this.e2, this.e4) * float4(other.group0.xxx, other.e5)) + float4((this.group8.xyz.yzx * other.group1.zxy), other.e321 * this.e12345) - (float4(other.e321, other.e3, other.e1, other.e315) * float4(this.group8.xyz.xxy, this.e431)) - (float4(other.e2, other.e321, other.e321, other.e125) * float4(this.group8.xyz.zyz, this.e412)) - (float4(this.e2, this.e415, this.e1, this.e425) * float4(other.group0.zzy, other.e2)) - (float4(this.e435, this.e3, this.e425, this.e415) * float4(other.group0.yxx, other.e1)) - (other.group0.xyzx * float4(this.group0.xy.yy, this.e12345, this.e423)) - (other.group1.xyzz * float4(float3(this.e5), this.e435)), 
-            /* e41, e42, e43, 0 */
-            float4((float3(this.e4) * other.group1.xyz) + (float3(other.e321, other.e3, other.e1) * this.group7.xyz.xxy) + (float3(other.e2, other.e321, other.e321) * this.group7.xyz.zyz) - (this.group7.xyz.yzx * other.group1.zxy), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((this.group7.xyz.yzx * other.group0.zxy) + (other.group1.zxy * this.group1.yzx) - (float3(other.e321) * this.group1.xyz) - (float3(this.e4) * other.group0.xyz) - (float3(other.e315, other.e5, other.e5) * this.group7.xyz.zyz) - (float3(other.e5, other.e125, other.e235) * this.group7.xyz.xxy) - (float3(this.e3, this.e1, this.e321) * other.group1.yzz) - (float3(this.e321, this.e321, this.e2) * other.group1.xyx), 0.0), 
+            /* e41, e42, e43 */
+            (float3(this.e4) * other.group1.xyz) + (float3(other.e321, other.e3, other.e1) * this.group7.xyz.xxy) + (float3(other.e2, other.e321, other.e321) * this.group7.xyz.zyz) - (this.group7.xyz.yzx * other.group1.zxy), 
+            /* e23, e31, e12 */
+            (this.group7.xyz.yzx * other.group0.zxy) + (other.group1.zxy * this.group1.yzx) - (float3(other.e321) * this.group1.xyz) - (float3(this.e4) * other.group0.xyz) - (float3(other.e315, other.e5, other.e5) * this.group7.xyz.zyz) - (float3(other.e5, other.e125, other.e235) * this.group7.xyz.xxy) - (float3(this.e3, this.e1, this.e321) * other.group1.yzz) - (float3(this.e321, this.e321, this.e2) * other.group1.xyx), 
             /* e415, e425, e435, e321 */
             float4((other.e235 * this.e1234) + (other.e3 * this.e4315), (other.e315 * this.e1234) + (other.e1 * this.e4125), (other.e125 * this.e1234) + (other.e2 * this.e4235), -(other.e2 * this.e31) - (other.e3 * this.e12)) + (float4(other.e315, other.e5, other.e5, this.e1234) * float4(this.group4.xyz.zyz, other.e5)) + (float4(other.e5, other.e125, other.e235, other.e321) * float4(this.group4.xyz.xxy, this.scalar)) - (other.group0.zxyx * float4(this.group4.xyz.yzx, this.e41)) - (float4(this.group3.ww, this.e4315, other.e125) * float4(other.group1.xyx, this.e43)) - (float4(this.group9.zx, this.e45, other.e1) * float4(other.group1.yzz, this.e23)) - float4((other.group0.www * this.group9.xyz), other.e315 * this.e42), 
-            /* e423, e431, e412, 0 */
-            float4((this.group4.xyz.yzx * other.group1.zxy) - (float3(this.e1234) * other.group1.xyz) - (float3(other.e321, other.e3, other.e1) * this.group4.xyz.xxy) - (float3(other.e2, other.e321, other.e321) * this.group4.xyz.zyz), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(other.e321) * this.group3.xyz) + (float3(other.e5) * this.group9.xyz) + (float3(this.scalar) * other.group0.xyz) + (float3(other.e315, other.e5, other.e5) * this.group5.xyz.zyz) + (float3(other.e5, other.e125, other.e235) * this.group5.xyz.xxy) + (float3(this.e35, this.e15, this.e3215) * other.group1.yzz) + (float3(this.e45, this.e45, this.e4315) * other.group0.xyx) + (float3(this.e4125, this.e4235, this.e45) * other.group0.yzz) + (float3(this.e3215, this.e3215, this.e25) * other.group1.xyx) - (this.group5.xyz.yzx * other.group0.zxy) - (other.group0.zxy * this.group9.yzx) - (other.group1.zxy * this.group3.yzx), 0.0), 
+            /* e423, e431, e412 */
+            (this.group4.xyz.yzx * other.group1.zxy) - (float3(this.e1234) * other.group1.xyz) - (float3(other.e321, other.e3, other.e1) * this.group4.xyz.xxy) - (float3(other.e2, other.e321, other.e321) * this.group4.xyz.zyz), 
+            /* e235, e315, e125 */
+            (float3(other.e321) * this.group3.xyz) + (float3(other.e5) * this.group9.xyz) + (float3(this.scalar) * other.group0.xyz) + (float3(other.e315, other.e5, other.e5) * this.group5.xyz.zyz) + (float3(other.e5, other.e125, other.e235) * this.group5.xyz.xxy) + (float3(this.e35, this.e15, this.e3215) * other.group1.yzz) + (float3(this.e45, this.e45, this.e4315) * other.group0.xyx) + (float3(this.e4125, this.e4235, this.e45) * other.group0.yzz) + (float3(this.e3215, this.e3215, this.e25) * other.group1.xyx) - (this.group5.xyz.yzx * other.group0.zxy) - (other.group0.zxy * this.group9.yzx) - (other.group1.zxy * this.group3.yzx), 
             /* e4235, e4315, e4125, e3215 */
             (float4(other.e315, other.e5, other.e5, other.e3) * float4(this.group7.xyz.zyz, this.e125)) + (float4(other.e5, other.e125, other.e235, other.e2) * float4(this.group7.xyz.xxy, this.e315)) + (other.group0.xyzx * float4(this.group1.www, this.e415)) + (other.group0.wwwy * this.group6.xyzy) + (other.group1.xyzx * float4(this.group0.xy.yy, this.e12345, this.e235)) + (this.group6.zxyz * float4(other.group1.yzx, other.e125)) + float4(float3(0.0), (other.e5 * this.e321) - (other.e315 * this.e2) - (other.e125 * this.e3) - (other.e321 * this.e5)) - float4((this.group7.xyz.yzx * other.group0.zxy), other.e5 * this.e12345) - float4((other.group1.zxy * this.group6.yzx), other.e235 * this.e1), 
-            /* e1234, 0, 0, 0 */
-            float4((other.e321 * this.e4) - (other.e1 * this.e423) - (other.e2 * this.e431) - (other.e3 * this.e412), 0.0, 0.0, 0.0)
+            /* e1234 */
+            (other.e321 * this.e4) - (other.e1 * this.e423) - (other.e2 * this.e431) - (other.e3 * this.e412)
         ).geometric_product(this.reverse());
     }
 }
-extension MultiVector: Sandwich<AntiLine> {
-    associatedtype Output = MultiVector;
-    func sandwich(other: AntiLine) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(-(float2(other.e23) * float2(this.e23, this.e415)) - (float2(other.e31) * float2(this.e31, this.e425)) - (float2(other.e12) * float2(this.e12, this.e435)) - (float2(other.e15) * float2(this.e41, this.e423)) - (float2(other.e25) * float2(this.e42, this.e431)) - (float2(other.e35) * float2(this.e43, this.e412)), 0.0, 0.0), 
+public extension MultiVector {
+    public MultiVector sandwich(AntiLine other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            -(float2(other.e23) * float2(this.e23, this.e415)) - (float2(other.e31) * float2(this.e31, this.e425)) - (float2(other.e12) * float2(this.e12, this.e435)) - (float2(other.e15) * float2(this.e41, this.e423)) - (float2(other.e25) * float2(this.e42, this.e431)) - (float2(other.e35) * float2(this.e43, this.e412)), 
             /* e1, e2, e3, e4 */
             float4((other.e23 * this.e321) + (other.e31 * this.e3) + (other.e15 * this.e4) + (other.e25 * this.e412), (other.e31 * this.e321) + (other.e12 * this.e1) + (other.e25 * this.e4) + (other.e35 * this.e423), (other.e23 * this.e2) + (other.e12 * this.e321) + (other.e15 * this.e431) + (other.e35 * this.e4), other.e12 * this.e412 * -1.0) - float4((other.group0.xyz.zxy * this.group1.yzx), other.e23 * this.e423) - float4((other.group1.xyz.zxy * this.group7.xyz.yzx), other.e31 * this.e431), 
-            /* e5, 0, 0, 0 */
-            float4((other.e15 * this.e1) + (other.e25 * this.e2) + (other.e35 * this.e3) - (other.e23 * this.e235) - (other.e31 * this.e315) - (other.e12 * this.e125) - (other.e15 * this.e415) - (other.e25 * this.e425) - (other.e35 * this.e435), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (other.e15 * this.e1) + (other.e25 * this.e2) + (other.e35 * this.e3) - (other.e23 * this.e235) - (other.e31 * this.e315) - (other.e12 * this.e125) - (other.e15 * this.e415) - (other.e25 * this.e425) - (other.e35 * this.e435), 
             /* e15, e25, e35, e45 */
             float4((other.e15 * this.e45) + (other.e25 * this.e12) + (other.e25 * this.e4125), (other.e25 * this.e45) + (other.e35 * this.e23) + (other.e35 * this.e4235), (other.e15 * this.e31) + (other.e15 * this.e4315) + (other.e35 * this.e45), 0.0) + (float4(this.group0.xy.xx, this.scalar, other.e15) * float4(other.group1.xyz, this.e41)) + (float4(this.group3.zx, this.e3215, this.e43) * float4(other.group0.xyz.yzz, other.e35)) + (float4(this.group9.ww, this.e25, this.e42) * float4(other.group0.xyz.xyx, other.e25)) - (this.group9.yzxz * float4(other.group1.xyz.zxy, other.e12)) - float4((other.group0.xyz.zxy * this.group3.yzx), other.e23 * this.e4235) - float4((other.group1.xyz.zxy * this.group5.xyz.yzx), other.e31 * this.e4315), 
-            /* e41, e42, e43, 0 */
-            float4((other.group0.xyz.xyx * float3(float2(this.e1234), this.e42)) + (other.group0.xyz.yzz * float3(this.group4.xyz.zx, this.e1234)) - (other.group0.xyz.zxy * this.group4.xyz.yzx), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(this.scalar) * other.group0.xyz) + (other.group0.xyz.yzx * this.group5.xyz.zxy) + (other.group1.xyz.xyx * float3(float2(this.e1234), this.e42)) + (other.group1.xyz.yzz * float3(this.group4.xyz.zx, this.e1234)) - (other.group0.xyz.zxy * this.group5.xyz.yzx) - (other.group1.xyz.zxy * this.group4.xyz.yzx), 0.0), 
+            /* e41, e42, e43 */
+            (other.group0.xyz.xyx * float3(float2(this.e1234), this.e42)) + (other.group0.xyz.yzz * float3(this.group4.xyz.zx, this.e1234)) - (other.group0.xyz.zxy * this.group4.xyz.yzx), 
+            /* e23, e31, e12 */
+            (float3(this.scalar) * other.group0.xyz) + (other.group0.xyz.yzx * this.group5.xyz.zxy) + (other.group1.xyz.xyx * float3(float2(this.e1234), this.e42)) + (other.group1.xyz.yzz * float3(this.group4.xyz.zx, this.e1234)) - (other.group0.xyz.zxy * this.group5.xyz.yzx) - (other.group1.xyz.zxy * this.group4.xyz.yzx), 
             /* e415, e425, e435, e321 */
             float4((other.e23 * this.e12345) + (other.e31 * this.e435) + (other.e15 * this.e4) + (other.e25 * this.e412), (other.e31 * this.e12345) + (other.e12 * this.e415) + (other.e25 * this.e4) + (other.e35 * this.e423), (other.e23 * this.e425) + (other.e12 * this.e12345) + (other.e15 * this.e431) + (other.e35 * this.e4), -(other.e12 * this.e3) - (other.e15 * this.e423) - (other.e25 * this.e431) - (other.e35 * this.e412)) - float4((other.group0.xyz.zxy * this.group6.yzx), other.e23 * this.e1) - float4((other.group1.xyz.zxy * this.group7.xyz.yzx), other.e31 * this.e2), 
-            /* e423, e431, e412, 0 */
-            float4((other.group0.xyz.xyx * float3(float2(this.e4), this.e431)) + (other.group0.xyz.yzz * float3(this.group7.xyz.zx, this.e4)) - (other.group0.xyz.zxy * this.group7.xyz.yzx), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(this.e12345) * other.group1.xyz) + (float3(this.e2, this.e415, this.e1) * other.group1.xyz.zzy) + (float3(this.e435, this.e3, this.e425) * other.group1.xyz.yxx) + (other.group0.xyz.xyx * float3(float2(this.e5), this.e315)) + (other.group0.xyz.yzz * float3(this.group8.xyz.zx, this.e5)) - (float3(other.e15) * float3(this.e321, this.e435, this.e2)) - (float3(other.e25) * float3(this.e3, this.e321, this.e415)) - (float3(other.e35) * float3(this.e425, this.e1, this.e321)) - (other.group0.xyz.zxy * this.group8.xyz.yzx), 0.0), 
+            /* e423, e431, e412 */
+            (other.group0.xyz.xyx * float3(float2(this.e4), this.e431)) + (other.group0.xyz.yzz * float3(this.group7.xyz.zx, this.e4)) - (other.group0.xyz.zxy * this.group7.xyz.yzx), 
+            /* e235, e315, e125 */
+            (float3(this.e12345) * other.group1.xyz) + (float3(this.e2, this.e415, this.e1) * other.group1.xyz.zzy) + (float3(this.e435, this.e3, this.e425) * other.group1.xyz.yxx) + (other.group0.xyz.xyx * float3(float2(this.e5), this.e315)) + (other.group0.xyz.yzz * float3(this.group8.xyz.zx, this.e5)) - (float3(other.e15) * float3(this.e321, this.e435, this.e2)) - (float3(other.e25) * float3(this.e3, this.e321, this.e415)) - (float3(other.e35) * float3(this.e425, this.e1, this.e321)) - (other.group0.xyz.zxy * this.group8.xyz.yzx), 
             /* e4235, e4315, e4125, e3215 */
             float4((other.e23 * this.e45) + (other.e31 * this.e4125) + (other.e35 * this.e42), (other.e31 * this.e45) + (other.e12 * this.e4235) + (other.e15 * this.e43), (other.e23 * this.e4315) + (other.e12 * this.e45) + (other.e25 * this.e41), -(other.e15 * this.e23) - (other.e15 * this.e4235) - (other.e25 * this.e31) - (other.e25 * this.e4315) - (other.e35 * this.e12) - (other.e35 * this.e4125)) - (float4(float2(this.e1234), this.e42, this.e25) * float4(other.group1.xyz.xyx, other.e31)) - (float4(this.group4.xyz.zx, this.e1234, this.e35) * float4(other.group1.xyz.yzz, other.e12)) - float4((other.group0.xyz.zxy * this.group9.yzx), other.e23 * this.e15), 
-            /* e1234, 0, 0, 0 */
-            float4(-(other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43), 0.0, 0.0, 0.0)
+            /* e1234 */
+            -(other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43)
         ).geometric_product(this.reverse());
     }
 }
-extension MultiVector: Sandwich<AntiMotor> {
-    associatedtype Output = MultiVector;
-    func sandwich(other: AntiMotor) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4((float2(other.scalar) * this.group0.xy) + (float2(other.e3215) * float2(this.e1234, this.e4)) - (float2(other.e23) * float2(this.e23, this.e415)) - (float2(other.e31) * float2(this.e31, this.e425)) - (float2(other.e12) * float2(this.e12, this.e435)) - (float2(other.e15) * float2(this.e41, this.e423)) - (float2(other.e25) * float2(this.e42, this.e431)) - (float2(other.e35) * float2(this.e43, this.e412)), 0.0, 0.0), 
+public extension MultiVector {
+    public MultiVector sandwich(AntiMotor other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            (float2(other.scalar) * this.group0.xy) + (float2(other.e3215) * float2(this.e1234, this.e4)) - (float2(other.e23) * float2(this.e23, this.e415)) - (float2(other.e31) * float2(this.e31, this.e425)) - (float2(other.e12) * float2(this.e12, this.e435)) - (float2(other.e15) * float2(this.e41, this.e423)) - (float2(other.e25) * float2(this.e42, this.e431)) - (float2(other.e35) * float2(this.e43, this.e412)), 
             /* e1, e2, e3, e4 */
             float4((other.e23 * this.e321) + (other.e31 * this.e3) + (other.scalar * this.e1) + (other.e15 * this.e4) + (other.e25 * this.e412), (other.e31 * this.e321) + (other.e12 * this.e1) + (other.scalar * this.e2) + (other.e25 * this.e4) + (other.e3215 * this.e431), (other.e23 * this.e2) + (other.e12 * this.e321) + (other.scalar * this.e3) + (other.e35 * this.e4) + (other.e3215 * this.e412), other.e12 * this.e412 * -1.0) + float4((this.group7.xyz.xxy * other.group1.wzx), other.scalar * this.e4) - float4((this.group7.xyz.yzx * other.group1.zxy), other.e23 * this.e423) - float4((other.group0.zxy * this.group1.yzx), other.e31 * this.e431), 
-            /* e5, 0, 0, 0 */
-            float4((other.scalar * this.e5) + (other.e15 * this.e1) + (other.e25 * this.e2) + (other.e35 * this.e3) + (other.e3215 * this.e12345) - (other.e23 * this.e235) - (other.e31 * this.e315) - (other.e12 * this.e125) - (other.e15 * this.e415) - (other.e25 * this.e425) - (other.e35 * this.e435) - (other.e3215 * this.e321), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (other.scalar * this.e5) + (other.e15 * this.e1) + (other.e25 * this.e2) + (other.e35 * this.e3) + (other.e3215 * this.e12345) - (other.e23 * this.e235) - (other.e31 * this.e315) - (other.e12 * this.e125) - (other.e15 * this.e415) - (other.e25 * this.e425) - (other.e35 * this.e435) - (other.e3215 * this.e321), 
             /* e15, e25, e35, e45 */
             float4((other.e31 * this.e35) + (other.scalar * this.e15) + (other.e15 * this.e45) + (other.e25 * this.e4125) + (other.e3215 * this.e4235), (other.e12 * this.e15) + (other.scalar * this.e25) + (other.e25 * this.e45) + (other.e35 * this.e4235) + (other.e3215 * this.e4315), (other.e12 * this.e3215) + (other.scalar * this.e35) + (other.e15 * this.e4315) + (other.e35 * this.e45) + (other.e3215 * this.e4125), other.e3215 * this.e1234 * -1.0) + (other.group0.xyxw * float4(this.group9.ww, this.e25, this.e45)) + (other.group1.xyzx * float4(this.group0.xy.xx, this.scalar, this.e41)) + (other.group1.ywwz * float4(this.group5.xyz.zyz, this.e43)) + (other.group1.wzxy * float4(this.group5.xyz.xxy, this.e42)) - (other.group0.zxyy * float4(this.group3.yzx, this.e4315)) - (this.group9.yzxz * float4(other.group1.zxy, other.e12)) - float4((this.group5.xyz.yzx * other.group1.zxy), other.e23 * this.e4235), 
-            /* e41, e42, e43, 0 */
-            float4((float3(this.e1234) * other.group0.xyz) + (this.group4.xyz.xxy * other.group0.wzx) + (this.group4.xyz.zyz * other.group0.yww) - (this.group4.xyz.yzx * other.group0.zxy), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(this.scalar) * other.group0.xyz) + (float3(this.e1234) * other.group1.xyz) + (this.group4.xyz.xxy * other.group1.wzx) + (this.group4.xyz.zyz * other.group1.yww) + (this.group5.xyz.xxy * other.group0.wzx) + (this.group5.xyz.zyz * other.group0.yww) - (this.group4.xyz.yzx * other.group1.zxy) - (this.group5.xyz.yzx * other.group0.zxy), 0.0), 
+            /* e41, e42, e43 */
+            (float3(this.e1234) * other.group0.xyz) + (this.group4.xyz.xxy * other.group0.wzx) + (this.group4.xyz.zyz * other.group0.yww) - (this.group4.xyz.yzx * other.group0.zxy), 
+            /* e23, e31, e12 */
+            (float3(this.scalar) * other.group0.xyz) + (float3(this.e1234) * other.group1.xyz) + (this.group4.xyz.xxy * other.group1.wzx) + (this.group4.xyz.zyz * other.group1.yww) + (this.group5.xyz.xxy * other.group0.wzx) + (this.group5.xyz.zyz * other.group0.yww) - (this.group4.xyz.yzx * other.group1.zxy) - (this.group5.xyz.yzx * other.group0.zxy), 
             /* e415, e425, e435, e321 */
             float4((other.e31 * this.e435) + (other.scalar * this.e415) + (other.e15 * this.e4) + (other.e25 * this.e412), (other.e12 * this.e415) + (other.scalar * this.e425) + (other.e25 * this.e4) + (other.e3215 * this.e431), (other.e23 * this.e425) + (other.scalar * this.e435) + (other.e35 * this.e4) + (other.e3215 * this.e412), -(other.e23 * this.e1) - (other.e31 * this.e2) - (other.e12 * this.e3) - (other.e35 * this.e412)) + (float4(this.group0.xy.yy, this.e12345, other.scalar) * float4(other.group0.xyz, this.e321)) + float4((this.group7.xyz.xxy * other.group1.wzx), other.e3215 * this.e4) - (other.group1.zxyx * float4(this.group7.xyz.yzx, this.e423)) - float4((other.group0.zxy * this.group6.yzx), other.e25 * this.e431), 
-            /* e423, e431, e412, 0 */
-            float4((float3(this.e4) * other.group0.xyz) + (this.group7.xyz.xxy * other.group0.wzx) + (this.group7.xyz.zyz * other.group0.yww) - (this.group7.xyz.yzx * other.group0.zxy), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(other.e3215) * this.group6.xyz) + (float3(this.e12345) * other.group1.xyz) + (float3(this.e5) * other.group0.xyz) + (float3(this.e2, this.e415, this.e1) * other.group1.zzy) + (float3(this.e435, this.e3, this.e425) * other.group1.yxx) + (this.group8.xyz.xxy * other.group0.wzx) + (this.group8.xyz.zyz * other.group0.yww) - (float3(other.e15) * float3(this.e321, this.e435, this.e2)) - (float3(other.e25) * float3(this.e3, this.e321, this.e415)) - (float3(other.e35) * float3(this.e425, this.e1, this.e321)) - (float3(other.e3215) * this.group1.xyz) - (this.group8.xyz.yzx * other.group0.zxy), 0.0), 
+            /* e423, e431, e412 */
+            (float3(this.e4) * other.group0.xyz) + (this.group7.xyz.xxy * other.group0.wzx) + (this.group7.xyz.zyz * other.group0.yww) - (this.group7.xyz.yzx * other.group0.zxy), 
+            /* e235, e315, e125 */
+            (float3(other.e3215) * this.group6.xyz) + (float3(this.e12345) * other.group1.xyz) + (float3(this.e5) * other.group0.xyz) + (float3(this.e2, this.e415, this.e1) * other.group1.zzy) + (float3(this.e435, this.e3, this.e425) * other.group1.yxx) + (this.group8.xyz.xxy * other.group0.wzx) + (this.group8.xyz.zyz * other.group0.yww) - (float3(other.e15) * float3(this.e321, this.e435, this.e2)) - (float3(other.e25) * float3(this.e3, this.e321, this.e415)) - (float3(other.e35) * float3(this.e425, this.e1, this.e321)) - (float3(other.e3215) * this.group1.xyz) - (this.group8.xyz.yzx * other.group0.zxy), 
             /* e4235, e4315, e4125, e3215 */
             float4(other.scalar * this.e4235, other.scalar * this.e4315, other.scalar * this.e4125, -(other.e31 * this.e25) - (other.e12 * this.e35) - (other.e15 * this.e4235) - (other.e25 * this.e4315) - (other.e35 * this.e4125)) + (other.group0.xyxw * float4(this.group3.ww, this.e4315, this.e3215)) + (other.group1.zxyw * float4(this.group4.xyz.yzx, this.scalar)) + (float4(this.group9.zx, this.e45, this.e45) * float4(other.group0.yzz, other.e3215)) - (other.group1.ywwy * float4(this.group4.xyz.zyz, this.e31)) - (other.group1.wzxx * float4(this.group4.xyz.xxy, this.e23)) - float4((float3(this.e1234) * other.group1.xyz), other.e23 * this.e15) - float4((other.group0.zxy * this.group9.yzx), other.e35 * this.e12), 
-            /* e1234, 0, 0, 0 */
-            float4((other.scalar * this.e1234) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43), 0.0, 0.0, 0.0)
+            /* e1234 */
+            (other.scalar * this.e1234) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43)
         ).geometric_product(this.reverse());
     }
 }
-extension MultiVector: Sandwich<AntiPlane> {
-    associatedtype Output = MultiVector;
-    func sandwich(other: AntiPlane) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(other.e5 * this.e4 * -1.0, other.e5 * this.e1234) + (float2(other.e1) * float2(this.e1, this.e4235)) + (float2(other.e2) * float2(this.e2, this.e4315)) + (float2(other.e3) * float2(this.e3, this.e4125)), 0.0, 0.0), 
+public extension MultiVector {
+    public MultiVector sandwich(AntiPlane other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(other.e5 * this.e4 * -1.0, other.e5 * this.e1234) + (float2(other.e1) * float2(this.e1, this.e4235)) + (float2(other.e2) * float2(this.e2, this.e4315)) + (float2(other.e3) * float2(this.e3, this.e4125)), 
             /* e1, e2, e3, e4 */
             float4(other.e3 * this.e31 * -1.0, other.e1 * this.e12 * -1.0, other.e2 * this.e23 * -1.0, 0.0) + (other.group0.xyzx * float4(this.group0.xy.xx, this.scalar, this.e41)) + (other.group0.yzxz * float4(this.group5.xyz.zxy, this.e43)) + (other.group0.wwwy * float4(this.group4.xyz, this.e42)), 
-            /* e5, 0, 0, 0 */
-            float4((other.e5 * this.scalar) + (other.e5 * this.e45) - (other.e1 * this.e15) - (other.e2 * this.e25) - (other.e3 * this.e35), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (other.e5 * this.scalar) + (other.e5 * this.e45) - (other.e1 * this.e15) - (other.e2 * this.e25) - (other.e3 * this.e35), 
             /* e15, e25, e35, e45 */
             float4(other.e5 * this.e1, other.e5 * this.e2, other.e5 * this.e3, 0.0) + float4((this.group8.xyz.yzx * other.group0.zxy), other.e5 * this.e4) - (other.group0.xyzy * float4(float3(this.e5), this.e425)) - (other.group0.wwwz * this.group6.xyzz) - float4((this.group8.xyz.zxy * other.group0.yzx), other.e1 * this.e415), 
-            /* e41, e42, e43, 0 */
-            float4((float3(this.e4) * other.group0.xyz) + (this.group7.xyz.zxy * other.group0.yzx) - (this.group7.xyz.yzx * other.group0.zxy), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((other.group0.zxy * this.group1.yzx) - (float3(other.e5) * this.group7.xyz) - (float3(this.e3, this.e1, this.e321) * other.group0.yzz) - (float3(this.e321, this.e321, this.e2) * other.group0.xyx), 0.0), 
+            /* e41, e42, e43 */
+            (float3(this.e4) * other.group0.xyz) + (this.group7.xyz.zxy * other.group0.yzx) - (this.group7.xyz.yzx * other.group0.zxy), 
+            /* e23, e31, e12 */
+            (other.group0.zxy * this.group1.yzx) - (float3(other.e5) * this.group7.xyz) - (float3(this.e3, this.e1, this.e321) * other.group0.yzz) - (float3(this.e321, this.e321, this.e2) * other.group0.xyx), 
             /* e415, e425, e435, e321 */
             float4(other.e3 * this.e4315, other.e1 * this.e4125, other.e2 * this.e4235, other.e3 * this.e12 * -1.0) + float4((this.group4.xyz * other.group0.www), other.e5 * this.e1234) - (float4(this.group3.ww, this.e4315, other.e1) * float4(other.group0.xyx, this.e23)) - (float4(this.group9.zx, this.e45, other.e2) * float4(other.group0.yzz, this.e31)), 
-            /* e423, e431, e412, 0 */
-            float4((this.group4.xyz.yzx * other.group0.zxy) - (float3(this.e1234) * other.group0.xyz) - (this.group4.xyz.zxy * other.group0.yzx), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(other.e5) * this.group5.xyz) + (float3(other.e5) * this.group9.xyz) + (float3(this.e35, this.e15, this.e3215) * other.group0.yzz) + (float3(this.e3215, this.e3215, this.e25) * other.group0.xyx) - (other.group0.zxy * this.group3.yzx), 0.0), 
+            /* e423, e431, e412 */
+            (this.group4.xyz.yzx * other.group0.zxy) - (float3(this.e1234) * other.group0.xyz) - (this.group4.xyz.zxy * other.group0.yzx), 
+            /* e235, e315, e125 */
+            (float3(other.e5) * this.group5.xyz) + (float3(other.e5) * this.group9.xyz) + (float3(this.e35, this.e15, this.e3215) * other.group0.yzz) + (float3(this.e3215, this.e3215, this.e25) * other.group0.xyx) - (other.group0.zxy * this.group3.yzx), 
             /* e4235, e4315, e4125, e3215 */
             (other.group0.xyzx * float4(this.group0.xy.yy, this.e12345, this.e235)) + (other.group0.wwwy * float4(this.group7.xyz, this.e315)) + float4(float3(0.0), other.e5 * this.e321) + float4((other.group0.yzx * this.group6.zxy), other.e3 * this.e125) - float4((other.group0.zxy * this.group6.yzx), other.e5 * this.e12345), 
-            /* e1234, 0, 0, 0 */
-            float4(-(other.e1 * this.e423) - (other.e2 * this.e431) - (other.e3 * this.e412), 0.0, 0.0, 0.0)
+            /* e1234 */
+            -(other.e1 * this.e423) - (other.e2 * this.e431) - (other.e3 * this.e412)
         ).geometric_product(this.reverse());
     }
 }
-extension MultiVector: Sandwich<AntiScalar> {
-    associatedtype Output = MultiVector;
-    func sandwich(other: AntiScalar) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(other.e12345) * this.group0.xy.yx * float2(-1.0, 1.0), 0.0, 0.0), 
+public extension MultiVector {
+    public MultiVector sandwich(AntiScalar other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(other.e12345) * this.group0.xy.yx * float2(-1.0, 1.0), 
             /* e1, e2, e3, e4 */
             float4((float3(other.e12345) * this.group9.xyz * float3(-1.0)), other.e12345 * this.e1234), 
-            /* e5, 0, 0, 0 */
-            float4(other.e12345 * this.e3215, 0.0, 0.0, 0.0), 
+            /* e5 */
+            other.e12345 * this.e3215, 
             /* e15, e25, e35, e45 */
             float4(other.e12345) * float4(this.group8.xyz, this.e321) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e41, e42, e43, 0 */
-            float4(float3(other.e12345) * this.group7.xyz * float3(-1.0), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(float3(other.e12345) * this.group6.xyz * float3(-1.0), 0.0), 
+            /* e41, e42, e43 */
+            float3(other.e12345) * this.group7.xyz * float3(-1.0), 
+            /* e23, e31, e12 */
+            float3(other.e12345) * this.group6.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             float4(other.e12345) * float4(this.group5.xyz, this.e45) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e423, e431, e412, 0 */
-            float4(float3(other.e12345) * this.group4.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(float3(other.e12345) * this.group3.xyz, 0.0), 
+            /* e423, e431, e412 */
+            float3(other.e12345) * this.group4.xyz, 
+            /* e235, e315, e125 */
+            float3(other.e12345) * this.group3.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4((float3(other.e12345) * this.group1.xyz), other.e12345 * this.e5 * -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e12345 * this.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e12345 * this.e4 * -1.0
         ).geometric_product(this.reverse());
     }
 }
-extension MultiVector: Sandwich<Circle> {
-    associatedtype Output = MultiVector;
-    func sandwich(other: Circle) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((other.e423 * this.e235) + (other.e431 * this.e315) + (other.e412 * this.e125) + (other.e415 * this.e415) + (other.e425 * this.e425) + (other.e435 * this.e435) + (other.e235 * this.e423) + (other.e315 * this.e431) + (other.e125 * this.e412), -(other.e423 * this.e15) - (other.e431 * this.e25) - (other.e412 * this.e35) - (other.e425 * this.e31) - (other.e435 * this.e12) - (other.e321 * this.e45) - (other.e235 * this.e41) - (other.e315 * this.e42) - (other.e125 * this.e43)) - (float2(this.e321, this.e23) * other.group1.wx), 0.0, 0.0), 
+public extension MultiVector {
+    public MultiVector sandwich(Circle other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((other.e423 * this.e235) + (other.e431 * this.e315) + (other.e412 * this.e125) + (other.e415 * this.e415) + (other.e425 * this.e425) + (other.e435 * this.e435) + (other.e235 * this.e423) + (other.e315 * this.e431) + (other.e125 * this.e412), -(other.e423 * this.e15) - (other.e431 * this.e25) - (other.e412 * this.e35) - (other.e425 * this.e31) - (other.e435 * this.e12) - (other.e321 * this.e45) - (other.e235 * this.e41) - (other.e315 * this.e42) - (other.e125 * this.e43)) - (float2(this.e321, this.e23) * other.group1.wx), 
             /* e1, e2, e3, e4 */
             float4((other.e435 * this.e4315) + (other.e321 * this.e23), (other.e415 * this.e4125) + (other.e321 * this.e31), (other.e425 * this.e4235) + (other.e321 * this.e12), -(other.e435 * this.e43) - (other.e321 * this.e1234)) + (float4(float2(this.e1234), this.e42, this.e4315) * float4(other.group2.xyz.xyx, other.e431)) + (float4(this.group4.xyz.zx, this.e1234, this.e4125) * float4(other.group2.xyz.yzz, other.e412)) + float4((other.group0.xyz.zxy * this.group3.yzx), other.e423 * this.e4235) - (float4(this.group3.zx, this.e3215, this.e31) * float4(other.group0.xyz.yzz, other.e431)) - (float4(this.group3.ww, this.e4315, other.e415) * float4(other.group1.xyx, this.e41)) - (float4(this.group9.zx, this.e45, other.e425) * float4(other.group1.yzz, this.e42)) - (float4(this.group9.ww, this.e25, this.e23) * float4(other.group0.xyz.xyx, other.e423)) - float4((other.group2.xyz.zxy * this.group4.xyz.yzx), other.e412 * this.e12), 
-            /* e5, 0, 0, 0 */
-            float4((other.e321 * this.e3215) - (other.e415 * this.e15) - (other.e425 * this.e25) - (other.e435 * this.e35) - (other.e235 * this.e23) - (other.e235 * this.e4235) - (other.e315 * this.e31) - (other.e315 * this.e4315) - (other.e125 * this.e12) - (other.e125 * this.e4125), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (other.e321 * this.e3215) - (other.e415 * this.e15) - (other.e425 * this.e25) - (other.e435 * this.e35) - (other.e235 * this.e23) - (other.e235 * this.e4235) - (other.e315 * this.e31) - (other.e315 * this.e4315) - (other.e125 * this.e12) - (other.e125 * this.e4125), 
             /* e15, e25, e35, e45 */
             (float4(this.e3, this.e321, this.e415, this.e235) * float4(other.group2.xyz.yyy, other.e423)) + (float4(this.e425, this.e1, this.e321, this.e315) * float4(other.group2.xyz.zzz, other.e431)) + (float4(this.group6.wz, this.e2, other.e321) * float4(other.group2.xyz.xxx, this.e12345)) + float4((this.group8.xyz.yzx * other.group1.zxy), other.e412 * this.e125) - (float4(this.e2, this.e415, this.e1, this.e412) * float4(other.group2.xyz.zzy, other.e125)) - (float4(this.e435, this.e3, this.e425, this.e431) * float4(other.group2.xyz.yxx, other.e315)) - (other.group1.xyzz * float4(float3(this.e5), this.e3)) - (float4(this.group0.xy.yy, this.e12345, other.e235) * float4(other.group2.xyz, this.e423)) - float4((this.group8.xyz.xxy * other.group1.wzx), other.e415 * this.e1) - float4((this.group8.xyz.zyz * other.group1.yww), other.e425 * this.e2), 
-            /* e41, e42, e43, 0 */
-            float4((other.group0.xyz.zxy * this.group1.yzx) + (other.group0.xyz.zxy * this.group6.yzx) + (this.group7.xyz.xyx * other.group1.wwy) + (this.group7.xyz.yzz * other.group1.zxw) - (float3(this.e12345) * other.group0.xyz) - (float3(this.e4) * other.group1.xyz) - (float3(this.e3, this.e1, this.e425) * other.group0.xyz.yzx) - (float3(this.e321, this.e321, this.e2) * other.group0.xyz.xyx) - (other.group0.xyz.yzz * this.group6.zxw) - (this.group7.xyz.zxy * other.group1.yzx), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((other.group0.xyz.zxy * this.group8.xyz.yzx) + (other.group2.xyz.zxy * this.group7.xyz.yzx) + (other.group1.zxy * this.group6.yzx) - (float3(other.e321) * this.group1.xyz) - (float3(this.e12345) * other.group1.xyz) - (other.group0.xyz.xyx * float3(float2(this.e5), this.e315)) - (other.group0.xyz.yzz * float3(this.group8.xyz.zx, this.e5)) - (other.group2.xyz.xyx * float3(float2(this.e4), this.e431)) - (other.group2.xyz.yzz * float3(this.group7.xyz.zx, this.e4)) - (other.group1.yzx * this.group6.zxy), 0.0), 
+            /* e41, e42, e43 */
+            (other.group0.xyz.zxy * this.group1.yzx) + (other.group0.xyz.zxy * this.group6.yzx) + (this.group7.xyz.xyx * other.group1.wwy) + (this.group7.xyz.yzz * other.group1.zxw) - (float3(this.e12345) * other.group0.xyz) - (float3(this.e4) * other.group1.xyz) - (float3(this.e3, this.e1, this.e425) * other.group0.xyz.yzx) - (float3(this.e321, this.e321, this.e2) * other.group0.xyz.xyx) - (other.group0.xyz.yzz * this.group6.zxw) - (this.group7.xyz.zxy * other.group1.yzx), 
+            /* e23, e31, e12 */
+            (other.group0.xyz.zxy * this.group8.xyz.yzx) + (other.group2.xyz.zxy * this.group7.xyz.yzx) + (other.group1.zxy * this.group6.yzx) - (float3(other.e321) * this.group1.xyz) - (float3(this.e12345) * other.group1.xyz) - (other.group0.xyz.xyx * float3(float2(this.e5), this.e315)) - (other.group0.xyz.yzz * float3(this.group8.xyz.zx, this.e5)) - (other.group2.xyz.xyx * float3(float2(this.e4), this.e431)) - (other.group2.xyz.yzz * float3(this.group7.xyz.zx, this.e4)) - (other.group1.yzx * this.group6.zxy), 
             /* e415, e425, e435, e321 */
             float4(other.e321 * this.e4235 * -1.0, other.e321 * this.e4315 * -1.0, other.e321 * this.e4125 * -1.0, other.e435 * this.e4125) + (float4(this.scalar) * other.group1) + (float4(float2(this.e1234), this.e42, this.e35) * float4(other.group2.xyz.xyx, other.e412)) + (float4(this.group4.xyz.zx, this.e1234, this.e4235) * float4(other.group2.xyz.yzz, other.e415)) + (float4(this.group3.zx, this.e3215, this.e25) * float4(other.group0.xyz.yzz, other.e431)) + (float4(this.group9.ww, this.e25, this.e15) * float4(other.group0.xyz.xyx, other.e423)) + float4((this.group5.xyz.zxy * other.group1.yzx), other.e425 * this.e4315) - float4((other.group0.xyz.zxy * this.group3.yzx), other.e235 * this.e41) - float4((other.group2.xyz.zxy * this.group4.xyz.yzx), other.e315 * this.e42) - float4((this.group5.xyz.yzx * other.group1.zxy), other.e125 * this.e43), 
-            /* e423, e431, e412, 0 */
-            float4((float3(this.scalar) * other.group0.xyz) + (float3(this.e1234) * other.group1.xyz) + (float3(this.e12, this.e4125, this.e31) * other.group0.xyz.yxx) + (float3(this.e4315, this.e23, this.e4235) * other.group0.xyz.zzy) + (this.group4.xyz.zxy * other.group1.yzx) - (float3(other.e423) * float3(this.e45, this.e12, this.e4315)) - (float3(other.e431) * float3(this.e4125, this.e45, this.e23)) - (float3(other.e412) * float3(this.e31, this.e4235, this.e45)) - (this.group4.xyz.xyx * other.group1.wwy) - (this.group4.xyz.yzz * other.group1.zxw), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(other.e321) * this.group3.xyz) + (float3(this.scalar) * other.group2.xyz) + (float3(this.e35, this.e15, this.e3215) * other.group1.yzz) + (float3(this.e4125, this.e4235, this.e45) * other.group2.xyz.yzz) + (float3(this.e3215, this.e3215, this.e25) * other.group1.xyx) + (other.group2.xyz.xyx * float3(float2(this.e45), this.e31)) + (other.group2.xyz.yzx * float3(this.group5.xyz.zx, this.e4315)) - (other.group2.xyz.zxy * this.group5.xyz.yzx) - (other.group2.xyz.zxy * this.group9.yzx) - (other.group1.zxy * this.group3.yzx), 0.0), 
+            /* e423, e431, e412 */
+            (float3(this.scalar) * other.group0.xyz) + (float3(this.e1234) * other.group1.xyz) + (float3(this.e12, this.e4125, this.e31) * other.group0.xyz.yxx) + (float3(this.e4315, this.e23, this.e4235) * other.group0.xyz.zzy) + (this.group4.xyz.zxy * other.group1.yzx) - (float3(other.e423) * float3(this.e45, this.e12, this.e4315)) - (float3(other.e431) * float3(this.e4125, this.e45, this.e23)) - (float3(other.e412) * float3(this.e31, this.e4235, this.e45)) - (this.group4.xyz.xyx * other.group1.wwy) - (this.group4.xyz.yzz * other.group1.zxw), 
+            /* e235, e315, e125 */
+            (float3(other.e321) * this.group3.xyz) + (float3(this.scalar) * other.group2.xyz) + (float3(this.e35, this.e15, this.e3215) * other.group1.yzz) + (float3(this.e4125, this.e4235, this.e45) * other.group2.xyz.yzz) + (float3(this.e3215, this.e3215, this.e25) * other.group1.xyx) + (other.group2.xyz.xyx * float3(float2(this.e45), this.e31)) + (other.group2.xyz.yzx * float3(this.group5.xyz.zx, this.e4315)) - (other.group2.xyz.zxy * this.group5.xyz.yzx) - (other.group2.xyz.zxy * this.group9.yzx) - (other.group1.zxy * this.group3.yzx), 
             /* e4235, e4315, e4125, e3215 */
             (float4(this.group7.xyz.zx, this.e4, this.e435) * float4(other.group2.xyz.yzz, other.e125)) + (float4(this.group1.zx, this.e321, other.e425) * float4(other.group1.yzz, this.e315)) + (float4(this.group1.ww, this.e431, this.e425) * float4(other.group2.xyz.xyx, other.e315)) + (float4(this.group6.ww, this.e2, other.e415) * float4(other.group1.xyx, this.e235)) + float4((other.group0.xyz.zxy * this.group8.xyz.yzx), other.e235 * this.e415) + float4((other.group1.www * this.group6.xyz), other.e435 * this.e125) - (other.group1.zxyw * float4(this.group1.yzx, this.e5)) - (float4(float2(this.e5), this.e315, this.e1) * float4(other.group0.xyz.xyx, other.e235)) - (float4(this.group8.xyz.zx, this.e5, this.e2) * float4(other.group0.xyz.yzz, other.e315)) - float4((other.group2.xyz.zxy * this.group7.xyz.yzx), other.e125 * this.e3), 
-            /* e1234, 0, 0, 0 */
-            float4((other.e423 * this.e1) + (other.e423 * this.e415) + (other.e431 * this.e2) + (other.e431 * this.e425) + (other.e412 * this.e3) + (other.e412 * this.e435) + (other.e415 * this.e423) + (other.e425 * this.e431) + (other.e435 * this.e412) + (other.e321 * this.e4), 0.0, 0.0, 0.0)
+            /* e1234 */
+            (other.e423 * this.e1) + (other.e423 * this.e415) + (other.e431 * this.e2) + (other.e431 * this.e425) + (other.e412 * this.e3) + (other.e412 * this.e435) + (other.e415 * this.e423) + (other.e425 * this.e431) + (other.e435 * this.e412) + (other.e321 * this.e4)
         ).geometric_product(this.reverse());
     }
 }
-extension MultiVector: Sandwich<CircleRotor> {
-    associatedtype Output = MultiVector;
-    func sandwich(other: CircleRotor) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((other.e423 * this.e235) + (other.e431 * this.e315) + (other.e412 * this.e125) + (other.e415 * this.e415) + (other.e425 * this.e425) + (other.e435 * this.e435) + (other.e315 * this.e431) + (other.e125 * this.e412), -(other.e423 * this.e15) - (other.e431 * this.e25) - (other.e412 * this.e35) - (other.e425 * this.e31) - (other.e435 * this.e12) - (other.e321 * this.e45) - (other.e315 * this.e42) - (other.e125 * this.e43)) + (float2(this.e423, this.scalar) * other.group2.xw) - (float2(this.e12345, this.e41) * other.group2.wx) - (float2(this.e321, this.e23) * other.group1.wx), 0.0, 0.0), 
+public extension MultiVector {
+    public MultiVector sandwich(CircleRotor other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((other.e423 * this.e235) + (other.e431 * this.e315) + (other.e412 * this.e125) + (other.e415 * this.e415) + (other.e425 * this.e425) + (other.e435 * this.e435) + (other.e315 * this.e431) + (other.e125 * this.e412), -(other.e423 * this.e15) - (other.e431 * this.e25) - (other.e412 * this.e35) - (other.e425 * this.e31) - (other.e435 * this.e12) - (other.e321 * this.e45) - (other.e315 * this.e42) - (other.e125 * this.e43)) + (float2(this.e423, this.scalar) * other.group2.xw) - (float2(this.e12345, this.e41) * other.group2.wx) - (float2(this.e321, this.e23) * other.group1.wx), 
             /* e1, e2, e3, e4 */
             float4(other.e235 * this.e1234, other.e315 * this.e1234, other.e125 * this.e1234, other.e321 * this.e1234 * -1.0) + float4((this.group5.xyz * other.group1.www), other.e412 * this.e4125) + float4((other.group0.xyz.zxy * this.group3.yzx), other.e423 * this.e4235) + float4((this.group4.xyz.zxy * other.group2.yzx), other.e431 * this.e4315) + float4((other.group1.zxy * this.group9.yzx), other.e12345 * this.e1234) - (float4(this.group3.zx, this.e3215, this.e31) * float4(other.group0.xyz.yzz, other.e431)) - (float4(this.group3.ww, this.e4315, other.e415) * float4(other.group1.xyx, this.e41)) - (float4(this.group9.zx, this.e45, other.e425) * float4(other.group1.yzz, this.e42)) - (float4(this.group9.ww, this.e25, this.e23) * float4(other.group0.xyz.xyx, other.e423)) - float4((this.group4.xyz.yzx * other.group2.zxy), other.e412 * this.e12) - float4((other.group2.www * this.group9.xyz), other.e435 * this.e43), 
-            /* e5, 0, 0, 0 */
-            float4((other.e321 * this.e3215) + (other.e12345 * this.e3215) - (other.e415 * this.e15) - (other.e425 * this.e25) - (other.e435 * this.e35) - (other.e235 * this.e23) - (other.e235 * this.e4235) - (other.e315 * this.e31) - (other.e315 * this.e4315) - (other.e125 * this.e12) - (other.e125 * this.e4125), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (other.e321 * this.e3215) + (other.e12345 * this.e3215) - (other.e415 * this.e15) - (other.e425 * this.e25) - (other.e435 * this.e35) - (other.e235 * this.e23) - (other.e235 * this.e4235) - (other.e315 * this.e31) - (other.e315 * this.e4315) - (other.e125 * this.e12) - (other.e125 * this.e4125), 
             /* e15, e25, e35, e45 */
             float4(other.e125 * this.e2 * -1.0, other.e125 * this.e415 * -1.0, other.e315 * this.e1 * -1.0, other.e12345 * this.e321) + (float4(this.e3, this.e321, this.e415, this.e315) * float4(other.group2.yyy, other.e431)) + (float4(this.e425, this.e1, this.e321, this.e125) * float4(other.group2.zzz, other.e412)) + (other.group1.zxyw * float4(this.group8.xyz.yzx, this.e12345)) + (float4(this.group6.wz, this.e2, this.e235) * float4(other.group2.xxx, other.e423)) - (float4(other.e425, other.e12345, other.e12345, this.e1) * float4(this.group8.xyz.zyz, other.e415)) - (float4(other.e12345, other.e321, other.e321, other.e125) * float4(this.group8.xyz, this.e412)) - (float4(this.e435, this.e3, this.e425, this.e3) * float4(other.group2.yxx, other.e435)) - (other.group1.xyzy * float4(float3(this.e5), this.e2)) - (other.group2.xyzx * float4(this.group0.xy.yy, this.e12345, this.e423)) - float4((this.group8.xyz.xxy * other.group1.wzx), other.e315 * this.e431), 
-            /* e41, e42, e43, 0 */
-            float4((other.group0.xyz.zxy * this.group1.yzx) + (other.group0.xyz.zxy * this.group6.yzx) + (this.group7.xyz.xyx * other.group1.wwy) + (this.group7.xyz.yzz * other.group1.zxw) - (float3(this.e12345) * other.group0.xyz) - (float3(this.e4) * other.group1.xyz) - (float3(other.e425, other.e12345, other.e12345) * this.group7.xyz.zyz) - (float3(other.e12345, other.e435, other.e415) * this.group7.xyz.xxy) - (float3(this.e3, this.e1, this.e425) * other.group0.xyz.yzx) - (float3(this.e321, this.e321, this.e2) * other.group0.xyz.xyx) - (other.group0.xyz.yzz * this.group6.zxw), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((other.group0.xyz.zxy * this.group8.xyz.yzx) + (this.group7.xyz.yzx * other.group2.zxy) + (other.group1.zxy * this.group6.yzx) - (float3(other.e321) * this.group1.xyz) - (float3(other.e12345) * this.group6.xyz) - (float3(this.e12345) * other.group1.xyz) - (float3(this.e4) * other.group2.xyz) - (other.group0.xyz.xyx * float3(float2(this.e5), this.e315)) - (other.group0.xyz.yzz * float3(this.group8.xyz.zx, this.e5)) - (this.group7.xyz.zxy * other.group2.yzx) - (other.group1.yzx * this.group6.zxy), 0.0), 
+            /* e41, e42, e43 */
+            (other.group0.xyz.zxy * this.group1.yzx) + (other.group0.xyz.zxy * this.group6.yzx) + (this.group7.xyz.xyx * other.group1.wwy) + (this.group7.xyz.yzz * other.group1.zxw) - (float3(this.e12345) * other.group0.xyz) - (float3(this.e4) * other.group1.xyz) - (float3(other.e425, other.e12345, other.e12345) * this.group7.xyz.zyz) - (float3(other.e12345, other.e435, other.e415) * this.group7.xyz.xxy) - (float3(this.e3, this.e1, this.e425) * other.group0.xyz.yzx) - (float3(this.e321, this.e321, this.e2) * other.group0.xyz.xyx) - (other.group0.xyz.yzz * this.group6.zxw), 
+            /* e23, e31, e12 */
+            (other.group0.xyz.zxy * this.group8.xyz.yzx) + (this.group7.xyz.yzx * other.group2.zxy) + (other.group1.zxy * this.group6.yzx) - (float3(other.e321) * this.group1.xyz) - (float3(other.e12345) * this.group6.xyz) - (float3(this.e12345) * other.group1.xyz) - (float3(this.e4) * other.group2.xyz) - (other.group0.xyz.xyx * float3(float2(this.e5), this.e315)) - (other.group0.xyz.yzz * float3(this.group8.xyz.zx, this.e5)) - (this.group7.xyz.zxy * other.group2.yzx) - (other.group1.yzx * this.group6.zxy), 
             /* e415, e425, e435, e321 */
             (float4(this.scalar) * other.group1) + (float4(other.e425, other.e12345, other.e12345, this.e4315) * float4(this.group5.xyz.zyz, other.e425)) + (float4(other.e12345, other.e435, other.e415, this.e4235) * float4(this.group5.xyz.xxy, other.e415)) + (float4(this.group3.zx, this.e3215, this.e25) * float4(other.group0.xyz.yzz, other.e431)) + (float4(this.group9.ww, this.e25, this.e15) * float4(other.group0.xyz.xyx, other.e423)) + float4((float3(this.e1234) * other.group2.xyz), other.e435 * this.e4125) + float4((this.group4.xyz.zxy * other.group2.yzx), other.e412 * this.e35) - (other.group2.zxyy * float4(this.group4.xyz.yzx, this.e42)) - float4((other.group0.xyz.zxy * this.group3.yzx), other.e235 * this.e41) - float4((this.group5.xyz.yzx * other.group1.zxy), other.e125 * this.e43) - float4((other.group1.www * this.group9.xyz), other.e12345 * this.e45), 
-            /* e423, e431, e412, 0 */
-            float4((float3(this.scalar) * other.group0.xyz) + (float3(this.e1234) * other.group1.xyz) + (float3(other.e425, other.e12345, other.e12345) * this.group4.xyz.zyz) + (float3(other.e12345, other.e435, other.e415) * this.group4.xyz.xxy) + (float3(this.e12, this.e4125, this.e31) * other.group0.xyz.yxx) + (float3(this.e4315, this.e23, this.e4235) * other.group0.xyz.zzy) - (float3(other.e423) * float3(this.e45, this.e12, this.e4315)) - (float3(other.e431) * float3(this.e4125, this.e45, this.e23)) - (float3(other.e412) * float3(this.e31, this.e4235, this.e45)) - (this.group4.xyz.xyx * other.group1.wwy) - (this.group4.xyz.yzz * other.group1.zxw), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(other.e321) * this.group3.xyz) + (float3(other.e12345) * this.group3.xyz) + (float3(this.scalar) * other.group2.xyz) + (float3(this.e35, this.e15, this.e3215) * other.group1.yzz) + (float3(this.e45, this.e45, this.e4315) * other.group2.xyx) + (float3(this.e4125, this.e4235, this.e45) * other.group2.yzz) + (float3(this.e3215, this.e3215, this.e25) * other.group1.xyx) + (this.group5.xyz.zxy * other.group2.yzx) - (this.group5.xyz.yzx * other.group2.zxy) - (other.group1.zxy * this.group3.yzx) - (other.group2.zxy * this.group9.yzx), 0.0), 
+            /* e423, e431, e412 */
+            (float3(this.scalar) * other.group0.xyz) + (float3(this.e1234) * other.group1.xyz) + (float3(other.e425, other.e12345, other.e12345) * this.group4.xyz.zyz) + (float3(other.e12345, other.e435, other.e415) * this.group4.xyz.xxy) + (float3(this.e12, this.e4125, this.e31) * other.group0.xyz.yxx) + (float3(this.e4315, this.e23, this.e4235) * other.group0.xyz.zzy) - (float3(other.e423) * float3(this.e45, this.e12, this.e4315)) - (float3(other.e431) * float3(this.e4125, this.e45, this.e23)) - (float3(other.e412) * float3(this.e31, this.e4235, this.e45)) - (this.group4.xyz.xyx * other.group1.wwy) - (this.group4.xyz.yzz * other.group1.zxw), 
+            /* e235, e315, e125 */
+            (float3(other.e321) * this.group3.xyz) + (float3(other.e12345) * this.group3.xyz) + (float3(this.scalar) * other.group2.xyz) + (float3(this.e35, this.e15, this.e3215) * other.group1.yzz) + (float3(this.e45, this.e45, this.e4315) * other.group2.xyx) + (float3(this.e4125, this.e4235, this.e45) * other.group2.yzz) + (float3(this.e3215, this.e3215, this.e25) * other.group1.xyx) + (this.group5.xyz.zxy * other.group2.yzx) - (this.group5.xyz.yzx * other.group2.zxy) - (other.group1.zxy * this.group3.yzx) - (other.group2.zxy * this.group9.yzx), 
             /* e4235, e4315, e4125, e3215 */
             float4(other.e12345 * this.e1, other.e12345 * this.e2, other.e12345 * this.e3, other.e12345 * this.e5 * -1.0) + (other.group2.xyzz * float4(this.group1.www, this.e435)) + (this.group6.xyzy * float4(other.group1.www, other.e315)) + (float4(this.group1.zx, this.e321, this.e415) * float4(other.group1.yzz, other.e235)) + (float4(this.group6.ww, this.e2, other.e435) * float4(other.group1.xyx, this.e125)) + float4((other.group0.xyz.zxy * this.group8.xyz.yzx), other.e415 * this.e235) + float4((this.group7.xyz.zxy * other.group2.yzx), other.e425 * this.e315) - (this.group1.yzxz * float4(other.group1.zxy, other.e125)) - (float4(float2(this.e5), this.e315, this.e5) * float4(other.group0.xyz.xyx, other.e321)) - (float4(this.group8.xyz.zx, this.e5, this.e1) * float4(other.group0.xyz.yzz, other.e235)) - float4((this.group7.xyz.yzx * other.group2.zxy), other.e315 * this.e2), 
-            /* e1234, 0, 0, 0 */
-            float4((other.e423 * this.e1) + (other.e423 * this.e415) + (other.e431 * this.e2) + (other.e431 * this.e425) + (other.e412 * this.e3) + (other.e412 * this.e435) + (other.e415 * this.e423) + (other.e425 * this.e431) + (other.e435 * this.e412) + (other.e321 * this.e4) - (other.e12345 * this.e4), 0.0, 0.0, 0.0)
+            /* e1234 */
+            (other.e423 * this.e1) + (other.e423 * this.e415) + (other.e431 * this.e2) + (other.e431 * this.e425) + (other.e412 * this.e3) + (other.e412 * this.e435) + (other.e415 * this.e423) + (other.e425 * this.e431) + (other.e435 * this.e412) + (other.e321 * this.e4) - (other.e12345 * this.e4)
         ).geometric_product(this.reverse());
     }
 }
-extension MultiVector: Sandwich<Dipole> {
-    associatedtype Output = MultiVector;
-    func sandwich(other: Dipole) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(other.e45 * this.e45, other.e45 * this.e321 * -1.0) - (float2(other.e41) * float2(this.e15, this.e235)) - (float2(other.e42) * float2(this.e25, this.e315)) - (float2(other.e43) * float2(this.e35, this.e125)) - (float2(other.e23) * float2(this.e23, this.e415)) - (float2(other.e31) * float2(this.e31, this.e425)) - (float2(other.e12) * float2(this.e12, this.e435)) - (float2(other.e15) * float2(this.e41, this.e423)) - (float2(other.e25) * float2(this.e42, this.e431)) - (float2(other.e35) * float2(this.e43, this.e412)), 0.0, 0.0), 
+public extension MultiVector {
+    public MultiVector sandwich(Dipole other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(other.e45 * this.e45, other.e45 * this.e321 * -1.0) - (float2(other.e41) * float2(this.e15, this.e235)) - (float2(other.e42) * float2(this.e25, this.e315)) - (float2(other.e43) * float2(this.e35, this.e125)) - (float2(other.e23) * float2(this.e23, this.e415)) - (float2(other.e31) * float2(this.e31, this.e425)) - (float2(other.e12) * float2(this.e12, this.e435)) - (float2(other.e15) * float2(this.e41, this.e423)) - (float2(other.e25) * float2(this.e42, this.e431)) - (float2(other.e35) * float2(this.e43, this.e412)), 
             /* e1, e2, e3, e4 */
             float4((other.e23 * this.e321) + (other.e31 * this.e3) + (other.e15 * this.e4) + (other.e25 * this.e412), (other.e31 * this.e321) + (other.e12 * this.e1) + (other.e25 * this.e4) + (other.e35 * this.e423), (other.e23 * this.e2) + (other.e12 * this.e321) + (other.e15 * this.e431) + (other.e35 * this.e4), -(other.e43 * this.e435) - (other.e23 * this.e423) - (other.e31 * this.e431) - (other.e12 * this.e412)) + float4((other.group0.xyz.zxy * this.group8.xyz.yzx), other.e45 * this.e4) - (float4(float2(this.e5), this.e315, this.e1) * float4(other.group0.xyz.xyx, other.e41)) - (float4(this.group8.xyz.zx, this.e5, this.e415) * float4(other.group0.xyz.yzz, other.e41)) - float4((other.group2.xyz.zxy * this.group7.xyz.yzx), other.e42 * this.e2) - float4((other.group1.zxy * this.group1.yzx), other.e42 * this.e425) - float4((other.group1.www * this.group6.xyz), other.e43 * this.e3), 
-            /* e5, 0, 0, 0 */
-            float4((other.e15 * this.e1) + (other.e25 * this.e2) + (other.e35 * this.e3) - (other.e23 * this.e235) - (other.e31 * this.e315) - (other.e12 * this.e125) - (other.e45 * this.e5) - (other.e15 * this.e415) - (other.e25 * this.e425) - (other.e35 * this.e435), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (other.e15 * this.e1) + (other.e25 * this.e2) + (other.e35 * this.e3) - (other.e23 * this.e235) - (other.e31 * this.e315) - (other.e12 * this.e125) - (other.e45 * this.e5) - (other.e15 * this.e415) - (other.e25 * this.e425) - (other.e35 * this.e435), 
             /* e15, e25, e35, e45 */
             float4((other.e23 * this.e3215) + (other.e31 * this.e35), (other.e31 * this.e3215) + (other.e12 * this.e15), (other.e23 * this.e25) + (other.e12 * this.e3215), -(other.e31 * this.e4315) - (other.e12 * this.e4125)) + (float4(this.scalar) * float4(other.group2.xyz, other.e45)) + (float4(this.group5.xyz.zx, this.e4315, this.e42) * float4(other.group2.xyz.yzx, other.e25)) + (float4(this.group3.ww, this.e31, this.e41) * float4(other.group2.xyz.xyx, other.e15)) + (float4(this.group9.zx, this.e45, this.e43) * float4(other.group2.xyz.yzz, other.e35)) - (other.group1.wwwx * float4(this.group3.xyz, this.e4235)) - (this.group3.yzxz * float4(other.group1.zxy, other.e43)) - float4((other.group2.xyz.zxy * this.group5.xyz.yzx), other.e41 * this.e15) - float4((other.group2.xyz.zxy * this.group9.yzx), other.e42 * this.e25), 
-            /* e41, e42, e43, 0 */
-            float4((float3(this.scalar) * other.group0.xyz) + (float3(this.e1234) * other.group1.xyz) + (float3(this.e12, this.e4125, this.e31) * other.group0.xyz.yxx) + (float3(this.e4315, this.e23, this.e4235) * other.group0.xyz.zzy) + (this.group4.xyz.xxy * other.group1.wzx) + (this.group4.xyz.zyz * other.group1.yww) - (float3(other.e41) * float3(this.e45, this.e12, this.e4315)) - (float3(other.e42) * float3(this.e4125, this.e45, this.e23)) - (float3(other.e43) * float3(this.e31, this.e4235, this.e45)) - (this.group4.xyz.yzx * other.group1.zxy), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(other.e45) * this.group9.xyz) + (float3(this.scalar) * other.group1.xyz) + (float3(this.e35, this.e15, this.e3215) * other.group0.xyz.yzz) + (float3(this.e3215, this.e3215, this.e25) * other.group0.xyz.xyx) + (other.group2.xyz.xyx * float3(float2(this.e1234), this.e42)) + (other.group2.xyz.yzz * float3(this.group4.xyz.zx, this.e1234)) + (this.group5.xyz.zxy * other.group1.yzx) - (other.group0.xyz.zxy * this.group3.yzx) - (other.group2.xyz.zxy * this.group4.xyz.yzx) - (this.group5.xyz.yzx * other.group1.zxy), 0.0), 
+            /* e41, e42, e43 */
+            (float3(this.scalar) * other.group0.xyz) + (float3(this.e1234) * other.group1.xyz) + (float3(this.e12, this.e4125, this.e31) * other.group0.xyz.yxx) + (float3(this.e4315, this.e23, this.e4235) * other.group0.xyz.zzy) + (this.group4.xyz.xxy * other.group1.wzx) + (this.group4.xyz.zyz * other.group1.yww) - (float3(other.e41) * float3(this.e45, this.e12, this.e4315)) - (float3(other.e42) * float3(this.e4125, this.e45, this.e23)) - (float3(other.e43) * float3(this.e31, this.e4235, this.e45)) - (this.group4.xyz.yzx * other.group1.zxy), 
+            /* e23, e31, e12 */
+            (float3(other.e45) * this.group9.xyz) + (float3(this.scalar) * other.group1.xyz) + (float3(this.e35, this.e15, this.e3215) * other.group0.xyz.yzz) + (float3(this.e3215, this.e3215, this.e25) * other.group0.xyz.xyx) + (other.group2.xyz.xyx * float3(float2(this.e1234), this.e42)) + (other.group2.xyz.yzz * float3(this.group4.xyz.zx, this.e1234)) + (this.group5.xyz.zxy * other.group1.yzx) - (other.group0.xyz.zxy * this.group3.yzx) - (other.group2.xyz.zxy * this.group4.xyz.yzx) - (this.group5.xyz.yzx * other.group1.zxy), 
             /* e415, e425, e435, e321 */
             float4((other.e31 * this.e435) + (other.e15 * this.e4) + (other.e25 * this.e412), (other.e12 * this.e415) + (other.e25 * this.e4) + (other.e35 * this.e423), (other.e23 * this.e425) + (other.e15 * this.e431) + (other.e35 * this.e4), -(other.e23 * this.e1) - (other.e31 * this.e2) - (other.e12 * this.e3)) + (float4(float2(this.e5), this.e315, this.e315) * float4(other.group0.xyz.xyx, other.e42)) + (float4(this.group0.xy.yy, this.e12345, other.e41) * float4(other.group1.xyz, this.e235)) + (float4(this.group8.xyz.zx, this.e5, this.e125) * float4(other.group0.xyz.yzz, other.e43)) - float4((other.group0.xyz.zxy * this.group8.xyz.yzx), other.e45 * this.e12345) - float4((other.group2.xyz.zxy * this.group7.xyz.yzx), other.e15 * this.e423) - float4((other.group1.zxy * this.group6.yzx), other.e25 * this.e431) - float4((other.group1.www * this.group1.xyz), other.e35 * this.e412), 
-            /* e423, e431, e412, 0 */
-            float4((float3(this.e12345) * other.group0.xyz) + (float3(this.e4) * other.group1.xyz) + (float3(this.e3, this.e1, this.e425) * other.group0.xyz.yzx) + (float3(this.e321, this.e321, this.e2) * other.group0.xyz.xyx) + (other.group0.xyz.yzz * this.group6.zxw) + (this.group7.xyz.xxy * other.group1.wzx) + (this.group7.xyz.zyz * other.group1.yww) - (other.group0.xyz.zxy * this.group1.yzx) - (other.group0.xyz.zxy * this.group6.yzx) - (this.group7.xyz.yzx * other.group1.zxy), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(this.e12345) * other.group2.xyz) + (float3(this.e5) * other.group1.xyz) + (float3(this.e2, this.e415, this.e1) * other.group2.xyz.zzy) + (float3(this.e435, this.e3, this.e425) * other.group2.xyz.yxx) + (this.group8.xyz.zxy * other.group1.yzx) - (float3(other.e15) * float3(this.e321, this.e435, this.e2)) - (float3(other.e25) * float3(this.e3, this.e321, this.e415)) - (float3(other.e35) * float3(this.e425, this.e1, this.e321)) - (this.group8.xyz.xyx * other.group1.wwy) - (this.group8.xyz.yzz * other.group1.zxw), 0.0), 
+            /* e423, e431, e412 */
+            (float3(this.e12345) * other.group0.xyz) + (float3(this.e4) * other.group1.xyz) + (float3(this.e3, this.e1, this.e425) * other.group0.xyz.yzx) + (float3(this.e321, this.e321, this.e2) * other.group0.xyz.xyx) + (other.group0.xyz.yzz * this.group6.zxw) + (this.group7.xyz.xxy * other.group1.wzx) + (this.group7.xyz.zyz * other.group1.yww) - (other.group0.xyz.zxy * this.group1.yzx) - (other.group0.xyz.zxy * this.group6.yzx) - (this.group7.xyz.yzx * other.group1.zxy), 
+            /* e235, e315, e125 */
+            (float3(this.e12345) * other.group2.xyz) + (float3(this.e5) * other.group1.xyz) + (float3(this.e2, this.e415, this.e1) * other.group2.xyz.zzy) + (float3(this.e435, this.e3, this.e425) * other.group2.xyz.yxx) + (this.group8.xyz.zxy * other.group1.yzx) - (float3(other.e15) * float3(this.e321, this.e435, this.e2)) - (float3(other.e25) * float3(this.e3, this.e321, this.e415)) - (float3(other.e35) * float3(this.e425, this.e1, this.e321)) - (this.group8.xyz.xyx * other.group1.wwy) - (this.group8.xyz.yzz * other.group1.zxw), 
             /* e4235, e4315, e4125, e3215 */
             float4((other.e41 * this.e3215) + (other.e42 * this.e35) + (other.e23 * this.e45) + (other.e31 * this.e4125) + (other.e45 * this.e23) + (other.e35 * this.e42), (other.e42 * this.e3215) + (other.e43 * this.e15) + (other.e31 * this.e45) + (other.e12 * this.e4235) + (other.e45 * this.e31) + (other.e15 * this.e43), (other.e41 * this.e25) + (other.e43 * this.e3215) + (other.e23 * this.e4315) + (other.e12 * this.e45) + (other.e45 * this.e12) + (other.e25 * this.e41), -(other.e23 * this.e15) - (other.e31 * this.e25) - (other.e12 * this.e35) - (other.e45 * this.e3215) - (other.e35 * this.e12) - (other.e35 * this.e4125)) - (this.group9.yzxy * float4(other.group1.zxy, other.e25)) - (float4(float2(this.e1234), this.e42, this.e4235) * float4(other.group2.xyz.xyx, other.e15)) - (float4(this.group4.xyz.zx, this.e1234, this.e31) * float4(other.group2.xyz.yzz, other.e25)) - float4((other.group0.xyz.zxy * this.group3.yzx), other.e15 * this.e23), 
-            /* e1234, 0, 0, 0 */
-            float4((other.e41 * this.e4235) + (other.e42 * this.e4315) + (other.e43 * this.e4125) + (other.e45 * this.e1234) - (other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43), 0.0, 0.0, 0.0)
+            /* e1234 */
+            (other.e41 * this.e4235) + (other.e42 * this.e4315) + (other.e43 * this.e4125) + (other.e45 * this.e1234) - (other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43)
         ).geometric_product(this.reverse());
     }
 }
-extension MultiVector: Sandwich<DipoleInversion> {
-    associatedtype Output = MultiVector;
-    func sandwich(other: DipoleInversion) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((other.e45 * this.e45) - (other.e4235 * this.e4235) - (other.e4315 * this.e4315) - (other.e4125 * this.e4125), (other.e4315 * this.e2) + (other.e4125 * this.e3) + (other.e3215 * this.e4) - (other.e45 * this.e321)) + (float2(other.e1234) * float2(this.e3215, this.e5)) + (float2(this.e1234, this.e1) * other.group3.wx) - (float2(other.e41) * float2(this.e15, this.e235)) - (float2(other.e42) * float2(this.e25, this.e315)) - (float2(other.e43) * float2(this.e35, this.e125)) - (float2(other.e23) * float2(this.e23, this.e415)) - (float2(other.e31) * float2(this.e31, this.e425)) - (float2(other.e12) * float2(this.e12, this.e435)) - (float2(other.e15) * float2(this.e41, this.e423)) - (float2(other.e25) * float2(this.e42, this.e431)) - (float2(other.e35) * float2(this.e43, this.e412)), 0.0, 0.0), 
+public extension MultiVector {
+    public MultiVector sandwich(DipoleInversion other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((other.e45 * this.e45) - (other.e4235 * this.e4235) - (other.e4315 * this.e4315) - (other.e4125 * this.e4125), (other.e4315 * this.e2) + (other.e4125 * this.e3) + (other.e3215 * this.e4) - (other.e45 * this.e321)) + (float2(other.e1234) * float2(this.e3215, this.e5)) + (float2(this.e1234, this.e1) * other.group3.wx) - (float2(other.e41) * float2(this.e15, this.e235)) - (float2(other.e42) * float2(this.e25, this.e315)) - (float2(other.e43) * float2(this.e35, this.e125)) - (float2(other.e23) * float2(this.e23, this.e415)) - (float2(other.e31) * float2(this.e31, this.e425)) - (float2(other.e12) * float2(this.e12, this.e435)) - (float2(other.e15) * float2(this.e41, this.e423)) - (float2(other.e25) * float2(this.e42, this.e431)) - (float2(other.e35) * float2(this.e43, this.e412)), 
             /* e1, e2, e3, e4 */
             float4((other.e23 * this.e321) + (other.e31 * this.e3) + (other.e15 * this.e4) + (other.e4125 * this.e425), (other.e31 * this.e321) + (other.e12 * this.e1) + (other.e25 * this.e4) + (other.e4235 * this.e435), (other.e23 * this.e2) + (other.e12 * this.e321) + (other.e35 * this.e4) + (other.e4315 * this.e415), -(other.e31 * this.e431) - (other.e12 * this.e412) - (other.e4315 * this.e431) - (other.e4125 * this.e412)) + (float4(other.e25, other.e3215, other.e3215, this.e321) * float4(this.group7.xyz.zyz, other.e1234)) + (float4(other.e3215, other.e35, other.e15, this.e4) * float4(this.group7.xyz.xxy, other.e45)) + float4((other.group0.xyz.zxy * this.group8.xyz.yzx), other.e1234 * this.e12345) - (float4(float2(this.e5), this.e315, this.e415) * float4(other.group0.xyz.xyx, other.e41)) - (float4(this.group0.xy.yy, this.e12345, other.e41) * float4(other.group3.xyz, this.e1)) - (float4(this.group8.xyz.zx, this.e5, this.e2) * float4(other.group0.xyz.yzz, other.e42)) - float4((this.group8.xyz * other.group2.www), other.e43 * this.e3) - float4((this.group7.xyz.yzx * other.group2.zxy), other.e42 * this.e425) - float4((other.group1.zxy * this.group1.yzx), other.e43 * this.e435) - float4((other.group1.www * this.group6.xyz), other.e23 * this.e423) - float4((other.group3.yzx * this.group6.zxy), other.e4235 * this.e423), 
-            /* e5, 0, 0, 0 */
-            float4((other.e15 * this.e1) + (other.e25 * this.e2) + (other.e35 * this.e3) + (other.e4235 * this.e235) + (other.e4315 * this.e315) + (other.e4125 * this.e125) + (other.e3215 * this.e12345) - (other.e23 * this.e235) - (other.e31 * this.e315) - (other.e12 * this.e125) - (other.e45 * this.e5) - (other.e15 * this.e415) - (other.e25 * this.e425) - (other.e35 * this.e435) - (other.e3215 * this.e321), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (other.e15 * this.e1) + (other.e25 * this.e2) + (other.e35 * this.e3) + (other.e4235 * this.e235) + (other.e4315 * this.e315) + (other.e4125 * this.e125) + (other.e3215 * this.e12345) - (other.e23 * this.e235) - (other.e31 * this.e315) - (other.e12 * this.e125) - (other.e45 * this.e5) - (other.e15 * this.e415) - (other.e25 * this.e425) - (other.e35 * this.e435) - (other.e3215 * this.e321), 
             /* e15, e25, e35, e45 */
             float4((other.e15 * this.e45) + (other.e25 * this.e4125) + (other.e4125 * this.e25) + (other.e3215 * this.e4235), (other.e25 * this.e45) + (other.e35 * this.e4235) + (other.e4235 * this.e35) + (other.e3215 * this.e4315), (other.e15 * this.e4315) + (other.e35 * this.e45) + (other.e4315 * this.e15) + (other.e3215 * this.e4125), -(other.e23 * this.e4235) - (other.e31 * this.e4315) - (other.e12 * this.e4125) - (other.e3215 * this.e1234)) + (float4(this.scalar) * float4(other.group2.xyz, other.e45)) + (float4(other.e25, other.e3215, other.e3215, other.e25) * float4(this.group5.xyz.zyz, this.e42)) + (float4(other.e3215, other.e35, other.e15, other.e15) * float4(this.group5.xyz.xxy, this.e41)) + (float4(this.group3.zx, this.e3215, this.e3215) * float4(other.group1.yzz, other.e1234)) + (float4(this.group9.ww, this.e25, other.e35) * float4(other.group1.xyx, this.e43)) - (this.group3.xyzz * float4(other.group1.www, other.e43)) - (this.group3.yzxy * float4(other.group1.zxy, other.e42)) - (float4(this.group3.zx, this.e3215, other.e4125) * float4(other.group3.yzz, this.e12)) - (float4(this.group9.ww, this.e25, other.e4315) * float4(other.group3.xyx, this.e31)) - float4((this.group5.xyz.yzx * other.group2.zxy), other.e41 * this.e15) - float4((other.group2.zxy * this.group9.yzx), other.e4235 * this.e23), 
-            /* e41, e42, e43, 0 */
-            float4((float3(other.e1234) * this.group5.xyz) + (float3(this.scalar) * other.group0.xyz) + (float3(this.e1234) * other.group1.xyz) + (float3(this.e1234) * other.group3.xyz) + (float3(other.e31, other.e4125, other.e4235) * this.group4.xyz.zxy) + (float3(other.e4315, other.e45, other.e45) * this.group4.xyz.zyz) + (float3(this.e12, this.e4125, this.e31) * other.group0.xyz.yxx) + (float3(this.e4315, this.e23, this.e4235) * other.group0.xyz.zzy) + (this.group4.xyz.xxy * other.group1.wzx) - (float3(other.e41) * float3(this.e45, this.e12, this.e4315)) - (float3(other.e42) * float3(this.e4125, this.e45, this.e23)) - (float3(other.e43) * float3(this.e31, this.e4235, this.e45)) - (float3(other.e1234) * this.group9.xyz) - (this.group4.xyz.yzx * other.group1.zxy) - (this.group4.xyz.yzx * other.group3.zxy), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(other.e45) * this.group9.xyz) + (float3(other.e1234) * this.group3.xyz) + (float3(this.scalar) * other.group1.xyz) + (float3(this.e1234) * other.group2.xyz) + (float3(other.e25, other.e3215, other.e3215) * this.group4.xyz.zyz) + (float3(other.e3215, other.e35, other.e15) * this.group4.xyz.xxy) + (float3(this.e35, this.e15, this.e3215) * other.group0.xyz.yzz) + (float3(this.e45, this.e45, this.e4315) * other.group3.xyx) + (float3(this.e4125, this.e4235, this.e45) * other.group3.yzz) + (float3(this.e3215, this.e3215, this.e25) * other.group0.xyz.xyx) + (this.group5.xyz.zxy * other.group1.yzx) - (other.group0.xyz.zxy * this.group3.yzx) - (this.group4.xyz.yzx * other.group2.zxy) - (this.group5.xyz.yzx * other.group1.zxy) - (other.group3.zxy * this.group9.yzx), 0.0), 
+            /* e41, e42, e43 */
+            (float3(other.e1234) * this.group5.xyz) + (float3(this.scalar) * other.group0.xyz) + (float3(this.e1234) * other.group1.xyz) + (float3(this.e1234) * other.group3.xyz) + (float3(other.e31, other.e4125, other.e4235) * this.group4.xyz.zxy) + (float3(other.e4315, other.e45, other.e45) * this.group4.xyz.zyz) + (float3(this.e12, this.e4125, this.e31) * other.group0.xyz.yxx) + (float3(this.e4315, this.e23, this.e4235) * other.group0.xyz.zzy) + (this.group4.xyz.xxy * other.group1.wzx) - (float3(other.e41) * float3(this.e45, this.e12, this.e4315)) - (float3(other.e42) * float3(this.e4125, this.e45, this.e23)) - (float3(other.e43) * float3(this.e31, this.e4235, this.e45)) - (float3(other.e1234) * this.group9.xyz) - (this.group4.xyz.yzx * other.group1.zxy) - (this.group4.xyz.yzx * other.group3.zxy), 
+            /* e23, e31, e12 */
+            (float3(other.e45) * this.group9.xyz) + (float3(other.e1234) * this.group3.xyz) + (float3(this.scalar) * other.group1.xyz) + (float3(this.e1234) * other.group2.xyz) + (float3(other.e25, other.e3215, other.e3215) * this.group4.xyz.zyz) + (float3(other.e3215, other.e35, other.e15) * this.group4.xyz.xxy) + (float3(this.e35, this.e15, this.e3215) * other.group0.xyz.yzz) + (float3(this.e45, this.e45, this.e4315) * other.group3.xyx) + (float3(this.e4125, this.e4235, this.e45) * other.group3.yzz) + (float3(this.e3215, this.e3215, this.e25) * other.group0.xyz.xyx) + (this.group5.xyz.zxy * other.group1.yzx) - (other.group0.xyz.zxy * this.group3.yzx) - (this.group4.xyz.yzx * other.group2.zxy) - (this.group5.xyz.yzx * other.group1.zxy) - (other.group3.zxy * this.group9.yzx), 
             /* e415, e425, e435, e321 */
             float4((other.e15 * this.e4) + (other.e4125 * this.e2), (other.e25 * this.e4) + (other.e4235 * this.e3), (other.e35 * this.e4) + (other.e4315 * this.e1), -(other.e12 * this.e3) - (other.e1234 * this.e5)) + (float4(other.e25, other.e3215, other.e3215, this.e425) * float4(this.group7.xyz.zyz, other.e4315)) + (float4(other.e3215, other.e35, other.e15, this.e415) * float4(this.group7.xyz.xxy, other.e4235)) + (float4(float2(this.e5), this.e315, this.e315) * float4(other.group0.xyz.xyx, other.e42)) + (float4(this.group0.xy.yy, this.e12345, other.e41) * float4(other.group1.xyz, this.e235)) + (float4(this.group8.xyz.zx, this.e5, this.e125) * float4(other.group0.xyz.yzz, other.e43)) + float4((this.group8.xyz * other.group2.www), other.e4125 * this.e435) + float4((other.group1.yzx * this.group6.zxy), other.e3215 * this.e4) - (other.group2.zxyx * float4(this.group7.xyz.yzx, this.e423)) - (float4(this.group1.zx, this.e321, this.e2) * float4(other.group3.yzz, other.e31)) - (float4(this.group6.ww, this.e2, this.e1) * float4(other.group3.xyx, other.e23)) - float4((other.group0.xyz.zxy * this.group8.xyz.yzx), other.e45 * this.e12345) - float4((other.group1.zxy * this.group6.yzx), other.e25 * this.e431) - float4((other.group1.www * this.group1.xyz), other.e35 * this.e412), 
-            /* e423, e431, e412, 0 */
-            float4((float3(other.e1234) * this.group1.xyz) + (float3(other.e1234) * this.group6.xyz) + (float3(this.e12345) * other.group0.xyz) + (float3(this.e4) * other.group1.xyz) + (float3(this.e4) * other.group3.xyz) + (float3(other.e31, other.e4125, other.e4235) * this.group7.xyz.zxy) + (float3(other.e4315, other.e45, other.e45) * this.group7.xyz.zyz) + (float3(this.e3, this.e1, this.e425) * other.group0.xyz.yzx) + (float3(this.e321, this.e321, this.e2) * other.group0.xyz.xyx) + (other.group0.xyz.yzz * this.group6.zxw) + (this.group7.xyz.xxy * other.group1.wzx) - (other.group0.xyz.zxy * this.group1.yzx) - (other.group0.xyz.zxy * this.group6.yzx) - (this.group7.xyz.yzx * other.group1.zxy) - (this.group7.xyz.yzx * other.group3.zxy), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(other.e3215) * this.group6.xyz) + (float3(this.e12345) * other.group2.xyz) + (float3(this.e5) * other.group1.xyz) + (float3(other.e31, other.e4235, other.e23) * this.group8.xyz.zzy) + (float3(other.e4125, other.e12, other.e4315) * this.group8.xyz.yxx) + (float3(this.e2, this.e415, this.e1) * other.group2.zzy) + (float3(this.e435, this.e3, this.e425) * other.group2.yxx) - (float3(other.e15) * float3(this.e321, this.e435, this.e2)) - (float3(other.e25) * float3(this.e3, this.e321, this.e415)) - (float3(other.e35) * float3(this.e425, this.e1, this.e321)) - (float3(other.e3215) * this.group1.xyz) - (float3(this.e5) * other.group3.xyz) - (float3(this.e235) * float3(other.e45, other.e4125, other.e31)) - (float3(this.e315) * float3(other.e12, other.e45, other.e4235)) - (float3(this.e125) * float3(other.e4315, other.e23, other.e45)), 0.0), 
+            /* e423, e431, e412 */
+            (float3(other.e1234) * this.group1.xyz) + (float3(other.e1234) * this.group6.xyz) + (float3(this.e12345) * other.group0.xyz) + (float3(this.e4) * other.group1.xyz) + (float3(this.e4) * other.group3.xyz) + (float3(other.e31, other.e4125, other.e4235) * this.group7.xyz.zxy) + (float3(other.e4315, other.e45, other.e45) * this.group7.xyz.zyz) + (float3(this.e3, this.e1, this.e425) * other.group0.xyz.yzx) + (float3(this.e321, this.e321, this.e2) * other.group0.xyz.xyx) + (other.group0.xyz.yzz * this.group6.zxw) + (this.group7.xyz.xxy * other.group1.wzx) - (other.group0.xyz.zxy * this.group1.yzx) - (other.group0.xyz.zxy * this.group6.yzx) - (this.group7.xyz.yzx * other.group1.zxy) - (this.group7.xyz.yzx * other.group3.zxy), 
+            /* e235, e315, e125 */
+            (float3(other.e3215) * this.group6.xyz) + (float3(this.e12345) * other.group2.xyz) + (float3(this.e5) * other.group1.xyz) + (float3(other.e31, other.e4235, other.e23) * this.group8.xyz.zzy) + (float3(other.e4125, other.e12, other.e4315) * this.group8.xyz.yxx) + (float3(this.e2, this.e415, this.e1) * other.group2.zzy) + (float3(this.e435, this.e3, this.e425) * other.group2.yxx) - (float3(other.e15) * float3(this.e321, this.e435, this.e2)) - (float3(other.e25) * float3(this.e3, this.e321, this.e415)) - (float3(other.e35) * float3(this.e425, this.e1, this.e321)) - (float3(other.e3215) * this.group1.xyz) - (float3(this.e5) * other.group3.xyz) - (float3(this.e235) * float3(other.e45, other.e4125, other.e31)) - (float3(this.e315) * float3(other.e12, other.e45, other.e4235)) - (float3(this.e125) * float3(other.e4315, other.e23, other.e45)), 
             /* e4235, e4315, e4125, e3215 */
             float4((other.e23 * this.e45) + (other.e31 * this.e4125) + (other.e1234 * this.e15) + (other.e4315 * this.e12), (other.e31 * this.e45) + (other.e12 * this.e4235) + (other.e45 * this.e31) + (other.e1234 * this.e25), (other.e23 * this.e4315) + (other.e12 * this.e45) + (other.e45 * this.e12) + (other.e1234 * this.e35), -(other.e45 * this.e3215) - (other.e15 * this.e4235) - (other.e25 * this.e4315) - (other.e35 * this.e4125)) + (float4(this.scalar) * other.group3) + (float4(other.e45, other.e4125, other.e4235, this.e45) * float4(this.group5.xyz.xxy, other.e3215)) + (float4(this.group3.zx, this.e3215, this.e25) * float4(other.group0.xyz.yzz, other.e4315)) + (float4(this.group9.ww, this.e25, this.e15) * float4(other.group0.xyz.xyx, other.e4235)) + float4((this.group4.xyz.yzx * other.group2.zxy), other.e4125 * this.e35) - (float4(other.e25, other.e3215, other.e3215, other.e35) * float4(this.group4.xyz.zyz, this.e12)) - (float4(other.e3215, other.e35, other.e15, other.e25) * float4(this.group4.xyz.xxy, this.e31)) - (other.group1.zxyy * float4(this.group9.yzx, this.e25)) - float4((float3(this.e1234) * other.group2.xyz), other.e12 * this.e35) - float4((other.group0.xyz.zxy * this.group3.yzx), other.e15 * this.e23) - float4((this.group5.xyz.yzx * other.group3.zxy), other.e23 * this.e15), 
-            /* e1234, 0, 0, 0 */
-            float4((other.e41 * this.e4235) + (other.e42 * this.e4315) + (other.e43 * this.e4125) + (other.e45 * this.e1234) + (other.e1234 * this.scalar) - (other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43) - (other.e1234 * this.e45) - (other.e4235 * this.e41) - (other.e4315 * this.e42) - (other.e4125 * this.e43), 0.0, 0.0, 0.0)
+            /* e1234 */
+            (other.e41 * this.e4235) + (other.e42 * this.e4315) + (other.e43 * this.e4125) + (other.e45 * this.e1234) + (other.e1234 * this.scalar) - (other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43) - (other.e1234 * this.e45) - (other.e4235 * this.e41) - (other.e4315 * this.e42) - (other.e4125 * this.e43)
         ).geometric_product(this.reverse());
     }
 }
-extension MultiVector: Sandwich<DualNum> {
-    associatedtype Output = MultiVector;
-    func sandwich(other: DualNum) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(-(other.e5 * this.e4) - (other.e12345 * this.e12345), (other.e5 * this.e1234) + (other.e12345 * this.scalar)), 0.0, 0.0), 
+public extension MultiVector {
+    public MultiVector sandwich(DualNum other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(-(other.e5 * this.e4) - (other.e12345 * this.e12345), (other.e5 * this.e1234) + (other.e12345 * this.scalar)), 
             /* e1, e2, e3, e4 */
             float4(((float3(other.e5) * this.group4.xyz) - (float3(other.e12345) * this.group9.xyz)), other.e12345 * this.e1234), 
-            /* e5, 0, 0, 0 */
-            float4((other.e5 * this.scalar) + (other.e5 * this.e45) + (other.e12345 * this.e3215), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (other.e5 * this.scalar) + (other.e5 * this.e45) + (other.e12345 * this.e3215), 
             /* e15, e25, e35, e45 */
             float4(-(other.e5 * this.e415) - (other.e12345 * this.e235), -(other.e5 * this.e425) - (other.e12345 * this.e315), -(other.e5 * this.e435) - (other.e12345 * this.e125), other.e12345 * this.e321) + (float4(other.e5) * this.group1), 
-            /* e41, e42, e43, 0 */
-            float4(float3(other.e12345) * this.group7.xyz * float3(-1.0), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(-(float3(other.e5) * this.group7.xyz) - (float3(other.e12345) * this.group6.xyz), 0.0), 
+            /* e41, e42, e43 */
+            float3(other.e12345) * this.group7.xyz * float3(-1.0), 
+            /* e23, e31, e12 */
+            -(float3(other.e5) * this.group7.xyz) - (float3(other.e12345) * this.group6.xyz), 
             /* e415, e425, e435, e321 */
             float4(other.e12345 * this.e23, other.e12345 * this.e31, other.e12345 * this.e12, other.e12345 * this.e45 * -1.0) + (float4(other.e5) * float4(this.group4.xyz, this.e1234)), 
-            /* e423, e431, e412, 0 */
-            float4(float3(other.e12345) * this.group4.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(other.e5) * this.group5.xyz) + (float3(other.e5) * this.group9.xyz) + (float3(other.e12345) * this.group3.xyz), 0.0), 
+            /* e423, e431, e412 */
+            float3(other.e12345) * this.group4.xyz, 
+            /* e235, e315, e125 */
+            (float3(other.e5) * this.group5.xyz) + (float3(other.e5) * this.group9.xyz) + (float3(other.e12345) * this.group3.xyz), 
             /* e4235, e4315, e4125, e3215 */
             float4(other.e12345 * this.e1, other.e12345 * this.e2, other.e12345 * this.e3, -(other.e5 * this.e12345) - (other.e12345 * this.e5)) + (float4(other.e5) * float4(this.group7.xyz, this.e321)), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e12345 * this.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e12345 * this.e4 * -1.0
         ).geometric_product(this.reverse());
     }
 }
-extension MultiVector: Sandwich<FlatPoint> {
-    associatedtype Output = MultiVector;
-    func sandwich(other: FlatPoint) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(other.e45 * this.e45, other.e45 * this.e321 * -1.0) - (float2(other.e15) * float2(this.e41, this.e423)) - (float2(other.e25) * float2(this.e42, this.e431)) - (float2(other.e35) * float2(this.e43, this.e412)), 0.0, 0.0), 
+public extension MultiVector {
+    public MultiVector sandwich(FlatPoint other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(other.e45 * this.e45, other.e45 * this.e321 * -1.0) - (float2(other.e15) * float2(this.e41, this.e423)) - (float2(other.e25) * float2(this.e42, this.e431)) - (float2(other.e35) * float2(this.e43, this.e412)), 
             /* e1, e2, e3, e4 */
             float4(((float3(this.e4) * other.group0.xyz) + (this.group7.xyz.zxy * other.group0.yzx) - (float3(other.e45) * this.group6.xyz) - (this.group7.xyz.yzx * other.group0.zxy)), other.e45 * this.e4), 
-            /* e5, 0, 0, 0 */
-            float4((other.e15 * this.e1) + (other.e25 * this.e2) + (other.e35 * this.e3) - (other.e15 * this.e415) - (other.e25 * this.e425) - (other.e35 * this.e435) - (other.e45 * this.e5), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (other.e15 * this.e1) + (other.e25 * this.e2) + (other.e35 * this.e3) - (other.e15 * this.e415) - (other.e25 * this.e425) - (other.e35 * this.e435) - (other.e45 * this.e5), 
             /* e15, e25, e35, e45 */
             float4(-(other.e35 * this.e31) - (other.e35 * this.e4315) - (other.e45 * this.e15), -(other.e15 * this.e12) - (other.e15 * this.e4125) - (other.e45 * this.e25), -(other.e25 * this.e23) - (other.e25 * this.e4235) - (other.e45 * this.e35), 0.0) + (float4(this.scalar) * other.group0) + (other.group0.yzxx * float4(this.group5.xyz.zxy, this.e41)) + (float4(this.group3.ww, this.e4315, other.e25) * float4(other.group0.xyx, this.e42)) + (float4(this.group9.zx, this.e45, other.e35) * float4(other.group0.yzz, this.e43)), 
-            /* e41, e42, e43, 0 */
-            float4(float3(other.e45) * this.group4.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(other.e45) * this.group9.xyz) + (float3(this.e1234) * other.group0.xyz) + (this.group4.xyz.zxy * other.group0.yzx) - (this.group4.xyz.yzx * other.group0.zxy), 0.0), 
+            /* e41, e42, e43 */
+            float3(other.e45) * this.group4.xyz, 
+            /* e23, e31, e12 */
+            (float3(other.e45) * this.group9.xyz) + (float3(this.e1234) * other.group0.xyz) + (this.group4.xyz.zxy * other.group0.yzx) - (this.group4.xyz.yzx * other.group0.zxy), 
             /* e415, e425, e435, e321 */
             float4((other.e15 * this.e4) + (other.e25 * this.e412), (other.e25 * this.e4) + (other.e35 * this.e423), (other.e15 * this.e431) + (other.e35 * this.e4), -(other.e25 * this.e431) - (other.e35 * this.e412)) - (other.group0.zxyw * float4(this.group7.xyz.yzx, this.e12345)) - float4((other.group0.www * this.group1.xyz), other.e15 * this.e423), 
-            /* e423, e431, e412, 0 */
-            float4(float3(other.e45) * this.group7.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(this.e12345) * other.group0.xyz) + (float3(this.e2, this.e415, this.e1) * other.group0.zzy) + (float3(this.e435, this.e3, this.e425) * other.group0.yxx) - (float3(other.e15) * float3(this.e321, this.e435, this.e2)) - (float3(other.e25) * float3(this.e3, this.e321, this.e415)) - (float3(other.e35) * float3(this.e425, this.e1, this.e321)) - (float3(other.e45) * this.group8.xyz), 0.0), 
+            /* e423, e431, e412 */
+            float3(other.e45) * this.group7.xyz, 
+            /* e235, e315, e125 */
+            (float3(this.e12345) * other.group0.xyz) + (float3(this.e2, this.e415, this.e1) * other.group0.zzy) + (float3(this.e435, this.e3, this.e425) * other.group0.yxx) - (float3(other.e15) * float3(this.e321, this.e435, this.e2)) - (float3(other.e25) * float3(this.e3, this.e321, this.e415)) - (float3(other.e35) * float3(this.e425, this.e1, this.e321)) - (float3(other.e45) * this.group8.xyz), 
             /* e4235, e4315, e4125, e3215 */
             float4((other.e35 * this.e42) + (other.e45 * this.e23), (other.e15 * this.e43) + (other.e45 * this.e31), (other.e25 * this.e41) + (other.e45 * this.e12), -(other.e15 * this.e4235) - (other.e25 * this.e4315) - (other.e35 * this.e12) - (other.e35 * this.e4125) - (other.e45 * this.e3215)) - (other.group0.yzxx * float4(this.group4.xyz.zxy, this.e23)) - float4((float3(this.e1234) * other.group0.xyz), other.e25 * this.e31), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e45 * this.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e45 * this.e1234
         ).geometric_product(this.reverse());
     }
 }
-extension MultiVector: Sandwich<Flector> {
-    associatedtype Output = MultiVector;
-    func sandwich(other: Flector) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((other.e45 * this.e45) - (other.e4235 * this.e4235) - (other.e4315 * this.e4315) - (other.e4125 * this.e4125), (other.e4315 * this.e2) + (other.e4125 * this.e3) + (other.e3215 * this.e4) - (other.e45 * this.e321)) + (float2(this.e1234, this.e1) * other.group1.wx) - (float2(other.e15) * float2(this.e41, this.e423)) - (float2(other.e25) * float2(this.e42, this.e431)) - (float2(other.e35) * float2(this.e43, this.e412)), 0.0, 0.0), 
+public extension MultiVector {
+    public MultiVector sandwich(Flector other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((other.e45 * this.e45) - (other.e4235 * this.e4235) - (other.e4315 * this.e4315) - (other.e4125 * this.e4125), (other.e4315 * this.e2) + (other.e4125 * this.e3) + (other.e3215 * this.e4) - (other.e45 * this.e321)) + (float2(this.e1234, this.e1) * other.group1.wx) - (float2(other.e15) * float2(this.e41, this.e423)) - (float2(other.e25) * float2(this.e42, this.e431)) - (float2(other.e35) * float2(this.e43, this.e412)), 
             /* e1, e2, e3, e4 */
             float4((other.e15 * this.e4) + (other.e25 * this.e412) + (other.e4125 * this.e425) - (other.e4315 * this.e435), (other.e25 * this.e4) + (other.e4235 * this.e435) + (other.e3215 * this.e431) - (other.e4125 * this.e415), (other.e35 * this.e4) + (other.e4315 * this.e415) + (other.e3215 * this.e412) - (other.e4235 * this.e425), 0.0) + (float4(other.e3215, other.e35, other.e15, this.e4) * float4(this.group7.xyz.xxy, other.e45)) - (other.group1.xyzx * float4(this.group0.xy.yy, this.e12345, this.e423)) - float4((this.group7.xyz.yzx * other.group0.zxy), other.e4315 * this.e431) - float4((other.group0.www * this.group6.xyz), other.e4125 * this.e412), 
-            /* e5, 0, 0, 0 */
-            float4((other.e15 * this.e1) + (other.e25 * this.e2) + (other.e35 * this.e3) + (other.e4235 * this.e235) + (other.e4315 * this.e315) + (other.e4125 * this.e125) + (other.e3215 * this.e12345) - (other.e15 * this.e415) - (other.e25 * this.e425) - (other.e35 * this.e435) - (other.e45 * this.e5) - (other.e3215 * this.e321), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (other.e15 * this.e1) + (other.e25 * this.e2) + (other.e35 * this.e3) + (other.e4235 * this.e235) + (other.e4315 * this.e315) + (other.e4125 * this.e125) + (other.e3215 * this.e12345) - (other.e15 * this.e415) - (other.e25 * this.e425) - (other.e35 * this.e435) - (other.e45 * this.e5) - (other.e3215 * this.e321), 
             /* e15, e25, e35, e45 */
             float4((other.e25 * this.e4125) + (other.e4125 * this.e25) + (other.e3215 * this.e4235) - (other.e4315 * this.e35), (other.e35 * this.e4235) + (other.e4235 * this.e35) + (other.e3215 * this.e4315) - (other.e4125 * this.e15), (other.e35 * this.e45) + (other.e4315 * this.e15) + (other.e3215 * this.e4125) - (other.e4125 * this.e3215), 0.0) + (float4(this.scalar) * other.group0) + (float4(other.e25, other.e3215, other.e3215, other.e25) * float4(this.group5.xyz.zyz, this.e42)) + (float4(other.e3215, other.e35, other.e15, other.e15) * float4(this.group5.xyz.xxy, this.e41)) + (float4(this.group3.ww, this.e4315, other.e35) * float4(other.group0.xyx, this.e43)) - (other.group1.xyxw * float4(this.group9.ww, this.e25, this.e1234)) - float4((this.group5.xyz.yzx * other.group0.zxy), other.e4235 * this.e23) - float4((other.group0.zxy * this.group9.yzx), other.e4315 * this.e31) - float4((other.group0.www * this.group3.xyz), other.e4125 * this.e12), 
-            /* e41, e42, e43, 0 */
-            float4((float3(this.e1234) * other.group1.xyz) + (float3(other.e45, other.e4125, other.e4235) * this.group4.xyz.xxy) + (float3(other.e4315, other.e45, other.e45) * this.group4.xyz.zyz) - (this.group4.xyz.yzx * other.group1.zxy), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(other.e45) * this.group9.xyz) + (float3(this.e1234) * other.group0.xyz) + (float3(other.e25, other.e3215, other.e3215) * this.group4.xyz.zyz) + (float3(other.e3215, other.e35, other.e15) * this.group4.xyz.xxy) + (float3(this.e45, this.e45, this.e4315) * other.group1.xyx) + (float3(this.e4125, this.e4235, this.e45) * other.group1.yzz) - (this.group4.xyz.yzx * other.group0.zxy) - (other.group1.zxy * this.group9.yzx), 0.0), 
+            /* e41, e42, e43 */
+            (float3(this.e1234) * other.group1.xyz) + (float3(other.e45, other.e4125, other.e4235) * this.group4.xyz.xxy) + (float3(other.e4315, other.e45, other.e45) * this.group4.xyz.zyz) - (this.group4.xyz.yzx * other.group1.zxy), 
+            /* e23, e31, e12 */
+            (float3(other.e45) * this.group9.xyz) + (float3(this.e1234) * other.group0.xyz) + (float3(other.e25, other.e3215, other.e3215) * this.group4.xyz.zyz) + (float3(other.e3215, other.e35, other.e15) * this.group4.xyz.xxy) + (float3(this.e45, this.e45, this.e4315) * other.group1.xyx) + (float3(this.e4125, this.e4235, this.e45) * other.group1.yzz) - (this.group4.xyz.yzx * other.group0.zxy) - (other.group1.zxy * this.group9.yzx), 
             /* e415, e425, e435, e321 */
             (float4(other.e25, other.e3215, other.e3215, this.e425) * float4(this.group7.xyz.zyz, other.e4315)) + (float4(other.e3215, other.e35, other.e15, this.e415) * float4(this.group7.xyz.xxy, other.e4235)) + (other.group1.zxyw * this.group1.yzxw) + float4((this.group1.www * other.group0.xyz), other.e4125 * this.e435) - (other.group0.zxyw * float4(this.group7.xyz.yzx, this.e12345)) - (float4(this.group1.zx, this.e321, other.e35) * float4(other.group1.yzz, this.e412)) - (float4(this.group6.ww, this.e2, other.e25) * float4(other.group1.xyx, this.e431)) - float4((other.group0.www * this.group1.xyz), other.e15 * this.e423), 
-            /* e423, e431, e412, 0 */
-            float4((float3(this.e4) * other.group1.xyz) + (float3(other.e45, other.e4125, other.e4235) * this.group7.xyz.xxy) + (float3(other.e4315, other.e45, other.e45) * this.group7.xyz.zyz) - (this.group7.xyz.yzx * other.group1.zxy), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(other.e3215) * this.group6.xyz) + (float3(this.e12345) * other.group0.xyz) + (float3(this.e2, this.e415, this.e1) * other.group0.zzy) + (float3(this.e435, this.e3, this.e425) * other.group0.yxx) + (this.group8.xyz.yzx * other.group1.zxy) - (float3(other.e15) * float3(this.e321, this.e435, this.e2)) - (float3(other.e25) * float3(this.e3, this.e321, this.e415)) - (float3(other.e35) * float3(this.e425, this.e1, this.e321)) - (float3(other.e3215) * this.group1.xyz) - (float3(this.e5) * other.group1.xyz) - (float3(other.e45, other.e4125, other.e4235) * this.group8.xyz.xxy) - (float3(other.e4315, other.e45, other.e45) * this.group8.xyz.zyz), 0.0), 
+            /* e423, e431, e412 */
+            (float3(this.e4) * other.group1.xyz) + (float3(other.e45, other.e4125, other.e4235) * this.group7.xyz.xxy) + (float3(other.e4315, other.e45, other.e45) * this.group7.xyz.zyz) - (this.group7.xyz.yzx * other.group1.zxy), 
+            /* e235, e315, e125 */
+            (float3(other.e3215) * this.group6.xyz) + (float3(this.e12345) * other.group0.xyz) + (float3(this.e2, this.e415, this.e1) * other.group0.zzy) + (float3(this.e435, this.e3, this.e425) * other.group0.yxx) + (this.group8.xyz.yzx * other.group1.zxy) - (float3(other.e15) * float3(this.e321, this.e435, this.e2)) - (float3(other.e25) * float3(this.e3, this.e321, this.e415)) - (float3(other.e35) * float3(this.e425, this.e1, this.e321)) - (float3(other.e3215) * this.group1.xyz) - (float3(this.e5) * other.group1.xyz) - (float3(other.e45, other.e4125, other.e4235) * this.group8.xyz.xxy) - (float3(other.e4315, other.e45, other.e45) * this.group8.xyz.zyz), 
             /* e4235, e4315, e4125, e3215 */
             (float4(this.scalar) * other.group1) + (float4(other.e45, other.e4125, other.e4235, this.e25) * float4(this.group5.xyz.xxy, other.e4315)) + (float4(other.e4315, other.e45, other.e45, this.e35) * float4(this.group5.xyz.zyz, other.e4125)) + float4(float3(0.0), (other.e3215 * this.e45) - (other.e25 * this.e4315) - (other.e35 * this.e4125) - (other.e45 * this.e3215)) + float4((this.group4.xyz.yzx * other.group0.zxy), other.e4235 * this.e15) - (float4(other.e25, other.e3215, other.e3215, other.e25) * float4(this.group4.xyz.zyz, this.e31)) - (float4(other.e3215, other.e35, other.e15, other.e15) * float4(this.group4.xyz.xxy, this.e23)) - (other.group0.xyzx * float4(float3(this.e1234), this.e4235)) - float4((this.group5.xyz.yzx * other.group1.zxy), other.e35 * this.e12), 
-            /* e1234, 0, 0, 0 */
-            float4((other.e45 * this.e1234) - (other.e4235 * this.e41) - (other.e4315 * this.e42) - (other.e4125 * this.e43), 0.0, 0.0, 0.0)
+            /* e1234 */
+            (other.e45 * this.e1234) - (other.e4235 * this.e41) - (other.e4315 * this.e42) - (other.e4125 * this.e43)
         ).geometric_product(this.reverse());
     }
 }
-extension MultiVector: Sandwich<Line> {
-    associatedtype Output = MultiVector;
-    func sandwich(other: Line) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((other.e415 * this.e415) + (other.e425 * this.e425) + (other.e435 * this.e435) + (other.e235 * this.e423) + (other.e315 * this.e431) + (other.e125 * this.e412), -(other.e415 * this.e23) - (other.e425 * this.e31) - (other.e435 * this.e12) - (other.e235 * this.e41) - (other.e315 * this.e42) - (other.e125 * this.e43)), 0.0, 0.0), 
+public extension MultiVector {
+    public MultiVector sandwich(Line other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((other.e415 * this.e415) + (other.e425 * this.e425) + (other.e435 * this.e435) + (other.e235 * this.e423) + (other.e315 * this.e431) + (other.e125 * this.e412), -(other.e415 * this.e23) - (other.e425 * this.e31) - (other.e435 * this.e12) - (other.e235 * this.e41) - (other.e315 * this.e42) - (other.e125 * this.e43)), 
             /* e1, e2, e3, e4 */
             float4((other.e435 * this.e4315) + (other.e235 * this.e1234) + (other.e315 * this.e43), (other.e415 * this.e4125) + (other.e315 * this.e1234) + (other.e125 * this.e41), (other.e425 * this.e4235) + (other.e235 * this.e42) + (other.e125 * this.e1234), 0.0) - (float4(this.group3.ww, this.e4315, this.e41) * float4(other.group0.xyz.xyx, other.e415)) - (float4(this.group9.zx, this.e45, this.e42) * float4(other.group0.xyz.yzz, other.e425)) - float4((other.group1.xyz.zxy * this.group4.xyz.yzx), other.e435 * this.e43), 
-            /* e5, 0, 0, 0 */
-            float4(-(other.e415 * this.e15) - (other.e425 * this.e25) - (other.e435 * this.e35) - (other.e235 * this.e23) - (other.e235 * this.e4235) - (other.e315 * this.e31) - (other.e315 * this.e4315) - (other.e125 * this.e12) - (other.e125 * this.e4125), 0.0, 0.0, 0.0), 
+            /* e5 */
+            -(other.e415 * this.e15) - (other.e425 * this.e25) - (other.e435 * this.e35) - (other.e235 * this.e23) - (other.e235 * this.e4235) - (other.e315 * this.e31) - (other.e315 * this.e4315) - (other.e125 * this.e12) - (other.e125 * this.e4125), 
             /* e15, e25, e35, e45 */
             float4((other.e435 * this.e315) + (other.e235 * this.e321) + (other.e315 * this.e3) + (other.e125 * this.e425), (other.e415 * this.e125) + (other.e235 * this.e435) + (other.e315 * this.e321) + (other.e125 * this.e1), (other.e425 * this.e235) + (other.e235 * this.e2) + (other.e315 * this.e415) + (other.e125 * this.e321), other.e125 * this.e412 * -1.0) - (float4(this.e2, this.e415, this.e1, this.e431) * float4(other.group1.xyz.zzy, other.e315)) - (float4(this.e435, this.e3, this.e425, this.e423) * float4(other.group1.xyz.yxx, other.e235)) - (float4(float2(this.e5), this.e315, this.e2) * float4(other.group0.xyz.xyx, other.e425)) - (float4(this.group0.xy.yy, this.e12345, other.e415) * float4(other.group1.xyz, this.e1)) - (float4(this.group8.xyz.zx, this.e5, this.e3) * float4(other.group0.xyz.yzz, other.e435)), 
-            /* e41, e42, e43, 0 */
-            float4((other.group0.xyz.zxy * this.group7.xyz.yzx) - (other.group0.xyz.xyx * float3(float2(this.e4), this.e431)) - (other.group0.xyz.yzz * float3(this.group7.xyz.zx, this.e4)), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((other.group0.xyz.zxy * this.group6.yzx) + (other.group1.xyz.zxy * this.group7.xyz.yzx) - (float3(this.e12345) * other.group0.xyz) - (other.group0.xyz.yzx * this.group6.zxy) - (other.group1.xyz.xyx * float3(float2(this.e4), this.e431)) - (other.group1.xyz.yzz * float3(this.group7.xyz.zx, this.e4)), 0.0), 
+            /* e41, e42, e43 */
+            (other.group0.xyz.zxy * this.group7.xyz.yzx) - (other.group0.xyz.xyx * float3(float2(this.e4), this.e431)) - (other.group0.xyz.yzz * float3(this.group7.xyz.zx, this.e4)), 
+            /* e23, e31, e12 */
+            (other.group0.xyz.zxy * this.group6.yzx) + (other.group1.xyz.zxy * this.group7.xyz.yzx) - (float3(this.e12345) * other.group0.xyz) - (other.group0.xyz.yzx * this.group6.zxy) - (other.group1.xyz.xyx * float3(float2(this.e4), this.e431)) - (other.group1.xyz.yzz * float3(this.group7.xyz.zx, this.e4)), 
             /* e415, e425, e435, e321 */
             float4(other.e315 * this.e43, other.e125 * this.e41, other.e125 * this.e1234, other.e125 * this.e43 * -1.0) + (float4(float2(this.e1234), this.e42, this.e4125) * float4(other.group1.xyz.xyx, other.e435)) + (float4(this.group0.xy.xx, this.scalar, other.e415) * float4(other.group0.xyz, this.e4235)) + float4((other.group0.xyz.yzx * this.group5.xyz.zxy), other.e425 * this.e4315) - float4((other.group0.xyz.zxy * this.group5.xyz.yzx), other.e235 * this.e41) - float4((other.group1.xyz.zxy * this.group4.xyz.yzx), other.e315 * this.e42), 
-            /* e423, e431, e412, 0 */
-            float4((other.group0.xyz.xyx * float3(float2(this.e1234), this.e42)) + (other.group0.xyz.yzz * float3(this.group4.xyz.zx, this.e1234)) - (other.group0.xyz.zxy * this.group4.xyz.yzx), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(this.scalar) * other.group1.xyz) + (float3(this.e35, this.e15, this.e3215) * other.group0.xyz.yzz) + (float3(this.e4125, this.e4235, this.e45) * other.group1.xyz.yzz) + (float3(this.e3215, this.e3215, this.e25) * other.group0.xyz.xyx) + (other.group1.xyz.xyx * float3(float2(this.e45), this.e31)) + (other.group1.xyz.yzx * float3(this.group5.xyz.zx, this.e4315)) - (other.group0.xyz.zxy * this.group3.yzx) - (other.group1.xyz.zxy * this.group5.xyz.yzx) - (other.group1.xyz.zxy * this.group9.yzx), 0.0), 
+            /* e423, e431, e412 */
+            (other.group0.xyz.xyx * float3(float2(this.e1234), this.e42)) + (other.group0.xyz.yzz * float3(this.group4.xyz.zx, this.e1234)) - (other.group0.xyz.zxy * this.group4.xyz.yzx), 
+            /* e235, e315, e125 */
+            (float3(this.scalar) * other.group1.xyz) + (float3(this.e35, this.e15, this.e3215) * other.group0.xyz.yzz) + (float3(this.e4125, this.e4235, this.e45) * other.group1.xyz.yzz) + (float3(this.e3215, this.e3215, this.e25) * other.group0.xyz.xyx) + (other.group1.xyz.xyx * float3(float2(this.e45), this.e31)) + (other.group1.xyz.yzx * float3(this.group5.xyz.zx, this.e4315)) - (other.group0.xyz.zxy * this.group3.yzx) - (other.group1.xyz.zxy * this.group5.xyz.yzx) - (other.group1.xyz.zxy * this.group9.yzx), 
             /* e4235, e4315, e4125, e3215 */
             (float4(this.group7.xyz.zx, this.e4, this.e415) * float4(other.group1.xyz.yzz, other.e235)) + (float4(this.group1.zx, this.e321, this.e315) * float4(other.group0.xyz.yzz, other.e425)) + (float4(this.group1.ww, this.e431, this.e125) * float4(other.group1.xyz.xyx, other.e435)) + (float4(this.group6.ww, this.e2, this.e235) * float4(other.group0.xyz.xyx, other.e415)) + float4(float3(0.0), (other.e315 * this.e425) + (other.e125 * this.e435) - (other.e125 * this.e3)) - (this.group1.yzxx * float4(other.group0.xyz.zxy, other.e235)) - float4((other.group1.xyz.zxy * this.group7.xyz.yzx), other.e315 * this.e2), 
-            /* e1234, 0, 0, 0 */
-            float4((other.e415 * this.e423) + (other.e425 * this.e431) + (other.e435 * this.e412), 0.0, 0.0, 0.0)
+            /* e1234 */
+            (other.e415 * this.e423) + (other.e425 * this.e431) + (other.e435 * this.e412)
         ).geometric_product(this.reverse());
     }
 }
-extension MultiVector: Sandwich<Motor> {
-    associatedtype Output = MultiVector;
-    func sandwich(other: Motor) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((other.e425 * this.e425) + (other.e435 * this.e435) + (other.e315 * this.e431) + (other.e125 * this.e412), -(other.e425 * this.e31) - (other.e435 * this.e12) - (other.e315 * this.e42) - (other.e125 * this.e43)) + (float2(this.e415, this.scalar) * other.group0.xw) + (float2(this.e423, this.e1234) * other.group1.xw) - (float2(this.e12345, this.e23) * other.group0.wx) - (float2(this.e4, this.e41) * other.group1.wx), 0.0, 0.0), 
+public extension MultiVector {
+    public MultiVector sandwich(Motor other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((other.e425 * this.e425) + (other.e435 * this.e435) + (other.e315 * this.e431) + (other.e125 * this.e412), -(other.e425 * this.e31) - (other.e435 * this.e12) - (other.e315 * this.e42) - (other.e125 * this.e43)) + (float2(this.e415, this.scalar) * other.group0.xw) + (float2(this.e423, this.e1234) * other.group1.xw) - (float2(this.e12345, this.e23) * other.group0.wx) - (float2(this.e4, this.e41) * other.group1.wx), 
             /* e1, e2, e3, e4 */
             float4((other.e435 * this.e4315) + (other.e235 * this.e1234) + (other.e315 * this.e43) - (other.e12345 * this.e4235), (other.e415 * this.e4125) + (other.e315 * this.e1234) + (other.e5 * this.e42) - (other.e12345 * this.e4315), (other.e425 * this.e4235) + (other.e125 * this.e1234) + (other.e5 * this.e43) - (other.e12345 * this.e4125), 0.0) + float4((this.group4.xyz.xxy * other.group1.wzx), other.e12345 * this.e1234) - (float4(this.group3.ww, this.e4315, other.e425) * float4(other.group0.xyx, this.e42)) - (float4(this.group9.zx, this.e45, other.e435) * float4(other.group0.yzz, this.e43)) - float4((this.group4.xyz.yzx * other.group1.zxy), other.e415 * this.e41), 
-            /* e5, 0, 0, 0 */
-            float4((other.e12345 * this.e3215) + (other.e5 * this.scalar) + (other.e5 * this.e45) - (other.e415 * this.e15) - (other.e425 * this.e25) - (other.e435 * this.e35) - (other.e235 * this.e23) - (other.e235 * this.e4235) - (other.e315 * this.e31) - (other.e315 * this.e4315) - (other.e125 * this.e12) - (other.e125 * this.e4125), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (other.e12345 * this.e3215) + (other.e5 * this.scalar) + (other.e5 * this.e45) - (other.e415 * this.e15) - (other.e425 * this.e25) - (other.e435 * this.e35) - (other.e235 * this.e23) - (other.e235 * this.e4235) - (other.e315 * this.e31) - (other.e315 * this.e4315) - (other.e125 * this.e12) - (other.e125 * this.e4125), 
             /* e15, e25, e35, e45 */
             float4((other.e315 * this.e3) + (other.e125 * this.e425) + (other.e5 * this.e1) - (other.e5 * this.e415), (other.e315 * this.e321) + (other.e125 * this.e1) + (other.e5 * this.e2) - (other.e5 * this.e425), (other.e315 * this.e415) + (other.e125 * this.e321) + (other.e5 * this.e3) - (other.e5 * this.e435), 0.0) + (other.group1.xxxw * float4(this.group6.wz, this.e2, this.e4)) + float4((this.group8.xyz.yzx * other.group0.zxy), other.e12345 * this.e321) - (float4(this.e2, this.e415, this.e1, this.e3) * float4(other.group1.zzy, other.e435)) - (float4(this.e435, this.e3, this.e425, this.e2) * float4(other.group1.yxx, other.e425)) - (other.group0.xyzx * float4(float3(this.e5), this.e1)) - (other.group1.xyzx * float4(this.group0.xy.yy, this.e12345, this.e423)) - float4((this.group8.xyz.xxy * other.group0.wzx), other.e315 * this.e431) - float4((this.group8.xyz.zyz * other.group0.yww), other.e125 * this.e412), 
-            /* e41, e42, e43, 0 */
-            float4((this.group7.xyz.yzx * other.group0.zxy) - (float3(this.e4) * other.group0.xyz) - (this.group7.xyz.xxy * other.group0.wzx) - (this.group7.xyz.zyz * other.group0.yww), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((this.group7.xyz.yzx * other.group1.zxy) + (other.group0.zxy * this.group6.yzx) - (float3(other.e12345) * this.group6.xyz) - (float3(this.e12345) * other.group0.xyz) - (float3(this.e4) * other.group1.xyz) - (this.group7.xyz.xxy * other.group1.wzx) - (this.group7.xyz.zyz * other.group1.yww) - (other.group0.yzx * this.group6.zxy), 0.0), 
+            /* e41, e42, e43 */
+            (this.group7.xyz.yzx * other.group0.zxy) - (float3(this.e4) * other.group0.xyz) - (this.group7.xyz.xxy * other.group0.wzx) - (this.group7.xyz.zyz * other.group0.yww), 
+            /* e23, e31, e12 */
+            (this.group7.xyz.yzx * other.group1.zxy) + (other.group0.zxy * this.group6.yzx) - (float3(other.e12345) * this.group6.xyz) - (float3(this.e12345) * other.group0.xyz) - (float3(this.e4) * other.group1.xyz) - (this.group7.xyz.xxy * other.group1.wzx) - (this.group7.xyz.zyz * other.group1.yww) - (other.group0.yzx * this.group6.zxy), 
             /* e415, e425, e435, e321 */
             float4((other.e425 * this.e12) + (other.e235 * this.e1234), (other.e12345 * this.e31) + (other.e315 * this.e1234), (other.e12345 * this.e12) + (other.e125 * this.e1234), -(other.e12345 * this.e45) - (other.e125 * this.e43)) + (float4(this.group0.xy.xx, this.scalar, other.e415) * float4(other.group0.xyz, this.e4235)) + float4((this.group4.xyz.xxy * other.group1.wzx), other.e425 * this.e4315) + float4((this.group4.xyz.zyz * other.group1.yww), other.e435 * this.e4125) + float4((this.group5.xyz.xxy * other.group0.wzx), other.e5 * this.e1234) - (other.group1.zxyx * float4(this.group4.xyz.yzx, this.e41)) - float4((this.group5.xyz.yzx * other.group0.zxy), other.e315 * this.e42), 
-            /* e423, e431, e412, 0 */
-            float4((float3(this.e1234) * other.group0.xyz) + (this.group4.xyz.xxy * other.group0.wzx) + (this.group4.xyz.zyz * other.group0.yww) - (this.group4.xyz.yzx * other.group0.zxy), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(other.e12345) * this.group3.xyz) + (float3(other.e5) * this.group9.xyz) + (float3(this.scalar) * other.group1.xyz) + (float3(this.e35, this.e15, this.e3215) * other.group0.yzz) + (float3(this.e45, this.e45, this.e4315) * other.group1.xyx) + (float3(this.e4125, this.e4235, this.e45) * other.group1.yzz) + (float3(this.e3215, this.e3215, this.e25) * other.group0.xyx) + (this.group5.xyz.xxy * other.group1.wzx) + (this.group5.xyz.zyz * other.group1.yww) - (this.group5.xyz.yzx * other.group1.zxy) - (other.group0.zxy * this.group3.yzx) - (other.group1.zxy * this.group9.yzx), 0.0), 
+            /* e423, e431, e412 */
+            (float3(this.e1234) * other.group0.xyz) + (this.group4.xyz.xxy * other.group0.wzx) + (this.group4.xyz.zyz * other.group0.yww) - (this.group4.xyz.yzx * other.group0.zxy), 
+            /* e235, e315, e125 */
+            (float3(other.e12345) * this.group3.xyz) + (float3(other.e5) * this.group9.xyz) + (float3(this.scalar) * other.group1.xyz) + (float3(this.e35, this.e15, this.e3215) * other.group0.yzz) + (float3(this.e45, this.e45, this.e4315) * other.group1.xyx) + (float3(this.e4125, this.e4235, this.e45) * other.group1.yzz) + (float3(this.e3215, this.e3215, this.e25) * other.group0.xyx) + (this.group5.xyz.xxy * other.group1.wzx) + (this.group5.xyz.zyz * other.group1.yww) - (this.group5.xyz.yzx * other.group1.zxy) - (other.group0.zxy * this.group3.yzx) - (other.group1.zxy * this.group9.yzx), 
             /* e4235, e4315, e4125, e3215 */
             (other.group1.xyzz * float4(this.group1.www, this.e435)) + (float4(this.group1.zx, this.e321, this.e415) * float4(other.group0.yzz, other.e235)) + (float4(this.group6.ww, this.e2, other.e435) * float4(other.group0.xyx, this.e125)) + float4(float3(0.0), (other.e5 * this.e321) - (other.e235 * this.e1) - (other.e315 * this.e2) - (other.e125 * this.e3)) + float4((this.group7.xyz.xxy * other.group1.wzx), other.e415 * this.e235) + float4((this.group7.xyz.zyz * other.group1.yww), other.e425 * this.e315) + float4((other.group0.www * this.group1.xyz), other.e315 * this.e425) - (other.group0.zxyw * float4(this.group1.yzx, this.e5)) - (other.group1.zxyw * float4(this.group7.xyz.yzx, this.e12345)), 
-            /* e1234, 0, 0, 0 */
-            float4((other.e415 * this.e423) + (other.e425 * this.e431) + (other.e435 * this.e412) - (other.e12345 * this.e4), 0.0, 0.0, 0.0)
+            /* e1234 */
+            (other.e415 * this.e423) + (other.e425 * this.e431) + (other.e435 * this.e412) - (other.e12345 * this.e4)
         ).geometric_product(this.reverse());
     }
 }
-extension MultiVector: Sandwich<MultiVector> {
-    associatedtype Output = MultiVector;
-    func sandwich(other: MultiVector) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((other.e45 * this.e45) + (other.e415 * this.e415) + (other.e425 * this.e425) + (other.e435 * this.e435) + (other.e423 * this.e235) + (other.e431 * this.e315) + (other.e412 * this.e125) + (other.e235 * this.e423) + (other.e315 * this.e431) + (other.e125 * this.e412) - (other.e12345 * this.e12345) - (other.e4 * this.e5) - (other.e5 * this.e4) - (other.e4235 * this.e4235) - (other.e4315 * this.e4315) - (other.e4125 * this.e4125), (other.e12345 * this.scalar) + (other.e5 * this.e1234) + (other.e4315 * this.e2) + (other.e4125 * this.e3) + (other.e3215 * this.e4) + (other.e1234 * this.e5) - (other.e15 * this.e423) - (other.e25 * this.e431) - (other.e35 * this.e412) - (other.e45 * this.e321) - (other.e425 * this.e31) - (other.e435 * this.e12) - (other.e321 * this.e45) - (other.e423 * this.e15) - (other.e431 * this.e25) - (other.e412 * this.e35)) + (float2(other.scalar) * this.group0.xy) + (float2(other.e1) * float2(this.e1, this.e4235)) + (float2(other.e2) * float2(this.e2, this.e4315)) + (float2(other.e3) * float2(this.e3, this.e4125)) + (float2(this.e3215) * float2(other.e1234, other.e4)) + (float2(this.e1234, this.e1) * other.group9.wx) - (float2(other.e41) * float2(this.e15, this.e235)) - (float2(other.e42) * float2(this.e25, this.e315)) - (float2(other.e43) * float2(this.e35, this.e125)) - (float2(other.e23) * float2(this.e23, this.e415)) - (float2(other.e31) * float2(this.e31, this.e425)) - (float2(other.e12) * float2(this.e12, this.e435)) - (float2(this.e41) * float2(other.e15, other.e235)) - (float2(this.e42) * float2(other.e25, other.e315)) - (float2(this.e43) * float2(other.e35, other.e125)) - (float2(this.e321, this.e23) * other.group6.wx), 0.0, 0.0), 
+public extension MultiVector {
+    public MultiVector sandwich(MultiVector other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((other.e45 * this.e45) + (other.e415 * this.e415) + (other.e425 * this.e425) + (other.e435 * this.e435) + (other.e423 * this.e235) + (other.e431 * this.e315) + (other.e412 * this.e125) + (other.e235 * this.e423) + (other.e315 * this.e431) + (other.e125 * this.e412) - (other.e12345 * this.e12345) - (other.e4 * this.e5) - (other.e5 * this.e4) - (other.e4235 * this.e4235) - (other.e4315 * this.e4315) - (other.e4125 * this.e4125), (other.e12345 * this.scalar) + (other.e5 * this.e1234) + (other.e4315 * this.e2) + (other.e4125 * this.e3) + (other.e3215 * this.e4) + (other.e1234 * this.e5) - (other.e15 * this.e423) - (other.e25 * this.e431) - (other.e35 * this.e412) - (other.e45 * this.e321) - (other.e425 * this.e31) - (other.e435 * this.e12) - (other.e321 * this.e45) - (other.e423 * this.e15) - (other.e431 * this.e25) - (other.e412 * this.e35)) + (float2(other.scalar) * this.group0.xy) + (float2(other.e1) * float2(this.e1, this.e4235)) + (float2(other.e2) * float2(this.e2, this.e4315)) + (float2(other.e3) * float2(this.e3, this.e4125)) + (float2(this.e3215) * float2(other.e1234, other.e4)) + (float2(this.e1234, this.e1) * other.group9.wx) - (float2(other.e41) * float2(this.e15, this.e235)) - (float2(other.e42) * float2(this.e25, this.e315)) - (float2(other.e43) * float2(this.e35, this.e125)) - (float2(other.e23) * float2(this.e23, this.e415)) - (float2(other.e31) * float2(this.e31, this.e425)) - (float2(other.e12) * float2(this.e12, this.e435)) - (float2(this.e41) * float2(other.e15, other.e235)) - (float2(this.e42) * float2(other.e25, other.e315)) - (float2(this.e43) * float2(other.e35, other.e125)) - (float2(this.e321, this.e23) * other.group6.wx), 
             /* e1, e2, e3, e4 */
             float4((other.e15 * this.e4) + (other.e25 * this.e412) + (other.e435 * this.e4315) + (other.e4125 * this.e425), (other.e25 * this.e4) + (other.e415 * this.e4125) + (other.e4235 * this.e435) + (other.e3215 * this.e431), (other.e35 * this.e4) + (other.e425 * this.e4235) + (other.e4315 * this.e415) + (other.e3215 * this.e412), -(other.e4 * this.e45) - (other.e321 * this.e1234) - (other.e4315 * this.e431) - (other.e4125 * this.e412)) + (float4(other.scalar) * this.group1) + (float4(other.e2, other.e321, other.e321, this.e4) * float4(this.group5.xyz.zyz, other.e45)) + (float4(other.e321, other.e3, other.e1, other.e3) * float4(this.group5.xyz.xxy, this.e43)) + (float4(other.e3215, other.e35, other.e15, other.e1234) * float4(this.group7.xyz.xxy, this.e321)) + (float4(float2(this.e1234), this.e42, this.e4125) * float4(other.group8.xyz.xyx, other.e412)) + (float4(this.group0.xy.xx, this.scalar, other.e12345) * float4(other.group1.xyz, this.e1234)) + (float4(this.group4.xyz.zx, this.e1234, other.e1) * float4(other.group8.xyz.yzz, this.e41)) + (float4(this.group1.zx, this.e321, this.e4235) * float4(other.group5.xyz.yzz, other.e423)) + (float4(this.group6.ww, this.e2, other.e1234) * float4(other.group5.xyz.xyx, this.e12345)) + float4((float3(other.e5) * this.group4.xyz), other.e2 * this.e42) + float4((other.group4.xyz.zxy * this.group8.xyz.yzx), other.e4 * this.scalar) + float4((other.group7.xyz.zxy * this.group3.yzx), other.e431 * this.e4315) - (this.group1.yzxz * float4(other.group5.xyz.zxy, other.e43)) - (float4(float2(this.e5), this.e315, this.e2) * float4(other.group4.xyz.xyx, other.e42)) - (float4(other.group0.xy.yy, other.e12345, other.e41) * float4(this.group9.xyz, this.e1)) - (float4(this.group0.xy.yy, this.e12345, other.e41) * float4(other.group9.xyz, this.e415)) - (float4(this.group8.xyz.zx, this.e5, this.e425) * float4(other.group4.xyz.yzz, other.e42)) - (float4(this.group3.zx, this.e3215, this.e423) * float4(other.group7.xyz.yzz, other.e23)) - (float4(this.group3.ww, this.e4315, other.e425) * float4(other.group6.xyx, this.e42)) - (float4(this.group9.zx, this.e45, other.e435) * float4(other.group6.yzz, this.e43)) - (float4(this.group9.ww, this.e25, this.e435) * float4(other.group7.xyz.xyx, other.e43)) - float4((float3(other.e1234) * this.group8.xyz), other.e431 * this.e31) - float4((other.group8.xyz.zxy * this.group4.xyz.yzx), other.e31 * this.e431) - float4((this.group5.xyz.yzx * other.group1.zxy), other.e12 * this.e412) - float4((this.group7.xyz.yzx * other.group3.zxy), other.e423 * this.e23) - float4((other.group1.www * this.group3.xyz), other.e412 * this.e12) - float4((other.group3.www * this.group6.xyz), other.e415 * this.e41) - float4((other.group9.yzx * this.group6.zxy), other.e4235 * this.e423), 
-            /* e5, 0, 0, 0 */
-            float4((other.scalar * this.e5) + (other.e12345 * this.e3215) + (other.e5 * this.scalar) + (other.e5 * this.e45) + (other.e15 * this.e1) + (other.e25 * this.e2) + (other.e35 * this.e3) + (other.e321 * this.e3215) + (other.e4235 * this.e235) + (other.e4315 * this.e315) + (other.e4125 * this.e125) + (other.e3215 * this.e12345) - (other.e1 * this.e15) - (other.e2 * this.e25) - (other.e3 * this.e35) - (other.e15 * this.e415) - (other.e25 * this.e425) - (other.e35 * this.e435) - (other.e45 * this.e5) - (other.e23 * this.e235) - (other.e31 * this.e315) - (other.e12 * this.e125) - (other.e415 * this.e15) - (other.e425 * this.e25) - (other.e435 * this.e35) - (other.e235 * this.e23) - (other.e235 * this.e4235) - (other.e315 * this.e31) - (other.e315 * this.e4315) - (other.e125 * this.e12) - (other.e125 * this.e4125) - (other.e3215 * this.e321), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (other.scalar * this.e5) + (other.e12345 * this.e3215) + (other.e5 * this.scalar) + (other.e5 * this.e45) + (other.e15 * this.e1) + (other.e25 * this.e2) + (other.e35 * this.e3) + (other.e321 * this.e3215) + (other.e4235 * this.e235) + (other.e4315 * this.e315) + (other.e4125 * this.e125) + (other.e3215 * this.e12345) - (other.e1 * this.e15) - (other.e2 * this.e25) - (other.e3 * this.e35) - (other.e15 * this.e415) - (other.e25 * this.e425) - (other.e35 * this.e435) - (other.e45 * this.e5) - (other.e23 * this.e235) - (other.e31 * this.e315) - (other.e12 * this.e125) - (other.e415 * this.e15) - (other.e425 * this.e25) - (other.e435 * this.e35) - (other.e235 * this.e23) - (other.e235 * this.e4235) - (other.e315 * this.e31) - (other.e315 * this.e4315) - (other.e125 * this.e12) - (other.e125 * this.e4125) - (other.e3215 * this.e321), 
             /* e15, e25, e35, e45 */
             float4((other.e5 * this.e1) + (other.e25 * this.e4125) + (other.e4125 * this.e25) + (other.e3215 * this.e4235), (other.e5 * this.e2) + (other.e35 * this.e4235) + (other.e4235 * this.e35) + (other.e3215 * this.e4315), (other.e5 * this.e3) + (other.e35 * this.e45) + (other.e4315 * this.e15) + (other.e3215 * this.e4125), -(other.e415 * this.e1) - (other.e425 * this.e2) - (other.e435 * this.e3) - (other.e3215 * this.e1234)) + (float4(other.scalar) * this.group3) + (float4(other.e25, other.e3215, other.e3215, other.e25) * float4(this.group5.xyz.zyz, this.e42)) + (float4(other.e3215, other.e35, other.e15, other.e15) * float4(this.group5.xyz.xxy, this.e41)) + (float4(this.e3, this.e321, this.e415, this.e315) * float4(other.group8.xyz.yyy, other.e431)) + (float4(this.e425, this.e1, this.e321, this.e125) * float4(other.group8.xyz.zzz, other.e412)) + (float4(this.group0.xy.xx, this.scalar, other.e12345) * float4(other.group3.xyz, this.e321)) + (float4(this.group3.zx, this.e3215, other.e321) * float4(other.group5.xyz.yzz, this.e12345)) + (float4(this.group3.ww, this.e4315, other.e1234) * float4(other.group3.xyx, this.e3215)) + (float4(this.group6.wz, this.e2, this.e235) * float4(other.group8.xyz.xxx, other.e423)) + (float4(this.group9.ww, this.e25, other.e45) * float4(other.group5.xyz.xyx, this.scalar)) + float4((this.group8.xyz.yzx * other.group1.zxy), other.e35 * this.e43) + float4((this.group8.xyz.yzx * other.group6.zxy), other.e5 * this.e4) - (float4(other.e2, other.e435, other.e415, this.e431) * float4(this.group8.xyz.zxy, other.e315)) - (float4(other.e321, other.e3, other.e1, this.e423) * float4(this.group8.xyz.xxy, other.e235)) - (float4(this.e2, this.e415, this.e1, this.e4315) * float4(other.group8.xyz.zzy, other.e31)) - (float4(this.e435, this.e3, this.e425, this.e4235) * float4(other.group8.xyz.yxx, other.e23)) - (this.group3.yzxz * float4(other.group5.xyz.zxy, other.e43)) - (float4(other.group0.xy.yy, other.e12345, other.e41) * float4(this.group8.xyz, this.e15)) - (float4(this.group0.xy.yy, this.e12345, other.e42) * float4(other.group8.xyz, this.e25)) - (float4(this.group3.zx, this.e3215, this.e435) * float4(other.group9.yzz, other.e3)) - (float4(this.group9.ww, this.e25, this.e425) * float4(other.group9.xyx, other.e2)) - float4((float3(other.e5) * this.group6.xyz), other.e4 * this.e5) - float4((float3(this.e5) * other.group1.xyz), other.e4235 * this.e23) - float4((float3(this.e5) * other.group6.xyz), other.e1 * this.e415) - float4((this.group5.xyz.yzx * other.group3.zxy), other.e12 * this.e4125) - float4((this.group8.xyz.zyz * other.group6.yww), other.e125 * this.e412) - float4((other.group3.zxy * this.group9.yzx), other.e4315 * this.e31) - float4((other.group3.www * this.group3.xyz), other.e4125 * this.e12), 
-            /* e41, e42, e43, 0 */
-            float4((float3(other.scalar) * this.group4.xyz) + (float3(other.e1234) * this.group5.xyz) + (float3(this.scalar) * other.group4.xyz) + (float3(this.e4) * other.group1.xyz) + (float3(this.e423) * float3(other.e321, other.e3, other.e425)) + (float3(this.e431) * float3(other.e435, other.e321, other.e1)) + (float3(this.e412) * float3(other.e2, other.e415, other.e321)) + (float3(this.e1234) * other.group9.xyz) + (float3(other.e45, other.e4125, other.e4235) * this.group4.xyz.xxy) + (float3(other.e4315, other.e45, other.e45) * this.group4.xyz.zyz) + (float3(this.e12, this.e4125, this.e31) * other.group4.xyz.yxx) + (float3(this.e4315, this.e23, this.e4235) * other.group4.xyz.zzy) + (other.group5.xyz.xyx * float3(float2(this.e1234), this.e42)) + (other.group5.xyz.yzz * float3(this.group4.xyz.zx, this.e1234)) + (other.group7.xyz.zxy * this.group1.yzx) + (other.group7.xyz.zxy * this.group6.yzx) - (float3(other.e12345) * this.group7.xyz) - (float3(other.e4) * this.group1.xyz) - (float3(other.e4) * this.group6.xyz) - (float3(other.e41) * float3(this.e45, this.e12, this.e4315)) - (float3(other.e42) * float3(this.e4125, this.e45, this.e23)) - (float3(other.e43) * float3(this.e31, this.e4235, this.e45)) - (float3(other.e1234) * this.group9.xyz) - (float3(this.e12345) * other.group7.xyz) - (float3(this.e4) * other.group6.xyz) - (float3(other.e3, other.e435, other.e2) * this.group7.xyz.yxx) - (float3(other.e425, other.e1, other.e415) * this.group7.xyz.zzy) - (float3(this.e3, this.e1, this.e425) * other.group7.xyz.yzx) - (float3(this.e321, this.e321, this.e2) * other.group7.xyz.xyx) - (other.group5.xyz.zxy * this.group4.xyz.yzx) - (other.group7.xyz.yzz * this.group6.zxw) - (this.group4.xyz.yzx * other.group9.zxy), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(other.scalar) * this.group5.xyz) + (float3(other.e45) * this.group9.xyz) + (float3(other.e1234) * this.group3.xyz) + (float3(this.scalar) * other.group5.xyz) + (float3(this.e1234) * other.group3.xyz) + (float3(other.e25, other.e3215, other.e3215) * this.group4.xyz.zyz) + (float3(other.e3215, other.e35, other.e15) * this.group4.xyz.xxy) + (float3(this.e35, this.e15, this.e3215) * other.group4.xyz.yzz) + (float3(this.e45, this.e45, this.e4315) * other.group9.xyx) + (float3(this.e4125, this.e4235, this.e45) * other.group9.yzz) + (float3(this.e3215, this.e3215, this.e25) * other.group4.xyz.xyx) + (other.group5.xyz.yzx * this.group5.xyz.zxy) + (other.group7.xyz.zxy * this.group8.xyz.yzx) + (other.group8.xyz.zxy * this.group7.xyz.yzx) + (other.group1.zxy * this.group1.yzx) + (other.group6.zxy * this.group6.yzx) - (float3(other.e12345) * this.group6.xyz) - (float3(other.e4) * this.group8.xyz) - (float3(other.e5) * this.group7.xyz) - (float3(other.e321) * this.group1.xyz) - (float3(this.e12345) * other.group6.xyz) - (float3(this.e3, this.e1, this.e321) * other.group1.yzz) - (float3(this.e321, this.e321, this.e2) * other.group1.xyx) - (other.group4.xyz.zxy * this.group3.yzx) - (other.group5.xyz.zxy * this.group5.xyz.yzx) - (other.group7.xyz.xyx * float3(float2(this.e5), this.e315)) - (other.group7.xyz.yzz * float3(this.group8.xyz.zx, this.e5)) - (other.group8.xyz.xyx * float3(float2(this.e4), this.e431)) - (other.group8.xyz.yzz * float3(this.group7.xyz.zx, this.e4)) - (this.group4.xyz.yzx * other.group3.zxy) - (other.group6.yzx * this.group6.zxy) - (other.group9.zxy * this.group9.yzx), 0.0), 
+            /* e41, e42, e43 */
+            (float3(other.scalar) * this.group4.xyz) + (float3(other.e1234) * this.group5.xyz) + (float3(this.scalar) * other.group4.xyz) + (float3(this.e4) * other.group1.xyz) + (float3(this.e423) * float3(other.e321, other.e3, other.e425)) + (float3(this.e431) * float3(other.e435, other.e321, other.e1)) + (float3(this.e412) * float3(other.e2, other.e415, other.e321)) + (float3(this.e1234) * other.group9.xyz) + (float3(other.e45, other.e4125, other.e4235) * this.group4.xyz.xxy) + (float3(other.e4315, other.e45, other.e45) * this.group4.xyz.zyz) + (float3(this.e12, this.e4125, this.e31) * other.group4.xyz.yxx) + (float3(this.e4315, this.e23, this.e4235) * other.group4.xyz.zzy) + (other.group5.xyz.xyx * float3(float2(this.e1234), this.e42)) + (other.group5.xyz.yzz * float3(this.group4.xyz.zx, this.e1234)) + (other.group7.xyz.zxy * this.group1.yzx) + (other.group7.xyz.zxy * this.group6.yzx) - (float3(other.e12345) * this.group7.xyz) - (float3(other.e4) * this.group1.xyz) - (float3(other.e4) * this.group6.xyz) - (float3(other.e41) * float3(this.e45, this.e12, this.e4315)) - (float3(other.e42) * float3(this.e4125, this.e45, this.e23)) - (float3(other.e43) * float3(this.e31, this.e4235, this.e45)) - (float3(other.e1234) * this.group9.xyz) - (float3(this.e12345) * other.group7.xyz) - (float3(this.e4) * other.group6.xyz) - (float3(other.e3, other.e435, other.e2) * this.group7.xyz.yxx) - (float3(other.e425, other.e1, other.e415) * this.group7.xyz.zzy) - (float3(this.e3, this.e1, this.e425) * other.group7.xyz.yzx) - (float3(this.e321, this.e321, this.e2) * other.group7.xyz.xyx) - (other.group5.xyz.zxy * this.group4.xyz.yzx) - (other.group7.xyz.yzz * this.group6.zxw) - (this.group4.xyz.yzx * other.group9.zxy), 
+            /* e23, e31, e12 */
+            (float3(other.scalar) * this.group5.xyz) + (float3(other.e45) * this.group9.xyz) + (float3(other.e1234) * this.group3.xyz) + (float3(this.scalar) * other.group5.xyz) + (float3(this.e1234) * other.group3.xyz) + (float3(other.e25, other.e3215, other.e3215) * this.group4.xyz.zyz) + (float3(other.e3215, other.e35, other.e15) * this.group4.xyz.xxy) + (float3(this.e35, this.e15, this.e3215) * other.group4.xyz.yzz) + (float3(this.e45, this.e45, this.e4315) * other.group9.xyx) + (float3(this.e4125, this.e4235, this.e45) * other.group9.yzz) + (float3(this.e3215, this.e3215, this.e25) * other.group4.xyz.xyx) + (other.group5.xyz.yzx * this.group5.xyz.zxy) + (other.group7.xyz.zxy * this.group8.xyz.yzx) + (other.group8.xyz.zxy * this.group7.xyz.yzx) + (other.group1.zxy * this.group1.yzx) + (other.group6.zxy * this.group6.yzx) - (float3(other.e12345) * this.group6.xyz) - (float3(other.e4) * this.group8.xyz) - (float3(other.e5) * this.group7.xyz) - (float3(other.e321) * this.group1.xyz) - (float3(this.e12345) * other.group6.xyz) - (float3(this.e3, this.e1, this.e321) * other.group1.yzz) - (float3(this.e321, this.e321, this.e2) * other.group1.xyx) - (other.group4.xyz.zxy * this.group3.yzx) - (other.group5.xyz.zxy * this.group5.xyz.yzx) - (other.group7.xyz.xyx * float3(float2(this.e5), this.e315)) - (other.group7.xyz.yzz * float3(this.group8.xyz.zx, this.e5)) - (other.group8.xyz.xyx * float3(float2(this.e4), this.e431)) - (other.group8.xyz.yzz * float3(this.group7.xyz.zx, this.e4)) - (this.group4.xyz.yzx * other.group3.zxy) - (other.group6.yzx * this.group6.zxy) - (other.group9.zxy * this.group9.yzx), 
             /* e415, e425, e435, e321 */
             float4((other.e3 * this.e4315) + (other.e4 * this.e15) + (other.e15 * this.e4) + (other.e4125 * this.e2), (other.e1 * this.e4125) + (other.e4 * this.e25) + (other.e25 * this.e4) + (other.e4235 * this.e3), (other.e2 * this.e4235) + (other.e4 * this.e35) + (other.e35 * this.e4) + (other.e4315 * this.e1), -(other.e4 * this.e3215) - (other.e25 * this.e431) - (other.e35 * this.e412) - (other.e1234 * this.e5)) + (float4(other.scalar) * this.group6) + (float4(other.e25, other.e3215, other.e3215, this.e4) * float4(this.group7.xyz.zyz, other.e3215)) + (float4(other.e3215, other.e35, other.e15, this.e435) * float4(this.group7.xyz.xxy, other.e4125)) + (float4(float2(this.e5), this.e315, this.e125) * float4(other.group4.xyz.xyx, other.e43)) + (float4(float2(this.e1234), this.e42, this.e4315) * float4(other.group8.xyz.xyx, other.e425)) + (float4(other.group0.xy.yy, other.e12345, this.scalar) * float4(this.group5.xyz, other.e321)) + (float4(this.group0.xy.xx, this.scalar, other.e41) * float4(other.group6.xyz, this.e235)) + (float4(this.group0.xy.yy, this.e12345, other.e42) * float4(other.group5.xyz, this.e315)) + (float4(this.group4.xyz.zx, this.e1234, this.e4125) * float4(other.group8.xyz.yzz, other.e435)) + (float4(this.group8.xyz.zx, this.e5, this.e15) * float4(other.group4.xyz.yzz, other.e423)) + (float4(this.group3.zx, this.e3215, this.e4235) * float4(other.group7.xyz.yzz, other.e415)) + (float4(this.group9.ww, this.e25, this.e35) * float4(other.group7.xyz.xyx, other.e412)) + float4((float3(other.e5) * this.group4.xyz), other.e4235 * this.e415) + float4((float3(other.e1234) * this.group8.xyz), other.e5 * this.e1234) + float4((other.group5.xyz.yzx * this.group6.zxy), other.e431 * this.e25) + float4((this.group5.xyz.zxy * other.group6.yzx), other.e4315 * this.e425) - (float4(this.group1.zx, this.e321, other.e15) * float4(other.group9.yzz, this.e423)) - (float4(this.group3.ww, this.e4315, this.e42) * float4(other.group1.xyx, other.e315)) - (float4(this.group6.ww, this.e2, other.e3) * float4(other.group9.xyx, this.e12)) - (float4(this.group9.zx, this.e45, this.e43) * float4(other.group1.yzz, other.e125)) - float4((other.group4.xyz.zxy * this.group8.xyz.yzx), other.e12345 * this.e45) - float4((other.group5.xyz.zxy * this.group6.yzx), other.e45 * this.e12345) - float4((other.group7.xyz.zxy * this.group3.yzx), other.e23 * this.e1) - float4((other.group8.xyz.zxy * this.group4.xyz.yzx), other.e31 * this.e2) - float4((this.group5.xyz.yzx * other.group6.zxy), other.e12 * this.e3) - float4((this.group7.xyz.yzx * other.group3.zxy), other.e235 * this.e41) - float4((other.group3.www * this.group1.xyz), other.e1 * this.e23) - float4((other.group6.www * this.group9.xyz), other.e2 * this.e31), 
-            /* e423, e431, e412, 0 */
-            float4((float3(other.scalar) * this.group7.xyz) + (float3(other.e12345) * this.group4.xyz) + (float3(other.e4) * this.group5.xyz) + (float3(other.e1234) * this.group1.xyz) + (float3(other.e1234) * this.group6.xyz) + (float3(this.scalar) * other.group7.xyz) + (float3(this.e12345) * other.group4.xyz) + (float3(this.e4) * other.group9.xyz) + (float3(this.e1234) * other.group6.xyz) + (float3(other.e3, other.e435, other.e2) * this.group4.xyz.yxx) + (float3(other.e45, other.e4125, other.e4235) * this.group7.xyz.xxy) + (float3(other.e425, other.e1, other.e415) * this.group4.xyz.zzy) + (float3(other.e4315, other.e45, other.e45) * this.group7.xyz.zyz) + (float3(this.e3, this.e1, this.e425) * other.group4.xyz.yzx) + (float3(this.e12, this.e4125, this.e31) * other.group7.xyz.yxx) + (float3(this.e321, this.e321, this.e2) * other.group4.xyz.xyx) + (float3(this.e4315, this.e23, this.e4235) * other.group7.xyz.zzy) + (other.group4.xyz.yzz * this.group6.zxw) + (other.group5.xyz.xyx * float3(float2(this.e4), this.e431)) + (other.group5.xyz.yzz * float3(this.group7.xyz.zx, this.e4)) - (float3(other.e4) * this.group9.xyz) - (float3(other.e423) * float3(this.e45, this.e12, this.e4315)) - (float3(other.e431) * float3(this.e4125, this.e45, this.e23)) - (float3(other.e412) * float3(this.e31, this.e4235, this.e45)) - (float3(this.e41) * float3(other.e321, other.e3, other.e425)) - (float3(this.e42) * float3(other.e435, other.e321, other.e1)) - (float3(this.e43) * float3(other.e2, other.e415, other.e321)) - (float3(this.e1234) * other.group1.xyz) - (other.group4.xyz.zxy * this.group1.yzx) - (other.group4.xyz.zxy * this.group6.yzx) - (other.group5.xyz.zxy * this.group7.xyz.yzx) - (this.group7.xyz.yzx * other.group9.zxy), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(other.scalar) * this.group8.xyz) + (float3(other.e12345) * this.group3.xyz) + (float3(other.e5) * this.group5.xyz) + (float3(other.e5) * this.group9.xyz) + (float3(other.e321) * this.group3.xyz) + (float3(other.e3215) * this.group6.xyz) + (float3(this.scalar) * other.group8.xyz) + (float3(this.e12345) * other.group3.xyz) + (float3(this.e2, this.e415, this.e1) * other.group3.zzy) + (float3(this.e35, this.e15, this.e3215) * other.group1.yzz) + (float3(this.e35, this.e15, this.e3215) * other.group6.yzz) + (float3(this.e435, this.e3, this.e425) * other.group3.yxx) + (float3(this.e4125, this.e4235, this.e45) * other.group8.xyz.yzz) + (float3(this.e3215, this.e3215, this.e25) * other.group1.xyx) + (float3(this.e3215, this.e3215, this.e25) * other.group6.xyx) + (other.group5.xyz.xyx * float3(float2(this.e5), this.e315)) + (other.group5.xyz.yzz * float3(this.group8.xyz.zx, this.e5)) + (other.group8.xyz.xyx * float3(float2(this.e45), this.e31)) + (other.group8.xyz.yzx * float3(this.group5.xyz.zx, this.e4315)) + (this.group8.xyz.yzx * other.group9.zxy) - (float3(other.e15) * float3(this.e321, this.e435, this.e2)) - (float3(other.e25) * float3(this.e3, this.e321, this.e415)) - (float3(other.e35) * float3(this.e425, this.e1, this.e321)) - (float3(other.e3215) * this.group1.xyz) - (float3(this.e5) * other.group9.xyz) - (float3(other.e45, other.e4125, other.e4235) * this.group8.xyz.xxy) - (float3(other.e4315, other.e45, other.e45) * this.group8.xyz.zyz) - (other.group5.xyz.zxy * this.group8.xyz.yzx) - (other.group8.xyz.zxy * this.group5.xyz.yzx) - (other.group8.xyz.zxy * this.group9.yzx) - (other.group1.zxy * this.group3.yzx) - (other.group6.zxy * this.group3.yzx), 0.0), 
+            /* e423, e431, e412 */
+            (float3(other.scalar) * this.group7.xyz) + (float3(other.e12345) * this.group4.xyz) + (float3(other.e4) * this.group5.xyz) + (float3(other.e1234) * this.group1.xyz) + (float3(other.e1234) * this.group6.xyz) + (float3(this.scalar) * other.group7.xyz) + (float3(this.e12345) * other.group4.xyz) + (float3(this.e4) * other.group9.xyz) + (float3(this.e1234) * other.group6.xyz) + (float3(other.e3, other.e435, other.e2) * this.group4.xyz.yxx) + (float3(other.e45, other.e4125, other.e4235) * this.group7.xyz.xxy) + (float3(other.e425, other.e1, other.e415) * this.group4.xyz.zzy) + (float3(other.e4315, other.e45, other.e45) * this.group7.xyz.zyz) + (float3(this.e3, this.e1, this.e425) * other.group4.xyz.yzx) + (float3(this.e12, this.e4125, this.e31) * other.group7.xyz.yxx) + (float3(this.e321, this.e321, this.e2) * other.group4.xyz.xyx) + (float3(this.e4315, this.e23, this.e4235) * other.group7.xyz.zzy) + (other.group4.xyz.yzz * this.group6.zxw) + (other.group5.xyz.xyx * float3(float2(this.e4), this.e431)) + (other.group5.xyz.yzz * float3(this.group7.xyz.zx, this.e4)) - (float3(other.e4) * this.group9.xyz) - (float3(other.e423) * float3(this.e45, this.e12, this.e4315)) - (float3(other.e431) * float3(this.e4125, this.e45, this.e23)) - (float3(other.e412) * float3(this.e31, this.e4235, this.e45)) - (float3(this.e41) * float3(other.e321, other.e3, other.e425)) - (float3(this.e42) * float3(other.e435, other.e321, other.e1)) - (float3(this.e43) * float3(other.e2, other.e415, other.e321)) - (float3(this.e1234) * other.group1.xyz) - (other.group4.xyz.zxy * this.group1.yzx) - (other.group4.xyz.zxy * this.group6.yzx) - (other.group5.xyz.zxy * this.group7.xyz.yzx) - (this.group7.xyz.yzx * other.group9.zxy), 
+            /* e235, e315, e125 */
+            (float3(other.scalar) * this.group8.xyz) + (float3(other.e12345) * this.group3.xyz) + (float3(other.e5) * this.group5.xyz) + (float3(other.e5) * this.group9.xyz) + (float3(other.e321) * this.group3.xyz) + (float3(other.e3215) * this.group6.xyz) + (float3(this.scalar) * other.group8.xyz) + (float3(this.e12345) * other.group3.xyz) + (float3(this.e2, this.e415, this.e1) * other.group3.zzy) + (float3(this.e35, this.e15, this.e3215) * other.group1.yzz) + (float3(this.e35, this.e15, this.e3215) * other.group6.yzz) + (float3(this.e435, this.e3, this.e425) * other.group3.yxx) + (float3(this.e4125, this.e4235, this.e45) * other.group8.xyz.yzz) + (float3(this.e3215, this.e3215, this.e25) * other.group1.xyx) + (float3(this.e3215, this.e3215, this.e25) * other.group6.xyx) + (other.group5.xyz.xyx * float3(float2(this.e5), this.e315)) + (other.group5.xyz.yzz * float3(this.group8.xyz.zx, this.e5)) + (other.group8.xyz.xyx * float3(float2(this.e45), this.e31)) + (other.group8.xyz.yzx * float3(this.group5.xyz.zx, this.e4315)) + (this.group8.xyz.yzx * other.group9.zxy) - (float3(other.e15) * float3(this.e321, this.e435, this.e2)) - (float3(other.e25) * float3(this.e3, this.e321, this.e415)) - (float3(other.e35) * float3(this.e425, this.e1, this.e321)) - (float3(other.e3215) * this.group1.xyz) - (float3(this.e5) * other.group9.xyz) - (float3(other.e45, other.e4125, other.e4235) * this.group8.xyz.xxy) - (float3(other.e4315, other.e45, other.e45) * this.group8.xyz.zyz) - (other.group5.xyz.zxy * this.group8.xyz.yzx) - (other.group8.xyz.zxy * this.group5.xyz.yzx) - (other.group8.xyz.zxy * this.group9.yzx) - (other.group1.zxy * this.group3.yzx) - (other.group6.zxy * this.group3.yzx), 
             /* e4235, e4315, e4125, e3215 */
             float4((other.e415 * this.e321) + (other.e425 * this.e3) + (other.e321 * this.e415) + (other.e1234 * this.e15), (other.e425 * this.e321) + (other.e435 * this.e1) + (other.e321 * this.e425) + (other.e1234 * this.e25), (other.e415 * this.e2) + (other.e435 * this.e321) + (other.e321 * this.e435) + (other.e1234 * this.e35), -(other.e25 * this.e4315) - (other.e35 * this.e4125) - (other.e45 * this.e3215) - (other.e321 * this.e5)) + (float4(other.scalar) * this.group9) + (float4(other.e45, other.e4125, other.e4235, this.e25) * float4(this.group5.xyz.xxy, other.e4315)) + (float4(other.e4315, other.e45, other.e45, this.e35) * float4(this.group5.xyz.zyz, other.e4125)) + (float4(other.group0.xy.yy, other.e12345, this.scalar) * float4(this.group1.xyz, other.e3215)) + (float4(this.group0.xy.xx, this.scalar, other.e235) * float4(other.group9.xyz, this.e415)) + (float4(this.group0.xy.yy, this.e12345, other.e315) * float4(other.group1.xyz, this.e425)) + (float4(this.group7.xyz.zx, this.e4, other.e435) * float4(other.group8.xyz.yzz, this.e125)) + (float4(this.group1.ww, this.e431, other.e3) * float4(other.group8.xyz.xyx, this.e125)) + (float4(this.group3.zx, this.e3215, other.e1) * float4(other.group4.xyz.yzz, this.e235)) + (float4(this.group3.ww, this.e4315, other.e415) * float4(other.group5.xyz.xyx, this.e235)) + (float4(this.group9.zx, this.e45, other.e2) * float4(other.group5.xyz.yzz, this.e315)) + (float4(this.group9.ww, this.e25, this.e435) * float4(other.group4.xyz.xyx, other.e125)) + float4((float3(other.e5) * this.group7.xyz), other.e3215 * this.e45) + float4((other.group7.xyz.zxy * this.group8.xyz.yzx), other.e425 * this.e315) + float4((this.group4.xyz.yzx * other.group3.zxy), other.e4235 * this.e15) + float4((other.group1.yzx * this.group6.zxy), other.e5 * this.e321) - (float4(other.e25, other.e3215, other.e3215, this.e2) * float4(this.group4.xyz.zyz, other.e315)) - (float4(other.e3215, other.e35, other.e15, this.e1) * float4(this.group4.xyz.xxy, other.e235)) - (float4(float2(this.e5), this.e315, this.e15) * float4(other.group7.xyz.xyx, other.e23)) - (float4(this.group8.xyz.zx, this.e5, this.e25) * float4(other.group7.xyz.yzz, other.e31)) - float4((float3(this.e1234) * other.group3.xyz), other.e35 * this.e12) - float4((this.group8.xyz * other.group1.www), other.e15 * this.e23) - float4((other.group4.xyz.zxy * this.group3.yzx), other.e12345 * this.e5) - float4((other.group5.xyz.zxy * this.group9.yzx), other.e5 * this.e12345) - float4((other.group8.xyz.zxy * this.group7.xyz.yzx), other.e12 * this.e35) - float4((this.group5.xyz.yzx * other.group9.zxy), other.e125 * this.e3) - float4((other.group1.zxy * this.group6.yzx), other.e25 * this.e31) - float4((other.group6.zxy * this.group1.yzx), other.e15 * this.e4235), 
-            /* e1234, 0, 0, 0 */
-            float4((other.scalar * this.e1234) + (other.e45 * this.e1234) + (other.e41 * this.e4235) + (other.e42 * this.e4315) + (other.e43 * this.e4125) + (other.e415 * this.e423) + (other.e425 * this.e431) + (other.e435 * this.e412) + (other.e321 * this.e4) + (other.e423 * this.e1) + (other.e423 * this.e415) + (other.e431 * this.e2) + (other.e431 * this.e425) + (other.e412 * this.e3) + (other.e412 * this.e435) + (other.e1234 * this.scalar) - (other.e12345 * this.e4) - (other.e1 * this.e423) - (other.e2 * this.e431) - (other.e3 * this.e412) - (other.e4 * this.e12345) - (other.e4 * this.e321) - (other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43) - (other.e4235 * this.e41) - (other.e4315 * this.e42) - (other.e4125 * this.e43) - (other.e1234 * this.e45), 0.0, 0.0, 0.0)
+            /* e1234 */
+            (other.scalar * this.e1234) + (other.e45 * this.e1234) + (other.e41 * this.e4235) + (other.e42 * this.e4315) + (other.e43 * this.e4125) + (other.e415 * this.e423) + (other.e425 * this.e431) + (other.e435 * this.e412) + (other.e321 * this.e4) + (other.e423 * this.e1) + (other.e423 * this.e415) + (other.e431 * this.e2) + (other.e431 * this.e425) + (other.e412 * this.e3) + (other.e412 * this.e435) + (other.e1234 * this.scalar) - (other.e12345 * this.e4) - (other.e1 * this.e423) - (other.e2 * this.e431) - (other.e3 * this.e412) - (other.e4 * this.e12345) - (other.e4 * this.e321) - (other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43) - (other.e4235 * this.e41) - (other.e4315 * this.e42) - (other.e4125 * this.e43) - (other.e1234 * this.e45)
         ).geometric_product(this.reverse());
     }
 }
-extension MultiVector: Sandwich<Plane> {
-    associatedtype Output = MultiVector;
-    func sandwich(other: Plane) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(-(this.e4235 * other.e4235) - (this.e4315 * other.e4315) - (this.e4125 * other.e4125), (this.e2 * other.e4315) + (this.e3 * other.e4125) + (this.e4 * other.e3215)) + (float2(this.e1234, this.e1) * other.group0.wx), 0.0, 0.0), 
+public extension MultiVector {
+    public MultiVector sandwich(Plane other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(-(this.e4235 * other.e4235) - (this.e4315 * other.e4315) - (this.e4125 * other.e4125), (this.e2 * other.e4315) + (this.e3 * other.e4125) + (this.e4 * other.e3215)) + (float2(this.e1234, this.e1) * other.group0.wx), 
             /* e1, e2, e3, e4 */
             float4((this.e425 * other.e4125) + (this.e423 * other.e3215), (this.e435 * other.e4235) + (this.e431 * other.e3215), (this.e415 * other.e4315) + (this.e412 * other.e3215), this.e412 * other.e4125 * -1.0) - (other.group0.xyzx * float4(this.group0.xy.yy, this.e12345, this.e423)) - (other.group0.yzxy * float4(this.group6.zxy, this.e431)), 
-            /* e5, 0, 0, 0 */
-            float4((this.e12345 * other.e3215) + (this.e235 * other.e4235) + (this.e315 * other.e4315) + (this.e125 * other.e4125) - (this.e321 * other.e3215), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (this.e12345 * other.e3215) + (this.e235 * other.e4235) + (this.e315 * other.e4315) + (this.e125 * other.e4125) - (this.e321 * other.e3215), 
             /* e15, e25, e35, e45 */
             float4((this.e25 * other.e4125) + (this.e23 * other.e3215) + (this.e4235 * other.e3215), (this.e35 * other.e4235) + (this.e31 * other.e3215) + (this.e4315 * other.e3215), (this.e15 * other.e4315) + (this.e12 * other.e3215) + (this.e4125 * other.e3215), -(this.e12 * other.e4125) - (this.e1234 * other.e3215)) - (other.group0.xyzy * float4(this.group9.www, this.e31)) - (other.group0.yzxx * float4(this.group3.zxy, this.e23)), 
-            /* e41, e42, e43, 0 */
-            float4((float3(this.e1234) * other.group0.xyz) + (this.group4.xyz.zxy * other.group0.yzx) - (this.group4.xyz.yzx * other.group0.zxy), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(this.e45) * other.group0.xyz) + (float3(other.e3215) * this.group4.xyz) + (this.group9.zxy * other.group0.yzx) - (this.group9.yzx * other.group0.zxy), 0.0), 
+            /* e41, e42, e43 */
+            (float3(this.e1234) * other.group0.xyz) + (this.group4.xyz.zxy * other.group0.yzx) - (this.group4.xyz.yzx * other.group0.zxy), 
+            /* e23, e31, e12 */
+            (float3(this.e45) * other.group0.xyz) + (float3(other.e3215) * this.group4.xyz) + (this.group9.zxy * other.group0.yzx) - (this.group9.yzx * other.group0.zxy), 
             /* e415, e425, e435, e321 */
             float4(-(this.e3 * other.e4315) - (this.e321 * other.e4235), -(this.e1 * other.e4125) - (this.e321 * other.e4315), -(this.e2 * other.e4235) - (this.e321 * other.e4125), (this.e425 * other.e4315) + (this.e435 * other.e4125)) + (float4(other.e3215) * float4(this.group7.xyz, this.e4)) + (other.group0.zxyx * float4(this.group1.yzx, this.e415)), 
-            /* e423, e431, e412, 0 */
-            float4((float3(this.e4) * other.group0.xyz) + (this.group7.xyz.zxy * other.group0.yzx) - (this.group7.xyz.yzx * other.group0.zxy), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(other.e3215) * this.group6.xyz) + (this.group8.xyz.yzx * other.group0.zxy) - (float3(this.e5) * other.group0.xyz) - (float3(other.e3215) * this.group1.xyz) - (this.group8.xyz.zxy * other.group0.yzx), 0.0), 
+            /* e423, e431, e412 */
+            (float3(this.e4) * other.group0.xyz) + (this.group7.xyz.zxy * other.group0.yzx) - (this.group7.xyz.yzx * other.group0.zxy), 
+            /* e235, e315, e125 */
+            (float3(other.e3215) * this.group6.xyz) + (this.group8.xyz.yzx * other.group0.zxy) - (float3(this.e5) * other.group0.xyz) - (float3(other.e3215) * this.group1.xyz) - (this.group8.xyz.zxy * other.group0.yzx), 
             /* e4235, e4315, e4125, e3215 */
             float4(-(this.e41 * other.e3215) - (this.e31 * other.e4125), -(this.e42 * other.e3215) - (this.e12 * other.e4235), -(this.e43 * other.e3215) - (this.e23 * other.e4315), (this.e25 * other.e4315) + (this.e35 * other.e4125) + (this.e45 * other.e3215)) + (float4(this.scalar) * other.group0) + (other.group0.yzxx * float4(this.group5.xyz.zxy, this.e15)), 
-            /* e1234, 0, 0, 0 */
-            float4(-(this.e41 * other.e4235) - (this.e42 * other.e4315) - (this.e43 * other.e4125), 0.0, 0.0, 0.0)
+            /* e1234 */
+            -(this.e41 * other.e4235) - (this.e42 * other.e4315) - (this.e43 * other.e4125)
         ).geometric_product(this.reverse());
     }
 }
-extension MultiVector: Sandwich<RoundPoint> {
-    associatedtype Output = MultiVector;
-    func sandwich(other: RoundPoint) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(-(this.e4 * other.e5) - (this.e5 * other.e4), (this.e3215 * other.e4) + (this.e1234 * other.e5)) + (float2(other.e1) * float2(this.e1, this.e4235)) + (float2(other.e2) * float2(this.e2, this.e4315)) + (float2(other.e3) * float2(this.e3, this.e4125)), 0.0, 0.0), 
+public extension MultiVector {
+    public MultiVector sandwich(RoundPoint other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(-(this.e4 * other.e5) - (this.e5 * other.e4), (this.e3215 * other.e4) + (this.e1234 * other.e5)) + (float2(other.e1) * float2(this.e1, this.e4235)) + (float2(other.e2) * float2(this.e2, this.e4315)) + (float2(other.e3) * float2(this.e3, this.e4125)), 
             /* e1, e2, e3, e4 */
             float4(this.e15 * other.e4 * -1.0, this.e25 * other.e4 * -1.0, this.e35 * other.e4 * -1.0, this.e43 * other.e3) + (float4(this.scalar) * other.group0) + (other.group0.yzxy * float4(this.group5.xyz.zxy, this.e42)) + float4((float3(other.e5) * this.group4.xyz), this.e41 * other.e1) - (other.group0.zxyw * float4(this.group5.xyz.yzx, this.e45)), 
-            /* e5, 0, 0, 0 */
-            float4((this.scalar * other.e5) + (this.e45 * other.e5) - (this.e15 * other.e1) - (this.e25 * other.e2) - (this.e35 * other.e3), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (this.scalar * other.e5) + (this.e45 * other.e5) - (this.e15 * other.e1) - (this.e25 * other.e2) - (this.e35 * other.e3), 
             /* e15, e25, e35, e45 */
             float4(this.e1 * other.e5, this.e2 * other.e5, this.e3 * other.e5, this.e5 * other.e4 * -1.0) + float4((this.group8.xyz.yzx * other.group0.zxy), this.e4 * other.e5) - (this.group6.xyzy * float4(float3(other.e5), other.e2)) - (other.group0.yzxx * float4(this.group8.xyz.zxy, this.e415)) - float4((float3(this.e5) * other.group0.xyz), this.e435 * other.e3), 
-            /* e41, e42, e43, 0 */
-            float4((float3(this.e4) * other.group0.xyz) + (this.group7.xyz.zxy * other.group0.yzx) - (float3(other.e4) * this.group1.xyz) - (float3(other.e4) * this.group6.xyz) - (this.group7.xyz.yzx * other.group0.zxy), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((this.group1.yzx * other.group0.zxy) - (float3(this.e321) * other.group0.xyz) - (float3(other.e4) * this.group8.xyz) - (float3(other.e5) * this.group7.xyz) - (this.group1.zxy * other.group0.yzx), 0.0), 
+            /* e41, e42, e43 */
+            (float3(this.e4) * other.group0.xyz) + (this.group7.xyz.zxy * other.group0.yzx) - (float3(other.e4) * this.group1.xyz) - (float3(other.e4) * this.group6.xyz) - (this.group7.xyz.yzx * other.group0.zxy), 
+            /* e23, e31, e12 */
+            (this.group1.yzx * other.group0.zxy) - (float3(this.e321) * other.group0.xyz) - (float3(other.e4) * this.group8.xyz) - (float3(other.e5) * this.group7.xyz) - (this.group1.zxy * other.group0.yzx), 
             /* e415, e425, e435, e321 */
             float4((this.e15 * other.e4) + (this.e4315 * other.e3), (this.e25 * other.e4) + (this.e4125 * other.e1), (this.e35 * other.e4) + (this.e4235 * other.e2), -(this.e12 * other.e3) - (this.e3215 * other.e4)) + (float4(other.e5) * float4(this.group4.xyz, this.e1234)) - (other.group0.xyzx * float4(this.group3.www, this.e23)) - (other.group0.yzxy * float4(this.group9.zxy, this.e31)), 
-            /* e423, e431, e412, 0 */
-            float4((float3(other.e4) * this.group5.xyz) + (this.group4.xyz.yzx * other.group0.zxy) - (float3(this.e1234) * other.group0.xyz) - (float3(other.e4) * this.group9.xyz) - (this.group4.xyz.zxy * other.group0.yzx), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(this.e3215) * other.group0.xyz) + (float3(other.e5) * this.group5.xyz) + (float3(other.e5) * this.group9.xyz) + (this.group3.zxy * other.group0.yzx) - (this.group3.yzx * other.group0.zxy), 0.0), 
+            /* e423, e431, e412 */
+            (float3(other.e4) * this.group5.xyz) + (this.group4.xyz.yzx * other.group0.zxy) - (float3(this.e1234) * other.group0.xyz) - (float3(other.e4) * this.group9.xyz) - (this.group4.xyz.zxy * other.group0.yzx), 
+            /* e235, e315, e125 */
+            (float3(this.e3215) * other.group0.xyz) + (float3(other.e5) * this.group5.xyz) + (float3(other.e5) * this.group9.xyz) + (this.group3.zxy * other.group0.yzx) - (this.group3.yzx * other.group0.zxy), 
             /* e4235, e4315, e4125, e3215 */
             float4(this.e425 * other.e3 * -1.0, this.e435 * other.e1 * -1.0, this.e415 * other.e2 * -1.0, this.e321 * other.e5) + (other.group0.xyzx * float4(this.group0.xy.yy, this.e12345, this.e235)) + (other.group0.yzxz * float4(this.group6.zxy, this.e125)) + float4((float3(other.e5) * this.group7.xyz), this.e315 * other.e2) - float4((this.group8.xyz * other.group0.www), this.e12345 * other.e5), 
-            /* e1234, 0, 0, 0 */
-            float4(-(this.e12345 * other.e4) - (this.e321 * other.e4) - (this.e423 * other.e1) - (this.e431 * other.e2) - (this.e412 * other.e3), 0.0, 0.0, 0.0)
+            /* e1234 */
+            -(this.e12345 * other.e4) - (this.e321 * other.e4) - (this.e423 * other.e1) - (this.e431 * other.e2) - (this.e412 * other.e3)
         ).geometric_product(this.reverse());
     }
 }
-extension MultiVector: Sandwich<Scalar> {
-    associatedtype Output = MultiVector;
-    func sandwich(other: Scalar) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(other.scalar) * this.group0.xy, 0.0, 0.0), 
+public extension MultiVector {
+    public MultiVector sandwich(Scalar other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(other.scalar) * this.group0.xy, 
             /* e1, e2, e3, e4 */
             float4(other.scalar) * this.group1, 
-            /* e5, 0, 0, 0 */
-            float4(this.e5 * other.scalar, 0.0, 0.0, 0.0), 
+            /* e5 */
+            this.e5 * other.scalar, 
             /* e15, e25, e35, e45 */
             float4(other.scalar) * this.group3, 
-            /* e41, e42, e43, 0 */
-            float4(float3(other.scalar) * this.group4.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(float3(other.scalar) * this.group5.xyz, 0.0), 
+            /* e41, e42, e43 */
+            float3(other.scalar) * this.group4.xyz, 
+            /* e23, e31, e12 */
+            float3(other.scalar) * this.group5.xyz, 
             /* e415, e425, e435, e321 */
             float4(other.scalar) * this.group6, 
-            /* e423, e431, e412, 0 */
-            float4(float3(other.scalar) * this.group7.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(float3(other.scalar) * this.group8.xyz, 0.0), 
+            /* e423, e431, e412 */
+            float3(other.scalar) * this.group7.xyz, 
+            /* e235, e315, e125 */
+            float3(other.scalar) * this.group8.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(other.scalar) * this.group9, 
-            /* e1234, 0, 0, 0 */
-            float4(this.e1234 * other.scalar, 0.0, 0.0, 0.0)
+            /* e1234 */
+            this.e1234 * other.scalar
         ).geometric_product(this.reverse());
     }
 }
-extension MultiVector: Sandwich<Sphere> {
-    associatedtype Output = MultiVector;
-    func sandwich(other: Sphere) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(-(this.e4235 * other.e4235) - (this.e4315 * other.e4315) - (this.e4125 * other.e4125), (this.e2 * other.e4315) + (this.e3 * other.e4125) + (this.e4 * other.e3215)) + (float2(other.e1234) * float2(this.e3215, this.e5)) + (float2(this.e1234, this.e1) * other.group0.wx), 0.0, 0.0), 
+public extension MultiVector {
+    public MultiVector sandwich(Sphere other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(-(this.e4235 * other.e4235) - (this.e4315 * other.e4315) - (this.e4125 * other.e4125), (this.e2 * other.e4315) + (this.e3 * other.e4125) + (this.e4 * other.e3215)) + (float2(other.e1234) * float2(this.e3215, this.e5)) + (float2(this.e1234, this.e1) * other.group0.wx), 
             /* e1, e2, e3, e4 */
             (this.group6.yzxw * float4(other.group0.zxy, other.e1234)) + float4((this.group7.xyz * other.group0.www), this.e12345 * other.e1234) - (other.group0.xyzx * float4(this.group0.xy.yy, this.e12345, this.e423)) - (other.group0.yzxz * float4(this.group6.zxy, this.e412)) - float4((float3(other.e1234) * this.group8.xyz), this.e431 * other.e4315), 
-            /* e5, 0, 0, 0 */
-            float4((this.e12345 * other.e3215) + (this.e235 * other.e4235) + (this.e315 * other.e4315) + (this.e125 * other.e4125) - (this.e321 * other.e3215), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (this.e12345 * other.e3215) + (this.e235 * other.e4235) + (this.e315 * other.e4315) + (this.e125 * other.e4125) - (this.e321 * other.e3215), 
             /* e15, e25, e35, e45 */
             float4((this.e25 * other.e4125) + (this.e4235 * other.e3215), (this.e35 * other.e4235) + (this.e4315 * other.e3215), (this.e15 * other.e4315) + (this.e4125 * other.e3215), -(this.e12 * other.e4125) - (this.e1234 * other.e3215)) + float4((this.group5.xyz * other.group0.www), this.e3215 * other.e1234) - (other.group0.xyzy * float4(this.group9.www, this.e31)) - (other.group0.yzxx * float4(this.group3.zxy, this.e23)), 
-            /* e41, e42, e43, 0 */
-            float4((float3(this.e1234) * other.group0.xyz) + (float3(other.e1234) * this.group5.xyz) + (this.group4.xyz.zxy * other.group0.yzx) - (float3(other.e1234) * this.group9.xyz) - (this.group4.xyz.yzx * other.group0.zxy), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(this.e45) * other.group0.xyz) + (float3(other.e3215) * this.group4.xyz) + (float3(other.e1234) * this.group3.xyz) + (this.group9.zxy * other.group0.yzx) - (this.group9.yzx * other.group0.zxy), 0.0), 
+            /* e41, e42, e43 */
+            (float3(this.e1234) * other.group0.xyz) + (float3(other.e1234) * this.group5.xyz) + (this.group4.xyz.zxy * other.group0.yzx) - (float3(other.e1234) * this.group9.xyz) - (this.group4.xyz.yzx * other.group0.zxy), 
+            /* e23, e31, e12 */
+            (float3(this.e45) * other.group0.xyz) + (float3(other.e3215) * this.group4.xyz) + (float3(other.e1234) * this.group3.xyz) + (this.group9.zxy * other.group0.yzx) - (this.group9.yzx * other.group0.zxy), 
             /* e415, e425, e435, e321 */
             float4(this.e321 * other.e4235 * -1.0, this.e321 * other.e4315 * -1.0, this.e321 * other.e4125 * -1.0, this.e435 * other.e4125) + (float4(other.e3215) * float4(this.group7.xyz, this.e4)) + (other.group0.zxyy * float4(this.group1.yzx, this.e425)) + float4((float3(other.e1234) * this.group8.xyz), this.e415 * other.e4235) - float4((this.group1.zxy * other.group0.yzx), this.e5 * other.e1234), 
-            /* e423, e431, e412, 0 */
-            float4((float3(this.e4) * other.group0.xyz) + (float3(other.e1234) * this.group1.xyz) + (float3(other.e1234) * this.group6.xyz) + (this.group7.xyz.zxy * other.group0.yzx) - (this.group7.xyz.yzx * other.group0.zxy), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(other.e3215) * this.group6.xyz) + (this.group8.xyz.yzx * other.group0.zxy) - (float3(this.e5) * other.group0.xyz) - (float3(other.e3215) * this.group1.xyz) - (this.group8.xyz.zxy * other.group0.yzx), 0.0), 
+            /* e423, e431, e412 */
+            (float3(this.e4) * other.group0.xyz) + (float3(other.e1234) * this.group1.xyz) + (float3(other.e1234) * this.group6.xyz) + (this.group7.xyz.zxy * other.group0.yzx) - (this.group7.xyz.yzx * other.group0.zxy), 
+            /* e235, e315, e125 */
+            (float3(other.e3215) * this.group6.xyz) + (this.group8.xyz.yzx * other.group0.zxy) - (float3(this.e5) * other.group0.xyz) - (float3(other.e3215) * this.group1.xyz) - (this.group8.xyz.zxy * other.group0.yzx), 
             /* e4235, e4315, e4125, e3215 */
             float4(-(this.e41 * other.e3215) - (this.e31 * other.e4125), -(this.e42 * other.e3215) - (this.e12 * other.e4235), -(this.e43 * other.e3215) - (this.e23 * other.e4315), (this.e35 * other.e4125) + (this.e45 * other.e3215)) + (float4(this.scalar) * other.group0) + (this.group3.xyzy * float4(float3(other.e1234), other.e4315)) + (other.group0.yzxx * float4(this.group5.xyz.zxy, this.e15)), 
-            /* e1234, 0, 0, 0 */
-            float4((this.scalar * other.e1234) - (this.e45 * other.e1234) - (this.e41 * other.e4235) - (this.e42 * other.e4315) - (this.e43 * other.e4125), 0.0, 0.0, 0.0)
+            /* e1234 */
+            (this.scalar * other.e1234) - (this.e45 * other.e1234) - (this.e41 * other.e4235) - (this.e42 * other.e4315) - (this.e43 * other.e4125)
         ).geometric_product(this.reverse());
     }
 }
-extension MultiVector: Sandwich<VersorEven> {
-    associatedtype Output = MultiVector;
-    func sandwich(other: VersorEven) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((this.e415 * other.e415) + (this.e425 * other.e425) + (this.e435 * other.e435) + (this.e431 * other.e315) + (this.e412 * other.e125) + (this.e315 * other.e431) + (this.e125 * other.e412) - (this.e5 * other.e4), (this.e3215 * other.e4) - (this.e25 * other.e431) - (this.e35 * other.e412) - (this.e45 * other.e321) - (this.e42 * other.e315) - (this.e43 * other.e125) - (this.e31 * other.e425) - (this.e12 * other.e435)) + (float2(other.e1) * float2(this.e1, this.e4235)) + (float2(other.e2) * float2(this.e2, this.e4315)) + (float2(other.e3) * float2(this.e3, this.e4125)) + (float2(this.e423, this.e1234) * other.group2.xw) + (float2(this.e235, this.scalar) * other.group0.xw) - (float2(this.e12345, this.e15) * other.group0.wx) - (float2(this.e4, this.e41) * other.group2.wx) - (float2(this.e321, this.e23) * other.group1.wx), 0.0, 0.0), 
+public extension MultiVector {
+    public MultiVector sandwich(VersorEven other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((this.e415 * other.e415) + (this.e425 * other.e425) + (this.e435 * other.e435) + (this.e431 * other.e315) + (this.e412 * other.e125) + (this.e315 * other.e431) + (this.e125 * other.e412) - (this.e5 * other.e4), (this.e3215 * other.e4) - (this.e25 * other.e431) - (this.e35 * other.e412) - (this.e45 * other.e321) - (this.e42 * other.e315) - (this.e43 * other.e125) - (this.e31 * other.e425) - (this.e12 * other.e435)) + (float2(other.e1) * float2(this.e1, this.e4235)) + (float2(other.e2) * float2(this.e2, this.e4315)) + (float2(other.e3) * float2(this.e3, this.e4125)) + (float2(this.e423, this.e1234) * other.group2.xw) + (float2(this.e235, this.scalar) * other.group0.xw) - (float2(this.e12345, this.e15) * other.group0.wx) - (float2(this.e4, this.e41) * other.group2.wx) - (float2(this.e321, this.e23) * other.group1.wx), 
             /* e1, e2, e3, e4 */
             (float4(this.scalar) * other.group3) + (float4(this.e1234) * float4(other.group2.xyz, other.e12345)) + (float4(other.e321, other.e3, other.e1, other.e3) * float4(this.group5.xyz.xxy, this.e43)) + (float4(other.e2, other.e321, other.e321, other.e423) * float4(this.group5.xyz.zyz, this.e4235)) + (this.group9.yzxz * float4(other.group1.zxy, other.e412)) + (other.group0.zxyy * float4(this.group3.yzx, this.e4315)) + float4((this.group4.xyz.xxy * other.group2.wzx), this.e41 * other.e1) + float4((this.group4.xyz.zyz * other.group2.yww), this.e42 * other.e2) - (float4(other.e431, other.e4, other.e4, other.e423) * float4(this.group3.zyz, this.e23)) - (float4(other.e12345, other.e435, other.e415, other.e412) * float4(this.group9.xxy, this.e12)) - (float4(other.e425, other.e12345, other.e12345, other.e4) * float4(this.group9.zyz, this.e45)) - (float4(other.e4, other.e412, other.e423, other.e435) * float4(this.group3.xxy, this.e43)) - float4((this.group4.xyz.yzx * other.group2.zxy), this.e41 * other.e415) - float4((this.group5.xyz.yzx * other.group3.zxy), this.e42 * other.e425) - float4((this.group3.www * other.group1.xyz), this.e31 * other.e431) - float4((this.group9.www * other.group0.xyz), this.e1234 * other.e321), 
-            /* e5, 0, 0, 0 */
-            float4((this.scalar * other.e5) + (this.e45 * other.e5) + (this.e3215 * other.e12345) + (this.e3215 * other.e321) - (this.e15 * other.e415) - (this.e15 * other.e1) - (this.e25 * other.e425) - (this.e25 * other.e2) - (this.e35 * other.e435) - (this.e35 * other.e3) - (this.e23 * other.e235) - (this.e31 * other.e315) - (this.e12 * other.e125) - (this.e4235 * other.e235) - (this.e4315 * other.e315) - (this.e4125 * other.e125), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (this.scalar * other.e5) + (this.e45 * other.e5) + (this.e3215 * other.e12345) + (this.e3215 * other.e321) - (this.e15 * other.e415) - (this.e15 * other.e1) - (this.e25 * other.e425) - (this.e25 * other.e2) - (this.e35 * other.e435) - (this.e35 * other.e3) - (this.e23 * other.e235) - (this.e31 * other.e315) - (this.e12 * other.e125) - (this.e4235 * other.e235) - (this.e4315 * other.e315) - (this.e4125 * other.e125), 
             /* e15, e25, e35, e45 */
             (float4(this.e321) * float4(other.group2.xyz, other.e12345)) + (other.group1.zxyw * float4(this.group8.xyz.yzx, this.e12345)) + (other.group2.zxyw * float4(this.group6.yzx, this.e4)) + float4((this.group8.xyz.yzx * other.group3.zxy), this.e235 * other.e423) + float4((this.group1.xxy * other.group2.wzx), this.e315 * other.e431) + float4((this.group1.zyz * other.group2.yww), this.e125 * other.e412) - (float4(this.e5) * other.group3) - (float4(other.e12345, other.e435, other.e415, other.e315) * float4(this.group8.xyz.xxy, this.e431)) - (float4(other.e425, other.e12345, other.e12345, other.e415) * float4(this.group8.xyz.zyz, this.e1)) - (float4(other.e321, other.e3, other.e1, other.e125) * float4(this.group8.xyz.xxy, this.e412)) - (float4(other.e2, other.e321, other.e321, other.e425) * float4(this.group8.xyz.zyz, this.e2)) - (this.group1.yzxz * float4(other.group2.zxy, other.e435)) - (this.group6.xxyx * float4(other.group2.wzx, other.e1)) - (this.group6.zyzy * float4(other.group2.yww, other.e2)) - (other.group2.xyzx * float4(this.group0.xy.yy, this.e12345, this.e423)) - float4((float3(this.e5) * other.group1.xyz), this.e435 * other.e3), 
-            /* e41, e42, e43, 0 */
-            float4((float3(this.e4) * other.group3.xyz) + (float3(this.e423) * float3(other.e321, other.e3, other.e425)) + (float3(this.e431) * float3(other.e435, other.e321, other.e1)) + (float3(this.e412) * float3(other.e2, other.e415, other.e321)) + (this.group1.yzx * other.group0.zxy) + (this.group6.yzx * other.group0.zxy) - (float3(this.e12345) * other.group0.xyz) - (float3(this.e4) * other.group1.xyz) - (float3(this.e321) * other.group0.xyz) - (float3(this.e423) * float3(other.e12345, other.e435, other.e2)) - (float3(this.e431) * float3(other.e3, other.e12345, other.e415)) - (float3(this.e412) * float3(other.e425, other.e1, other.e12345)) - (float3(other.e431, other.e4, other.e4) * this.group1.zyz) - (float3(other.e431, other.e4, other.e4) * this.group6.zyz) - (float3(other.e4, other.e412, other.e423) * this.group1.xxy) - (float3(other.e4, other.e412, other.e423) * this.group6.xxy), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((this.group7.xyz.yzx * other.group2.zxy) + (this.group8.xyz.yzx * other.group0.zxy) + (this.group1.yzx * other.group3.zxy) + (this.group6.yzx * other.group1.zxy) - (float3(this.e12345) * other.group1.xyz) - (float3(this.e4) * other.group2.xyz) - (float3(this.e5) * other.group0.xyz) - (float3(this.e321) * other.group3.xyz) - (float3(other.e431, other.e4, other.e4) * this.group8.xyz.zyz) - (float3(other.e12345, other.e435, other.e415) * this.group6.xxy) - (float3(other.e425, other.e12345, other.e12345) * this.group6.zyz) - (float3(other.e321, other.e3, other.e1) * this.group1.xxy) - (float3(other.e2, other.e321, other.e321) * this.group1.zyz) - (float3(other.e4, other.e412, other.e423) * this.group8.xyz.xxy) - (this.group7.xyz.xxy * other.group2.wzx) - (this.group7.xyz.zyz * other.group2.yww), 0.0), 
+            /* e41, e42, e43 */
+            (float3(this.e4) * other.group3.xyz) + (float3(this.e423) * float3(other.e321, other.e3, other.e425)) + (float3(this.e431) * float3(other.e435, other.e321, other.e1)) + (float3(this.e412) * float3(other.e2, other.e415, other.e321)) + (this.group1.yzx * other.group0.zxy) + (this.group6.yzx * other.group0.zxy) - (float3(this.e12345) * other.group0.xyz) - (float3(this.e4) * other.group1.xyz) - (float3(this.e321) * other.group0.xyz) - (float3(this.e423) * float3(other.e12345, other.e435, other.e2)) - (float3(this.e431) * float3(other.e3, other.e12345, other.e415)) - (float3(this.e412) * float3(other.e425, other.e1, other.e12345)) - (float3(other.e431, other.e4, other.e4) * this.group1.zyz) - (float3(other.e431, other.e4, other.e4) * this.group6.zyz) - (float3(other.e4, other.e412, other.e423) * this.group1.xxy) - (float3(other.e4, other.e412, other.e423) * this.group6.xxy), 
+            /* e23, e31, e12 */
+            (this.group7.xyz.yzx * other.group2.zxy) + (this.group8.xyz.yzx * other.group0.zxy) + (this.group1.yzx * other.group3.zxy) + (this.group6.yzx * other.group1.zxy) - (float3(this.e12345) * other.group1.xyz) - (float3(this.e4) * other.group2.xyz) - (float3(this.e5) * other.group0.xyz) - (float3(this.e321) * other.group3.xyz) - (float3(other.e431, other.e4, other.e4) * this.group8.xyz.zyz) - (float3(other.e12345, other.e435, other.e415) * this.group6.xxy) - (float3(other.e425, other.e12345, other.e12345) * this.group6.zyz) - (float3(other.e321, other.e3, other.e1) * this.group1.xxy) - (float3(other.e2, other.e321, other.e321) * this.group1.zyz) - (float3(other.e4, other.e412, other.e423) * this.group8.xyz.xxy) - (this.group7.xyz.xxy * other.group2.wzx) - (this.group7.xyz.zyz * other.group2.yww), 
             /* e415, e425, e435, e321 */
             float4((this.e3215 * other.e423) + (this.e1234 * other.e235), (this.e3215 * other.e431) + (this.e1234 * other.e315), (this.e3215 * other.e412) + (this.e1234 * other.e125), -(this.e45 * other.e12345) - (this.e3215 * other.e4)) + (float4(this.scalar) * other.group1) + (float4(other.e431, other.e4, other.e4, other.e435) * float4(this.group3.zyz, this.e4125)) + (float4(other.e12345, other.e435, other.e415, other.e412) * float4(this.group5.xyz.xxy, this.e35)) + (float4(other.e425, other.e12345, other.e12345, other.e415) * float4(this.group5.xyz.zyz, this.e4235)) + (float4(other.e4, other.e412, other.e423, other.e425) * float4(this.group3.xxy, this.e4315)) + float4((this.group4.xyz.xxy * other.group2.wzx), this.e15 * other.e423) + float4((this.group4.xyz.zyz * other.group2.yww), this.e25 * other.e431) + float4((this.group9.yzx * other.group3.zxy), this.e1234 * other.e5) - (float4(other.e321, other.e3, other.e1, other.e2) * float4(this.group9.xxy, this.e31)) - (float4(other.e2, other.e321, other.e321, other.e3) * float4(this.group9.zyz, this.e12)) - (other.group2.zxyx * float4(this.group4.xyz.yzx, this.e41)) - (other.group3.xyzx * float4(this.group3.www, this.e23)) - float4((this.group5.xyz.yzx * other.group1.zxy), this.e42 * other.e315) - float4((this.group3.yzx * other.group0.zxy), this.e43 * other.e125), 
-            /* e423, e431, e412, 0 */
-            float4((float3(this.scalar) * other.group0.xyz) + (float3(this.e41) * float3(other.e12345, other.e435, other.e2)) + (float3(this.e42) * float3(other.e3, other.e12345, other.e415)) + (float3(this.e43) * float3(other.e425, other.e1, other.e12345)) + (float3(this.e1234) * other.group1.xyz) + (float3(other.e431, other.e4, other.e4) * this.group5.xyz.zyz) + (float3(other.e4, other.e412, other.e423) * this.group5.xyz.xxy) + (this.group9.yzx * other.group0.zxy) - (float3(this.e45) * other.group0.xyz) - (float3(this.e41) * float3(other.e321, other.e3, other.e425)) - (float3(this.e42) * float3(other.e435, other.e321, other.e1)) - (float3(this.e43) * float3(other.e2, other.e415, other.e321)) - (float3(this.e1234) * other.group3.xyz) - (float3(other.e431, other.e4, other.e4) * this.group9.zyz) - (float3(other.e4, other.e412, other.e423) * this.group9.xxy) - (this.group5.xyz.yzx * other.group0.zxy), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(this.scalar) * other.group2.xyz) + (float3(this.e45) * other.group2.xyz) + (float3(this.e3215) * other.group1.xyz) + (float3(this.e3215) * other.group3.xyz) + (float3(other.e12345, other.e435, other.e415) * this.group3.xxy) + (float3(other.e425, other.e12345, other.e12345) * this.group3.zyz) + (float3(other.e321, other.e3, other.e1) * this.group3.xxy) + (float3(other.e2, other.e321, other.e321) * this.group3.zyz) + (this.group5.xyz.xxy * other.group2.wzx) + (this.group5.xyz.zyz * other.group2.yww) + (this.group9.xxy * other.group2.wzx) + (this.group9.zyz * other.group2.yww) - (this.group5.xyz.yzx * other.group2.zxy) - (this.group3.yzx * other.group1.zxy) - (this.group3.yzx * other.group3.zxy) - (this.group9.yzx * other.group2.zxy), 0.0), 
+            /* e423, e431, e412 */
+            (float3(this.scalar) * other.group0.xyz) + (float3(this.e41) * float3(other.e12345, other.e435, other.e2)) + (float3(this.e42) * float3(other.e3, other.e12345, other.e415)) + (float3(this.e43) * float3(other.e425, other.e1, other.e12345)) + (float3(this.e1234) * other.group1.xyz) + (float3(other.e431, other.e4, other.e4) * this.group5.xyz.zyz) + (float3(other.e4, other.e412, other.e423) * this.group5.xyz.xxy) + (this.group9.yzx * other.group0.zxy) - (float3(this.e45) * other.group0.xyz) - (float3(this.e41) * float3(other.e321, other.e3, other.e425)) - (float3(this.e42) * float3(other.e435, other.e321, other.e1)) - (float3(this.e43) * float3(other.e2, other.e415, other.e321)) - (float3(this.e1234) * other.group3.xyz) - (float3(other.e431, other.e4, other.e4) * this.group9.zyz) - (float3(other.e4, other.e412, other.e423) * this.group9.xxy) - (this.group5.xyz.yzx * other.group0.zxy), 
+            /* e235, e315, e125 */
+            (float3(this.scalar) * other.group2.xyz) + (float3(this.e45) * other.group2.xyz) + (float3(this.e3215) * other.group1.xyz) + (float3(this.e3215) * other.group3.xyz) + (float3(other.e12345, other.e435, other.e415) * this.group3.xxy) + (float3(other.e425, other.e12345, other.e12345) * this.group3.zyz) + (float3(other.e321, other.e3, other.e1) * this.group3.xxy) + (float3(other.e2, other.e321, other.e321) * this.group3.zyz) + (this.group5.xyz.xxy * other.group2.wzx) + (this.group5.xyz.zyz * other.group2.yww) + (this.group9.xxy * other.group2.wzx) + (this.group9.zyz * other.group2.yww) - (this.group5.xyz.yzx * other.group2.zxy) - (this.group3.yzx * other.group1.zxy) - (this.group3.yzx * other.group3.zxy) - (this.group9.yzx * other.group2.zxy), 
             /* e4235, e4315, e4125, e3215 */
             (float4(this.e321) * float4(other.group1.xyz, other.e5)) + (float4(other.e12345, other.e435, other.e415, other.e435) * float4(this.group1.xxy, this.e125)) + (float4(other.e425, other.e12345, other.e12345, other.e3) * float4(this.group1.zyz, this.e125)) + (float4(other.e321, other.e3, other.e1, other.e315) * this.group6.xxyy) + (float4(other.e2, other.e321, other.e321, other.e125) * this.group6.zyzz) + (other.group2.xyzx * float4(this.group1.www, this.e415)) + (float4(this.group0.xy.yy, this.e12345, this.e235) * float4(other.group3.xyz, other.e415)) + float4((this.group7.xyz.xxy * other.group2.wzx), this.e235 * other.e1) + float4((this.group7.xyz.zyz * other.group2.yww), this.e315 * other.e425) + float4((this.group8.xyz.yzx * other.group0.zxy), this.e315 * other.e2) - (float4(this.e5) * float4(other.group0.xyz, other.e321)) - (float4(other.e431, other.e4, other.e4, other.e315) * float4(this.group8.xyz.zyz, this.e2)) - (float4(other.e4, other.e412, other.e423, other.e235) * float4(this.group8.xyz.xxy, this.e1)) - (this.group1.yzxz * float4(other.group1.zxy, other.e125)) - (other.group2.zxyw * float4(this.group7.xyz.yzx, this.e12345)) - float4((this.group6.yzx * other.group3.zxy), this.e5 * other.e12345), 
-            /* e1234, 0, 0, 0 */
-            float4((this.e1 * other.e423) + (this.e2 * other.e431) + (this.e3 * other.e412) + (this.e4 * other.e321) + (this.e415 * other.e423) + (this.e425 * other.e431) + (this.e435 * other.e412) + (this.e423 * other.e415) + (this.e431 * other.e425) + (this.e412 * other.e435) - (this.e12345 * other.e4) - (this.e4 * other.e12345) - (this.e321 * other.e4) - (this.e423 * other.e1) - (this.e431 * other.e2) - (this.e412 * other.e3), 0.0, 0.0, 0.0)
+            /* e1234 */
+            (this.e1 * other.e423) + (this.e2 * other.e431) + (this.e3 * other.e412) + (this.e4 * other.e321) + (this.e415 * other.e423) + (this.e425 * other.e431) + (this.e435 * other.e412) + (this.e423 * other.e415) + (this.e431 * other.e425) + (this.e412 * other.e435) - (this.e12345 * other.e4) - (this.e4 * other.e12345) - (this.e321 * other.e4) - (this.e423 * other.e1) - (this.e431 * other.e2) - (this.e412 * other.e3)
         ).geometric_product(this.reverse());
     }
 }
-extension MultiVector: Sandwich<VersorOdd> {
-    associatedtype Output = MultiVector;
-    func sandwich(other: VersorOdd) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((this.e45 * other.e45) - (this.e4235 * other.e4235) - (this.e4315 * other.e4315) - (this.e4125 * other.e4125), (this.e2 * other.e4315) + (this.e3 * other.e4125) + (this.e4 * other.e3215) - (this.e321 * other.e45)) + (float2(other.scalar) * this.group0.xy) + (float2(other.e1234) * float2(this.e3215, this.e5)) + (float2(this.e1234, this.e1) * other.group3.wx) - (float2(other.e41) * float2(this.e15, this.e235)) - (float2(other.e42) * float2(this.e25, this.e315)) - (float2(other.e43) * float2(this.e35, this.e125)) - (float2(other.e23) * float2(this.e23, this.e415)) - (float2(other.e31) * float2(this.e31, this.e425)) - (float2(other.e12) * float2(this.e12, this.e435)) - (float2(other.e15) * float2(this.e41, this.e423)) - (float2(other.e25) * float2(this.e42, this.e431)) - (float2(other.e35) * float2(this.e43, this.e412)), 0.0, 0.0), 
+public extension MultiVector {
+    public MultiVector sandwich(VersorOdd other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((this.e45 * other.e45) - (this.e4235 * other.e4235) - (this.e4315 * other.e4315) - (this.e4125 * other.e4125), (this.e2 * other.e4315) + (this.e3 * other.e4125) + (this.e4 * other.e3215) - (this.e321 * other.e45)) + (float2(other.scalar) * this.group0.xy) + (float2(other.e1234) * float2(this.e3215, this.e5)) + (float2(this.e1234, this.e1) * other.group3.wx) - (float2(other.e41) * float2(this.e15, this.e235)) - (float2(other.e42) * float2(this.e25, this.e315)) - (float2(other.e43) * float2(this.e35, this.e125)) - (float2(other.e23) * float2(this.e23, this.e415)) - (float2(other.e31) * float2(this.e31, this.e425)) - (float2(other.e12) * float2(this.e12, this.e435)) - (float2(other.e15) * float2(this.e41, this.e423)) - (float2(other.e25) * float2(this.e42, this.e431)) - (float2(other.e35) * float2(this.e43, this.e412)), 
             /* e1, e2, e3, e4 */
             float4((this.e3 * other.e31) + (this.e4 * other.e15) + (this.e425 * other.e4125) + (this.e321 * other.e23), (this.e2 * other.scalar) + (this.e4 * other.e25) + (this.e435 * other.e4235) + (this.e321 * other.e31), (this.e3 * other.scalar) + (this.e4 * other.e35) + (this.e415 * other.e4315) + (this.e321 * other.e12), -(this.e3 * other.e43) - (this.e415 * other.e41) - (this.e425 * other.e42) - (this.e435 * other.e43)) + (float4(other.scalar, other.e12, other.e23, other.e1234) * float4(this.group1.xxy, this.e321)) + (float4(other.e25, other.e3215, other.e3215, other.scalar) * float4(this.group7.xyz.zyz, this.e4)) + (float4(other.e3215, other.e35, other.e15, other.e1234) * float4(this.group7.xyz.xxy, this.e12345)) + float4((this.group8.xyz.yzx * other.group0.zxy), this.e4 * other.e45) - (float4(other.e42, other.e1234, other.e1234, other.e4315) * float4(this.group8.xyz.zyz, this.e431)) - (float4(other.e45, other.e4125, other.e4235, other.e4125) * float4(this.group6.xxy, this.e412)) - (float4(other.e1234, other.e43, other.e41, other.e31) * float4(this.group8.xyz.xxy, this.e431)) - (float4(other.e4315, other.e45, other.e45, other.e41) * float4(this.group6.zyz, this.e1)) - (other.group1.zxyz * float4(this.group1.yzx, this.e412)) - (float4(this.group0.xy.yy, this.e12345, this.e423) * float4(other.group3.xyz, other.e23)) - float4((float3(this.e5) * other.group0.xyz), this.e2 * other.e42) - float4((this.group7.xyz.yzx * other.group2.zxy), this.e423 * other.e4235), 
-            /* e5, 0, 0, 0 */
-            float4((this.e12345 * other.e3215) + (this.e1 * other.e15) + (this.e2 * other.e25) + (this.e3 * other.e35) + (this.e5 * other.scalar) + (this.e235 * other.e4235) + (this.e315 * other.e4315) + (this.e125 * other.e4125) - (this.e5 * other.e45) - (this.e415 * other.e15) - (this.e425 * other.e25) - (this.e435 * other.e35) - (this.e321 * other.e3215) - (this.e235 * other.e23) - (this.e315 * other.e31) - (this.e125 * other.e12), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (this.e12345 * other.e3215) + (this.e1 * other.e15) + (this.e2 * other.e25) + (this.e3 * other.e35) + (this.e5 * other.scalar) + (this.e235 * other.e4235) + (this.e315 * other.e4315) + (this.e125 * other.e4125) - (this.e5 * other.e45) - (this.e415 * other.e15) - (this.e425 * other.e25) - (this.e435 * other.e35) - (this.e321 * other.e3215) - (this.e235 * other.e23) - (this.e315 * other.e31) - (this.e125 * other.e12), 
             /* e15, e25, e35, e45 */
             float4((this.e45 * other.e15) + (this.e4235 * other.e3215) + (this.e4125 * other.e25) + (this.e3215 * other.e23), (this.e45 * other.e25) + (this.e4235 * other.e35) + (this.e4315 * other.e3215) + (this.e3215 * other.e31), (this.e45 * other.e35) + (this.e4315 * other.e15) + (this.e4125 * other.e3215) + (this.e3215 * other.e12), -(this.e4235 * other.e23) - (this.e4315 * other.e31) - (this.e4125 * other.e12) - (this.e1234 * other.e3215)) + (float4(this.scalar) * float4(other.group2.xyz, other.e45)) + (float4(other.scalar, other.e12, other.e4315, other.e35) * float4(this.group3.xxx, this.e43)) + (float4(other.e31, other.e4235, other.scalar, other.e1234) * float4(this.group3.zzz, this.e3215)) + (float4(other.e25, other.e3215, other.e3215, other.e25) * float4(this.group5.xyz.zyz, this.e42)) + (float4(other.e4125, other.scalar, other.e23, other.scalar) * this.group3.yyyw) + (float4(other.e3215, other.e35, other.e15, other.e15) * float4(this.group5.xyz.xxy, this.e41)) - (float4(other.e45, other.e4125, other.e31, other.e4315) * float4(this.group3.xxx, this.e31)) - (float4(other.e4315, other.e23, other.e45, other.e41) * this.group3.zzzx) - (float4(other.group1.zw, other.e4235, other.e4125) * float4(this.group3.yyy, this.e12)) - float4((this.group5.xyz.yzx * other.group2.zxy), this.e23 * other.e4235) - float4((this.group9.yzx * other.group2.zxy), this.e25 * other.e42) - float4((this.group9.www * other.group3.xyz), this.e35 * other.e43), 
-            /* e41, e42, e43, 0 */
-            float4((float3(this.scalar) * other.group0.xyz) + (float3(this.e1234) * other.group1.xyz) + (float3(this.e1234) * other.group3.xyz) + (float3(other.e42, other.e1234, other.e1234) * this.group5.xyz.zyz) + (float3(other.scalar, other.e12, other.e23) * this.group4.xyz.xxy) + (float3(other.e31, other.scalar, other.scalar) * this.group4.xyz.zyz) + (float3(other.e45, other.e4125, other.e4235) * this.group4.xyz.xxy) + (float3(other.e1234, other.e43, other.e41) * this.group5.xyz.xxy) + (float3(other.e4315, other.e45, other.e45) * this.group4.xyz.zyz) + (this.group9.yzx * other.group0.zxy) - (float3(this.e45) * other.group0.xyz) - (float3(other.e42, other.e1234, other.e1234) * this.group9.zyz) - (float3(other.e1234, other.e43, other.e41) * this.group9.xxy) - (this.group4.xyz.yzx * other.group1.zxy) - (this.group4.xyz.yzx * other.group3.zxy) - (this.group5.xyz.yzx * other.group0.zxy), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(this.scalar) * other.group1.xyz) + (float3(this.e45) * other.group3.xyz) + (float3(this.e3215) * other.group0.xyz) + (float3(this.e1234) * other.group2.xyz) + (float3(other.e42, other.e1234, other.e1234) * this.group3.zyz) + (float3(other.scalar, other.e12, other.e23) * this.group5.xyz.xxy) + (float3(other.e31, other.scalar, other.scalar) * this.group5.xyz.zyz) + (float3(other.e45, other.e4125, other.e4235) * this.group9.xxy) + (float3(other.e25, other.e3215, other.e3215) * this.group4.xyz.zyz) + (float3(other.e1234, other.e43, other.e41) * this.group3.xxy) + (float3(other.e4315, other.e45, other.e45) * this.group9.zyz) + (float3(other.e3215, other.e35, other.e15) * this.group4.xyz.xxy) - (this.group4.xyz.yzx * other.group2.zxy) - (this.group5.xyz.yzx * other.group1.zxy) - (this.group3.yzx * other.group0.zxy) - (this.group9.yzx * other.group3.zxy), 0.0), 
+            /* e41, e42, e43 */
+            (float3(this.scalar) * other.group0.xyz) + (float3(this.e1234) * other.group1.xyz) + (float3(this.e1234) * other.group3.xyz) + (float3(other.e42, other.e1234, other.e1234) * this.group5.xyz.zyz) + (float3(other.scalar, other.e12, other.e23) * this.group4.xyz.xxy) + (float3(other.e31, other.scalar, other.scalar) * this.group4.xyz.zyz) + (float3(other.e45, other.e4125, other.e4235) * this.group4.xyz.xxy) + (float3(other.e1234, other.e43, other.e41) * this.group5.xyz.xxy) + (float3(other.e4315, other.e45, other.e45) * this.group4.xyz.zyz) + (this.group9.yzx * other.group0.zxy) - (float3(this.e45) * other.group0.xyz) - (float3(other.e42, other.e1234, other.e1234) * this.group9.zyz) - (float3(other.e1234, other.e43, other.e41) * this.group9.xxy) - (this.group4.xyz.yzx * other.group1.zxy) - (this.group4.xyz.yzx * other.group3.zxy) - (this.group5.xyz.yzx * other.group0.zxy), 
+            /* e23, e31, e12 */
+            (float3(this.scalar) * other.group1.xyz) + (float3(this.e45) * other.group3.xyz) + (float3(this.e3215) * other.group0.xyz) + (float3(this.e1234) * other.group2.xyz) + (float3(other.e42, other.e1234, other.e1234) * this.group3.zyz) + (float3(other.scalar, other.e12, other.e23) * this.group5.xyz.xxy) + (float3(other.e31, other.scalar, other.scalar) * this.group5.xyz.zyz) + (float3(other.e45, other.e4125, other.e4235) * this.group9.xxy) + (float3(other.e25, other.e3215, other.e3215) * this.group4.xyz.zyz) + (float3(other.e1234, other.e43, other.e41) * this.group3.xxy) + (float3(other.e4315, other.e45, other.e45) * this.group9.zyz) + (float3(other.e3215, other.e35, other.e15) * this.group4.xyz.xxy) - (this.group4.xyz.yzx * other.group2.zxy) - (this.group5.xyz.yzx * other.group1.zxy) - (this.group3.yzx * other.group0.zxy) - (this.group9.yzx * other.group3.zxy), 
             /* e415, e425, e435, e321 */
             float4((this.e5 * other.e41) + (this.e435 * other.e31), (this.e5 * other.e42) + (this.e425 * other.scalar), (this.e5 * other.e43) + (this.e435 * other.scalar), -(this.e3 * other.e12) - (this.e5 * other.e1234)) + (float4(other.e42, other.e1234, other.e1234, other.e4235) * float4(this.group8.xyz.zyz, this.e415)) + (float4(other.scalar, other.e12, other.e23, other.scalar) * this.group6.xxyw) + (float4(other.e25, other.e3215, other.e3215, other.e43) * float4(this.group7.xyz.zyz, this.e125)) + (float4(other.e1234, other.e43, other.e41, other.e3215) * float4(this.group8.xyz.xxy, this.e4)) + (float4(other.e3215, other.e35, other.e15, other.e42) * float4(this.group7.xyz.xxy, this.e315)) + (other.group3.zxyy * float4(this.group1.yzx, this.e425)) + (float4(this.group0.xy.yy, this.e12345, this.e235) * float4(other.group1.xyz, other.e41)) + float4((this.group1.www * other.group2.xyz), this.e435 * other.e4125) - (float4(other.e45, other.e4125, other.e4235, other.e25) * float4(this.group1.xxy, this.e431)) - (float4(other.e4315, other.e45, other.e45, other.e35) * float4(this.group1.zyz, this.e412)) - (other.group1.zxyx * float4(this.group6.yzx, this.e1)) - float4((this.group7.xyz.yzx * other.group2.zxy), this.e12345 * other.e45) - float4((this.group8.xyz.yzx * other.group0.zxy), this.e423 * other.e15) - float4((this.group6.www * other.group3.xyz), this.e2 * other.e31), 
-            /* e423, e431, e412, 0 */
-            float4((float3(this.e12345) * other.group0.xyz) + (float3(this.e4) * other.group1.xyz) + (float3(this.e4) * other.group3.xyz) + (float3(this.e321) * other.group0.xyz) + (float3(other.e42, other.e1234, other.e1234) * this.group1.zyz) + (float3(other.e42, other.e1234, other.e1234) * this.group6.zyz) + (float3(other.scalar, other.e12, other.e23) * this.group7.xyz.xxy) + (float3(other.e31, other.scalar, other.scalar) * this.group7.xyz.zyz) + (float3(other.e45, other.e4125, other.e4235) * this.group7.xyz.xxy) + (float3(other.e1234, other.e43, other.e41) * this.group1.xxy) + (float3(other.e1234, other.e43, other.e41) * this.group6.xxy) + (float3(other.e4315, other.e45, other.e45) * this.group7.xyz.zyz) - (this.group7.xyz.yzx * other.group1.zxy) - (this.group7.xyz.yzx * other.group3.zxy) - (this.group1.yzx * other.group0.zxy) - (this.group6.yzx * other.group0.zxy), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(this.e12345) * other.group2.xyz) + (float3(this.e5) * other.group1.xyz) + (float3(this.e235) * float3(other.scalar, other.e12, other.e4315)) + (float3(this.e315) * float3(other.e4125, other.scalar, other.e23)) + (float3(this.e125) * float3(other.e31, other.e4235, other.scalar)) + (float3(other.e25, other.e3215, other.e3215) * this.group6.zyz) + (float3(other.e3215, other.e35, other.e15) * this.group6.xxy) + (this.group1.yzx * other.group2.zxy) - (float3(this.e5) * other.group3.xyz) - (float3(this.e321) * other.group2.xyz) - (float3(this.e235) * float3(other.e45, other.e4125, other.e31)) - (float3(this.e315) * float3(other.e12, other.e45, other.e4235)) - (float3(this.e125) * float3(other.e4315, other.e23, other.e45)) - (float3(other.e25, other.e3215, other.e3215) * this.group1.zyz) - (float3(other.e3215, other.e35, other.e15) * this.group1.xxy) - (this.group6.yzx * other.group2.zxy), 0.0), 
+            /* e423, e431, e412 */
+            (float3(this.e12345) * other.group0.xyz) + (float3(this.e4) * other.group1.xyz) + (float3(this.e4) * other.group3.xyz) + (float3(this.e321) * other.group0.xyz) + (float3(other.e42, other.e1234, other.e1234) * this.group1.zyz) + (float3(other.e42, other.e1234, other.e1234) * this.group6.zyz) + (float3(other.scalar, other.e12, other.e23) * this.group7.xyz.xxy) + (float3(other.e31, other.scalar, other.scalar) * this.group7.xyz.zyz) + (float3(other.e45, other.e4125, other.e4235) * this.group7.xyz.xxy) + (float3(other.e1234, other.e43, other.e41) * this.group1.xxy) + (float3(other.e1234, other.e43, other.e41) * this.group6.xxy) + (float3(other.e4315, other.e45, other.e45) * this.group7.xyz.zyz) - (this.group7.xyz.yzx * other.group1.zxy) - (this.group7.xyz.yzx * other.group3.zxy) - (this.group1.yzx * other.group0.zxy) - (this.group6.yzx * other.group0.zxy), 
+            /* e235, e315, e125 */
+            (float3(this.e12345) * other.group2.xyz) + (float3(this.e5) * other.group1.xyz) + (float3(this.e235) * float3(other.scalar, other.e12, other.e4315)) + (float3(this.e315) * float3(other.e4125, other.scalar, other.e23)) + (float3(this.e125) * float3(other.e31, other.e4235, other.scalar)) + (float3(other.e25, other.e3215, other.e3215) * this.group6.zyz) + (float3(other.e3215, other.e35, other.e15) * this.group6.xxy) + (this.group1.yzx * other.group2.zxy) - (float3(this.e5) * other.group3.xyz) - (float3(this.e321) * other.group2.xyz) - (float3(this.e235) * float3(other.e45, other.e4125, other.e31)) - (float3(this.e315) * float3(other.e12, other.e45, other.e4235)) - (float3(this.e125) * float3(other.e4315, other.e23, other.e45)) - (float3(other.e25, other.e3215, other.e3215) * this.group1.zyz) - (float3(other.e3215, other.e35, other.e15) * this.group1.xxy) - (this.group6.yzx * other.group2.zxy), 
             /* e4235, e4315, e4125, e3215 */
             float4((this.e45 * other.e23) + (this.e4235 * other.scalar) + (this.e4125 * other.e31) + (this.e3215 * other.e41), (this.e45 * other.e31) + (this.e4235 * other.e12) + (this.e4315 * other.scalar) + (this.e3215 * other.e42), (this.e45 * other.e12) + (this.e4315 * other.e23) + (this.e4125 * other.scalar) + (this.e3215 * other.e43), -(this.e4235 * other.e15) - (this.e4315 * other.e25) - (this.e4125 * other.e35) - (this.e3215 * other.e45)) + (float4(this.scalar) * other.group3) + (float4(other.e42, other.e1234, other.e1234, other.scalar) * float4(this.group3.zyz, this.e3215)) + (float4(other.e45, other.e4125, other.e4235, other.e4315) * float4(this.group5.xyz.xxy, this.e25)) + (float4(other.e1234, other.e43, other.e41, other.e3215) * this.group3.xxyw) + (float4(other.e4315, other.e45, other.e45, other.e4125) * float4(this.group5.xyz.zyz, this.e35)) + float4((this.group4.xyz.yzx * other.group2.zxy), this.e15 * other.e4235) - (float4(other.e25, other.e3215, other.e3215, other.e25) * float4(this.group4.xyz.zyz, this.e31)) - (float4(other.e3215, other.e35, other.e15, other.e15) * float4(this.group4.xyz.xxy, this.e23)) - (this.group3.yzxx * float4(other.group0.zxy, other.e23)) - (other.group1.zxyy * float4(this.group9.yzx, this.e25)) - float4((float3(this.e1234) * other.group2.xyz), this.e35 * other.e12) - float4((this.group5.xyz.yzx * other.group3.zxy), this.e12 * other.e35), 
-            /* e1234, 0, 0, 0 */
-            float4((this.scalar * other.e1234) + (this.e4235 * other.e41) + (this.e4315 * other.e42) + (this.e4125 * other.e43) + (this.e1234 * other.scalar) + (this.e1234 * other.e45) - (this.e45 * other.e1234) - (this.e41 * other.e23) - (this.e41 * other.e4235) - (this.e42 * other.e31) - (this.e42 * other.e4315) - (this.e43 * other.e12) - (this.e43 * other.e4125) - (this.e23 * other.e41) - (this.e31 * other.e42) - (this.e12 * other.e43), 0.0, 0.0, 0.0)
+            /* e1234 */
+            (this.scalar * other.e1234) + (this.e4235 * other.e41) + (this.e4315 * other.e42) + (this.e4125 * other.e43) + (this.e1234 * other.scalar) + (this.e1234 * other.e45) - (this.e45 * other.e1234) - (this.e41 * other.e23) - (this.e41 * other.e4235) - (this.e42 * other.e31) - (this.e42 * other.e4315) - (this.e43 * other.e12) - (this.e43 * other.e4125) - (this.e23 * other.e41) - (this.e31 * other.e42) - (this.e12 * other.e43)
         ).geometric_product(this.reverse());
     }
 }
-extension Plane {
-    // Fancy infix trick
-    func operator/(_rhs: SandwichInfix) -> SandwichInfixPartial<Plane> {
-        return SandwichInfixPartial { a: this };
+public extension Plane {
+    // Fancy infix trick (first half)
+    public SandwichInfixPartial<Plane> operator /(SandwichInfix rhs) {
+        return SandwichInfixPartial<Plane>(this);
     }
 }
-extension Plane: Sandwich<AntiCircleRotor> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: AntiCircleRotor) -> Output {
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4((other.group0.xyz.zxy * this.group0.yzx) - (other.group0.xyz.yzx * this.group0.zxy), 0.0), 
+public extension SandwichInfixPartial<Plane> {
+    // Fancy infix trick (second half)
+    public VersorOdd operator /(AntiCircleRotor rhs) {
+        return this.a.sandwich(rhs);
+    }
+}
+public extension Plane {
+    public VersorOdd sandwich(AntiCircleRotor other) {
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            (other.group0.xyz.zxy * this.group0.yzx) - (other.group0.xyz.yzx * this.group0.zxy), 
             /* e23, e31, e12, e45 */
             float4((other.e41 * this.e3215) + (other.e45 * this.e4235), (other.e42 * this.e3215) + (other.e45 * this.e4315), (other.e43 * this.e3215) + (other.e45 * this.e4125), -(other.e23 * this.e4235) - (other.e31 * this.e4315) - (other.e12 * this.e4125)), 
             /* e15, e25, e35, e1234 */
@@ -7110,10 +6754,9 @@ extension Plane: Sandwich<AntiCircleRotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension Plane: Sandwich<AntiDipoleInversion> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiDipoleInversion) -> Output {
-        return VersorEven.from_groups(
+public extension Plane {
+    public VersorEven sandwich(AntiDipoleInversion other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(-(other.e431 * this.e4125) - (other.e4 * this.e4235), -(other.e412 * this.e4235) - (other.e4 * this.e4315), -(other.e423 * this.e4315) - (other.e4 * this.e4125), (other.e1 * this.e4235) + (other.e2 * this.e4315) + (other.e3 * this.e4125)) + (this.group0.yzxw * float4(other.group0.xyz.zxy, other.e4)), 
             /* e415, e425, e435, e321 */
@@ -7125,10 +6768,9 @@ extension Plane: Sandwich<AntiDipoleInversion> {
         ).geometric_product(this.reverse());
     }
 }
-extension Plane: Sandwich<AntiDualNum> {
-    associatedtype Output = AntiMotor;
-    func sandwich(other: AntiDualNum) -> Output {
-        return Flector.from_groups(
+public extension Plane {
+    public AntiMotor sandwich(AntiDualNum other) {
+        return Flector(
             /* e15, e25, e35, e45 */
             float4(other.group0.xy.xx, other.e3215, 0.0) * float4(float3(1.0), 0.0) * float4(this.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
             /* e4235, e4315, e4125, e3215 */
@@ -7136,10 +6778,9 @@ extension Plane: Sandwich<AntiDualNum> {
         ).geometric_product(this.reverse());
     }
 }
-extension Plane: Sandwich<AntiFlatPoint> {
-    associatedtype Output = AntiFlector;
-    func sandwich(other: AntiFlatPoint) -> Output {
-        return Motor.from_groups(
+public extension Plane {
+    public AntiFlector sandwich(AntiFlatPoint other) {
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4(float3(1.0), 0.0) * float4(other.group0.www, 0.0) * float4(this.group0.xyz, 0.0) * float4(-1.0, -1.0, -1.0, 0.0), 
             /* e235, e315, e125, e5 */
@@ -7147,10 +6788,9 @@ extension Plane: Sandwich<AntiFlatPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension Plane: Sandwich<AntiFlector> {
-    associatedtype Output = AntiFlector;
-    func sandwich(other: AntiFlector) -> Output {
-        return Motor.from_groups(
+public extension Plane {
+    public AntiFlector sandwich(AntiFlector other) {
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4(-(other.e321 * this.e4235) - (other.e2 * this.e4125), -(other.e321 * this.e4315) - (other.e3 * this.e4235), -(other.e321 * this.e4125) - (other.e1 * this.e4315), (other.e2 * this.e4315) + (other.e3 * this.e4125)) + (other.group1.zxyx * this.group0.yzxx), 
             /* e235, e315, e125, e5 */
@@ -7158,10 +6798,9 @@ extension Plane: Sandwich<AntiFlector> {
         ).geometric_product(this.reverse());
     }
 }
-extension Plane: Sandwich<AntiLine> {
-    associatedtype Output = AntiMotor;
-    func sandwich(other: AntiLine) -> Output {
-        return Flector.from_groups(
+public extension Plane {
+    public AntiMotor sandwich(AntiLine other) {
+        return Flector(
             /* e15, e25, e35, e45 */
             float4((other.e23 * this.e3215) + (other.e25 * this.e4125), (other.e31 * this.e3215) + (other.e35 * this.e4235), (other.e12 * this.e3215) + (other.e15 * this.e4315), -(other.e31 * this.e4315) - (other.e12 * this.e4125)) - (this.group0.yzxx * float4(other.group1.xyz.zxy, other.e23)), 
             /* e4235, e4315, e4125, e3215 */
@@ -7169,10 +6808,9 @@ extension Plane: Sandwich<AntiLine> {
         ).geometric_product(this.reverse());
     }
 }
-extension Plane: Sandwich<AntiMotor> {
-    associatedtype Output = AntiMotor;
-    func sandwich(other: AntiMotor) -> Output {
-        return Flector.from_groups(
+public extension Plane {
+    public AntiMotor sandwich(AntiMotor other) {
+        return Flector(
             /* e15, e25, e35, e45 */
             float4((other.e23 * this.e3215) + (other.e25 * this.e4125) + (other.e3215 * this.e4235), (other.e31 * this.e3215) + (other.e35 * this.e4235) + (other.e3215 * this.e4315), (other.e12 * this.e3215) + (other.e15 * this.e4315) + (other.e3215 * this.e4125), -(other.e31 * this.e4315) - (other.e12 * this.e4125)) - (this.group0.yzxx * float4(other.group1.zxy, other.e23)), 
             /* e4235, e4315, e4125, e3215 */
@@ -7180,10 +6818,9 @@ extension Plane: Sandwich<AntiMotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension Plane: Sandwich<AntiPlane> {
-    associatedtype Output = AntiFlector;
-    func sandwich(other: AntiPlane) -> Output {
-        return Motor.from_groups(
+public extension Plane {
+    public AntiFlector sandwich(AntiPlane other) {
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4(other.e2 * this.e4125 * -1.0, other.e3 * this.e4235 * -1.0, other.e1 * this.e4315 * -1.0, (other.e2 * this.e4315) + (other.e3 * this.e4125)) + (other.group0.zxyx * this.group0.yzxx), 
             /* e235, e315, e125, e5 */
@@ -7191,21 +6828,19 @@ extension Plane: Sandwich<AntiPlane> {
         ).geometric_product(this.reverse());
     }
 }
-extension Plane: Sandwich<AntiScalar> {
-    associatedtype Output = Motor;
-    func sandwich(other: AntiScalar) -> Output {
-        return AntiPlane.from_groups(
+public extension Plane {
+    public Motor sandwich(AntiScalar other) {
+        return AntiPlane(
             /* e1, e2, e3, e5 */
             float4(other.e12345) * this.group0 * float4(-1.0, -1.0, -1.0, 1.0)
         ).geometric_product(this.reverse());
     }
 }
-extension Plane: Sandwich<Circle> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: Circle) -> Output {
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4((other.group0.xyz.zxy * this.group0.yzx) - (other.group0.xyz.yzx * this.group0.zxy), 0.0), 
+public extension Plane {
+    public VersorEven sandwich(Circle other) {
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            (other.group0.xyz.zxy * this.group0.yzx) - (other.group0.xyz.yzx * this.group0.zxy), 
             /* e415, e425, e435, e321 */
             float4(other.e321 * this.e4235 * -1.0, other.e321 * this.e4315 * -1.0, other.e321 * this.e4125 * -1.0, (other.e425 * this.e4315) + (other.e435 * this.e4125)) + (this.group0.wwwx * float4(other.group0.xyz, other.e415)), 
             /* e235, e315, e125, e4 */
@@ -7215,12 +6850,11 @@ extension Plane: Sandwich<Circle> {
         ).geometric_product(this.reverse());
     }
 }
-extension Plane: Sandwich<CircleRotor> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: CircleRotor) -> Output {
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4((other.group0.xyz.zxy * this.group0.yzx) - (other.group0.xyz.yzx * this.group0.zxy), 0.0), 
+public extension Plane {
+    public VersorEven sandwich(CircleRotor other) {
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            (other.group0.xyz.zxy * this.group0.yzx) - (other.group0.xyz.yzx * this.group0.zxy), 
             /* e415, e425, e435, e321 */
             float4(other.e321 * this.e4235 * -1.0, other.e321 * this.e4315 * -1.0, other.e321 * this.e4125 * -1.0, (other.e425 * this.e4315) + (other.e435 * this.e4125)) + (this.group0.wwwx * float4(other.group0.xyz, other.e415)), 
             /* e235, e315, e125, e4 */
@@ -7230,12 +6864,11 @@ extension Plane: Sandwich<CircleRotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension Plane: Sandwich<Dipole> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Dipole) -> Output {
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4((other.group0.xyz.zxy * this.group0.yzx) - (other.group0.xyz.yzx * this.group0.zxy), 0.0), 
+public extension Plane {
+    public VersorOdd sandwich(Dipole other) {
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            (other.group0.xyz.zxy * this.group0.yzx) - (other.group0.xyz.yzx * this.group0.zxy), 
             /* e23, e31, e12, e45 */
             float4((other.e41 * this.e3215) + (other.e45 * this.e4235), (other.e42 * this.e3215) + (other.e45 * this.e4315), (other.e43 * this.e3215) + (other.e45 * this.e4125), -(other.e23 * this.e4235) - (other.e31 * this.e4315) - (other.e12 * this.e4125)), 
             /* e15, e25, e35, e1234 */
@@ -7245,10 +6878,9 @@ extension Plane: Sandwich<Dipole> {
         ).geometric_product(this.reverse());
     }
 }
-extension Plane: Sandwich<DipoleInversion> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: DipoleInversion) -> Output {
-        return VersorOdd.from_groups(
+public extension Plane {
+    public VersorOdd sandwich(DipoleInversion other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             (this.group0.yzxw * float4(other.group0.xyz.zxy, other.e1234)) + float4(float3(0.0), other.e4125 * this.e4125 * -1.0) - (this.group0.xyzy * float4(other.group2.www, other.e4315)) - (this.group0.zxyx * float4(other.group0.xyz.yzx, other.e4235)), 
             /* e23, e31, e12, e45 */
@@ -7260,10 +6892,9 @@ extension Plane: Sandwich<DipoleInversion> {
         ).geometric_product(this.reverse());
     }
 }
-extension Plane: Sandwich<DualNum> {
-    associatedtype Output = Motor;
-    func sandwich(other: DualNum) -> Output {
-        return AntiFlector.from_groups(
+public extension Plane {
+    public Motor sandwich(DualNum other) {
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(other.group0.xy.xx, other.e5, 0.0) * float4(float3(1.0), 0.0) * float4(this.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
             /* e1, e2, e3, e5 */
@@ -7271,10 +6902,9 @@ extension Plane: Sandwich<DualNum> {
         ).geometric_product(this.reverse());
     }
 }
-extension Plane: Sandwich<FlatPoint> {
-    associatedtype Output = Flector;
-    func sandwich(other: FlatPoint) -> Output {
-        return AntiMotor.from_groups(
+public extension Plane {
+    public Flector sandwich(FlatPoint other) {
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(float3(1.0), 0.0) * float4(other.group0.www, 0.0) * float4(this.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
             /* e15, e25, e35, e3215 */
@@ -7282,10 +6912,9 @@ extension Plane: Sandwich<FlatPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension Plane: Sandwich<Flector> {
-    associatedtype Output = Flector;
-    func sandwich(other: Flector) -> Output {
-        return AntiMotor.from_groups(
+public extension Plane {
+    public Flector sandwich(Flector other) {
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4((other.e45 * this.e4235) + (other.e4315 * this.e4125), (other.e45 * this.e4315) + (other.e4125 * this.e4235), (other.e45 * this.e4125) + (other.e4235 * this.e4315), -(other.e4315 * this.e4315) - (other.e4125 * this.e4125)) - (other.group1.zxyx * this.group0.yzxx), 
             /* e15, e25, e35, e3215 */
@@ -7293,10 +6922,9 @@ extension Plane: Sandwich<Flector> {
         ).geometric_product(this.reverse());
     }
 }
-extension Plane: Sandwich<Line> {
-    associatedtype Output = Motor;
-    func sandwich(other: Line) -> Output {
-        return AntiFlector.from_groups(
+public extension Plane {
+    public Motor sandwich(Line other) {
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(other.e125 * this.e4315 * -1.0, other.e235 * this.e4125 * -1.0, other.e315 * this.e4235 * -1.0, other.e435 * this.e4125) + (this.group0.zxyy * float4(other.group1.xyz.yzx, other.e425)) + (this.group0.wwwx * float4(other.group0.xyz, other.e415)), 
             /* e1, e2, e3, e5 */
@@ -7304,10 +6932,9 @@ extension Plane: Sandwich<Line> {
         ).geometric_product(this.reverse());
     }
 }
-extension Plane: Sandwich<Motor> {
-    associatedtype Output = Motor;
-    func sandwich(other: Motor) -> Output {
-        return AntiFlector.from_groups(
+public extension Plane {
+    public Motor sandwich(Motor other) {
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(other.e125 * this.e4315 * -1.0, other.e235 * this.e4125 * -1.0, other.e315 * this.e4235 * -1.0, 0.0) + (other.group0.xyzx * this.group0.wwwx) + (this.group0.xyzz * float4(other.group1.www, other.e435)) + (this.group0.zxyy * float4(other.group1.yzx, other.e425)), 
             /* e1, e2, e3, e5 */
@@ -7315,39 +6942,37 @@ extension Plane: Sandwich<Motor> {
         ).geometric_product(this.reverse());
     }
 }
-extension Plane: Sandwich<MultiVector> {
-    associatedtype Output = MultiVector;
-    func sandwich(other: MultiVector) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(-(other.e4235 * this.e4235) - (other.e4315 * this.e4315) - (other.e4125 * this.e4125), (other.e2 * this.e4315) + (other.e3 * this.e4125) + (other.e4 * this.e3215)) + (float2(other.e1234, other.e1) * this.group0.wx), 0.0, 0.0), 
+public extension Plane {
+    public MultiVector sandwich(MultiVector other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(-(other.e4235 * this.e4235) - (other.e4315 * this.e4315) - (other.e4125 * this.e4125), (other.e2 * this.e4315) + (other.e3 * this.e4125) + (other.e4 * this.e3215)) + (float2(other.e1234, other.e1) * this.group0.wx), 
             /* e1, e2, e3, e4 */
             float4(-(other.e12345 * this.e4235) - (other.e425 * this.e4125) - (other.e423 * this.e3215), -(other.e12345 * this.e4315) - (other.e435 * this.e4235) - (other.e431 * this.e3215), -(other.e12345 * this.e4125) - (other.e415 * this.e4315) - (other.e412 * this.e3215), (other.e431 * this.e4315) + (other.e412 * this.e4125)) + (this.group0.yzxx * float4(other.group6.zxy, other.e423)), 
-            /* e5, 0, 0, 0 */
-            float4((other.e12345 * this.e3215) + (other.e321 * this.e3215) - (other.e235 * this.e4235) - (other.e315 * this.e4315) - (other.e125 * this.e4125), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (other.e12345 * this.e3215) + (other.e321 * this.e3215) - (other.e235 * this.e4235) - (other.e315 * this.e4315) - (other.e125 * this.e4125), 
             /* e15, e25, e35, e45 */
             float4((other.e25 * this.e4125) + (other.e3215 * this.e4235), (other.e35 * this.e4235) + (other.e3215 * this.e4315), (other.e15 * this.e4315) + (other.e3215 * this.e4125), other.e12 * this.e4125 * -1.0) + float4((other.group5.xyz * this.group0.www), other.e1234 * this.e3215) - (this.group0.yzxx * float4(other.group3.zxy, other.e23)) - (this.group0.wwwy * float4(other.group9.xyz, other.e31)), 
-            /* e41, e42, e43, 0 */
-            float4((other.group4.xyz.zxy * this.group0.yzx) - (float3(other.e1234) * this.group0.xyz) - (other.group4.xyz.yzx * this.group0.zxy), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(other.e45) * this.group0.xyz) + (float3(this.e3215) * other.group4.xyz) + (other.group9.yzx * this.group0.zxy) - (other.group9.zxy * this.group0.yzx), 0.0), 
+            /* e41, e42, e43 */
+            (other.group4.xyz.zxy * this.group0.yzx) - (float3(other.e1234) * this.group0.xyz) - (other.group4.xyz.yzx * this.group0.zxy), 
+            /* e23, e31, e12 */
+            (float3(other.e45) * this.group0.xyz) + (float3(this.e3215) * other.group4.xyz) + (other.group9.yzx * this.group0.zxy) - (other.group9.zxy * this.group0.yzx), 
             /* e415, e425, e435, e321 */
             float4(other.e321 * this.e4235 * -1.0, other.e321 * this.e4315 * -1.0, other.e321 * this.e4125 * -1.0, other.e435 * this.e4125) + (this.group0.yzxy * float4(other.group1.zxy, other.e425)) + (this.group0.wwwx * float4(other.group7.xyz, other.e415)) - (other.group1.yzxw * this.group0.zxyw), 
-            /* e423, e431, e412, 0 */
-            float4((other.group7.xyz.zxy * this.group0.yzx) - (float3(other.e4) * this.group0.xyz) - (other.group7.xyz.yzx * this.group0.zxy), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(other.e5) * this.group0.xyz) + (float3(this.e3215) * other.group1.xyz) + (float3(this.e3215) * other.group6.xyz) + (other.group8.xyz.yzx * this.group0.zxy) - (other.group8.xyz.zxy * this.group0.yzx), 0.0), 
+            /* e423, e431, e412 */
+            (other.group7.xyz.zxy * this.group0.yzx) - (float3(other.e4) * this.group0.xyz) - (other.group7.xyz.yzx * this.group0.zxy), 
+            /* e235, e315, e125 */
+            (float3(other.e5) * this.group0.xyz) + (float3(this.e3215) * other.group1.xyz) + (float3(this.e3215) * other.group6.xyz) + (other.group8.xyz.yzx * this.group0.zxy) - (other.group8.xyz.zxy * this.group0.yzx), 
             /* e4235, e4315, e4125, e3215 */
             float4((other.e41 * this.e3215) + (other.e31 * this.e4125), (other.e42 * this.e3215) + (other.e12 * this.e4235), (other.e43 * this.e3215) + (other.e23 * this.e4315), -(other.e25 * this.e4315) - (other.e35 * this.e4125) - (other.e45 * this.e3215)) + (float4(other.scalar) * this.group0) - (this.group0.yzxx * float4(other.group5.xyz.zxy, other.e15)), 
-            /* e1234, 0, 0, 0 */
-            float4((other.e41 * this.e4235) + (other.e42 * this.e4315) + (other.e43 * this.e4125), 0.0, 0.0, 0.0)
+            /* e1234 */
+            (other.e41 * this.e4235) + (other.e42 * this.e4315) + (other.e43 * this.e4125)
         ).geometric_product(this.reverse());
     }
 }
-extension Plane: Sandwich<Plane> {
-    associatedtype Output = Flector;
-    func sandwich(other: Plane) -> Output {
-        return AntiMotor.from_groups(
+public extension Plane {
+    public Flector sandwich(Plane other) {
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(other.e4315 * this.e4125, other.e4125 * this.e4235, other.e4235 * this.e4315, -(other.e4315 * this.e4315) - (other.e4125 * this.e4125)) - (other.group0.zxyx * this.group0.yzxx), 
             /* e15, e25, e35, e3215 */
@@ -7355,12 +6980,11 @@ extension Plane: Sandwich<Plane> {
         ).geometric_product(this.reverse());
     }
 }
-extension Plane: Sandwich<RoundPoint> {
-    associatedtype Output = AntiDipoleInversion;
-    func sandwich(other: RoundPoint) -> Output {
-        return CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(other.e4) * this.group0.xyz * float3(-1.0), 0.0), 
+public extension Plane {
+    public AntiDipoleInversion sandwich(RoundPoint other) {
+        return CircleRotor(
+            /* e423, e431, e412 */
+            float3(other.e4) * this.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             float4(((this.group0.yzx * other.group0.zxy) - (this.group0.zxy * other.group0.yzx)), this.e3215 * other.e4 * -1.0), 
             /* e235, e315, e125, e12345 */
@@ -7368,21 +6992,19 @@ extension Plane: Sandwich<RoundPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension Plane: Sandwich<Scalar> {
-    associatedtype Output = AntiMotor;
-    func sandwich(other: Scalar) -> Output {
-        return Plane.from_groups(
+public extension Plane {
+    public AntiMotor sandwich(Scalar other) {
+        return Plane(
             /* e4235, e4315, e4125, e3215 */
             float4(other.scalar) * this.group0
         ).geometric_product(this.reverse());
     }
 }
-extension Plane: Sandwich<Sphere> {
-    associatedtype Output = DipoleInversion;
-    func sandwich(other: Sphere) -> Output {
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(other.e1234) * this.group0.xyz * float3(-1.0), 0.0), 
+public extension Plane {
+    public DipoleInversion sandwich(Sphere other) {
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            float3(other.e1234) * this.group0.xyz * float3(-1.0), 
             /* e23, e31, e12, e45 */
             float4(((this.group0.zxy * other.group0.yzx) - (this.group0.yzx * other.group0.zxy)), this.e3215 * other.e1234), 
             /* e15, e25, e35, scalar */
@@ -7390,10 +7012,9 @@ extension Plane: Sandwich<Sphere> {
         ).geometric_product(this.reverse());
     }
 }
-extension Plane: Sandwich<VersorEven> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: VersorEven) -> Output {
-        return VersorEven.from_groups(
+public extension Plane {
+    public VersorEven sandwich(VersorEven other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(-(this.e4235 * other.e4) - (this.e4125 * other.e431), -(this.e4235 * other.e412) - (this.e4315 * other.e4), -(this.e4315 * other.e423) - (this.e4125 * other.e4), (this.e4315 * other.e2) + (this.e4125 * other.e3) + (this.e3215 * other.e4)) + (this.group0.yzxx * float4(other.group0.zxy, other.e1)), 
             /* e415, e425, e435, e321 */
@@ -7405,10 +7026,9 @@ extension Plane: Sandwich<VersorEven> {
         ).geometric_product(this.reverse());
     }
 }
-extension Plane: Sandwich<VersorOdd> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: VersorOdd) -> Output {
-        return VersorOdd.from_groups(
+public extension Plane {
+    public VersorOdd sandwich(VersorOdd other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             (this.group0.yzxw * float4(other.group0.zxy, other.e1234)) + float4(float3(0.0), this.e4125 * other.e4125 * -1.0) - (float4(other.e42, other.e1234, other.e1234, other.e4315) * this.group0.zyzy) - (float4(other.e1234, other.e43, other.e41, other.e4235) * this.group0.xxyx), 
             /* e23, e31, e12, e45 */
@@ -7420,18 +7040,23 @@ extension Plane: Sandwich<VersorOdd> {
         ).geometric_product(this.reverse());
     }
 }
-extension RoundPoint {
-    // Fancy infix trick
-    func operator/(_rhs: SandwichInfix) -> SandwichInfixPartial<RoundPoint> {
-        return SandwichInfixPartial { a: this };
+public extension RoundPoint {
+    // Fancy infix trick (first half)
+    public SandwichInfixPartial<RoundPoint> operator /(SandwichInfix rhs) {
+        return SandwichInfixPartial<RoundPoint>(this);
     }
 }
-extension RoundPoint: Sandwich<AntiCircleRotor> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: AntiCircleRotor) -> Output {
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4((float3(this.e4) * other.group1.xyz) + (other.group0.xyz.yzx * this.group0.zxy) - (other.group0.xyz.zxy * this.group0.yzx), 0.0), 
+public extension SandwichInfixPartial<RoundPoint> {
+    // Fancy infix trick (second half)
+    public VersorOdd operator /(AntiCircleRotor rhs) {
+        return this.a.sandwich(rhs);
+    }
+}
+public extension RoundPoint {
+    public VersorOdd sandwich(AntiCircleRotor other) {
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            (float3(this.e4) * other.group1.xyz) + (other.group0.xyz.yzx * this.group0.zxy) - (other.group0.xyz.zxy * this.group0.yzx), 
             /* e415, e425, e435, e321 */
             float4((other.e41 * this.e5) + (other.e15 * this.e4), (other.e42 * this.e5) + (other.e25 * this.e4), (other.e43 * this.e5) + (other.e35 * this.e4), -(other.e31 * this.e2) - (other.e12 * this.e3)) - (other.group1.wwwx * this.group0.xyzx), 
             /* e235, e315, e125, e4 */
@@ -7441,10 +7066,9 @@ extension RoundPoint: Sandwich<AntiCircleRotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension RoundPoint: Sandwich<AntiDipoleInversion> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiDipoleInversion) -> Output {
-        return VersorOdd.from_groups(
+public extension RoundPoint {
+    public VersorEven sandwich(AntiDipoleInversion other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(other.e4 * this.e1 * -1.0, other.e4 * this.e2 * -1.0, other.e4 * this.e3 * -1.0, other.e3 * this.e3) + (other.group3.xyzy * this.group0.wwwy) + (this.group0.yzxx * float4(other.group0.xyz.zxy, other.e1)) - (float4(this.e4) * float4(other.group1.xyz, other.e5)) - float4((other.group0.xyz.yzx * this.group0.zxy), other.e4 * this.e5), 
             /* e23, e31, e12, e45 */
@@ -7456,10 +7080,9 @@ extension RoundPoint: Sandwich<AntiDipoleInversion> {
         ).geometric_product(this.reverse());
     }
 }
-extension RoundPoint: Sandwich<AntiDualNum> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: AntiDualNum) -> Output {
-        return VersorEven.from_groups(
+public extension RoundPoint {
+    public VersorOdd sandwich(AntiDualNum other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(float3(0.0), other.e3215 * this.e4), 
             /* e415, e425, e435, e321 */
@@ -7471,12 +7094,11 @@ extension RoundPoint: Sandwich<AntiDualNum> {
         ).geometric_product(this.reverse());
     }
 }
-extension RoundPoint: Sandwich<AntiFlatPoint> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiFlatPoint) -> Output {
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
+public extension RoundPoint {
+    public VersorEven sandwich(AntiFlatPoint other) {
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            float3(0.0), 
             /* e23, e31, e12, e45 */
             float4((-(float3(other.e321) * this.group0.xyz) - (float3(this.e4) * other.group0.xyz)), 0.0), 
             /* e15, e25, e35, e1234 */
@@ -7486,10 +7108,9 @@ extension RoundPoint: Sandwich<AntiFlatPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension RoundPoint: Sandwich<AntiFlector> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiFlector) -> Output {
-        return VersorOdd.from_groups(
+public extension RoundPoint {
+    public VersorEven sandwich(AntiFlector other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4((float3(this.e4) * other.group1.xyz), (other.e1 * this.e1) + (other.e2 * this.e2) + (other.e3 * this.e3) - (other.e5 * this.e4)), 
             /* e23, e31, e12, e45 */
@@ -7501,12 +7122,11 @@ extension RoundPoint: Sandwich<AntiFlector> {
         ).geometric_product(this.reverse());
     }
 }
-extension RoundPoint: Sandwich<AntiLine> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: AntiLine) -> Output {
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(this.e4) * other.group0.xyz, 0.0), 
+public extension RoundPoint {
+    public VersorOdd sandwich(AntiLine other) {
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(this.e4) * other.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4((float3(this.e4) * other.group1.xyz), -(other.e23 * this.e1) - (other.e31 * this.e2) - (other.e12 * this.e3)), 
             /* e235, e315, e125, e4 */
@@ -7516,10 +7136,9 @@ extension RoundPoint: Sandwich<AntiLine> {
         ).geometric_product(this.reverse());
     }
 }
-extension RoundPoint: Sandwich<AntiMotor> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: AntiMotor) -> Output {
-        return VersorEven.from_groups(
+public extension RoundPoint {
+    public VersorOdd sandwich(AntiMotor other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(this.e4) * float4(other.group0.xyz, other.e3215), 
             /* e415, e425, e435, e321 */
@@ -7531,12 +7150,11 @@ extension RoundPoint: Sandwich<AntiMotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension RoundPoint: Sandwich<AntiPlane> {
-    associatedtype Output = AntiDipoleInversion;
-    func sandwich(other: AntiPlane) -> Output {
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(this.e4) * other.group0.xyz, 0.0), 
+public extension RoundPoint {
+    public AntiDipoleInversion sandwich(AntiPlane other) {
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            float3(this.e4) * other.group0.xyz, 
             /* e23, e31, e12, e45 */
             float4(((other.group0.zxy * this.group0.yzx) - (other.group0.yzx * this.group0.zxy)), other.e5 * this.e4), 
             /* e15, e25, e35, scalar */
@@ -7544,23 +7162,21 @@ extension RoundPoint: Sandwich<AntiPlane> {
         ).geometric_product(this.reverse());
     }
 }
-extension RoundPoint: Sandwich<AntiScalar> {
-    associatedtype Output = CircleRotor;
-    func sandwich(other: AntiScalar) -> Output {
-        return Sphere.from_groups(
+public extension RoundPoint {
+    public CircleRotor sandwich(AntiScalar other) {
+        return Sphere(
             /* e4235, e4315, e4125, e3215 */
             float4((float3(other.e12345) * this.group0.xyz), other.e12345 * this.e5 * -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e12345 * this.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e12345 * this.e4 * -1.0
         ).geometric_product(this.reverse());
     }
 }
-extension RoundPoint: Sandwich<Circle> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: Circle) -> Output {
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4((other.group0.xyz.zxy * this.group0.yzx) - (float3(this.e4) * other.group1.xyz) - (other.group0.xyz.yzx * this.group0.zxy), 0.0), 
+public extension RoundPoint {
+    public VersorEven sandwich(Circle other) {
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            (other.group0.xyz.zxy * this.group0.yzx) - (float3(this.e4) * other.group1.xyz) - (other.group0.xyz.yzx * this.group0.zxy), 
             /* e23, e31, e12, e45 */
             -(other.group1.wwwz * this.group0.xyzz) - (this.group0.wwwy * float4(other.group2.xyz, other.e425)) - float4((float3(this.e5) * other.group0.xyz), other.e415 * this.e1), 
             /* e15, e25, e35, e1234 */
@@ -7570,12 +7186,11 @@ extension RoundPoint: Sandwich<Circle> {
         ).geometric_product(this.reverse());
     }
 }
-extension RoundPoint: Sandwich<CircleRotor> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: CircleRotor) -> Output {
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4((other.group0.xyz.zxy * this.group0.yzx) - (float3(this.e4) * other.group1.xyz) - (other.group0.xyz.yzx * this.group0.zxy), 0.0), 
+public extension RoundPoint {
+    public VersorEven sandwich(CircleRotor other) {
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            (other.group0.xyz.zxy * this.group0.yzx) - (float3(this.e4) * other.group1.xyz) - (other.group0.xyz.yzx * this.group0.zxy), 
             /* e23, e31, e12, e45 */
             -(other.group1.wwwy * this.group0.xyzy) - (this.group0.wwwz * float4(other.group2.xyz, other.e435)) - float4((float3(this.e5) * other.group0.xyz), other.e415 * this.e1), 
             /* e15, e25, e35, e1234 */
@@ -7585,12 +7200,11 @@ extension RoundPoint: Sandwich<CircleRotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension RoundPoint: Sandwich<Dipole> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Dipole) -> Output {
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4((float3(this.e4) * other.group1.xyz) + (other.group0.xyz.yzx * this.group0.zxy) - (other.group0.xyz.zxy * this.group0.yzx), 0.0), 
+public extension RoundPoint {
+    public VersorOdd sandwich(Dipole other) {
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            (float3(this.e4) * other.group1.xyz) + (other.group0.xyz.yzx * this.group0.zxy) - (other.group0.xyz.zxy * this.group0.yzx), 
             /* e415, e425, e435, e321 */
             float4((other.e41 * this.e5) + (other.e15 * this.e4), (other.e42 * this.e5) + (other.e25 * this.e4), (other.e43 * this.e5) + (other.e35 * this.e4), -(other.e31 * this.e2) - (other.e12 * this.e3)) - (other.group1.wwwx * this.group0.xyzx), 
             /* e235, e315, e125, e4 */
@@ -7600,10 +7214,9 @@ extension RoundPoint: Sandwich<Dipole> {
         ).geometric_product(this.reverse());
     }
 }
-extension RoundPoint: Sandwich<DipoleInversion> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: DipoleInversion) -> Output {
-        return VersorEven.from_groups(
+public extension RoundPoint {
+    public VersorOdd sandwich(DipoleInversion other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(other.e43 * this.e2 * -1.0, other.e41 * this.e3 * -1.0, other.e42 * this.e1 * -1.0, other.e3215 * this.e4) + (other.group3.xyzz * this.group0.wwwz) + (this.group0.xyzy * float4(other.group2.www, other.e4315)) + (this.group0.wwwx * float4(other.group1.xyz, other.e4235)) + float4((other.group0.xyz.yzx * this.group0.zxy), other.e1234 * this.e5), 
             /* e415, e425, e435, e321 */
@@ -7615,10 +7228,9 @@ extension RoundPoint: Sandwich<DipoleInversion> {
         ).geometric_product(this.reverse());
     }
 }
-extension RoundPoint: Sandwich<DualNum> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: DualNum) -> Output {
-        return VersorOdd.from_groups(
+public extension RoundPoint {
+    public VersorEven sandwich(DualNum other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(float3(0.0), other.e5 * this.e4 * -1.0), 
             /* e23, e31, e12, e45 */
@@ -7630,12 +7242,11 @@ extension RoundPoint: Sandwich<DualNum> {
         ).geometric_product(this.reverse());
     }
 }
-extension RoundPoint: Sandwich<FlatPoint> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: FlatPoint) -> Output {
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
+public extension RoundPoint {
+    public VersorOdd sandwich(FlatPoint other) {
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(((float3(this.e4) * other.group0.xyz) - (float3(other.e45) * this.group0.xyz)), 0.0), 
             /* e235, e315, e125, e4 */
@@ -7645,10 +7256,9 @@ extension RoundPoint: Sandwich<FlatPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension RoundPoint: Sandwich<Flector> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Flector) -> Output {
-        return VersorEven.from_groups(
+public extension RoundPoint {
+    public VersorOdd sandwich(Flector other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((float3(this.e4) * other.group1.xyz), (other.e4235 * this.e1) + (other.e4315 * this.e2) + (other.e4125 * this.e3) + (other.e3215 * this.e4)), 
             /* e415, e425, e435, e321 */
@@ -7660,12 +7270,11 @@ extension RoundPoint: Sandwich<Flector> {
         ).geometric_product(this.reverse());
     }
 }
-extension RoundPoint: Sandwich<Line> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: Line) -> Output {
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(this.e4) * other.group0.xyz * float3(-1.0), 0.0), 
+public extension RoundPoint {
+    public VersorEven sandwich(Line other) {
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            float3(this.e4) * other.group0.xyz * float3(-1.0), 
             /* e23, e31, e12, e45 */
             float4((float3(this.e4) * other.group1.xyz * float3(-1.0)), -(other.e415 * this.e1) - (other.e425 * this.e2) - (other.e435 * this.e3)), 
             /* e15, e25, e35, e1234 */
@@ -7675,10 +7284,9 @@ extension RoundPoint: Sandwich<Line> {
         ).geometric_product(this.reverse());
     }
 }
-extension RoundPoint: Sandwich<Motor> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: Motor) -> Output {
-        return VersorOdd.from_groups(
+public extension RoundPoint {
+    public VersorEven sandwich(Motor other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(this.e4) * float4(other.group0.xyz, other.e5) * float4(-1.0), 
             /* e23, e31, e12, e45 */
@@ -7690,41 +7298,39 @@ extension RoundPoint: Sandwich<Motor> {
         ).geometric_product(this.reverse());
     }
 }
-extension RoundPoint: Sandwich<MultiVector> {
-    associatedtype Output = MultiVector;
-    func sandwich(other: MultiVector) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(-(other.e4 * this.e5) - (other.e5 * this.e4), (other.e3215 * this.e4) + (other.e1234 * this.e5)) + (float2(this.e1) * float2(other.e1, other.e4235)) + (float2(this.e2) * float2(other.e2, other.e4315)) + (float2(this.e3) * float2(other.e3, other.e4125)), 0.0, 0.0), 
+public extension RoundPoint {
+    public MultiVector sandwich(MultiVector other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(-(other.e4 * this.e5) - (other.e5 * this.e4), (other.e3215 * this.e4) + (other.e1234 * this.e5)) + (float2(this.e1) * float2(other.e1, other.e4235)) + (float2(this.e2) * float2(other.e2, other.e4315)) + (float2(this.e3) * float2(other.e3, other.e4125)), 
             /* e1, e2, e3, e4 */
             float4(other.e15 * this.e4, other.e25 * this.e4, other.e35 * this.e4, other.e43 * this.e3 * -1.0) + (float4(other.scalar) * this.group0) + (this.group0.zxyw * float4(other.group5.xyz.yzx, other.e45)) - (this.group0.yzxy * float4(other.group5.xyz.zxy, other.e42)) - float4((float3(this.e5) * other.group4.xyz), other.e41 * this.e1), 
-            /* e5, 0, 0, 0 */
-            float4((other.scalar * this.e5) + (other.e15 * this.e1) + (other.e25 * this.e2) + (other.e35 * this.e3) - (other.e45 * this.e5), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (other.scalar * this.e5) + (other.e15 * this.e1) + (other.e25 * this.e2) + (other.e35 * this.e3) - (other.e45 * this.e5), 
             /* e15, e25, e35, e45 */
             float4(other.e5 * this.e1, other.e5 * this.e2, other.e5 * this.e3, other.e435 * this.e3 * -1.0) + float4((other.group8.xyz.yzx * this.group0.zxy), other.e5 * this.e4) - (other.group6.xyzy * float4(float3(this.e5), this.e2)) - float4((float3(this.e5) * other.group1.xyz), other.e415 * this.e1) - float4((other.group8.xyz.zxy * this.group0.yzx), other.e4 * this.e5), 
-            /* e41, e42, e43, 0 */
-            float4((float3(this.e4) * other.group1.xyz) + (other.group7.xyz.zxy * this.group0.yzx) - (float3(other.e4) * this.group0.xyz) - (float3(this.e4) * other.group6.xyz) - (other.group7.xyz.yzx * this.group0.zxy), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((other.group1.zxy * this.group0.yzx) - (float3(other.e321) * this.group0.xyz) - (float3(this.e4) * other.group8.xyz) - (float3(this.e5) * other.group7.xyz) - (other.group1.yzx * this.group0.zxy), 0.0), 
+            /* e41, e42, e43 */
+            (float3(this.e4) * other.group1.xyz) + (other.group7.xyz.zxy * this.group0.yzx) - (float3(other.e4) * this.group0.xyz) - (float3(this.e4) * other.group6.xyz) - (other.group7.xyz.yzx * this.group0.zxy), 
+            /* e23, e31, e12 */
+            (other.group1.zxy * this.group0.yzx) - (float3(other.e321) * this.group0.xyz) - (float3(this.e4) * other.group8.xyz) - (float3(this.e5) * other.group7.xyz) - (other.group1.yzx * this.group0.zxy), 
             /* e415, e425, e435, e321 */
             float4((other.e15 * this.e4) + (other.e4125 * this.e2), (other.e25 * this.e4) + (other.e4235 * this.e3), (other.e35 * this.e4) + (other.e4315 * this.e1), -(other.e12 * this.e3) - (other.e1234 * this.e5)) + float4((float3(this.e5) * other.group4.xyz), other.e3215 * this.e4) - (this.group0.xyzx * float4(other.group3.www, other.e23)) - (this.group0.zxyy * float4(other.group9.yzx, other.e31)), 
-            /* e423, e431, e412, 0 */
-            float4((float3(other.e1234) * this.group0.xyz) + (float3(this.e4) * other.group5.xyz) + (float3(this.e4) * other.group9.xyz) + (other.group4.xyz.yzx * this.group0.zxy) - (other.group4.xyz.zxy * this.group0.yzx), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(this.e5) * other.group5.xyz) + (other.group3.zxy * this.group0.yzx) - (float3(other.e3215) * this.group0.xyz) - (float3(this.e5) * other.group9.xyz) - (other.group3.yzx * this.group0.zxy), 0.0), 
+            /* e423, e431, e412 */
+            (float3(other.e1234) * this.group0.xyz) + (float3(this.e4) * other.group5.xyz) + (float3(this.e4) * other.group9.xyz) + (other.group4.xyz.yzx * this.group0.zxy) - (other.group4.xyz.zxy * this.group0.yzx), 
+            /* e235, e315, e125 */
+            (float3(this.e5) * other.group5.xyz) + (other.group3.zxy * this.group0.yzx) - (float3(other.e3215) * this.group0.xyz) - (float3(this.e5) * other.group9.xyz) - (other.group3.yzx * this.group0.zxy), 
             /* e4235, e4315, e4125, e3215 */
             float4((other.e12345 * this.e1) + (other.e425 * this.e3) + (other.e235 * this.e4), (other.e12345 * this.e2) + (other.e435 * this.e1) + (other.e315 * this.e4), (other.e12345 * this.e3) + (other.e415 * this.e2) + (other.e125 * this.e4), -(other.e321 * this.e5) - (other.e315 * this.e2) - (other.e125 * this.e3)) - (float4(this.e5) * float4(other.group7.xyz, other.e12345)) - (this.group0.yzxx * float4(other.group6.zxy, other.e235)), 
-            /* e1234, 0, 0, 0 */
-            float4((other.e321 * this.e4) + (other.e423 * this.e1) + (other.e431 * this.e2) + (other.e412 * this.e3) - (other.e12345 * this.e4), 0.0, 0.0, 0.0)
+            /* e1234 */
+            (other.e321 * this.e4) + (other.e423 * this.e1) + (other.e431 * this.e2) + (other.e412 * this.e3) - (other.e12345 * this.e4)
         ).geometric_product(this.reverse());
     }
 }
-extension RoundPoint: Sandwich<Plane> {
-    associatedtype Output = DipoleInversion;
-    func sandwich(other: Plane) -> Output {
-        return CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(this.e4) * other.group0.xyz, 0.0), 
+public extension RoundPoint {
+    public DipoleInversion sandwich(Plane other) {
+        return CircleRotor(
+            /* e423, e431, e412 */
+            float3(this.e4) * other.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(((other.group0.zxy * this.group0.yzx) - (other.group0.yzx * this.group0.zxy)), other.e3215 * this.e4), 
             /* e235, e315, e125, e12345 */
@@ -7732,12 +7338,11 @@ extension RoundPoint: Sandwich<Plane> {
         ).geometric_product(this.reverse());
     }
 }
-extension RoundPoint: Sandwich<RoundPoint> {
-    associatedtype Output = AntiDipoleInversion;
-    func sandwich(other: RoundPoint) -> Output {
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4((float3(this.e4) * other.group0.xyz) - (float3(other.e4) * this.group0.xyz), 0.0), 
+public extension RoundPoint {
+    public AntiDipoleInversion sandwich(RoundPoint other) {
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            (float3(this.e4) * other.group0.xyz) - (float3(other.e4) * this.group0.xyz), 
             /* e23, e31, e12, e45 */
             float4((other.group0.zxy * this.group0.yzx), other.e5 * this.e4) - (other.group0.yzxw * float4(this.group0.zxy, this.e5)), 
             /* e15, e25, e35, scalar */
@@ -7745,23 +7350,21 @@ extension RoundPoint: Sandwich<RoundPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension RoundPoint: Sandwich<Scalar> {
-    associatedtype Output = AntiCircleRotor;
-    func sandwich(other: Scalar) -> Output {
-        return RoundPoint.from_groups(
+public extension RoundPoint {
+    public AntiCircleRotor sandwich(Scalar other) {
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4(other.scalar) * this.group0, 
-            /* e5, 0, 0, 0 */
-            float4(this.e5 * other.scalar, 0.0, 0.0, 0.0)
+            /* e5 */
+            this.e5 * other.scalar
         ).geometric_product(this.reverse());
     }
 }
-extension RoundPoint: Sandwich<Sphere> {
-    associatedtype Output = DipoleInversion;
-    func sandwich(other: Sphere) -> Output {
-        return CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4((float3(this.e4) * other.group0.xyz) + (float3(other.e1234) * this.group0.xyz), 0.0), 
+public extension RoundPoint {
+    public DipoleInversion sandwich(Sphere other) {
+        return CircleRotor(
+            /* e423, e431, e412 */
+            (float3(this.e4) * other.group0.xyz) + (float3(other.e1234) * this.group0.xyz), 
             /* e415, e425, e435, e321 */
             (this.group0.yzxw * other.group0.zxyw) - float4((this.group0.zxy * other.group0.yzx), this.e5 * other.e1234), 
             /* e235, e315, e125, e12345 */
@@ -7769,10 +7372,9 @@ extension RoundPoint: Sandwich<Sphere> {
         ).geometric_product(this.reverse());
     }
 }
-extension RoundPoint: Sandwich<VersorEven> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: VersorEven) -> Output {
-        return VersorOdd.from_groups(
+public extension RoundPoint {
+    public VersorEven sandwich(VersorEven other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(this.e4 * other.e415 * -1.0, this.e4 * other.e425 * -1.0, this.e4 * other.e435 * -1.0, this.e3 * other.e3) + (this.group0.yzxx * float4(other.group0.zxy, other.e1)) + (this.group0.wwwy * other.group3.xyzy) - (float4(other.e431, other.e4, other.e4, this.e5) * float4(this.group0.zyz, other.e4)) - (float4(other.e4, other.e412, other.e423, other.e5) * this.group0.xxyw), 
             /* e23, e31, e12, e45 */
@@ -7784,10 +7386,9 @@ extension RoundPoint: Sandwich<VersorEven> {
         ).geometric_product(this.reverse());
     }
 }
-extension RoundPoint: Sandwich<VersorOdd> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: VersorOdd) -> Output {
-        return VersorEven.from_groups(
+public extension RoundPoint {
+    public VersorOdd sandwich(VersorOdd other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(this.e2 * other.e43 * -1.0, this.e3 * other.e41 * -1.0, this.e1 * other.e42 * -1.0, this.e5 * other.e1234) + (float4(this.e4) * other.group3) + (float4(other.e42, other.e1234, other.e1234, other.e4315) * this.group0.zyzy) + (float4(other.e1234, other.e43, other.e41, other.e4235) * this.group0.xxyx) + (this.group0.wwwz * float4(other.group1.xyz, other.e4125)), 
             /* e415, e425, e435, e321 */
@@ -7799,18 +7400,23 @@ extension RoundPoint: Sandwich<VersorOdd> {
         ).geometric_product(this.reverse());
     }
 }
-extension Scalar {
-    // Fancy infix trick
-    func operator/(_rhs: SandwichInfix) -> SandwichInfixPartial<Scalar> {
-        return SandwichInfixPartial { a: this };
+public extension Scalar {
+    // Fancy infix trick (first half)
+    public SandwichInfixPartial<Scalar> operator /(SandwichInfix rhs) {
+        return SandwichInfixPartial<Scalar>(this);
     }
 }
-extension Scalar: Sandwich<AntiCircleRotor> {
-    associatedtype Output = AntiCircleRotor;
-    func sandwich(other: AntiCircleRotor) -> Output {
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(this.scalar) * other.group0.xyz, 0.0), 
+public extension SandwichInfixPartial<Scalar> {
+    // Fancy infix trick (second half)
+    public AntiCircleRotor operator /(AntiCircleRotor rhs) {
+        return this.a.sandwich(rhs);
+    }
+}
+public extension Scalar {
+    public AntiCircleRotor sandwich(AntiCircleRotor other) {
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            float3(this.scalar) * other.group0.xyz, 
             /* e23, e31, e12, e45 */
             float4(this.scalar) * other.group1, 
             /* e15, e25, e35, scalar */
@@ -7818,12 +7424,11 @@ extension Scalar: Sandwich<AntiCircleRotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension Scalar: Sandwich<AntiDipoleInversion> {
-    associatedtype Output = AntiDipoleInversion;
-    func sandwich(other: AntiDipoleInversion) -> Output {
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(this.scalar) * other.group0.xyz, 0.0), 
+public extension Scalar {
+    public AntiDipoleInversion sandwich(AntiDipoleInversion other) {
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(this.scalar) * other.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(this.scalar) * other.group1, 
             /* e235, e315, e125, e4 */
@@ -7833,28 +7438,25 @@ extension Scalar: Sandwich<AntiDipoleInversion> {
         ).geometric_product(this.reverse());
     }
 }
-extension Scalar: Sandwich<AntiDualNum> {
-    associatedtype Output = AntiDualNum;
-    func sandwich(other: AntiDualNum) -> Output {
-        return AntiDualNum.from_groups(
-            /* e3215, scalar, 0, 0 */
-            float4(float2(this.scalar) * other.group0.xy, 0.0, 0.0)
+public extension Scalar {
+    public AntiDualNum sandwich(AntiDualNum other) {
+        return AntiDualNum(
+            /* e3215, scalar */
+            float2(this.scalar) * other.group0.xy
         ).geometric_product(this.reverse());
     }
 }
-extension Scalar: Sandwich<AntiFlatPoint> {
-    associatedtype Output = AntiFlatPoint;
-    func sandwich(other: AntiFlatPoint) -> Output {
-        return AntiFlatPoint.from_groups(
+public extension Scalar {
+    public AntiFlatPoint sandwich(AntiFlatPoint other) {
+        return AntiFlatPoint(
             /* e235, e315, e125, e321 */
             float4(this.scalar) * other.group0
         ).geometric_product(this.reverse());
     }
 }
-extension Scalar: Sandwich<AntiFlector> {
-    associatedtype Output = AntiFlector;
-    func sandwich(other: AntiFlector) -> Output {
-        return AntiFlector.from_groups(
+public extension Scalar {
+    public AntiFlector sandwich(AntiFlector other) {
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(this.scalar) * other.group0, 
             /* e1, e2, e3, e5 */
@@ -7862,21 +7464,19 @@ extension Scalar: Sandwich<AntiFlector> {
         ).geometric_product(this.reverse());
     }
 }
-extension Scalar: Sandwich<AntiLine> {
-    associatedtype Output = AntiLine;
-    func sandwich(other: AntiLine) -> Output {
-        return AntiLine.from_groups(
-            /* e23, e31, e12, 0 */
-            float4(float3(this.scalar) * other.group0.xyz, 0.0), 
-            /* e15, e25, e35, 0 */
-            float4(float3(this.scalar) * other.group1.xyz, 0.0)
+public extension Scalar {
+    public AntiLine sandwich(AntiLine other) {
+        return AntiLine(
+            /* e23, e31, e12 */
+            float3(this.scalar) * other.group0.xyz, 
+            /* e15, e25, e35 */
+            float3(this.scalar) * other.group1.xyz
         ).geometric_product(this.reverse());
     }
 }
-extension Scalar: Sandwich<AntiMotor> {
-    associatedtype Output = AntiMotor;
-    func sandwich(other: AntiMotor) -> Output {
-        return AntiMotor.from_groups(
+public extension Scalar {
+    public AntiMotor sandwich(AntiMotor other) {
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(this.scalar) * other.group0, 
             /* e15, e25, e35, e3215 */
@@ -7884,43 +7484,39 @@ extension Scalar: Sandwich<AntiMotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension Scalar: Sandwich<AntiPlane> {
-    associatedtype Output = AntiPlane;
-    func sandwich(other: AntiPlane) -> Output {
-        return AntiPlane.from_groups(
+public extension Scalar {
+    public AntiPlane sandwich(AntiPlane other) {
+        return AntiPlane(
             /* e1, e2, e3, e5 */
             float4(this.scalar) * other.group0
         ).geometric_product(this.reverse());
     }
 }
-extension Scalar: Sandwich<AntiScalar> {
-    associatedtype Output = AntiScalar;
-    func sandwich(other: AntiScalar) -> Output {
-        return AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(other.e12345 * this.scalar, 0.0, 0.0, 0.0)
+public extension Scalar {
+    public AntiScalar sandwich(AntiScalar other) {
+        return AntiScalar(
+            /* e12345 */
+            other.e12345 * this.scalar
         ).geometric_product(this.reverse());
     }
 }
-extension Scalar: Sandwich<Circle> {
-    associatedtype Output = Circle;
-    func sandwich(other: Circle) -> Output {
-        return Circle.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(this.scalar) * other.group0.xyz, 0.0), 
+public extension Scalar {
+    public Circle sandwich(Circle other) {
+        return Circle(
+            /* e423, e431, e412 */
+            float3(this.scalar) * other.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(this.scalar) * other.group1, 
-            /* e235, e315, e125, 0 */
-            float4(float3(this.scalar) * other.group2.xyz, 0.0)
+            /* e235, e315, e125 */
+            float3(this.scalar) * other.group2.xyz
         ).geometric_product(this.reverse());
     }
 }
-extension Scalar: Sandwich<CircleRotor> {
-    associatedtype Output = CircleRotor;
-    func sandwich(other: CircleRotor) -> Output {
-        return CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(this.scalar) * other.group0.xyz, 0.0), 
+public extension Scalar {
+    public CircleRotor sandwich(CircleRotor other) {
+        return CircleRotor(
+            /* e423, e431, e412 */
+            float3(this.scalar) * other.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(this.scalar) * other.group1, 
             /* e235, e315, e125, e12345 */
@@ -7928,25 +7524,23 @@ extension Scalar: Sandwich<CircleRotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension Scalar: Sandwich<Dipole> {
-    associatedtype Output = Dipole;
-    func sandwich(other: Dipole) -> Output {
-        return Dipole.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(this.scalar) * other.group0.xyz, 0.0), 
+public extension Scalar {
+    public Dipole sandwich(Dipole other) {
+        return Dipole(
+            /* e41, e42, e43 */
+            float3(this.scalar) * other.group0.xyz, 
             /* e23, e31, e12, e45 */
             float4(this.scalar) * other.group1, 
-            /* e15, e25, e35, 0 */
-            float4(float3(this.scalar) * other.group2.xyz, 0.0)
+            /* e15, e25, e35 */
+            float3(this.scalar) * other.group2.xyz
         ).geometric_product(this.reverse());
     }
 }
-extension Scalar: Sandwich<DipoleInversion> {
-    associatedtype Output = DipoleInversion;
-    func sandwich(other: DipoleInversion) -> Output {
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(this.scalar) * other.group0.xyz, 0.0), 
+public extension Scalar {
+    public DipoleInversion sandwich(DipoleInversion other) {
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            float3(this.scalar) * other.group0.xyz, 
             /* e23, e31, e12, e45 */
             float4(this.scalar) * other.group1, 
             /* e15, e25, e35, e1234 */
@@ -7956,28 +7550,25 @@ extension Scalar: Sandwich<DipoleInversion> {
         ).geometric_product(this.reverse());
     }
 }
-extension Scalar: Sandwich<DualNum> {
-    associatedtype Output = DualNum;
-    func sandwich(other: DualNum) -> Output {
-        return DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(float2(this.scalar) * other.group0.xy, 0.0, 0.0)
+public extension Scalar {
+    public DualNum sandwich(DualNum other) {
+        return DualNum(
+            /* e5, e12345 */
+            float2(this.scalar) * other.group0.xy
         ).geometric_product(this.reverse());
     }
 }
-extension Scalar: Sandwich<FlatPoint> {
-    associatedtype Output = FlatPoint;
-    func sandwich(other: FlatPoint) -> Output {
-        return FlatPoint.from_groups(
+public extension Scalar {
+    public FlatPoint sandwich(FlatPoint other) {
+        return FlatPoint(
             /* e15, e25, e35, e45 */
             float4(this.scalar) * other.group0
         ).geometric_product(this.reverse());
     }
 }
-extension Scalar: Sandwich<Flector> {
-    associatedtype Output = Flector;
-    func sandwich(other: Flector) -> Output {
-        return Flector.from_groups(
+public extension Scalar {
+    public Flector sandwich(Flector other) {
+        return Flector(
             /* e15, e25, e35, e45 */
             float4(this.scalar) * other.group0, 
             /* e4235, e4315, e4125, e3215 */
@@ -7985,21 +7576,19 @@ extension Scalar: Sandwich<Flector> {
         ).geometric_product(this.reverse());
     }
 }
-extension Scalar: Sandwich<Line> {
-    associatedtype Output = Line;
-    func sandwich(other: Line) -> Output {
-        return Line.from_groups(
-            /* e415, e425, e435, 0 */
-            float4(float3(this.scalar) * other.group0.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(float3(this.scalar) * other.group1.xyz, 0.0)
+public extension Scalar {
+    public Line sandwich(Line other) {
+        return Line(
+            /* e415, e425, e435 */
+            float3(this.scalar) * other.group0.xyz, 
+            /* e235, e315, e125 */
+            float3(this.scalar) * other.group1.xyz
         ).geometric_product(this.reverse());
     }
 }
-extension Scalar: Sandwich<Motor> {
-    associatedtype Output = Motor;
-    func sandwich(other: Motor) -> Output {
-        return Motor.from_groups(
+public extension Scalar {
+    public Motor sandwich(Motor other) {
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4(this.scalar) * other.group0, 
             /* e235, e315, e125, e5 */
@@ -8007,79 +7596,73 @@ extension Scalar: Sandwich<Motor> {
         ).geometric_product(this.reverse());
     }
 }
-extension Scalar: Sandwich<MultiVector> {
-    associatedtype Output = MultiVector;
-    func sandwich(other: MultiVector) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(this.scalar) * other.group0.xy, 0.0, 0.0), 
+public extension Scalar {
+    public MultiVector sandwich(MultiVector other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(this.scalar) * other.group0.xy, 
             /* e1, e2, e3, e4 */
             float4(this.scalar) * other.group1, 
-            /* e5, 0, 0, 0 */
-            float4(other.e5 * this.scalar, 0.0, 0.0, 0.0), 
+            /* e5 */
+            other.e5 * this.scalar, 
             /* e15, e25, e35, e45 */
             float4(this.scalar) * other.group3, 
-            /* e41, e42, e43, 0 */
-            float4(float3(this.scalar) * other.group4.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(float3(this.scalar) * other.group5.xyz, 0.0), 
+            /* e41, e42, e43 */
+            float3(this.scalar) * other.group4.xyz, 
+            /* e23, e31, e12 */
+            float3(this.scalar) * other.group5.xyz, 
             /* e415, e425, e435, e321 */
             float4(this.scalar) * other.group6, 
-            /* e423, e431, e412, 0 */
-            float4(float3(this.scalar) * other.group7.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(float3(this.scalar) * other.group8.xyz, 0.0), 
+            /* e423, e431, e412 */
+            float3(this.scalar) * other.group7.xyz, 
+            /* e235, e315, e125 */
+            float3(this.scalar) * other.group8.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(this.scalar) * other.group9, 
-            /* e1234, 0, 0, 0 */
-            float4(other.e1234 * this.scalar, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e1234 * this.scalar
         ).geometric_product(this.reverse());
     }
 }
-extension Scalar: Sandwich<Plane> {
-    associatedtype Output = Plane;
-    func sandwich(other: Plane) -> Output {
-        return Plane.from_groups(
+public extension Scalar {
+    public Plane sandwich(Plane other) {
+        return Plane(
             /* e4235, e4315, e4125, e3215 */
             float4(this.scalar) * other.group0
         ).geometric_product(this.reverse());
     }
 }
-extension Scalar: Sandwich<RoundPoint> {
-    associatedtype Output = RoundPoint;
-    func sandwich(other: RoundPoint) -> Output {
-        return RoundPoint.from_groups(
+public extension Scalar {
+    public RoundPoint sandwich(RoundPoint other) {
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4(this.scalar) * other.group0, 
-            /* e5, 0, 0, 0 */
-            float4(other.e5 * this.scalar, 0.0, 0.0, 0.0)
+            /* e5 */
+            other.e5 * this.scalar
         ).geometric_product(this.reverse());
     }
 }
-extension Scalar: Sandwich<Scalar> {
-    associatedtype Output = Scalar;
-    func sandwich(other: Scalar) -> Output {
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(other.scalar * this.scalar, 0.0, 0.0, 0.0)
+public extension Scalar {
+    public Scalar sandwich(Scalar other) {
+        return Scalar(
+            /* scalar */
+            other.scalar * this.scalar
         ).geometric_product(this.reverse());
     }
 }
-extension Scalar: Sandwich<Sphere> {
-    associatedtype Output = Sphere;
-    func sandwich(other: Sphere) -> Output {
-        return Sphere.from_groups(
+public extension Scalar {
+    public Sphere sandwich(Sphere other) {
+        return Sphere(
             /* e4235, e4315, e4125, e3215 */
             float4(this.scalar) * other.group0, 
-            /* e1234, 0, 0, 0 */
-            float4(this.scalar * other.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            this.scalar * other.e1234
         ).geometric_product(this.reverse());
     }
 }
-extension Scalar: Sandwich<VersorEven> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: VersorEven) -> Output {
-        return VersorEven.from_groups(
+public extension Scalar {
+    public VersorEven sandwich(VersorEven other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(this.scalar) * other.group0, 
             /* e415, e425, e435, e321 */
@@ -8091,10 +7674,9 @@ extension Scalar: Sandwich<VersorEven> {
         ).geometric_product(this.reverse());
     }
 }
-extension Scalar: Sandwich<VersorOdd> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: VersorOdd) -> Output {
-        return VersorOdd.from_groups(
+public extension Scalar {
+    public VersorOdd sandwich(VersorOdd other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(this.scalar) * other.group0, 
             /* e23, e31, e12, e45 */
@@ -8106,18 +7688,23 @@ extension Scalar: Sandwich<VersorOdd> {
         ).geometric_product(this.reverse());
     }
 }
-extension Sphere {
-    // Fancy infix trick
-    func operator/(_rhs: SandwichInfix) -> SandwichInfixPartial<Sphere> {
-        return SandwichInfixPartial { a: this };
+public extension Sphere {
+    // Fancy infix trick (first half)
+    public SandwichInfixPartial<Sphere> operator /(SandwichInfix rhs) {
+        return SandwichInfixPartial<Sphere>(this);
     }
 }
-extension Sphere: Sandwich<AntiCircleRotor> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: AntiCircleRotor) -> Output {
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4((float3(this.e1234) * other.group1.xyz) + (other.group0.xyz.zxy * this.group0.yzx) - (other.group0.xyz.yzx * this.group0.zxy), 0.0), 
+public extension SandwichInfixPartial<Sphere> {
+    // Fancy infix trick (second half)
+    public VersorOdd operator /(AntiCircleRotor rhs) {
+        return this.a.sandwich(rhs);
+    }
+}
+public extension Sphere {
+    public VersorOdd sandwich(AntiCircleRotor other) {
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            (float3(this.e1234) * other.group1.xyz) + (other.group0.xyz.zxy * this.group0.yzx) - (other.group0.xyz.yzx * this.group0.zxy), 
             /* e23, e31, e12, e45 */
             float4((other.e41 * this.e3215) + (other.e45 * this.e4235) + (other.e15 * this.e1234), (other.e42 * this.e3215) + (other.e45 * this.e4315) + (other.e25 * this.e1234), (other.e43 * this.e3215) + (other.e45 * this.e4125) + (other.e35 * this.e1234), -(other.e23 * this.e4235) - (other.e31 * this.e4315) - (other.e12 * this.e4125)), 
             /* e15, e25, e35, e1234 */
@@ -8127,10 +7714,9 @@ extension Sphere: Sandwich<AntiCircleRotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension Sphere: Sandwich<AntiDipoleInversion> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiDipoleInversion) -> Output {
-        return VersorEven.from_groups(
+public extension Sphere {
+    public VersorEven sandwich(AntiDipoleInversion other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(-(other.e431 * this.e4125) - (other.e4 * this.e4235) - (other.e1 * this.e1234), -(other.e412 * this.e4235) - (other.e4 * this.e4315) - (other.e2 * this.e1234), -(other.e423 * this.e4315) - (other.e4 * this.e4125) - (other.e3 * this.e1234), (other.e2 * this.e4315) + (other.e3 * this.e4125) + (other.e5 * this.e1234)) + (this.group0.yzxw * float4(other.group0.xyz.zxy, other.e4)) + float4((float3(this.e1234) * other.group1.xyz), other.e1 * this.e4235), 
             /* e415, e425, e435, e321 */
@@ -8142,10 +7728,9 @@ extension Sphere: Sandwich<AntiDipoleInversion> {
         ).geometric_product(this.reverse());
     }
 }
-extension Sphere: Sandwich<AntiDualNum> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: AntiDualNum) -> Output {
-        return VersorOdd.from_groups(
+public extension Sphere {
+    public VersorOdd sandwich(AntiDualNum other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(float3(0.0), other.e3215 * this.e1234), 
             /* e23, e31, e12, e45 */
@@ -8157,12 +7742,11 @@ extension Sphere: Sandwich<AntiDualNum> {
         ).geometric_product(this.reverse());
     }
 }
-extension Sphere: Sandwich<AntiFlatPoint> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiFlatPoint) -> Output {
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
+public extension Sphere {
+    public VersorEven sandwich(AntiFlatPoint other) {
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(((float3(this.e1234) * other.group0.xyz) - (float3(other.e321) * this.group0.xyz)), 0.0), 
             /* e235, e315, e125, e4 */
@@ -8172,10 +7756,9 @@ extension Sphere: Sandwich<AntiFlatPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension Sphere: Sandwich<AntiFlector> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiFlector) -> Output {
-        return VersorEven.from_groups(
+public extension Sphere {
+    public VersorEven sandwich(AntiFlector other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((float3(this.e1234) * other.group1.xyz * float3(-1.0)), (other.e1 * this.e4235) + (other.e2 * this.e4315) + (other.e3 * this.e4125) + (other.e5 * this.e1234)), 
             /* e415, e425, e435, e321 */
@@ -8187,12 +7770,11 @@ extension Sphere: Sandwich<AntiFlector> {
         ).geometric_product(this.reverse());
     }
 }
-extension Sphere: Sandwich<AntiLine> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: AntiLine) -> Output {
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(this.e1234) * other.group0.xyz, 0.0), 
+public extension Sphere {
+    public VersorOdd sandwich(AntiLine other) {
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            float3(this.e1234) * other.group0.xyz, 
             /* e23, e31, e12, e45 */
             float4((float3(this.e1234) * other.group1.xyz), -(other.e23 * this.e4235) - (other.e31 * this.e4315) - (other.e12 * this.e4125)), 
             /* e15, e25, e35, e1234 */
@@ -8202,10 +7784,9 @@ extension Sphere: Sandwich<AntiLine> {
         ).geometric_product(this.reverse());
     }
 }
-extension Sphere: Sandwich<AntiMotor> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: AntiMotor) -> Output {
-        return VersorOdd.from_groups(
+public extension Sphere {
+    public VersorOdd sandwich(AntiMotor other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(this.e1234) * float4(other.group0.xyz, other.e3215), 
             /* e23, e31, e12, e45 */
@@ -8217,12 +7798,11 @@ extension Sphere: Sandwich<AntiMotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension Sphere: Sandwich<AntiPlane> {
-    associatedtype Output = AntiDipoleInversion;
-    func sandwich(other: AntiPlane) -> Output {
-        return CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(this.e1234) * other.group0.xyz * float3(-1.0), 0.0), 
+public extension Sphere {
+    public AntiDipoleInversion sandwich(AntiPlane other) {
+        return CircleRotor(
+            /* e423, e431, e412 */
+            float3(this.e1234) * other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             float4(((other.group0.zxy * this.group0.yzx) - (other.group0.yzx * this.group0.zxy)), other.e5 * this.e1234), 
             /* e235, e315, e125, e12345 */
@@ -8230,23 +7810,21 @@ extension Sphere: Sandwich<AntiPlane> {
         ).geometric_product(this.reverse());
     }
 }
-extension Sphere: Sandwich<AntiScalar> {
-    associatedtype Output = CircleRotor;
-    func sandwich(other: AntiScalar) -> Output {
-        return RoundPoint.from_groups(
+public extension Sphere {
+    public CircleRotor sandwich(AntiScalar other) {
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4((float3(other.e12345) * this.group0.xyz * float3(-1.0)), other.e12345 * this.e1234), 
-            /* e5, 0, 0, 0 */
-            float4(other.e12345 * this.e3215, 0.0, 0.0, 0.0)
+            /* e5 */
+            other.e12345 * this.e3215
         ).geometric_product(this.reverse());
     }
 }
-extension Sphere: Sandwich<Circle> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: Circle) -> Output {
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4((float3(this.e1234) * other.group1.xyz) + (other.group0.xyz.zxy * this.group0.yzx) - (other.group0.xyz.yzx * this.group0.zxy), 0.0), 
+public extension Sphere {
+    public VersorEven sandwich(Circle other) {
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            (float3(this.e1234) * other.group1.xyz) + (other.group0.xyz.zxy * this.group0.yzx) - (other.group0.xyz.yzx * this.group0.zxy), 
             /* e415, e425, e435, e321 */
             float4(other.e321 * this.e4235 * -1.0, other.e321 * this.e4315 * -1.0, other.e321 * this.e4125 * -1.0, other.e435 * this.e4125) + (this.group0.wwwx * float4(other.group0.xyz, other.e415)) + float4((float3(this.e1234) * other.group2.xyz), other.e425 * this.e4315), 
             /* e235, e315, e125, e4 */
@@ -8256,12 +7834,11 @@ extension Sphere: Sandwich<Circle> {
         ).geometric_product(this.reverse());
     }
 }
-extension Sphere: Sandwich<CircleRotor> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: CircleRotor) -> Output {
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4((float3(this.e1234) * other.group1.xyz) + (other.group0.xyz.zxy * this.group0.yzx) - (other.group0.xyz.yzx * this.group0.zxy), 0.0), 
+public extension Sphere {
+    public VersorEven sandwich(CircleRotor other) {
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            (float3(this.e1234) * other.group1.xyz) + (other.group0.xyz.zxy * this.group0.yzx) - (other.group0.xyz.yzx * this.group0.zxy), 
             /* e415, e425, e435, e321 */
             float4(other.e321 * this.e4235 * -1.0, other.e321 * this.e4315 * -1.0, other.e321 * this.e4125 * -1.0, other.e435 * this.e4125) + (this.group0.wwwx * float4(other.group0.xyz, other.e415)) + float4((float3(this.e1234) * other.group2.xyz), other.e425 * this.e4315), 
             /* e235, e315, e125, e4 */
@@ -8271,12 +7848,11 @@ extension Sphere: Sandwich<CircleRotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension Sphere: Sandwich<Dipole> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Dipole) -> Output {
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4((float3(this.e1234) * other.group1.xyz) + (other.group0.xyz.zxy * this.group0.yzx) - (other.group0.xyz.yzx * this.group0.zxy), 0.0), 
+public extension Sphere {
+    public VersorOdd sandwich(Dipole other) {
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            (float3(this.e1234) * other.group1.xyz) + (other.group0.xyz.zxy * this.group0.yzx) - (other.group0.xyz.yzx * this.group0.zxy), 
             /* e23, e31, e12, e45 */
             float4((other.e41 * this.e3215) + (other.e45 * this.e4235) + (other.e15 * this.e1234), (other.e42 * this.e3215) + (other.e45 * this.e4315) + (other.e25 * this.e1234), (other.e43 * this.e3215) + (other.e45 * this.e4125) + (other.e35 * this.e1234), -(other.e23 * this.e4235) - (other.e31 * this.e4315) - (other.e12 * this.e4125)), 
             /* e15, e25, e35, e1234 */
@@ -8286,10 +7862,9 @@ extension Sphere: Sandwich<Dipole> {
         ).geometric_product(this.reverse());
     }
 }
-extension Sphere: Sandwich<DipoleInversion> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: DipoleInversion) -> Output {
-        return VersorOdd.from_groups(
+public extension Sphere {
+    public VersorOdd sandwich(DipoleInversion other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(other.e4235 * this.e1234, other.e4315 * this.e1234, other.e4125 * this.e1234, other.e4125 * this.e4125 * -1.0) + (float4(this.e1234) * float4(other.group1.xyz, other.e3215)) + (this.group0.yzxw * float4(other.group0.xyz.zxy, other.e1234)) - (this.group0.xyzy * float4(other.group2.www, other.e4315)) - (this.group0.zxyx * float4(other.group0.xyz.yzx, other.e4235)), 
             /* e23, e31, e12, e45 */
@@ -8301,10 +7876,9 @@ extension Sphere: Sandwich<DipoleInversion> {
         ).geometric_product(this.reverse());
     }
 }
-extension Sphere: Sandwich<DualNum> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: DualNum) -> Output {
-        return VersorEven.from_groups(
+public extension Sphere {
+    public VersorEven sandwich(DualNum other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(float3(0.0), other.e5 * this.e1234), 
             /* e415, e425, e435, e321 */
@@ -8316,12 +7890,11 @@ extension Sphere: Sandwich<DualNum> {
         ).geometric_product(this.reverse());
     }
 }
-extension Sphere: Sandwich<FlatPoint> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: FlatPoint) -> Output {
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
+public extension Sphere {
+    public VersorOdd sandwich(FlatPoint other) {
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            float3(0.0), 
             /* e23, e31, e12, e45 */
             float4(((float3(other.e45) * this.group0.xyz) + (float3(this.e1234) * other.group0.xyz)), 0.0), 
             /* e15, e25, e35, e1234 */
@@ -8331,10 +7904,9 @@ extension Sphere: Sandwich<FlatPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension Sphere: Sandwich<Flector> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Flector) -> Output {
-        return VersorOdd.from_groups(
+public extension Sphere {
+    public VersorOdd sandwich(Flector other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4((float3(this.e1234) * other.group1.xyz), (other.e3215 * this.e1234) - (other.e4235 * this.e4235) - (other.e4315 * this.e4315) - (other.e4125 * this.e4125)), 
             /* e23, e31, e12, e45 */
@@ -8346,12 +7918,11 @@ extension Sphere: Sandwich<Flector> {
         ).geometric_product(this.reverse());
     }
 }
-extension Sphere: Sandwich<Line> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: Line) -> Output {
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(this.e1234) * other.group0.xyz, 0.0), 
+public extension Sphere {
+    public VersorEven sandwich(Line other) {
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(this.e1234) * other.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4((float3(this.e1234) * other.group1.xyz), (other.e415 * this.e4235) + (other.e425 * this.e4315) + (other.e435 * this.e4125)), 
             /* e235, e315, e125, e4 */
@@ -8361,10 +7932,9 @@ extension Sphere: Sandwich<Line> {
         ).geometric_product(this.reverse());
     }
 }
-extension Sphere: Sandwich<Motor> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: Motor) -> Output {
-        return VersorEven.from_groups(
+public extension Sphere {
+    public VersorEven sandwich(Motor other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(this.e1234) * float4(other.group0.xyz, other.e5), 
             /* e415, e425, e435, e321 */
@@ -8376,41 +7946,39 @@ extension Sphere: Sandwich<Motor> {
         ).geometric_product(this.reverse());
     }
 }
-extension Sphere: Sandwich<MultiVector> {
-    associatedtype Output = MultiVector;
-    func sandwich(other: MultiVector) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(-(other.e4235 * this.e4235) - (other.e4315 * this.e4315) - (other.e4125 * this.e4125), (other.e2 * this.e4315) + (other.e3 * this.e4125) + (other.e4 * this.e3215)) + (float2(this.e1234) * float2(other.e3215, other.e5)) + (float2(other.e1234, other.e1) * this.group0.wx), 0.0, 0.0), 
+public extension Sphere {
+    public MultiVector sandwich(MultiVector other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(-(other.e4235 * this.e4235) - (other.e4315 * this.e4315) - (other.e4125 * this.e4125), (other.e2 * this.e4315) + (other.e3 * this.e4125) + (other.e4 * this.e3215)) + (float2(this.e1234) * float2(other.e3215, other.e5)) + (float2(other.e1234, other.e1) * this.group0.wx), 
             /* e1, e2, e3, e4 */
             float4(-(other.e425 * this.e4125) - (other.e423 * this.e3215), -(other.e435 * this.e4235) - (other.e431 * this.e3215), -(other.e415 * this.e4315) - (other.e412 * this.e3215), (other.e431 * this.e4315) + (other.e412 * this.e4125)) + (float4(this.e1234) * float4(other.group8.xyz, other.e12345)) + (this.group0.yzxx * float4(other.group6.zxy, other.e423)) - (float4(other.group0.xy.yy, other.e12345, other.e321) * float4(this.group0.xyz, this.e1234)), 
-            /* e5, 0, 0, 0 */
-            float4((other.e12345 * this.e3215) + (other.e321 * this.e3215) - (other.e235 * this.e4235) - (other.e315 * this.e4315) - (other.e125 * this.e4125), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (other.e12345 * this.e3215) + (other.e321 * this.e3215) - (other.e235 * this.e4235) - (other.e315 * this.e4315) - (other.e125 * this.e4125), 
             /* e15, e25, e35, e45 */
             float4((other.e25 * this.e4125) + (other.e3215 * this.e4235), (other.e35 * this.e4235) + (other.e3215 * this.e4315), (other.e15 * this.e4315) + (other.e3215 * this.e4125), -(other.e12 * this.e4125) - (other.e3215 * this.e1234)) + float4((other.group5.xyz * this.group0.www), other.e1234 * this.e3215) - (this.group0.yzxx * float4(other.group3.zxy, other.e23)) - (this.group0.wwwy * float4(other.group9.xyz, other.e31)), 
-            /* e41, e42, e43, 0 */
-            float4((float3(this.e1234) * other.group5.xyz) + (float3(this.e1234) * other.group9.xyz) + (other.group4.xyz.zxy * this.group0.yzx) - (float3(other.e1234) * this.group0.xyz) - (other.group4.xyz.yzx * this.group0.zxy), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(other.e45) * this.group0.xyz) + (float3(this.e3215) * other.group4.xyz) + (float3(this.e1234) * other.group3.xyz) + (other.group9.yzx * this.group0.zxy) - (other.group9.zxy * this.group0.yzx), 0.0), 
+            /* e41, e42, e43 */
+            (float3(this.e1234) * other.group5.xyz) + (float3(this.e1234) * other.group9.xyz) + (other.group4.xyz.zxy * this.group0.yzx) - (float3(other.e1234) * this.group0.xyz) - (other.group4.xyz.yzx * this.group0.zxy), 
+            /* e23, e31, e12 */
+            (float3(other.e45) * this.group0.xyz) + (float3(this.e3215) * other.group4.xyz) + (float3(this.e1234) * other.group3.xyz) + (other.group9.yzx * this.group0.zxy) - (other.group9.zxy * this.group0.yzx), 
             /* e415, e425, e435, e321 */
             float4(other.e321 * this.e4235 * -1.0, other.e321 * this.e4315 * -1.0, other.e321 * this.e4125 * -1.0, other.e5 * this.e1234) + (this.group0.yzxz * float4(other.group1.zxy, other.e435)) + (this.group0.wwwx * float4(other.group7.xyz, other.e415)) + float4((float3(this.e1234) * other.group8.xyz), other.e425 * this.e4315) - (other.group1.yzxw * this.group0.zxyw), 
-            /* e423, e431, e412, 0 */
-            float4((float3(this.e1234) * other.group6.xyz) + (other.group7.xyz.zxy * this.group0.yzx) - (float3(other.e4) * this.group0.xyz) - (float3(this.e1234) * other.group1.xyz) - (other.group7.xyz.yzx * this.group0.zxy), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(other.e5) * this.group0.xyz) + (float3(this.e3215) * other.group1.xyz) + (float3(this.e3215) * other.group6.xyz) + (other.group8.xyz.yzx * this.group0.zxy) - (other.group8.xyz.zxy * this.group0.yzx), 0.0), 
+            /* e423, e431, e412 */
+            (float3(this.e1234) * other.group6.xyz) + (other.group7.xyz.zxy * this.group0.yzx) - (float3(other.e4) * this.group0.xyz) - (float3(this.e1234) * other.group1.xyz) - (other.group7.xyz.yzx * this.group0.zxy), 
+            /* e235, e315, e125 */
+            (float3(other.e5) * this.group0.xyz) + (float3(this.e3215) * other.group1.xyz) + (float3(this.e3215) * other.group6.xyz) + (other.group8.xyz.yzx * this.group0.zxy) - (other.group8.xyz.zxy * this.group0.yzx), 
             /* e4235, e4315, e4125, e3215 */
             float4((other.e41 * this.e3215) + (other.e31 * this.e4125), (other.e42 * this.e3215) + (other.e12 * this.e4235), (other.e43 * this.e3215) + (other.e23 * this.e4315), -(other.e35 * this.e4125) - (other.e45 * this.e3215)) + (float4(other.scalar) * this.group0) - (other.group3.xyzy * float4(float3(this.e1234), this.e4315)) - (this.group0.yzxx * float4(other.group5.xyz.zxy, other.e15)), 
-            /* e1234, 0, 0, 0 */
-            float4((other.scalar * this.e1234) + (other.e45 * this.e1234) + (other.e41 * this.e4235) + (other.e42 * this.e4315) + (other.e43 * this.e4125), 0.0, 0.0, 0.0)
+            /* e1234 */
+            (other.scalar * this.e1234) + (other.e45 * this.e1234) + (other.e41 * this.e4235) + (other.e42 * this.e4315) + (other.e43 * this.e4125)
         ).geometric_product(this.reverse());
     }
 }
-extension Sphere: Sandwich<Plane> {
-    associatedtype Output = DipoleInversion;
-    func sandwich(other: Plane) -> Output {
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(this.e1234) * other.group0.xyz, 0.0), 
+public extension Sphere {
+    public DipoleInversion sandwich(Plane other) {
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            float3(this.e1234) * other.group0.xyz, 
             /* e23, e31, e12, e45 */
             float4(((other.group0.yzx * this.group0.zxy) - (other.group0.zxy * this.group0.yzx)), other.e3215 * this.e1234 * -1.0), 
             /* e15, e25, e35, scalar */
@@ -8418,12 +7986,11 @@ extension Sphere: Sandwich<Plane> {
         ).geometric_product(this.reverse());
     }
 }
-extension Sphere: Sandwich<RoundPoint> {
-    associatedtype Output = AntiDipoleInversion;
-    func sandwich(other: RoundPoint) -> Output {
-        return CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(-(float3(other.e4) * this.group0.xyz) - (float3(this.e1234) * other.group0.xyz), 0.0), 
+public extension Sphere {
+    public AntiDipoleInversion sandwich(RoundPoint other) {
+        return CircleRotor(
+            /* e423, e431, e412 */
+            -(float3(other.e4) * this.group0.xyz) - (float3(this.e1234) * other.group0.xyz), 
             /* e415, e425, e435, e321 */
             float4((other.group0.zxy * this.group0.yzx), other.e5 * this.e1234) - (other.group0.yzxw * this.group0.zxyw), 
             /* e235, e315, e125, e12345 */
@@ -8431,23 +7998,21 @@ extension Sphere: Sandwich<RoundPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension Sphere: Sandwich<Scalar> {
-    associatedtype Output = AntiCircleRotor;
-    func sandwich(other: Scalar) -> Output {
-        return Sphere.from_groups(
+public extension Sphere {
+    public AntiCircleRotor sandwich(Scalar other) {
+        return Sphere(
             /* e4235, e4315, e4125, e3215 */
             float4(other.scalar) * this.group0, 
-            /* e1234, 0, 0, 0 */
-            float4(other.scalar * this.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.scalar * this.e1234
         ).geometric_product(this.reverse());
     }
 }
-extension Sphere: Sandwich<Sphere> {
-    associatedtype Output = DipoleInversion;
-    func sandwich(other: Sphere) -> Output {
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4((float3(this.e1234) * other.group0.xyz) - (float3(other.e1234) * this.group0.xyz), 0.0), 
+public extension Sphere {
+    public DipoleInversion sandwich(Sphere other) {
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            (float3(this.e1234) * other.group0.xyz) - (float3(other.e1234) * this.group0.xyz), 
             /* e23, e31, e12, e45 */
             float4((other.group0.yzx * this.group0.zxy), other.e1234 * this.e3215) - (other.group0.zxyw * float4(this.group0.yzx, this.e1234)), 
             /* e15, e25, e35, scalar */
@@ -8455,10 +8020,9 @@ extension Sphere: Sandwich<Sphere> {
         ).geometric_product(this.reverse());
     }
 }
-extension Sphere: Sandwich<VersorEven> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: VersorEven) -> Output {
-        return VersorEven.from_groups(
+public extension Sphere {
+    public VersorEven sandwich(VersorEven other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(-(this.e4235 * other.e4) - (this.e4125 * other.e431) - (this.e1234 * other.e1), -(this.e4235 * other.e412) - (this.e4315 * other.e4) - (this.e1234 * other.e2), -(this.e4315 * other.e423) - (this.e4125 * other.e4) - (this.e1234 * other.e3), (this.e4125 * other.e3) + (this.e3215 * other.e4) + (this.e1234 * other.e5)) + (this.group0.yzxx * float4(other.group0.zxy, other.e1)) + float4((float3(this.e1234) * other.group1.xyz), this.e4315 * other.e2), 
             /* e415, e425, e435, e321 */
@@ -8470,10 +8034,9 @@ extension Sphere: Sandwich<VersorEven> {
         ).geometric_product(this.reverse());
     }
 }
-extension Sphere: Sandwich<VersorOdd> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: VersorOdd) -> Output {
-        return VersorOdd.from_groups(
+public extension Sphere {
+    public VersorOdd sandwich(VersorOdd other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(this.e1234 * other.e4235, this.e1234 * other.e4315, this.e1234 * other.e4125, this.e4125 * other.e4125 * -1.0) + (float4(this.e1234) * float4(other.group1.xyz, other.e3215)) + (this.group0.yzxw * float4(other.group0.zxy, other.e1234)) - (float4(other.e42, other.e1234, other.e1234, other.e4315) * this.group0.zyzy) - (float4(other.e1234, other.e43, other.e41, other.e4235) * this.group0.xxyx), 
             /* e23, e31, e12, e45 */
@@ -8485,16 +8048,21 @@ extension Sphere: Sandwich<VersorOdd> {
         ).geometric_product(this.reverse());
     }
 }
-extension VersorEven {
-    // Fancy infix trick
-    func operator/(_rhs: SandwichInfix) -> SandwichInfixPartial<VersorEven> {
-        return SandwichInfixPartial { a: this };
+public extension VersorEven {
+    // Fancy infix trick (first half)
+    public SandwichInfixPartial<VersorEven> operator /(SandwichInfix rhs) {
+        return SandwichInfixPartial<VersorEven>(this);
     }
 }
-extension VersorEven: Sandwich<AntiCircleRotor> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: AntiCircleRotor) -> Output {
-        return VersorEven.from_groups(
+public extension SandwichInfixPartial<VersorEven> {
+    // Fancy infix trick (second half)
+    public VersorOdd operator /(AntiCircleRotor rhs) {
+        return this.a.sandwich(rhs);
+    }
+}
+public extension VersorEven {
+    public VersorOdd sandwich(AntiCircleRotor other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((other.e41 * this.e321) + (other.e42 * this.e435) + (other.e42 * this.e3) + (other.e23 * this.e4) + (other.e31 * this.e412) + (other.e45 * this.e423) + (other.scalar * this.e423), (other.e42 * this.e321) + (other.e43 * this.e415) + (other.e43 * this.e1) + (other.e31 * this.e4) + (other.e12 * this.e423) + (other.e45 * this.e431) + (other.scalar * this.e431), (other.e41 * this.e2) + (other.e43 * this.e12345) + (other.e43 * this.e321) + (other.e23 * this.e431) + (other.e12 * this.e4) + (other.e45 * this.e412) + (other.scalar * this.e412), -(other.e23 * this.e415) - (other.e31 * this.e425) - (other.e12 * this.e435) - (other.e45 * this.e321) - (other.e15 * this.e423) - (other.e25 * this.e431) - (other.e35 * this.e412)) + (float4(this.group0.ww, this.e425, this.e12345) * float4(other.group0.xyz.xyx, other.scalar)) - float4((other.group0.xyz.zxy * this.group1.yzx), other.e41 * this.e235) - float4((other.group0.xyz.zxy * this.group3.yzx), other.e42 * this.e315) - float4((other.group1.zxy * this.group0.yzx), other.e43 * this.e125), 
             /* e415, e425, e435, e321 */
@@ -8506,10 +8074,9 @@ extension VersorEven: Sandwich<AntiCircleRotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension VersorEven: Sandwich<AntiDipoleInversion> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiDipoleInversion) -> Output {
-        return VersorOdd.from_groups(
+public extension VersorEven {
+    public VersorEven sandwich(AntiDipoleInversion other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(-(other.e431 * this.e3) - (other.e415 * this.e4) - (other.e425 * this.e412) - (other.e4 * this.e415) - (other.e4 * this.e1) - (other.e3 * this.e431), -(other.e412 * this.e1) - (other.e425 * this.e4) - (other.e435 * this.e423) - (other.e4 * this.e425) - (other.e4 * this.e2) - (other.e1 * this.e412), -(other.e412 * this.e321) - (other.e415 * this.e431) - (other.e435 * this.e4) - (other.e4 * this.e435) - (other.e4 * this.e3) - (other.e2 * this.e423), (other.e235 * this.e423) + (other.e315 * this.e431) + (other.e125 * this.e412) + (other.e1 * this.e1) + (other.e2 * this.e2) + (other.e3 * this.e3)) + (other.group1.wwwx * float4(this.group0.xyz, this.e415)) + (float4(this.group0.zx, this.e4, this.e435) * float4(other.group3.yzz, other.e435)) + (float4(this.group3.ww, this.e431, this.e425) * float4(other.group3.xyx, other.e425)) + float4((other.group0.xyz.zxy * this.group1.yzx), other.e423 * this.e235) + float4((other.group0.xyz.zxy * this.group3.yzx), other.e431 * this.e315) + float4((other.group1.zxy * this.group0.yzx), other.e412 * this.e125) - (float4(this.group0.ww, this.e425, this.e321) * float4(other.group0.xyz.xyx, other.e321)) - (float4(this.group1.zx, this.e12345, this.e4) * float4(other.group0.xyz.yzz, other.e5)) - (float4(this.group1.ww, this.e2, this.e5) * float4(other.group0.xyz.xyx, other.e4)), 
             /* e23, e31, e12, e45 */
@@ -8521,10 +8088,9 @@ extension VersorEven: Sandwich<AntiDipoleInversion> {
         ).geometric_product(this.reverse());
     }
 }
-extension VersorEven: Sandwich<AntiDualNum> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: AntiDualNum) -> Output {
-        return VersorEven.from_groups(
+public extension VersorEven {
+    public VersorOdd sandwich(AntiDualNum other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(other.group0.xy.yy, other.scalar, (other.e3215 * this.e4) + (other.scalar * this.e12345)) * float4(this.group0.xyz, 1.0), 
             /* e415, e425, e435, e321 */
@@ -8536,10 +8102,9 @@ extension VersorEven: Sandwich<AntiDualNum> {
         ).geometric_product(this.reverse());
     }
 }
-extension VersorEven: Sandwich<AntiFlatPoint> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiFlatPoint) -> Output {
-        return VersorOdd.from_groups(
+public extension VersorEven {
+    public VersorEven sandwich(AntiFlatPoint other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4((other.group0.www * this.group0.xyz), (other.e235 * this.e423) + (other.e315 * this.e431) + (other.e125 * this.e412) - (other.e321 * this.e321)), 
             /* e23, e31, e12, e45 */
@@ -8551,10 +8116,9 @@ extension VersorEven: Sandwich<AntiFlatPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension VersorEven: Sandwich<AntiFlector> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiFlector) -> Output {
-        return VersorOdd.from_groups(
+public extension VersorEven {
+    public VersorEven sandwich(AntiFlector other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             (other.group0.wwwx * this.group0.xyzx) + (float4(this.group0.zx, this.e4, this.e412) * float4(other.group1.yzz, other.e125)) + (float4(this.group3.ww, this.e431, this.e431) * float4(other.group1.xyx, other.e315)) + float4(float3(0.0), (other.e1 * this.e1) + (other.e2 * this.e2) + (other.e3 * this.e3) - (other.e5 * this.e4)) - float4((other.group1.zxy * this.group0.yzx), other.e321 * this.e321), 
             /* e23, e31, e12, e45 */
@@ -8566,10 +8130,9 @@ extension VersorEven: Sandwich<AntiFlector> {
         ).geometric_product(this.reverse());
     }
 }
-extension VersorEven: Sandwich<AntiLine> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: AntiLine) -> Output {
-        return VersorEven.from_groups(
+public extension VersorEven {
+    public VersorOdd sandwich(AntiLine other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((other.e23 * this.e4) + (other.e31 * this.e412), (other.e31 * this.e4) + (other.e12 * this.e423), (other.e23 * this.e431) + (other.e12 * this.e4), -(other.e31 * this.e425) - (other.e12 * this.e435) - (other.e15 * this.e423) - (other.e25 * this.e431) - (other.e35 * this.e412)) - float4((other.group0.xyz.zxy * this.group0.yzx), other.e23 * this.e415), 
             /* e415, e425, e435, e321 */
@@ -8581,10 +8144,9 @@ extension VersorEven: Sandwich<AntiLine> {
         ).geometric_product(this.reverse());
     }
 }
-extension VersorEven: Sandwich<AntiMotor> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: AntiMotor) -> Output {
-        return VersorEven.from_groups(
+public extension VersorEven {
+    public VersorOdd sandwich(AntiMotor other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(other.scalar * this.e423, other.scalar * this.e431, other.scalar * this.e412, -(other.e31 * this.e425) - (other.e12 * this.e435) - (other.e15 * this.e423) - (other.e25 * this.e431) - (other.e35 * this.e412)) + (other.group0.xyxw * float4(this.group3.ww, this.e431, this.e12345)) + (float4(this.group0.zx, this.e4, this.e4) * float4(other.group0.yzz, other.e3215)) - (other.group0.zxyx * float4(this.group0.yzx, this.e415)), 
             /* e415, e425, e435, e321 */
@@ -8596,10 +8158,9 @@ extension VersorEven: Sandwich<AntiMotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension VersorEven: Sandwich<AntiPlane> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiPlane) -> Output {
-        return VersorOdd.from_groups(
+public extension VersorEven {
+    public VersorEven sandwich(AntiPlane other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             (other.group0.xyxx * float4(this.group3.ww, this.e431, this.e1)) + (other.group0.yzzy * float4(this.group0.zx, this.e4, this.e2)) + float4(float3(0.0), other.e3 * this.e3) - (other.group0.zxyw * float4(this.group0.yzx, this.e4)), 
             /* e23, e31, e12, e45 */
@@ -8611,10 +8172,9 @@ extension VersorEven: Sandwich<AntiPlane> {
         ).geometric_product(this.reverse());
     }
 }
-extension VersorEven: Sandwich<AntiScalar> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiScalar) -> Output {
-        return VersorOdd.from_groups(
+public extension VersorEven {
+    public VersorEven sandwich(AntiScalar other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(other.e12345) * this.group0 * float4(-1.0), 
             /* e23, e31, e12, e45 */
@@ -8626,10 +8186,9 @@ extension VersorEven: Sandwich<AntiScalar> {
         ).geometric_product(this.reverse());
     }
 }
-extension VersorEven: Sandwich<Circle> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: Circle) -> Output {
-        return VersorOdd.from_groups(
+public extension VersorEven {
+    public VersorEven sandwich(Circle other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(-(other.e423 * this.e321) - (other.e431 * this.e435) - (other.e431 * this.e3) - (other.e415 * this.e4) - (other.e425 * this.e412), -(other.e431 * this.e321) - (other.e412 * this.e415) - (other.e412 * this.e1) - (other.e425 * this.e4) - (other.e435 * this.e423), -(other.e423 * this.e2) - (other.e412 * this.e12345) - (other.e412 * this.e321) - (other.e415 * this.e431) - (other.e435 * this.e4), (other.e415 * this.e415) + (other.e425 * this.e425) + (other.e435 * this.e435) + (other.e315 * this.e431) + (other.e125 * this.e412)) + (this.group0.xyzx * float4(other.group1.www, other.e235)) + float4((other.group0.xyz.zxy * this.group1.yzx), other.e423 * this.e235) + float4((other.group0.xyz.zxy * this.group3.yzx), other.e431 * this.e315) + float4((other.group1.zxy * this.group0.yzx), other.e412 * this.e125) - (float4(this.group0.ww, this.e425, this.e321) * float4(other.group0.xyz.xyx, other.e321)), 
             /* e23, e31, e12, e45 */
@@ -8641,10 +8200,9 @@ extension VersorEven: Sandwich<Circle> {
         ).geometric_product(this.reverse());
     }
 }
-extension VersorEven: Sandwich<CircleRotor> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: CircleRotor) -> Output {
-        return VersorOdd.from_groups(
+public extension VersorEven {
+    public VersorEven sandwich(CircleRotor other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(-(other.e431 * this.e435) - (other.e431 * this.e3) - (other.e415 * this.e4) - (other.e425 * this.e412) - (other.e12345 * this.e423), -(other.e412 * this.e415) - (other.e412 * this.e1) - (other.e425 * this.e4) - (other.e435 * this.e423) - (other.e12345 * this.e431), -(other.e412 * this.e12345) - (other.e412 * this.e321) - (other.e415 * this.e431) - (other.e435 * this.e4) - (other.e12345 * this.e412), (other.e425 * this.e425) + (other.e435 * this.e435) + (other.e235 * this.e423) + (other.e315 * this.e431) + (other.e125 * this.e412)) + (other.group1.wwwx * float4(this.group0.xyz, this.e415)) + float4((other.group0.xyz.zxy * this.group1.yzx), other.e423 * this.e235) + float4((other.group0.xyz.zxy * this.group3.yzx), other.e431 * this.e315) + float4((other.group1.zxy * this.group0.yzx), other.e412 * this.e125) - (float4(this.group0.ww, this.e425, this.e321) * float4(other.group0.xyz.xyx, other.e321)) - (float4(this.group1.ww, this.e2, this.e12345) * float4(other.group0.xyz.xyx, other.e12345)), 
             /* e23, e31, e12, e45 */
@@ -8656,10 +8214,9 @@ extension VersorEven: Sandwich<CircleRotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension VersorEven: Sandwich<Dipole> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Dipole) -> Output {
-        return VersorEven.from_groups(
+public extension VersorEven {
+    public VersorOdd sandwich(Dipole other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((other.e41 * this.e12345) + (other.e41 * this.e321) + (other.e42 * this.e435) + (other.e42 * this.e3) + (other.e23 * this.e4) + (other.e31 * this.e412) + (other.e45 * this.e423), (other.e42 * this.e12345) + (other.e42 * this.e321) + (other.e43 * this.e415) + (other.e43 * this.e1) + (other.e31 * this.e4) + (other.e12 * this.e423) + (other.e45 * this.e431), (other.e41 * this.e425) + (other.e41 * this.e2) + (other.e43 * this.e12345) + (other.e43 * this.e321) + (other.e23 * this.e431) + (other.e12 * this.e4) + (other.e45 * this.e412), -(other.e23 * this.e415) - (other.e31 * this.e425) - (other.e12 * this.e435) - (other.e45 * this.e321) - (other.e15 * this.e423) - (other.e25 * this.e431) - (other.e35 * this.e412)) - float4((other.group0.xyz.zxy * this.group1.yzx), other.e41 * this.e235) - float4((other.group0.xyz.zxy * this.group3.yzx), other.e42 * this.e315) - float4((other.group1.zxy * this.group0.yzx), other.e43 * this.e125), 
             /* e415, e425, e435, e321 */
@@ -8671,10 +8228,9 @@ extension VersorEven: Sandwich<Dipole> {
         ).geometric_product(this.reverse());
     }
 }
-extension VersorEven: Sandwich<DipoleInversion> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: DipoleInversion) -> Output {
-        return VersorEven.from_groups(
+public extension VersorEven {
+    public VersorOdd sandwich(DipoleInversion other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((other.e31 * this.e412) + (other.e45 * this.e423) + (other.e1234 * this.e415) + (other.e1234 * this.e1) + (other.e4235 * this.e4) + (other.e4315 * this.e412), (other.e12 * this.e423) + (other.e45 * this.e431) + (other.e1234 * this.e425) + (other.e1234 * this.e2) + (other.e4315 * this.e4) + (other.e4125 * this.e423), (other.e12 * this.e4) + (other.e45 * this.e412) + (other.e1234 * this.e435) + (other.e1234 * this.e3) + (other.e4235 * this.e431) + (other.e4125 * this.e4), -(other.e31 * this.e425) - (other.e12 * this.e435) - (other.e45 * this.e321) - (other.e15 * this.e423) - (other.e25 * this.e431) - (other.e35 * this.e412)) + (float4(this.group0.ww, this.e425, this.e5) * float4(other.group0.xyz.xyx, other.e1234)) + (float4(this.group1.zx, this.e12345, this.e2) * float4(other.group0.xyz.yzz, other.e4315)) + (float4(this.group1.ww, this.e2, this.e1) * float4(other.group0.xyz.xyx, other.e4235)) + (float4(this.group3.zx, this.e321, this.e3) * float4(other.group0.xyz.yzz, other.e4125)) + (float4(this.group3.ww, this.e431, this.e4) * float4(other.group1.xyx, other.e3215)) - float4((other.group0.xyz.zxy * this.group1.yzx), other.e41 * this.e235) - float4((other.group0.xyz.zxy * this.group3.yzx), other.e42 * this.e315) - float4((other.group1.zxy * this.group0.yzx), other.e43 * this.e125) - float4((other.group3.zxy * this.group0.yzx), other.e23 * this.e415), 
             /* e415, e425, e435, e321 */
@@ -8686,10 +8242,9 @@ extension VersorEven: Sandwich<DipoleInversion> {
         ).geometric_product(this.reverse());
     }
 }
-extension VersorEven: Sandwich<DualNum> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: DualNum) -> Output {
-        return VersorOdd.from_groups(
+public extension VersorEven {
+    public VersorEven sandwich(DualNum other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(other.group0.xy.yy, other.e12345, -(other.e5 * this.e4) - (other.e12345 * this.e12345)) * float4(this.group0.xyz, 1.0) * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, e45 */
@@ -8701,10 +8256,9 @@ extension VersorEven: Sandwich<DualNum> {
         ).geometric_product(this.reverse());
     }
 }
-extension VersorEven: Sandwich<FlatPoint> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: FlatPoint) -> Output {
-        return VersorEven.from_groups(
+public extension VersorEven {
+    public VersorOdd sandwich(FlatPoint other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((other.group0.www * this.group0.xyz), -(other.e15 * this.e423) - (other.e25 * this.e431) - (other.e35 * this.e412) - (other.e45 * this.e321)), 
             /* e415, e425, e435, e321 */
@@ -8716,10 +8270,9 @@ extension VersorEven: Sandwich<FlatPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension VersorEven: Sandwich<Flector> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Flector) -> Output {
-        return VersorEven.from_groups(
+public extension VersorEven {
+    public VersorOdd sandwich(Flector other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             (other.group1.xyxy * float4(this.group3.ww, this.e431, this.e2)) + (other.group1.yzzz * float4(this.group0.zx, this.e4, this.e3)) + float4(float3(0.0), (other.e3215 * this.e4) - (other.e25 * this.e431) - (other.e35 * this.e412) - (other.e45 * this.e321)) + float4((other.group0.www * this.group0.xyz), other.e4235 * this.e1) - (this.group0.yzxx * float4(other.group1.zxy, other.e15)), 
             /* e415, e425, e435, e321 */
@@ -8731,10 +8284,9 @@ extension VersorEven: Sandwich<Flector> {
         ).geometric_product(this.reverse());
     }
 }
-extension VersorEven: Sandwich<Line> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: Line) -> Output {
-        return VersorOdd.from_groups(
+public extension VersorEven {
+    public VersorEven sandwich(Line other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(-(other.e415 * this.e4) - (other.e425 * this.e412), -(other.e425 * this.e4) - (other.e435 * this.e423), -(other.e415 * this.e431) - (other.e435 * this.e4), (other.e425 * this.e425) + (other.e435 * this.e435) + (other.e235 * this.e423) + (other.e315 * this.e431) + (other.e125 * this.e412)) + float4((other.group0.xyz.zxy * this.group0.yzx), other.e415 * this.e415), 
             /* e23, e31, e12, e45 */
@@ -8746,10 +8298,9 @@ extension VersorEven: Sandwich<Line> {
         ).geometric_product(this.reverse());
     }
 }
-extension VersorEven: Sandwich<Motor> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: Motor) -> Output {
-        return VersorOdd.from_groups(
+public extension VersorEven {
+    public VersorEven sandwich(Motor other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(other.e12345 * this.e423 * -1.0, other.e12345 * this.e431 * -1.0, other.e12345 * this.e412 * -1.0, (other.e425 * this.e425) + (other.e435 * this.e435) + (other.e235 * this.e423) + (other.e315 * this.e431) + (other.e125 * this.e412)) + (other.group0.zxyx * float4(this.group0.yzx, this.e415)) - (other.group0.xyxw * float4(this.group3.ww, this.e431, this.e12345)) - (float4(this.group0.zx, this.e4, this.e4) * float4(other.group0.yzz, other.e5)), 
             /* e23, e31, e12, e45 */
@@ -8761,39 +8312,37 @@ extension VersorEven: Sandwich<Motor> {
         ).geometric_product(this.reverse());
     }
 }
-extension VersorEven: Sandwich<MultiVector> {
-    associatedtype Output = MultiVector;
-    func sandwich(other: MultiVector) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((other.e415 * this.e415) + (other.e425 * this.e425) + (other.e435 * this.e435) + (other.e431 * this.e315) + (other.e412 * this.e125) + (other.e315 * this.e431) + (other.e125 * this.e412) - (other.e5 * this.e4), (other.e3215 * this.e4) - (other.e25 * this.e431) - (other.e35 * this.e412) - (other.e45 * this.e321) - (other.e42 * this.e315) - (other.e43 * this.e125) - (other.e31 * this.e425) - (other.e12 * this.e435)) + (float2(this.e1) * float2(other.e1, other.e4235)) + (float2(this.e2) * float2(other.e2, other.e4315)) + (float2(this.e3) * float2(other.e3, other.e4125)) + (float2(other.e423, other.e1234) * this.group2.xw) + (float2(other.e235, other.scalar) * this.group0.xw) - (float2(other.e12345, other.e15) * this.group0.wx) - (float2(other.e4, other.e41) * this.group2.wx) - (float2(other.e321, other.e23) * this.group1.wx), 0.0, 0.0), 
+public extension VersorEven {
+    public MultiVector sandwich(MultiVector other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((other.e415 * this.e415) + (other.e425 * this.e425) + (other.e435 * this.e435) + (other.e431 * this.e315) + (other.e412 * this.e125) + (other.e315 * this.e431) + (other.e125 * this.e412) - (other.e5 * this.e4), (other.e3215 * this.e4) - (other.e25 * this.e431) - (other.e35 * this.e412) - (other.e45 * this.e321) - (other.e42 * this.e315) - (other.e43 * this.e125) - (other.e31 * this.e425) - (other.e12 * this.e435)) + (float2(this.e1) * float2(other.e1, other.e4235)) + (float2(this.e2) * float2(other.e2, other.e4315)) + (float2(this.e3) * float2(other.e3, other.e4125)) + (float2(other.e423, other.e1234) * this.group2.xw) + (float2(other.e235, other.scalar) * this.group0.xw) - (float2(other.e12345, other.e15) * this.group0.wx) - (float2(other.e4, other.e41) * this.group2.wx) - (float2(other.e321, other.e23) * this.group1.wx), 
             /* e1, e2, e3, e4 */
             float4((other.e15 * this.e4) + (other.e25 * this.e412) + (other.e4125 * this.e425) + (other.e3215 * this.e423), (other.e25 * this.e4) + (other.e35 * this.e423) + (other.e4235 * this.e435) + (other.e3215 * this.e431), (other.e15 * this.e431) + (other.e35 * this.e4) + (other.e4315 * this.e415) + (other.e3215 * this.e412), -(other.e12 * this.e412) - (other.e4235 * this.e423) - (other.e4315 * this.e431) - (other.e4125 * this.e412)) + (float4(other.scalar) * this.group3) + (float4(this.group1.ww, this.e2, other.e1234) * float4(other.group5.xyz.xyx, this.e12345)) + (float4(this.group3.zx, this.e321, other.e1234) * float4(other.group5.xyz.yzz, this.e321)) + float4((other.group4.xyz.zxy * this.group2.yzx), other.e45 * this.e4) - (this.group1.xyzz * float4(other.group3.www, other.e43)) - (float4(this.group0.ww, this.e425, this.e3) * float4(other.group9.xyx, other.e43)) - (float4(this.group1.zx, this.e12345, this.e423) * float4(other.group9.yzz, other.e23)) - float4((float3(other.e1234) * this.group2.xyz), other.e31 * this.e431) - float4((other.group4.xyz.xyx * this.group2.wwy), other.e41 * this.e415) - float4((other.group4.xyz.yzz * this.group2.zxw), other.e41 * this.e1) - float4((other.group5.xyz.zxy * this.group3.yzx), other.e42 * this.e425) - float4((other.group3.zxy * this.group0.yzx), other.e42 * this.e2), 
-            /* e5, 0, 0, 0 */
-            float4((other.scalar * this.e5) + (other.e15 * this.e1) + (other.e25 * this.e2) + (other.e35 * this.e3) + (other.e4235 * this.e235) + (other.e4315 * this.e315) + (other.e4125 * this.e125) + (other.e3215 * this.e12345) - (other.e15 * this.e415) - (other.e25 * this.e425) - (other.e35 * this.e435) - (other.e45 * this.e5) - (other.e23 * this.e235) - (other.e31 * this.e315) - (other.e12 * this.e125) - (other.e3215 * this.e321), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (other.scalar * this.e5) + (other.e15 * this.e1) + (other.e25 * this.e2) + (other.e35 * this.e3) + (other.e4235 * this.e235) + (other.e4315 * this.e315) + (other.e4125 * this.e125) + (other.e3215 * this.e12345) - (other.e15 * this.e415) - (other.e25 * this.e425) - (other.e35 * this.e435) - (other.e45 * this.e5) - (other.e23 * this.e235) - (other.e31 * this.e315) - (other.e12 * this.e125) - (other.e3215 * this.e321), 
             /* e15, e25, e35, e45 */
             (float4(other.e5) * this.group3) + (float4(this.e425, this.e1, this.e321, this.e315) * float4(other.group8.xyz.zzz, other.e431)) + (float4(this.e3, this.e321, this.e415, this.e235) * float4(other.group8.xyz.yyy, other.e423)) + (other.group6.zxyw * float4(this.group2.yzx, this.e12345)) + (this.group2.yzxz * float4(other.group1.zxy, other.e412)) + (float4(this.group1.wz, this.e2, this.e321) * float4(other.group8.xyz.xxx, other.e12345)) - (float4(this.e12345, this.e3, this.e425, this.e431) * float4(other.group8.xyz.xxx, other.e315)) - (float4(this.e435, this.e12345, this.e1, this.e412) * float4(other.group8.xyz.yyy, other.e125)) - (float4(this.e2, this.e415, this.e12345, this.e415) * float4(other.group8.xyz.zzz, other.e1)) - (other.group1.xyxy * float4(this.group2.wwy, this.e425)) - (other.group1.yzzz * float4(this.group2.zxw, this.e435)) - (other.group6.yzzx * float4(this.group2.zxw, this.e1)) - (other.group6.wwwy * float4(this.group2.xyz, this.e2)) - (this.group2.wwyw * float4(other.group6.xyx, other.e4)) - (float4(other.group0.xy.yy, other.e12345, other.e235) * float4(this.group2.xyz, this.e423)) - float4((float3(other.e5) * this.group1.xyz), other.e435 * this.e3), 
-            /* e41, e42, e43, 0 */
-            float4((float3(other.e321) * this.group0.xyz) + (float3(this.e412, this.e423, this.e4) * other.group1.yzz) + (float3(this.e4, this.e4, this.e431) * other.group1.xyx) + (other.group7.xyz.zxy * this.group1.yzx) + (other.group7.xyz.zxy * this.group3.yzx) + (other.group6.zxy * this.group0.yzx) - (float3(other.e12345) * this.group0.xyz) - (float3(other.e4) * this.group1.xyz) - (float3(other.e4) * this.group3.xyz) - (float3(this.e412, this.e423, this.e4) * other.group6.yzz) - (float3(this.e12345, this.e12345, this.e425) * other.group7.xyz.xyx) - (float3(this.e435, this.e415, this.e12345) * other.group7.xyz.yzz) - (float3(this.e321, this.e321, this.e2) * other.group7.xyz.xyx) - (float3(this.e3, this.e1, this.e321) * other.group7.xyz.yzz) - (float3(this.e4, this.e4, this.e431) * other.group6.xyx) - (other.group1.zxy * this.group0.yzx), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((other.group7.xyz.zxy * this.group2.yzx) + (other.group8.xyz.zxy * this.group0.yzx) + (other.group1.zxy * this.group3.yzx) + (other.group6.zxy * this.group1.yzx) - (float3(other.e12345) * this.group1.xyz) - (float3(other.e4) * this.group2.xyz) - (float3(other.e5) * this.group0.xyz) - (float3(other.e321) * this.group3.xyz) - (float3(this.e412, this.e423, this.e4) * other.group8.xyz.yzz) - (float3(this.e12345, this.e12345, this.e425) * other.group6.xyx) - (float3(this.e435, this.e415, this.e12345) * other.group6.yzz) - (float3(this.e321, this.e321, this.e2) * other.group1.xyx) - (float3(this.e3, this.e1, this.e321) * other.group1.yzz) - (float3(this.e4, this.e4, this.e431) * other.group8.xyz.xyx) - (other.group7.xyz.xyx * this.group2.wwy) - (other.group7.xyz.yzz * this.group2.zxw), 0.0), 
+            /* e41, e42, e43 */
+            (float3(other.e321) * this.group0.xyz) + (float3(this.e412, this.e423, this.e4) * other.group1.yzz) + (float3(this.e4, this.e4, this.e431) * other.group1.xyx) + (other.group7.xyz.zxy * this.group1.yzx) + (other.group7.xyz.zxy * this.group3.yzx) + (other.group6.zxy * this.group0.yzx) - (float3(other.e12345) * this.group0.xyz) - (float3(other.e4) * this.group1.xyz) - (float3(other.e4) * this.group3.xyz) - (float3(this.e412, this.e423, this.e4) * other.group6.yzz) - (float3(this.e12345, this.e12345, this.e425) * other.group7.xyz.xyx) - (float3(this.e435, this.e415, this.e12345) * other.group7.xyz.yzz) - (float3(this.e321, this.e321, this.e2) * other.group7.xyz.xyx) - (float3(this.e3, this.e1, this.e321) * other.group7.xyz.yzz) - (float3(this.e4, this.e4, this.e431) * other.group6.xyx) - (other.group1.zxy * this.group0.yzx), 
+            /* e23, e31, e12 */
+            (other.group7.xyz.zxy * this.group2.yzx) + (other.group8.xyz.zxy * this.group0.yzx) + (other.group1.zxy * this.group3.yzx) + (other.group6.zxy * this.group1.yzx) - (float3(other.e12345) * this.group1.xyz) - (float3(other.e4) * this.group2.xyz) - (float3(other.e5) * this.group0.xyz) - (float3(other.e321) * this.group3.xyz) - (float3(this.e412, this.e423, this.e4) * other.group8.xyz.yzz) - (float3(this.e12345, this.e12345, this.e425) * other.group6.xyx) - (float3(this.e435, this.e415, this.e12345) * other.group6.yzz) - (float3(this.e321, this.e321, this.e2) * other.group1.xyx) - (float3(this.e3, this.e1, this.e321) * other.group1.yzz) - (float3(this.e4, this.e4, this.e431) * other.group8.xyz.xyx) - (other.group7.xyz.xyx * this.group2.wwy) - (other.group7.xyz.yzz * this.group2.zxw), 
             /* e415, e425, e435, e321 */
             float4((other.e3215 * this.e423) + (other.e1234 * this.e235), (other.e3215 * this.e431) + (other.e1234 * this.e315), (other.e3215 * this.e412) + (other.e1234 * this.e125), -(other.e45 * this.e12345) - (other.e1234 * this.e5)) + (float4(other.scalar) * this.group1) + (other.group9.zxyw * this.group3.yzxw) + (this.group2.zxwy * float4(other.group4.xyz.yzz, other.e42)) + (this.group2.wwyx * float4(other.group4.xyz.xyx, other.e41)) + (float4(this.group0.zx, this.e4, this.e435) * float4(other.group3.yzz, other.e4125)) + (float4(this.group0.ww, this.e425, this.e125) * float4(other.group5.xyz.xyx, other.e43)) + (float4(this.group1.zx, this.e12345, this.e415) * float4(other.group5.xyz.yzz, other.e4235)) + (float4(this.group3.ww, this.e431, this.e425) * float4(other.group3.xyx, other.e4315)) - (other.group3.wwwx * float4(this.group3.xyz, this.e423)) - (float4(this.group1.ww, this.e2, this.e431) * float4(other.group9.xyx, other.e25)) - (float4(this.group3.zx, this.e321, this.e412) * float4(other.group9.yzz, other.e35)) - float4((other.group4.xyz.zxy * this.group2.yzx), other.e23 * this.e1) - float4((other.group5.xyz.zxy * this.group1.yzx), other.e31 * this.e2) - float4((other.group3.zxy * this.group0.yzx), other.e12 * this.e3), 
-            /* e423, e431, e412, 0 */
-            float4((float3(other.scalar) * this.group0.xyz) + (float3(other.e45) * this.group0.xyz) + (float3(other.e1234) * this.group1.xyz) + (float3(other.e1234) * this.group3.xyz) + (float3(this.e412, this.e423, this.e4) * other.group5.xyz.yzz) + (float3(this.e412, this.e423, this.e4) * other.group9.yzz) + (float3(this.e12345, this.e12345, this.e425) * other.group4.xyz.xyx) + (float3(this.e435, this.e415, this.e12345) * other.group4.xyz.yzz) + (float3(this.e321, this.e321, this.e2) * other.group4.xyz.xyx) + (float3(this.e3, this.e1, this.e321) * other.group4.xyz.yzz) + (float3(this.e4, this.e4, this.e431) * other.group5.xyz.xyx) + (float3(this.e4, this.e4, this.e431) * other.group9.xyx) - (other.group4.xyz.zxy * this.group1.yzx) - (other.group4.xyz.zxy * this.group3.yzx) - (other.group5.xyz.zxy * this.group0.yzx) - (other.group9.zxy * this.group0.yzx), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(other.scalar) * this.group2.xyz) + (float3(other.e15) * float3(this.e12345, this.e3, this.e425)) + (float3(other.e25) * float3(this.e435, this.e12345, this.e1)) + (float3(other.e35) * float3(this.e2, this.e415, this.e12345)) + (float3(other.e3215) * this.group1.xyz) + (other.group5.xyz.xyx * this.group2.wwy) + (other.group5.xyz.yzz * this.group2.zxw) + (other.group9.zxy * this.group2.yzx) - (float3(other.e15) * float3(this.e321, this.e435, this.e2)) - (float3(other.e25) * float3(this.e3, this.e321, this.e415)) - (float3(other.e35) * float3(this.e425, this.e1, this.e321)) - (float3(other.e45) * this.group2.xyz) - (float3(other.e3215) * this.group3.xyz) - (other.group5.xyz.zxy * this.group2.yzx) - (other.group9.xyx * this.group2.wwy) - (other.group9.yzz * this.group2.zxw), 0.0), 
+            /* e423, e431, e412 */
+            (float3(other.scalar) * this.group0.xyz) + (float3(other.e45) * this.group0.xyz) + (float3(other.e1234) * this.group1.xyz) + (float3(other.e1234) * this.group3.xyz) + (float3(this.e412, this.e423, this.e4) * other.group5.xyz.yzz) + (float3(this.e412, this.e423, this.e4) * other.group9.yzz) + (float3(this.e12345, this.e12345, this.e425) * other.group4.xyz.xyx) + (float3(this.e435, this.e415, this.e12345) * other.group4.xyz.yzz) + (float3(this.e321, this.e321, this.e2) * other.group4.xyz.xyx) + (float3(this.e3, this.e1, this.e321) * other.group4.xyz.yzz) + (float3(this.e4, this.e4, this.e431) * other.group5.xyz.xyx) + (float3(this.e4, this.e4, this.e431) * other.group9.xyx) - (other.group4.xyz.zxy * this.group1.yzx) - (other.group4.xyz.zxy * this.group3.yzx) - (other.group5.xyz.zxy * this.group0.yzx) - (other.group9.zxy * this.group0.yzx), 
+            /* e235, e315, e125 */
+            (float3(other.scalar) * this.group2.xyz) + (float3(other.e15) * float3(this.e12345, this.e3, this.e425)) + (float3(other.e25) * float3(this.e435, this.e12345, this.e1)) + (float3(other.e35) * float3(this.e2, this.e415, this.e12345)) + (float3(other.e3215) * this.group1.xyz) + (other.group5.xyz.xyx * this.group2.wwy) + (other.group5.xyz.yzz * this.group2.zxw) + (other.group9.zxy * this.group2.yzx) - (float3(other.e15) * float3(this.e321, this.e435, this.e2)) - (float3(other.e25) * float3(this.e3, this.e321, this.e415)) - (float3(other.e35) * float3(this.e425, this.e1, this.e321)) - (float3(other.e45) * this.group2.xyz) - (float3(other.e3215) * this.group3.xyz) - (other.group5.xyz.zxy * this.group2.yzx) - (other.group9.xyx * this.group2.wwy) - (other.group9.yzz * this.group2.zxw), 
             /* e4235, e4315, e4125, e3215 */
             (float4(other.e5) * float4(this.group0.xyz, this.e321)) + (other.group1.xyxy * float4(this.group0.ww, this.e425, this.e315)) + (other.group1.yzzz * float4(this.group1.zx, this.e12345, this.e125)) + (other.group6.xyxx * float4(this.group1.ww, this.e2, this.e235)) + (other.group6.yzzy * float4(this.group3.zx, this.e321, this.e315)) + (other.group6.wwwz * float4(this.group1.xyz, this.e125)) + (float4(other.group0.xy.yy, other.e12345, other.e235) * float4(this.group3.xyz, this.e415)) + (float4(this.group0.zx, this.e4, this.e235) * float4(other.group8.xyz.yzz, other.e1)) + (float4(this.group3.ww, this.e431, this.e435) * float4(other.group8.xyz.xyx, other.e125)) + float4((other.group7.xyz.zxy * this.group2.yzx), other.e315 * this.e425) - (this.group2 * float4(other.group1.www, other.e321)) - (this.group2.wwyw * float4(other.group7.xyz.xyx, other.e12345)) - float4((other.group7.xyz.yzz * this.group2.zxw), other.e235 * this.e1) - float4((other.group8.xyz.zxy * this.group0.yzx), other.e315 * this.e2) - float4((other.group1.zxy * this.group1.yzx), other.e125 * this.e3) - float4((other.group6.zxy * this.group3.yzx), other.e5 * this.e12345), 
-            /* e1234, 0, 0, 0 */
-            float4((other.e415 * this.e423) + (other.e425 * this.e431) + (other.e435 * this.e412) + (other.e321 * this.e4) + (other.e423 * this.e415) + (other.e423 * this.e1) + (other.e431 * this.e425) + (other.e431 * this.e2) + (other.e412 * this.e435) + (other.e412 * this.e3) - (other.e12345 * this.e4) - (other.e1 * this.e423) - (other.e2 * this.e431) - (other.e3 * this.e412) - (other.e4 * this.e12345) - (other.e4 * this.e321), 0.0, 0.0, 0.0)
+            /* e1234 */
+            (other.e415 * this.e423) + (other.e425 * this.e431) + (other.e435 * this.e412) + (other.e321 * this.e4) + (other.e423 * this.e415) + (other.e423 * this.e1) + (other.e431 * this.e425) + (other.e431 * this.e2) + (other.e412 * this.e435) + (other.e412 * this.e3) - (other.e12345 * this.e4) - (other.e1 * this.e423) - (other.e2 * this.e431) - (other.e3 * this.e412) - (other.e4 * this.e12345) - (other.e4 * this.e321)
         ).geometric_product(this.reverse());
     }
 }
-extension VersorEven: Sandwich<Plane> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Plane) -> Output {
-        return VersorEven.from_groups(
+public extension VersorEven {
+    public VersorOdd sandwich(Plane other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(other.e4125 * this.e431 * -1.0, other.e4235 * this.e412 * -1.0, other.e4315 * this.e423 * -1.0, (other.e4125 * this.e3) + (other.e3215 * this.e4)) + (other.group0.xyxx * float4(this.group3.ww, this.e431, this.e1)) + (other.group0.yzzy * float4(this.group0.zx, this.e4, this.e2)), 
             /* e415, e425, e435, e321 */
@@ -8805,10 +8354,9 @@ extension VersorEven: Sandwich<Plane> {
         ).geometric_product(this.reverse());
     }
 }
-extension VersorEven: Sandwich<RoundPoint> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: RoundPoint) -> Output {
-        return VersorOdd.from_groups(
+public extension VersorEven {
+    public VersorEven sandwich(RoundPoint other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(other.e4 * this.e1 * -1.0, other.e4 * this.e2 * -1.0, other.e4 * this.e3 * -1.0, other.e3 * this.e3) + (other.group0.xyxx * float4(this.group3.ww, this.e431, this.e1)) + (other.group0.yzzy * float4(this.group0.zx, this.e4, this.e2)) - (other.group0.zxyw * float4(this.group0.yzx, this.e5)) - float4((other.group0.www * this.group1.xyz), other.e5 * this.e4), 
             /* e23, e31, e12, e45 */
@@ -8820,10 +8368,9 @@ extension VersorEven: Sandwich<RoundPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension VersorEven: Sandwich<Scalar> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Scalar) -> Output {
-        return VersorEven.from_groups(
+public extension VersorEven {
+    public VersorOdd sandwich(Scalar other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(other.scalar) * this.group0, 
             /* e415, e425, e435, e321 */
@@ -8835,10 +8382,9 @@ extension VersorEven: Sandwich<Scalar> {
         ).geometric_product(this.reverse());
     }
 }
-extension VersorEven: Sandwich<Sphere> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Sphere) -> Output {
-        return VersorEven.from_groups(
+public extension VersorEven {
+    public VersorOdd sandwich(Sphere other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(other.e4125 * this.e431 * -1.0, other.e4235 * this.e412 * -1.0, other.e4315 * this.e423 * -1.0, other.e1234 * this.e5) + (other.group0.xyxx * float4(this.group3.ww, this.e431, this.e1)) + (other.group0.yzzy * float4(this.group0.zx, this.e4, this.e2)) + float4((float3(other.e1234) * this.group1.xyz), other.e4125 * this.e3) + float4((float3(other.e1234) * this.group3.xyz), other.e3215 * this.e4), 
             /* e415, e425, e435, e321 */
@@ -8850,10 +8396,9 @@ extension VersorEven: Sandwich<Sphere> {
         ).geometric_product(this.reverse());
     }
 }
-extension VersorEven: Sandwich<VersorEven> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: VersorEven) -> Output {
-        return VersorOdd.from_groups(
+public extension VersorEven {
+    public VersorEven sandwich(VersorEven other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(-(other.e12345 * this.e423) - (other.e415 * this.e4) - (other.e425 * this.e412) - (other.e3 * this.e431) - (other.e4 * this.e415) - (other.e4 * this.e1), -(other.e12345 * this.e431) - (other.e425 * this.e4) - (other.e435 * this.e423) - (other.e1 * this.e412) - (other.e4 * this.e425) - (other.e4 * this.e2), -(other.e12345 * this.e412) - (other.e415 * this.e431) - (other.e435 * this.e4) - (other.e2 * this.e423) - (other.e4 * this.e435) - (other.e4 * this.e3), (other.e235 * this.e423) + (other.e315 * this.e431) + (other.e125 * this.e412) + (other.e1 * this.e1) + (other.e2 * this.e2) + (other.e3 * this.e3)) + (other.group0.zxyx * float4(this.group1.yzx, this.e235)) + (other.group0.zxyy * float4(this.group3.yzx, this.e315)) + (other.group1.wwwx * float4(this.group0.xyz, this.e415)) + (float4(this.group0.zx, this.e4, this.e435) * float4(other.group3.yzz, other.e435)) + (float4(this.group3.ww, this.e431, this.e425) * float4(other.group3.xyx, other.e425)) + float4((other.group1.zxy * this.group0.yzx), other.e412 * this.e125) - (other.group0.xyxw * float4(this.group0.ww, this.e425, this.e12345)) - (float4(this.group1.zx, this.e12345, this.e4) * float4(other.group0.yzz, other.e5)) - (float4(this.group1.ww, this.e2, this.e321) * float4(other.group0.xyx, other.e321)) - (float4(this.group3.zx, this.e321, this.e5) * float4(other.group0.yzz, other.e4)), 
             /* e23, e31, e12, e45 */
@@ -8865,10 +8410,9 @@ extension VersorEven: Sandwich<VersorEven> {
         ).geometric_product(this.reverse());
     }
 }
-extension VersorEven: Sandwich<VersorOdd> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: VersorOdd) -> Output {
-        return VersorEven.from_groups(
+public extension VersorEven {
+    public VersorOdd sandwich(VersorOdd other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((this.e435 * other.e42) + (this.e321 * other.e41) + (this.e1 * other.e1234) + (this.e3 * other.e42) + (this.e4 * other.e23) + (this.e4 * other.e4235), (this.e425 * other.e1234) + (this.e321 * other.e42) + (this.e1 * other.e43) + (this.e2 * other.e1234) + (this.e4 * other.e31) + (this.e4 * other.e4315), (this.e435 * other.e1234) + (this.e321 * other.e43) + (this.e2 * other.e41) + (this.e3 * other.e1234) + (this.e4 * other.e12) + (this.e4 * other.e4125), -(this.e425 * other.e31) - (this.e435 * other.e12) - (this.e321 * other.e45) - (this.e235 * other.e41) - (this.e315 * other.e42) - (this.e125 * other.e43)) + (float4(other.scalar, other.e12, other.e23, other.scalar) * this.group0.xxyw) + (float4(other.e31, other.scalar, other.scalar, other.e4235) * float4(this.group0.zyz, this.e1)) + (float4(other.e45, other.e4125, other.e4235, other.e1234) * float4(this.group0.xxy, this.e5)) + (float4(other.e1234, other.e43, other.e41, other.e3215) * float4(this.group1.xxy, this.e4)) + (float4(other.e4315, other.e45, other.e45, other.e4315) * float4(this.group0.zyz, this.e2)) + float4((this.group0.www * other.group0.xyz), this.e3 * other.e4125) - (this.group0.yzxx * float4(other.group1.zxy, other.e15)) - (this.group0.yzxy * float4(other.group3.zxy, other.e25)) - float4((this.group1.yzx * other.group0.zxy), this.e412 * other.e35) - float4((this.group3.yzx * other.group0.zxy), this.e415 * other.e23), 
             /* e415, e425, e435, e321 */
@@ -8880,16 +8424,21 @@ extension VersorEven: Sandwich<VersorOdd> {
         ).geometric_product(this.reverse());
     }
 }
-extension VersorOdd {
-    // Fancy infix trick
-    func operator/(_rhs: SandwichInfix) -> SandwichInfixPartial<VersorOdd> {
-        return SandwichInfixPartial { a: this };
+public extension VersorOdd {
+    // Fancy infix trick (first half)
+    public SandwichInfixPartial<VersorOdd> operator /(SandwichInfix rhs) {
+        return SandwichInfixPartial<VersorOdd>(this);
     }
 }
-extension VersorOdd: Sandwich<AntiCircleRotor> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: AntiCircleRotor) -> Output {
-        return VersorOdd.from_groups(
+public extension SandwichInfixPartial<VersorOdd> {
+    // Fancy infix trick (second half)
+    public VersorOdd operator /(AntiCircleRotor rhs) {
+        return this.a.sandwich(rhs);
+    }
+}
+public extension VersorOdd {
+    public VersorOdd sandwich(AntiCircleRotor other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4((other.e43 * this.e4315) + (other.e23 * this.e1234) + (other.e31 * this.e43) + (other.e45 * this.e41) + (other.scalar * this.e41), (other.e43 * this.e23) + (other.e31 * this.e1234) + (other.e12 * this.e41) + (other.e45 * this.e42) + (other.scalar * this.e42), (other.e43 * this.scalar) + (other.e23 * this.e42) + (other.e12 * this.e1234) + (other.e45 * this.e43) + (other.scalar * this.e43), -(other.e31 * this.e31) - (other.e12 * this.e12) - (other.e15 * this.e41) - (other.e25 * this.e42) - (other.e35 * this.e43)) + (float4(this.scalar, this.e4125, this.e31, this.e45) * float4(other.group0.xyz.xxx, other.e45)) + (float4(this.e12, this.scalar, this.e4235, this.scalar) * float4(other.group0.xyz.yyy, other.scalar)) - (float4(other.e41) * float4(this.group1.wz, this.e4315, this.e15)) - (float4(other.e42) * float4(this.e4125, this.e45, this.e23, this.e25)) - (float4(other.e43) * float4(this.e31, this.e4235, this.e45, this.e35)) - (other.group1.zxyx * float4(this.group0.yzx, this.e23)), 
             /* e23, e31, e12, e45 */
@@ -8901,10 +8450,9 @@ extension VersorOdd: Sandwich<AntiCircleRotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension VersorOdd: Sandwich<AntiDipoleInversion> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiDipoleInversion) -> Output {
-        return VersorEven.from_groups(
+public extension VersorOdd {
+    public VersorEven sandwich(AntiDipoleInversion other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((other.e4 * this.e23) + (other.e3 * this.e42), (other.e4 * this.e31) + (other.e1 * this.e43), (other.e4 * this.e12) + (other.e2 * this.e41), -(other.e315 * this.e42) - (other.e125 * this.e43)) + (float4(this.scalar, this.e4125, this.e31, this.e3215) * float4(other.group0.xyz.xxx, other.e4)) + (float4(this.e12, this.scalar, this.e4235, this.e4235) * float4(other.group0.xyz.yyy, other.e1)) + (float4(this.e4315, this.e23, this.scalar, this.e4315) * float4(other.group0.xyz.zzz, other.e2)) + (float4(this.group0.zx, this.e1234, this.e1234) * float4(other.group1.yzz, other.e5)) + (float4(this.group2.ww, this.e42, this.e4125) * float4(other.group1.xyx, other.e3)) - (float4(other.e423) * float4(this.group1.wz, this.e4315, this.e15)) - (float4(other.e431) * float4(this.e4125, this.e45, this.e23, this.e25)) - (float4(other.e412) * float4(this.e31, this.e4235, this.e45, this.e35)) - (other.group1.zxyx * float4(this.group0.yzx, this.e23)) - (other.group1.wwwy * float4(this.group0.xyz, this.e31)) - (float4(this.group0.zx, this.e1234, this.e41) * float4(other.group3.yzz, other.e235)) - (float4(this.group2.ww, this.e42, this.e45) * float4(other.group3.xyx, other.e321)) - float4((other.group2.www * this.group3.xyz), other.e435 * this.e12), 
             /* e415, e425, e435, e321 */
@@ -8916,10 +8464,9 @@ extension VersorOdd: Sandwich<AntiDipoleInversion> {
         ).geometric_product(this.reverse());
     }
 }
-extension VersorOdd: Sandwich<AntiDualNum> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: AntiDualNum) -> Output {
-        return VersorOdd.from_groups(
+public extension VersorOdd {
+    public VersorOdd sandwich(AntiDualNum other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(other.group0.xy.yy, other.scalar, (other.e3215 * this.e1234) + (other.scalar * this.scalar)) * float4(this.group0.xyz, 1.0), 
             /* e23, e31, e12, e45 */
@@ -8931,10 +8478,9 @@ extension VersorOdd: Sandwich<AntiDualNum> {
         ).geometric_product(this.reverse());
     }
 }
-extension VersorOdd: Sandwich<AntiFlatPoint> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiFlatPoint) -> Output {
-        return VersorEven.from_groups(
+public extension VersorOdd {
+    public VersorEven sandwich(AntiFlatPoint other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((other.group0.www * this.group0.xyz * float3(-1.0)), -(other.e235 * this.e41) - (other.e315 * this.e42) - (other.e125 * this.e43) - (other.e321 * this.e45)), 
             /* e415, e425, e435, e321 */
@@ -8946,10 +8492,9 @@ extension VersorOdd: Sandwich<AntiFlatPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension VersorOdd: Sandwich<AntiFlector> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiFlector) -> Output {
-        return VersorEven.from_groups(
+public extension VersorOdd {
+    public VersorEven sandwich(AntiFlector other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             (other.group1.zxyx * float4(this.group0.yzx, this.e4235)) + float4(float3(0.0), (other.e2 * this.e4315) + (other.e3 * this.e4125) + (other.e5 * this.e1234) - (other.e321 * this.e45)) - (other.group0.wwwx * this.group0.xyzx) - (float4(this.group0.zx, this.e1234, this.e43) * float4(other.group1.yzz, other.e125)) - (float4(this.group2.ww, this.e42, this.e42) * float4(other.group1.xyx, other.e315)), 
             /* e415, e425, e435, e321 */
@@ -8961,10 +8506,9 @@ extension VersorOdd: Sandwich<AntiFlector> {
         ).geometric_product(this.reverse());
     }
 }
-extension VersorOdd: Sandwich<AntiLine> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: AntiLine) -> Output {
-        return VersorOdd.from_groups(
+public extension VersorOdd {
+    public VersorOdd sandwich(AntiLine other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4((other.e23 * this.e1234) + (other.e31 * this.e43), (other.e31 * this.e1234) + (other.e12 * this.e41), (other.e23 * this.e42) + (other.e12 * this.e1234), -(other.e31 * this.e31) - (other.e12 * this.e12) - (other.e15 * this.e41) - (other.e25 * this.e42) - (other.e35 * this.e43)) - float4((other.group0.xyz.zxy * this.group0.yzx), other.e23 * this.e23), 
             /* e23, e31, e12, e45 */
@@ -8976,10 +8520,9 @@ extension VersorOdd: Sandwich<AntiLine> {
         ).geometric_product(this.reverse());
     }
 }
-extension VersorOdd: Sandwich<AntiMotor> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: AntiMotor) -> Output {
-        return VersorOdd.from_groups(
+public extension VersorOdd {
+    public VersorOdd sandwich(AntiMotor other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(other.scalar * this.e41, other.scalar * this.e42, other.scalar * this.e43, -(other.e31 * this.e31) - (other.e12 * this.e12) - (other.e15 * this.e41) - (other.e25 * this.e42) - (other.e35 * this.e43)) + (other.group0.xyxw * float4(this.group2.ww, this.e42, this.scalar)) + (float4(this.group0.zx, this.e1234, this.e1234) * float4(other.group0.yzz, other.e3215)) - (other.group0.zxyx * float4(this.group0.yzx, this.e23)), 
             /* e23, e31, e12, e45 */
@@ -8991,10 +8534,9 @@ extension VersorOdd: Sandwich<AntiMotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension VersorOdd: Sandwich<AntiPlane> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiPlane) -> Output {
-        return VersorEven.from_groups(
+public extension VersorOdd {
+    public VersorEven sandwich(AntiPlane other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(-(other.e1 * this.e1234) - (other.e2 * this.e43), -(other.e2 * this.e1234) - (other.e3 * this.e41), -(other.e1 * this.e42) - (other.e3 * this.e1234), (other.e2 * this.e4315) + (other.e3 * this.e4125) + (other.e5 * this.e1234)) + (other.group0.zxyx * float4(this.group0.yzx, this.e4235)), 
             /* e415, e425, e435, e321 */
@@ -9006,10 +8548,9 @@ extension VersorOdd: Sandwich<AntiPlane> {
         ).geometric_product(this.reverse());
     }
 }
-extension VersorOdd: Sandwich<AntiScalar> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: AntiScalar) -> Output {
-        return VersorEven.from_groups(
+public extension VersorOdd {
+    public VersorEven sandwich(AntiScalar other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(other.e12345) * this.group0, 
             /* e415, e425, e435, e321 */
@@ -9021,10 +8562,9 @@ extension VersorOdd: Sandwich<AntiScalar> {
         ).geometric_product(this.reverse());
     }
 }
-extension VersorOdd: Sandwich<Circle> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: Circle) -> Output {
-        return VersorEven.from_groups(
+public extension VersorOdd {
+    public VersorEven sandwich(Circle other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((other.e423 * this.scalar) + (other.e431 * this.e12) + (other.e412 * this.e4315) + (other.e415 * this.e1234) + (other.e425 * this.e43), (other.e423 * this.e4125) + (other.e431 * this.scalar) + (other.e412 * this.e23) + (other.e425 * this.e1234) + (other.e435 * this.e41), (other.e423 * this.e31) + (other.e431 * this.e4235) + (other.e412 * this.scalar) + (other.e415 * this.e42) + (other.e435 * this.e1234), -(other.e415 * this.e23) - (other.e425 * this.e31) - (other.e435 * this.e12) - (other.e321 * this.e45) - (other.e125 * this.e43)) - (float4(other.e423) * float4(this.group1.wz, this.e4315, this.e15)) - (float4(other.e431) * float4(this.e4125, this.e45, this.e23, this.e25)) - (float4(other.e412) * float4(this.e31, this.e4235, this.e45, this.e35)) - (this.group0.xyzy * float4(other.group1.www, other.e315)) - (this.group0.yzxx * float4(other.group1.zxy, other.e235)), 
             /* e415, e425, e435, e321 */
@@ -9036,10 +8576,9 @@ extension VersorOdd: Sandwich<Circle> {
         ).geometric_product(this.reverse());
     }
 }
-extension VersorOdd: Sandwich<CircleRotor> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: CircleRotor) -> Output {
-        return VersorEven.from_groups(
+public extension VersorOdd {
+    public VersorEven sandwich(CircleRotor other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((other.e431 * this.e12) + (other.e412 * this.e4315) + (other.e415 * this.e1234) + (other.e425 * this.e43) + (other.e12345 * this.e41), (other.e431 * this.scalar) + (other.e412 * this.e23) + (other.e425 * this.e1234) + (other.e435 * this.e41) + (other.e12345 * this.e42), (other.e431 * this.e4235) + (other.e412 * this.scalar) + (other.e415 * this.e42) + (other.e435 * this.e1234) + (other.e12345 * this.e43), -(other.e435 * this.e12) - (other.e321 * this.e45) - (other.e235 * this.e41) - (other.e315 * this.e42) - (other.e125 * this.e43)) + (float4(this.scalar, this.e4125, this.e31, this.scalar) * float4(other.group0.xyz.xxx, other.e12345)) - (float4(other.e423) * float4(this.group1.wz, this.e4315, this.e15)) - (float4(other.e431) * float4(this.e4125, this.e45, this.e23, this.e25)) - (float4(other.e412) * float4(this.e31, this.e4235, this.e45, this.e35)) - (other.group1.zxyx * float4(this.group0.yzx, this.e23)) - (other.group1.wwwy * float4(this.group0.xyz, this.e31)), 
             /* e415, e425, e435, e321 */
@@ -9051,10 +8590,9 @@ extension VersorOdd: Sandwich<CircleRotor> {
         ).geometric_product(this.reverse());
     }
 }
-extension VersorOdd: Sandwich<Dipole> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Dipole) -> Output {
-        return VersorOdd.from_groups(
+public extension VersorOdd {
+    public VersorOdd sandwich(Dipole other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4((other.e42 * this.e12) + (other.e43 * this.e4315) + (other.e23 * this.e1234) + (other.e31 * this.e43) + (other.e45 * this.e41), (other.e42 * this.scalar) + (other.e43 * this.e23) + (other.e31 * this.e1234) + (other.e12 * this.e41) + (other.e45 * this.e42), (other.e42 * this.e4235) + (other.e43 * this.scalar) + (other.e23 * this.e42) + (other.e12 * this.e1234) + (other.e45 * this.e43), -(other.e23 * this.e23) - (other.e31 * this.e31) - (other.e12 * this.e12) - (other.e25 * this.e42) - (other.e35 * this.e43)) + (float4(this.scalar, this.e4125, this.e31, this.e45) * float4(other.group0.xyz.xxx, other.e45)) - (float4(other.e41) * float4(this.group1.wz, this.e4315, this.e15)) - (float4(other.e42) * float4(this.e4125, this.e45, this.e23, this.e25)) - (float4(other.e43) * float4(this.e31, this.e4235, this.e45, this.e35)) - (this.group0.yzxx * float4(other.group1.zxy, other.e15)), 
             /* e23, e31, e12, e45 */
@@ -9066,10 +8604,9 @@ extension VersorOdd: Sandwich<Dipole> {
         ).geometric_product(this.reverse());
     }
 }
-extension VersorOdd: Sandwich<DipoleInversion> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: DipoleInversion) -> Output {
-        return VersorOdd.from_groups(
+public extension VersorOdd {
+    public VersorOdd sandwich(DipoleInversion other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4((other.e23 * this.e1234) + (other.e31 * this.e43) + (other.e45 * this.e41) + (other.e1234 * this.e23) + (other.e4235 * this.e1234) + (other.e4315 * this.e43), (other.e31 * this.e1234) + (other.e12 * this.e41) + (other.e45 * this.e42) + (other.e1234 * this.e31) + (other.e4315 * this.e1234) + (other.e4125 * this.e41), (other.e23 * this.e42) + (other.e12 * this.e1234) + (other.e45 * this.e43) + (other.e1234 * this.e12) + (other.e4235 * this.e42) + (other.e4125 * this.e1234), -(other.e15 * this.e41) - (other.e25 * this.e42) - (other.e35 * this.e43) - (other.e4235 * this.e4235) - (other.e4315 * this.e4315) - (other.e4125 * this.e4125)) + (float4(this.scalar, this.e4125, this.e31, this.e45) * float4(other.group0.xyz.xxx, other.e45)) + (float4(this.e12, this.scalar, this.e4235, this.e3215) * float4(other.group0.xyz.yyy, other.e1234)) + (float4(this.e4315, this.e23, this.scalar, this.e1234) * float4(other.group0.xyz.zzz, other.e3215)) - (float4(other.e41) * float4(this.group1.wz, this.e4315, this.e15)) - (float4(other.e42) * float4(this.e4125, this.e45, this.e23, this.e25)) - (float4(other.e43) * float4(this.e31, this.e4235, this.e45, this.e35)) - (other.group1.zxyx * float4(this.group0.yzx, this.e23)) - float4((other.group2.www * this.group3.xyz), other.e31 * this.e31) - float4((other.group3.zxy * this.group0.yzx), other.e12 * this.e12), 
             /* e23, e31, e12, e45 */
@@ -9081,10 +8618,9 @@ extension VersorOdd: Sandwich<DipoleInversion> {
         ).geometric_product(this.reverse());
     }
 }
-extension VersorOdd: Sandwich<DualNum> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: DualNum) -> Output {
-        return VersorEven.from_groups(
+public extension VersorOdd {
+    public VersorEven sandwich(DualNum other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(other.group0.xy.yy, other.e12345, (other.e5 * this.e1234) + (other.e12345 * this.scalar)) * float4(this.group0.xyz, 1.0), 
             /* e415, e425, e435, e321 */
@@ -9096,10 +8632,9 @@ extension VersorOdd: Sandwich<DualNum> {
         ).geometric_product(this.reverse());
     }
 }
-extension VersorOdd: Sandwich<FlatPoint> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: FlatPoint) -> Output {
-        return VersorOdd.from_groups(
+public extension VersorOdd {
+    public VersorOdd sandwich(FlatPoint other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4((other.group0.www * this.group0.xyz), (other.e45 * this.e45) - (other.e15 * this.e41) - (other.e25 * this.e42) - (other.e35 * this.e43)), 
             /* e23, e31, e12, e45 */
@@ -9111,10 +8646,9 @@ extension VersorOdd: Sandwich<FlatPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension VersorOdd: Sandwich<Flector> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Flector) -> Output {
-        return VersorOdd.from_groups(
+public extension VersorOdd {
+    public VersorOdd sandwich(Flector other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(other.e4315 * this.e43, other.e4125 * this.e41, other.e4125 * this.e1234, -(other.e25 * this.e42) - (other.e35 * this.e43) - (other.e4235 * this.e4235) - (other.e4315 * this.e4315) - (other.e4125 * this.e4125)) + (float4(other.e45) * float4(this.group0.xyz, this.e45)) + (other.group1.xyxw * float4(this.group2.ww, this.e42, this.e1234)) - (this.group0.yzxx * float4(other.group1.zxy, other.e15)), 
             /* e23, e31, e12, e45 */
@@ -9126,10 +8660,9 @@ extension VersorOdd: Sandwich<Flector> {
         ).geometric_product(this.reverse());
     }
 }
-extension VersorOdd: Sandwich<Line> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: Line) -> Output {
-        return VersorEven.from_groups(
+public extension VersorOdd {
+    public VersorEven sandwich(Line other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((other.e415 * this.e1234) + (other.e425 * this.e43), (other.e425 * this.e1234) + (other.e435 * this.e41), (other.e415 * this.e42) + (other.e435 * this.e1234), -(other.e425 * this.e31) - (other.e435 * this.e12) - (other.e235 * this.e41) - (other.e315 * this.e42) - (other.e125 * this.e43)) - float4((other.group0.xyz.zxy * this.group0.yzx), other.e415 * this.e23), 
             /* e415, e425, e435, e321 */
@@ -9141,10 +8674,9 @@ extension VersorOdd: Sandwich<Line> {
         ).geometric_product(this.reverse());
     }
 }
-extension VersorOdd: Sandwich<Motor> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: Motor) -> Output {
-        return VersorEven.from_groups(
+public extension VersorOdd {
+    public VersorEven sandwich(Motor other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(other.e12345 * this.e41, other.e12345 * this.e42, other.e12345 * this.e43, -(other.e425 * this.e31) - (other.e435 * this.e12) - (other.e235 * this.e41) - (other.e315 * this.e42) - (other.e125 * this.e43)) + (other.group0.xyxw * float4(this.group2.ww, this.e42, this.scalar)) + (float4(this.group0.zx, this.e1234, this.e1234) * float4(other.group0.yzz, other.e5)) - (other.group0.zxyx * float4(this.group0.yzx, this.e23)), 
             /* e415, e425, e435, e321 */
@@ -9156,39 +8688,37 @@ extension VersorOdd: Sandwich<Motor> {
         ).geometric_product(this.reverse());
     }
 }
-extension VersorOdd: Sandwich<MultiVector> {
-    associatedtype Output = MultiVector;
-    func sandwich(other: MultiVector) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((other.e45 * this.e45) - (other.e4235 * this.e4235) - (other.e4315 * this.e4315) - (other.e4125 * this.e4125), (other.e2 * this.e4315) + (other.e3 * this.e4125) + (other.e4 * this.e3215) - (other.e321 * this.e45)) + (float2(this.scalar) * other.group0.xy) + (float2(this.e1234) * float2(other.e3215, other.e5)) + (float2(other.e1234, other.e1) * this.group3.wx) - (float2(this.e41) * float2(other.e15, other.e235)) - (float2(this.e42) * float2(other.e25, other.e315)) - (float2(this.e43) * float2(other.e35, other.e125)) - (float2(this.e23) * float2(other.e23, other.e415)) - (float2(this.e31) * float2(other.e31, other.e425)) - (float2(this.e12) * float2(other.e12, other.e435)) - (float2(this.e15) * float2(other.e41, other.e423)) - (float2(this.e25) * float2(other.e42, other.e431)) - (float2(this.e35) * float2(other.e43, other.e412)), 0.0, 0.0), 
+public extension VersorOdd {
+    public MultiVector sandwich(MultiVector other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((other.e45 * this.e45) - (other.e4235 * this.e4235) - (other.e4315 * this.e4315) - (other.e4125 * this.e4125), (other.e2 * this.e4315) + (other.e3 * this.e4125) + (other.e4 * this.e3215) - (other.e321 * this.e45)) + (float2(this.scalar) * other.group0.xy) + (float2(this.e1234) * float2(other.e3215, other.e5)) + (float2(other.e1234, other.e1) * this.group3.wx) - (float2(this.e41) * float2(other.e15, other.e235)) - (float2(this.e42) * float2(other.e25, other.e315)) - (float2(this.e43) * float2(other.e35, other.e125)) - (float2(this.e23) * float2(other.e23, other.e415)) - (float2(this.e31) * float2(other.e31, other.e425)) - (float2(this.e12) * float2(other.e12, other.e435)) - (float2(this.e15) * float2(other.e41, other.e423)) - (float2(this.e25) * float2(other.e42, other.e431)) - (float2(this.e35) * float2(other.e43, other.e412)), 
             /* e1, e2, e3, e4 */
             (other.group1.yzzx * float4(this.group1.zx, this.scalar, this.e41)) + (this.group2.yzxw * float4(other.group7.xyz.zxy, other.e12345)) + (float4(this.group0.zx, this.e1234, this.e4315) * float4(other.group8.xyz.yzz, other.e431)) + (float4(this.group0.ww, this.e31, this.e4125) * float4(other.group1.xyx, other.e412)) + (float4(this.group2.ww, this.e42, this.e4235) * float4(other.group8.xyz.xyx, other.e423)) + float4((float3(other.e5) * this.group0.xyz), other.e4 * this.scalar) + float4((other.group6.zxy * this.group3.yzx), other.e2 * this.e42) + float4((other.group6.www * this.group1.xyz), other.e3 * this.e43) - (other.group6.xyxz * float4(this.group1.ww, this.e4315, this.e43)) - (other.group6.yzzw * float4(this.group3.zx, this.e45, this.e1234)) - (float4(other.group0.xy.yy, other.e12345, other.e423) * float4(this.group3.xyz, this.e23)) - (float4(this.group2.zx, this.e3215, this.e12) * float4(other.group7.xyz.yzz, other.e412)) - (float4(this.group3.ww, this.e25, this.e31) * float4(other.group7.xyz.xyx, other.e431)) - float4((other.group8.xyz.zxy * this.group0.yzx), other.e4 * this.e45) - float4((other.group1.zxy * this.group1.yzx), other.e415 * this.e41) - float4((other.group1.www * this.group2.xyz), other.e425 * this.e42), 
-            /* e5, 0, 0, 0 */
-            float4((other.e12345 * this.e3215) + (other.e5 * this.scalar) + (other.e5 * this.e45) + (other.e321 * this.e3215) - (other.e1 * this.e15) - (other.e2 * this.e25) - (other.e3 * this.e35) - (other.e415 * this.e15) - (other.e425 * this.e25) - (other.e435 * this.e35) - (other.e235 * this.e23) - (other.e235 * this.e4235) - (other.e315 * this.e31) - (other.e315 * this.e4315) - (other.e125 * this.e12) - (other.e125 * this.e4125), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (other.e12345 * this.e3215) + (other.e5 * this.scalar) + (other.e5 * this.e45) + (other.e321 * this.e3215) - (other.e1 * this.e15) - (other.e2 * this.e25) - (other.e3 * this.e35) - (other.e415 * this.e15) - (other.e425 * this.e25) - (other.e435 * this.e35) - (other.e235 * this.e23) - (other.e235 * this.e4235) - (other.e315 * this.e31) - (other.e315 * this.e4315) - (other.e125 * this.e12) - (other.e125 * this.e4125), 
             /* e15, e25, e35, e45 */
             float4((other.e25 * this.e4125) + (other.e4125 * this.e25) + (other.e3215 * this.e23) + (other.e3215 * this.e4235), (other.e35 * this.e4235) + (other.e4235 * this.e35) + (other.e3215 * this.e31) + (other.e3215 * this.e4315), (other.e35 * this.e45) + (other.e4315 * this.e15) + (other.e3215 * this.e12) + (other.e3215 * this.e4125), -(other.e4235 * this.e23) - (other.e4315 * this.e31) - (other.e4125 * this.e12) - (other.e3215 * this.e1234)) + (float4(other.scalar) * float4(this.group2.xyz, this.e45)) + (other.group3.xyxz * float4(this.group0.ww, this.e31, this.e43)) + (other.group3.xyxw * float4(this.group1.ww, this.e4315, this.scalar)) + (float4(this.group1.zx, this.scalar, other.e1234) * float4(other.group3.yzz, this.e3215)) + (float4(this.group2.zx, this.e3215, this.e42) * float4(other.group5.xyz.yzz, other.e25)) + (float4(this.group3.ww, this.e25, this.e41) * float4(other.group5.xyz.xyx, other.e15)) - (this.group2.yzxx * float4(other.group5.xyz.zxy, other.e41)) - (float4(this.group2.zx, this.e3215, this.e4125) * float4(other.group9.yzz, other.e12)) - (float4(this.group3.ww, this.e25, this.e4315) * float4(other.group9.xyx, other.e31)) - float4((other.group3.zxy * this.group1.yzx), other.e42 * this.e25) - float4((other.group3.zxy * this.group3.yzx), other.e43 * this.e35) - float4((other.group3.www * this.group2.xyz), other.e23 * this.e4235), 
-            /* e41, e42, e43, 0 */
-            float4((float3(other.scalar) * this.group0.xyz) + (float3(other.e45) * this.group0.xyz) + (float3(other.e41) * float3(this.scalar, this.e4125, this.e31)) + (float3(other.e42) * float3(this.e12, this.scalar, this.e4235)) + (float3(other.e43) * float3(this.e4315, this.e23, this.scalar)) + (float3(other.e1234) * this.group1.xyz) + (float3(this.e43, this.e41, this.e1234) * other.group5.xyz.yzz) + (float3(this.e43, this.e41, this.e1234) * other.group9.yzz) + (float3(this.e1234, this.e1234, this.e42) * other.group5.xyz.xyx) + (float3(this.e1234, this.e1234, this.e42) * other.group9.xyx) - (float3(other.e41) * float3(this.e45, this.e12, this.e4315)) - (float3(other.e42) * float3(this.e4125, this.e45, this.e23)) - (float3(other.e43) * float3(this.e31, this.e4235, this.e45)) - (float3(other.e1234) * this.group3.xyz) - (other.group5.xyz.zxy * this.group0.yzx) - (other.group9.zxy * this.group0.yzx), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(other.scalar) * this.group1.xyz) + (float3(other.e45) * this.group3.xyz) + (float3(other.e3215) * this.group0.xyz) + (float3(other.e1234) * this.group2.xyz) + (float3(this.e43, this.e41, this.e1234) * other.group3.yzz) + (float3(this.scalar, this.scalar, this.e31) * other.group5.xyz.xyx) + (float3(this.e12, this.e23, this.scalar) * other.group5.xyz.yzz) + (float3(this.e45, this.e45, this.e4315) * other.group9.xyx) + (float3(this.e35, this.e15, this.e3215) * other.group4.xyz.yzz) + (float3(this.e1234, this.e1234, this.e42) * other.group3.xyx) + (float3(this.e4125, this.e4235, this.e45) * other.group9.yzz) + (float3(this.e3215, this.e3215, this.e25) * other.group4.xyz.xyx) - (other.group4.xyz.zxy * this.group2.yzx) - (other.group5.xyz.zxy * this.group1.yzx) - (other.group3.zxy * this.group0.yzx) - (other.group9.zxy * this.group3.yzx), 0.0), 
+            /* e41, e42, e43 */
+            (float3(other.scalar) * this.group0.xyz) + (float3(other.e45) * this.group0.xyz) + (float3(other.e41) * float3(this.scalar, this.e4125, this.e31)) + (float3(other.e42) * float3(this.e12, this.scalar, this.e4235)) + (float3(other.e43) * float3(this.e4315, this.e23, this.scalar)) + (float3(other.e1234) * this.group1.xyz) + (float3(this.e43, this.e41, this.e1234) * other.group5.xyz.yzz) + (float3(this.e43, this.e41, this.e1234) * other.group9.yzz) + (float3(this.e1234, this.e1234, this.e42) * other.group5.xyz.xyx) + (float3(this.e1234, this.e1234, this.e42) * other.group9.xyx) - (float3(other.e41) * float3(this.e45, this.e12, this.e4315)) - (float3(other.e42) * float3(this.e4125, this.e45, this.e23)) - (float3(other.e43) * float3(this.e31, this.e4235, this.e45)) - (float3(other.e1234) * this.group3.xyz) - (other.group5.xyz.zxy * this.group0.yzx) - (other.group9.zxy * this.group0.yzx), 
+            /* e23, e31, e12 */
+            (float3(other.scalar) * this.group1.xyz) + (float3(other.e45) * this.group3.xyz) + (float3(other.e3215) * this.group0.xyz) + (float3(other.e1234) * this.group2.xyz) + (float3(this.e43, this.e41, this.e1234) * other.group3.yzz) + (float3(this.scalar, this.scalar, this.e31) * other.group5.xyz.xyx) + (float3(this.e12, this.e23, this.scalar) * other.group5.xyz.yzz) + (float3(this.e45, this.e45, this.e4315) * other.group9.xyx) + (float3(this.e35, this.e15, this.e3215) * other.group4.xyz.yzz) + (float3(this.e1234, this.e1234, this.e42) * other.group3.xyx) + (float3(this.e4125, this.e4235, this.e45) * other.group9.yzz) + (float3(this.e3215, this.e3215, this.e25) * other.group4.xyz.xyx) - (other.group4.xyz.zxy * this.group2.yzx) - (other.group5.xyz.zxy * this.group1.yzx) - (other.group3.zxy * this.group0.yzx) - (other.group9.zxy * this.group3.yzx), 
             /* e415, e425, e435, e321 */
             float4((other.e5 * this.e41) + (other.e425 * this.e12), (other.e5 * this.e42) + (other.e435 * this.e23), (other.e5 * this.e43) + (other.e435 * this.scalar), -(other.e3 * this.e12) - (other.e4 * this.e3215)) + (this.group3.yzxz * float4(other.group1.zxy, other.e435)) + (float4(other.group0.xy.yy, other.e12345, other.e423) * float4(this.group1.xyz, this.e15)) + (float4(this.group0.zx, this.e1234, this.e4315) * float4(other.group8.xyz.yzz, other.e425)) + (float4(this.group0.ww, this.e31, other.e5) * float4(other.group6.xyx, this.e1234)) + (float4(this.group2.zx, this.e3215, this.e35) * float4(other.group7.xyz.yzz, other.e412)) + (float4(this.group2.ww, this.e42, this.e4235) * float4(other.group8.xyz.xyx, other.e415)) + (float4(this.group3.ww, this.e25, this.e25) * float4(other.group7.xyz.xyx, other.e431)) + float4((other.group1.www * this.group2.xyz), other.e321 * this.scalar) - (this.group0.yzxx * float4(other.group8.xyz.zxy, other.e235)) - (this.group1.yzxx * float4(other.group6.zxy, other.e1)) - (float4(this.group1.ww, this.e4315, this.e42) * float4(other.group1.xyx, other.e315)) - (float4(this.group3.zx, this.e45, this.e43) * float4(other.group1.yzz, other.e125)) - float4((other.group7.xyz.zxy * this.group2.yzx), other.e12345 * this.e45) - float4((other.group6.www * this.group3.xyz), other.e2 * this.e31), 
-            /* e423, e431, e412, 0 */
-            float4((float3(other.e12345) * this.group0.xyz) + (float3(other.e4) * this.group1.xyz) + (float3(other.e423) * float3(this.scalar, this.e4125, this.e31)) + (float3(other.e431) * float3(this.e12, this.scalar, this.e4235)) + (float3(other.e412) * float3(this.e4315, this.e23, this.scalar)) + (float3(this.e43, this.e41, this.e1234) * other.group6.yzz) + (float3(this.e1234, this.e1234, this.e42) * other.group6.xyx) + (other.group1.zxy * this.group0.yzx) - (float3(other.e4) * this.group3.xyz) - (float3(other.e321) * this.group0.xyz) - (float3(other.e423) * float3(this.e45, this.e12, this.e4315)) - (float3(other.e431) * float3(this.e4125, this.e45, this.e23)) - (float3(other.e412) * float3(this.e31, this.e4235, this.e45)) - (float3(this.e43, this.e41, this.e1234) * other.group1.yzz) - (float3(this.e1234, this.e1234, this.e42) * other.group1.xyx) - (other.group6.zxy * this.group0.yzx), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(other.e12345) * this.group2.xyz) + (float3(other.e5) * this.group1.xyz) + (float3(other.e5) * this.group3.xyz) + (float3(other.e321) * this.group2.xyz) + (float3(this.scalar, this.scalar, this.e31) * other.group8.xyz.xyx) + (float3(this.e12, this.e23, this.scalar) * other.group8.xyz.yzz) + (float3(this.e45, this.e45, this.e4315) * other.group8.xyz.xyx) + (float3(this.e35, this.e15, this.e3215) * other.group1.yzz) + (float3(this.e35, this.e15, this.e3215) * other.group6.yzz) + (float3(this.e4125, this.e4235, this.e45) * other.group8.xyz.yzz) + (float3(this.e3215, this.e3215, this.e25) * other.group1.xyx) + (float3(this.e3215, this.e3215, this.e25) * other.group6.xyx) - (other.group8.xyz.zxy * this.group1.yzx) - (other.group8.xyz.zxy * this.group3.yzx) - (other.group1.zxy * this.group2.yzx) - (other.group6.zxy * this.group2.yzx), 0.0), 
+            /* e423, e431, e412 */
+            (float3(other.e12345) * this.group0.xyz) + (float3(other.e4) * this.group1.xyz) + (float3(other.e423) * float3(this.scalar, this.e4125, this.e31)) + (float3(other.e431) * float3(this.e12, this.scalar, this.e4235)) + (float3(other.e412) * float3(this.e4315, this.e23, this.scalar)) + (float3(this.e43, this.e41, this.e1234) * other.group6.yzz) + (float3(this.e1234, this.e1234, this.e42) * other.group6.xyx) + (other.group1.zxy * this.group0.yzx) - (float3(other.e4) * this.group3.xyz) - (float3(other.e321) * this.group0.xyz) - (float3(other.e423) * float3(this.e45, this.e12, this.e4315)) - (float3(other.e431) * float3(this.e4125, this.e45, this.e23)) - (float3(other.e412) * float3(this.e31, this.e4235, this.e45)) - (float3(this.e43, this.e41, this.e1234) * other.group1.yzz) - (float3(this.e1234, this.e1234, this.e42) * other.group1.xyx) - (other.group6.zxy * this.group0.yzx), 
+            /* e235, e315, e125 */
+            (float3(other.e12345) * this.group2.xyz) + (float3(other.e5) * this.group1.xyz) + (float3(other.e5) * this.group3.xyz) + (float3(other.e321) * this.group2.xyz) + (float3(this.scalar, this.scalar, this.e31) * other.group8.xyz.xyx) + (float3(this.e12, this.e23, this.scalar) * other.group8.xyz.yzz) + (float3(this.e45, this.e45, this.e4315) * other.group8.xyz.xyx) + (float3(this.e35, this.e15, this.e3215) * other.group1.yzz) + (float3(this.e35, this.e15, this.e3215) * other.group6.yzz) + (float3(this.e4125, this.e4235, this.e45) * other.group8.xyz.yzz) + (float3(this.e3215, this.e3215, this.e25) * other.group1.xyx) + (float3(this.e3215, this.e3215, this.e25) * other.group6.xyx) - (other.group8.xyz.zxy * this.group1.yzx) - (other.group8.xyz.zxy * this.group3.yzx) - (other.group1.zxy * this.group2.yzx) - (other.group6.zxy * this.group2.yzx), 
             /* e4235, e4315, e4125, e3215 */
             float4((other.e45 * this.e23) + (other.e4235 * this.scalar) + (other.e4315 * this.e12) + (other.e1234 * this.e15), (other.e45 * this.e31) + (other.e4315 * this.scalar) + (other.e4125 * this.e23) + (other.e1234 * this.e25), (other.e45 * this.e12) + (other.e4235 * this.e31) + (other.e4125 * this.scalar) + (other.e1234 * this.e35), -(other.e25 * this.e4315) - (other.e35 * this.e12) - (other.e35 * this.e4125) - (other.e45 * this.e3215)) + (float4(other.scalar) * this.group3) + (float4(this.group1.ww, this.e4315, this.e35) * float4(other.group5.xyz.xyx, other.e4125)) + (float4(this.group2.zx, this.e3215, this.e25) * float4(other.group4.xyz.yzz, other.e4315)) + (float4(this.group3.zx, this.e45, this.scalar) * float4(other.group5.xyz.yzz, other.e3215)) + (float4(this.group3.ww, this.e25, this.e15) * float4(other.group4.xyz.xyx, other.e4235)) + float4((other.group3.zxy * this.group0.yzx), other.e3215 * this.e45) - (other.group3.yzzx * float4(this.group0.zx, this.e1234, this.e23)) - (this.group2.yzxx * float4(other.group4.xyz.zxy, other.e23)) - (float4(this.group2.ww, this.e42, this.e35) * float4(other.group3.xyx, other.e12)) - float4((other.group5.xyz.zxy * this.group3.yzx), other.e31 * this.e25) - float4((other.group9.zxy * this.group1.yzx), other.e15 * this.e4235) - float4((other.group9.www * this.group0.xyz), other.e25 * this.e31), 
-            /* e1234, 0, 0, 0 */
-            float4((other.scalar * this.e1234) + (other.e45 * this.e1234) + (other.e41 * this.e4235) + (other.e42 * this.e4315) + (other.e43 * this.e4125) + (other.e1234 * this.scalar) - (other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43) - (other.e4235 * this.e41) - (other.e4315 * this.e42) - (other.e4125 * this.e43) - (other.e1234 * this.e45), 0.0, 0.0, 0.0)
+            /* e1234 */
+            (other.scalar * this.e1234) + (other.e45 * this.e1234) + (other.e41 * this.e4235) + (other.e42 * this.e4315) + (other.e43 * this.e4125) + (other.e1234 * this.scalar) - (other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43) - (other.e4235 * this.e41) - (other.e4315 * this.e42) - (other.e4125 * this.e43) - (other.e1234 * this.e45)
         ).geometric_product(this.reverse());
     }
 }
-extension VersorOdd: Sandwich<Plane> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Plane) -> Output {
-        return VersorOdd.from_groups(
+public extension VersorOdd {
+    public VersorOdd sandwich(Plane other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(other.e4315 * this.e43, other.e4125 * this.e41, other.e4125 * this.e1234, -(other.e4315 * this.e4315) - (other.e4125 * this.e4125)) + (other.group0.xyxw * float4(this.group2.ww, this.e42, this.e1234)) - (other.group0.zxyx * float4(this.group0.yzx, this.e4235)), 
             /* e23, e31, e12, e45 */
@@ -9200,10 +8730,9 @@ extension VersorOdd: Sandwich<Plane> {
         ).geometric_product(this.reverse());
     }
 }
-extension VersorOdd: Sandwich<RoundPoint> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: RoundPoint) -> Output {
-        return VersorEven.from_groups(
+public extension VersorOdd {
+    public VersorEven sandwich(RoundPoint other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(-(other.e1 * this.e1234) - (other.e2 * this.e43) - (other.e4 * this.e4235), -(other.e2 * this.e1234) - (other.e3 * this.e41) - (other.e4 * this.e4315), -(other.e1 * this.e42) - (other.e3 * this.e1234) - (other.e4 * this.e4125), (other.e3 * this.e4125) + (other.e4 * this.e3215) + (other.e5 * this.e1234)) + (other.group0.zxyx * float4(this.group0.yzx, this.e4235)) + (other.group0.wwwy * float4(this.group1.xyz, this.e4315)), 
             /* e415, e425, e435, e321 */
@@ -9215,10 +8744,9 @@ extension VersorOdd: Sandwich<RoundPoint> {
         ).geometric_product(this.reverse());
     }
 }
-extension VersorOdd: Sandwich<Scalar> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Scalar) -> Output {
-        return VersorOdd.from_groups(
+public extension VersorOdd {
+    public VersorOdd sandwich(Scalar other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(other.scalar) * this.group0, 
             /* e23, e31, e12, e45 */
@@ -9230,10 +8758,9 @@ extension VersorOdd: Sandwich<Scalar> {
         ).geometric_product(this.reverse());
     }
 }
-extension VersorOdd: Sandwich<Sphere> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: Sphere) -> Output {
-        return VersorOdd.from_groups(
+public extension VersorOdd {
+    public VersorOdd sandwich(Sphere other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(other.e1234 * this.e23, other.e1234 * this.e31, other.e1234 * this.e12, other.e4125 * this.e4125 * -1.0) + (other.group0.xyxw * float4(this.group2.ww, this.e42, this.e1234)) + (float4(this.group0.zx, this.e1234, other.e1234) * float4(other.group0.yzz, this.e3215)) - (other.group0.zxyx * float4(this.group0.yzx, this.e4235)) - float4((float3(other.e1234) * this.group3.xyz), other.e4315 * this.e4315), 
             /* e23, e31, e12, e45 */
@@ -9245,10 +8772,9 @@ extension VersorOdd: Sandwich<Sphere> {
         ).geometric_product(this.reverse());
     }
 }
-extension VersorOdd: Sandwich<VersorEven> {
-    associatedtype Output = VersorEven;
-    func sandwich(other: VersorEven) -> Output {
-        return VersorEven.from_groups(
+public extension VersorOdd {
+    public VersorEven sandwich(VersorEven other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4((other.e3 * this.e42) + (other.e4 * this.e23), (other.e1 * this.e43) + (other.e4 * this.e31), (other.e2 * this.e41) + (other.e4 * this.e12), -(other.e315 * this.e42) - (other.e125 * this.e43)) + (float4(this.scalar, this.e4125, this.e31, this.scalar) * other.group0.xxxw) + (float4(this.e12, this.scalar, this.e4235, this.e1234) * float4(other.group0.yyy, other.e5)) + (float4(this.e4315, this.e23, this.scalar, this.e4235) * float4(other.group0.zzz, other.e1)) + (float4(this.group0.zx, this.e1234, this.e3215) * float4(other.group1.yzz, other.e4)) + (float4(this.group2.ww, this.e42, this.e4125) * float4(other.group1.xyx, other.e3)) + float4((other.group0.www * this.group0.xyz), other.e2 * this.e4315) - (float4(other.e423) * float4(this.group1.wz, this.e4315, this.e15)) - (float4(other.e431) * float4(this.e4125, this.e45, this.e23, this.e25)) - (float4(other.e412) * float4(this.e31, this.e4235, this.e45, this.e35)) - (other.group1.zxyx * float4(this.group0.yzx, this.e23)) - (other.group1.wwwy * float4(this.group0.xyz, this.e31)) - (float4(this.group0.zx, this.e1234, this.e45) * float4(other.group3.yzz, other.e321)) - (float4(this.group2.ww, this.e42, this.e12) * float4(other.group3.xyx, other.e435)) - float4((other.group3.www * this.group3.xyz), other.e235 * this.e41), 
             /* e415, e425, e435, e321 */
@@ -9260,10 +8786,9 @@ extension VersorOdd: Sandwich<VersorEven> {
         ).geometric_product(this.reverse());
     }
 }
-extension VersorOdd: Sandwich<VersorOdd> {
-    associatedtype Output = VersorOdd;
-    func sandwich(other: VersorOdd) -> Output {
-        return VersorOdd.from_groups(
+public extension VersorOdd {
+    public VersorOdd sandwich(VersorOdd other) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4((other.e23 * this.e1234) + (other.e31 * this.e43) + (other.e45 * this.e41) + (other.e1234 * this.e23) + (other.e4235 * this.e1234) + (other.e4315 * this.e43), (other.e31 * this.e1234) + (other.e12 * this.e41) + (other.e45 * this.e42) + (other.e1234 * this.e31) + (other.e4315 * this.e1234) + (other.e4125 * this.e41), (other.e23 * this.e42) + (other.e12 * this.e1234) + (other.e45 * this.e43) + (other.e1234 * this.e12) + (other.e4235 * this.e42) + (other.e4125 * this.e1234), -(other.e15 * this.e41) - (other.e25 * this.e42) - (other.e35 * this.e43) - (other.e4235 * this.e4235) - (other.e4315 * this.e4315) - (other.e4125 * this.e4125)) + (float4(this.scalar, this.e4125, this.e31, this.scalar) * other.group0.xxxw) + (float4(this.e12, this.scalar, this.e4235, this.e45) * float4(other.group0.yyy, other.e45)) + (float4(this.e4315, this.e23, this.scalar, this.e3215) * float4(other.group0.zzz, other.e1234)) + float4((other.group0.www * this.group0.xyz), other.e3215 * this.e1234) - (float4(other.e41) * float4(this.group1.wz, this.e4315, this.e15)) - (float4(other.e42) * float4(this.e4125, this.e45, this.e23, this.e25)) - (float4(other.e43) * float4(this.e31, this.e4235, this.e45, this.e35)) - (other.group1.zxyx * float4(this.group0.yzx, this.e23)) - float4((other.group2.www * this.group3.xyz), other.e31 * this.e31) - float4((other.group3.zxy * this.group0.yzx), other.e12 * this.e12), 
             /* e23, e31, e12, e45 */

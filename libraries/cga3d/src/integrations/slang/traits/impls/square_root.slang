@@ -1,19 +1,22 @@
-extension Scalar {
-    // Fancy infix trick
-    func operator/(_rhs: SquareRootPrefixOrPostfix) -> Scalar {
+implementing cga3d;
+using traits;
+public extension Scalar {
+    // Fancy postfix trick
+    public Scalar operator /(SquareRootPrefixOrPostfix rhs)  {
         return this.square_root();
     }
-    func operator/=(const SquareRootPrefixOrPostfix& _rhs) -> Scalar& {
-        this = this.square_root();
-        return *this;
+}
+public extension SquareRootPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(Scalar rhs) {
+        return rhs.square_root();
     }
 }
-extension Scalar: SquareRoot {
-    associatedtype Output = Scalar;
-    func square_root() -> Output {
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(powf(this.scalar, 0.5), 0.0, 0.0, 0.0)
+public extension Scalar {
+    public Scalar square_root() {
+        return Scalar(
+            /* scalar */
+            pow(this.scalar, 0.5)
         );
     }
 }

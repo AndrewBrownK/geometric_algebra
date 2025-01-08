@@ -2,7 +2,7 @@ implementing rga3d;
 using traits;
 public extension AntiScalar {
     public AntiScalar zero() {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             0.0
         );
@@ -10,7 +10,7 @@ public extension AntiScalar {
 }
 public extension DualNum {
     public DualNum zero() {
-        return DualNum.from_groups(
+        return DualNum(
             /* scalar, e1234 */
             float2(0.0)
         );
@@ -18,7 +18,7 @@ public extension DualNum {
 }
 public extension Flector {
     public Flector zero() {
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
@@ -28,7 +28,7 @@ public extension Flector {
 }
 public extension Horizon {
     public Horizon zero() {
-        return Horizon.from_groups(
+        return Horizon(
             /* e321 */
             0.0
         );
@@ -36,7 +36,7 @@ public extension Horizon {
 }
 public extension Line {
     public Line zero() {
-        return Line.from_groups(
+        return Line(
             /* e41, e42, e43 */
             float3(0.0), 
             /* e23, e31, e12 */
@@ -46,7 +46,7 @@ public extension Line {
 }
 public extension Motor {
     public Motor zero() {
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(0.0), 
             /* e23, e31, e12, scalar */
@@ -56,7 +56,7 @@ public extension Motor {
 }
 public extension MultiVector {
     public MultiVector zero() {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(0.0), 
             /* e1, e2, e3, e4 */
@@ -72,7 +72,7 @@ public extension MultiVector {
 }
 public extension Origin {
     public Origin zero() {
-        return Origin.from_groups(
+        return Origin(
             /* e4 */
             0.0
         );
@@ -80,7 +80,7 @@ public extension Origin {
 }
 public extension Plane {
     public Plane zero() {
-        return Plane.from_groups(
+        return Plane(
             /* e423, e431, e412, e321 */
             float4(0.0)
         );
@@ -88,7 +88,7 @@ public extension Plane {
 }
 public extension Point {
     public Point zero() {
-        return Point.from_groups(
+        return Point(
             /* e1, e2, e3, e4 */
             float4(0.0)
         );
@@ -96,7 +96,7 @@ public extension Point {
 }
 public extension Scalar {
     public Scalar zero() {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             0.0
         );

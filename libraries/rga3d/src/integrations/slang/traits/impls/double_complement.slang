@@ -48,7 +48,7 @@ public extension DoubleComplementPrefixOrPostfix {
 }
 public extension Flector {
     public Flector double_complement() {
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             this.group0 * float4(-1.0), 
             /* e423, e431, e412, e321 */
@@ -70,7 +70,7 @@ public extension DoubleComplementPrefixOrPostfix {
 }
 public extension Horizon {
     public Horizon double_complement() {
-        return Horizon.from_groups(
+        return Horizon(
             /* e321 */
             this.e321 * -1.0
         );
@@ -124,7 +124,7 @@ public extension DoubleComplementPrefixOrPostfix {
 }
 public extension MultiVector {
     public MultiVector double_complement() {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             this.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -152,7 +152,7 @@ public extension DoubleComplementPrefixOrPostfix {
 }
 public extension Origin {
     public Origin double_complement() {
-        return Origin.from_groups(
+        return Origin(
             /* e4 */
             this.e4 * -1.0
         );
@@ -172,7 +172,7 @@ public extension DoubleComplementPrefixOrPostfix {
 }
 public extension Plane {
     public Plane double_complement() {
-        return Plane.from_groups(
+        return Plane(
             /* e423, e431, e412, e321 */
             this.group0 * float4(-1.0)
         );
@@ -192,7 +192,7 @@ public extension DoubleComplementPrefixOrPostfix {
 }
 public extension Point {
     public Point double_complement() {
-        return Point.from_groups(
+        return Point(
             /* e1, e2, e3, e4 */
             this.group0 * float4(-1.0)
         );

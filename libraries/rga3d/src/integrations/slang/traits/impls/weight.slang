@@ -31,7 +31,7 @@ public extension WeightPrefixOrPostfix {
 }
 public extension DualNum {
     public AntiScalar weight() {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             this.e1234
         );
@@ -51,7 +51,7 @@ public extension WeightPrefixOrPostfix {
 }
 public extension Flector {
     public Flector weight() {
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), this.e4), 
             /* e423, e431, e412, e321 */
@@ -73,7 +73,7 @@ public extension WeightPrefixOrPostfix {
 }
 public extension Line {
     public Line weight() {
-        return Line.from_groups(
+        return Line(
             /* e41, e42, e43 */
             this.group0.xyz, 
             /* e23, e31, e12 */
@@ -95,7 +95,7 @@ public extension WeightPrefixOrPostfix {
 }
 public extension Motor {
     public Motor weight() {
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             this.group0, 
             /* e23, e31, e12, scalar */
@@ -117,7 +117,7 @@ public extension WeightPrefixOrPostfix {
 }
 public extension MultiVector {
     public MultiVector weight() {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(0.0, this.e1234), 
             /* e1, e2, e3, e4 */
@@ -162,7 +162,7 @@ public extension WeightPrefixOrPostfix {
 }
 public extension Plane {
     public Plane weight() {
-        return Plane.from_groups(
+        return Plane(
             /* e423, e431, e412, e321 */
             float4(this.group0.xyz, 0.0)
         );
@@ -182,7 +182,7 @@ public extension WeightPrefixOrPostfix {
 }
 public extension Point {
     public Origin weight() {
-        return Origin.from_groups(
+        return Origin(
             /* e4 */
             this.e4
         );

@@ -14,7 +14,7 @@ public extension GeometricQuotientInfixPartial<AntiScalar> {
 }
 public extension AntiScalar {
     public AntiScalar geometric_quotient(DualNum other) {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             this.e1234 / (other.scalar)
         );
@@ -22,23 +22,23 @@ public extension AntiScalar {
 }
 public extension AntiScalar {
     public Flector geometric_quotient(Flector other) {
-        Flector reverse = Flector.from_groups(
+        Flector reverse = Flector(
             /* e1, e2, e3, e4 */
             other.group0, 
             /* e423, e431, e412, e321 */
             other.group1 * float4(-1.0)
         );
-        Scalar other_2 = Scalar.from_groups(
+        Scalar other_2 = Scalar(
             /* scalar */
             pow(other.e1, 2) + pow(other.e2, 2) + pow(other.e3, 2) + pow(other.e321, 2)
         );
-        Flector geometric_product = Flector.from_groups(
+        Flector geometric_product = Flector(
             /* e1, e2, e3, e4 */
             float4(other_2.scalar) * reverse.group0, 
             /* e423, e431, e412, e321 */
             float4(other_2.scalar) * reverse.group1
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), this.e1234 * geometric_product.e321 * -1.0), 
             /* e423, e431, e412, e321 */
@@ -48,7 +48,7 @@ public extension AntiScalar {
 }
 public extension AntiScalar {
     public Origin geometric_quotient(Horizon other) {
-        return Origin.from_groups(
+        return Origin(
             /* e4 */
             this.e1234 / (other.e321)
         );
@@ -56,17 +56,17 @@ public extension AntiScalar {
 }
 public extension AntiScalar {
     public Line geometric_quotient(Line other) {
-        Line reverse = Line.from_groups(
+        Line reverse = Line(
             /* e41, e42, e43 */
             other.group0.xyz * float3(-1.0), 
             /* e23, e31, e12 */
             other.group1.xyz * float3(-1.0)
         );
-        Scalar other_2 = Scalar.from_groups(
+        Scalar other_2 = Scalar(
             /* scalar */
             pow(other.e23, 2) + pow(other.e31, 2) + pow(other.e12, 2)
         );
-        return Line.from_groups(
+        return Line(
             /* e41, e42, e43 */
             float3(this.e1234) * float3(reverse.e23 * other_2.scalar, reverse.e31 * other_2.scalar, reverse.e12 * other_2.scalar), 
             /* e23, e31, e12 */
@@ -76,17 +76,17 @@ public extension AntiScalar {
 }
 public extension AntiScalar {
     public Motor geometric_quotient(Motor other) {
-        Motor reverse = Motor.from_groups(
+        Motor reverse = Motor(
             /* e41, e42, e43, e1234 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, scalar */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        Scalar other_2 = Scalar.from_groups(
+        Scalar other_2 = Scalar(
             /* scalar */
             pow(other.e23, 2) + pow(other.e31, 2) + pow(other.e12, 2) + pow(other.scalar, 2)
         );
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(this.e1234) * float4(reverse.e23 * other_2.scalar, reverse.e31 * other_2.scalar, reverse.e12 * other_2.scalar, reverse.scalar * other_2.scalar), 
             /* e23, e31, e12, scalar */
@@ -96,7 +96,7 @@ public extension AntiScalar {
 }
 public extension AntiScalar {
     public MultiVector geometric_quotient(MultiVector other) {
-        MultiVector reverse = MultiVector.from_groups(
+        MultiVector reverse = MultiVector(
             /* scalar, e1234 */
             other.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -108,11 +108,11 @@ public extension AntiScalar {
             /* e423, e431, e412, e321 */
             other.group4 * float4(-1.0)
         );
-        Scalar other_2 = Scalar.from_groups(
+        Scalar other_2 = Scalar(
             /* scalar */
             pow(other.scalar, 2) + pow(other.e1, 2) + pow(other.e2, 2) + pow(other.e3, 2) + pow(other.e23, 2) + pow(other.e31, 2) + pow(other.e12, 2) + pow(other.e321, 2)
         );
-        MultiVector geometric_product = MultiVector.from_groups(
+        MultiVector geometric_product = MultiVector(
             /* scalar, e1234 */
             float2(other_2.scalar) * reverse.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -124,7 +124,7 @@ public extension AntiScalar {
             /* e423, e431, e412, e321 */
             float4(other_2.scalar) * reverse.group4
         );
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(1.0, this.e1234 * geometric_product.scalar) * float2(0.0, 1.0), 
             /* e1, e2, e3, e4 */
@@ -140,7 +140,7 @@ public extension AntiScalar {
 }
 public extension AntiScalar {
     public Origin geometric_quotient(Plane other) {
-        return Origin.from_groups(
+        return Origin(
             /* e4 */
             this.e1234 / (other.e321)
         );
@@ -148,11 +148,11 @@ public extension AntiScalar {
 }
 public extension AntiScalar {
     public Plane geometric_quotient(Point other) {
-        Scalar other_2 = Scalar.from_groups(
+        Scalar other_2 = Scalar(
             /* scalar */
             pow(other.e1, 2) + pow(other.e2, 2) + pow(other.e3, 2)
         );
-        return Plane.from_groups(
+        return Plane(
             /* e423, e431, e412, e321 */
             float4((float3(this.e1234) * float4(other.e1 * other_2.scalar, other.e2 * other_2.scalar, other.e3 * other_2.scalar, other.e4 * other_2.scalar).xyz * float3(-1.0)), 0.0)
         );
@@ -160,7 +160,7 @@ public extension AntiScalar {
 }
 public extension AntiScalar {
     public AntiScalar geometric_quotient(Scalar other) {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             this.e1234 / (other.scalar)
         );
@@ -180,11 +180,11 @@ public extension GeometricQuotientInfixPartial<DualNum> {
 }
 public extension DualNum {
     public DualNum geometric_quotient(DualNum other) {
-        DualNum geometric_product = DualNum.from_groups(
+        DualNum geometric_product = DualNum(
             /* scalar, e1234 */
             float2(pow(other.scalar, -2)) * other.group0.xy
         );
-        return DualNum.from_groups(
+        return DualNum(
             /* scalar, e1234 */
             float2(geometric_product.scalar * this.scalar, (geometric_product.scalar * this.e1234) + (geometric_product.e1234 * this.scalar))
         );
@@ -192,23 +192,23 @@ public extension DualNum {
 }
 public extension DualNum {
     public Flector geometric_quotient(Flector other) {
-        Flector reverse = Flector.from_groups(
+        Flector reverse = Flector(
             /* e1, e2, e3, e4 */
             other.group0, 
             /* e423, e431, e412, e321 */
             other.group1 * float4(-1.0)
         );
-        Scalar other_2 = Scalar.from_groups(
+        Scalar other_2 = Scalar(
             /* scalar */
             pow(other.e1, 2) + pow(other.e2, 2) + pow(other.e3, 2) + pow(other.e321, 2)
         );
-        Flector geometric_product = Flector.from_groups(
+        Flector geometric_product = Flector(
             /* e1, e2, e3, e4 */
             float4(other_2.scalar) * reverse.group0, 
             /* e423, e431, e412, e321 */
             float4(other_2.scalar) * reverse.group1
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4(this.group0.xy.xx, this.scalar, (this.scalar * geometric_product.e4) - (this.e1234 * geometric_product.e321)) * float4(geometric_product.group0.xyz, 1.0), 
             /* e423, e431, e412, e321 */
@@ -218,11 +218,11 @@ public extension DualNum {
 }
 public extension DualNum {
     public Flector geometric_quotient(Horizon other) {
-        Horizon geometric_product = Horizon.from_groups(
+        Horizon geometric_product = Horizon(
             /* e321 */
             1.0/other.e321 * -1.0
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), this.e1234 * geometric_product.e321 * -1.0), 
             /* e423, e431, e412, e321 */
@@ -232,23 +232,23 @@ public extension DualNum {
 }
 public extension DualNum {
     public Line geometric_quotient(Line other) {
-        Line reverse = Line.from_groups(
+        Line reverse = Line(
             /* e41, e42, e43 */
             other.group0.xyz * float3(-1.0), 
             /* e23, e31, e12 */
             other.group1.xyz * float3(-1.0)
         );
-        Scalar other_2 = Scalar.from_groups(
+        Scalar other_2 = Scalar(
             /* scalar */
             pow(other.e23, 2) + pow(other.e31, 2) + pow(other.e12, 2)
         );
-        Line geometric_product = Line.from_groups(
+        Line geometric_product = Line(
             /* e41, e42, e43 */
             float3(other_2.scalar) * reverse.group0.xyz, 
             /* e23, e31, e12 */
             float3(other_2.scalar) * reverse.group1.xyz
         );
-        return Line.from_groups(
+        return Line(
             /* e41, e42, e43 */
             (float3(this.scalar) * geometric_product.group0.xyz) + (float3(this.e1234) * geometric_product.group1.xyz), 
             /* e23, e31, e12 */
@@ -258,23 +258,23 @@ public extension DualNum {
 }
 public extension DualNum {
     public Motor geometric_quotient(Motor other) {
-        Motor reverse = Motor.from_groups(
+        Motor reverse = Motor(
             /* e41, e42, e43, e1234 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, scalar */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        Scalar other_2 = Scalar.from_groups(
+        Scalar other_2 = Scalar(
             /* scalar */
             pow(other.e23, 2) + pow(other.e31, 2) + pow(other.e12, 2) + pow(other.scalar, 2)
         );
-        Motor geometric_product = Motor.from_groups(
+        Motor geometric_product = Motor(
             /* e41, e42, e43, e1234 */
             float4(other_2.scalar) * reverse.group0, 
             /* e23, e31, e12, scalar */
             float4(other_2.scalar) * reverse.group1
         );
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             (float4(this.scalar) * geometric_product.group0) + (float4(this.e1234) * geometric_product.group1), 
             /* e23, e31, e12, scalar */
@@ -284,7 +284,7 @@ public extension DualNum {
 }
 public extension DualNum {
     public MultiVector geometric_quotient(MultiVector other) {
-        MultiVector reverse = MultiVector.from_groups(
+        MultiVector reverse = MultiVector(
             /* scalar, e1234 */
             other.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -296,11 +296,11 @@ public extension DualNum {
             /* e423, e431, e412, e321 */
             other.group4 * float4(-1.0)
         );
-        Scalar other_2 = Scalar.from_groups(
+        Scalar other_2 = Scalar(
             /* scalar */
             pow(other.scalar, 2) + pow(other.e1, 2) + pow(other.e2, 2) + pow(other.e3, 2) + pow(other.e23, 2) + pow(other.e31, 2) + pow(other.e12, 2) + pow(other.e321, 2)
         );
-        MultiVector geometric_product = MultiVector.from_groups(
+        MultiVector geometric_product = MultiVector(
             /* scalar, e1234 */
             float2(other_2.scalar) * reverse.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -312,7 +312,7 @@ public extension DualNum {
             /* e423, e431, e412, e321 */
             float4(other_2.scalar) * reverse.group4
         );
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(this.scalar * geometric_product.scalar, (this.scalar * geometric_product.e1234) + (this.e1234 * geometric_product.scalar)), 
             /* e1, e2, e3, e4 */
@@ -328,11 +328,11 @@ public extension DualNum {
 }
 public extension DualNum {
     public Flector geometric_quotient(Plane other) {
-        Plane geometric_product = Plane.from_groups(
+        Plane geometric_product = Plane(
             /* e423, e431, e412, e321 */
             float4(pow(other.e321, -2)) * float4(other.e423 * -1.0, other.e431 * -1.0, other.e412 * -1.0, other.e321 * -1.0)
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), this.e1234 * geometric_product.e321 * -1.0), 
             /* e423, e431, e412, e321 */
@@ -342,11 +342,11 @@ public extension DualNum {
 }
 public extension DualNum {
     public Flector geometric_quotient(Point other) {
-        Point geometric_product = Point.from_groups(
+        Point geometric_product = Point(
             /* e1, e2, e3, e4 */
             float4(pow(other.e1, 2) + pow(other.e2, 2) + pow(other.e3, 2)) * other.group0
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4(this.scalar) * geometric_product.group0, 
             /* e423, e431, e412, e321 */
@@ -356,7 +356,7 @@ public extension DualNum {
 }
 public extension DualNum {
     public DualNum geometric_quotient(Scalar other) {
-        return DualNum.from_groups(
+        return DualNum(
             /* scalar, e1234 */
             float2(1.0/other.scalar) * this.group0.xy
         );
@@ -376,11 +376,11 @@ public extension GeometricQuotientInfixPartial<Flector> {
 }
 public extension Flector {
     public Flector geometric_quotient(DualNum other) {
-        DualNum geometric_product = DualNum.from_groups(
+        DualNum geometric_product = DualNum(
             /* scalar, e1234 */
             float2(pow(other.scalar, -2)) * other.group0.xy
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4(geometric_product.group0.xy.xx, geometric_product.scalar, (geometric_product.scalar * this.e4) + (geometric_product.e1234 * this.e321)) * float4(this.group0.xyz, 1.0), 
             /* e423, e431, e412, e321 */
@@ -390,23 +390,23 @@ public extension Flector {
 }
 public extension Flector {
     public Motor geometric_quotient(Flector other) {
-        Flector reverse = Flector.from_groups(
+        Flector reverse = Flector(
             /* e1, e2, e3, e4 */
             other.group0, 
             /* e423, e431, e412, e321 */
             other.group1 * float4(-1.0)
         );
-        Scalar other_2 = Scalar.from_groups(
+        Scalar other_2 = Scalar(
             /* scalar */
             pow(other.e1, 2) + pow(other.e2, 2) + pow(other.e3, 2) + pow(other.e321, 2)
         );
-        Flector geometric_product = Flector.from_groups(
+        Flector geometric_product = Flector(
             /* e1, e2, e3, e4 */
             float4(other_2.scalar) * reverse.group0, 
             /* e423, e431, e412, e321 */
             float4(other_2.scalar) * reverse.group1
         );
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             (float4(geometric_product.e321) * float4(this.group1.xyz, this.e4)) + (geometric_product.group1.zxyz * this.group0.yzxz) + (float4(this.group0.ww, this.e431, this.e1) * float4(geometric_product.group0.xyx, geometric_product.e423)) + (float4(this.group1.zx, this.e4, this.e2) * float4(geometric_product.group0.yzz, geometric_product.e431)) - (geometric_product.group0.zxyx * this.group1.yzxx) - (geometric_product.group0.wwwy * float4(this.group0.xyz, this.e431)) - (float4(this.group0.zx, this.e321, this.e321) * float4(geometric_product.group1.yzz, geometric_product.e4)) - (float4(this.group1.ww, this.e2, this.e412) * float4(geometric_product.group1.xyx, geometric_product.e3)), 
             /* e23, e31, e12, scalar */
@@ -416,11 +416,11 @@ public extension Flector {
 }
 public extension Flector {
     public Motor geometric_quotient(Horizon other) {
-        Horizon geometric_product = Horizon.from_groups(
+        Horizon geometric_product = Horizon(
             /* e321 */
             1.0/other.e321 * -1.0
         );
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(geometric_product.e321) * float4(this.group1.xyz, this.e4), 
             /* e23, e31, e12, scalar */
@@ -430,23 +430,23 @@ public extension Flector {
 }
 public extension Flector {
     public Flector geometric_quotient(Line other) {
-        Line reverse = Line.from_groups(
+        Line reverse = Line(
             /* e41, e42, e43 */
             other.group0.xyz * float3(-1.0), 
             /* e23, e31, e12 */
             other.group1.xyz * float3(-1.0)
         );
-        Scalar other_2 = Scalar.from_groups(
+        Scalar other_2 = Scalar(
             /* scalar */
             pow(other.e23, 2) + pow(other.e31, 2) + pow(other.e12, 2)
         );
-        Line geometric_product = Line.from_groups(
+        Line geometric_product = Line(
             /* e41, e42, e43 */
             float3(other_2.scalar) * reverse.group0.xyz, 
             /* e23, e31, e12 */
             float3(other_2.scalar) * reverse.group1.xyz
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4((this.e3 * geometric_product.e31) + (this.e321 * geometric_product.e23), (this.e1 * geometric_product.e12) + (this.e321 * geometric_product.e31), (this.e2 * geometric_product.e23) + (this.e321 * geometric_product.e12), -(this.e2 * geometric_product.e42) - (this.e3 * geometric_product.e43) - (this.e423 * geometric_product.e23) - (this.e431 * geometric_product.e31) - (this.e412 * geometric_product.e12)) - (this.group0.yzxx * float4(geometric_product.group1.xyz.zxy, geometric_product.e41)), 
             /* e423, e431, e412, e321 */
@@ -456,23 +456,23 @@ public extension Flector {
 }
 public extension Flector {
     public Flector geometric_quotient(Motor other) {
-        Motor reverse = Motor.from_groups(
+        Motor reverse = Motor(
             /* e41, e42, e43, e1234 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, scalar */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        Scalar other_2 = Scalar.from_groups(
+        Scalar other_2 = Scalar(
             /* scalar */
             pow(other.e23, 2) + pow(other.e31, 2) + pow(other.e12, 2) + pow(other.scalar, 2)
         );
-        Motor geometric_product = Motor.from_groups(
+        Motor geometric_product = Motor(
             /* e41, e42, e43, e1234 */
             float4(other_2.scalar) * reverse.group0, 
             /* e23, e31, e12, scalar */
             float4(other_2.scalar) * reverse.group1
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4(this.e321 * geometric_product.e23, this.e321 * geometric_product.e31, this.e321 * geometric_product.e12, -(this.e2 * geometric_product.e42) - (this.e3 * geometric_product.e43) - (this.e423 * geometric_product.e23) - (this.e431 * geometric_product.e31) - (this.e412 * geometric_product.e12)) + (this.group0.xxyw * geometric_product.group1.wzxw) + float4((this.group0.zyz * geometric_product.group1.yww), this.e321 * geometric_product.e1234) - (this.group0.yzxx * float4(geometric_product.group1.zxy, geometric_product.e41)), 
             /* e423, e431, e412, e321 */
@@ -482,7 +482,7 @@ public extension Flector {
 }
 public extension Flector {
     public MultiVector geometric_quotient(MultiVector other) {
-        MultiVector reverse = MultiVector.from_groups(
+        MultiVector reverse = MultiVector(
             /* scalar, e1234 */
             other.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -494,11 +494,11 @@ public extension Flector {
             /* e423, e431, e412, e321 */
             other.group4 * float4(-1.0)
         );
-        Scalar other_2 = Scalar.from_groups(
+        Scalar other_2 = Scalar(
             /* scalar */
             pow(other.scalar, 2) + pow(other.e1, 2) + pow(other.e2, 2) + pow(other.e3, 2) + pow(other.e23, 2) + pow(other.e31, 2) + pow(other.e12, 2) + pow(other.e321, 2)
         );
-        MultiVector geometric_product = MultiVector.from_groups(
+        MultiVector geometric_product = MultiVector(
             /* scalar, e1234 */
             float2(other_2.scalar) * reverse.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -510,7 +510,7 @@ public extension Flector {
             /* e423, e431, e412, e321 */
             float4(other_2.scalar) * reverse.group4
         );
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(0.0, (this.e4 * geometric_product.e321) - (this.e431 * geometric_product.e2) - (this.e412 * geometric_product.e3) - (this.e321 * geometric_product.e4)) + (float2(this.e1) * float2(geometric_product.e1, geometric_product.e423)) + (float2(this.e2) * float2(geometric_product.e2, geometric_product.e431)) + (float2(this.e3) * float2(geometric_product.e3, geometric_product.e412)) - (float2(geometric_product.e321, geometric_product.e1) * this.group1.wx), 
             /* e1, e2, e3, e4 */
@@ -526,11 +526,11 @@ public extension Flector {
 }
 public extension Flector {
     public Motor geometric_quotient(Plane other) {
-        Plane geometric_product = Plane.from_groups(
+        Plane geometric_product = Plane(
             /* e423, e431, e412, e321 */
             float4(pow(other.e321, -2)) * float4(other.e423 * -1.0, other.e431 * -1.0, other.e412 * -1.0, other.e321 * -1.0)
         );
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(-(this.e3 * geometric_product.e431) - (this.e321 * geometric_product.e423), -(this.e1 * geometric_product.e412) - (this.e321 * geometric_product.e431), -(this.e2 * geometric_product.e423) - (this.e321 * geometric_product.e412), (this.e3 * geometric_product.e412) + (this.e4 * geometric_product.e321)) + (this.group0.yzxx * geometric_product.group0.zxyx) + (geometric_product.group0.wwwy * float4(this.group1.xyz, this.e2)), 
             /* e23, e31, e12, scalar */
@@ -540,11 +540,11 @@ public extension Flector {
 }
 public extension Flector {
     public Motor geometric_quotient(Point other) {
-        Point geometric_product = Point.from_groups(
+        Point geometric_product = Point(
             /* e1, e2, e3, e4 */
             float4(pow(other.e1, 2) + pow(other.e2, 2) + pow(other.e3, 2)) * other.group0
         );
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4((this.e4 * geometric_product.e1) + (this.e412 * geometric_product.e2), (this.e4 * geometric_product.e2) + (this.e423 * geometric_product.e3), (this.e4 * geometric_product.e3) + (this.e431 * geometric_product.e1), -(this.e412 * geometric_product.e3) - (this.e321 * geometric_product.e4)) - (this.group1.yzxy * geometric_product.group0.zxyy) - (geometric_product.group0.wwwx * float4(this.group0.xyz, this.e423)), 
             /* e23, e31, e12, scalar */
@@ -554,11 +554,11 @@ public extension Flector {
 }
 public extension Flector {
     public Flector geometric_quotient(Scalar other) {
-        Scalar geometric_product = Scalar.from_groups(
+        Scalar geometric_product = Scalar(
             /* scalar */
             1.0/other.scalar
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4(geometric_product.scalar) * this.group0, 
             /* e423, e431, e412, e321 */
@@ -580,11 +580,11 @@ public extension GeometricQuotientInfixPartial<Horizon> {
 }
 public extension Horizon {
     public Flector geometric_quotient(DualNum other) {
-        DualNum geometric_product = DualNum.from_groups(
+        DualNum geometric_product = DualNum(
             /* scalar, e1234 */
             float2(pow(other.scalar, -2)) * other.group0.xy
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), geometric_product.e1234 * this.e321), 
             /* e423, e431, e412, e321 */
@@ -594,23 +594,23 @@ public extension Horizon {
 }
 public extension Horizon {
     public Motor geometric_quotient(Flector other) {
-        Flector reverse = Flector.from_groups(
+        Flector reverse = Flector(
             /* e1, e2, e3, e4 */
             other.group0, 
             /* e423, e431, e412, e321 */
             other.group1 * float4(-1.0)
         );
-        Scalar other_2 = Scalar.from_groups(
+        Scalar other_2 = Scalar(
             /* scalar */
             pow(other.e1, 2) + pow(other.e2, 2) + pow(other.e3, 2) + pow(other.e321, 2)
         );
-        Flector geometric_product = Flector.from_groups(
+        Flector geometric_product = Flector(
             /* e1, e2, e3, e4 */
             float4(other_2.scalar) * reverse.group0, 
             /* e423, e431, e412, e321 */
             float4(other_2.scalar) * reverse.group1
         );
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(this.e321) * float4(geometric_product.group1.xyz, geometric_product.e4) * float4(-1.0), 
             /* e23, e31, e12, scalar */
@@ -620,7 +620,7 @@ public extension Horizon {
 }
 public extension Horizon {
     public Scalar geometric_quotient(Horizon other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             this.e321 / (other.e321)
         );
@@ -628,23 +628,23 @@ public extension Horizon {
 }
 public extension Horizon {
     public Flector geometric_quotient(Line other) {
-        Line reverse = Line.from_groups(
+        Line reverse = Line(
             /* e41, e42, e43 */
             other.group0.xyz * float3(-1.0), 
             /* e23, e31, e12 */
             other.group1.xyz * float3(-1.0)
         );
-        Scalar other_2 = Scalar.from_groups(
+        Scalar other_2 = Scalar(
             /* scalar */
             pow(other.e23, 2) + pow(other.e31, 2) + pow(other.e12, 2)
         );
-        Line geometric_product = Line.from_groups(
+        Line geometric_product = Line(
             /* e41, e42, e43 */
             float3(other_2.scalar) * reverse.group0.xyz, 
             /* e23, e31, e12 */
             float3(other_2.scalar) * reverse.group1.xyz
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4((float3(this.e321) * geometric_product.group1.xyz), 0.0), 
             /* e423, e431, e412, e321 */
@@ -654,23 +654,23 @@ public extension Horizon {
 }
 public extension Horizon {
     public Flector geometric_quotient(Motor other) {
-        Motor reverse = Motor.from_groups(
+        Motor reverse = Motor(
             /* e41, e42, e43, e1234 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, scalar */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        Scalar other_2 = Scalar.from_groups(
+        Scalar other_2 = Scalar(
             /* scalar */
             pow(other.e23, 2) + pow(other.e31, 2) + pow(other.e12, 2) + pow(other.scalar, 2)
         );
-        Motor geometric_product = Motor.from_groups(
+        Motor geometric_product = Motor(
             /* e41, e42, e43, e1234 */
             float4(other_2.scalar) * reverse.group0, 
             /* e23, e31, e12, scalar */
             float4(other_2.scalar) * reverse.group1
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4(this.e321) * float4(geometric_product.group1.xyz, geometric_product.e1234), 
             /* e423, e431, e412, e321 */
@@ -680,7 +680,7 @@ public extension Horizon {
 }
 public extension Horizon {
     public MultiVector geometric_quotient(MultiVector other) {
-        MultiVector reverse = MultiVector.from_groups(
+        MultiVector reverse = MultiVector(
             /* scalar, e1234 */
             other.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -692,11 +692,11 @@ public extension Horizon {
             /* e423, e431, e412, e321 */
             other.group4 * float4(-1.0)
         );
-        Scalar other_2 = Scalar.from_groups(
+        Scalar other_2 = Scalar(
             /* scalar */
             pow(other.scalar, 2) + pow(other.e1, 2) + pow(other.e2, 2) + pow(other.e3, 2) + pow(other.e23, 2) + pow(other.e31, 2) + pow(other.e12, 2) + pow(other.e321, 2)
         );
-        MultiVector geometric_product = MultiVector.from_groups(
+        MultiVector geometric_product = MultiVector(
             /* scalar, e1234 */
             float2(other_2.scalar) * reverse.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -708,7 +708,7 @@ public extension Horizon {
             /* e423, e431, e412, e321 */
             float4(other_2.scalar) * reverse.group4
         );
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(this.e321) * float2(geometric_product.e321, geometric_product.e4) * float2(-1.0), 
             /* e1, e2, e3, e4 */
@@ -724,11 +724,11 @@ public extension Horizon {
 }
 public extension Horizon {
     public Motor geometric_quotient(Plane other) {
-        Plane geometric_product = Plane.from_groups(
+        Plane geometric_product = Plane(
             /* e423, e431, e412, e321 */
             float4(pow(other.e321, -2)) * float4(other.e423 * -1.0, other.e431 * -1.0, other.e412 * -1.0, other.e321 * -1.0)
         );
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4((float3(this.e321) * geometric_product.group0.xyz * float3(-1.0)), 0.0), 
             /* e23, e31, e12, scalar */
@@ -738,11 +738,11 @@ public extension Horizon {
 }
 public extension Horizon {
     public Motor geometric_quotient(Point other) {
-        Point geometric_product = Point.from_groups(
+        Point geometric_product = Point(
             /* e1, e2, e3, e4 */
             float4(pow(other.e1, 2) + pow(other.e2, 2) + pow(other.e3, 2)) * other.group0
         );
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(float3(0.0), this.e321 * geometric_product.e4 * -1.0), 
             /* e23, e31, e12, scalar */
@@ -752,7 +752,7 @@ public extension Horizon {
 }
 public extension Horizon {
     public Horizon geometric_quotient(Scalar other) {
-        return Horizon.from_groups(
+        return Horizon(
             /* e321 */
             this.e321 / (other.scalar)
         );
@@ -772,11 +772,11 @@ public extension GeometricQuotientInfixPartial<Line> {
 }
 public extension Line {
     public Line geometric_quotient(DualNum other) {
-        DualNum geometric_product = DualNum.from_groups(
+        DualNum geometric_product = DualNum(
             /* scalar, e1234 */
             float2(pow(other.scalar, -2)) * other.group0.xy
         );
-        return Line.from_groups(
+        return Line(
             /* e41, e42, e43 */
             (float3(geometric_product.scalar) * this.group0.xyz) + (float3(geometric_product.e1234) * this.group1.xyz), 
             /* e23, e31, e12 */
@@ -786,23 +786,23 @@ public extension Line {
 }
 public extension Line {
     public Flector geometric_quotient(Flector other) {
-        Flector reverse = Flector.from_groups(
+        Flector reverse = Flector(
             /* e1, e2, e3, e4 */
             other.group0, 
             /* e423, e431, e412, e321 */
             other.group1 * float4(-1.0)
         );
-        Scalar other_2 = Scalar.from_groups(
+        Scalar other_2 = Scalar(
             /* scalar */
             pow(other.e1, 2) + pow(other.e2, 2) + pow(other.e3, 2) + pow(other.e321, 2)
         );
-        Flector geometric_product = Flector.from_groups(
+        Flector geometric_product = Flector(
             /* e1, e2, e3, e4 */
             float4(other_2.scalar) * reverse.group0, 
             /* e423, e431, e412, e321 */
             float4(other_2.scalar) * reverse.group1
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             (float4(geometric_product.e2, geometric_product.e321, geometric_product.e321, geometric_product.e2) * float4(this.group1.xyz.zyz, this.e42)) + (float4(geometric_product.e321, geometric_product.e3, geometric_product.e1, geometric_product.e1) * float4(this.group1.xyz.xxy, this.e41)) + float4(float3(0.0), (geometric_product.e3 * this.e43) - (geometric_product.e431 * this.e31) - (geometric_product.e412 * this.e12)) - float4((this.group1.xyz.yzx * geometric_product.group0.zxy), geometric_product.e423 * this.e23), 
             /* e423, e431, e412, e321 */
@@ -812,11 +812,11 @@ public extension Line {
 }
 public extension Line {
     public Flector geometric_quotient(Horizon other) {
-        Horizon geometric_product = Horizon.from_groups(
+        Horizon geometric_product = Horizon(
             /* e321 */
             1.0/other.e321 * -1.0
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4((float3(geometric_product.e321) * this.group1.xyz), 0.0), 
             /* e423, e431, e412, e321 */
@@ -826,23 +826,23 @@ public extension Line {
 }
 public extension Line {
     public Motor geometric_quotient(Line other) {
-        Line reverse = Line.from_groups(
+        Line reverse = Line(
             /* e41, e42, e43 */
             other.group0.xyz * float3(-1.0), 
             /* e23, e31, e12 */
             other.group1.xyz * float3(-1.0)
         );
-        Scalar other_2 = Scalar.from_groups(
+        Scalar other_2 = Scalar(
             /* scalar */
             pow(other.e23, 2) + pow(other.e31, 2) + pow(other.e12, 2)
         );
-        Line geometric_product = Line.from_groups(
+        Line geometric_product = Line(
             /* e41, e42, e43 */
             float3(other_2.scalar) * reverse.group0.xyz, 
             /* e23, e31, e12 */
             float3(other_2.scalar) * reverse.group1.xyz
         );
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4((geometric_product.e42 * this.e12) + (geometric_product.e31 * this.e43), (geometric_product.e43 * this.e23) + (geometric_product.e12 * this.e41), (geometric_product.e41 * this.e31) + (geometric_product.e23 * this.e42), -(geometric_product.e43 * this.e12) - (geometric_product.e23 * this.e41) - (geometric_product.e31 * this.e42) - (geometric_product.e12 * this.e43)) - float4((geometric_product.group0.xyz.zxy * this.group1.xyz.yzx), geometric_product.e41 * this.e23) - float4((geometric_product.group1.xyz.zxy * this.group0.xyz.yzx), geometric_product.e42 * this.e31), 
             /* e23, e31, e12, scalar */
@@ -852,23 +852,23 @@ public extension Line {
 }
 public extension Line {
     public Motor geometric_quotient(Motor other) {
-        Motor reverse = Motor.from_groups(
+        Motor reverse = Motor(
             /* e41, e42, e43, e1234 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, scalar */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        Scalar other_2 = Scalar.from_groups(
+        Scalar other_2 = Scalar(
             /* scalar */
             pow(other.e23, 2) + pow(other.e31, 2) + pow(other.e12, 2) + pow(other.scalar, 2)
         );
-        Motor geometric_product = Motor.from_groups(
+        Motor geometric_product = Motor(
             /* e41, e42, e43, e1234 */
             float4(other_2.scalar) * reverse.group0, 
             /* e23, e31, e12, scalar */
             float4(other_2.scalar) * reverse.group1
         );
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4((this.e41 * geometric_product.scalar) + (this.e43 * geometric_product.e31) + (this.e23 * geometric_product.e1234) + (this.e12 * geometric_product.e42), (this.e41 * geometric_product.e12) + (this.e42 * geometric_product.scalar) + (this.e23 * geometric_product.e43) + (this.e31 * geometric_product.e1234), (this.e42 * geometric_product.e23) + (this.e43 * geometric_product.scalar) + (this.e31 * geometric_product.e41) + (this.e12 * geometric_product.e1234), -(this.e43 * geometric_product.e12) - (this.e23 * geometric_product.e41) - (this.e31 * geometric_product.e42) - (this.e12 * geometric_product.e43)) - (geometric_product.group1.zxyx * float4(this.group0.xyz.yzx, this.e41)) - float4((this.group1.xyz.yzx * geometric_product.group0.zxy), this.e42 * geometric_product.e31), 
             /* e23, e31, e12, scalar */
@@ -878,7 +878,7 @@ public extension Line {
 }
 public extension Line {
     public MultiVector geometric_quotient(MultiVector other) {
-        MultiVector reverse = MultiVector.from_groups(
+        MultiVector reverse = MultiVector(
             /* scalar, e1234 */
             other.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -890,11 +890,11 @@ public extension Line {
             /* e423, e431, e412, e321 */
             other.group4 * float4(-1.0)
         );
-        Scalar other_2 = Scalar.from_groups(
+        Scalar other_2 = Scalar(
             /* scalar */
             pow(other.scalar, 2) + pow(other.e1, 2) + pow(other.e2, 2) + pow(other.e3, 2) + pow(other.e23, 2) + pow(other.e31, 2) + pow(other.e12, 2) + pow(other.e321, 2)
         );
-        MultiVector geometric_product = MultiVector.from_groups(
+        MultiVector geometric_product = MultiVector(
             /* scalar, e1234 */
             float2(other_2.scalar) * reverse.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -906,7 +906,7 @@ public extension Line {
             /* e423, e431, e412, e321 */
             float4(other_2.scalar) * reverse.group4
         );
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(0.0, -(this.e23 * geometric_product.e41) - (this.e31 * geometric_product.e42) - (this.e12 * geometric_product.e43)) - (float2(geometric_product.e23) * float2(this.e23, this.e41)) - (float2(geometric_product.e31) * float2(this.e31, this.e42)) - (float2(geometric_product.e12) * float2(this.e12, this.e43)), 
             /* e1, e2, e3, e4 */
@@ -922,11 +922,11 @@ public extension Line {
 }
 public extension Line {
     public Flector geometric_quotient(Plane other) {
-        Plane geometric_product = Plane.from_groups(
+        Plane geometric_product = Plane(
             /* e423, e431, e412, e321 */
             float4(pow(other.e321, -2)) * float4(other.e423 * -1.0, other.e431 * -1.0, other.e412 * -1.0, other.e321 * -1.0)
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4((float3(geometric_product.e321) * this.group1.xyz), -(this.e23 * geometric_product.e423) - (this.e31 * geometric_product.e431) - (this.e12 * geometric_product.e412)), 
             /* e423, e431, e412, e321 */
@@ -936,11 +936,11 @@ public extension Line {
 }
 public extension Line {
     public Flector geometric_quotient(Point other) {
-        Point geometric_product = Point.from_groups(
+        Point geometric_product = Point(
             /* e1, e2, e3, e4 */
             float4(pow(other.e1, 2) + pow(other.e2, 2) + pow(other.e3, 2)) * other.group0
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4(this.e31 * geometric_product.e3 * -1.0, this.e12 * geometric_product.e1 * -1.0, this.e23 * geometric_product.e2 * -1.0, (this.e42 * geometric_product.e2) + (this.e43 * geometric_product.e3)) + (geometric_product.group0.yzxx * float4(this.group1.xyz.zxy, this.e41)), 
             /* e423, e431, e412, e321 */
@@ -950,11 +950,11 @@ public extension Line {
 }
 public extension Line {
     public Line geometric_quotient(Scalar other) {
-        Scalar geometric_product = Scalar.from_groups(
+        Scalar geometric_product = Scalar(
             /* scalar */
             1.0/other.scalar
         );
-        return Line.from_groups(
+        return Line(
             /* e41, e42, e43 */
             float3(geometric_product.scalar) * this.group0.xyz, 
             /* e23, e31, e12 */
@@ -976,11 +976,11 @@ public extension GeometricQuotientInfixPartial<Motor> {
 }
 public extension Motor {
     public Motor geometric_quotient(DualNum other) {
-        DualNum geometric_product = DualNum.from_groups(
+        DualNum geometric_product = DualNum(
             /* scalar, e1234 */
             float2(pow(other.scalar, -2)) * other.group0.xy
         );
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             (float4(geometric_product.scalar) * this.group0) + (float4(geometric_product.e1234) * this.group1), 
             /* e23, e31, e12, scalar */
@@ -990,23 +990,23 @@ public extension Motor {
 }
 public extension Motor {
     public Flector geometric_quotient(Flector other) {
-        Flector reverse = Flector.from_groups(
+        Flector reverse = Flector(
             /* e1, e2, e3, e4 */
             other.group0, 
             /* e423, e431, e412, e321 */
             other.group1 * float4(-1.0)
         );
-        Scalar other_2 = Scalar.from_groups(
+        Scalar other_2 = Scalar(
             /* scalar */
             pow(other.e1, 2) + pow(other.e2, 2) + pow(other.e3, 2) + pow(other.e321, 2)
         );
-        Flector geometric_product = Flector.from_groups(
+        Flector geometric_product = Flector(
             /* e1, e2, e3, e4 */
             float4(other_2.scalar) * reverse.group0, 
             /* e423, e431, e412, e321 */
             float4(other_2.scalar) * reverse.group1
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             (geometric_product.group0.xyxx * float4(this.group1.wwy, this.e41)) + (geometric_product.group0.yzzy * float4(this.group1.zxw, this.e42)) + float4(float3(0.0), (geometric_product.e4 * this.scalar) - (geometric_product.e431 * this.e31) - (geometric_product.e412 * this.e12) - (geometric_product.e321 * this.e1234)) + float4((geometric_product.group1.www * this.group1.xyz), geometric_product.e3 * this.e43) - (this.group1.yzxx * float4(geometric_product.group0.zxy, geometric_product.e423)), 
             /* e423, e431, e412, e321 */
@@ -1016,11 +1016,11 @@ public extension Motor {
 }
 public extension Motor {
     public Flector geometric_quotient(Horizon other) {
-        Horizon geometric_product = Horizon.from_groups(
+        Horizon geometric_product = Horizon(
             /* e321 */
             1.0/other.e321 * -1.0
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4(geometric_product.e321) * float4(this.group1.xyz, this.e1234) * float4(1.0, 1.0, 1.0, -1.0), 
             /* e423, e431, e412, e321 */
@@ -1030,23 +1030,23 @@ public extension Motor {
 }
 public extension Motor {
     public Motor geometric_quotient(Line other) {
-        Line reverse = Line.from_groups(
+        Line reverse = Line(
             /* e41, e42, e43 */
             other.group0.xyz * float3(-1.0), 
             /* e23, e31, e12 */
             other.group1.xyz * float3(-1.0)
         );
-        Scalar other_2 = Scalar.from_groups(
+        Scalar other_2 = Scalar(
             /* scalar */
             pow(other.e23, 2) + pow(other.e31, 2) + pow(other.e12, 2)
         );
-        Line geometric_product = Line.from_groups(
+        Line geometric_product = Line(
             /* e41, e42, e43 */
             float3(other_2.scalar) * reverse.group0.xyz, 
             /* e23, e31, e12 */
             float3(other_2.scalar) * reverse.group1.xyz
         );
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4((geometric_product.e41 * this.scalar) + (geometric_product.e42 * this.e12) + (geometric_product.e23 * this.e1234) + (geometric_product.e31 * this.e43), (geometric_product.e42 * this.scalar) + (geometric_product.e43 * this.e23) + (geometric_product.e31 * this.e1234) + (geometric_product.e12 * this.e41), (geometric_product.e41 * this.e31) + (geometric_product.e43 * this.scalar) + (geometric_product.e23 * this.e42) + (geometric_product.e12 * this.e1234), -(geometric_product.e43 * this.e12) - (geometric_product.e23 * this.e41) - (geometric_product.e31 * this.e42) - (geometric_product.e12 * this.e43)) - (this.group1.yzxx * float4(geometric_product.group0.xyz.zxy, geometric_product.e41)) - float4((geometric_product.group1.xyz.zxy * this.group0.yzx), geometric_product.e42 * this.e31), 
             /* e23, e31, e12, scalar */
@@ -1056,23 +1056,23 @@ public extension Motor {
 }
 public extension Motor {
     public Motor geometric_quotient(Motor other) {
-        Motor reverse = Motor.from_groups(
+        Motor reverse = Motor(
             /* e41, e42, e43, e1234 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, scalar */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        Scalar other_2 = Scalar.from_groups(
+        Scalar other_2 = Scalar(
             /* scalar */
             pow(other.e23, 2) + pow(other.e31, 2) + pow(other.e12, 2) + pow(other.scalar, 2)
         );
-        Motor geometric_product = Motor.from_groups(
+        Motor geometric_product = Motor(
             /* e41, e42, e43, e1234 */
             float4(other_2.scalar) * reverse.group0, 
             /* e23, e31, e12, scalar */
             float4(other_2.scalar) * reverse.group1
         );
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4((geometric_product.e1234 * this.e23) + (geometric_product.e23 * this.e1234) + (geometric_product.e31 * this.e43) + (geometric_product.scalar * this.e41), (geometric_product.e1234 * this.e31) + (geometric_product.e31 * this.e1234) + (geometric_product.e12 * this.e41) + (geometric_product.scalar * this.e42), (geometric_product.e1234 * this.e12) + (geometric_product.e23 * this.e42) + (geometric_product.e12 * this.e1234) + (geometric_product.scalar * this.e43), -(geometric_product.e43 * this.e12) - (geometric_product.e23 * this.e41) - (geometric_product.e31 * this.e42) - (geometric_product.e12 * this.e43)) + (geometric_product.group0.xyxw * this.group1.wwyw) + float4((geometric_product.group0.yzz * this.group1.zxw), geometric_product.scalar * this.e1234) - (geometric_product.group0.zxyx * this.group1.yzxx) - float4((geometric_product.group1.zxy * this.group0.yzx), geometric_product.e42 * this.e31), 
             /* e23, e31, e12, scalar */
@@ -1082,7 +1082,7 @@ public extension Motor {
 }
 public extension Motor {
     public MultiVector geometric_quotient(MultiVector other) {
-        MultiVector reverse = MultiVector.from_groups(
+        MultiVector reverse = MultiVector(
             /* scalar, e1234 */
             other.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -1094,11 +1094,11 @@ public extension Motor {
             /* e423, e431, e412, e321 */
             other.group4 * float4(-1.0)
         );
-        Scalar other_2 = Scalar.from_groups(
+        Scalar other_2 = Scalar(
             /* scalar */
             pow(other.scalar, 2) + pow(other.e1, 2) + pow(other.e2, 2) + pow(other.e3, 2) + pow(other.e23, 2) + pow(other.e31, 2) + pow(other.e12, 2) + pow(other.e321, 2)
         );
-        MultiVector geometric_product = MultiVector.from_groups(
+        MultiVector geometric_product = MultiVector(
             /* scalar, e1234 */
             float2(other_2.scalar) * reverse.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -1110,7 +1110,7 @@ public extension Motor {
             /* e423, e431, e412, e321 */
             float4(other_2.scalar) * reverse.group4
         );
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(0.0, (this.scalar * geometric_product.e1234) - (this.e41 * geometric_product.e23) - (this.e42 * geometric_product.e31) - (this.e43 * geometric_product.e12)) + (float2(geometric_product.scalar) * float2(this.scalar, this.e1234)) - (float2(this.e23) * float2(geometric_product.e23, geometric_product.e41)) - (float2(this.e31) * float2(geometric_product.e31, geometric_product.e42)) - (float2(this.e12) * float2(geometric_product.e12, geometric_product.e43)), 
             /* e1, e2, e3, e4 */
@@ -1126,11 +1126,11 @@ public extension Motor {
 }
 public extension Motor {
     public Flector geometric_quotient(Plane other) {
-        Plane geometric_product = Plane.from_groups(
+        Plane geometric_product = Plane(
             /* e423, e431, e412, e321 */
             float4(pow(other.e321, -2)) * float4(other.e423 * -1.0, other.e431 * -1.0, other.e412 * -1.0, other.e321 * -1.0)
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4((float3(geometric_product.e321) * this.group1.xyz), -(this.e1234 * geometric_product.e321) - (this.e23 * geometric_product.e423) - (this.e31 * geometric_product.e431) - (this.e12 * geometric_product.e412)), 
             /* e423, e431, e412, e321 */
@@ -1140,11 +1140,11 @@ public extension Motor {
 }
 public extension Motor {
     public Flector geometric_quotient(Point other) {
-        Point geometric_product = Point.from_groups(
+        Point geometric_product = Point(
             /* e1, e2, e3, e4 */
             float4(pow(other.e1, 2) + pow(other.e2, 2) + pow(other.e3, 2)) * other.group0
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4(this.e31 * geometric_product.e3 * -1.0, this.e12 * geometric_product.e1 * -1.0, this.e23 * geometric_product.e2 * -1.0, (this.e43 * geometric_product.e3) + (this.scalar * geometric_product.e4)) + (geometric_product.group0.xyzy * float4(this.group1.www, this.e42)) + (geometric_product.group0.yzxx * float4(this.group1.zxy, this.e41)), 
             /* e423, e431, e412, e321 */
@@ -1154,11 +1154,11 @@ public extension Motor {
 }
 public extension Motor {
     public Motor geometric_quotient(Scalar other) {
-        Scalar geometric_product = Scalar.from_groups(
+        Scalar geometric_product = Scalar(
             /* scalar */
             1.0/other.scalar
         );
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(geometric_product.scalar) * this.group0, 
             /* e23, e31, e12, scalar */
@@ -1180,11 +1180,11 @@ public extension GeometricQuotientInfixPartial<MultiVector> {
 }
 public extension MultiVector {
     public MultiVector geometric_quotient(DualNum other) {
-        DualNum geometric_product = DualNum.from_groups(
+        DualNum geometric_product = DualNum(
             /* scalar, e1234 */
             float2(pow(other.scalar, -2)) * other.group0.xy
         );
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(geometric_product.scalar * this.scalar, (geometric_product.scalar * this.e1234) + (geometric_product.e1234 * this.scalar)), 
             /* e1, e2, e3, e4 */
@@ -1200,23 +1200,23 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public MultiVector geometric_quotient(Flector other) {
-        Flector reverse = Flector.from_groups(
+        Flector reverse = Flector(
             /* e1, e2, e3, e4 */
             other.group0, 
             /* e423, e431, e412, e321 */
             other.group1 * float4(-1.0)
         );
-        Scalar other_2 = Scalar.from_groups(
+        Scalar other_2 = Scalar(
             /* scalar */
             pow(other.e1, 2) + pow(other.e2, 2) + pow(other.e3, 2) + pow(other.e321, 2)
         );
-        Flector geometric_product = Flector.from_groups(
+        Flector geometric_product = Flector(
             /* e1, e2, e3, e4 */
             float4(other_2.scalar) * reverse.group0, 
             /* e423, e431, e412, e321 */
             float4(other_2.scalar) * reverse.group1
         );
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(0.0, (geometric_product.e321 * this.e4) - (geometric_product.e2 * this.e431) - (geometric_product.e3 * this.e412) - (geometric_product.e4 * this.e321)) + (float2(this.e1) * float2(geometric_product.e1, geometric_product.e423)) + (float2(this.e2) * float2(geometric_product.e2, geometric_product.e431)) + (float2(this.e3) * float2(geometric_product.e3, geometric_product.e412)) - (float2(geometric_product.e321, geometric_product.e1) * this.group4.wx), 
             /* e1, e2, e3, e4 */
@@ -1232,11 +1232,11 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public MultiVector geometric_quotient(Horizon other) {
-        Horizon geometric_product = Horizon.from_groups(
+        Horizon geometric_product = Horizon(
             /* e321 */
             1.0/other.e321 * -1.0
         );
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(geometric_product.e321) * float2(this.e321, this.e4) * float2(-1.0, 1.0), 
             /* e1, e2, e3, e4 */
@@ -1252,23 +1252,23 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public MultiVector geometric_quotient(Line other) {
-        Line reverse = Line.from_groups(
+        Line reverse = Line(
             /* e41, e42, e43 */
             other.group0.xyz * float3(-1.0), 
             /* e23, e31, e12 */
             other.group1.xyz * float3(-1.0)
         );
-        Scalar other_2 = Scalar.from_groups(
+        Scalar other_2 = Scalar(
             /* scalar */
             pow(other.e23, 2) + pow(other.e31, 2) + pow(other.e12, 2)
         );
-        Line geometric_product = Line.from_groups(
+        Line geometric_product = Line(
             /* e41, e42, e43 */
             float3(other_2.scalar) * reverse.group0.xyz, 
             /* e23, e31, e12 */
             float3(other_2.scalar) * reverse.group1.xyz
         );
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(0.0, -(geometric_product.e23 * this.e41) - (geometric_product.e31 * this.e42) - (geometric_product.e12 * this.e43)) - (float2(this.e23) * float2(geometric_product.e23, geometric_product.e41)) - (float2(this.e31) * float2(geometric_product.e31, geometric_product.e42)) - (float2(this.e12) * float2(geometric_product.e12, geometric_product.e43)), 
             /* e1, e2, e3, e4 */
@@ -1284,23 +1284,23 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public MultiVector geometric_quotient(Motor other) {
-        Motor reverse = Motor.from_groups(
+        Motor reverse = Motor(
             /* e41, e42, e43, e1234 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, scalar */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        Scalar other_2 = Scalar.from_groups(
+        Scalar other_2 = Scalar(
             /* scalar */
             pow(other.e23, 2) + pow(other.e31, 2) + pow(other.e12, 2) + pow(other.scalar, 2)
         );
-        Motor geometric_product = Motor.from_groups(
+        Motor geometric_product = Motor(
             /* e41, e42, e43, e1234 */
             float4(other_2.scalar) * reverse.group0, 
             /* e23, e31, e12, scalar */
             float4(other_2.scalar) * reverse.group1
         );
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(0.0, (geometric_product.scalar * this.e1234) - (geometric_product.e41 * this.e23) - (geometric_product.e42 * this.e31) - (geometric_product.e43 * this.e12)) + (float2(this.scalar) * float2(geometric_product.scalar, geometric_product.e1234)) - (float2(geometric_product.e23) * float2(this.e23, this.e41)) - (float2(geometric_product.e31) * float2(this.e31, this.e42)) - (float2(geometric_product.e12) * float2(this.e12, this.e43)), 
             /* e1, e2, e3, e4 */
@@ -1316,7 +1316,7 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public MultiVector geometric_quotient(MultiVector other) {
-        MultiVector reverse = MultiVector.from_groups(
+        MultiVector reverse = MultiVector(
             /* scalar, e1234 */
             other.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -1328,11 +1328,11 @@ public extension MultiVector {
             /* e423, e431, e412, e321 */
             other.group4 * float4(-1.0)
         );
-        Scalar other_2 = Scalar.from_groups(
+        Scalar other_2 = Scalar(
             /* scalar */
             pow(other.scalar, 2) + pow(other.e1, 2) + pow(other.e2, 2) + pow(other.e3, 2) + pow(other.e23, 2) + pow(other.e31, 2) + pow(other.e12, 2) + pow(other.e321, 2)
         );
-        MultiVector geometric_product = MultiVector.from_groups(
+        MultiVector geometric_product = MultiVector(
             /* scalar, e1234 */
             float2(other_2.scalar) * reverse.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -1344,7 +1344,7 @@ public extension MultiVector {
             /* e423, e431, e412, e321 */
             float4(other_2.scalar) * reverse.group4
         );
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(0.0, (geometric_product.e1234 * this.scalar) + (geometric_product.e321 * this.e4) - (geometric_product.e2 * this.e431) - (geometric_product.e3 * this.e412) - (geometric_product.e4 * this.e321) - (geometric_product.e23 * this.e41) - (geometric_product.e31 * this.e42) - (geometric_product.e12 * this.e43)) + (float2(geometric_product.scalar) * this.group0.xy) + (float2(this.e1) * float2(geometric_product.e1, geometric_product.e423)) + (float2(this.e2) * float2(geometric_product.e2, geometric_product.e431)) + (float2(this.e3) * float2(geometric_product.e3, geometric_product.e412)) - (float2(this.e23) * float2(geometric_product.e23, geometric_product.e41)) - (float2(this.e31) * float2(geometric_product.e31, geometric_product.e42)) - (float2(this.e12) * float2(geometric_product.e12, geometric_product.e43)) - (float2(geometric_product.e321, geometric_product.e1) * this.group4.wx), 
             /* e1, e2, e3, e4 */
@@ -1360,11 +1360,11 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public MultiVector geometric_quotient(Plane other) {
-        Plane geometric_product = Plane.from_groups(
+        Plane geometric_product = Plane(
             /* e423, e431, e412, e321 */
             float4(pow(other.e321, -2)) * float4(other.e423 * -1.0, other.e431 * -1.0, other.e412 * -1.0, other.e321 * -1.0)
         );
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(this.e321 * geometric_product.e321, (this.e1 * geometric_product.e423) + (this.e2 * geometric_product.e431) + (this.e3 * geometric_product.e412) + (this.e4 * geometric_product.e321)) * float2(-1.0, 1.0), 
             /* e1, e2, e3, e4 */
@@ -1380,11 +1380,11 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public MultiVector geometric_quotient(Point other) {
-        Point geometric_product = Point.from_groups(
+        Point geometric_product = Point(
             /* e1, e2, e3, e4 */
             float4(pow(other.e1, 2) + pow(other.e2, 2) + pow(other.e3, 2)) * other.group0
         );
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2((this.e1 * geometric_product.e1) + (this.e2 * geometric_product.e2) + (this.e3 * geometric_product.e3), -(this.e423 * geometric_product.e1) - (this.e431 * geometric_product.e2) - (this.e412 * geometric_product.e3) - (this.e321 * geometric_product.e4)), 
             /* e1, e2, e3, e4 */
@@ -1400,11 +1400,11 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public MultiVector geometric_quotient(Scalar other) {
-        Scalar geometric_product = Scalar.from_groups(
+        Scalar geometric_product = Scalar(
             /* scalar */
             1.0/other.scalar
         );
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(geometric_product.scalar) * this.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -1432,7 +1432,7 @@ public extension GeometricQuotientInfixPartial<Origin> {
 }
 public extension Origin {
     public Origin geometric_quotient(DualNum other) {
-        return Origin.from_groups(
+        return Origin(
             /* e4 */
             this.e4 / (other.scalar)
         );
@@ -1440,23 +1440,23 @@ public extension Origin {
 }
 public extension Origin {
     public Motor geometric_quotient(Flector other) {
-        Flector reverse = Flector.from_groups(
+        Flector reverse = Flector(
             /* e1, e2, e3, e4 */
             other.group0, 
             /* e423, e431, e412, e321 */
             other.group1 * float4(-1.0)
         );
-        Scalar other_2 = Scalar.from_groups(
+        Scalar other_2 = Scalar(
             /* scalar */
             pow(other.e1, 2) + pow(other.e2, 2) + pow(other.e3, 2) + pow(other.e321, 2)
         );
-        Flector geometric_product = Flector.from_groups(
+        Flector geometric_product = Flector(
             /* e1, e2, e3, e4 */
             float4(other_2.scalar) * reverse.group0, 
             /* e423, e431, e412, e321 */
             float4(other_2.scalar) * reverse.group1
         );
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(this.e4) * float4(geometric_product.group0.xyz, geometric_product.e321), 
             /* e23, e31, e12, scalar */
@@ -1466,7 +1466,7 @@ public extension Origin {
 }
 public extension Origin {
     public AntiScalar geometric_quotient(Horizon other) {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             this.e4 / (other.e321) * -1.0
         );
@@ -1474,17 +1474,17 @@ public extension Origin {
 }
 public extension Origin {
     public Plane geometric_quotient(Line other) {
-        Line reverse = Line.from_groups(
+        Line reverse = Line(
             /* e41, e42, e43 */
             other.group0.xyz * float3(-1.0), 
             /* e23, e31, e12 */
             other.group1.xyz * float3(-1.0)
         );
-        Scalar other_2 = Scalar.from_groups(
+        Scalar other_2 = Scalar(
             /* scalar */
             pow(other.e23, 2) + pow(other.e31, 2) + pow(other.e12, 2)
         );
-        return Plane.from_groups(
+        return Plane(
             /* e423, e431, e412, e321 */
             float4((float3(this.e4) * float3(reverse.e23 * other_2.scalar, reverse.e31 * other_2.scalar, reverse.e12 * other_2.scalar)), 0.0)
         );
@@ -1492,23 +1492,23 @@ public extension Origin {
 }
 public extension Origin {
     public Flector geometric_quotient(Motor other) {
-        Motor reverse = Motor.from_groups(
+        Motor reverse = Motor(
             /* e41, e42, e43, e1234 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, scalar */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        Scalar other_2 = Scalar.from_groups(
+        Scalar other_2 = Scalar(
             /* scalar */
             pow(other.e23, 2) + pow(other.e31, 2) + pow(other.e12, 2) + pow(other.scalar, 2)
         );
-        Motor geometric_product = Motor.from_groups(
+        Motor geometric_product = Motor(
             /* e41, e42, e43, e1234 */
             float4(other_2.scalar) * reverse.group0, 
             /* e23, e31, e12, scalar */
             float4(other_2.scalar) * reverse.group1
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), geometric_product.scalar * this.e4), 
             /* e423, e431, e412, e321 */
@@ -1518,7 +1518,7 @@ public extension Origin {
 }
 public extension Origin {
     public MultiVector geometric_quotient(MultiVector other) {
-        MultiVector reverse = MultiVector.from_groups(
+        MultiVector reverse = MultiVector(
             /* scalar, e1234 */
             other.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -1530,11 +1530,11 @@ public extension Origin {
             /* e423, e431, e412, e321 */
             other.group4 * float4(-1.0)
         );
-        Scalar other_2 = Scalar.from_groups(
+        Scalar other_2 = Scalar(
             /* scalar */
             pow(other.scalar, 2) + pow(other.e1, 2) + pow(other.e2, 2) + pow(other.e3, 2) + pow(other.e23, 2) + pow(other.e31, 2) + pow(other.e12, 2) + pow(other.e321, 2)
         );
-        MultiVector geometric_product = MultiVector.from_groups(
+        MultiVector geometric_product = MultiVector(
             /* scalar, e1234 */
             float2(other_2.scalar) * reverse.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -1546,7 +1546,7 @@ public extension Origin {
             /* e423, e431, e412, e321 */
             float4(other_2.scalar) * reverse.group4
         );
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(1.0, geometric_product.e321 * this.e4) * float2(0.0, 1.0), 
             /* e1, e2, e3, e4 */
@@ -1562,7 +1562,7 @@ public extension Origin {
 }
 public extension Origin {
     public AntiScalar geometric_quotient(Plane other) {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             this.e4 / (other.e321) * -1.0
         );
@@ -1570,11 +1570,11 @@ public extension Origin {
 }
 public extension Origin {
     public Line geometric_quotient(Point other) {
-        Scalar other_2 = Scalar.from_groups(
+        Scalar other_2 = Scalar(
             /* scalar */
             pow(other.e1, 2) + pow(other.e2, 2) + pow(other.e3, 2)
         );
-        return Line.from_groups(
+        return Line(
             /* e41, e42, e43 */
             float3(this.e4) * float4(other.e1 * other_2.scalar, other.e2 * other_2.scalar, other.e3 * other_2.scalar, other.e4 * other_2.scalar).xyz, 
             /* e23, e31, e12 */
@@ -1584,7 +1584,7 @@ public extension Origin {
 }
 public extension Origin {
     public Origin geometric_quotient(Scalar other) {
-        return Origin.from_groups(
+        return Origin(
             /* e4 */
             this.e4 / (other.scalar)
         );
@@ -1604,11 +1604,11 @@ public extension GeometricQuotientInfixPartial<Plane> {
 }
 public extension Plane {
     public Flector geometric_quotient(DualNum other) {
-        DualNum geometric_product = DualNum.from_groups(
+        DualNum geometric_product = DualNum(
             /* scalar, e1234 */
             float2(pow(other.scalar, -2)) * other.group0.xy
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), geometric_product.e1234 * this.e321), 
             /* e423, e431, e412, e321 */
@@ -1618,23 +1618,23 @@ public extension Plane {
 }
 public extension Plane {
     public Motor geometric_quotient(Flector other) {
-        Flector reverse = Flector.from_groups(
+        Flector reverse = Flector(
             /* e1, e2, e3, e4 */
             other.group0, 
             /* e423, e431, e412, e321 */
             other.group1 * float4(-1.0)
         );
-        Scalar other_2 = Scalar.from_groups(
+        Scalar other_2 = Scalar(
             /* scalar */
             pow(other.e1, 2) + pow(other.e2, 2) + pow(other.e3, 2) + pow(other.e321, 2)
         );
-        Flector geometric_product = Flector.from_groups(
+        Flector geometric_product = Flector(
             /* e1, e2, e3, e4 */
             float4(other_2.scalar) * reverse.group0, 
             /* e423, e431, e412, e321 */
             float4(other_2.scalar) * reverse.group1
         );
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4((geometric_product.e2 * this.e412) + (geometric_product.e321 * this.e423), (geometric_product.e3 * this.e423) + (geometric_product.e321 * this.e431), (geometric_product.e1 * this.e431) + (geometric_product.e321 * this.e412), -(geometric_product.e3 * this.e412) - (geometric_product.e4 * this.e321)) - (geometric_product.group0.zxyx * this.group0.yzxx) - (this.group0.wwwy * float4(geometric_product.group1.xyz, geometric_product.e2)), 
             /* e23, e31, e12, scalar */
@@ -1644,11 +1644,11 @@ public extension Plane {
 }
 public extension Plane {
     public Motor geometric_quotient(Horizon other) {
-        Horizon geometric_product = Horizon.from_groups(
+        Horizon geometric_product = Horizon(
             /* e321 */
             1.0/other.e321 * -1.0
         );
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4((float3(geometric_product.e321) * this.group0.xyz), 0.0), 
             /* e23, e31, e12, scalar */
@@ -1658,23 +1658,23 @@ public extension Plane {
 }
 public extension Plane {
     public Flector geometric_quotient(Line other) {
-        Line reverse = Line.from_groups(
+        Line reverse = Line(
             /* e41, e42, e43 */
             other.group0.xyz * float3(-1.0), 
             /* e23, e31, e12 */
             other.group1.xyz * float3(-1.0)
         );
-        Scalar other_2 = Scalar.from_groups(
+        Scalar other_2 = Scalar(
             /* scalar */
             pow(other.e23, 2) + pow(other.e31, 2) + pow(other.e12, 2)
         );
-        Line geometric_product = Line.from_groups(
+        Line geometric_product = Line(
             /* e41, e42, e43 */
             float3(other_2.scalar) * reverse.group0.xyz, 
             /* e23, e31, e12 */
             float3(other_2.scalar) * reverse.group1.xyz
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4((float3(this.e321) * geometric_product.group1.xyz), -(geometric_product.e23 * this.e423) - (geometric_product.e31 * this.e431) - (geometric_product.e12 * this.e412)), 
             /* e423, e431, e412, e321 */
@@ -1684,23 +1684,23 @@ public extension Plane {
 }
 public extension Plane {
     public Flector geometric_quotient(Motor other) {
-        Motor reverse = Motor.from_groups(
+        Motor reverse = Motor(
             /* e41, e42, e43, e1234 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, scalar */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        Scalar other_2 = Scalar.from_groups(
+        Scalar other_2 = Scalar(
             /* scalar */
             pow(other.e23, 2) + pow(other.e31, 2) + pow(other.e12, 2) + pow(other.scalar, 2)
         );
-        Motor geometric_product = Motor.from_groups(
+        Motor geometric_product = Motor(
             /* e41, e42, e43, e1234 */
             float4(other_2.scalar) * reverse.group0, 
             /* e23, e31, e12, scalar */
             float4(other_2.scalar) * reverse.group1
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4((float3(this.e321) * geometric_product.group1.xyz), (geometric_product.e1234 * this.e321) - (geometric_product.e23 * this.e423) - (geometric_product.e31 * this.e431) - (geometric_product.e12 * this.e412)), 
             /* e423, e431, e412, e321 */
@@ -1710,7 +1710,7 @@ public extension Plane {
 }
 public extension Plane {
     public MultiVector geometric_quotient(MultiVector other) {
-        MultiVector reverse = MultiVector.from_groups(
+        MultiVector reverse = MultiVector(
             /* scalar, e1234 */
             other.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -1722,11 +1722,11 @@ public extension Plane {
             /* e423, e431, e412, e321 */
             other.group4 * float4(-1.0)
         );
-        Scalar other_2 = Scalar.from_groups(
+        Scalar other_2 = Scalar(
             /* scalar */
             pow(other.scalar, 2) + pow(other.e1, 2) + pow(other.e2, 2) + pow(other.e3, 2) + pow(other.e23, 2) + pow(other.e31, 2) + pow(other.e12, 2) + pow(other.e321, 2)
         );
-        MultiVector geometric_product = MultiVector.from_groups(
+        MultiVector geometric_product = MultiVector(
             /* scalar, e1234 */
             float2(other_2.scalar) * reverse.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -1738,7 +1738,7 @@ public extension Plane {
             /* e423, e431, e412, e321 */
             float4(other_2.scalar) * reverse.group4
         );
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(geometric_product.e321 * this.e321, -(geometric_product.e1 * this.e423) - (geometric_product.e2 * this.e431) - (geometric_product.e3 * this.e412) - (geometric_product.e4 * this.e321)) * float2(-1.0, 1.0), 
             /* e1, e2, e3, e4 */
@@ -1754,11 +1754,11 @@ public extension Plane {
 }
 public extension Plane {
     public Motor geometric_quotient(Plane other) {
-        Plane geometric_product = Plane.from_groups(
+        Plane geometric_product = Plane(
             /* e423, e431, e412, e321 */
             float4(pow(other.e321, -2)) * float4(other.e423 * -1.0, other.e431 * -1.0, other.e412 * -1.0, other.e321 * -1.0)
         );
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(((float3(geometric_product.e321) * this.group0.xyz) - (float3(this.e321) * geometric_product.group0.xyz)), 0.0), 
             /* e23, e31, e12, scalar */
@@ -1768,11 +1768,11 @@ public extension Plane {
 }
 public extension Plane {
     public Motor geometric_quotient(Point other) {
-        Point geometric_product = Point.from_groups(
+        Point geometric_product = Point(
             /* e1, e2, e3, e4 */
             float4(pow(other.e1, 2) + pow(other.e2, 2) + pow(other.e3, 2)) * other.group0
         );
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(this.e412 * geometric_product.e2, this.e423 * geometric_product.e3, this.e431 * geometric_product.e1, -(this.e431 * geometric_product.e2) - (this.e412 * geometric_product.e3) - (this.e321 * geometric_product.e4)) - (this.group0.yzxx * geometric_product.group0.zxyx), 
             /* e23, e31, e12, scalar */
@@ -1782,7 +1782,7 @@ public extension Plane {
 }
 public extension Plane {
     public Plane geometric_quotient(Scalar other) {
-        return Plane.from_groups(
+        return Plane(
             /* e423, e431, e412, e321 */
             float4(1.0/other.scalar) * this.group0
         );
@@ -1802,11 +1802,11 @@ public extension GeometricQuotientInfixPartial<Point> {
 }
 public extension Point {
     public Flector geometric_quotient(DualNum other) {
-        DualNum geometric_product = DualNum.from_groups(
+        DualNum geometric_product = DualNum(
             /* scalar, e1234 */
             float2(pow(other.scalar, -2)) * other.group0.xy
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4(geometric_product.scalar) * this.group0, 
             /* e423, e431, e412, e321 */
@@ -1816,23 +1816,23 @@ public extension Point {
 }
 public extension Point {
     public Motor geometric_quotient(Flector other) {
-        Flector reverse = Flector.from_groups(
+        Flector reverse = Flector(
             /* e1, e2, e3, e4 */
             other.group0, 
             /* e423, e431, e412, e321 */
             other.group1 * float4(-1.0)
         );
-        Scalar other_2 = Scalar.from_groups(
+        Scalar other_2 = Scalar(
             /* scalar */
             pow(other.e1, 2) + pow(other.e2, 2) + pow(other.e3, 2) + pow(other.e321, 2)
         );
-        Flector geometric_product = Flector.from_groups(
+        Flector geometric_product = Flector(
             /* e1, e2, e3, e4 */
             float4(other_2.scalar) * reverse.group0, 
             /* e423, e431, e412, e321 */
             float4(other_2.scalar) * reverse.group1
         );
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(-(geometric_product.e4 * this.e1) - (geometric_product.e431 * this.e3), -(geometric_product.e4 * this.e2) - (geometric_product.e412 * this.e1), -(geometric_product.e4 * this.e3) - (geometric_product.e423 * this.e2), (geometric_product.e412 * this.e3) + (geometric_product.e321 * this.e4)) + (geometric_product.group1.zxyy * this.group0.yzxy) + (this.group0.wwwx * float4(geometric_product.group0.xyz, geometric_product.e423)), 
             /* e23, e31, e12, scalar */
@@ -1842,11 +1842,11 @@ public extension Point {
 }
 public extension Point {
     public Motor geometric_quotient(Horizon other) {
-        Horizon geometric_product = Horizon.from_groups(
+        Horizon geometric_product = Horizon(
             /* e321 */
             1.0/other.e321 * -1.0
         );
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(float3(0.0), geometric_product.e321 * this.e4), 
             /* e23, e31, e12, scalar */
@@ -1856,23 +1856,23 @@ public extension Point {
 }
 public extension Point {
     public Flector geometric_quotient(Line other) {
-        Line reverse = Line.from_groups(
+        Line reverse = Line(
             /* e41, e42, e43 */
             other.group0.xyz * float3(-1.0), 
             /* e23, e31, e12 */
             other.group1.xyz * float3(-1.0)
         );
-        Scalar other_2 = Scalar.from_groups(
+        Scalar other_2 = Scalar(
             /* scalar */
             pow(other.e23, 2) + pow(other.e31, 2) + pow(other.e12, 2)
         );
-        Line geometric_product = Line.from_groups(
+        Line geometric_product = Line(
             /* e41, e42, e43 */
             float3(other_2.scalar) * reverse.group0.xyz, 
             /* e23, e31, e12 */
             float3(other_2.scalar) * reverse.group1.xyz
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4(geometric_product.e31 * this.e3, geometric_product.e12 * this.e1, geometric_product.e23 * this.e2, -(geometric_product.e42 * this.e2) - (geometric_product.e43 * this.e3)) - (this.group0.yzxx * float4(geometric_product.group1.xyz.zxy, geometric_product.e41)), 
             /* e423, e431, e412, e321 */
@@ -1882,23 +1882,23 @@ public extension Point {
 }
 public extension Point {
     public Flector geometric_quotient(Motor other) {
-        Motor reverse = Motor.from_groups(
+        Motor reverse = Motor(
             /* e41, e42, e43, e1234 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, scalar */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        Scalar other_2 = Scalar.from_groups(
+        Scalar other_2 = Scalar(
             /* scalar */
             pow(other.e23, 2) + pow(other.e31, 2) + pow(other.e12, 2) + pow(other.scalar, 2)
         );
-        Motor geometric_product = Motor.from_groups(
+        Motor geometric_product = Motor(
             /* e41, e42, e43, e1234 */
             float4(other_2.scalar) * reverse.group0, 
             /* e23, e31, e12, scalar */
             float4(other_2.scalar) * reverse.group1
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4(geometric_product.scalar * this.e1, geometric_product.scalar * this.e2, geometric_product.scalar * this.e3, -(geometric_product.e42 * this.e2) - (geometric_product.e43 * this.e3)) + (geometric_product.group1.yzxw * this.group0.zxyw) - (this.group0.yzxx * float4(geometric_product.group1.zxy, geometric_product.e41)), 
             /* e423, e431, e412, e321 */
@@ -1908,7 +1908,7 @@ public extension Point {
 }
 public extension Point {
     public MultiVector geometric_quotient(MultiVector other) {
-        MultiVector reverse = MultiVector.from_groups(
+        MultiVector reverse = MultiVector(
             /* scalar, e1234 */
             other.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -1920,11 +1920,11 @@ public extension Point {
             /* e423, e431, e412, e321 */
             other.group4 * float4(-1.0)
         );
-        Scalar other_2 = Scalar.from_groups(
+        Scalar other_2 = Scalar(
             /* scalar */
             pow(other.scalar, 2) + pow(other.e1, 2) + pow(other.e2, 2) + pow(other.e3, 2) + pow(other.e23, 2) + pow(other.e31, 2) + pow(other.e12, 2) + pow(other.e321, 2)
         );
-        MultiVector geometric_product = MultiVector.from_groups(
+        MultiVector geometric_product = MultiVector(
             /* scalar, e1234 */
             float2(other_2.scalar) * reverse.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -1936,7 +1936,7 @@ public extension Point {
             /* e423, e431, e412, e321 */
             float4(other_2.scalar) * reverse.group4
         );
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(0.0, geometric_product.e321 * this.e4) + (float2(this.e1) * float2(geometric_product.e1, geometric_product.e423)) + (float2(this.e2) * float2(geometric_product.e2, geometric_product.e431)) + (float2(this.e3) * float2(geometric_product.e3, geometric_product.e412)), 
             /* e1, e2, e3, e4 */
@@ -1952,11 +1952,11 @@ public extension Point {
 }
 public extension Point {
     public Motor geometric_quotient(Plane other) {
-        Plane geometric_product = Plane.from_groups(
+        Plane geometric_product = Plane(
             /* e423, e431, e412, e321 */
             float4(pow(other.e321, -2)) * float4(other.e423 * -1.0, other.e431 * -1.0, other.e412 * -1.0, other.e321 * -1.0)
         );
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(geometric_product.e431 * this.e3 * -1.0, geometric_product.e412 * this.e1 * -1.0, geometric_product.e423 * this.e2 * -1.0, (geometric_product.e431 * this.e2) + (geometric_product.e412 * this.e3) + (geometric_product.e321 * this.e4)) + (geometric_product.group0.zxyx * this.group0.yzxx), 
             /* e23, e31, e12, scalar */
@@ -1966,11 +1966,11 @@ public extension Point {
 }
 public extension Point {
     public Motor geometric_quotient(Point other) {
-        Point geometric_product = Point.from_groups(
+        Point geometric_product = Point(
             /* e1, e2, e3, e4 */
             float4(pow(other.e1, 2) + pow(other.e2, 2) + pow(other.e3, 2)) * other.group0
         );
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(((float3(this.e4) * geometric_product.group0.xyz) - (float3(geometric_product.e4) * this.group0.xyz)), 0.0), 
             /* e23, e31, e12, scalar */
@@ -1980,7 +1980,7 @@ public extension Point {
 }
 public extension Point {
     public Point geometric_quotient(Scalar other) {
-        return Point.from_groups(
+        return Point(
             /* e1, e2, e3, e4 */
             float4(1.0/other.scalar) * this.group0
         );
@@ -2000,11 +2000,11 @@ public extension GeometricQuotientInfixPartial<Scalar> {
 }
 public extension Scalar {
     public DualNum geometric_quotient(DualNum other) {
-        Scalar other_2 = Scalar.from_groups(
+        Scalar other_2 = Scalar(
             /* scalar */
             pow(other.scalar, -2)
         );
-        return DualNum.from_groups(
+        return DualNum(
             /* scalar, e1234 */
             float2(this.scalar) * float2(other.scalar * other_2.scalar, other.e1234 * other_2.scalar)
         );
@@ -2012,23 +2012,23 @@ public extension Scalar {
 }
 public extension Scalar {
     public Flector geometric_quotient(Flector other) {
-        Flector reverse = Flector.from_groups(
+        Flector reverse = Flector(
             /* e1, e2, e3, e4 */
             other.group0, 
             /* e423, e431, e412, e321 */
             other.group1 * float4(-1.0)
         );
-        Scalar other_2 = Scalar.from_groups(
+        Scalar other_2 = Scalar(
             /* scalar */
             pow(other.e1, 2) + pow(other.e2, 2) + pow(other.e3, 2) + pow(other.e321, 2)
         );
-        Flector geometric_product = Flector.from_groups(
+        Flector geometric_product = Flector(
             /* e1, e2, e3, e4 */
             float4(other_2.scalar) * reverse.group0, 
             /* e423, e431, e412, e321 */
             float4(other_2.scalar) * reverse.group1
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4(this.scalar) * geometric_product.group0, 
             /* e423, e431, e412, e321 */
@@ -2038,7 +2038,7 @@ public extension Scalar {
 }
 public extension Scalar {
     public Horizon geometric_quotient(Horizon other) {
-        return Horizon.from_groups(
+        return Horizon(
             /* e321 */
             this.scalar / (other.e321) * -1.0
         );
@@ -2046,23 +2046,23 @@ public extension Scalar {
 }
 public extension Scalar {
     public Line geometric_quotient(Line other) {
-        Line reverse = Line.from_groups(
+        Line reverse = Line(
             /* e41, e42, e43 */
             other.group0.xyz * float3(-1.0), 
             /* e23, e31, e12 */
             other.group1.xyz * float3(-1.0)
         );
-        Scalar other_2 = Scalar.from_groups(
+        Scalar other_2 = Scalar(
             /* scalar */
             pow(other.e23, 2) + pow(other.e31, 2) + pow(other.e12, 2)
         );
-        Line geometric_product = Line.from_groups(
+        Line geometric_product = Line(
             /* e41, e42, e43 */
             float3(other_2.scalar) * reverse.group0.xyz, 
             /* e23, e31, e12 */
             float3(other_2.scalar) * reverse.group1.xyz
         );
-        return Line.from_groups(
+        return Line(
             /* e41, e42, e43 */
             float3(this.scalar) * geometric_product.group0.xyz, 
             /* e23, e31, e12 */
@@ -2072,23 +2072,23 @@ public extension Scalar {
 }
 public extension Scalar {
     public Motor geometric_quotient(Motor other) {
-        Motor reverse = Motor.from_groups(
+        Motor reverse = Motor(
             /* e41, e42, e43, e1234 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, scalar */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        Scalar other_2 = Scalar.from_groups(
+        Scalar other_2 = Scalar(
             /* scalar */
             pow(other.e23, 2) + pow(other.e31, 2) + pow(other.e12, 2) + pow(other.scalar, 2)
         );
-        Motor geometric_product = Motor.from_groups(
+        Motor geometric_product = Motor(
             /* e41, e42, e43, e1234 */
             float4(other_2.scalar) * reverse.group0, 
             /* e23, e31, e12, scalar */
             float4(other_2.scalar) * reverse.group1
         );
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(this.scalar) * geometric_product.group0, 
             /* e23, e31, e12, scalar */
@@ -2098,7 +2098,7 @@ public extension Scalar {
 }
 public extension Scalar {
     public MultiVector geometric_quotient(MultiVector other) {
-        MultiVector reverse = MultiVector.from_groups(
+        MultiVector reverse = MultiVector(
             /* scalar, e1234 */
             other.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -2110,11 +2110,11 @@ public extension Scalar {
             /* e423, e431, e412, e321 */
             other.group4 * float4(-1.0)
         );
-        Scalar other_2 = Scalar.from_groups(
+        Scalar other_2 = Scalar(
             /* scalar */
             pow(other.scalar, 2) + pow(other.e1, 2) + pow(other.e2, 2) + pow(other.e3, 2) + pow(other.e23, 2) + pow(other.e31, 2) + pow(other.e12, 2) + pow(other.e321, 2)
         );
-        MultiVector geometric_product = MultiVector.from_groups(
+        MultiVector geometric_product = MultiVector(
             /* scalar, e1234 */
             float2(other_2.scalar) * reverse.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -2126,7 +2126,7 @@ public extension Scalar {
             /* e423, e431, e412, e321 */
             float4(other_2.scalar) * reverse.group4
         );
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(this.scalar) * geometric_product.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -2142,15 +2142,15 @@ public extension Scalar {
 }
 public extension Scalar {
     public Plane geometric_quotient(Plane other) {
-        Plane reverse = Plane.from_groups(
+        Plane reverse = Plane(
             /* e423, e431, e412, e321 */
             other.group0 * float4(-1.0)
         );
-        Scalar other_2 = Scalar.from_groups(
+        Scalar other_2 = Scalar(
             /* scalar */
             pow(other.e321, -2)
         );
-        return Plane.from_groups(
+        return Plane(
             /* e423, e431, e412, e321 */
             float4(this.scalar) * float4(reverse.e423 * other_2.scalar, reverse.e431 * other_2.scalar, reverse.e412 * other_2.scalar, reverse.e321 * other_2.scalar)
         );
@@ -2158,11 +2158,11 @@ public extension Scalar {
 }
 public extension Scalar {
     public Point geometric_quotient(Point other) {
-        Scalar other_2 = Scalar.from_groups(
+        Scalar other_2 = Scalar(
             /* scalar */
             pow(other.e1, 2) + pow(other.e2, 2) + pow(other.e3, 2)
         );
-        return Point.from_groups(
+        return Point(
             /* e1, e2, e3, e4 */
             float4(this.scalar) * float4(other.e1 * other_2.scalar, other.e2 * other_2.scalar, other.e3 * other_2.scalar, other.e4 * other_2.scalar)
         );
@@ -2170,7 +2170,7 @@ public extension Scalar {
 }
 public extension Scalar {
     public Scalar geometric_quotient(Scalar other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             this.scalar / (other.scalar)
         );

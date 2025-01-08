@@ -1,18 +1,35 @@
 implementing cga3d;
-using data::*;
+using data;
 
 /// AntiDipoleInversion
 public struct AntiDipoleInversion {
     // e423, e431, e412, 0
-    internal group0: float4,
+    internal float4 group0;
     // e415, e425, e435, e321
-    internal group1: float4,
+    internal float4 group1;
     // e235, e315, e125, e4
-    internal group2: float4,
+    internal float4 group2;
     // e1, e2, e3, e5
-    internal group3: float4
+    internal float4 group3;
+
+    __init(
+        float e423, float e431, float e412, float e415, float e425, float e435, float e321, float e235, float e315, float e125, float e4, float e1, float e2, float e3, float e5
+    ) {
+        group0 = float4(e423, e431, e412, 0.0);
+        group1 = float4(e415, e425, e435, e321);
+        group2 = float4(e235, e315, e125, e4);
+        group3 = float4(e1, e2, e3, e5);
+    }
+    internal __init(
+        float3 g0, float4 g1, float4 g2, float4 g3
+    ) {
+        group0 = float4(g0, 0.0);
+        group1 = g1;
+        group2 = g2;
+        group3 = g3;
+    }
 }
-extension AntiDipoleInversion {
+public extension AntiDipoleInversion {
     public property e423: float {
         get { return group0[0]; }
         set { group0[0] = newValue; }
@@ -73,33 +90,28 @@ extension AntiDipoleInversion {
         get { return group3[3]; }
         set { group3[3] = newValue; }
     }
-    public static func from_elements(
-        e423: float, e431: float, e412: float, e415: float, e425: float, e435: float, e321: float, e235: float, e315: float, e125: float, e4: float, e1: float, e2: float, e3: float, e5: float
-    ) -> AntiDipoleInversion {
-        return AntiDipoleInversion { float4(e423, e431, e412, 0.0), float4(e415, e425, e435, e321), float4(e235, e315, e125, e4), float4(e1, e2, e3, e5) };
-    }
-    internal static func from_groups(
-        g0: float3, g1: float4, g2: float4, g3: float4
-    ) -> AntiDipoleInversion {
-        return AntiDipoleInversion {
-            group0: g0, group1: g1, group2: g2, group3: g3
-        };
-    }
 }
-extension AntiDipoleInversion: IComparable {
-    bool lessThan(IComparable another) {
-        AntiDipoleInversion other = (AntiDipoleInversion)another;
-        if (this.group0 != other.group0)
-            return this.group0.lessThan(other.group0);
-        if (this.group1 != other.group1)
-            return this.group1.lessThan(other.group1);
-        if (this.group2 != other.group2)
-            return this.group2.lessThan(other.group2);
-        return this.group3.lessThan(other.group3);
+public extension AntiDipoleInversion: IComparable {
+    public bool equals(AntiDipoleInversion other) {
+        return equalsHelper(this.group0, other.group0) && equalsHelper(this.group1, other.group1) && equalsHelper(this.group2, other.group2) && equalsHelper(this.group3, other.group3);
     }
-    bool equals(IComparable another) {
-        AntiDipoleInversion other = (AntiDipoleInversion)another;
-        return this.group0.equals(other.group0) && this.group1.equals(other.group1) && this.group2.equals(other.group2) && this.group3.equals(other.group3);
+    public bool lessThan(AntiDipoleInversion other) {
+        if (!equalsHelper(this.group0, other.group0))
+            return lessThanHelper(this.group0, other.group0);
+        if (!equalsHelper(this.group1, other.group1))
+            return lessThanHelper(this.group1, other.group1);
+        if (!equalsHelper(this.group2, other.group2))
+            return lessThanHelper(this.group2, other.group2);
+        return lessThanHelper(this.group3, other.group3);
+    }
+    public bool lessThanOrEquals(AntiDipoleInversion other) {
+        if (!equalsHelper(this.group0, other.group0))
+            return lessThanOrEqualsHelper(this.group0, other.group0);
+        if (!equalsHelper(this.group1, other.group1))
+            return lessThanOrEqualsHelper(this.group1, other.group1);
+        if (!equalsHelper(this.group2, other.group2))
+            return lessThanOrEqualsHelper(this.group2, other.group2);
+        return lessThanOrEqualsHelper(this.group3, other.group3);
     }
 }
 __include "impls/anti_dipole_inversion";

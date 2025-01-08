@@ -14,7 +14,7 @@ public extension AntiWedgeInfixPartial<AntiScalar> {
 }
 public extension AntiScalar {
     public AntiScalar anti_wedge(AntiScalar other) {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             other.e1234 * this.e1234
         );
@@ -22,7 +22,7 @@ public extension AntiScalar {
 }
 public extension AntiScalar {
     public DualNum anti_wedge(DualNum other) {
-        return DualNum.from_groups(
+        return DualNum(
             /* scalar, e1234 */
             float2(this.e1234) * other.group0.xy
         );
@@ -30,7 +30,7 @@ public extension AntiScalar {
 }
 public extension AntiScalar {
     public Flector anti_wedge(Flector other) {
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4(this.e1234) * other.group0, 
             /* e423, e431, e412, e321 */
@@ -40,7 +40,7 @@ public extension AntiScalar {
 }
 public extension AntiScalar {
     public Horizon anti_wedge(Horizon other) {
-        return Horizon.from_groups(
+        return Horizon(
             /* e321 */
             this.e1234 * other.e321
         );
@@ -48,7 +48,7 @@ public extension AntiScalar {
 }
 public extension AntiScalar {
     public Line anti_wedge(Line other) {
-        return Line.from_groups(
+        return Line(
             /* e41, e42, e43 */
             float3(this.e1234) * other.group0.xyz, 
             /* e23, e31, e12 */
@@ -58,7 +58,7 @@ public extension AntiScalar {
 }
 public extension AntiScalar {
     public Motor anti_wedge(Motor other) {
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(this.e1234) * other.group0, 
             /* e23, e31, e12, scalar */
@@ -68,7 +68,7 @@ public extension AntiScalar {
 }
 public extension AntiScalar {
     public MultiVector anti_wedge(MultiVector other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(this.e1234) * other.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -84,7 +84,7 @@ public extension AntiScalar {
 }
 public extension AntiScalar {
     public Origin anti_wedge(Origin other) {
-        return Origin.from_groups(
+        return Origin(
             /* e4 */
             this.e1234 * other.e4
         );
@@ -92,7 +92,7 @@ public extension AntiScalar {
 }
 public extension AntiScalar {
     public Plane anti_wedge(Plane other) {
-        return Plane.from_groups(
+        return Plane(
             /* e423, e431, e412, e321 */
             float4(this.e1234) * other.group0
         );
@@ -100,7 +100,7 @@ public extension AntiScalar {
 }
 public extension AntiScalar {
     public Point anti_wedge(Point other) {
-        return Point.from_groups(
+        return Point(
             /* e1, e2, e3, e4 */
             float4(this.e1234) * other.group0
         );
@@ -108,7 +108,7 @@ public extension AntiScalar {
 }
 public extension AntiScalar {
     public Scalar anti_wedge(Scalar other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             this.e1234 * other.scalar
         );
@@ -128,7 +128,7 @@ public extension AntiWedgeInfixPartial<DualNum> {
 }
 public extension DualNum {
     public DualNum anti_wedge(AntiScalar other) {
-        return DualNum.from_groups(
+        return DualNum(
             /* scalar, e1234 */
             float2(other.e1234) * this.group0.xy
         );
@@ -136,7 +136,7 @@ public extension DualNum {
 }
 public extension DualNum {
     public DualNum anti_wedge(DualNum other) {
-        return DualNum.from_groups(
+        return DualNum(
             /* scalar, e1234 */
             float2((other.scalar * this.e1234) + (other.e1234 * this.scalar), other.e1234 * this.e1234)
         );
@@ -144,7 +144,7 @@ public extension DualNum {
 }
 public extension DualNum {
     public Flector anti_wedge(Flector other) {
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4(this.e1234) * other.group0, 
             /* e423, e431, e412, e321 */
@@ -154,7 +154,7 @@ public extension DualNum {
 }
 public extension DualNum {
     public Horizon anti_wedge(Horizon other) {
-        return Horizon.from_groups(
+        return Horizon(
             /* e321 */
             this.e1234 * other.e321
         );
@@ -162,7 +162,7 @@ public extension DualNum {
 }
 public extension DualNum {
     public Line anti_wedge(Line other) {
-        return Line.from_groups(
+        return Line(
             /* e41, e42, e43 */
             float3(this.e1234) * other.group0.xyz, 
             /* e23, e31, e12 */
@@ -172,7 +172,7 @@ public extension DualNum {
 }
 public extension DualNum {
     public Motor anti_wedge(Motor other) {
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(this.e1234) * other.group0, 
             /* e23, e31, e12, scalar */
@@ -182,7 +182,7 @@ public extension DualNum {
 }
 public extension DualNum {
     public MultiVector anti_wedge(MultiVector other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2((this.scalar * other.e1234) + (this.e1234 * other.scalar), this.e1234 * other.e1234), 
             /* e1, e2, e3, e4 */
@@ -198,7 +198,7 @@ public extension DualNum {
 }
 public extension DualNum {
     public Origin anti_wedge(Origin other) {
-        return Origin.from_groups(
+        return Origin(
             /* e4 */
             this.e1234 * other.e4
         );
@@ -206,7 +206,7 @@ public extension DualNum {
 }
 public extension DualNum {
     public Plane anti_wedge(Plane other) {
-        return Plane.from_groups(
+        return Plane(
             /* e423, e431, e412, e321 */
             float4(this.e1234) * other.group0
         );
@@ -214,7 +214,7 @@ public extension DualNum {
 }
 public extension DualNum {
     public Point anti_wedge(Point other) {
-        return Point.from_groups(
+        return Point(
             /* e1, e2, e3, e4 */
             float4(this.e1234) * other.group0
         );
@@ -222,7 +222,7 @@ public extension DualNum {
 }
 public extension DualNum {
     public Scalar anti_wedge(Scalar other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             this.e1234 * other.scalar
         );
@@ -242,7 +242,7 @@ public extension AntiWedgeInfixPartial<Flector> {
 }
 public extension Flector {
     public Flector anti_wedge(AntiScalar other) {
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4(other.e1234) * this.group0, 
             /* e423, e431, e412, e321 */
@@ -252,7 +252,7 @@ public extension Flector {
 }
 public extension Flector {
     public Flector anti_wedge(DualNum other) {
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4(other.e1234) * this.group0, 
             /* e423, e431, e412, e321 */
@@ -262,7 +262,7 @@ public extension Flector {
 }
 public extension Flector {
     public Motor anti_wedge(Flector other) {
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(((other.group1.yzx * this.group1.zxy) - (other.group1.zxy * this.group1.yzx)), 0.0), 
             /* e23, e31, e12, scalar */
@@ -272,7 +272,7 @@ public extension Flector {
 }
 public extension Flector {
     public Motor anti_wedge(Horizon other) {
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(0.0), 
             /* e23, e31, e12, scalar */
@@ -282,7 +282,7 @@ public extension Flector {
 }
 public extension Flector {
     public Point anti_wedge(Line other) {
-        return Point.from_groups(
+        return Point(
             /* e1, e2, e3, e4 */
             float4((this.e412 * other.e31) + (this.e321 * other.e41), (this.e423 * other.e12) + (this.e321 * other.e42), (this.e431 * other.e23) + (this.e321 * other.e43), -(this.e431 * other.e42) - (this.e412 * other.e43)) - (this.group1.yzxx * float4(other.group1.xyz.zxy, other.e41))
         );
@@ -290,7 +290,7 @@ public extension Flector {
 }
 public extension Flector {
     public Flector anti_wedge(Motor other) {
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4((this.e412 * other.e31) + (this.e321 * other.e41), (this.e423 * other.e12) + (this.e321 * other.e42), (this.e431 * other.e23) + (this.e321 * other.e43), -(this.e431 * other.e42) - (this.e412 * other.e43)) + (float4(other.e1234) * this.group0) - (this.group1.yzxx * float4(other.group1.zxy, other.e41)), 
             /* e423, e431, e412, e321 */
@@ -300,7 +300,7 @@ public extension Flector {
 }
 public extension Flector {
     public MultiVector anti_wedge(MultiVector other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2((this.e1 * other.e423) + (this.e2 * other.e431) + (this.e3 * other.e412) + (this.e4 * other.e321) - (this.e423 * other.e1) - (this.e431 * other.e2) - (this.e412 * other.e3) - (this.e321 * other.e4), 0.0), 
             /* e1, e2, e3, e4 */
@@ -316,7 +316,7 @@ public extension Flector {
 }
 public extension Flector {
     public Scalar anti_wedge(Origin other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             this.e321 * other.e4 * -1.0
         );
@@ -324,7 +324,7 @@ public extension Flector {
 }
 public extension Flector {
     public Motor anti_wedge(Plane other) {
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(((this.group1.zxy * other.group0.yzx) - (this.group1.yzx * other.group0.zxy)), 0.0), 
             /* e23, e31, e12, scalar */
@@ -334,7 +334,7 @@ public extension Flector {
 }
 public extension Flector {
     public Scalar anti_wedge(Point other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             -(this.e423 * other.e1) - (this.e431 * other.e2) - (this.e412 * other.e3) - (this.e321 * other.e4)
         );
@@ -354,7 +354,7 @@ public extension AntiWedgeInfixPartial<Horizon> {
 }
 public extension Horizon {
     public Horizon anti_wedge(AntiScalar other) {
-        return Horizon.from_groups(
+        return Horizon(
             /* e321 */
             other.e1234 * this.e321
         );
@@ -362,7 +362,7 @@ public extension Horizon {
 }
 public extension Horizon {
     public Horizon anti_wedge(DualNum other) {
-        return Horizon.from_groups(
+        return Horizon(
             /* e321 */
             other.e1234 * this.e321
         );
@@ -370,7 +370,7 @@ public extension Horizon {
 }
 public extension Horizon {
     public Motor anti_wedge(Flector other) {
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(0.0), 
             /* e23, e31, e12, scalar */
@@ -380,7 +380,7 @@ public extension Horizon {
 }
 public extension Horizon {
     public Point anti_wedge(Line other) {
-        return Point.from_groups(
+        return Point(
             /* e1, e2, e3, e4 */
             float4((float3(this.e321) * other.group0.xyz), 0.0)
         );
@@ -388,7 +388,7 @@ public extension Horizon {
 }
 public extension Horizon {
     public Flector anti_wedge(Motor other) {
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4((float3(this.e321) * other.group0.xyz), 0.0), 
             /* e423, e431, e412, e321 */
@@ -398,7 +398,7 @@ public extension Horizon {
 }
 public extension Horizon {
     public MultiVector anti_wedge(MultiVector other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(this.e321 * other.e4, 1.0) * float2(-1.0, 0.0), 
             /* e1, e2, e3, e4 */
@@ -414,7 +414,7 @@ public extension Horizon {
 }
 public extension Horizon {
     public Scalar anti_wedge(Origin other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             this.e321 * other.e4 * -1.0
         );
@@ -422,7 +422,7 @@ public extension Horizon {
 }
 public extension Horizon {
     public Line anti_wedge(Plane other) {
-        return Line.from_groups(
+        return Line(
             /* e41, e42, e43 */
             float3(0.0), 
             /* e23, e31, e12 */
@@ -432,7 +432,7 @@ public extension Horizon {
 }
 public extension Horizon {
     public Scalar anti_wedge(Point other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             this.e321 * other.e4 * -1.0
         );
@@ -452,7 +452,7 @@ public extension AntiWedgeInfixPartial<Line> {
 }
 public extension Line {
     public Line anti_wedge(AntiScalar other) {
-        return Line.from_groups(
+        return Line(
             /* e41, e42, e43 */
             float3(other.e1234) * this.group0.xyz, 
             /* e23, e31, e12 */
@@ -462,7 +462,7 @@ public extension Line {
 }
 public extension Line {
     public Line anti_wedge(DualNum other) {
-        return Line.from_groups(
+        return Line(
             /* e41, e42, e43 */
             float3(other.e1234) * this.group0.xyz, 
             /* e23, e31, e12 */
@@ -472,7 +472,7 @@ public extension Line {
 }
 public extension Line {
     public Point anti_wedge(Flector other) {
-        return Point.from_groups(
+        return Point(
             /* e1, e2, e3, e4 */
             float4((other.e412 * this.e31) + (other.e321 * this.e41), (other.e423 * this.e12) + (other.e321 * this.e42), (other.e431 * this.e23) + (other.e321 * this.e43), -(other.e431 * this.e42) - (other.e412 * this.e43)) - (other.group1.yzxx * float4(this.group1.xyz.zxy, this.e41))
         );
@@ -480,7 +480,7 @@ public extension Line {
 }
 public extension Line {
     public Point anti_wedge(Horizon other) {
-        return Point.from_groups(
+        return Point(
             /* e1, e2, e3, e4 */
             float4((float3(other.e321) * this.group0.xyz), 0.0)
         );
@@ -488,7 +488,7 @@ public extension Line {
 }
 public extension Line {
     public Scalar anti_wedge(Line other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             -(other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43)
         );
@@ -496,7 +496,7 @@ public extension Line {
 }
 public extension Line {
     public Motor anti_wedge(Motor other) {
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(float3(1.0), 0.0) * float4(this.group0.xyz, 0.0) * float4(other.group0.www, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
             /* e23, e31, e12, scalar */
@@ -506,7 +506,7 @@ public extension Line {
 }
 public extension Line {
     public MultiVector anti_wedge(MultiVector other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(-(this.e41 * other.e23) - (this.e42 * other.e31) - (this.e43 * other.e12) - (this.e23 * other.e41) - (this.e31 * other.e42) - (this.e12 * other.e43), 0.0), 
             /* e1, e2, e3, e4 */
@@ -522,7 +522,7 @@ public extension Line {
 }
 public extension Line {
     public Point anti_wedge(Plane other) {
-        return Point.from_groups(
+        return Point(
             /* e1, e2, e3, e4 */
             float4((this.e41 * other.e321) + (this.e31 * other.e412), (this.e42 * other.e321) + (this.e12 * other.e423), (this.e43 * other.e321) + (this.e23 * other.e431), -(this.e42 * other.e431) - (this.e43 * other.e412)) - (other.group0.yzxx * float4(this.group1.xyz.zxy, this.e41))
         );
@@ -542,7 +542,7 @@ public extension AntiWedgeInfixPartial<Motor> {
 }
 public extension Motor {
     public Motor anti_wedge(AntiScalar other) {
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(other.e1234) * this.group0, 
             /* e23, e31, e12, scalar */
@@ -552,7 +552,7 @@ public extension Motor {
 }
 public extension Motor {
     public Motor anti_wedge(DualNum other) {
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(other.e1234) * this.group0, 
             /* e23, e31, e12, scalar */
@@ -562,7 +562,7 @@ public extension Motor {
 }
 public extension Motor {
     public Flector anti_wedge(Flector other) {
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4((other.e412 * this.e31) + (other.e321 * this.e41), (other.e423 * this.e12) + (other.e321 * this.e42), (other.e431 * this.e23) + (other.e321 * this.e43), -(other.e431 * this.e42) - (other.e412 * this.e43)) + (float4(this.e1234) * other.group0) - (other.group1.yzxx * float4(this.group1.zxy, this.e41)), 
             /* e423, e431, e412, e321 */
@@ -572,7 +572,7 @@ public extension Motor {
 }
 public extension Motor {
     public Flector anti_wedge(Horizon other) {
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4((float3(other.e321) * this.group0.xyz), 0.0), 
             /* e423, e431, e412, e321 */
@@ -582,7 +582,7 @@ public extension Motor {
 }
 public extension Motor {
     public Motor anti_wedge(Line other) {
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(float3(1.0), 0.0) * float4(other.group0.xyz, 0.0) * float4(this.group0.www, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
             /* e23, e31, e12, scalar */
@@ -592,7 +592,7 @@ public extension Motor {
 }
 public extension Motor {
     public Motor anti_wedge(Motor other) {
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(((float3(other.e1234) * this.group0.xyz) + (float3(this.e1234) * other.group0.xyz)), other.e1234 * this.e1234), 
             /* e23, e31, e12, scalar */
@@ -602,7 +602,7 @@ public extension Motor {
 }
 public extension Motor {
     public MultiVector anti_wedge(MultiVector other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2((this.e1234 * other.scalar) + (this.scalar * other.e1234) - (this.e41 * other.e23) - (this.e42 * other.e31) - (this.e43 * other.e12) - (this.e23 * other.e41) - (this.e31 * other.e42) - (this.e12 * other.e43), this.e1234 * other.e1234), 
             /* e1, e2, e3, e4 */
@@ -618,7 +618,7 @@ public extension Motor {
 }
 public extension Motor {
     public Origin anti_wedge(Origin other) {
-        return Origin.from_groups(
+        return Origin(
             /* e4 */
             this.e1234 * other.e4
         );
@@ -626,7 +626,7 @@ public extension Motor {
 }
 public extension Motor {
     public Flector anti_wedge(Plane other) {
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4((this.e41 * other.e321) + (this.e31 * other.e412), (this.e42 * other.e321) + (this.e12 * other.e423), (this.e43 * other.e321) + (this.e23 * other.e431), -(this.e42 * other.e431) - (this.e43 * other.e412)) - (other.group0.yzxx * float4(this.group1.zxy, this.e41)), 
             /* e423, e431, e412, e321 */
@@ -636,7 +636,7 @@ public extension Motor {
 }
 public extension Motor {
     public Point anti_wedge(Point other) {
-        return Point.from_groups(
+        return Point(
             /* e1, e2, e3, e4 */
             float4(this.e1234) * other.group0
         );
@@ -644,7 +644,7 @@ public extension Motor {
 }
 public extension Motor {
     public Scalar anti_wedge(Scalar other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             this.e1234 * other.scalar
         );
@@ -664,7 +664,7 @@ public extension AntiWedgeInfixPartial<MultiVector> {
 }
 public extension MultiVector {
     public MultiVector anti_wedge(AntiScalar other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(other.e1234) * this.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -680,7 +680,7 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public MultiVector anti_wedge(DualNum other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2((other.scalar * this.e1234) + (other.e1234 * this.scalar), other.e1234 * this.e1234), 
             /* e1, e2, e3, e4 */
@@ -696,7 +696,7 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public MultiVector anti_wedge(Flector other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2((other.e423 * this.e1) + (other.e431 * this.e2) + (other.e412 * this.e3) + (other.e321 * this.e4) - (other.e1 * this.e423) - (other.e2 * this.e431) - (other.e3 * this.e412) - (other.e4 * this.e321), 0.0), 
             /* e1, e2, e3, e4 */
@@ -712,7 +712,7 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public MultiVector anti_wedge(Horizon other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(other.e321 * this.e4, 1.0) * float2(1.0, 0.0), 
             /* e1, e2, e3, e4 */
@@ -728,7 +728,7 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public MultiVector anti_wedge(Line other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(-(other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43), 0.0), 
             /* e1, e2, e3, e4 */
@@ -744,7 +744,7 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public MultiVector anti_wedge(Motor other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2((other.e1234 * this.scalar) + (other.scalar * this.e1234) - (other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43), other.e1234 * this.e1234), 
             /* e1, e2, e3, e4 */
@@ -760,7 +760,7 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public MultiVector anti_wedge(MultiVector other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2((other.scalar * this.e1234) + (other.e1234 * this.scalar) + (other.e423 * this.e1) + (other.e431 * this.e2) + (other.e412 * this.e3) + (other.e321 * this.e4) - (other.e1 * this.e423) - (other.e2 * this.e431) - (other.e3 * this.e412) - (other.e4 * this.e321) - (other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43), other.e1234 * this.e1234), 
             /* e1, e2, e3, e4 */
@@ -776,7 +776,7 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public MultiVector anti_wedge(Origin other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(this.e321 * other.e4, 1.0) * float2(-1.0, 0.0), 
             /* e1, e2, e3, e4 */
@@ -792,7 +792,7 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public MultiVector anti_wedge(Plane other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2((this.e1 * other.e423) + (this.e2 * other.e431) + (this.e3 * other.e412) + (this.e4 * other.e321), 0.0), 
             /* e1, e2, e3, e4 */
@@ -808,7 +808,7 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public MultiVector anti_wedge(Point other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(-(this.e423 * other.e1) - (this.e431 * other.e2) - (this.e412 * other.e3) - (this.e321 * other.e4), 0.0), 
             /* e1, e2, e3, e4 */
@@ -824,7 +824,7 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public Scalar anti_wedge(Scalar other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             this.e1234 * other.scalar
         );
@@ -844,7 +844,7 @@ public extension AntiWedgeInfixPartial<Origin> {
 }
 public extension Origin {
     public Origin anti_wedge(AntiScalar other) {
-        return Origin.from_groups(
+        return Origin(
             /* e4 */
             other.e1234 * this.e4
         );
@@ -852,7 +852,7 @@ public extension Origin {
 }
 public extension Origin {
     public Origin anti_wedge(DualNum other) {
-        return Origin.from_groups(
+        return Origin(
             /* e4 */
             other.e1234 * this.e4
         );
@@ -860,7 +860,7 @@ public extension Origin {
 }
 public extension Origin {
     public Scalar anti_wedge(Flector other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             other.e321 * this.e4
         );
@@ -868,7 +868,7 @@ public extension Origin {
 }
 public extension Origin {
     public Scalar anti_wedge(Horizon other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             other.e321 * this.e4
         );
@@ -876,7 +876,7 @@ public extension Origin {
 }
 public extension Origin {
     public Origin anti_wedge(Motor other) {
-        return Origin.from_groups(
+        return Origin(
             /* e4 */
             other.e1234 * this.e4
         );
@@ -884,7 +884,7 @@ public extension Origin {
 }
 public extension Origin {
     public MultiVector anti_wedge(MultiVector other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(other.e321 * this.e4, 1.0) * float2(1.0, 0.0), 
             /* e1, e2, e3, e4 */
@@ -900,7 +900,7 @@ public extension Origin {
 }
 public extension Origin {
     public Scalar anti_wedge(Plane other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             this.e4 * other.e321
         );
@@ -920,7 +920,7 @@ public extension AntiWedgeInfixPartial<Plane> {
 }
 public extension Plane {
     public Plane anti_wedge(AntiScalar other) {
-        return Plane.from_groups(
+        return Plane(
             /* e423, e431, e412, e321 */
             float4(other.e1234) * this.group0
         );
@@ -928,7 +928,7 @@ public extension Plane {
 }
 public extension Plane {
     public Plane anti_wedge(DualNum other) {
-        return Plane.from_groups(
+        return Plane(
             /* e423, e431, e412, e321 */
             float4(other.e1234) * this.group0
         );
@@ -936,7 +936,7 @@ public extension Plane {
 }
 public extension Plane {
     public Motor anti_wedge(Flector other) {
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(((other.group1.yzx * this.group0.zxy) - (other.group1.zxy * this.group0.yzx)), 0.0), 
             /* e23, e31, e12, scalar */
@@ -946,7 +946,7 @@ public extension Plane {
 }
 public extension Plane {
     public Line anti_wedge(Horizon other) {
-        return Line.from_groups(
+        return Line(
             /* e41, e42, e43 */
             float3(0.0), 
             /* e23, e31, e12 */
@@ -956,7 +956,7 @@ public extension Plane {
 }
 public extension Plane {
     public Point anti_wedge(Line other) {
-        return Point.from_groups(
+        return Point(
             /* e1, e2, e3, e4 */
             float4((other.e41 * this.e321) + (other.e31 * this.e412), (other.e42 * this.e321) + (other.e12 * this.e423), (other.e43 * this.e321) + (other.e23 * this.e431), -(other.e42 * this.e431) - (other.e43 * this.e412)) - (this.group0.yzxx * float4(other.group1.xyz.zxy, other.e41))
         );
@@ -964,7 +964,7 @@ public extension Plane {
 }
 public extension Plane {
     public Flector anti_wedge(Motor other) {
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4((other.e41 * this.e321) + (other.e31 * this.e412), (other.e42 * this.e321) + (other.e12 * this.e423), (other.e43 * this.e321) + (other.e23 * this.e431), -(other.e42 * this.e431) - (other.e43 * this.e412)) - (this.group0.yzxx * float4(other.group1.zxy, other.e41)), 
             /* e423, e431, e412, e321 */
@@ -974,7 +974,7 @@ public extension Plane {
 }
 public extension Plane {
     public MultiVector anti_wedge(MultiVector other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(-(other.e1 * this.e423) - (other.e2 * this.e431) - (other.e3 * this.e412) - (other.e4 * this.e321), 0.0), 
             /* e1, e2, e3, e4 */
@@ -990,7 +990,7 @@ public extension Plane {
 }
 public extension Plane {
     public Scalar anti_wedge(Origin other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             other.e4 * this.e321 * -1.0
         );
@@ -998,7 +998,7 @@ public extension Plane {
 }
 public extension Plane {
     public Line anti_wedge(Plane other) {
-        return Line.from_groups(
+        return Line(
             /* e41, e42, e43 */
             (other.group0.yzx * this.group0.zxy) - (other.group0.zxy * this.group0.yzx), 
             /* e23, e31, e12 */
@@ -1008,7 +1008,7 @@ public extension Plane {
 }
 public extension Plane {
     public Scalar anti_wedge(Point other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             -(this.e423 * other.e1) - (this.e431 * other.e2) - (this.e412 * other.e3) - (this.e321 * other.e4)
         );
@@ -1028,7 +1028,7 @@ public extension AntiWedgeInfixPartial<Point> {
 }
 public extension Point {
     public Point anti_wedge(AntiScalar other) {
-        return Point.from_groups(
+        return Point(
             /* e1, e2, e3, e4 */
             float4(other.e1234) * this.group0
         );
@@ -1036,7 +1036,7 @@ public extension Point {
 }
 public extension Point {
     public Point anti_wedge(DualNum other) {
-        return Point.from_groups(
+        return Point(
             /* e1, e2, e3, e4 */
             float4(other.e1234) * this.group0
         );
@@ -1044,7 +1044,7 @@ public extension Point {
 }
 public extension Point {
     public Scalar anti_wedge(Flector other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             (other.e423 * this.e1) + (other.e431 * this.e2) + (other.e412 * this.e3) + (other.e321 * this.e4)
         );
@@ -1052,7 +1052,7 @@ public extension Point {
 }
 public extension Point {
     public Scalar anti_wedge(Horizon other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             other.e321 * this.e4
         );
@@ -1060,7 +1060,7 @@ public extension Point {
 }
 public extension Point {
     public Point anti_wedge(Motor other) {
-        return Point.from_groups(
+        return Point(
             /* e1, e2, e3, e4 */
             float4(other.e1234) * this.group0
         );
@@ -1068,7 +1068,7 @@ public extension Point {
 }
 public extension Point {
     public MultiVector anti_wedge(MultiVector other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2((other.e423 * this.e1) + (other.e431 * this.e2) + (other.e412 * this.e3) + (other.e321 * this.e4), 0.0), 
             /* e1, e2, e3, e4 */
@@ -1084,7 +1084,7 @@ public extension Point {
 }
 public extension Point {
     public Scalar anti_wedge(Plane other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             (other.e423 * this.e1) + (other.e431 * this.e2) + (other.e412 * this.e3) + (other.e321 * this.e4)
         );
@@ -1104,7 +1104,7 @@ public extension AntiWedgeInfixPartial<Scalar> {
 }
 public extension Scalar {
     public Scalar anti_wedge(AntiScalar other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             other.e1234 * this.scalar
         );
@@ -1112,7 +1112,7 @@ public extension Scalar {
 }
 public extension Scalar {
     public Scalar anti_wedge(DualNum other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             other.e1234 * this.scalar
         );
@@ -1120,7 +1120,7 @@ public extension Scalar {
 }
 public extension Scalar {
     public Scalar anti_wedge(Motor other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             other.e1234 * this.scalar
         );
@@ -1128,7 +1128,7 @@ public extension Scalar {
 }
 public extension Scalar {
     public Scalar anti_wedge(MultiVector other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             other.e1234 * this.scalar
         );

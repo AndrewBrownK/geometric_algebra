@@ -1,14 +1,27 @@
 implementing cga3d;
-using data::*;
+using data;
 
 /// AntiLine
 public struct AntiLine {
     // e23, e31, e12, 0
-    internal group0: float4,
+    internal float4 group0;
     // e15, e25, e35, 0
-    internal group1: float4
+    internal float4 group1;
+
+    __init(
+        float e23, float e31, float e12, float e15, float e25, float e35
+    ) {
+        group0 = float4(e23, e31, e12, 0.0);
+        group1 = float4(e15, e25, e35, 0.0);
+    }
+    internal __init(
+        float3 g0, float3 g1
+    ) {
+        group0 = float4(g0, 0.0);
+        group1 = float4(g1, 0.0);
+    }
 }
-extension AntiLine {
+public extension AntiLine {
     public property e23: float {
         get { return group0[0]; }
         set { group0[0] = newValue; }
@@ -33,29 +46,20 @@ extension AntiLine {
         get { return group1[2]; }
         set { group1[2] = newValue; }
     }
-    public static func from_elements(
-        e23: float, e31: float, e12: float, e15: float, e25: float, e35: float
-    ) -> AntiLine {
-        return AntiLine { float4(e23, e31, e12, 0.0), float4(e15, e25, e35, 0.0) };
-    }
-    internal static func from_groups(
-        g0: float3, g1: float3
-    ) -> AntiLine {
-        return AntiLine {
-            group0: g0, group1: g1
-        };
-    }
 }
-extension AntiLine: IComparable {
-    bool lessThan(IComparable another) {
-        AntiLine other = (AntiLine)another;
-        if (this.group0 != other.group0)
-            return this.group0.lessThan(other.group0);
-        return this.group1.lessThan(other.group1);
+public extension AntiLine: IComparable {
+    public bool equals(AntiLine other) {
+        return equalsHelper(this.group0, other.group0) && equalsHelper(this.group1, other.group1);
     }
-    bool equals(IComparable another) {
-        AntiLine other = (AntiLine)another;
-        return this.group0.equals(other.group0) && this.group1.equals(other.group1);
+    public bool lessThan(AntiLine other) {
+        if (!equalsHelper(this.group0, other.group0))
+            return lessThanHelper(this.group0, other.group0);
+        return lessThanHelper(this.group1, other.group1);
+    }
+    public bool lessThanOrEquals(AntiLine other) {
+        if (!equalsHelper(this.group0, other.group0))
+            return lessThanOrEqualsHelper(this.group0, other.group0);
+        return lessThanOrEqualsHelper(this.group1, other.group1);
     }
 }
 __include "impls/anti_line";

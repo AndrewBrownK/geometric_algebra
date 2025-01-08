@@ -13,6 +13,25 @@ public struct MultiVector {
     internal float4 group3;
     // e423, e431, e412, e321
     internal float4 group4;
+
+    __init(
+        float scalar, float e1234, float e1, float e2, float e3, float e4, float e41, float e42, float e43, float e23, float e31, float e12, float e423, float e431, float e412, float e321
+    ) {
+        group0 = float4(scalar, e1234, 0.0, 0.0);
+        group1 = float4(e1, e2, e3, e4);
+        group2 = float4(e41, e42, e43, 0.0);
+        group3 = float4(e23, e31, e12, 0.0);
+        group4 = float4(e423, e431, e412, e321);
+    }
+    internal __init(
+        float2 g0, float4 g1, float3 g2, float3 g3, float4 g4
+    ) {
+        group0 = float4(g0, 0.0, 0.0);
+        group1 = g1;
+        group2 = float4(g2, 0.0);
+        group3 = float4(g3, 0.0);
+        group4 = g4;
+    }
 }
 public extension MultiVector {
     public property scalar: float {
@@ -78,16 +97,6 @@ public extension MultiVector {
     public property e321: float {
         get { return group4[3]; }
         set { group4[3] = newValue; }
-    }
-    public static MultiVector from_elements(
-        float scalar, float e1234, float e1, float e2, float e3, float e4, float e41, float e42, float e43, float e23, float e31, float e12, float e423, float e431, float e412, float e321
-    ) {
-        return MultiVector(float4(scalar, e1234, 0.0, 0.0), float4(e1, e2, e3, e4), float4(e41, e42, e43, 0.0), float4(e23, e31, e12, 0.0), float4(e423, e431, e412, e321));
-    }
-    internal static MultiVector from_groups(
-        float2 g0, float4 g1, float3 g2, float3 g3, float4 g4
-    ) {
-        return MultiVector(float4(g0, 0.0, 0.0), g1, float4(g2, 0.0), float4(g3, 0.0), g4);
     }
 }
 public extension MultiVector: IComparable {

@@ -1,16 +1,31 @@
 implementing cga3d;
-using data::*;
+using data;
 
 /// Dipole
 public struct Dipole {
     // e41, e42, e43, 0
-    internal group0: float4,
+    internal float4 group0;
     // e23, e31, e12, e45
-    internal group1: float4,
+    internal float4 group1;
     // e15, e25, e35, 0
-    internal group2: float4
+    internal float4 group2;
+
+    __init(
+        float e41, float e42, float e43, float e23, float e31, float e12, float e45, float e15, float e25, float e35
+    ) {
+        group0 = float4(e41, e42, e43, 0.0);
+        group1 = float4(e23, e31, e12, e45);
+        group2 = float4(e15, e25, e35, 0.0);
+    }
+    internal __init(
+        float3 g0, float4 g1, float3 g2
+    ) {
+        group0 = float4(g0, 0.0);
+        group1 = g1;
+        group2 = float4(g2, 0.0);
+    }
 }
-extension Dipole {
+public extension Dipole {
     public property e41: float {
         get { return group0[0]; }
         set { group0[0] = newValue; }
@@ -51,31 +66,24 @@ extension Dipole {
         get { return group2[2]; }
         set { group2[2] = newValue; }
     }
-    public static func from_elements(
-        e41: float, e42: float, e43: float, e23: float, e31: float, e12: float, e45: float, e15: float, e25: float, e35: float
-    ) -> Dipole {
-        return Dipole { float4(e41, e42, e43, 0.0), float4(e23, e31, e12, e45), float4(e15, e25, e35, 0.0) };
-    }
-    internal static func from_groups(
-        g0: float3, g1: float4, g2: float3
-    ) -> Dipole {
-        return Dipole {
-            group0: g0, group1: g1, group2: g2
-        };
-    }
 }
-extension Dipole: IComparable {
-    bool lessThan(IComparable another) {
-        Dipole other = (Dipole)another;
-        if (this.group0 != other.group0)
-            return this.group0.lessThan(other.group0);
-        if (this.group1 != other.group1)
-            return this.group1.lessThan(other.group1);
-        return this.group2.lessThan(other.group2);
+public extension Dipole: IComparable {
+    public bool equals(Dipole other) {
+        return equalsHelper(this.group0, other.group0) && equalsHelper(this.group1, other.group1) && equalsHelper(this.group2, other.group2);
     }
-    bool equals(IComparable another) {
-        Dipole other = (Dipole)another;
-        return this.group0.equals(other.group0) && this.group1.equals(other.group1) && this.group2.equals(other.group2);
+    public bool lessThan(Dipole other) {
+        if (!equalsHelper(this.group0, other.group0))
+            return lessThanHelper(this.group0, other.group0);
+        if (!equalsHelper(this.group1, other.group1))
+            return lessThanHelper(this.group1, other.group1);
+        return lessThanHelper(this.group2, other.group2);
+    }
+    public bool lessThanOrEquals(Dipole other) {
+        if (!equalsHelper(this.group0, other.group0))
+            return lessThanOrEqualsHelper(this.group0, other.group0);
+        if (!equalsHelper(this.group1, other.group1))
+            return lessThanOrEqualsHelper(this.group1, other.group1);
+        return lessThanOrEqualsHelper(this.group2, other.group2);
     }
 }
 __include "impls/dipole";

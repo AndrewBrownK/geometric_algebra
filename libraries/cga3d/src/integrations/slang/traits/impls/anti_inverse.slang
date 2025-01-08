@@ -1,31 +1,34 @@
-extension AntiCircleRotor {
-    // Fancy infix trick
-    func operator/(_rhs: AntiInversePrefixOrPostfix) -> AntiCircleRotor {
+implementing cga3d;
+using traits;
+public extension AntiCircleRotor {
+    // Fancy postfix trick
+    public AntiCircleRotor operator /(AntiInversePrefixOrPostfix rhs)  {
         return this.anti_inverse();
     }
-    func operator/=(const AntiInversePrefixOrPostfix& _rhs) -> AntiCircleRotor& {
-        this = this.anti_inverse();
-        return *this;
+}
+public extension AntiInversePrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiCircleRotor operator /(AntiCircleRotor rhs) {
+        return rhs.anti_inverse();
     }
 }
-extension AntiCircleRotor: AntiInverse {
-    associatedtype Output = AntiCircleRotor;
-    func anti_inverse() -> Output {
-        AntiCircleRotor anti_reverse = AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(this.group0.xyz * float3(-1.0), 0.0), 
+public extension AntiCircleRotor {
+    public AntiCircleRotor anti_inverse() {
+        AntiCircleRotor anti_reverse = AntiCircleRotor(
+            /* e41, e42, e43 */
+            this.group0.xyz * float3(-1.0), 
             /* e23, e31, e12, e45 */
             this.group1 * float4(-1.0), 
             /* e15, e25, e35, scalar */
             this.group2 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        AntiScalar other = AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(powi(this.e45, 2) - powi(this.e23, 2) - powi(this.e31, 2) - powi(this.e12, 2) - powi(this.scalar, 2) - 2.0 * (this.e41 * this.e15) - 2.0 * (this.e42 * this.e25) - 2.0 * (this.e43 * this.e35), 0.0, 0.0, 0.0)
+        AntiScalar other = AntiScalar(
+            /* e12345 */
+            pow(this.e45, 2) - pow(this.e23, 2) - pow(this.e31, 2) - pow(this.e12, 2) - pow(this.scalar, 2) - 2.0 * (this.e41 * this.e15) - 2.0 * (this.e42 * this.e25) - 2.0 * (this.e43 * this.e35)
         );
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(other.e12345) * anti_reverse.group0.xyz, 0.0), 
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            float3(other.e12345) * anti_reverse.group0.xyz, 
             /* e23, e31, e12, e45 */
             float4(other.e12345) * anti_reverse.group1, 
             /* e15, e25, e35, scalar */
@@ -33,22 +36,23 @@ extension AntiCircleRotor: AntiInverse {
         );
     }
 }
-extension AntiDipoleInversion {
-    // Fancy infix trick
-    func operator/(_rhs: AntiInversePrefixOrPostfix) -> AntiDipoleInversion {
+public extension AntiDipoleInversion {
+    // Fancy postfix trick
+    public AntiDipoleInversion operator /(AntiInversePrefixOrPostfix rhs)  {
         return this.anti_inverse();
     }
-    func operator/=(const AntiInversePrefixOrPostfix& _rhs) -> AntiDipoleInversion& {
-        this = this.anti_inverse();
-        return *this;
+}
+public extension AntiInversePrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiDipoleInversion operator /(AntiDipoleInversion rhs) {
+        return rhs.anti_inverse();
     }
 }
-extension AntiDipoleInversion: AntiInverse {
-    associatedtype Output = AntiDipoleInversion;
-    func anti_inverse() -> Output {
-        AntiDipoleInversion anti_reverse = AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz * float3(-1.0), 0.0), 
+public extension AntiDipoleInversion {
+    public AntiDipoleInversion anti_inverse() {
+        AntiDipoleInversion anti_reverse = AntiDipoleInversion(
+            /* e423, e431, e412 */
+            this.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             this.group1 * float4(-1.0), 
             /* e235, e315, e125, e4 */
@@ -56,13 +60,13 @@ extension AntiDipoleInversion: AntiInverse {
             /* e1, e2, e3, e5 */
             this.group3
         );
-        AntiScalar other = AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(2.0*(this.e423 * this.e235) + 2.0 * (this.e431 * this.e315) + 2.0 * (this.e412 * this.e125) + 2.0 * (this.e4 * this.e5) + powi(this.e415, 2) + powi(this.e425, 2) + powi(this.e435, 2) - powi(this.e321, 2) - powi(this.e1, 2) - powi(this.e2, 2) - powi(this.e3, 2), 0.0, 0.0, 0.0)
+        AntiScalar other = AntiScalar(
+            /* e12345 */
+            2.0*(this.e423 * this.e235) + 2.0 * (this.e431 * this.e315) + 2.0 * (this.e412 * this.e125) + 2.0 * (this.e4 * this.e5) + pow(this.e415, 2) + pow(this.e425, 2) + pow(this.e435, 2) - pow(this.e321, 2) - pow(this.e1, 2) - pow(this.e2, 2) - pow(this.e3, 2)
         );
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(other.e12345) * anti_reverse.group0.xyz, 0.0), 
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(other.e12345) * anti_reverse.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(other.e12345) * anti_reverse.group1, 
             /* e235, e315, e125, e4 */
@@ -72,68 +76,71 @@ extension AntiDipoleInversion: AntiInverse {
         );
     }
 }
-extension AntiDualNum {
-    // Fancy infix trick
-    func operator/(_rhs: AntiInversePrefixOrPostfix) -> AntiDualNum {
+public extension AntiDualNum {
+    // Fancy postfix trick
+    public AntiDualNum operator /(AntiInversePrefixOrPostfix rhs)  {
         return this.anti_inverse();
     }
-    func operator/=(const AntiInversePrefixOrPostfix& _rhs) -> AntiDualNum& {
-        this = this.anti_inverse();
-        return *this;
+}
+public extension AntiInversePrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiDualNum operator /(AntiDualNum rhs) {
+        return rhs.anti_inverse();
     }
 }
-extension AntiDualNum: AntiInverse {
-    associatedtype Output = AntiDualNum;
-    func anti_inverse() -> Output {
-        return AntiDualNum.from_groups(
-            /* e3215, scalar, 0, 0 */
-            float4(float2(powi(this.scalar, -2) * -1.0) * this.group0.xy, 0.0, 0.0)
+public extension AntiDualNum {
+    public AntiDualNum anti_inverse() {
+        return AntiDualNum(
+            /* e3215, scalar */
+            float2(pow(this.scalar, -2) * -1.0) * this.group0.xy
         );
     }
 }
-extension AntiFlatPoint {
-    // Fancy infix trick
-    func operator/(_rhs: AntiInversePrefixOrPostfix) -> AntiFlatPoint {
+public extension AntiFlatPoint {
+    // Fancy postfix trick
+    public AntiFlatPoint operator /(AntiInversePrefixOrPostfix rhs)  {
         return this.anti_inverse();
     }
-    func operator/=(const AntiInversePrefixOrPostfix& _rhs) -> AntiFlatPoint& {
-        this = this.anti_inverse();
-        return *this;
+}
+public extension AntiInversePrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiFlatPoint operator /(AntiFlatPoint rhs) {
+        return rhs.anti_inverse();
     }
 }
-extension AntiFlatPoint: AntiInverse {
-    associatedtype Output = AntiFlatPoint;
-    func anti_inverse() -> Output {
-        return AntiFlatPoint.from_groups(
+public extension AntiFlatPoint {
+    public AntiFlatPoint anti_inverse() {
+        return AntiFlatPoint(
             /* e235, e315, e125, e321 */
-            float4(powi(this.e321, -2) * -1.0) * float4(this.e235 * -1.0, this.e315 * -1.0, this.e125 * -1.0, this.e321 * -1.0)
+            float4(pow(this.e321, -2) * -1.0) * float4(this.e235 * -1.0, this.e315 * -1.0, this.e125 * -1.0, this.e321 * -1.0)
         );
     }
 }
-extension AntiFlector {
-    // Fancy infix trick
-    func operator/(_rhs: AntiInversePrefixOrPostfix) -> AntiFlector {
+public extension AntiFlector {
+    // Fancy postfix trick
+    public AntiFlector operator /(AntiInversePrefixOrPostfix rhs)  {
         return this.anti_inverse();
     }
-    func operator/=(const AntiInversePrefixOrPostfix& _rhs) -> AntiFlector& {
-        this = this.anti_inverse();
-        return *this;
+}
+public extension AntiInversePrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiFlector operator /(AntiFlector rhs) {
+        return rhs.anti_inverse();
     }
 }
-extension AntiFlector: AntiInverse {
-    associatedtype Output = AntiFlector;
-    func anti_inverse() -> Output {
-        AntiFlector anti_reverse = AntiFlector.from_groups(
+public extension AntiFlector {
+    public AntiFlector anti_inverse() {
+        AntiFlector anti_reverse = AntiFlector(
             /* e235, e315, e125, e321 */
             this.group0 * float4(-1.0), 
             /* e1, e2, e3, e5 */
             this.group1
         );
-        AntiScalar other = AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(-powi(this.e321, 2) - powi(this.e1, 2) - powi(this.e2, 2) - powi(this.e3, 2), 0.0, 0.0, 0.0)
+        AntiScalar other = AntiScalar(
+            /* e12345 */
+            -pow(this.e321, 2) - pow(this.e1, 2) - pow(this.e2, 2) - pow(this.e3, 2)
         );
-        return AntiFlector.from_groups(
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(other.e12345) * anti_reverse.group0, 
             /* e1, e2, e3, e5 */
@@ -141,61 +148,63 @@ extension AntiFlector: AntiInverse {
         );
     }
 }
-extension AntiLine {
-    // Fancy infix trick
-    func operator/(_rhs: AntiInversePrefixOrPostfix) -> AntiLine {
+public extension AntiLine {
+    // Fancy postfix trick
+    public AntiLine operator /(AntiInversePrefixOrPostfix rhs)  {
         return this.anti_inverse();
     }
-    func operator/=(const AntiInversePrefixOrPostfix& _rhs) -> AntiLine& {
-        this = this.anti_inverse();
-        return *this;
+}
+public extension AntiInversePrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiLine operator /(AntiLine rhs) {
+        return rhs.anti_inverse();
     }
 }
-extension AntiLine: AntiInverse {
-    associatedtype Output = AntiLine;
-    func anti_inverse() -> Output {
-        AntiLine anti_reverse = AntiLine.from_groups(
-            /* e23, e31, e12, 0 */
-            float4(this.group0.xyz * float3(-1.0), 0.0), 
-            /* e15, e25, e35, 0 */
-            float4(this.group1.xyz * float3(-1.0), 0.0)
+public extension AntiLine {
+    public AntiLine anti_inverse() {
+        AntiLine anti_reverse = AntiLine(
+            /* e23, e31, e12 */
+            this.group0.xyz * float3(-1.0), 
+            /* e15, e25, e35 */
+            this.group1.xyz * float3(-1.0)
         );
-        AntiScalar other = AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(-powi(this.e23, 2) - powi(this.e31, 2) - powi(this.e12, 2), 0.0, 0.0, 0.0)
+        AntiScalar other = AntiScalar(
+            /* e12345 */
+            -pow(this.e23, 2) - pow(this.e31, 2) - pow(this.e12, 2)
         );
-        return AntiLine.from_groups(
-            /* e23, e31, e12, 0 */
-            float4(float3(other.e12345) * anti_reverse.group0.xyz, 0.0), 
-            /* e15, e25, e35, 0 */
-            float4(float3(other.e12345) * anti_reverse.group1.xyz, 0.0)
+        return AntiLine(
+            /* e23, e31, e12 */
+            float3(other.e12345) * anti_reverse.group0.xyz, 
+            /* e15, e25, e35 */
+            float3(other.e12345) * anti_reverse.group1.xyz
         );
     }
 }
-extension AntiMotor {
-    // Fancy infix trick
-    func operator/(_rhs: AntiInversePrefixOrPostfix) -> AntiMotor {
+public extension AntiMotor {
+    // Fancy postfix trick
+    public AntiMotor operator /(AntiInversePrefixOrPostfix rhs)  {
         return this.anti_inverse();
     }
-    func operator/=(const AntiInversePrefixOrPostfix& _rhs) -> AntiMotor& {
-        this = this.anti_inverse();
-        return *this;
+}
+public extension AntiInversePrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiMotor operator /(AntiMotor rhs) {
+        return rhs.anti_inverse();
     }
 }
-extension AntiMotor: AntiInverse {
-    associatedtype Output = AntiMotor;
-    func anti_inverse() -> Output {
-        AntiMotor anti_reverse = AntiMotor.from_groups(
+public extension AntiMotor {
+    public AntiMotor anti_inverse() {
+        AntiMotor anti_reverse = AntiMotor(
             /* e23, e31, e12, scalar */
             this.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e15, e25, e35, e3215 */
             this.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        AntiScalar other = AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(-powi(this.e23, 2) - powi(this.e31, 2) - powi(this.e12, 2) - powi(this.scalar, 2), 0.0, 0.0, 0.0)
+        AntiScalar other = AntiScalar(
+            /* e12345 */
+            -pow(this.e23, 2) - pow(this.e31, 2) - pow(this.e12, 2) - pow(this.scalar, 2)
         );
-        return AntiMotor.from_groups(
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(other.e12345) * anti_reverse.group0, 
             /* e15, e25, e35, e3215 */
@@ -203,107 +212,111 @@ extension AntiMotor: AntiInverse {
         );
     }
 }
-extension AntiPlane {
-    // Fancy infix trick
-    func operator/(_rhs: AntiInversePrefixOrPostfix) -> AntiPlane {
+public extension AntiPlane {
+    // Fancy postfix trick
+    public AntiPlane operator /(AntiInversePrefixOrPostfix rhs)  {
         return this.anti_inverse();
     }
-    func operator/=(const AntiInversePrefixOrPostfix& _rhs) -> AntiPlane& {
-        this = this.anti_inverse();
-        return *this;
+}
+public extension AntiInversePrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiPlane operator /(AntiPlane rhs) {
+        return rhs.anti_inverse();
     }
 }
-extension AntiPlane: AntiInverse {
-    associatedtype Output = AntiPlane;
-    func anti_inverse() -> Output {
-        return AntiPlane.from_groups(
+public extension AntiPlane {
+    public AntiPlane anti_inverse() {
+        return AntiPlane(
             /* e1, e2, e3, e5 */
-            float4(-powi(this.e1, 2) - powi(this.e2, 2) - powi(this.e3, 2)) * this.group0
+            float4(-pow(this.e1, 2) - pow(this.e2, 2) - pow(this.e3, 2)) * this.group0
         );
     }
 }
-extension AntiScalar {
-    // Fancy infix trick
-    func operator/(_rhs: AntiInversePrefixOrPostfix) -> AntiScalar {
+public extension AntiScalar {
+    // Fancy postfix trick
+    public AntiScalar operator /(AntiInversePrefixOrPostfix rhs)  {
         return this.anti_inverse();
     }
-    func operator/=(const AntiInversePrefixOrPostfix& _rhs) -> AntiScalar& {
-        this = this.anti_inverse();
-        return *this;
+}
+public extension AntiInversePrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiScalar operator /(AntiScalar rhs) {
+        return rhs.anti_inverse();
     }
 }
-extension AntiScalar: AntiInverse {
-    associatedtype Output = AntiScalar;
-    func anti_inverse() -> Output {
-        return AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(1.0/this.e12345, 0.0, 0.0, 0.0)
+public extension AntiScalar {
+    public AntiScalar anti_inverse() {
+        return AntiScalar(
+            /* e12345 */
+            1.0/this.e12345
         );
     }
 }
-extension Circle {
-    // Fancy infix trick
-    func operator/(_rhs: AntiInversePrefixOrPostfix) -> Circle {
+public extension Circle {
+    // Fancy postfix trick
+    public Circle operator /(AntiInversePrefixOrPostfix rhs)  {
         return this.anti_inverse();
     }
-    func operator/=(const AntiInversePrefixOrPostfix& _rhs) -> Circle& {
-        this = this.anti_inverse();
-        return *this;
+}
+public extension AntiInversePrefixOrPostfix {
+    // Fancy prefix trick
+    public Circle operator /(Circle rhs) {
+        return rhs.anti_inverse();
     }
 }
-extension Circle: AntiInverse {
-    associatedtype Output = Circle;
-    func anti_inverse() -> Output {
-        Circle anti_reverse = Circle.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz * float3(-1.0), 0.0), 
+public extension Circle {
+    public Circle anti_inverse() {
+        Circle anti_reverse = Circle(
+            /* e423, e431, e412 */
+            this.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             this.group1 * float4(-1.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group2.xyz * float3(-1.0), 0.0)
+            /* e235, e315, e125 */
+            this.group2.xyz * float3(-1.0)
         );
-        AntiScalar other = AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(2.0*(this.e423 * this.e235) + 2.0 * (this.e431 * this.e315) + 2.0 * (this.e412 * this.e125) + powi(this.e415, 2) + powi(this.e425, 2) + powi(this.e435, 2) - powi(this.e321, 2), 0.0, 0.0, 0.0)
+        AntiScalar other = AntiScalar(
+            /* e12345 */
+            2.0*(this.e423 * this.e235) + 2.0 * (this.e431 * this.e315) + 2.0 * (this.e412 * this.e125) + pow(this.e415, 2) + pow(this.e425, 2) + pow(this.e435, 2) - pow(this.e321, 2)
         );
-        return Circle.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(other.e12345) * anti_reverse.group0.xyz, 0.0), 
+        return Circle(
+            /* e423, e431, e412 */
+            float3(other.e12345) * anti_reverse.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(other.e12345) * anti_reverse.group1, 
-            /* e235, e315, e125, 0 */
-            float4(float3(other.e12345) * anti_reverse.group2.xyz, 0.0)
+            /* e235, e315, e125 */
+            float3(other.e12345) * anti_reverse.group2.xyz
         );
     }
 }
-extension CircleRotor {
-    // Fancy infix trick
-    func operator/(_rhs: AntiInversePrefixOrPostfix) -> CircleRotor {
+public extension CircleRotor {
+    // Fancy postfix trick
+    public CircleRotor operator /(AntiInversePrefixOrPostfix rhs)  {
         return this.anti_inverse();
     }
-    func operator/=(const AntiInversePrefixOrPostfix& _rhs) -> CircleRotor& {
-        this = this.anti_inverse();
-        return *this;
+}
+public extension AntiInversePrefixOrPostfix {
+    // Fancy prefix trick
+    public CircleRotor operator /(CircleRotor rhs) {
+        return rhs.anti_inverse();
     }
 }
-extension CircleRotor: AntiInverse {
-    associatedtype Output = CircleRotor;
-    func anti_inverse() -> Output {
-        CircleRotor anti_reverse = CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz * float3(-1.0), 0.0), 
+public extension CircleRotor {
+    public CircleRotor anti_inverse() {
+        CircleRotor anti_reverse = CircleRotor(
+            /* e423, e431, e412 */
+            this.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             this.group1 * float4(-1.0), 
             /* e235, e315, e125, e12345 */
             this.group2 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        AntiScalar other = AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(2.0*(this.e423 * this.e235) + 2.0 * (this.e431 * this.e315) + 2.0 * (this.e412 * this.e125) + powi(this.e415, 2) + powi(this.e425, 2) + powi(this.e435, 2) + powi(this.e12345, 2) - powi(this.e321, 2), 0.0, 0.0, 0.0)
+        AntiScalar other = AntiScalar(
+            /* e12345 */
+            2.0*(this.e423 * this.e235) + 2.0 * (this.e431 * this.e315) + 2.0 * (this.e412 * this.e125) + pow(this.e415, 2) + pow(this.e425, 2) + pow(this.e435, 2) + pow(this.e12345, 2) - pow(this.e321, 2)
         );
-        return CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(other.e12345) * anti_reverse.group0.xyz, 0.0), 
+        return CircleRotor(
+            /* e423, e431, e412 */
+            float3(other.e12345) * anti_reverse.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(other.e12345) * anti_reverse.group1, 
             /* e235, e315, e125, e12345 */
@@ -311,57 +324,59 @@ extension CircleRotor: AntiInverse {
         );
     }
 }
-extension Dipole {
-    // Fancy infix trick
-    func operator/(_rhs: AntiInversePrefixOrPostfix) -> Dipole {
+public extension Dipole {
+    // Fancy postfix trick
+    public Dipole operator /(AntiInversePrefixOrPostfix rhs)  {
         return this.anti_inverse();
     }
-    func operator/=(const AntiInversePrefixOrPostfix& _rhs) -> Dipole& {
-        this = this.anti_inverse();
-        return *this;
+}
+public extension AntiInversePrefixOrPostfix {
+    // Fancy prefix trick
+    public Dipole operator /(Dipole rhs) {
+        return rhs.anti_inverse();
     }
 }
-extension Dipole: AntiInverse {
-    associatedtype Output = Dipole;
-    func anti_inverse() -> Output {
-        Dipole anti_reverse = Dipole.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(this.group0.xyz * float3(-1.0), 0.0), 
+public extension Dipole {
+    public Dipole anti_inverse() {
+        Dipole anti_reverse = Dipole(
+            /* e41, e42, e43 */
+            this.group0.xyz * float3(-1.0), 
             /* e23, e31, e12, e45 */
             this.group1 * float4(-1.0), 
-            /* e15, e25, e35, 0 */
-            float4(this.group2.xyz * float3(-1.0), 0.0)
+            /* e15, e25, e35 */
+            this.group2.xyz * float3(-1.0)
         );
-        AntiScalar other = AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(powi(this.e45, 2) - powi(this.e23, 2) - powi(this.e31, 2) - powi(this.e12, 2) - 2.0 * (this.e41 * this.e15) - 2.0 * (this.e42 * this.e25) - 2.0 * (this.e43 * this.e35), 0.0, 0.0, 0.0)
+        AntiScalar other = AntiScalar(
+            /* e12345 */
+            pow(this.e45, 2) - pow(this.e23, 2) - pow(this.e31, 2) - pow(this.e12, 2) - 2.0 * (this.e41 * this.e15) - 2.0 * (this.e42 * this.e25) - 2.0 * (this.e43 * this.e35)
         );
-        return Dipole.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(other.e12345) * anti_reverse.group0.xyz, 0.0), 
+        return Dipole(
+            /* e41, e42, e43 */
+            float3(other.e12345) * anti_reverse.group0.xyz, 
             /* e23, e31, e12, e45 */
             float4(other.e12345) * anti_reverse.group1, 
-            /* e15, e25, e35, 0 */
-            float4(float3(other.e12345) * anti_reverse.group2.xyz, 0.0)
+            /* e15, e25, e35 */
+            float3(other.e12345) * anti_reverse.group2.xyz
         );
     }
 }
-extension DipoleInversion {
-    // Fancy infix trick
-    func operator/(_rhs: AntiInversePrefixOrPostfix) -> DipoleInversion {
+public extension DipoleInversion {
+    // Fancy postfix trick
+    public DipoleInversion operator /(AntiInversePrefixOrPostfix rhs)  {
         return this.anti_inverse();
     }
-    func operator/=(const AntiInversePrefixOrPostfix& _rhs) -> DipoleInversion& {
-        this = this.anti_inverse();
-        return *this;
+}
+public extension AntiInversePrefixOrPostfix {
+    // Fancy prefix trick
+    public DipoleInversion operator /(DipoleInversion rhs) {
+        return rhs.anti_inverse();
     }
 }
-extension DipoleInversion: AntiInverse {
-    associatedtype Output = DipoleInversion;
-    func anti_inverse() -> Output {
-        DipoleInversion anti_reverse = DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(this.group0.xyz * float3(-1.0), 0.0), 
+public extension DipoleInversion {
+    public DipoleInversion anti_inverse() {
+        DipoleInversion anti_reverse = DipoleInversion(
+            /* e41, e42, e43 */
+            this.group0.xyz * float3(-1.0), 
             /* e23, e31, e12, e45 */
             this.group1 * float4(-1.0), 
             /* e15, e25, e35, e1234 */
@@ -369,13 +384,13 @@ extension DipoleInversion: AntiInverse {
             /* e4235, e4315, e4125, e3215 */
             this.group3
         );
-        AntiScalar other = AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(powi(this.e45, 2) + powi(this.e4235, 2) + powi(this.e4315, 2) + powi(this.e4125, 2) - powi(this.e23, 2) - powi(this.e31, 2) - powi(this.e12, 2) - 2.0 * (this.e41 * this.e15) - 2.0 * (this.e42 * this.e25) - 2.0 * (this.e43 * this.e35) - 2.0 * (this.e1234 * this.e3215), 0.0, 0.0, 0.0)
+        AntiScalar other = AntiScalar(
+            /* e12345 */
+            pow(this.e45, 2) + pow(this.e4235, 2) + pow(this.e4315, 2) + pow(this.e4125, 2) - pow(this.e23, 2) - pow(this.e31, 2) - pow(this.e12, 2) - 2.0 * (this.e41 * this.e15) - 2.0 * (this.e42 * this.e25) - 2.0 * (this.e43 * this.e35) - 2.0 * (this.e1234 * this.e3215)
         );
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(other.e12345) * anti_reverse.group0.xyz, 0.0), 
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            float3(other.e12345) * anti_reverse.group0.xyz, 
             /* e23, e31, e12, e45 */
             float4(other.e12345) * anti_reverse.group1, 
             /* e15, e25, e35, e1234 */
@@ -385,68 +400,71 @@ extension DipoleInversion: AntiInverse {
         );
     }
 }
-extension DualNum {
-    // Fancy infix trick
-    func operator/(_rhs: AntiInversePrefixOrPostfix) -> DualNum {
+public extension DualNum {
+    // Fancy postfix trick
+    public DualNum operator /(AntiInversePrefixOrPostfix rhs)  {
         return this.anti_inverse();
     }
-    func operator/=(const AntiInversePrefixOrPostfix& _rhs) -> DualNum& {
-        this = this.anti_inverse();
-        return *this;
+}
+public extension AntiInversePrefixOrPostfix {
+    // Fancy prefix trick
+    public DualNum operator /(DualNum rhs) {
+        return rhs.anti_inverse();
     }
 }
-extension DualNum: AntiInverse {
-    associatedtype Output = DualNum;
-    func anti_inverse() -> Output {
-        return DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(float2(powi(this.e12345, -2)) * this.group0.xy, 0.0, 0.0)
+public extension DualNum {
+    public DualNum anti_inverse() {
+        return DualNum(
+            /* e5, e12345 */
+            float2(pow(this.e12345, -2)) * this.group0.xy
         );
     }
 }
-extension FlatPoint {
-    // Fancy infix trick
-    func operator/(_rhs: AntiInversePrefixOrPostfix) -> FlatPoint {
+public extension FlatPoint {
+    // Fancy postfix trick
+    public FlatPoint operator /(AntiInversePrefixOrPostfix rhs)  {
         return this.anti_inverse();
     }
-    func operator/=(const AntiInversePrefixOrPostfix& _rhs) -> FlatPoint& {
-        this = this.anti_inverse();
-        return *this;
+}
+public extension AntiInversePrefixOrPostfix {
+    // Fancy prefix trick
+    public FlatPoint operator /(FlatPoint rhs) {
+        return rhs.anti_inverse();
     }
 }
-extension FlatPoint: AntiInverse {
-    associatedtype Output = FlatPoint;
-    func anti_inverse() -> Output {
-        return FlatPoint.from_groups(
+public extension FlatPoint {
+    public FlatPoint anti_inverse() {
+        return FlatPoint(
             /* e15, e25, e35, e45 */
-            float4(powi(this.e45, -2)) * float4(this.e15 * -1.0, this.e25 * -1.0, this.e35 * -1.0, this.e45 * -1.0)
+            float4(pow(this.e45, -2)) * float4(this.e15 * -1.0, this.e25 * -1.0, this.e35 * -1.0, this.e45 * -1.0)
         );
     }
 }
-extension Flector {
-    // Fancy infix trick
-    func operator/(_rhs: AntiInversePrefixOrPostfix) -> Flector {
+public extension Flector {
+    // Fancy postfix trick
+    public Flector operator /(AntiInversePrefixOrPostfix rhs)  {
         return this.anti_inverse();
     }
-    func operator/=(const AntiInversePrefixOrPostfix& _rhs) -> Flector& {
-        this = this.anti_inverse();
-        return *this;
+}
+public extension AntiInversePrefixOrPostfix {
+    // Fancy prefix trick
+    public Flector operator /(Flector rhs) {
+        return rhs.anti_inverse();
     }
 }
-extension Flector: AntiInverse {
-    associatedtype Output = Flector;
-    func anti_inverse() -> Output {
-        Flector anti_reverse = Flector.from_groups(
+public extension Flector {
+    public Flector anti_inverse() {
+        Flector anti_reverse = Flector(
             /* e15, e25, e35, e45 */
             this.group0 * float4(-1.0), 
             /* e4235, e4315, e4125, e3215 */
             this.group1
         );
-        AntiScalar other = AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(powi(this.e45, 2) + powi(this.e4235, 2) + powi(this.e4315, 2) + powi(this.e4125, 2), 0.0, 0.0, 0.0)
+        AntiScalar other = AntiScalar(
+            /* e12345 */
+            pow(this.e45, 2) + pow(this.e4235, 2) + pow(this.e4315, 2) + pow(this.e4125, 2)
         );
-        return Flector.from_groups(
+        return Flector(
             /* e15, e25, e35, e45 */
             float4(other.e12345) * anti_reverse.group0, 
             /* e4235, e4315, e4125, e3215 */
@@ -454,61 +472,63 @@ extension Flector: AntiInverse {
         );
     }
 }
-extension Line {
-    // Fancy infix trick
-    func operator/(_rhs: AntiInversePrefixOrPostfix) -> Line {
+public extension Line {
+    // Fancy postfix trick
+    public Line operator /(AntiInversePrefixOrPostfix rhs)  {
         return this.anti_inverse();
     }
-    func operator/=(const AntiInversePrefixOrPostfix& _rhs) -> Line& {
-        this = this.anti_inverse();
-        return *this;
+}
+public extension AntiInversePrefixOrPostfix {
+    // Fancy prefix trick
+    public Line operator /(Line rhs) {
+        return rhs.anti_inverse();
     }
 }
-extension Line: AntiInverse {
-    associatedtype Output = Line;
-    func anti_inverse() -> Output {
-        Line anti_reverse = Line.from_groups(
-            /* e415, e425, e435, 0 */
-            float4(this.group0.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group1.xyz * float3(-1.0), 0.0)
+public extension Line {
+    public Line anti_inverse() {
+        Line anti_reverse = Line(
+            /* e415, e425, e435 */
+            this.group0.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            this.group1.xyz * float3(-1.0)
         );
-        AntiScalar other = AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(powi(this.e415, 2) + powi(this.e425, 2) + powi(this.e435, 2), 0.0, 0.0, 0.0)
+        AntiScalar other = AntiScalar(
+            /* e12345 */
+            pow(this.e415, 2) + pow(this.e425, 2) + pow(this.e435, 2)
         );
-        return Line.from_groups(
-            /* e415, e425, e435, 0 */
-            float4(float3(other.e12345) * anti_reverse.group0.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(float3(other.e12345) * anti_reverse.group1.xyz, 0.0)
+        return Line(
+            /* e415, e425, e435 */
+            float3(other.e12345) * anti_reverse.group0.xyz, 
+            /* e235, e315, e125 */
+            float3(other.e12345) * anti_reverse.group1.xyz
         );
     }
 }
-extension Motor {
-    // Fancy infix trick
-    func operator/(_rhs: AntiInversePrefixOrPostfix) -> Motor {
+public extension Motor {
+    // Fancy postfix trick
+    public Motor operator /(AntiInversePrefixOrPostfix rhs)  {
         return this.anti_inverse();
     }
-    func operator/=(const AntiInversePrefixOrPostfix& _rhs) -> Motor& {
-        this = this.anti_inverse();
-        return *this;
+}
+public extension AntiInversePrefixOrPostfix {
+    // Fancy prefix trick
+    public Motor operator /(Motor rhs) {
+        return rhs.anti_inverse();
     }
 }
-extension Motor: AntiInverse {
-    associatedtype Output = Motor;
-    func anti_inverse() -> Output {
-        Motor anti_reverse = Motor.from_groups(
+public extension Motor {
+    public Motor anti_inverse() {
+        Motor anti_reverse = Motor(
             /* e415, e425, e435, e12345 */
             this.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e5 */
             this.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        AntiScalar other = AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(powi(this.e415, 2) + powi(this.e425, 2) + powi(this.e435, 2) + powi(this.e12345, 2), 0.0, 0.0, 0.0)
+        AntiScalar other = AntiScalar(
+            /* e12345 */
+            pow(this.e415, 2) + pow(this.e425, 2) + pow(this.e435, 2) + pow(this.e12345, 2)
         );
-        return Motor.from_groups(
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4(other.e12345) * anti_reverse.group0, 
             /* e235, e315, e125, e5 */
@@ -516,175 +536,181 @@ extension Motor: AntiInverse {
         );
     }
 }
-extension MultiVector {
-    // Fancy infix trick
-    func operator/(_rhs: AntiInversePrefixOrPostfix) -> MultiVector {
+public extension MultiVector {
+    // Fancy postfix trick
+    public MultiVector operator /(AntiInversePrefixOrPostfix rhs)  {
         return this.anti_inverse();
     }
-    func operator/=(const AntiInversePrefixOrPostfix& _rhs) -> MultiVector& {
-        this = this.anti_inverse();
-        return *this;
+}
+public extension AntiInversePrefixOrPostfix {
+    // Fancy prefix trick
+    public MultiVector operator /(MultiVector rhs) {
+        return rhs.anti_inverse();
     }
 }
-extension MultiVector: AntiInverse {
-    associatedtype Output = MultiVector;
-    func anti_inverse() -> Output {
-        MultiVector anti_reverse = MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(this.group0.xy, 0.0, 0.0), 
+public extension MultiVector {
+    public MultiVector anti_inverse() {
+        MultiVector anti_reverse = MultiVector(
+            /* scalar, e12345 */
+            this.group0.xy, 
             /* e1, e2, e3, e4 */
             this.group1, 
-            /* e5, 0, 0, 0 */
-            float4(this.e5, 0.0, 0.0, 0.0), 
+            /* e5 */
+            this.e5, 
             /* e15, e25, e35, e45 */
             this.group3 * float4(-1.0), 
-            /* e41, e42, e43, 0 */
-            float4(this.group4.xyz * float3(-1.0), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(this.group5.xyz * float3(-1.0), 0.0), 
+            /* e41, e42, e43 */
+            this.group4.xyz * float3(-1.0), 
+            /* e23, e31, e12 */
+            this.group5.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             this.group6 * float4(-1.0), 
-            /* e423, e431, e412, 0 */
-            float4(this.group7.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group8.xyz * float3(-1.0), 0.0), 
+            /* e423, e431, e412 */
+            this.group7.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            this.group8.xyz * float3(-1.0), 
             /* e4235, e4315, e4125, e3215 */
             this.group9, 
-            /* e1234, 0, 0, 0 */
-            float4(this.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            this.e1234
         );
-        AntiScalar other = AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(2.0*(this.e4 * this.e5) + 2.0 * (this.e423 * this.e235) + 2.0 * (this.e431 * this.e315) + 2.0 * (this.e412 * this.e125) + powi(this.e12345, 2) + powi(this.e45, 2) + powi(this.e415, 2) + powi(this.e425, 2) + powi(this.e435, 2) + powi(this.e4235, 2) + powi(this.e4315, 2) + powi(this.e4125, 2) - powi(this.scalar, 2) - powi(this.e1, 2) - powi(this.e2, 2) - powi(this.e3, 2) - powi(this.e23, 2) - powi(this.e31, 2) - powi(this.e12, 2) - powi(this.e321, 2) - 2.0 * (this.e15 * this.e41) - 2.0 * (this.e25 * this.e42) - 2.0 * (this.e35 * this.e43) - 2.0 * (this.e3215 * this.e1234), 0.0, 0.0, 0.0)
+        AntiScalar other = AntiScalar(
+            /* e12345 */
+            2.0*(this.e4 * this.e5) + 2.0 * (this.e423 * this.e235) + 2.0 * (this.e431 * this.e315) + 2.0 * (this.e412 * this.e125) + pow(this.e12345, 2) + pow(this.e45, 2) + pow(this.e415, 2) + pow(this.e425, 2) + pow(this.e435, 2) + pow(this.e4235, 2) + pow(this.e4315, 2) + pow(this.e4125, 2) - pow(this.scalar, 2) - pow(this.e1, 2) - pow(this.e2, 2) - pow(this.e3, 2) - pow(this.e23, 2) - pow(this.e31, 2) - pow(this.e12, 2) - pow(this.e321, 2) - 2.0 * (this.e15 * this.e41) - 2.0 * (this.e25 * this.e42) - 2.0 * (this.e35 * this.e43) - 2.0 * (this.e3215 * this.e1234)
         );
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(other.e12345) * anti_reverse.group0.xy, 0.0, 0.0), 
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(other.e12345) * anti_reverse.group0.xy, 
             /* e1, e2, e3, e4 */
             float4(other.e12345) * anti_reverse.group1, 
-            /* e5, 0, 0, 0 */
-            float4(other.e12345 * anti_reverse.e5, 0.0, 0.0, 0.0), 
+            /* e5 */
+            other.e12345 * anti_reverse.e5, 
             /* e15, e25, e35, e45 */
             float4(other.e12345) * anti_reverse.group3, 
-            /* e41, e42, e43, 0 */
-            float4(float3(other.e12345) * anti_reverse.group4.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(float3(other.e12345) * anti_reverse.group5.xyz, 0.0), 
+            /* e41, e42, e43 */
+            float3(other.e12345) * anti_reverse.group4.xyz, 
+            /* e23, e31, e12 */
+            float3(other.e12345) * anti_reverse.group5.xyz, 
             /* e415, e425, e435, e321 */
             float4(other.e12345) * anti_reverse.group6, 
-            /* e423, e431, e412, 0 */
-            float4(float3(other.e12345) * anti_reverse.group7.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(float3(other.e12345) * anti_reverse.group8.xyz, 0.0), 
+            /* e423, e431, e412 */
+            float3(other.e12345) * anti_reverse.group7.xyz, 
+            /* e235, e315, e125 */
+            float3(other.e12345) * anti_reverse.group8.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(other.e12345) * anti_reverse.group9, 
-            /* e1234, 0, 0, 0 */
-            float4(other.e12345 * anti_reverse.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e12345 * anti_reverse.e1234
         );
     }
 }
-extension Plane {
-    // Fancy infix trick
-    func operator/(_rhs: AntiInversePrefixOrPostfix) -> Plane {
+public extension Plane {
+    // Fancy postfix trick
+    public Plane operator /(AntiInversePrefixOrPostfix rhs)  {
         return this.anti_inverse();
     }
-    func operator/=(const AntiInversePrefixOrPostfix& _rhs) -> Plane& {
-        this = this.anti_inverse();
-        return *this;
+}
+public extension AntiInversePrefixOrPostfix {
+    // Fancy prefix trick
+    public Plane operator /(Plane rhs) {
+        return rhs.anti_inverse();
     }
 }
-extension Plane: AntiInverse {
-    associatedtype Output = Plane;
-    func anti_inverse() -> Output {
-        return Plane.from_groups(
+public extension Plane {
+    public Plane anti_inverse() {
+        return Plane(
             /* e4235, e4315, e4125, e3215 */
-            float4(powi(this.e4235, 2) + powi(this.e4315, 2) + powi(this.e4125, 2)) * this.group0
+            float4(pow(this.e4235, 2) + pow(this.e4315, 2) + pow(this.e4125, 2)) * this.group0
         );
     }
 }
-extension RoundPoint {
-    // Fancy infix trick
-    func operator/(_rhs: AntiInversePrefixOrPostfix) -> RoundPoint {
+public extension RoundPoint {
+    // Fancy postfix trick
+    public RoundPoint operator /(AntiInversePrefixOrPostfix rhs)  {
         return this.anti_inverse();
     }
-    func operator/=(const AntiInversePrefixOrPostfix& _rhs) -> RoundPoint& {
-        this = this.anti_inverse();
-        return *this;
+}
+public extension AntiInversePrefixOrPostfix {
+    // Fancy prefix trick
+    public RoundPoint operator /(RoundPoint rhs) {
+        return rhs.anti_inverse();
     }
 }
-extension RoundPoint: AntiInverse {
-    associatedtype Output = RoundPoint;
-    func anti_inverse() -> Output {
-        AntiScalar other = AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(2.0*(this.e4 * this.e5) - powi(this.e1, 2) - powi(this.e2, 2) - powi(this.e3, 2), 0.0, 0.0, 0.0)
+public extension RoundPoint {
+    public RoundPoint anti_inverse() {
+        AntiScalar other = AntiScalar(
+            /* e12345 */
+            2.0*(this.e4 * this.e5) - pow(this.e1, 2) - pow(this.e2, 2) - pow(this.e3, 2)
         );
-        return RoundPoint.from_groups(
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4(other.e12345) * this.group0, 
-            /* e5, 0, 0, 0 */
-            float4(other.e12345 * this.e5, 0.0, 0.0, 0.0)
+            /* e5 */
+            other.e12345 * this.e5
         );
     }
 }
-extension Scalar {
-    // Fancy infix trick
-    func operator/(_rhs: AntiInversePrefixOrPostfix) -> Scalar {
+public extension Scalar {
+    // Fancy postfix trick
+    public Scalar operator /(AntiInversePrefixOrPostfix rhs)  {
         return this.anti_inverse();
     }
-    func operator/=(const AntiInversePrefixOrPostfix& _rhs) -> Scalar& {
-        this = this.anti_inverse();
-        return *this;
+}
+public extension AntiInversePrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(Scalar rhs) {
+        return rhs.anti_inverse();
     }
 }
-extension Scalar: AntiInverse {
-    associatedtype Output = Scalar;
-    func anti_inverse() -> Output {
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(1.0/this.scalar * -1.0, 0.0, 0.0, 0.0)
+public extension Scalar {
+    public Scalar anti_inverse() {
+        return Scalar(
+            /* scalar */
+            1.0/this.scalar * -1.0
         );
     }
 }
-extension Sphere {
-    // Fancy infix trick
-    func operator/(_rhs: AntiInversePrefixOrPostfix) -> Sphere {
+public extension Sphere {
+    // Fancy postfix trick
+    public Sphere operator /(AntiInversePrefixOrPostfix rhs)  {
         return this.anti_inverse();
     }
-    func operator/=(const AntiInversePrefixOrPostfix& _rhs) -> Sphere& {
-        this = this.anti_inverse();
-        return *this;
+}
+public extension AntiInversePrefixOrPostfix {
+    // Fancy prefix trick
+    public Sphere operator /(Sphere rhs) {
+        return rhs.anti_inverse();
     }
 }
-extension Sphere: AntiInverse {
-    associatedtype Output = Sphere;
-    func anti_inverse() -> Output {
-        AntiScalar other = AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(powi(this.e4235, 2) + powi(this.e4315, 2) + powi(this.e4125, 2) - 2.0 * (this.e3215 * this.e1234), 0.0, 0.0, 0.0)
+public extension Sphere {
+    public Sphere anti_inverse() {
+        AntiScalar other = AntiScalar(
+            /* e12345 */
+            pow(this.e4235, 2) + pow(this.e4315, 2) + pow(this.e4125, 2) - 2.0 * (this.e3215 * this.e1234)
         );
-        return Sphere.from_groups(
+        return Sphere(
             /* e4235, e4315, e4125, e3215 */
             float4(other.e12345) * this.group0, 
-            /* e1234, 0, 0, 0 */
-            float4(other.e12345 * this.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e12345 * this.e1234
         );
     }
 }
-extension VersorEven {
-    // Fancy infix trick
-    func operator/(_rhs: AntiInversePrefixOrPostfix) -> VersorEven {
+public extension VersorEven {
+    // Fancy postfix trick
+    public VersorEven operator /(AntiInversePrefixOrPostfix rhs)  {
         return this.anti_inverse();
     }
-    func operator/=(const AntiInversePrefixOrPostfix& _rhs) -> VersorEven& {
-        this = this.anti_inverse();
-        return *this;
+}
+public extension AntiInversePrefixOrPostfix {
+    // Fancy prefix trick
+    public VersorEven operator /(VersorEven rhs) {
+        return rhs.anti_inverse();
     }
 }
-extension VersorEven: AntiInverse {
-    associatedtype Output = VersorEven;
-    func anti_inverse() -> Output {
-        VersorEven anti_reverse = VersorEven.from_groups(
+public extension VersorEven {
+    public VersorEven anti_inverse() {
+        VersorEven anti_reverse = VersorEven(
             /* e423, e431, e412, e12345 */
             this.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e415, e425, e435, e321 */
@@ -694,11 +720,11 @@ extension VersorEven: AntiInverse {
             /* e1, e2, e3, e4 */
             this.group3
         );
-        AntiScalar other = AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(2.0*(this.e423 * this.e235) + 2.0 * (this.e431 * this.e315) + 2.0 * (this.e412 * this.e125) + 2.0 * (this.e5 * this.e4) + powi(this.e12345, 2) + powi(this.e415, 2) + powi(this.e425, 2) + powi(this.e435, 2) - powi(this.e321, 2) - powi(this.e1, 2) - powi(this.e2, 2) - powi(this.e3, 2), 0.0, 0.0, 0.0)
+        AntiScalar other = AntiScalar(
+            /* e12345 */
+            2.0*(this.e423 * this.e235) + 2.0 * (this.e431 * this.e315) + 2.0 * (this.e412 * this.e125) + 2.0 * (this.e5 * this.e4) + pow(this.e12345, 2) + pow(this.e415, 2) + pow(this.e425, 2) + pow(this.e435, 2) - pow(this.e321, 2) - pow(this.e1, 2) - pow(this.e2, 2) - pow(this.e3, 2)
         );
-        return VersorEven.from_groups(
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(other.e12345) * anti_reverse.group0, 
             /* e415, e425, e435, e321 */
@@ -710,20 +736,21 @@ extension VersorEven: AntiInverse {
         );
     }
 }
-extension VersorOdd {
-    // Fancy infix trick
-    func operator/(_rhs: AntiInversePrefixOrPostfix) -> VersorOdd {
+public extension VersorOdd {
+    // Fancy postfix trick
+    public VersorOdd operator /(AntiInversePrefixOrPostfix rhs)  {
         return this.anti_inverse();
     }
-    func operator/=(const AntiInversePrefixOrPostfix& _rhs) -> VersorOdd& {
-        this = this.anti_inverse();
-        return *this;
+}
+public extension AntiInversePrefixOrPostfix {
+    // Fancy prefix trick
+    public VersorOdd operator /(VersorOdd rhs) {
+        return rhs.anti_inverse();
     }
 }
-extension VersorOdd: AntiInverse {
-    associatedtype Output = VersorOdd;
-    func anti_inverse() -> Output {
-        VersorOdd anti_reverse = VersorOdd.from_groups(
+public extension VersorOdd {
+    public VersorOdd anti_inverse() {
+        VersorOdd anti_reverse = VersorOdd(
             /* e41, e42, e43, scalar */
             this.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, e45 */
@@ -733,11 +760,11 @@ extension VersorOdd: AntiInverse {
             /* e4235, e4315, e4125, e3215 */
             this.group3
         );
-        AntiScalar other = AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(powi(this.e45, 2) + powi(this.e4235, 2) + powi(this.e4315, 2) + powi(this.e4125, 2) - powi(this.scalar, 2) - powi(this.e23, 2) - powi(this.e31, 2) - powi(this.e12, 2) - 2.0 * (this.e41 * this.e15) - 2.0 * (this.e42 * this.e25) - 2.0 * (this.e43 * this.e35) - 2.0 * (this.e1234 * this.e3215), 0.0, 0.0, 0.0)
+        AntiScalar other = AntiScalar(
+            /* e12345 */
+            pow(this.e45, 2) + pow(this.e4235, 2) + pow(this.e4315, 2) + pow(this.e4125, 2) - pow(this.scalar, 2) - pow(this.e23, 2) - pow(this.e31, 2) - pow(this.e12, 2) - 2.0 * (this.e41 * this.e15) - 2.0 * (this.e42 * this.e25) - 2.0 * (this.e43 * this.e35) - 2.0 * (this.e1234 * this.e3215)
         );
-        return VersorOdd.from_groups(
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(other.e12345) * anti_reverse.group0, 
             /* e23, e31, e12, e45 */

@@ -14,7 +14,7 @@ public extension UnitizePrefixOrPostfix {
 }
 public extension AntiScalar {
     public AntiScalar unitize() {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             this.e1234 / (this.flat_weight_norm_squared().anti_square_root().e1234)
         );
@@ -34,7 +34,7 @@ public extension UnitizePrefixOrPostfix {
 }
 public extension DualNum {
     public DualNum unitize() {
-        return DualNum.from_groups(
+        return DualNum(
             /* scalar, e1234 */
             float2(1.0/this.flat_weight_norm_squared().anti_square_root().e1234) * this.group0.xy
         );
@@ -54,11 +54,11 @@ public extension UnitizePrefixOrPostfix {
 }
 public extension Flector {
     public Flector unitize() {
-        AntiScalar geometric_anti_product = AntiScalar.from_groups(
+        AntiScalar geometric_anti_product = AntiScalar(
             /* e1234 */
             1.0/this.flat_weight_norm_squared().anti_square_root().e1234
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4(geometric_anti_product.e1234) * this.group0, 
             /* e423, e431, e412, e321 */
@@ -80,11 +80,11 @@ public extension UnitizePrefixOrPostfix {
 }
 public extension Line {
     public Line unitize() {
-        AntiScalar geometric_anti_product = AntiScalar.from_groups(
+        AntiScalar geometric_anti_product = AntiScalar(
             /* e1234 */
             1.0/this.flat_weight_norm_squared().anti_square_root().e1234
         );
-        return Line.from_groups(
+        return Line(
             /* e41, e42, e43 */
             float3(geometric_anti_product.e1234) * this.group0.xyz, 
             /* e23, e31, e12 */
@@ -106,11 +106,11 @@ public extension UnitizePrefixOrPostfix {
 }
 public extension Motor {
     public Motor unitize() {
-        AntiScalar geometric_anti_product = AntiScalar.from_groups(
+        AntiScalar geometric_anti_product = AntiScalar(
             /* e1234 */
             1.0/this.flat_weight_norm_squared().anti_square_root().e1234
         );
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(geometric_anti_product.e1234) * this.group0, 
             /* e23, e31, e12, scalar */
@@ -132,11 +132,11 @@ public extension UnitizePrefixOrPostfix {
 }
 public extension MultiVector {
     public MultiVector unitize() {
-        AntiScalar geometric_anti_product = AntiScalar.from_groups(
+        AntiScalar geometric_anti_product = AntiScalar(
             /* e1234 */
             1.0/this.flat_weight_norm_squared().anti_square_root().e1234
         );
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(geometric_anti_product.e1234) * this.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -164,7 +164,7 @@ public extension UnitizePrefixOrPostfix {
 }
 public extension Origin {
     public Origin unitize() {
-        return Origin.from_groups(
+        return Origin(
             /* e4 */
             this.e4 / (this.flat_weight_norm_squared().anti_square_root().e1234)
         );
@@ -184,7 +184,7 @@ public extension UnitizePrefixOrPostfix {
 }
 public extension Plane {
     public Plane unitize() {
-        return Plane.from_groups(
+        return Plane(
             /* e423, e431, e412, e321 */
             float4(1.0/this.flat_weight_norm_squared().anti_square_root().e1234) * this.group0
         );
@@ -204,7 +204,7 @@ public extension UnitizePrefixOrPostfix {
 }
 public extension Point {
     public Point unitize() {
-        return Point.from_groups(
+        return Point(
             /* e1, e2, e3, e4 */
             float4(1.0/this.flat_weight_norm_squared().anti_square_root().e1234) * this.group0
         );

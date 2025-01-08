@@ -14,7 +14,7 @@ public extension SquareRootPrefixOrPostfix {
 }
 public extension Scalar {
     public Scalar square_root() {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             pow(this.scalar, 0.5)
         );

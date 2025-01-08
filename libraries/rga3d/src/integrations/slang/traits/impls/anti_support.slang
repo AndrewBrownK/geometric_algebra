@@ -14,7 +14,7 @@ public extension AntiSupportPrefixOrPostfix {
 }
 public extension DualNum {
     public Horizon anti_support() {
-        return Horizon.from_groups(
+        return Horizon(
             /* e321 */
             this.scalar
         );
@@ -34,13 +34,13 @@ public extension AntiSupportPrefixOrPostfix {
 }
 public extension Flector {
     public Motor anti_support() {
-        Flector right_dual = Flector.from_groups(
+        Flector right_dual = Flector(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), this.e321 * -1.0), 
             /* e423, e431, e412, e321 */
             float4(this.group0.xyz, 0.0)
         );
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(0.0), 
             /* e23, e31, e12, scalar */
@@ -62,7 +62,7 @@ public extension AntiSupportPrefixOrPostfix {
 }
 public extension Horizon {
     public Scalar anti_support() {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             this.e321
         );
@@ -82,7 +82,7 @@ public extension AntiSupportPrefixOrPostfix {
 }
 public extension Line {
     public Point anti_support() {
-        return Point.from_groups(
+        return Point(
             /* e1, e2, e3, e4 */
             float4((this.group1.xyz * float3(-1.0)), 0.0)
         );
@@ -102,17 +102,17 @@ public extension AntiSupportPrefixOrPostfix {
 }
 public extension Motor {
     public Flector anti_support() {
-        Horizon right_complement = Horizon.from_groups(
+        Horizon right_complement = Horizon(
             /* e321 */
             1.0
         );
-        Motor right_dual = Motor.from_groups(
+        Motor right_dual = Motor(
             /* e41, e42, e43, e1234 */
             this.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, scalar */
             float4(0.0)
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4((float3(right_complement.e321) * right_dual.group0.xyz), 0.0), 
             /* e423, e431, e412, e321 */
@@ -134,11 +134,11 @@ public extension AntiSupportPrefixOrPostfix {
 }
 public extension MultiVector {
     public MultiVector anti_support() {
-        Horizon right_complement = Horizon.from_groups(
+        Horizon right_complement = Horizon(
             /* e321 */
             1.0
         );
-        MultiVector right_dual = MultiVector.from_groups(
+        MultiVector right_dual = MultiVector(
             /* scalar, e1234 */
             float2(0.0, this.scalar), 
             /* e1, e2, e3, e4 */
@@ -150,7 +150,7 @@ public extension MultiVector {
             /* e423, e431, e412, e321 */
             float4(this.group1.xyz, 0.0)
         );
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(right_complement.e321 * right_dual.e4, 1.0) * float2(-1.0, 0.0), 
             /* e1, e2, e3, e4 */
@@ -178,7 +178,7 @@ public extension AntiSupportPrefixOrPostfix {
 }
 public extension Plane {
     public Scalar anti_support() {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             this.e321
         );
@@ -198,7 +198,7 @@ public extension AntiSupportPrefixOrPostfix {
 }
 public extension Point {
     public Line anti_support() {
-        return Line.from_groups(
+        return Line(
             /* e41, e42, e43 */
             float3(0.0), 
             /* e23, e31, e12 */
@@ -220,7 +220,7 @@ public extension AntiSupportPrefixOrPostfix {
 }
 public extension Scalar {
     public Horizon anti_support() {
-        return Horizon.from_groups(
+        return Horizon(
             /* e321 */
             this.scalar
         );

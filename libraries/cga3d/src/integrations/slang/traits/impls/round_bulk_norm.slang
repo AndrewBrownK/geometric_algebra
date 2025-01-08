@@ -1,210 +1,291 @@
-using traits::RoundBulkNormSquared;
-using traits::SquareRoot;
-extension AntiCircleRotor {
-    // Fancy infix trick
-    func operator/(_rhs: RoundBulkNormPrefixOrPostfix) -> Scalar {
+implementing cga3d;
+using traits;
+public extension AntiCircleRotor {
+    // Fancy postfix trick
+    public Scalar operator /(RoundBulkNormPrefixOrPostfix rhs)  {
         return this.round_bulk_norm();
     }
 }
-extension AntiCircleRotor: RoundBulkNorm {
-    associatedtype Output = Scalar;
-    func round_bulk_norm() -> Output {
+public extension RoundBulkNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(AntiCircleRotor rhs) {
+        return rhs.round_bulk_norm();
+    }
+}
+public extension AntiCircleRotor {
+    public Scalar round_bulk_norm() {
         return this.round_bulk_norm_squared().square_root();
     }
 }
-extension AntiDipoleInversion {
-    // Fancy infix trick
-    func operator/(_rhs: RoundBulkNormPrefixOrPostfix) -> Scalar {
+public extension AntiDipoleInversion {
+    // Fancy postfix trick
+    public Scalar operator /(RoundBulkNormPrefixOrPostfix rhs)  {
         return this.round_bulk_norm();
     }
 }
-extension AntiDipoleInversion: RoundBulkNorm {
-    associatedtype Output = Scalar;
-    func round_bulk_norm() -> Output {
+public extension RoundBulkNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(AntiDipoleInversion rhs) {
+        return rhs.round_bulk_norm();
+    }
+}
+public extension AntiDipoleInversion {
+    public Scalar round_bulk_norm() {
         return this.round_bulk_norm_squared().square_root();
     }
 }
-extension AntiDualNum {
-    // Fancy infix trick
-    func operator/(_rhs: RoundBulkNormPrefixOrPostfix) -> Scalar {
+public extension AntiDualNum {
+    // Fancy postfix trick
+    public Scalar operator /(RoundBulkNormPrefixOrPostfix rhs)  {
         return this.round_bulk_norm();
     }
 }
-extension AntiDualNum: RoundBulkNorm {
-    associatedtype Output = Scalar;
-    func round_bulk_norm() -> Output {
+public extension RoundBulkNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(AntiDualNum rhs) {
+        return rhs.round_bulk_norm();
+    }
+}
+public extension AntiDualNum {
+    public Scalar round_bulk_norm() {
         return this.round_bulk_norm_squared().square_root();
     }
 }
-extension AntiFlatPoint {
-    // Fancy infix trick
-    func operator/(_rhs: RoundBulkNormPrefixOrPostfix) -> Scalar {
+public extension AntiFlatPoint {
+    // Fancy postfix trick
+    public Scalar operator /(RoundBulkNormPrefixOrPostfix rhs)  {
         return this.round_bulk_norm();
     }
 }
-extension AntiFlatPoint: RoundBulkNorm {
-    associatedtype Output = Scalar;
-    func round_bulk_norm() -> Output {
+public extension RoundBulkNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(AntiFlatPoint rhs) {
+        return rhs.round_bulk_norm();
+    }
+}
+public extension AntiFlatPoint {
+    public Scalar round_bulk_norm() {
         return this.round_bulk_norm_squared().square_root();
     }
 }
-extension AntiFlector {
-    // Fancy infix trick
-    func operator/(_rhs: RoundBulkNormPrefixOrPostfix) -> Scalar {
+public extension AntiFlector {
+    // Fancy postfix trick
+    public Scalar operator /(RoundBulkNormPrefixOrPostfix rhs)  {
         return this.round_bulk_norm();
     }
 }
-extension AntiFlector: RoundBulkNorm {
-    associatedtype Output = Scalar;
-    func round_bulk_norm() -> Output {
+public extension RoundBulkNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(AntiFlector rhs) {
+        return rhs.round_bulk_norm();
+    }
+}
+public extension AntiFlector {
+    public Scalar round_bulk_norm() {
         return this.round_bulk_norm_squared().square_root();
     }
 }
-extension AntiLine {
-    // Fancy infix trick
-    func operator/(_rhs: RoundBulkNormPrefixOrPostfix) -> Scalar {
+public extension AntiLine {
+    // Fancy postfix trick
+    public Scalar operator /(RoundBulkNormPrefixOrPostfix rhs)  {
         return this.round_bulk_norm();
     }
 }
-extension AntiLine: RoundBulkNorm {
-    associatedtype Output = Scalar;
-    func round_bulk_norm() -> Output {
+public extension RoundBulkNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(AntiLine rhs) {
+        return rhs.round_bulk_norm();
+    }
+}
+public extension AntiLine {
+    public Scalar round_bulk_norm() {
         return this.round_bulk_norm_squared().square_root();
     }
 }
-extension AntiMotor {
-    // Fancy infix trick
-    func operator/(_rhs: RoundBulkNormPrefixOrPostfix) -> Scalar {
+public extension AntiMotor {
+    // Fancy postfix trick
+    public Scalar operator /(RoundBulkNormPrefixOrPostfix rhs)  {
         return this.round_bulk_norm();
     }
 }
-extension AntiMotor: RoundBulkNorm {
-    associatedtype Output = Scalar;
-    func round_bulk_norm() -> Output {
+public extension RoundBulkNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(AntiMotor rhs) {
+        return rhs.round_bulk_norm();
+    }
+}
+public extension AntiMotor {
+    public Scalar round_bulk_norm() {
         return this.round_bulk_norm_squared().square_root();
     }
 }
-extension AntiPlane {
-    // Fancy infix trick
-    func operator/(_rhs: RoundBulkNormPrefixOrPostfix) -> Scalar {
+public extension AntiPlane {
+    // Fancy postfix trick
+    public Scalar operator /(RoundBulkNormPrefixOrPostfix rhs)  {
         return this.round_bulk_norm();
     }
 }
-extension AntiPlane: RoundBulkNorm {
-    associatedtype Output = Scalar;
-    func round_bulk_norm() -> Output {
+public extension RoundBulkNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(AntiPlane rhs) {
+        return rhs.round_bulk_norm();
+    }
+}
+public extension AntiPlane {
+    public Scalar round_bulk_norm() {
         return this.round_bulk_norm_squared().square_root();
     }
 }
-extension Circle {
-    // Fancy infix trick
-    func operator/(_rhs: RoundBulkNormPrefixOrPostfix) -> Scalar {
+public extension Circle {
+    // Fancy postfix trick
+    public Scalar operator /(RoundBulkNormPrefixOrPostfix rhs)  {
         return this.round_bulk_norm();
     }
 }
-extension Circle: RoundBulkNorm {
-    associatedtype Output = Scalar;
-    func round_bulk_norm() -> Output {
+public extension RoundBulkNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(Circle rhs) {
+        return rhs.round_bulk_norm();
+    }
+}
+public extension Circle {
+    public Scalar round_bulk_norm() {
         return this.round_bulk_norm_squared().square_root();
     }
 }
-extension CircleRotor {
-    // Fancy infix trick
-    func operator/(_rhs: RoundBulkNormPrefixOrPostfix) -> Scalar {
+public extension CircleRotor {
+    // Fancy postfix trick
+    public Scalar operator /(RoundBulkNormPrefixOrPostfix rhs)  {
         return this.round_bulk_norm();
     }
 }
-extension CircleRotor: RoundBulkNorm {
-    associatedtype Output = Scalar;
-    func round_bulk_norm() -> Output {
+public extension RoundBulkNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(CircleRotor rhs) {
+        return rhs.round_bulk_norm();
+    }
+}
+public extension CircleRotor {
+    public Scalar round_bulk_norm() {
         return this.round_bulk_norm_squared().square_root();
     }
 }
-extension Dipole {
-    // Fancy infix trick
-    func operator/(_rhs: RoundBulkNormPrefixOrPostfix) -> Scalar {
+public extension Dipole {
+    // Fancy postfix trick
+    public Scalar operator /(RoundBulkNormPrefixOrPostfix rhs)  {
         return this.round_bulk_norm();
     }
 }
-extension Dipole: RoundBulkNorm {
-    associatedtype Output = Scalar;
-    func round_bulk_norm() -> Output {
+public extension RoundBulkNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(Dipole rhs) {
+        return rhs.round_bulk_norm();
+    }
+}
+public extension Dipole {
+    public Scalar round_bulk_norm() {
         return this.round_bulk_norm_squared().square_root();
     }
 }
-extension DipoleInversion {
-    // Fancy infix trick
-    func operator/(_rhs: RoundBulkNormPrefixOrPostfix) -> Scalar {
+public extension DipoleInversion {
+    // Fancy postfix trick
+    public Scalar operator /(RoundBulkNormPrefixOrPostfix rhs)  {
         return this.round_bulk_norm();
     }
 }
-extension DipoleInversion: RoundBulkNorm {
-    associatedtype Output = Scalar;
-    func round_bulk_norm() -> Output {
+public extension RoundBulkNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(DipoleInversion rhs) {
+        return rhs.round_bulk_norm();
+    }
+}
+public extension DipoleInversion {
+    public Scalar round_bulk_norm() {
         return this.round_bulk_norm_squared().square_root();
     }
 }
-extension MultiVector {
-    // Fancy infix trick
-    func operator/(_rhs: RoundBulkNormPrefixOrPostfix) -> Scalar {
+public extension MultiVector {
+    // Fancy postfix trick
+    public Scalar operator /(RoundBulkNormPrefixOrPostfix rhs)  {
         return this.round_bulk_norm();
     }
 }
-extension MultiVector: RoundBulkNorm {
-    associatedtype Output = Scalar;
-    func round_bulk_norm() -> Output {
+public extension RoundBulkNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(MultiVector rhs) {
+        return rhs.round_bulk_norm();
+    }
+}
+public extension MultiVector {
+    public Scalar round_bulk_norm() {
         return this.round_bulk_norm_squared().square_root();
     }
 }
-extension RoundPoint {
-    // Fancy infix trick
-    func operator/(_rhs: RoundBulkNormPrefixOrPostfix) -> Scalar {
+public extension RoundPoint {
+    // Fancy postfix trick
+    public Scalar operator /(RoundBulkNormPrefixOrPostfix rhs)  {
         return this.round_bulk_norm();
     }
 }
-extension RoundPoint: RoundBulkNorm {
-    associatedtype Output = Scalar;
-    func round_bulk_norm() -> Output {
+public extension RoundBulkNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(RoundPoint rhs) {
+        return rhs.round_bulk_norm();
+    }
+}
+public extension RoundPoint {
+    public Scalar round_bulk_norm() {
         return this.round_bulk_norm_squared().square_root();
     }
 }
-extension Scalar {
-    // Fancy infix trick
-    func operator/(_rhs: RoundBulkNormPrefixOrPostfix) -> Scalar {
+public extension Scalar {
+    // Fancy postfix trick
+    public Scalar operator /(RoundBulkNormPrefixOrPostfix rhs)  {
         return this.round_bulk_norm();
     }
-    func operator/=(const RoundBulkNormPrefixOrPostfix& _rhs) -> Scalar& {
-        this = this.round_bulk_norm();
-        return *this;
+}
+public extension RoundBulkNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(Scalar rhs) {
+        return rhs.round_bulk_norm();
     }
 }
-extension Scalar: RoundBulkNorm {
-    associatedtype Output = Scalar;
-    func round_bulk_norm() -> Output {
+public extension Scalar {
+    public Scalar round_bulk_norm() {
         return this.round_bulk_norm_squared().square_root();
     }
 }
-extension VersorEven {
-    // Fancy infix trick
-    func operator/(_rhs: RoundBulkNormPrefixOrPostfix) -> Scalar {
+public extension VersorEven {
+    // Fancy postfix trick
+    public Scalar operator /(RoundBulkNormPrefixOrPostfix rhs)  {
         return this.round_bulk_norm();
     }
 }
-extension VersorEven: RoundBulkNorm {
-    associatedtype Output = Scalar;
-    func round_bulk_norm() -> Output {
+public extension RoundBulkNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(VersorEven rhs) {
+        return rhs.round_bulk_norm();
+    }
+}
+public extension VersorEven {
+    public Scalar round_bulk_norm() {
         return this.round_bulk_norm_squared().square_root();
     }
 }
-extension VersorOdd {
-    // Fancy infix trick
-    func operator/(_rhs: RoundBulkNormPrefixOrPostfix) -> Scalar {
+public extension VersorOdd {
+    // Fancy postfix trick
+    public Scalar operator /(RoundBulkNormPrefixOrPostfix rhs)  {
         return this.round_bulk_norm();
     }
 }
-extension VersorOdd: RoundBulkNorm {
-    associatedtype Output = Scalar;
-    func round_bulk_norm() -> Output {
+public extension RoundBulkNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(VersorOdd rhs) {
+        return rhs.round_bulk_norm();
+    }
+}
+public extension VersorOdd {
+    public Scalar round_bulk_norm() {
         return this.round_bulk_norm_squared().square_root();
     }
 }

@@ -1,210 +1,291 @@
-using traits::AntiSquareRoot;
-using traits::FlatWeightNormSquared;
-extension AntiCircleRotor {
-    // Fancy infix trick
-    func operator/(_rhs: FlatWeightNormPrefixOrPostfix) -> AntiScalar {
+implementing cga3d;
+using traits;
+public extension AntiCircleRotor {
+    // Fancy postfix trick
+    public AntiScalar operator /(FlatWeightNormPrefixOrPostfix rhs)  {
         return this.flat_weight_norm();
     }
 }
-extension AntiCircleRotor: FlatWeightNorm {
-    associatedtype Output = AntiScalar;
-    func flat_weight_norm() -> Output {
+public extension FlatWeightNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiScalar operator /(AntiCircleRotor rhs) {
+        return rhs.flat_weight_norm();
+    }
+}
+public extension AntiCircleRotor {
+    public AntiScalar flat_weight_norm() {
         return this.flat_weight_norm_squared().anti_square_root();
     }
 }
-extension AntiDipoleInversion {
-    // Fancy infix trick
-    func operator/(_rhs: FlatWeightNormPrefixOrPostfix) -> AntiScalar {
+public extension AntiDipoleInversion {
+    // Fancy postfix trick
+    public AntiScalar operator /(FlatWeightNormPrefixOrPostfix rhs)  {
         return this.flat_weight_norm();
     }
 }
-extension AntiDipoleInversion: FlatWeightNorm {
-    associatedtype Output = AntiScalar;
-    func flat_weight_norm() -> Output {
+public extension FlatWeightNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiScalar operator /(AntiDipoleInversion rhs) {
+        return rhs.flat_weight_norm();
+    }
+}
+public extension AntiDipoleInversion {
+    public AntiScalar flat_weight_norm() {
         return this.flat_weight_norm_squared().anti_square_root();
     }
 }
-extension AntiScalar {
-    // Fancy infix trick
-    func operator/(_rhs: FlatWeightNormPrefixOrPostfix) -> AntiScalar {
+public extension AntiScalar {
+    // Fancy postfix trick
+    public AntiScalar operator /(FlatWeightNormPrefixOrPostfix rhs)  {
         return this.flat_weight_norm();
     }
-    func operator/=(const FlatWeightNormPrefixOrPostfix& _rhs) -> AntiScalar& {
-        this = this.flat_weight_norm();
-        return *this;
+}
+public extension FlatWeightNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiScalar operator /(AntiScalar rhs) {
+        return rhs.flat_weight_norm();
     }
 }
-extension AntiScalar: FlatWeightNorm {
-    associatedtype Output = AntiScalar;
-    func flat_weight_norm() -> Output {
+public extension AntiScalar {
+    public AntiScalar flat_weight_norm() {
         return this.flat_weight_norm_squared().anti_square_root();
     }
 }
-extension Circle {
-    // Fancy infix trick
-    func operator/(_rhs: FlatWeightNormPrefixOrPostfix) -> AntiScalar {
+public extension Circle {
+    // Fancy postfix trick
+    public AntiScalar operator /(FlatWeightNormPrefixOrPostfix rhs)  {
         return this.flat_weight_norm();
     }
 }
-extension Circle: FlatWeightNorm {
-    associatedtype Output = AntiScalar;
-    func flat_weight_norm() -> Output {
+public extension FlatWeightNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiScalar operator /(Circle rhs) {
+        return rhs.flat_weight_norm();
+    }
+}
+public extension Circle {
+    public AntiScalar flat_weight_norm() {
         return this.flat_weight_norm_squared().anti_square_root();
     }
 }
-extension CircleRotor {
-    // Fancy infix trick
-    func operator/(_rhs: FlatWeightNormPrefixOrPostfix) -> AntiScalar {
+public extension CircleRotor {
+    // Fancy postfix trick
+    public AntiScalar operator /(FlatWeightNormPrefixOrPostfix rhs)  {
         return this.flat_weight_norm();
     }
 }
-extension CircleRotor: FlatWeightNorm {
-    associatedtype Output = AntiScalar;
-    func flat_weight_norm() -> Output {
+public extension FlatWeightNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiScalar operator /(CircleRotor rhs) {
+        return rhs.flat_weight_norm();
+    }
+}
+public extension CircleRotor {
+    public AntiScalar flat_weight_norm() {
         return this.flat_weight_norm_squared().anti_square_root();
     }
 }
-extension Dipole {
-    // Fancy infix trick
-    func operator/(_rhs: FlatWeightNormPrefixOrPostfix) -> AntiScalar {
+public extension Dipole {
+    // Fancy postfix trick
+    public AntiScalar operator /(FlatWeightNormPrefixOrPostfix rhs)  {
         return this.flat_weight_norm();
     }
 }
-extension Dipole: FlatWeightNorm {
-    associatedtype Output = AntiScalar;
-    func flat_weight_norm() -> Output {
+public extension FlatWeightNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiScalar operator /(Dipole rhs) {
+        return rhs.flat_weight_norm();
+    }
+}
+public extension Dipole {
+    public AntiScalar flat_weight_norm() {
         return this.flat_weight_norm_squared().anti_square_root();
     }
 }
-extension DipoleInversion {
-    // Fancy infix trick
-    func operator/(_rhs: FlatWeightNormPrefixOrPostfix) -> AntiScalar {
+public extension DipoleInversion {
+    // Fancy postfix trick
+    public AntiScalar operator /(FlatWeightNormPrefixOrPostfix rhs)  {
         return this.flat_weight_norm();
     }
 }
-extension DipoleInversion: FlatWeightNorm {
-    associatedtype Output = AntiScalar;
-    func flat_weight_norm() -> Output {
+public extension FlatWeightNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiScalar operator /(DipoleInversion rhs) {
+        return rhs.flat_weight_norm();
+    }
+}
+public extension DipoleInversion {
+    public AntiScalar flat_weight_norm() {
         return this.flat_weight_norm_squared().anti_square_root();
     }
 }
-extension DualNum {
-    // Fancy infix trick
-    func operator/(_rhs: FlatWeightNormPrefixOrPostfix) -> AntiScalar {
+public extension DualNum {
+    // Fancy postfix trick
+    public AntiScalar operator /(FlatWeightNormPrefixOrPostfix rhs)  {
         return this.flat_weight_norm();
     }
 }
-extension DualNum: FlatWeightNorm {
-    associatedtype Output = AntiScalar;
-    func flat_weight_norm() -> Output {
+public extension FlatWeightNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiScalar operator /(DualNum rhs) {
+        return rhs.flat_weight_norm();
+    }
+}
+public extension DualNum {
+    public AntiScalar flat_weight_norm() {
         return this.flat_weight_norm_squared().anti_square_root();
     }
 }
-extension FlatPoint {
-    // Fancy infix trick
-    func operator/(_rhs: FlatWeightNormPrefixOrPostfix) -> AntiScalar {
+public extension FlatPoint {
+    // Fancy postfix trick
+    public AntiScalar operator /(FlatWeightNormPrefixOrPostfix rhs)  {
         return this.flat_weight_norm();
     }
 }
-extension FlatPoint: FlatWeightNorm {
-    associatedtype Output = AntiScalar;
-    func flat_weight_norm() -> Output {
+public extension FlatWeightNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiScalar operator /(FlatPoint rhs) {
+        return rhs.flat_weight_norm();
+    }
+}
+public extension FlatPoint {
+    public AntiScalar flat_weight_norm() {
         return this.flat_weight_norm_squared().anti_square_root();
     }
 }
-extension Flector {
-    // Fancy infix trick
-    func operator/(_rhs: FlatWeightNormPrefixOrPostfix) -> AntiScalar {
+public extension Flector {
+    // Fancy postfix trick
+    public AntiScalar operator /(FlatWeightNormPrefixOrPostfix rhs)  {
         return this.flat_weight_norm();
     }
 }
-extension Flector: FlatWeightNorm {
-    associatedtype Output = AntiScalar;
-    func flat_weight_norm() -> Output {
+public extension FlatWeightNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiScalar operator /(Flector rhs) {
+        return rhs.flat_weight_norm();
+    }
+}
+public extension Flector {
+    public AntiScalar flat_weight_norm() {
         return this.flat_weight_norm_squared().anti_square_root();
     }
 }
-extension Line {
-    // Fancy infix trick
-    func operator/(_rhs: FlatWeightNormPrefixOrPostfix) -> AntiScalar {
+public extension Line {
+    // Fancy postfix trick
+    public AntiScalar operator /(FlatWeightNormPrefixOrPostfix rhs)  {
         return this.flat_weight_norm();
     }
 }
-extension Line: FlatWeightNorm {
-    associatedtype Output = AntiScalar;
-    func flat_weight_norm() -> Output {
+public extension FlatWeightNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiScalar operator /(Line rhs) {
+        return rhs.flat_weight_norm();
+    }
+}
+public extension Line {
+    public AntiScalar flat_weight_norm() {
         return this.flat_weight_norm_squared().anti_square_root();
     }
 }
-extension Motor {
-    // Fancy infix trick
-    func operator/(_rhs: FlatWeightNormPrefixOrPostfix) -> AntiScalar {
+public extension Motor {
+    // Fancy postfix trick
+    public AntiScalar operator /(FlatWeightNormPrefixOrPostfix rhs)  {
         return this.flat_weight_norm();
     }
 }
-extension Motor: FlatWeightNorm {
-    associatedtype Output = AntiScalar;
-    func flat_weight_norm() -> Output {
+public extension FlatWeightNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiScalar operator /(Motor rhs) {
+        return rhs.flat_weight_norm();
+    }
+}
+public extension Motor {
+    public AntiScalar flat_weight_norm() {
         return this.flat_weight_norm_squared().anti_square_root();
     }
 }
-extension MultiVector {
-    // Fancy infix trick
-    func operator/(_rhs: FlatWeightNormPrefixOrPostfix) -> AntiScalar {
+public extension MultiVector {
+    // Fancy postfix trick
+    public AntiScalar operator /(FlatWeightNormPrefixOrPostfix rhs)  {
         return this.flat_weight_norm();
     }
 }
-extension MultiVector: FlatWeightNorm {
-    associatedtype Output = AntiScalar;
-    func flat_weight_norm() -> Output {
+public extension FlatWeightNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiScalar operator /(MultiVector rhs) {
+        return rhs.flat_weight_norm();
+    }
+}
+public extension MultiVector {
+    public AntiScalar flat_weight_norm() {
         return this.flat_weight_norm_squared().anti_square_root();
     }
 }
-extension Plane {
-    // Fancy infix trick
-    func operator/(_rhs: FlatWeightNormPrefixOrPostfix) -> AntiScalar {
+public extension Plane {
+    // Fancy postfix trick
+    public AntiScalar operator /(FlatWeightNormPrefixOrPostfix rhs)  {
         return this.flat_weight_norm();
     }
 }
-extension Plane: FlatWeightNorm {
-    associatedtype Output = AntiScalar;
-    func flat_weight_norm() -> Output {
+public extension FlatWeightNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiScalar operator /(Plane rhs) {
+        return rhs.flat_weight_norm();
+    }
+}
+public extension Plane {
+    public AntiScalar flat_weight_norm() {
         return this.flat_weight_norm_squared().anti_square_root();
     }
 }
-extension Sphere {
-    // Fancy infix trick
-    func operator/(_rhs: FlatWeightNormPrefixOrPostfix) -> AntiScalar {
+public extension Sphere {
+    // Fancy postfix trick
+    public AntiScalar operator /(FlatWeightNormPrefixOrPostfix rhs)  {
         return this.flat_weight_norm();
     }
 }
-extension Sphere: FlatWeightNorm {
-    associatedtype Output = AntiScalar;
-    func flat_weight_norm() -> Output {
+public extension FlatWeightNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiScalar operator /(Sphere rhs) {
+        return rhs.flat_weight_norm();
+    }
+}
+public extension Sphere {
+    public AntiScalar flat_weight_norm() {
         return this.flat_weight_norm_squared().anti_square_root();
     }
 }
-extension VersorEven {
-    // Fancy infix trick
-    func operator/(_rhs: FlatWeightNormPrefixOrPostfix) -> AntiScalar {
+public extension VersorEven {
+    // Fancy postfix trick
+    public AntiScalar operator /(FlatWeightNormPrefixOrPostfix rhs)  {
         return this.flat_weight_norm();
     }
 }
-extension VersorEven: FlatWeightNorm {
-    associatedtype Output = AntiScalar;
-    func flat_weight_norm() -> Output {
+public extension FlatWeightNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiScalar operator /(VersorEven rhs) {
+        return rhs.flat_weight_norm();
+    }
+}
+public extension VersorEven {
+    public AntiScalar flat_weight_norm() {
         return this.flat_weight_norm_squared().anti_square_root();
     }
 }
-extension VersorOdd {
-    // Fancy infix trick
-    func operator/(_rhs: FlatWeightNormPrefixOrPostfix) -> AntiScalar {
+public extension VersorOdd {
+    // Fancy postfix trick
+    public AntiScalar operator /(FlatWeightNormPrefixOrPostfix rhs)  {
         return this.flat_weight_norm();
     }
 }
-extension VersorOdd: FlatWeightNorm {
-    associatedtype Output = AntiScalar;
-    func flat_weight_norm() -> Output {
+public extension FlatWeightNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiScalar operator /(VersorOdd rhs) {
+        return rhs.flat_weight_norm();
+    }
+}
+public extension VersorOdd {
+    public AntiScalar flat_weight_norm() {
         return this.flat_weight_norm_squared().anti_square_root();
     }
 }

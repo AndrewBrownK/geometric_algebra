@@ -8,21 +8,17 @@ using data;
 public struct Origin {
     // e4, 0, 0, 0
     internal float4 group0;
+
+    __init(
+        float e4
+    ) {
+        group0 = float4(e4, 0.0, 0.0, 0.0);
+    }
 }
 public extension Origin {
     public property e4: float {
         get { return group0[0]; }
         set { group0[0] = newValue; }
-    }
-    public static Origin from_elements(
-        float e4
-    ) {
-        return Origin(float4(e4, 0.0, 0.0, 0.0));
-    }
-    internal static Origin from_groups(
-        float g0
-    ) {
-        return Origin(float4(g0, 0.0, 0.0, 0.0));
     }
 }
 public extension Origin: IComparable {

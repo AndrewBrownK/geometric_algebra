@@ -1,72 +1,62 @@
-extension AntiFlatPoint: AntiGrade {
-    associatedtype Output = uint;
-    func anti_grade() -> Output {
+implementing cga3d;
+using traits;
+public extension AntiFlatPoint {
+    public uint anti_grade() {
         return 2;
     }
 }
-extension AntiLine: AntiGrade {
-    associatedtype Output = uint;
-    func anti_grade() -> Output {
+public extension AntiLine {
+    public uint anti_grade() {
         return 3;
     }
 }
-extension AntiPlane: AntiGrade {
-    associatedtype Output = uint;
-    func anti_grade() -> Output {
+public extension AntiPlane {
+    public uint anti_grade() {
         return 4;
     }
 }
-extension AntiScalar: AntiGrade {
-    associatedtype Output = uint;
-    func anti_grade() -> Output {
+public extension AntiScalar {
+    public uint anti_grade() {
         return 0;
     }
 }
-extension Circle: AntiGrade {
-    associatedtype Output = uint;
-    func anti_grade() -> Output {
+public extension Circle {
+    public uint anti_grade() {
         return 2;
     }
 }
-extension Dipole: AntiGrade {
-    associatedtype Output = uint;
-    func anti_grade() -> Output {
+public extension Dipole {
+    public uint anti_grade() {
         return 3;
     }
 }
-extension FlatPoint: AntiGrade {
-    associatedtype Output = uint;
-    func anti_grade() -> Output {
+public extension FlatPoint {
+    public uint anti_grade() {
         return 3;
     }
 }
-extension Line: AntiGrade {
-    associatedtype Output = uint;
-    func anti_grade() -> Output {
+public extension Line {
+    public uint anti_grade() {
         return 2;
     }
 }
-extension Plane: AntiGrade {
-    associatedtype Output = uint;
-    func anti_grade() -> Output {
+public extension Plane {
+    public uint anti_grade() {
         return 1;
     }
 }
-extension RoundPoint: AntiGrade {
-    associatedtype Output = uint;
-    func anti_grade() -> Output {
+public extension RoundPoint {
+    public uint anti_grade() {
         return 4;
     }
 }
-extension Scalar: AntiGrade {
-    associatedtype Output = uint;
-    func anti_grade() -> Output {
+public extension Scalar {
+    public uint anti_grade() {
         return 5;
     }
 }
-extension Sphere: AntiGrade {
-    associatedtype Output = uint;
-    func anti_grade() -> Output {
+public extension Sphere {
+    public uint anti_grade() {
         return 1;
     }
 }

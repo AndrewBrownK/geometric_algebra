@@ -1,109 +1,155 @@
-using traits::UnitizedCenterNormSquared;
-extension AntiCircleRotor {
-    // Fancy infix trick
-    func operator/(_rhs: UnitizedCenterNormPrefixOrPostfix) -> float {
+implementing cga3d;
+using traits;
+public extension AntiCircleRotor {
+    // Fancy postfix trick
+    public float operator /(UnitizedCenterNormPrefixOrPostfix rhs)  {
         return this.unitized_center_norm();
     }
 }
-extension AntiCircleRotor: UnitizedCenterNorm {
-    associatedtype Output = float;
-    func unitized_center_norm() -> Output {
-        return powf(this.unitized_center_norm_squared(), 0.5);
+public extension UnitizedCenterNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public float operator /(AntiCircleRotor rhs) {
+        return rhs.unitized_center_norm();
     }
 }
-extension AntiDipoleInversion {
-    // Fancy infix trick
-    func operator/(_rhs: UnitizedCenterNormPrefixOrPostfix) -> float {
+public extension AntiCircleRotor {
+    public float unitized_center_norm() {
+        return pow(this.unitized_center_norm_squared(), 0.5);
+    }
+}
+public extension AntiDipoleInversion {
+    // Fancy postfix trick
+    public float operator /(UnitizedCenterNormPrefixOrPostfix rhs)  {
         return this.unitized_center_norm();
     }
 }
-extension AntiDipoleInversion: UnitizedCenterNorm {
-    associatedtype Output = float;
-    func unitized_center_norm() -> Output {
-        return powf(this.unitized_center_norm_squared(), 0.5);
+public extension UnitizedCenterNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public float operator /(AntiDipoleInversion rhs) {
+        return rhs.unitized_center_norm();
     }
 }
-extension Circle {
-    // Fancy infix trick
-    func operator/(_rhs: UnitizedCenterNormPrefixOrPostfix) -> float {
+public extension AntiDipoleInversion {
+    public float unitized_center_norm() {
+        return pow(this.unitized_center_norm_squared(), 0.5);
+    }
+}
+public extension Circle {
+    // Fancy postfix trick
+    public float operator /(UnitizedCenterNormPrefixOrPostfix rhs)  {
         return this.unitized_center_norm();
     }
 }
-extension Circle: UnitizedCenterNorm {
-    associatedtype Output = float;
-    func unitized_center_norm() -> Output {
-        return powf(this.unitized_center_norm_squared(), 0.5);
+public extension UnitizedCenterNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public float operator /(Circle rhs) {
+        return rhs.unitized_center_norm();
     }
 }
-extension CircleRotor {
-    // Fancy infix trick
-    func operator/(_rhs: UnitizedCenterNormPrefixOrPostfix) -> float {
+public extension Circle {
+    public float unitized_center_norm() {
+        return pow(this.unitized_center_norm_squared(), 0.5);
+    }
+}
+public extension CircleRotor {
+    // Fancy postfix trick
+    public float operator /(UnitizedCenterNormPrefixOrPostfix rhs)  {
         return this.unitized_center_norm();
     }
 }
-extension CircleRotor: UnitizedCenterNorm {
-    associatedtype Output = float;
-    func unitized_center_norm() -> Output {
-        return powf(this.unitized_center_norm_squared(), 0.5);
+public extension UnitizedCenterNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public float operator /(CircleRotor rhs) {
+        return rhs.unitized_center_norm();
     }
 }
-extension Dipole {
-    // Fancy infix trick
-    func operator/(_rhs: UnitizedCenterNormPrefixOrPostfix) -> float {
+public extension CircleRotor {
+    public float unitized_center_norm() {
+        return pow(this.unitized_center_norm_squared(), 0.5);
+    }
+}
+public extension Dipole {
+    // Fancy postfix trick
+    public float operator /(UnitizedCenterNormPrefixOrPostfix rhs)  {
         return this.unitized_center_norm();
     }
 }
-extension Dipole: UnitizedCenterNorm {
-    associatedtype Output = float;
-    func unitized_center_norm() -> Output {
-        return powf(this.unitized_center_norm_squared(), 0.5);
+public extension UnitizedCenterNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public float operator /(Dipole rhs) {
+        return rhs.unitized_center_norm();
     }
 }
-extension DipoleInversion {
-    // Fancy infix trick
-    func operator/(_rhs: UnitizedCenterNormPrefixOrPostfix) -> float {
+public extension Dipole {
+    public float unitized_center_norm() {
+        return pow(this.unitized_center_norm_squared(), 0.5);
+    }
+}
+public extension DipoleInversion {
+    // Fancy postfix trick
+    public float operator /(UnitizedCenterNormPrefixOrPostfix rhs)  {
         return this.unitized_center_norm();
     }
 }
-extension DipoleInversion: UnitizedCenterNorm {
-    associatedtype Output = float;
-    func unitized_center_norm() -> Output {
-        return powf(this.unitized_center_norm_squared(), 0.5);
+public extension UnitizedCenterNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public float operator /(DipoleInversion rhs) {
+        return rhs.unitized_center_norm();
     }
 }
-extension MultiVector {
-    // Fancy infix trick
-    func operator/(_rhs: UnitizedCenterNormPrefixOrPostfix) -> float {
+public extension DipoleInversion {
+    public float unitized_center_norm() {
+        return pow(this.unitized_center_norm_squared(), 0.5);
+    }
+}
+public extension MultiVector {
+    // Fancy postfix trick
+    public float operator /(UnitizedCenterNormPrefixOrPostfix rhs)  {
         return this.unitized_center_norm();
     }
 }
-extension MultiVector: UnitizedCenterNorm {
-    associatedtype Output = float;
-    func unitized_center_norm() -> Output {
-        return powf(this.unitized_center_norm_squared(), 0.5);
+public extension UnitizedCenterNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public float operator /(MultiVector rhs) {
+        return rhs.unitized_center_norm();
     }
 }
-extension VersorEven {
-    // Fancy infix trick
-    func operator/(_rhs: UnitizedCenterNormPrefixOrPostfix) -> float {
+public extension MultiVector {
+    public float unitized_center_norm() {
+        return pow(this.unitized_center_norm_squared(), 0.5);
+    }
+}
+public extension VersorEven {
+    // Fancy postfix trick
+    public float operator /(UnitizedCenterNormPrefixOrPostfix rhs)  {
         return this.unitized_center_norm();
     }
 }
-extension VersorEven: UnitizedCenterNorm {
-    associatedtype Output = float;
-    func unitized_center_norm() -> Output {
-        return powf(this.unitized_center_norm_squared(), 0.5);
+public extension UnitizedCenterNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public float operator /(VersorEven rhs) {
+        return rhs.unitized_center_norm();
     }
 }
-extension VersorOdd {
-    // Fancy infix trick
-    func operator/(_rhs: UnitizedCenterNormPrefixOrPostfix) -> float {
+public extension VersorEven {
+    public float unitized_center_norm() {
+        return pow(this.unitized_center_norm_squared(), 0.5);
+    }
+}
+public extension VersorOdd {
+    // Fancy postfix trick
+    public float operator /(UnitizedCenterNormPrefixOrPostfix rhs)  {
         return this.unitized_center_norm();
     }
 }
-extension VersorOdd: UnitizedCenterNorm {
-    associatedtype Output = float;
-    func unitized_center_norm() -> Output {
-        return powf(this.unitized_center_norm_squared(), 0.5);
+public extension UnitizedCenterNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public float operator /(VersorOdd rhs) {
+        return rhs.unitized_center_norm();
+    }
+}
+public extension VersorOdd {
+    public float unitized_center_norm() {
+        return pow(this.unitized_center_norm_squared(), 0.5);
     }
 }

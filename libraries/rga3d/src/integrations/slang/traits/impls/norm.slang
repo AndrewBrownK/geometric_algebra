@@ -14,7 +14,7 @@ public extension NormPrefixOrPostfix {
 }
 public extension Flector {
     public DualNum norm() {
-        return DualNum.from_groups(
+        return DualNum(
             /* scalar, e1234 */
             float2(this.flat_bulk_norm().scalar, this.flat_weight_norm().e1234)
         );
@@ -34,7 +34,7 @@ public extension NormPrefixOrPostfix {
 }
 public extension Line {
     public DualNum norm() {
-        return DualNum.from_groups(
+        return DualNum(
             /* scalar, e1234 */
             float2(this.flat_bulk_norm().scalar, this.flat_weight_norm().e1234)
         );
@@ -54,7 +54,7 @@ public extension NormPrefixOrPostfix {
 }
 public extension Motor {
     public DualNum norm() {
-        return DualNum.from_groups(
+        return DualNum(
             /* scalar, e1234 */
             float2(this.flat_bulk_norm().scalar, this.flat_weight_norm().e1234)
         );
@@ -74,7 +74,7 @@ public extension NormPrefixOrPostfix {
 }
 public extension MultiVector {
     public DualNum norm() {
-        return DualNum.from_groups(
+        return DualNum(
             /* scalar, e1234 */
             float2(this.flat_bulk_norm().scalar, this.flat_weight_norm().e1234)
         );
@@ -94,7 +94,7 @@ public extension NormPrefixOrPostfix {
 }
 public extension Point {
     public DualNum norm() {
-        return DualNum.from_groups(
+        return DualNum(
             /* scalar, e1234 */
             float2(this.flat_bulk_norm().scalar, this.flat_weight_norm().e1234)
         );

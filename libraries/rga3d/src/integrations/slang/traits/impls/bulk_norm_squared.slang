@@ -14,7 +14,7 @@ public extension BulkNormSquaredPrefixOrPostfix {
 }
 public extension Flector {
     public Scalar bulk_norm_squared() {
-        Motor flat_bulk_thing = this.flat_bulk().wedge(Origin.from_groups(
+        Motor flat_bulk_thing = this.flat_bulk().wedge(Origin(
             /* e4 */
             1.0
         ));
@@ -35,7 +35,7 @@ public extension BulkNormSquaredPrefixOrPostfix {
 }
 public extension Line {
     public Scalar bulk_norm_squared() {
-        Plane flat_bulk_thing = this.flat_bulk().wedge(Origin.from_groups(
+        Plane flat_bulk_thing = this.flat_bulk().wedge(Origin(
             /* e4 */
             1.0
         ));
@@ -56,7 +56,7 @@ public extension BulkNormSquaredPrefixOrPostfix {
 }
 public extension Motor {
     public Scalar bulk_norm_squared() {
-        Flector flat_bulk_thing = this.flat_bulk().wedge(Origin.from_groups(
+        Flector flat_bulk_thing = this.flat_bulk().wedge(Origin(
             /* e4 */
             1.0
         ));
@@ -77,7 +77,7 @@ public extension BulkNormSquaredPrefixOrPostfix {
 }
 public extension MultiVector {
     public Scalar bulk_norm_squared() {
-        MultiVector flat_bulk_thing = this.flat_bulk().wedge(Origin.from_groups(
+        MultiVector flat_bulk_thing = this.flat_bulk().wedge(Origin(
             /* e4 */
             1.0
         ));
@@ -98,7 +98,7 @@ public extension BulkNormSquaredPrefixOrPostfix {
 }
 public extension Point {
     public Scalar bulk_norm_squared() {
-        Line flat_bulk_thing = this.flat_bulk().wedge(Origin.from_groups(
+        Line flat_bulk_thing = this.flat_bulk().wedge(Origin(
             /* e4 */
             1.0
         ));

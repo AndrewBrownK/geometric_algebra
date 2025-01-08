@@ -1,27 +1,34 @@
-extension AntiCircleRotor {
-    // Fancy infix trick
-    func operator/(_rhs: AntiSupportPrefixOrPostfix) -> DipoleInversion {
+implementing cga3d;
+using traits;
+public extension AntiCircleRotor {
+    // Fancy postfix trick
+    public DipoleInversion operator /(AntiSupportPrefixOrPostfix rhs)  {
         return this.anti_support();
     }
 }
-extension AntiCircleRotor: AntiSupport {
-    associatedtype Output = DipoleInversion;
-    func anti_support() -> Output {
-        Plane right_complement = Plane.from_groups(
+public extension AntiSupportPrefixOrPostfix {
+    // Fancy prefix trick
+    public DipoleInversion operator /(AntiCircleRotor rhs) {
+        return rhs.anti_support();
+    }
+}
+public extension AntiCircleRotor {
+    public DipoleInversion anti_support() {
+        Plane right_complement = Plane(
             /* e4235, e4315, e4125, e3215 */
             float4(float3(0.0), 1.0)
         );
-        CircleRotor right_dual = CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz * float3(-1.0), 0.0), 
+        CircleRotor right_dual = CircleRotor(
+            /* e423, e431, e412 */
+            this.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             this.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e12345 */
             this.group2 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4((right_dual.group0.xyz.zxy * right_complement.group0.yzx) - (right_dual.group0.xyz.yzx * right_complement.group0.zxy), 0.0), 
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            (right_dual.group0.xyz.zxy * right_complement.group0.yzx) - (right_dual.group0.xyz.yzx * right_complement.group0.zxy), 
             /* e23, e31, e12, e45 */
             float4(right_dual.e423 * right_complement.e3215, right_dual.e431 * right_complement.e3215, right_dual.e412 * right_complement.e3215, -(right_dual.e425 * right_complement.e4315) - (right_dual.e435 * right_complement.e4125)) - (right_dual.group1.wwwx * right_complement.group0.xyzx), 
             /* e15, e25, e35, e1234 */
@@ -31,26 +38,27 @@ extension AntiCircleRotor: AntiSupport {
         );
     }
 }
-extension AntiDipoleInversion {
-    // Fancy infix trick
-    func operator/(_rhs: AntiSupportPrefixOrPostfix) -> AntiDipoleInversion {
+public extension AntiDipoleInversion {
+    // Fancy postfix trick
+    public AntiDipoleInversion operator /(AntiSupportPrefixOrPostfix rhs)  {
         return this.anti_support();
     }
-    func operator/=(const AntiSupportPrefixOrPostfix& _rhs) -> AntiDipoleInversion& {
-        this = this.anti_support();
-        return *this;
+}
+public extension AntiSupportPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiDipoleInversion operator /(AntiDipoleInversion rhs) {
+        return rhs.anti_support();
     }
 }
-extension AntiDipoleInversion: AntiSupport {
-    associatedtype Output = AntiDipoleInversion;
-    func anti_support() -> Output {
-        Plane right_complement = Plane.from_groups(
+public extension AntiDipoleInversion {
+    public AntiDipoleInversion anti_support() {
+        Plane right_complement = Plane(
             /* e4235, e4315, e4125, e3215 */
             float4(float3(0.0), 1.0)
         );
-        DipoleInversion right_dual = DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(this.group0.xyz, 0.0), 
+        DipoleInversion right_dual = DipoleInversion(
+            /* e41, e42, e43 */
+            this.group0.xyz, 
             /* e23, e31, e12, e45 */
             this.group1 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, e1234 */
@@ -58,9 +66,9 @@ extension AntiDipoleInversion: AntiSupport {
             /* e4235, e4315, e4125, e3215 */
             this.group3 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(right_dual.e1234) * right_complement.group0.xyz * float3(-1.0), 0.0), 
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(right_dual.e1234) * right_complement.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             float4(((right_dual.group3.yzx * right_complement.group0.zxy) - (right_dual.group3.zxy * right_complement.group0.yzx)), right_dual.e1234 * right_complement.e3215 * -1.0), 
             /* e235, e315, e125, e4 */
@@ -70,64 +78,79 @@ extension AntiDipoleInversion: AntiSupport {
         );
     }
 }
-extension AntiDualNum {
-    // Fancy infix trick
-    func operator/(_rhs: AntiSupportPrefixOrPostfix) -> Plane {
+public extension AntiDualNum {
+    // Fancy postfix trick
+    public Plane operator /(AntiSupportPrefixOrPostfix rhs)  {
         return this.anti_support();
     }
 }
-extension AntiDualNum: AntiSupport {
-    associatedtype Output = Plane;
-    func anti_support() -> Output {
-        return Plane.from_groups(
+public extension AntiSupportPrefixOrPostfix {
+    // Fancy prefix trick
+    public Plane operator /(AntiDualNum rhs) {
+        return rhs.anti_support();
+    }
+}
+public extension AntiDualNum {
+    public Plane anti_support() {
+        return Plane(
             /* e4235, e4315, e4125, e3215 */
             float4(this.scalar) * float4(float3(0.0), 1.0)
         );
     }
 }
-extension AntiFlatPoint {
-    // Fancy infix trick
-    func operator/(_rhs: AntiSupportPrefixOrPostfix) -> DualNum {
+public extension AntiFlatPoint {
+    // Fancy postfix trick
+    public DualNum operator /(AntiSupportPrefixOrPostfix rhs)  {
         return this.anti_support();
     }
 }
-extension AntiFlatPoint: AntiSupport {
-    associatedtype Output = DualNum;
-    func anti_support() -> Output {
-        Plane right_complement = Plane.from_groups(
+public extension AntiSupportPrefixOrPostfix {
+    // Fancy prefix trick
+    public DualNum operator /(AntiFlatPoint rhs) {
+        return rhs.anti_support();
+    }
+}
+public extension AntiFlatPoint {
+    public DualNum anti_support() {
+        Plane right_complement = Plane(
             /* e4235, e4315, e4125, e3215 */
             float4(float3(0.0), 1.0)
         );
-        FlatPoint right_dual = FlatPoint.from_groups(
+        FlatPoint right_dual = FlatPoint(
             /* e15, e25, e35, e45 */
             this.group0 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(float2(-(right_dual.e15 * right_complement.e4235) - (right_dual.e25 * right_complement.e4315) - (right_dual.e35 * right_complement.e4125) - (right_dual.e45 * right_complement.e3215), 0.0), 0.0, 0.0)
+        return DualNum(
+            /* e5, e12345 */
+            float2(-(right_dual.e15 * right_complement.e4235) - (right_dual.e25 * right_complement.e4315) - (right_dual.e35 * right_complement.e4125) - (right_dual.e45 * right_complement.e3215), 0.0)
         );
     }
 }
-extension AntiFlector {
-    // Fancy infix trick
-    func operator/(_rhs: AntiSupportPrefixOrPostfix) -> Motor {
+public extension AntiFlector {
+    // Fancy postfix trick
+    public Motor operator /(AntiSupportPrefixOrPostfix rhs)  {
         return this.anti_support();
     }
 }
-extension AntiFlector: AntiSupport {
-    associatedtype Output = Motor;
-    func anti_support() -> Output {
-        Plane right_complement = Plane.from_groups(
+public extension AntiSupportPrefixOrPostfix {
+    // Fancy prefix trick
+    public Motor operator /(AntiFlector rhs) {
+        return rhs.anti_support();
+    }
+}
+public extension AntiFlector {
+    public Motor anti_support() {
+        Plane right_complement = Plane(
             /* e4235, e4315, e4125, e3215 */
             float4(float3(0.0), 1.0)
         );
-        Flector right_dual = Flector.from_groups(
+        Flector right_dual = Flector(
             /* e15, e25, e35, e45 */
             this.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e4235, e4315, e4125, e3215 */
             this.group1 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return Motor.from_groups(
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4(((right_dual.group1.yzx * right_complement.group0.zxy) - (right_dual.group1.zxy * right_complement.group0.yzx)), 0.0), 
             /* e235, e315, e125, e5 */
@@ -135,51 +158,61 @@ extension AntiFlector: AntiSupport {
         );
     }
 }
-extension AntiLine {
-    // Fancy infix trick
-    func operator/(_rhs: AntiSupportPrefixOrPostfix) -> FlatPoint {
+public extension AntiLine {
+    // Fancy postfix trick
+    public FlatPoint operator /(AntiSupportPrefixOrPostfix rhs)  {
         return this.anti_support();
     }
 }
-extension AntiLine: AntiSupport {
-    associatedtype Output = FlatPoint;
-    func anti_support() -> Output {
-        Plane right_complement = Plane.from_groups(
+public extension AntiSupportPrefixOrPostfix {
+    // Fancy prefix trick
+    public FlatPoint operator /(AntiLine rhs) {
+        return rhs.anti_support();
+    }
+}
+public extension AntiLine {
+    public FlatPoint anti_support() {
+        Plane right_complement = Plane(
             /* e4235, e4315, e4125, e3215 */
             float4(float3(0.0), 1.0)
         );
-        Line right_dual = Line.from_groups(
-            /* e415, e425, e435, 0 */
-            float4(this.group0.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group1.xyz * float3(-1.0), 0.0)
+        Line right_dual = Line(
+            /* e415, e425, e435 */
+            this.group0.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            this.group1.xyz * float3(-1.0)
         );
-        return FlatPoint.from_groups(
+        return FlatPoint(
             /* e15, e25, e35, e45 */
             float4((right_dual.e415 * right_complement.e3215) + (right_dual.e315 * right_complement.e4125), (right_dual.e425 * right_complement.e3215) + (right_dual.e125 * right_complement.e4235), (right_dual.e435 * right_complement.e3215) + (right_dual.e235 * right_complement.e4315), -(right_dual.e425 * right_complement.e4315) - (right_dual.e435 * right_complement.e4125)) - (right_complement.group0.yzxx * float4(right_dual.group1.xyz.zxy, right_dual.e415))
         );
     }
 }
-extension AntiMotor {
-    // Fancy infix trick
-    func operator/(_rhs: AntiSupportPrefixOrPostfix) -> Flector {
+public extension AntiMotor {
+    // Fancy postfix trick
+    public Flector operator /(AntiSupportPrefixOrPostfix rhs)  {
         return this.anti_support();
     }
 }
-extension AntiMotor: AntiSupport {
-    associatedtype Output = Flector;
-    func anti_support() -> Output {
-        Plane right_complement = Plane.from_groups(
+public extension AntiSupportPrefixOrPostfix {
+    // Fancy prefix trick
+    public Flector operator /(AntiMotor rhs) {
+        return rhs.anti_support();
+    }
+}
+public extension AntiMotor {
+    public Flector anti_support() {
+        Plane right_complement = Plane(
             /* e4235, e4315, e4125, e3215 */
             float4(float3(0.0), 1.0)
         );
-        Motor right_dual = Motor.from_groups(
+        Motor right_dual = Motor(
             /* e415, e425, e435, e12345 */
             this.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e5 */
             this.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return Flector.from_groups(
+        return Flector(
             /* e15, e25, e35, e45 */
             float4((right_dual.e415 * right_complement.e3215) + (right_dual.e315 * right_complement.e4125), (right_dual.e425 * right_complement.e3215) + (right_dual.e125 * right_complement.e4235), (right_dual.e435 * right_complement.e3215) + (right_dual.e235 * right_complement.e4315), -(right_dual.e425 * right_complement.e4315) - (right_dual.e435 * right_complement.e4125)) - (right_complement.group0.yzxx * float4(right_dual.group1.zxy, right_dual.e415)), 
             /* e4235, e4315, e4125, e3215 */
@@ -187,140 +220,161 @@ extension AntiMotor: AntiSupport {
         );
     }
 }
-extension AntiPlane {
-    // Fancy infix trick
-    func operator/(_rhs: AntiSupportPrefixOrPostfix) -> Line {
+public extension AntiPlane {
+    // Fancy postfix trick
+    public Line operator /(AntiSupportPrefixOrPostfix rhs)  {
         return this.anti_support();
     }
 }
-extension AntiPlane: AntiSupport {
-    associatedtype Output = Line;
-    func anti_support() -> Output {
-        Plane right_complement = Plane.from_groups(
+public extension AntiSupportPrefixOrPostfix {
+    // Fancy prefix trick
+    public Line operator /(AntiPlane rhs) {
+        return rhs.anti_support();
+    }
+}
+public extension AntiPlane {
+    public Line anti_support() {
+        Plane right_complement = Plane(
             /* e4235, e4315, e4125, e3215 */
             float4(float3(0.0), 1.0)
         );
-        Plane right_dual = Plane.from_groups(
+        Plane right_dual = Plane(
             /* e4235, e4315, e4125, e3215 */
             this.group0 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return Line.from_groups(
-            /* e415, e425, e435, 0 */
-            float4((right_complement.group0.zxy * right_dual.group0.yzx) - (right_complement.group0.yzx * right_dual.group0.zxy), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(right_dual.e3215) * right_complement.group0.xyz) - (float3(right_complement.e3215) * right_dual.group0.xyz), 0.0)
+        return Line(
+            /* e415, e425, e435 */
+            (right_complement.group0.zxy * right_dual.group0.yzx) - (right_complement.group0.yzx * right_dual.group0.zxy), 
+            /* e235, e315, e125 */
+            (float3(right_dual.e3215) * right_complement.group0.xyz) - (float3(right_complement.e3215) * right_dual.group0.xyz)
         );
     }
 }
-extension Circle {
-    // Fancy infix trick
-    func operator/(_rhs: AntiSupportPrefixOrPostfix) -> RoundPoint {
+public extension Circle {
+    // Fancy postfix trick
+    public RoundPoint operator /(AntiSupportPrefixOrPostfix rhs)  {
         return this.anti_support();
     }
 }
-extension Circle: AntiSupport {
-    associatedtype Output = RoundPoint;
-    func anti_support() -> Output {
-        Plane right_complement = Plane.from_groups(
+public extension AntiSupportPrefixOrPostfix {
+    // Fancy prefix trick
+    public RoundPoint operator /(Circle rhs) {
+        return rhs.anti_support();
+    }
+}
+public extension Circle {
+    public RoundPoint anti_support() {
+        Plane right_complement = Plane(
             /* e4235, e4315, e4125, e3215 */
             float4(float3(0.0), 1.0)
         );
-        Dipole right_dual = Dipole.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(this.group0.xyz, 0.0), 
+        Dipole right_dual = Dipole(
+            /* e41, e42, e43 */
+            this.group0.xyz, 
             /* e23, e31, e12, e45 */
             this.group1 * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e15, e25, e35, 0 */
-            float4(this.group2.xyz, 0.0)
+            /* e15, e25, e35 */
+            this.group2.xyz
         );
-        return RoundPoint.from_groups(
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4(-(right_dual.e41 * right_complement.e3215) - (right_dual.e31 * right_complement.e4125), -(right_dual.e42 * right_complement.e3215) - (right_dual.e12 * right_complement.e4235), -(right_dual.e43 * right_complement.e3215) - (right_dual.e23 * right_complement.e4315), (right_dual.e42 * right_complement.e4315) + (right_dual.e43 * right_complement.e4125)) + (right_complement.group0.yzxx * float4(right_dual.group1.zxy, right_dual.e41)), 
-            /* e5, 0, 0, 0 */
-            float4(-(right_dual.e45 * right_complement.e3215) - (right_dual.e15 * right_complement.e4235) - (right_dual.e25 * right_complement.e4315) - (right_dual.e35 * right_complement.e4125), 0.0, 0.0, 0.0)
+            /* e5 */
+            -(right_dual.e45 * right_complement.e3215) - (right_dual.e15 * right_complement.e4235) - (right_dual.e25 * right_complement.e4315) - (right_dual.e35 * right_complement.e4125)
         );
     }
 }
-extension CircleRotor {
-    // Fancy infix trick
-    func operator/(_rhs: AntiSupportPrefixOrPostfix) -> RoundPoint {
+public extension CircleRotor {
+    // Fancy postfix trick
+    public RoundPoint operator /(AntiSupportPrefixOrPostfix rhs)  {
         return this.anti_support();
     }
 }
-extension CircleRotor: AntiSupport {
-    associatedtype Output = RoundPoint;
-    func anti_support() -> Output {
-        Plane right_complement = Plane.from_groups(
+public extension AntiSupportPrefixOrPostfix {
+    // Fancy prefix trick
+    public RoundPoint operator /(CircleRotor rhs) {
+        return rhs.anti_support();
+    }
+}
+public extension CircleRotor {
+    public RoundPoint anti_support() {
+        Plane right_complement = Plane(
             /* e4235, e4315, e4125, e3215 */
             float4(float3(0.0), 1.0)
         );
-        AntiCircleRotor right_dual = AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(this.group0.xyz, 0.0), 
+        AntiCircleRotor right_dual = AntiCircleRotor(
+            /* e41, e42, e43 */
+            this.group0.xyz, 
             /* e23, e31, e12, e45 */
             this.group1 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, scalar */
             this.group2 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return RoundPoint.from_groups(
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4(-(right_dual.e41 * right_complement.e3215) - (right_dual.e31 * right_complement.e4125), -(right_dual.e42 * right_complement.e3215) - (right_dual.e12 * right_complement.e4235), -(right_dual.e43 * right_complement.e3215) - (right_dual.e23 * right_complement.e4315), (right_dual.e42 * right_complement.e4315) + (right_dual.e43 * right_complement.e4125)) + (right_complement.group0.yzxx * float4(right_dual.group1.zxy, right_dual.e41)), 
-            /* e5, 0, 0, 0 */
-            float4(-(right_dual.e45 * right_complement.e3215) - (right_dual.e15 * right_complement.e4235) - (right_dual.e25 * right_complement.e4315) - (right_dual.e35 * right_complement.e4125), 0.0, 0.0, 0.0)
+            /* e5 */
+            -(right_dual.e45 * right_complement.e3215) - (right_dual.e15 * right_complement.e4235) - (right_dual.e25 * right_complement.e4315) - (right_dual.e35 * right_complement.e4125)
         );
     }
 }
-extension Dipole {
-    // Fancy infix trick
-    func operator/(_rhs: AntiSupportPrefixOrPostfix) -> Dipole {
+public extension Dipole {
+    // Fancy postfix trick
+    public Dipole operator /(AntiSupportPrefixOrPostfix rhs)  {
         return this.anti_support();
     }
-    func operator/=(const AntiSupportPrefixOrPostfix& _rhs) -> Dipole& {
-        this = this.anti_support();
-        return *this;
+}
+public extension AntiSupportPrefixOrPostfix {
+    // Fancy prefix trick
+    public Dipole operator /(Dipole rhs) {
+        return rhs.anti_support();
     }
 }
-extension Dipole: AntiSupport {
-    associatedtype Output = Dipole;
-    func anti_support() -> Output {
-        Plane right_complement = Plane.from_groups(
+public extension Dipole {
+    public Dipole anti_support() {
+        Plane right_complement = Plane(
             /* e4235, e4315, e4125, e3215 */
             float4(float3(0.0), 1.0)
         );
-        Circle right_dual = Circle.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz * float3(-1.0), 0.0), 
+        Circle right_dual = Circle(
+            /* e423, e431, e412 */
+            this.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             this.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group2.xyz * float3(-1.0), 0.0)
+            /* e235, e315, e125 */
+            this.group2.xyz * float3(-1.0)
         );
-        return Dipole.from_groups(
-            /* e41, e42, e43, 0 */
-            float4((right_dual.group0.xyz.zxy * right_complement.group0.yzx) - (right_dual.group0.xyz.yzx * right_complement.group0.zxy), 0.0), 
+        return Dipole(
+            /* e41, e42, e43 */
+            (right_dual.group0.xyz.zxy * right_complement.group0.yzx) - (right_dual.group0.xyz.yzx * right_complement.group0.zxy), 
             /* e23, e31, e12, e45 */
             float4(right_dual.e423 * right_complement.e3215, right_dual.e431 * right_complement.e3215, right_dual.e412 * right_complement.e3215, -(right_dual.e425 * right_complement.e4315) - (right_dual.e435 * right_complement.e4125)) - (right_dual.group1.wwwx * right_complement.group0.xyzx), 
-            /* e15, e25, e35, 0 */
-            float4((float3(right_complement.e3215) * right_dual.group1.xyz) + (right_dual.group2.xyz.yzx * right_complement.group0.zxy) - (right_dual.group2.xyz.zxy * right_complement.group0.yzx), 0.0)
+            /* e15, e25, e35 */
+            (float3(right_complement.e3215) * right_dual.group1.xyz) + (right_dual.group2.xyz.yzx * right_complement.group0.zxy) - (right_dual.group2.xyz.zxy * right_complement.group0.yzx)
         );
     }
 }
-extension DipoleInversion {
-    // Fancy infix trick
-    func operator/(_rhs: AntiSupportPrefixOrPostfix) -> AntiCircleRotor {
+public extension DipoleInversion {
+    // Fancy postfix trick
+    public AntiCircleRotor operator /(AntiSupportPrefixOrPostfix rhs)  {
         return this.anti_support();
     }
 }
-extension DipoleInversion: AntiSupport {
-    associatedtype Output = AntiCircleRotor;
-    func anti_support() -> Output {
-        Plane right_complement = Plane.from_groups(
+public extension AntiSupportPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiCircleRotor operator /(DipoleInversion rhs) {
+        return rhs.anti_support();
+    }
+}
+public extension DipoleInversion {
+    public AntiCircleRotor anti_support() {
+        Plane right_complement = Plane(
             /* e4235, e4315, e4125, e3215 */
             float4(float3(0.0), 1.0)
         );
-        AntiDipoleInversion right_dual = AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz * float3(-1.0), 0.0), 
+        AntiDipoleInversion right_dual = AntiDipoleInversion(
+            /* e423, e431, e412 */
+            this.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             this.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e4 */
@@ -328,9 +382,9 @@ extension DipoleInversion: AntiSupport {
             /* e1, e2, e3, e5 */
             this.group3 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4((right_dual.group0.xyz.zxy * right_complement.group0.yzx) - (right_dual.group0.xyz.yzx * right_complement.group0.zxy), 0.0), 
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            (right_dual.group0.xyz.zxy * right_complement.group0.yzx) - (right_dual.group0.xyz.yzx * right_complement.group0.zxy), 
             /* e23, e31, e12, e45 */
             float4(right_dual.e423 * right_complement.e3215, right_dual.e431 * right_complement.e3215, right_dual.e412 * right_complement.e3215, -(right_dual.e425 * right_complement.e4315) - (right_dual.e435 * right_complement.e4125)) - (right_dual.group1.wwwx * right_complement.group0.xyzx), 
             /* e15, e25, e35, scalar */
@@ -338,70 +392,85 @@ extension DipoleInversion: AntiSupport {
         );
     }
 }
-extension DualNum {
-    // Fancy infix trick
-    func operator/(_rhs: AntiSupportPrefixOrPostfix) -> AntiFlatPoint {
+public extension DualNum {
+    // Fancy postfix trick
+    public AntiFlatPoint operator /(AntiSupportPrefixOrPostfix rhs)  {
         return this.anti_support();
     }
 }
-extension DualNum: AntiSupport {
-    associatedtype Output = AntiFlatPoint;
-    func anti_support() -> Output {
-        AntiDualNum right_dual = AntiDualNum.from_groups(
-            /* e3215, scalar, 0, 0 */
-            float4(this.group0.xy * float2(-1.0), 0.0, 0.0)
+public extension AntiSupportPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiFlatPoint operator /(DualNum rhs) {
+        return rhs.anti_support();
+    }
+}
+public extension DualNum {
+    public AntiFlatPoint anti_support() {
+        AntiDualNum right_dual = AntiDualNum(
+            /* e3215, scalar */
+            this.group0.xy * float2(-1.0)
         );
-        return AntiFlatPoint.from_groups(
+        return AntiFlatPoint(
             /* e235, e315, e125, e321 */
             float4(right_dual.group0.xy.xx, right_dual.e3215, 0.0) * float4(float3(0.0), 0.0) * float4(float3(1.0), 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         );
     }
 }
-extension FlatPoint {
-    // Fancy infix trick
-    func operator/(_rhs: AntiSupportPrefixOrPostfix) -> AntiLine {
+public extension FlatPoint {
+    // Fancy postfix trick
+    public AntiLine operator /(AntiSupportPrefixOrPostfix rhs)  {
         return this.anti_support();
     }
 }
-extension FlatPoint: AntiSupport {
-    associatedtype Output = AntiLine;
-    func anti_support() -> Output {
-        Plane right_complement = Plane.from_groups(
+public extension AntiSupportPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiLine operator /(FlatPoint rhs) {
+        return rhs.anti_support();
+    }
+}
+public extension FlatPoint {
+    public AntiLine anti_support() {
+        Plane right_complement = Plane(
             /* e4235, e4315, e4125, e3215 */
             float4(float3(0.0), 1.0)
         );
-        AntiFlatPoint right_dual = AntiFlatPoint.from_groups(
+        AntiFlatPoint right_dual = AntiFlatPoint(
             /* e235, e315, e125, e321 */
             this.group0 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiLine.from_groups(
-            /* e23, e31, e12, 0 */
-            float4(float3(right_dual.e321) * right_complement.group0.xyz * float3(-1.0), 0.0), 
-            /* e15, e25, e35, 0 */
-            float4((right_dual.group0.yzx * right_complement.group0.zxy) - (right_dual.group0.zxy * right_complement.group0.yzx), 0.0)
+        return AntiLine(
+            /* e23, e31, e12 */
+            float3(right_dual.e321) * right_complement.group0.xyz * float3(-1.0), 
+            /* e15, e25, e35 */
+            (right_dual.group0.yzx * right_complement.group0.zxy) - (right_dual.group0.zxy * right_complement.group0.yzx)
         );
     }
 }
-extension Flector {
-    // Fancy infix trick
-    func operator/(_rhs: AntiSupportPrefixOrPostfix) -> AntiMotor {
+public extension Flector {
+    // Fancy postfix trick
+    public AntiMotor operator /(AntiSupportPrefixOrPostfix rhs)  {
         return this.anti_support();
     }
 }
-extension Flector: AntiSupport {
-    associatedtype Output = AntiMotor;
-    func anti_support() -> Output {
-        Plane right_complement = Plane.from_groups(
+public extension AntiSupportPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiMotor operator /(Flector rhs) {
+        return rhs.anti_support();
+    }
+}
+public extension Flector {
+    public AntiMotor anti_support() {
+        Plane right_complement = Plane(
             /* e4235, e4315, e4125, e3215 */
             float4(float3(0.0), 1.0)
         );
-        AntiFlector right_dual = AntiFlector.from_groups(
+        AntiFlector right_dual = AntiFlector(
             /* e235, e315, e125, e321 */
             this.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e1, e2, e3, e5 */
             this.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiMotor.from_groups(
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4((right_dual.group0.www * right_complement.group0.xyz * float3(-1.0)), (right_dual.e1 * right_complement.e4235) + (right_dual.e2 * right_complement.e4315) + (right_dual.e3 * right_complement.e4125)), 
             /* e15, e25, e35, e3215 */
@@ -409,51 +478,61 @@ extension Flector: AntiSupport {
         );
     }
 }
-extension Line {
-    // Fancy infix trick
-    func operator/(_rhs: AntiSupportPrefixOrPostfix) -> AntiPlane {
+public extension Line {
+    // Fancy postfix trick
+    public AntiPlane operator /(AntiSupportPrefixOrPostfix rhs)  {
         return this.anti_support();
     }
 }
-extension Line: AntiSupport {
-    associatedtype Output = AntiPlane;
-    func anti_support() -> Output {
-        Plane right_complement = Plane.from_groups(
+public extension AntiSupportPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiPlane operator /(Line rhs) {
+        return rhs.anti_support();
+    }
+}
+public extension Line {
+    public AntiPlane anti_support() {
+        Plane right_complement = Plane(
             /* e4235, e4315, e4125, e3215 */
             float4(float3(0.0), 1.0)
         );
-        AntiLine right_dual = AntiLine.from_groups(
-            /* e23, e31, e12, 0 */
-            float4(this.group0.xyz, 0.0), 
-            /* e15, e25, e35, 0 */
-            float4(this.group1.xyz, 0.0)
+        AntiLine right_dual = AntiLine(
+            /* e23, e31, e12 */
+            this.group0.xyz, 
+            /* e15, e25, e35 */
+            this.group1.xyz
         );
-        return AntiPlane.from_groups(
+        return AntiPlane(
             /* e1, e2, e3, e5 */
             float4(right_dual.e12 * right_complement.e4315, right_dual.e23 * right_complement.e4125, right_dual.e31 * right_complement.e4235, -(right_dual.e25 * right_complement.e4315) - (right_dual.e35 * right_complement.e4125)) - (right_complement.group0.zxyx * float4(right_dual.group0.xyz.yzx, right_dual.e15))
         );
     }
 }
-extension Motor {
-    // Fancy infix trick
-    func operator/(_rhs: AntiSupportPrefixOrPostfix) -> AntiFlector {
+public extension Motor {
+    // Fancy postfix trick
+    public AntiFlector operator /(AntiSupportPrefixOrPostfix rhs)  {
         return this.anti_support();
     }
 }
-extension Motor: AntiSupport {
-    associatedtype Output = AntiFlector;
-    func anti_support() -> Output {
-        Plane right_complement = Plane.from_groups(
+public extension AntiSupportPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiFlector operator /(Motor rhs) {
+        return rhs.anti_support();
+    }
+}
+public extension Motor {
+    public AntiFlector anti_support() {
+        Plane right_complement = Plane(
             /* e4235, e4315, e4125, e3215 */
             float4(float3(0.0), 1.0)
         );
-        AntiMotor right_dual = AntiMotor.from_groups(
+        AntiMotor right_dual = AntiMotor(
             /* e23, e31, e12, scalar */
             this.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, e3215 */
             this.group1 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiFlector.from_groups(
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(float3(1.0), 0.0) * float4(right_dual.group1.www, 0.0) * float4(right_complement.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
             /* e1, e2, e3, e5 */
@@ -461,179 +540,205 @@ extension Motor: AntiSupport {
         );
     }
 }
-extension MultiVector {
-    // Fancy infix trick
-    func operator/(_rhs: AntiSupportPrefixOrPostfix) -> MultiVector {
+public extension MultiVector {
+    // Fancy postfix trick
+    public MultiVector operator /(AntiSupportPrefixOrPostfix rhs)  {
         return this.anti_support();
     }
-    func operator/=(const AntiSupportPrefixOrPostfix& _rhs) -> MultiVector& {
-        this = this.anti_support();
-        return *this;
+}
+public extension AntiSupportPrefixOrPostfix {
+    // Fancy prefix trick
+    public MultiVector operator /(MultiVector rhs) {
+        return rhs.anti_support();
     }
 }
-extension MultiVector: AntiSupport {
-    associatedtype Output = MultiVector;
-    func anti_support() -> Output {
-        Plane right_complement = Plane.from_groups(
+public extension MultiVector {
+    public MultiVector anti_support() {
+        Plane right_complement = Plane(
             /* e4235, e4315, e4125, e3215 */
             float4(float3(0.0), 1.0)
         );
-        MultiVector right_dual = MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(this.group0.xy.yx * float2(-1.0, 1.0), 0.0, 0.0), 
+        MultiVector right_dual = MultiVector(
+            /* scalar, e12345 */
+            this.group0.xy.yx * float2(-1.0, 1.0), 
             /* e1, e2, e3, e4 */
             float4(this.group9.xyz, this.e1234) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e5, 0, 0, 0 */
-            float4(this.e3215, 0.0, 0.0, 0.0), 
+            /* e5 */
+            this.e3215, 
             /* e15, e25, e35, e45 */
             float4(this.group8.xyz, this.e321 * -1.0), 
-            /* e41, e42, e43, 0 */
-            float4(this.group7.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(this.group6.xyz, 0.0), 
+            /* e41, e42, e43 */
+            this.group7.xyz, 
+            /* e23, e31, e12 */
+            this.group6.xyz, 
             /* e415, e425, e435, e321 */
             float4(this.group5.xyz, this.e45) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e423, e431, e412, 0 */
-            float4(this.group4.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group3.xyz * float3(-1.0), 0.0), 
+            /* e423, e431, e412 */
+            this.group4.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            this.group3.xyz * float3(-1.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(this.group1.xyz, this.e5) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(this.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            this.e4 * -1.0
         );
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((right_dual.e1 * right_complement.e4235) + (right_dual.e2 * right_complement.e4315) + (right_dual.e3 * right_complement.e4125) + (right_dual.e4 * right_complement.e3215), 0.0), 0.0, 0.0), 
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((right_dual.e1 * right_complement.e4235) + (right_dual.e2 * right_complement.e4315) + (right_dual.e3 * right_complement.e4125) + (right_dual.e4 * right_complement.e3215), 0.0), 
             /* e1, e2, e3, e4 */
             float4(-(right_dual.e41 * right_complement.e3215) - (right_dual.e31 * right_complement.e4125), -(right_dual.e42 * right_complement.e3215) - (right_dual.e12 * right_complement.e4235), -(right_dual.e43 * right_complement.e3215) - (right_dual.e23 * right_complement.e4315), (right_dual.e42 * right_complement.e4315) + (right_dual.e43 * right_complement.e4125)) + (right_complement.group0.yzxx * float4(right_dual.group5.xyz.zxy, right_dual.e41)), 
-            /* e5, 0, 0, 0 */
-            float4(-(right_dual.e15 * right_complement.e4235) - (right_dual.e25 * right_complement.e4315) - (right_dual.e35 * right_complement.e4125) - (right_dual.e45 * right_complement.e3215), 0.0, 0.0, 0.0), 
+            /* e5 */
+            -(right_dual.e15 * right_complement.e4235) - (right_dual.e25 * right_complement.e4315) - (right_dual.e35 * right_complement.e4125) - (right_dual.e45 * right_complement.e3215), 
             /* e15, e25, e35, e45 */
             float4((right_dual.e415 * right_complement.e3215) + (right_dual.e315 * right_complement.e4125), (right_dual.e425 * right_complement.e3215) + (right_dual.e125 * right_complement.e4235), (right_dual.e435 * right_complement.e3215) + (right_dual.e235 * right_complement.e4315), -(right_dual.e425 * right_complement.e4315) - (right_dual.e435 * right_complement.e4125)) - (right_complement.group0.yzxx * float4(right_dual.group8.xyz.zxy, right_dual.e415)), 
-            /* e41, e42, e43, 0 */
-            float4((right_dual.group7.xyz.zxy * right_complement.group0.yzx) - (right_dual.group7.xyz.yzx * right_complement.group0.zxy), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(right_complement.e3215) * right_dual.group7.xyz) - (float3(right_dual.e321) * right_complement.group0.xyz), 0.0), 
+            /* e41, e42, e43 */
+            (right_dual.group7.xyz.zxy * right_complement.group0.yzx) - (right_dual.group7.xyz.yzx * right_complement.group0.zxy), 
+            /* e23, e31, e12 */
+            (float3(right_complement.e3215) * right_dual.group7.xyz) - (float3(right_dual.e321) * right_complement.group0.xyz), 
             /* e415, e425, e435, e321 */
             float4(((right_dual.group9.yzx * right_complement.group0.zxy) - (right_dual.group9.zxy * right_complement.group0.yzx)), right_dual.e1234 * right_complement.e3215 * -1.0), 
-            /* e423, e431, e412, 0 */
-            float4(float3(right_dual.e1234) * right_complement.group0.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(right_dual.e3215) * right_complement.group0.xyz) - (float3(right_complement.e3215) * right_dual.group9.xyz), 0.0), 
+            /* e423, e431, e412 */
+            float3(right_dual.e1234) * right_complement.group0.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            (float3(right_dual.e3215) * right_complement.group0.xyz) - (float3(right_complement.e3215) * right_dual.group9.xyz), 
             /* e4235, e4315, e4125, e3215 */
             float4(right_dual.e12345) * right_complement.group0, 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension Plane {
-    // Fancy infix trick
-    func operator/(_rhs: AntiSupportPrefixOrPostfix) -> Scalar {
+public extension Plane {
+    // Fancy postfix trick
+    public Scalar operator /(AntiSupportPrefixOrPostfix rhs)  {
         return this.anti_support();
     }
 }
-extension Plane: AntiSupport {
-    associatedtype Output = Scalar;
-    func anti_support() -> Output {
-        Plane right_complement = Plane.from_groups(
+public extension AntiSupportPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(Plane rhs) {
+        return rhs.anti_support();
+    }
+}
+public extension Plane {
+    public Scalar anti_support() {
+        Plane right_complement = Plane(
             /* e4235, e4315, e4125, e3215 */
             float4(float3(0.0), 1.0)
         );
-        AntiPlane right_dual = AntiPlane.from_groups(
+        AntiPlane right_dual = AntiPlane(
             /* e1, e2, e3, e5 */
             this.group0 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4((right_dual.e1 * right_complement.e4235) + (right_dual.e2 * right_complement.e4315) + (right_dual.e3 * right_complement.e4125), 0.0, 0.0, 0.0)
+        return Scalar(
+            /* scalar */
+            (right_dual.e1 * right_complement.e4235) + (right_dual.e2 * right_complement.e4315) + (right_dual.e3 * right_complement.e4125)
         );
     }
 }
-extension RoundPoint {
-    // Fancy infix trick
-    func operator/(_rhs: AntiSupportPrefixOrPostfix) -> Circle {
+public extension RoundPoint {
+    // Fancy postfix trick
+    public Circle operator /(AntiSupportPrefixOrPostfix rhs)  {
         return this.anti_support();
     }
 }
-extension RoundPoint: AntiSupport {
-    associatedtype Output = Circle;
-    func anti_support() -> Output {
-        Plane right_complement = Plane.from_groups(
+public extension AntiSupportPrefixOrPostfix {
+    // Fancy prefix trick
+    public Circle operator /(RoundPoint rhs) {
+        return rhs.anti_support();
+    }
+}
+public extension RoundPoint {
+    public Circle anti_support() {
+        Plane right_complement = Plane(
             /* e4235, e4315, e4125, e3215 */
             float4(float3(0.0), 1.0)
         );
-        Sphere right_dual = Sphere.from_groups(
+        Sphere right_dual = Sphere(
             /* e4235, e4315, e4125, e3215 */
             float4(this.group0.xyz, this.e5) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(this.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            this.e4 * -1.0
         );
-        return Circle.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(right_dual.e1234) * right_complement.group0.xyz * float3(-1.0), 0.0), 
+        return Circle(
+            /* e423, e431, e412 */
+            float3(right_dual.e1234) * right_complement.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             float4(((right_complement.group0.zxy * right_dual.group0.yzx) - (right_complement.group0.yzx * right_dual.group0.zxy)), right_complement.e3215 * right_dual.e1234 * -1.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(right_dual.e3215) * right_complement.group0.xyz) - (float3(right_complement.e3215) * right_dual.group0.xyz), 0.0)
+            /* e235, e315, e125 */
+            (float3(right_dual.e3215) * right_complement.group0.xyz) - (float3(right_complement.e3215) * right_dual.group0.xyz)
         );
     }
 }
-extension Scalar {
-    // Fancy infix trick
-    func operator/(_rhs: AntiSupportPrefixOrPostfix) -> Plane {
+public extension Scalar {
+    // Fancy postfix trick
+    public Plane operator /(AntiSupportPrefixOrPostfix rhs)  {
         return this.anti_support();
     }
 }
-extension Scalar: AntiSupport {
-    associatedtype Output = Plane;
-    func anti_support() -> Output {
-        return Plane.from_groups(
+public extension AntiSupportPrefixOrPostfix {
+    // Fancy prefix trick
+    public Plane operator /(Scalar rhs) {
+        return rhs.anti_support();
+    }
+}
+public extension Scalar {
+    public Plane anti_support() {
+        return Plane(
             /* e4235, e4315, e4125, e3215 */
             float4(this.scalar) * float4(float3(0.0), 1.0)
         );
     }
 }
-extension Sphere {
-    // Fancy infix trick
-    func operator/(_rhs: AntiSupportPrefixOrPostfix) -> Scalar {
+public extension Sphere {
+    // Fancy postfix trick
+    public Scalar operator /(AntiSupportPrefixOrPostfix rhs)  {
         return this.anti_support();
     }
 }
-extension Sphere: AntiSupport {
-    associatedtype Output = Scalar;
-    func anti_support() -> Output {
-        Plane right_complement = Plane.from_groups(
+public extension AntiSupportPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(Sphere rhs) {
+        return rhs.anti_support();
+    }
+}
+public extension Sphere {
+    public Scalar anti_support() {
+        Plane right_complement = Plane(
             /* e4235, e4315, e4125, e3215 */
             float4(float3(0.0), 1.0)
         );
-        RoundPoint right_dual = RoundPoint.from_groups(
+        RoundPoint right_dual = RoundPoint(
             /* e1, e2, e3, e4 */
             float4(this.group0.xyz, this.e1234) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e5, 0, 0, 0 */
-            float4(this.e3215, 0.0, 0.0, 0.0)
+            /* e5 */
+            this.e3215
         );
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4((right_complement.e4235 * right_dual.e1) + (right_complement.e4315 * right_dual.e2) + (right_complement.e4125 * right_dual.e3) + (right_complement.e3215 * right_dual.e4), 0.0, 0.0, 0.0)
+        return Scalar(
+            /* scalar */
+            (right_complement.e4235 * right_dual.e1) + (right_complement.e4315 * right_dual.e2) + (right_complement.e4125 * right_dual.e3) + (right_complement.e3215 * right_dual.e4)
         );
     }
 }
-extension VersorEven {
-    // Fancy infix trick
-    func operator/(_rhs: AntiSupportPrefixOrPostfix) -> AntiDipoleInversion {
+public extension VersorEven {
+    // Fancy postfix trick
+    public AntiDipoleInversion operator /(AntiSupportPrefixOrPostfix rhs)  {
         return this.anti_support();
     }
 }
-extension VersorEven: AntiSupport {
-    associatedtype Output = AntiDipoleInversion;
-    func anti_support() -> Output {
-        Plane right_complement = Plane.from_groups(
+public extension AntiSupportPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiDipoleInversion operator /(VersorEven rhs) {
+        return rhs.anti_support();
+    }
+}
+public extension VersorEven {
+    public AntiDipoleInversion anti_support() {
+        Plane right_complement = Plane(
             /* e4235, e4315, e4125, e3215 */
             float4(float3(0.0), 1.0)
         );
-        VersorOdd right_dual = VersorOdd.from_groups(
+        VersorOdd right_dual = VersorOdd(
             /* e41, e42, e43, scalar */
             this.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e23, e31, e12, e45 */
@@ -643,9 +748,9 @@ extension VersorEven: AntiSupport {
             /* e4235, e4315, e4125, e3215 */
             float4(this.group3.xyz, this.e5) * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(right_dual.e1234) * right_complement.group0.xyz * float3(-1.0), 0.0), 
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(right_dual.e1234) * right_complement.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             float4(((right_complement.group0.zxy * right_dual.group3.yzx) - (right_complement.group0.yzx * right_dual.group3.zxy)), right_complement.e3215 * right_dual.e1234 * -1.0), 
             /* e235, e315, e125, e4 */
@@ -655,24 +760,25 @@ extension VersorEven: AntiSupport {
         );
     }
 }
-extension VersorOdd {
-    // Fancy infix trick
-    func operator/(_rhs: AntiSupportPrefixOrPostfix) -> VersorOdd {
+public extension VersorOdd {
+    // Fancy postfix trick
+    public VersorOdd operator /(AntiSupportPrefixOrPostfix rhs)  {
         return this.anti_support();
     }
-    func operator/=(const AntiSupportPrefixOrPostfix& _rhs) -> VersorOdd& {
-        this = this.anti_support();
-        return *this;
+}
+public extension AntiSupportPrefixOrPostfix {
+    // Fancy prefix trick
+    public VersorOdd operator /(VersorOdd rhs) {
+        return rhs.anti_support();
     }
 }
-extension VersorOdd: AntiSupport {
-    associatedtype Output = VersorOdd;
-    func anti_support() -> Output {
-        Plane right_complement = Plane.from_groups(
+public extension VersorOdd {
+    public VersorOdd anti_support() {
+        Plane right_complement = Plane(
             /* e4235, e4315, e4125, e3215 */
             float4(float3(0.0), 1.0)
         );
-        VersorEven right_dual = VersorEven.from_groups(
+        VersorEven right_dual = VersorEven(
             /* e423, e431, e412, e12345 */
             this.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e415, e425, e435, e321 */
@@ -682,7 +788,7 @@ extension VersorOdd: AntiSupport {
             /* e1, e2, e3, e4 */
             float4(this.group3.xyz, this.e1234) * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return VersorOdd.from_groups(
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(right_complement.e4125 * right_dual.e431 * -1.0, right_complement.e4235 * right_dual.e412 * -1.0, right_complement.e4315 * right_dual.e423 * -1.0, (right_complement.e4315 * right_dual.e2) + (right_complement.e4125 * right_dual.e3) + (right_complement.e3215 * right_dual.e4)) + (right_complement.group0.yzxx * float4(right_dual.group0.zxy, right_dual.e1)), 
             /* e23, e31, e12, e45 */

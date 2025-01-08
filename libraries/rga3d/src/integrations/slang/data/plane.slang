@@ -5,6 +5,17 @@ using data;
 public struct Plane {
     // e423, e431, e412, e321
     internal float4 group0;
+
+    __init(
+        float e423, float e431, float e412, float e321
+    ) {
+        group0 = float4(e423, e431, e412, e321);
+    }
+    internal __init(
+        float4 g0
+    ) {
+        group0 = g0;
+    }
 }
 public extension Plane {
     public property e423: float {
@@ -22,16 +33,6 @@ public extension Plane {
     public property e321: float {
         get { return group0[3]; }
         set { group0[3] = newValue; }
-    }
-    public static Plane from_elements(
-        float e423, float e431, float e412, float e321
-    ) {
-        return Plane(float4(e423, e431, e412, e321));
-    }
-    internal static Plane from_groups(
-        float4 g0
-    ) {
-        return Plane(g0);
     }
 }
 public extension Plane: IComparable {

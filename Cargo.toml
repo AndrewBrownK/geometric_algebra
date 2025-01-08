@@ -15,7 +15,6 @@ members = [
     "examples/hello_circle_wgsl/hello_circle_wgsl",
     "examples/hello_circle_wgsl/hello_circle_wgsl_build",
     "examples/hello_circle_rust",
-    "examples/broken_glsl/hello_circle_glsl",
-    "examples/broken_glsl/debug_glsl",
-    "examples/camera_and_instancing",
+    "examples/hello_circle_slang/hello_circle_slang",
+    "examples/hello_circle_slang/hello_circle_slang_build",
 ]

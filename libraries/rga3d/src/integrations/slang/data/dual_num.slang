@@ -5,6 +5,17 @@ using data;
 public struct DualNum {
     // scalar, e1234, 0, 0
     internal float4 group0;
+
+    __init(
+        float scalar, float e1234
+    ) {
+        group0 = float4(scalar, e1234, 0.0, 0.0);
+    }
+    internal __init(
+        float2 g0
+    ) {
+        group0 = float4(g0, 0.0, 0.0);
+    }
 }
 public extension DualNum {
     public property scalar: float {
@@ -14,16 +25,6 @@ public extension DualNum {
     public property e1234: float {
         get { return group0[1]; }
         set { group0[1] = newValue; }
-    }
-    public static DualNum from_elements(
-        float scalar, float e1234
-    ) {
-        return DualNum(float4(scalar, e1234, 0.0, 0.0));
-    }
-    internal static DualNum from_groups(
-        float2 g0
-    ) {
-        return DualNum(float4(g0, 0.0, 0.0));
     }
 }
 public extension DualNum: IComparable {

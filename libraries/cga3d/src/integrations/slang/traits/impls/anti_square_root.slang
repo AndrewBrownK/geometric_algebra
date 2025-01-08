@@ -1,19 +1,22 @@
-extension AntiScalar {
-    // Fancy infix trick
-    func operator/(_rhs: AntiSquareRootPrefixOrPostfix) -> AntiScalar {
+implementing cga3d;
+using traits;
+public extension AntiScalar {
+    // Fancy postfix trick
+    public AntiScalar operator /(AntiSquareRootPrefixOrPostfix rhs)  {
         return this.anti_square_root();
     }
-    func operator/=(const AntiSquareRootPrefixOrPostfix& _rhs) -> AntiScalar& {
-        this = this.anti_square_root();
-        return *this;
+}
+public extension AntiSquareRootPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiScalar operator /(AntiScalar rhs) {
+        return rhs.anti_square_root();
     }
 }
-extension AntiScalar: AntiSquareRoot {
-    associatedtype Output = AntiScalar;
-    func anti_square_root() -> Output {
-        return AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(powf(this.e12345, 0.5), 0.0, 0.0, 0.0)
+public extension AntiScalar {
+    public AntiScalar anti_square_root() {
+        return AntiScalar(
+            /* e12345 */
+            pow(this.e12345, 0.5)
         );
     }
 }

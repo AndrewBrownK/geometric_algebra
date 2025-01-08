@@ -1,15 +1,22 @@
-extension AntiCircleRotor {
-    // Fancy infix trick
-    func operator/(_rhs: ComplementPrefixOrPostfix) -> CircleRotor {
+implementing cga3d;
+using traits;
+public extension AntiCircleRotor {
+    // Fancy postfix trick
+    public CircleRotor operator /(ComplementPrefixOrPostfix rhs)  {
         return this.complement();
     }
 }
-extension AntiCircleRotor: Complement {
-    associatedtype Output = CircleRotor;
-    func complement() -> Output {
-        return CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(this.group2.xyz * float3(-1.0), 0.0), 
+public extension ComplementPrefixOrPostfix {
+    // Fancy prefix trick
+    public CircleRotor operator /(AntiCircleRotor rhs) {
+        return rhs.complement();
+    }
+}
+public extension AntiCircleRotor {
+    public CircleRotor complement() {
+        return CircleRotor(
+            /* e423, e431, e412 */
+            this.group2.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             this.group1 * float4(-1.0), 
             /* e235, e315, e125, e12345 */
@@ -17,18 +24,23 @@ extension AntiCircleRotor: Complement {
         );
     }
 }
-extension AntiDipoleInversion {
-    // Fancy infix trick
-    func operator/(_rhs: ComplementPrefixOrPostfix) -> DipoleInversion {
+public extension AntiDipoleInversion {
+    // Fancy postfix trick
+    public DipoleInversion operator /(ComplementPrefixOrPostfix rhs)  {
         return this.complement();
     }
 }
-extension AntiDipoleInversion: Complement {
-    associatedtype Output = DipoleInversion;
-    func complement() -> Output {
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(this.group2.xyz * float3(-1.0), 0.0), 
+public extension ComplementPrefixOrPostfix {
+    // Fancy prefix trick
+    public DipoleInversion operator /(AntiDipoleInversion rhs) {
+        return rhs.complement();
+    }
+}
+public extension AntiDipoleInversion {
+    public DipoleInversion complement() {
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            this.group2.xyz * float3(-1.0), 
             /* e23, e31, e12, e45 */
             this.group1 * float4(-1.0), 
             /* e15, e25, e35, e1234 */
@@ -38,16 +50,21 @@ extension AntiDipoleInversion: Complement {
         );
     }
 }
-extension AntiDualNum {
-    // Fancy infix trick
-    func operator/(_rhs: ComplementPrefixOrPostfix) -> VersorEven {
+public extension AntiDualNum {
+    // Fancy postfix trick
+    public VersorEven operator /(ComplementPrefixOrPostfix rhs)  {
         return this.complement();
     }
 }
-extension AntiDualNum: Complement {
-    associatedtype Output = VersorEven;
-    func complement() -> Output {
-        return VersorEven.from_groups(
+public extension ComplementPrefixOrPostfix {
+    // Fancy prefix trick
+    public VersorEven operator /(AntiDualNum rhs) {
+        return rhs.complement();
+    }
+}
+public extension AntiDualNum {
+    public VersorEven complement() {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(float3(0.0), this.scalar), 
             /* e415, e425, e435, e321 */
@@ -59,37 +76,47 @@ extension AntiDualNum: Complement {
         );
     }
 }
-extension AntiFlatPoint {
-    // Fancy infix trick
-    func operator/(_rhs: ComplementPrefixOrPostfix) -> Dipole {
+public extension AntiFlatPoint {
+    // Fancy postfix trick
+    public Dipole operator /(ComplementPrefixOrPostfix rhs)  {
         return this.complement();
     }
 }
-extension AntiFlatPoint: Complement {
-    associatedtype Output = Dipole;
-    func complement() -> Output {
-        return Dipole.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(this.group0.xyz * float3(-1.0), 0.0), 
+public extension ComplementPrefixOrPostfix {
+    // Fancy prefix trick
+    public Dipole operator /(AntiFlatPoint rhs) {
+        return rhs.complement();
+    }
+}
+public extension AntiFlatPoint {
+    public Dipole complement() {
+        return Dipole(
+            /* e41, e42, e43 */
+            this.group0.xyz * float3(-1.0), 
             /* e23, e31, e12, e45 */
             float4(float3(0.0), this.e321 * -1.0), 
-            /* e15, e25, e35, 0 */
-            float4(0.0)
+            /* e15, e25, e35 */
+            float3(0.0)
         );
     }
 }
-extension AntiFlector {
-    // Fancy infix trick
-    func operator/(_rhs: ComplementPrefixOrPostfix) -> DipoleInversion {
+public extension AntiFlector {
+    // Fancy postfix trick
+    public DipoleInversion operator /(ComplementPrefixOrPostfix rhs)  {
         return this.complement();
     }
 }
-extension AntiFlector: Complement {
-    associatedtype Output = DipoleInversion;
-    func complement() -> Output {
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(this.group0.xyz * float3(-1.0), 0.0), 
+public extension ComplementPrefixOrPostfix {
+    // Fancy prefix trick
+    public DipoleInversion operator /(AntiFlector rhs) {
+        return rhs.complement();
+    }
+}
+public extension AntiFlector {
+    public DipoleInversion complement() {
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            this.group0.xyz * float3(-1.0), 
             /* e23, e31, e12, e45 */
             float4(float3(0.0), this.e321 * -1.0), 
             /* e15, e25, e35, e1234 */
@@ -99,35 +126,45 @@ extension AntiFlector: Complement {
         );
     }
 }
-extension AntiLine {
-    // Fancy infix trick
-    func operator/(_rhs: ComplementPrefixOrPostfix) -> Circle {
+public extension AntiLine {
+    // Fancy postfix trick
+    public Circle operator /(ComplementPrefixOrPostfix rhs)  {
         return this.complement();
     }
 }
-extension AntiLine: Complement {
-    associatedtype Output = Circle;
-    func complement() -> Output {
-        return Circle.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(this.group1.xyz * float3(-1.0), 0.0), 
+public extension ComplementPrefixOrPostfix {
+    // Fancy prefix trick
+    public Circle operator /(AntiLine rhs) {
+        return rhs.complement();
+    }
+}
+public extension AntiLine {
+    public Circle complement() {
+        return Circle(
+            /* e423, e431, e412 */
+            this.group1.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             float4((this.group0.xyz * float3(-1.0)), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0)
+            /* e235, e315, e125 */
+            float3(0.0)
         );
     }
 }
-extension AntiMotor {
-    // Fancy infix trick
-    func operator/(_rhs: ComplementPrefixOrPostfix) -> VersorEven {
+public extension AntiMotor {
+    // Fancy postfix trick
+    public VersorEven operator /(ComplementPrefixOrPostfix rhs)  {
         return this.complement();
     }
 }
-extension AntiMotor: Complement {
-    associatedtype Output = VersorEven;
-    func complement() -> Output {
-        return VersorEven.from_groups(
+public extension ComplementPrefixOrPostfix {
+    // Fancy prefix trick
+    public VersorEven operator /(AntiMotor rhs) {
+        return rhs.complement();
+    }
+}
+public extension AntiMotor {
+    public VersorEven complement() {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(this.group1.xyz, this.scalar) * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e415, e425, e435, e321 */
@@ -139,69 +176,89 @@ extension AntiMotor: Complement {
         );
     }
 }
-extension AntiPlane {
-    // Fancy infix trick
-    func operator/(_rhs: ComplementPrefixOrPostfix) -> Sphere {
+public extension AntiPlane {
+    // Fancy postfix trick
+    public Sphere operator /(ComplementPrefixOrPostfix rhs)  {
         return this.complement();
     }
 }
-extension AntiPlane: Complement {
-    associatedtype Output = Sphere;
-    func complement() -> Output {
-        return Sphere.from_groups(
+public extension ComplementPrefixOrPostfix {
+    // Fancy prefix trick
+    public Sphere operator /(AntiPlane rhs) {
+        return rhs.complement();
+    }
+}
+public extension AntiPlane {
+    public Sphere complement() {
+        return Sphere(
             /* e4235, e4315, e4125, e3215 */
             float4(this.group0.xyz, 0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(this.e5, 0.0, 0.0, 0.0)
+            /* e1234 */
+            this.e5
         );
     }
 }
-extension AntiScalar {
-    // Fancy infix trick
-    func operator/(_rhs: ComplementPrefixOrPostfix) -> Scalar {
+public extension AntiScalar {
+    // Fancy postfix trick
+    public Scalar operator /(ComplementPrefixOrPostfix rhs)  {
         return this.complement();
     }
 }
-extension AntiScalar: Complement {
-    associatedtype Output = Scalar;
-    func complement() -> Output {
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(this.e12345, 0.0, 0.0, 0.0)
+public extension ComplementPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(AntiScalar rhs) {
+        return rhs.complement();
+    }
+}
+public extension AntiScalar {
+    public Scalar complement() {
+        return Scalar(
+            /* scalar */
+            this.e12345
         );
     }
 }
-extension Circle {
-    // Fancy infix trick
-    func operator/(_rhs: ComplementPrefixOrPostfix) -> Dipole {
+public extension Circle {
+    // Fancy postfix trick
+    public Dipole operator /(ComplementPrefixOrPostfix rhs)  {
         return this.complement();
     }
 }
-extension Circle: Complement {
-    associatedtype Output = Dipole;
-    func complement() -> Output {
-        return Dipole.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(this.group2.xyz * float3(-1.0), 0.0), 
+public extension ComplementPrefixOrPostfix {
+    // Fancy prefix trick
+    public Dipole operator /(Circle rhs) {
+        return rhs.complement();
+    }
+}
+public extension Circle {
+    public Dipole complement() {
+        return Dipole(
+            /* e41, e42, e43 */
+            this.group2.xyz * float3(-1.0), 
             /* e23, e31, e12, e45 */
             this.group1 * float4(-1.0), 
-            /* e15, e25, e35, 0 */
-            float4(this.group0.xyz * float3(-1.0), 0.0)
+            /* e15, e25, e35 */
+            this.group0.xyz * float3(-1.0)
         );
     }
 }
-extension CircleRotor {
-    // Fancy infix trick
-    func operator/(_rhs: ComplementPrefixOrPostfix) -> AntiCircleRotor {
+public extension CircleRotor {
+    // Fancy postfix trick
+    public AntiCircleRotor operator /(ComplementPrefixOrPostfix rhs)  {
         return this.complement();
     }
 }
-extension CircleRotor: Complement {
-    associatedtype Output = AntiCircleRotor;
-    func complement() -> Output {
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(this.group2.xyz * float3(-1.0), 0.0), 
+public extension ComplementPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiCircleRotor operator /(CircleRotor rhs) {
+        return rhs.complement();
+    }
+}
+public extension CircleRotor {
+    public AntiCircleRotor complement() {
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            this.group2.xyz * float3(-1.0), 
             /* e23, e31, e12, e45 */
             this.group1 * float4(-1.0), 
             /* e15, e25, e35, scalar */
@@ -209,37 +266,47 @@ extension CircleRotor: Complement {
         );
     }
 }
-extension Dipole {
-    // Fancy infix trick
-    func operator/(_rhs: ComplementPrefixOrPostfix) -> Circle {
+public extension Dipole {
+    // Fancy postfix trick
+    public Circle operator /(ComplementPrefixOrPostfix rhs)  {
         return this.complement();
     }
 }
-extension Dipole: Complement {
-    associatedtype Output = Circle;
-    func complement() -> Output {
-        return Circle.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(this.group2.xyz * float3(-1.0), 0.0), 
+public extension ComplementPrefixOrPostfix {
+    // Fancy prefix trick
+    public Circle operator /(Dipole rhs) {
+        return rhs.complement();
+    }
+}
+public extension Dipole {
+    public Circle complement() {
+        return Circle(
+            /* e423, e431, e412 */
+            this.group2.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             this.group1 * float4(-1.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group0.xyz * float3(-1.0), 0.0)
+            /* e235, e315, e125 */
+            this.group0.xyz * float3(-1.0)
         );
     }
 }
-extension DipoleInversion {
-    // Fancy infix trick
-    func operator/(_rhs: ComplementPrefixOrPostfix) -> AntiDipoleInversion {
+public extension DipoleInversion {
+    // Fancy postfix trick
+    public AntiDipoleInversion operator /(ComplementPrefixOrPostfix rhs)  {
         return this.complement();
     }
 }
-extension DipoleInversion: Complement {
-    associatedtype Output = AntiDipoleInversion;
-    func complement() -> Output {
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(this.group2.xyz * float3(-1.0), 0.0), 
+public extension ComplementPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiDipoleInversion operator /(DipoleInversion rhs) {
+        return rhs.complement();
+    }
+}
+public extension DipoleInversion {
+    public AntiDipoleInversion complement() {
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            this.group2.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             this.group1 * float4(-1.0), 
             /* e235, e315, e125, e4 */
@@ -249,16 +316,21 @@ extension DipoleInversion: Complement {
         );
     }
 }
-extension DualNum {
-    // Fancy infix trick
-    func operator/(_rhs: ComplementPrefixOrPostfix) -> VersorOdd {
+public extension DualNum {
+    // Fancy postfix trick
+    public VersorOdd operator /(ComplementPrefixOrPostfix rhs)  {
         return this.complement();
     }
 }
-extension DualNum: Complement {
-    associatedtype Output = VersorOdd;
-    func complement() -> Output {
-        return VersorOdd.from_groups(
+public extension ComplementPrefixOrPostfix {
+    // Fancy prefix trick
+    public VersorOdd operator /(DualNum rhs) {
+        return rhs.complement();
+    }
+}
+public extension DualNum {
+    public VersorOdd complement() {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(float3(0.0), this.e12345), 
             /* e23, e31, e12, e45 */
@@ -270,37 +342,47 @@ extension DualNum: Complement {
         );
     }
 }
-extension FlatPoint {
-    // Fancy infix trick
-    func operator/(_rhs: ComplementPrefixOrPostfix) -> Circle {
+public extension FlatPoint {
+    // Fancy postfix trick
+    public Circle operator /(ComplementPrefixOrPostfix rhs)  {
         return this.complement();
     }
 }
-extension FlatPoint: Complement {
-    associatedtype Output = Circle;
-    func complement() -> Output {
-        return Circle.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz * float3(-1.0), 0.0), 
+public extension ComplementPrefixOrPostfix {
+    // Fancy prefix trick
+    public Circle operator /(FlatPoint rhs) {
+        return rhs.complement();
+    }
+}
+public extension FlatPoint {
+    public Circle complement() {
+        return Circle(
+            /* e423, e431, e412 */
+            this.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             float4(float3(0.0), this.e45 * -1.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0)
+            /* e235, e315, e125 */
+            float3(0.0)
         );
     }
 }
-extension Flector {
-    // Fancy infix trick
-    func operator/(_rhs: ComplementPrefixOrPostfix) -> AntiDipoleInversion {
+public extension Flector {
+    // Fancy postfix trick
+    public AntiDipoleInversion operator /(ComplementPrefixOrPostfix rhs)  {
         return this.complement();
     }
 }
-extension Flector: Complement {
-    associatedtype Output = AntiDipoleInversion;
-    func complement() -> Output {
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz * float3(-1.0), 0.0), 
+public extension ComplementPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiDipoleInversion operator /(Flector rhs) {
+        return rhs.complement();
+    }
+}
+public extension Flector {
+    public AntiDipoleInversion complement() {
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            this.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             float4(float3(0.0), this.e45 * -1.0), 
             /* e235, e315, e125, e4 */
@@ -310,35 +392,45 @@ extension Flector: Complement {
         );
     }
 }
-extension Line {
-    // Fancy infix trick
-    func operator/(_rhs: ComplementPrefixOrPostfix) -> Dipole {
+public extension Line {
+    // Fancy postfix trick
+    public Dipole operator /(ComplementPrefixOrPostfix rhs)  {
         return this.complement();
     }
 }
-extension Line: Complement {
-    associatedtype Output = Dipole;
-    func complement() -> Output {
-        return Dipole.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(this.group1.xyz * float3(-1.0), 0.0), 
+public extension ComplementPrefixOrPostfix {
+    // Fancy prefix trick
+    public Dipole operator /(Line rhs) {
+        return rhs.complement();
+    }
+}
+public extension Line {
+    public Dipole complement() {
+        return Dipole(
+            /* e41, e42, e43 */
+            this.group1.xyz * float3(-1.0), 
             /* e23, e31, e12, e45 */
             float4((this.group0.xyz * float3(-1.0)), 0.0), 
-            /* e15, e25, e35, 0 */
-            float4(0.0)
+            /* e15, e25, e35 */
+            float3(0.0)
         );
     }
 }
-extension Motor {
-    // Fancy infix trick
-    func operator/(_rhs: ComplementPrefixOrPostfix) -> VersorOdd {
+public extension Motor {
+    // Fancy postfix trick
+    public VersorOdd operator /(ComplementPrefixOrPostfix rhs)  {
         return this.complement();
     }
 }
-extension Motor: Complement {
-    associatedtype Output = VersorOdd;
-    func complement() -> Output {
-        return VersorOdd.from_groups(
+public extension ComplementPrefixOrPostfix {
+    // Fancy prefix trick
+    public VersorOdd operator /(Motor rhs) {
+        return rhs.complement();
+    }
+}
+public extension Motor {
+    public VersorOdd complement() {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(this.group1.xyz, this.e12345) * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, e45 */
@@ -350,121 +442,147 @@ extension Motor: Complement {
         );
     }
 }
-extension MultiVector {
-    // Fancy infix trick
-    func operator/(_rhs: ComplementPrefixOrPostfix) -> MultiVector {
+public extension MultiVector {
+    // Fancy postfix trick
+    public MultiVector operator /(ComplementPrefixOrPostfix rhs)  {
         return this.complement();
     }
-    func operator/=(const ComplementPrefixOrPostfix& _rhs) -> MultiVector& {
-        this = this.complement();
-        return *this;
+}
+public extension ComplementPrefixOrPostfix {
+    // Fancy prefix trick
+    public MultiVector operator /(MultiVector rhs) {
+        return rhs.complement();
     }
 }
-extension MultiVector: Complement {
-    associatedtype Output = MultiVector;
-    func complement() -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(this.group0.xy.yx, 0.0, 0.0), 
+public extension MultiVector {
+    public MultiVector complement() {
+        return MultiVector(
+            /* scalar, e12345 */
+            this.group0.xy.yx, 
             /* e1, e2, e3, e4 */
             this.group9, 
-            /* e5, 0, 0, 0 */
-            float4(this.e1234, 0.0, 0.0, 0.0), 
+            /* e5 */
+            this.e1234, 
             /* e15, e25, e35, e45 */
             float4(this.group7.xyz, this.e321) * float4(-1.0), 
-            /* e41, e42, e43, 0 */
-            float4(this.group8.xyz * float3(-1.0), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(this.group6.xyz * float3(-1.0), 0.0), 
+            /* e41, e42, e43 */
+            this.group8.xyz * float3(-1.0), 
+            /* e23, e31, e12 */
+            this.group6.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             float4(this.group5.xyz, this.e45) * float4(-1.0), 
-            /* e423, e431, e412, 0 */
-            float4(this.group3.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group4.xyz * float3(-1.0), 0.0), 
+            /* e423, e431, e412 */
+            this.group3.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            this.group4.xyz * float3(-1.0), 
             /* e4235, e4315, e4125, e3215 */
             this.group1, 
-            /* e1234, 0, 0, 0 */
-            float4(this.e5, 0.0, 0.0, 0.0)
+            /* e1234 */
+            this.e5
         );
     }
 }
-extension Plane {
-    // Fancy infix trick
-    func operator/(_rhs: ComplementPrefixOrPostfix) -> RoundPoint {
+public extension Plane {
+    // Fancy postfix trick
+    public RoundPoint operator /(ComplementPrefixOrPostfix rhs)  {
         return this.complement();
     }
 }
-extension Plane: Complement {
-    associatedtype Output = RoundPoint;
-    func complement() -> Output {
-        return RoundPoint.from_groups(
+public extension ComplementPrefixOrPostfix {
+    // Fancy prefix trick
+    public RoundPoint operator /(Plane rhs) {
+        return rhs.complement();
+    }
+}
+public extension Plane {
+    public RoundPoint complement() {
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             this.group0, 
-            /* e5, 0, 0, 0 */
-            float4(0.0)
+            /* e5 */
+            0.0
         );
     }
 }
-extension RoundPoint {
-    // Fancy infix trick
-    func operator/(_rhs: ComplementPrefixOrPostfix) -> Sphere {
+public extension RoundPoint {
+    // Fancy postfix trick
+    public Sphere operator /(ComplementPrefixOrPostfix rhs)  {
         return this.complement();
     }
 }
-extension RoundPoint: Complement {
-    associatedtype Output = Sphere;
-    func complement() -> Output {
-        return Sphere.from_groups(
+public extension ComplementPrefixOrPostfix {
+    // Fancy prefix trick
+    public Sphere operator /(RoundPoint rhs) {
+        return rhs.complement();
+    }
+}
+public extension RoundPoint {
+    public Sphere complement() {
+        return Sphere(
             /* e4235, e4315, e4125, e3215 */
             this.group0, 
-            /* e1234, 0, 0, 0 */
-            float4(this.e5, 0.0, 0.0, 0.0)
+            /* e1234 */
+            this.e5
         );
     }
 }
-extension Scalar {
-    // Fancy infix trick
-    func operator/(_rhs: ComplementPrefixOrPostfix) -> AntiScalar {
+public extension Scalar {
+    // Fancy postfix trick
+    public AntiScalar operator /(ComplementPrefixOrPostfix rhs)  {
         return this.complement();
     }
 }
-extension Scalar: Complement {
-    associatedtype Output = AntiScalar;
-    func complement() -> Output {
-        return AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(this.scalar, 0.0, 0.0, 0.0)
+public extension ComplementPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiScalar operator /(Scalar rhs) {
+        return rhs.complement();
+    }
+}
+public extension Scalar {
+    public AntiScalar complement() {
+        return AntiScalar(
+            /* e12345 */
+            this.scalar
         );
     }
 }
-extension Sphere {
-    // Fancy infix trick
-    func operator/(_rhs: ComplementPrefixOrPostfix) -> RoundPoint {
+public extension Sphere {
+    // Fancy postfix trick
+    public RoundPoint operator /(ComplementPrefixOrPostfix rhs)  {
         return this.complement();
     }
 }
-extension Sphere: Complement {
-    associatedtype Output = RoundPoint;
-    func complement() -> Output {
-        return RoundPoint.from_groups(
+public extension ComplementPrefixOrPostfix {
+    // Fancy prefix trick
+    public RoundPoint operator /(Sphere rhs) {
+        return rhs.complement();
+    }
+}
+public extension Sphere {
+    public RoundPoint complement() {
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             this.group0, 
-            /* e5, 0, 0, 0 */
-            float4(this.e1234, 0.0, 0.0, 0.0)
+            /* e5 */
+            this.e1234
         );
     }
 }
-extension VersorEven {
-    // Fancy infix trick
-    func operator/(_rhs: ComplementPrefixOrPostfix) -> VersorOdd {
+public extension VersorEven {
+    // Fancy postfix trick
+    public VersorOdd operator /(ComplementPrefixOrPostfix rhs)  {
         return this.complement();
     }
 }
-extension VersorEven: Complement {
-    associatedtype Output = VersorOdd;
-    func complement() -> Output {
-        return VersorOdd.from_groups(
+public extension ComplementPrefixOrPostfix {
+    // Fancy prefix trick
+    public VersorOdd operator /(VersorEven rhs) {
+        return rhs.complement();
+    }
+}
+public extension VersorEven {
+    public VersorOdd complement() {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(this.group2.xyz, this.e12345) * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, e45 */
@@ -476,16 +594,21 @@ extension VersorEven: Complement {
         );
     }
 }
-extension VersorOdd {
-    // Fancy infix trick
-    func operator/(_rhs: ComplementPrefixOrPostfix) -> VersorEven {
+public extension VersorOdd {
+    // Fancy postfix trick
+    public VersorEven operator /(ComplementPrefixOrPostfix rhs)  {
         return this.complement();
     }
 }
-extension VersorOdd: Complement {
-    associatedtype Output = VersorEven;
-    func complement() -> Output {
-        return VersorEven.from_groups(
+public extension ComplementPrefixOrPostfix {
+    // Fancy prefix trick
+    public VersorEven operator /(VersorOdd rhs) {
+        return rhs.complement();
+    }
+}
+public extension VersorOdd {
+    public VersorEven complement() {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(this.group2.xyz, this.scalar) * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e415, e425, e435, e321 */

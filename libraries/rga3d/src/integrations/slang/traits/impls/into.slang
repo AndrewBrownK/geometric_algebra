@@ -2,7 +2,7 @@ implementing rga3d;
 using traits;
 public extension DualNum {
     public static DualNum from(AntiScalar from_anti_scalar) {
-        return DualNum.from_groups(
+        return DualNum(
             /* scalar, e1234 */
             float2(0.0, from_anti_scalar.e1234)
         );
@@ -15,7 +15,7 @@ public extension AntiScalar {
 }
 public extension Motor {
     public static Motor from(AntiScalar from_anti_scalar) {
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(float3(0.0), from_anti_scalar.e1234), 
             /* e23, e31, e12, scalar */
@@ -30,7 +30,7 @@ public extension AntiScalar {
 }
 public extension MultiVector {
     public static MultiVector from(AntiScalar from_anti_scalar) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(0.0, from_anti_scalar.e1234), 
             /* e1, e2, e3, e4 */
@@ -51,7 +51,7 @@ public extension AntiScalar {
 }
 public extension Motor {
     public static Motor from(DualNum from_dual_num) {
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(float3(0.0), from_dual_num.e1234), 
             /* e23, e31, e12, scalar */
@@ -66,7 +66,7 @@ public extension DualNum {
 }
 public extension MultiVector {
     public static MultiVector from(DualNum from_dual_num) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             from_dual_num.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -87,7 +87,7 @@ public extension DualNum {
 }
 public extension MultiVector {
     public static MultiVector from(Flector from_flector) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(0.0), 
             /* e1, e2, e3, e4 */
@@ -108,7 +108,7 @@ public extension Flector {
 }
 public extension Flector {
     public static Flector from(Horizon from_horizon) {
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
@@ -123,7 +123,7 @@ public extension Horizon {
 }
 public extension MultiVector {
     public static MultiVector from(Horizon from_horizon) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(0.0), 
             /* e1, e2, e3, e4 */
@@ -144,7 +144,7 @@ public extension Horizon {
 }
 public extension Plane {
     public static Plane from(Horizon from_horizon) {
-        return Plane.from_groups(
+        return Plane(
             /* e423, e431, e412, e321 */
             float4(float3(0.0), from_horizon.e321)
         );
@@ -157,7 +157,7 @@ public extension Horizon {
 }
 public extension Motor {
     public static Motor from(Line from_line) {
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(from_line.group0.xyz, 0.0), 
             /* e23, e31, e12, scalar */
@@ -172,7 +172,7 @@ public extension Line {
 }
 public extension MultiVector {
     public static MultiVector from(Line from_line) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(0.0), 
             /* e1, e2, e3, e4 */
@@ -193,7 +193,7 @@ public extension Line {
 }
 public extension MultiVector {
     public static MultiVector from(Motor from_motor) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(from_motor.scalar, from_motor.e1234), 
             /* e1, e2, e3, e4 */
@@ -214,7 +214,7 @@ public extension Motor {
 }
 public extension Flector {
     public static Flector from(Origin from_origin) {
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), from_origin.e4), 
             /* e423, e431, e412, e321 */
@@ -229,7 +229,7 @@ public extension Origin {
 }
 public extension MultiVector {
     public static MultiVector from(Origin from_origin) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(0.0), 
             /* e1, e2, e3, e4 */
@@ -250,7 +250,7 @@ public extension Origin {
 }
 public extension Point {
     public static Point from(Origin from_origin) {
-        return Point.from_groups(
+        return Point(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), from_origin.e4)
         );
@@ -263,7 +263,7 @@ public extension Origin {
 }
 public extension Flector {
     public static Flector from(Plane from_plane) {
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4(0.0), 
             /* e423, e431, e412, e321 */
@@ -278,7 +278,7 @@ public extension Plane {
 }
 public extension MultiVector {
     public static MultiVector from(Plane from_plane) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(0.0), 
             /* e1, e2, e3, e4 */
@@ -299,7 +299,7 @@ public extension Plane {
 }
 public extension Flector {
     public static Flector from(Point from_point) {
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             from_point.group0, 
             /* e423, e431, e412, e321 */
@@ -314,7 +314,7 @@ public extension Point {
 }
 public extension MultiVector {
     public static MultiVector from(Point from_point) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(0.0), 
             /* e1, e2, e3, e4 */
@@ -335,7 +335,7 @@ public extension Point {
 }
 public extension DualNum {
     public static DualNum from(Scalar from_scalar) {
-        return DualNum.from_groups(
+        return DualNum(
             /* scalar, e1234 */
             float2(from_scalar.scalar, 0.0)
         );
@@ -348,7 +348,7 @@ public extension Scalar {
 }
 public extension Motor {
     public static Motor from(Scalar from_scalar) {
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(0.0), 
             /* e23, e31, e12, scalar */
@@ -363,7 +363,7 @@ public extension Scalar {
 }
 public extension MultiVector {
     public static MultiVector from(Scalar from_scalar) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(from_scalar.scalar, 0.0), 
             /* e1, e2, e3, e4 */

@@ -14,7 +14,7 @@ public extension RightComplementPrefixOrPostfix {
 }
 public extension AntiScalar {
     public Scalar right_complement() {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             this.e1234
         );
@@ -34,7 +34,7 @@ public extension RightComplementPrefixOrPostfix {
 }
 public extension DualNum {
     public DualNum right_complement() {
-        return DualNum.from_groups(
+        return DualNum(
             /* scalar, e1234 */
             this.group0.xy.yx
         );
@@ -54,7 +54,7 @@ public extension RightComplementPrefixOrPostfix {
 }
 public extension Flector {
     public Flector right_complement() {
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             this.group1 * float4(-1.0), 
             /* e423, e431, e412, e321 */
@@ -76,7 +76,7 @@ public extension RightComplementPrefixOrPostfix {
 }
 public extension Horizon {
     public Origin right_complement() {
-        return Origin.from_groups(
+        return Origin(
             /* e4 */
             this.e321 * -1.0
         );
@@ -96,7 +96,7 @@ public extension RightComplementPrefixOrPostfix {
 }
 public extension Line {
     public Line right_complement() {
-        return Line.from_groups(
+        return Line(
             /* e41, e42, e43 */
             this.group1.xyz * float3(-1.0), 
             /* e23, e31, e12 */
@@ -118,7 +118,7 @@ public extension RightComplementPrefixOrPostfix {
 }
 public extension Motor {
     public Motor right_complement() {
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             this.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, scalar */
@@ -140,7 +140,7 @@ public extension RightComplementPrefixOrPostfix {
 }
 public extension MultiVector {
     public MultiVector right_complement() {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             this.group0.xy.yx, 
             /* e1, e2, e3, e4 */
@@ -168,7 +168,7 @@ public extension RightComplementPrefixOrPostfix {
 }
 public extension Origin {
     public Horizon right_complement() {
-        return Horizon.from_groups(
+        return Horizon(
             /* e321 */
             this.e4
         );
@@ -188,7 +188,7 @@ public extension RightComplementPrefixOrPostfix {
 }
 public extension Plane {
     public Point right_complement() {
-        return Point.from_groups(
+        return Point(
             /* e1, e2, e3, e4 */
             this.group0 * float4(-1.0)
         );
@@ -208,7 +208,7 @@ public extension RightComplementPrefixOrPostfix {
 }
 public extension Point {
     public Plane right_complement() {
-        return Plane.from_groups(
+        return Plane(
             /* e423, e431, e412, e321 */
             this.group0
         );
@@ -228,7 +228,7 @@ public extension RightComplementPrefixOrPostfix {
 }
 public extension Scalar {
     public AntiScalar right_complement() {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             this.scalar
         );

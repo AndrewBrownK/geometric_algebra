@@ -1,23 +1,30 @@
-extension AntiCircleRotor {
-    // Fancy infix trick
-    func operator/(_rhs: WeightContractionInfix) -> WeightContractionInfixPartial<AntiCircleRotor> {
-        return WeightContractionInfixPartial { a: this };
+implementing cga3d;
+using traits;
+public extension AntiCircleRotor {
+    // Fancy infix trick (first half)
+    public WeightContractionInfixPartial<AntiCircleRotor> operator /(WeightContractionInfix rhs) {
+        return WeightContractionInfixPartial<AntiCircleRotor>(this);
     }
 }
-extension AntiCircleRotor: WeightContraction<AntiCircleRotor> {
-    associatedtype Output = AntiCircleRotor;
-    func weight_contraction(other: AntiCircleRotor) -> Output {
-        CircleRotor right_anti_dual = CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension WeightContractionInfixPartial<AntiCircleRotor> {
+    // Fancy infix trick (second half)
+    public AntiCircleRotor operator /(AntiCircleRotor rhs) {
+        return this.a.weight_contraction(rhs);
+    }
+}
+public extension AntiCircleRotor {
+    public AntiCircleRotor weight_contraction(AntiCircleRotor other) {
+        CircleRotor right_anti_dual = CircleRotor(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e12345 */
             other.group2 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(right_anti_dual.e12345) * this.group0.xyz, 0.0), 
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            float3(right_anti_dual.e12345) * this.group0.xyz, 
             /* e23, e31, e12, e45 */
             float4(right_anti_dual.e12345) * this.group1, 
             /* e15, e25, e35, scalar */
@@ -25,12 +32,11 @@ extension AntiCircleRotor: WeightContraction<AntiCircleRotor> {
         );
     }
 }
-extension AntiCircleRotor: WeightContraction<AntiDipoleInversion> {
-    associatedtype Output = RoundPoint;
-    func weight_contraction(other: AntiDipoleInversion) -> Output {
-        DipoleInversion right_anti_dual = DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension AntiCircleRotor {
+    public RoundPoint weight_contraction(AntiDipoleInversion other) {
+        DipoleInversion right_anti_dual = DipoleInversion(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, e1234 */
@@ -38,24 +44,23 @@ extension AntiCircleRotor: WeightContraction<AntiDipoleInversion> {
             /* e4235, e4315, e4125, e3215 */
             other.group3 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return RoundPoint.from_groups(
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4((this.e41 * right_anti_dual.e3215) + (this.e31 * right_anti_dual.e4125), (this.e42 * right_anti_dual.e3215) + (this.e12 * right_anti_dual.e4235), (this.e43 * right_anti_dual.e3215) + (this.e23 * right_anti_dual.e4315), -(this.e43 * right_anti_dual.e4125) - (this.e45 * right_anti_dual.e1234)) - (right_anti_dual.group3.yzxx * float4(this.group1.zxy, this.e41)) - float4((right_anti_dual.group2.www * this.group2.xyz), this.e42 * right_anti_dual.e4315), 
-            /* e5, 0, 0, 0 */
-            float4((this.e45 * right_anti_dual.e3215) + (this.e15 * right_anti_dual.e4235) + (this.e25 * right_anti_dual.e4315) + (this.e35 * right_anti_dual.e4125), 0.0, 0.0, 0.0)
+            /* e5 */
+            (this.e45 * right_anti_dual.e3215) + (this.e15 * right_anti_dual.e4235) + (this.e25 * right_anti_dual.e4315) + (this.e35 * right_anti_dual.e4125)
         );
     }
 }
-extension AntiCircleRotor: WeightContraction<AntiDualNum> {
-    associatedtype Output = AntiCircleRotor;
-    func weight_contraction(other: AntiDualNum) -> Output {
-        DualNum right_anti_dual = DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(other.group0.xy, 0.0, 0.0)
+public extension AntiCircleRotor {
+    public AntiCircleRotor weight_contraction(AntiDualNum other) {
+        DualNum right_anti_dual = DualNum(
+            /* e5, e12345 */
+            other.group0.xy
         );
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(right_anti_dual.e12345) * this.group0.xyz, 0.0), 
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            float3(right_anti_dual.e12345) * this.group0.xyz, 
             /* e23, e31, e12, e45 */
             float4(right_anti_dual.e12345) * this.group1, 
             /* e15, e25, e35, scalar */
@@ -63,50 +68,47 @@ extension AntiCircleRotor: WeightContraction<AntiDualNum> {
         );
     }
 }
-extension AntiCircleRotor: WeightContraction<AntiFlector> {
-    associatedtype Output = RoundPoint;
-    func weight_contraction(other: AntiFlector) -> Output {
-        Flector right_anti_dual = Flector.from_groups(
+public extension AntiCircleRotor {
+    public RoundPoint weight_contraction(AntiFlector other) {
+        Flector right_anti_dual = Flector(
             /* e15, e25, e35, e45 */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e4235, e4315, e4125, e3215 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return RoundPoint.from_groups(
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4((this.e41 * right_anti_dual.e3215) + (this.e31 * right_anti_dual.e4125), (this.e42 * right_anti_dual.e3215) + (this.e12 * right_anti_dual.e4235), (this.e43 * right_anti_dual.e3215) + (this.e23 * right_anti_dual.e4315), -(this.e42 * right_anti_dual.e4315) - (this.e43 * right_anti_dual.e4125)) - (right_anti_dual.group1.yzxx * float4(this.group1.zxy, this.e41)), 
-            /* e5, 0, 0, 0 */
-            float4((this.e45 * right_anti_dual.e3215) + (this.e15 * right_anti_dual.e4235) + (this.e25 * right_anti_dual.e4315) + (this.e35 * right_anti_dual.e4125), 0.0, 0.0, 0.0)
+            /* e5 */
+            (this.e45 * right_anti_dual.e3215) + (this.e15 * right_anti_dual.e4235) + (this.e25 * right_anti_dual.e4315) + (this.e35 * right_anti_dual.e4125)
         );
     }
 }
-extension AntiCircleRotor: WeightContraction<AntiLine> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: AntiLine) -> Output {
-        Line right_anti_dual = Line.from_groups(
-            /* e415, e425, e435, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group1.xyz * float3(-1.0), 0.0)
+public extension AntiCircleRotor {
+    public Scalar weight_contraction(AntiLine other) {
+        Line right_anti_dual = Line(
+            /* e415, e425, e435 */
+            other.group0.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            other.group1.xyz * float3(-1.0)
         );
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(-(this.e41 * right_anti_dual.e235) - (this.e42 * right_anti_dual.e315) - (this.e43 * right_anti_dual.e125) - (this.e23 * right_anti_dual.e415) - (this.e31 * right_anti_dual.e425) - (this.e12 * right_anti_dual.e435), 0.0, 0.0, 0.0)
+        return Scalar(
+            /* scalar */
+            -(this.e41 * right_anti_dual.e235) - (this.e42 * right_anti_dual.e315) - (this.e43 * right_anti_dual.e125) - (this.e23 * right_anti_dual.e415) - (this.e31 * right_anti_dual.e425) - (this.e12 * right_anti_dual.e435)
         );
     }
 }
-extension AntiCircleRotor: WeightContraction<AntiMotor> {
-    associatedtype Output = AntiCircleRotor;
-    func weight_contraction(other: AntiMotor) -> Output {
-        Motor right_anti_dual = Motor.from_groups(
+public extension AntiCircleRotor {
+    public AntiCircleRotor weight_contraction(AntiMotor other) {
+        Motor right_anti_dual = Motor(
             /* e415, e425, e435, e12345 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e5 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(right_anti_dual.e12345) * this.group0.xyz, 0.0), 
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            float3(right_anti_dual.e12345) * this.group0.xyz, 
             /* e23, e31, e12, e45 */
             float4(right_anti_dual.e12345) * this.group1, 
             /* e15, e25, e35, scalar */
@@ -114,44 +116,41 @@ extension AntiCircleRotor: WeightContraction<AntiMotor> {
         );
     }
 }
-extension AntiCircleRotor: WeightContraction<AntiPlane> {
-    associatedtype Output = RoundPoint;
-    func weight_contraction(other: AntiPlane) -> Output {
-        Plane right_anti_dual = Plane.from_groups(
+public extension AntiCircleRotor {
+    public RoundPoint weight_contraction(AntiPlane other) {
+        Plane right_anti_dual = Plane(
             /* e4235, e4315, e4125, e3215 */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return RoundPoint.from_groups(
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4((this.e41 * right_anti_dual.e3215) + (this.e31 * right_anti_dual.e4125), (this.e42 * right_anti_dual.e3215) + (this.e12 * right_anti_dual.e4235), (this.e43 * right_anti_dual.e3215) + (this.e23 * right_anti_dual.e4315), -(this.e42 * right_anti_dual.e4315) - (this.e43 * right_anti_dual.e4125)) - (right_anti_dual.group0.yzxx * float4(this.group1.zxy, this.e41)), 
-            /* e5, 0, 0, 0 */
-            float4((this.e45 * right_anti_dual.e3215) + (this.e15 * right_anti_dual.e4235) + (this.e25 * right_anti_dual.e4315) + (this.e35 * right_anti_dual.e4125), 0.0, 0.0, 0.0)
+            /* e5 */
+            (this.e45 * right_anti_dual.e3215) + (this.e15 * right_anti_dual.e4235) + (this.e25 * right_anti_dual.e4315) + (this.e35 * right_anti_dual.e4125)
         );
     }
 }
-extension AntiCircleRotor: WeightContraction<Dipole> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: Dipole) -> Output {
-        Circle right_anti_dual = Circle.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension AntiCircleRotor {
+    public Scalar weight_contraction(Dipole other) {
+        Circle right_anti_dual = Circle(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group2.xyz * float3(-1.0), 0.0)
+            /* e235, e315, e125 */
+            other.group2.xyz * float3(-1.0)
         );
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(-(this.e41 * right_anti_dual.e235) - (this.e42 * right_anti_dual.e315) - (this.e43 * right_anti_dual.e125) - (this.e23 * right_anti_dual.e415) - (this.e31 * right_anti_dual.e425) - (this.e12 * right_anti_dual.e435) - (this.e45 * right_anti_dual.e321) - (this.e15 * right_anti_dual.e423) - (this.e25 * right_anti_dual.e431) - (this.e35 * right_anti_dual.e412), 0.0, 0.0, 0.0)
+        return Scalar(
+            /* scalar */
+            -(this.e41 * right_anti_dual.e235) - (this.e42 * right_anti_dual.e315) - (this.e43 * right_anti_dual.e125) - (this.e23 * right_anti_dual.e415) - (this.e31 * right_anti_dual.e425) - (this.e12 * right_anti_dual.e435) - (this.e45 * right_anti_dual.e321) - (this.e15 * right_anti_dual.e423) - (this.e25 * right_anti_dual.e431) - (this.e35 * right_anti_dual.e412)
         );
     }
 }
-extension AntiCircleRotor: WeightContraction<DipoleInversion> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: DipoleInversion) -> Output {
-        AntiDipoleInversion right_anti_dual = AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension AntiCircleRotor {
+    public Scalar weight_contraction(DipoleInversion other) {
+        AntiDipoleInversion right_anti_dual = AntiDipoleInversion(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e4 */
@@ -159,138 +158,131 @@ extension AntiCircleRotor: WeightContraction<DipoleInversion> {
             /* e1, e2, e3, e5 */
             other.group3 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(-(this.e41 * right_anti_dual.e235) - (this.e42 * right_anti_dual.e315) - (this.e43 * right_anti_dual.e125) - (this.e23 * right_anti_dual.e415) - (this.e31 * right_anti_dual.e425) - (this.e12 * right_anti_dual.e435) - (this.e45 * right_anti_dual.e321) - (this.e15 * right_anti_dual.e423) - (this.e25 * right_anti_dual.e431) - (this.e35 * right_anti_dual.e412), 0.0, 0.0, 0.0)
+        return Scalar(
+            /* scalar */
+            -(this.e41 * right_anti_dual.e235) - (this.e42 * right_anti_dual.e315) - (this.e43 * right_anti_dual.e125) - (this.e23 * right_anti_dual.e415) - (this.e31 * right_anti_dual.e425) - (this.e12 * right_anti_dual.e435) - (this.e45 * right_anti_dual.e321) - (this.e15 * right_anti_dual.e423) - (this.e25 * right_anti_dual.e431) - (this.e35 * right_anti_dual.e412)
         );
     }
 }
-extension AntiCircleRotor: WeightContraction<DualNum> {
-    associatedtype Output = AntiPlane;
-    func weight_contraction(other: DualNum) -> Output {
-        return AntiPlane.from_groups(
+public extension AntiCircleRotor {
+    public AntiPlane weight_contraction(DualNum other) {
+        return AntiPlane(
             /* e1, e2, e3, e5 */
             float4(other.e5 * -1.0) * float4(this.group0.xyz, this.e45)
         );
     }
 }
-extension AntiCircleRotor: WeightContraction<FlatPoint> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: FlatPoint) -> Output {
-        AntiFlatPoint right_anti_dual = AntiFlatPoint.from_groups(
+public extension AntiCircleRotor {
+    public Scalar weight_contraction(FlatPoint other) {
+        AntiFlatPoint right_anti_dual = AntiFlatPoint(
             /* e235, e315, e125, e321 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(-(this.e41 * right_anti_dual.e235) - (this.e42 * right_anti_dual.e315) - (this.e43 * right_anti_dual.e125) - (this.e45 * right_anti_dual.e321), 0.0, 0.0, 0.0)
+        return Scalar(
+            /* scalar */
+            -(this.e41 * right_anti_dual.e235) - (this.e42 * right_anti_dual.e315) - (this.e43 * right_anti_dual.e125) - (this.e45 * right_anti_dual.e321)
         );
     }
 }
-extension AntiCircleRotor: WeightContraction<Flector> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: Flector) -> Output {
-        AntiFlector right_anti_dual = AntiFlector.from_groups(
+public extension AntiCircleRotor {
+    public Scalar weight_contraction(Flector other) {
+        AntiFlector right_anti_dual = AntiFlector(
             /* e235, e315, e125, e321 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e1, e2, e3, e5 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(-(this.e41 * right_anti_dual.e235) - (this.e42 * right_anti_dual.e315) - (this.e43 * right_anti_dual.e125) - (this.e45 * right_anti_dual.e321), 0.0, 0.0, 0.0)
+        return Scalar(
+            /* scalar */
+            -(this.e41 * right_anti_dual.e235) - (this.e42 * right_anti_dual.e315) - (this.e43 * right_anti_dual.e125) - (this.e45 * right_anti_dual.e321)
         );
     }
 }
-extension AntiCircleRotor: WeightContraction<Motor> {
-    associatedtype Output = AntiPlane;
-    func weight_contraction(other: Motor) -> Output {
-        return AntiPlane.from_groups(
+public extension AntiCircleRotor {
+    public AntiPlane weight_contraction(Motor other) {
+        return AntiPlane(
             /* e1, e2, e3, e5 */
             float4(float4(other.group1.xyz, other.e5 * -1.0)[3]) * float4(this.group0.xyz, this.e45)
         );
     }
 }
-extension AntiCircleRotor: WeightContraction<MultiVector> {
-    associatedtype Output = MultiVector;
-    func weight_contraction(other: MultiVector) -> Output {
-        MultiVector right_anti_dual = MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(other.group0.xy.yx * float2(-1.0, 1.0), 0.0, 0.0), 
+public extension AntiCircleRotor {
+    public MultiVector weight_contraction(MultiVector other) {
+        MultiVector right_anti_dual = MultiVector(
+            /* scalar, e12345 */
+            other.group0.xy.yx * float2(-1.0, 1.0), 
             /* e1, e2, e3, e4 */
             float4(other.group9.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e5, 0, 0, 0 */
-            float4(other.e3215, 0.0, 0.0, 0.0), 
+            /* e5 */
+            other.e3215, 
             /* e15, e25, e35, e45 */
             float4(other.group8.xyz, other.e321 * -1.0), 
-            /* e41, e42, e43, 0 */
-            float4(other.group7.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group6.xyz, 0.0), 
+            /* e41, e42, e43 */
+            other.group7.xyz, 
+            /* e23, e31, e12 */
+            other.group6.xyz, 
             /* e415, e425, e435, e321 */
             float4(other.group5.xyz, other.e45) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e423, e431, e412, 0 */
-            float4(other.group4.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group3.xyz * float3(-1.0), 0.0), 
+            /* e423, e431, e412 */
+            other.group4.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            other.group3.xyz * float3(-1.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(other.group1.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * -1.0
         );
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((this.scalar * right_anti_dual.e12345) - (this.e41 * right_anti_dual.e235) - (this.e42 * right_anti_dual.e315) - (this.e43 * right_anti_dual.e125) - (this.e23 * right_anti_dual.e415) - (this.e31 * right_anti_dual.e425) - (this.e12 * right_anti_dual.e435) - (this.e45 * right_anti_dual.e321) - (this.e15 * right_anti_dual.e423) - (this.e25 * right_anti_dual.e431) - (this.e35 * right_anti_dual.e412), 0.0), 0.0, 0.0), 
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((this.scalar * right_anti_dual.e12345) - (this.e41 * right_anti_dual.e235) - (this.e42 * right_anti_dual.e315) - (this.e43 * right_anti_dual.e125) - (this.e23 * right_anti_dual.e415) - (this.e31 * right_anti_dual.e425) - (this.e12 * right_anti_dual.e435) - (this.e45 * right_anti_dual.e321) - (this.e15 * right_anti_dual.e423) - (this.e25 * right_anti_dual.e431) - (this.e35 * right_anti_dual.e412), 0.0), 
             /* e1, e2, e3, e4 */
             float4((this.e41 * right_anti_dual.e3215) + (this.e31 * right_anti_dual.e4125), (this.e42 * right_anti_dual.e3215) + (this.e12 * right_anti_dual.e4235), (this.e43 * right_anti_dual.e3215) + (this.e23 * right_anti_dual.e4315), -(this.e43 * right_anti_dual.e4125) - (this.e45 * right_anti_dual.e1234)) - (right_anti_dual.group9.yzxx * float4(this.group1.zxy, this.e41)) - float4((float3(right_anti_dual.e1234) * this.group2.xyz), this.e42 * right_anti_dual.e4315), 
-            /* e5, 0, 0, 0 */
-            float4((this.e45 * right_anti_dual.e3215) + (this.e15 * right_anti_dual.e4235) + (this.e25 * right_anti_dual.e4315) + (this.e35 * right_anti_dual.e4125), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (this.e45 * right_anti_dual.e3215) + (this.e15 * right_anti_dual.e4235) + (this.e25 * right_anti_dual.e4315) + (this.e35 * right_anti_dual.e4125), 
             /* e15, e25, e35, e45 */
             float4(right_anti_dual.e12345) * float4(this.group2.xyz, this.e45), 
-            /* e41, e42, e43, 0 */
-            float4(float3(right_anti_dual.e12345) * this.group0.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(float3(right_anti_dual.e12345) * this.group1.xyz, 0.0), 
+            /* e41, e42, e43 */
+            float3(right_anti_dual.e12345) * this.group0.xyz, 
+            /* e23, e31, e12 */
+            float3(right_anti_dual.e12345) * this.group1.xyz, 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(0.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension AntiCircleRotor: WeightContraction<RoundPoint> {
-    associatedtype Output = RoundPoint;
-    func weight_contraction(other: RoundPoint) -> Output {
-        Sphere right_anti_dual = Sphere.from_groups(
+public extension AntiCircleRotor {
+    public RoundPoint weight_contraction(RoundPoint other) {
+        Sphere right_anti_dual = Sphere(
             /* e4235, e4315, e4125, e3215 */
             float4(other.group0.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * -1.0
         );
-        return RoundPoint.from_groups(
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4((this.e41 * right_anti_dual.e3215) + (this.e31 * right_anti_dual.e4125), (this.e42 * right_anti_dual.e3215) + (this.e12 * right_anti_dual.e4235), (this.e43 * right_anti_dual.e3215) + (this.e23 * right_anti_dual.e4315), -(this.e43 * right_anti_dual.e4125) - (this.e45 * right_anti_dual.e1234)) - (right_anti_dual.group0.yzxx * float4(this.group1.zxy, this.e41)) - float4((float3(right_anti_dual.e1234) * this.group2.xyz), this.e42 * right_anti_dual.e4315), 
-            /* e5, 0, 0, 0 */
-            float4((this.e45 * right_anti_dual.e3215) + (this.e15 * right_anti_dual.e4235) + (this.e25 * right_anti_dual.e4315) + (this.e35 * right_anti_dual.e4125), 0.0, 0.0, 0.0)
+            /* e5 */
+            (this.e45 * right_anti_dual.e3215) + (this.e15 * right_anti_dual.e4235) + (this.e25 * right_anti_dual.e4315) + (this.e35 * right_anti_dual.e4125)
         );
     }
 }
-extension AntiCircleRotor: WeightContraction<Scalar> {
-    associatedtype Output = AntiCircleRotor;
-    func weight_contraction(other: Scalar) -> Output {
-        AntiScalar right_anti_dual = AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(other.scalar, 0.0, 0.0, 0.0)
+public extension AntiCircleRotor {
+    public AntiCircleRotor weight_contraction(Scalar other) {
+        AntiScalar right_anti_dual = AntiScalar(
+            /* e12345 */
+            other.scalar
         );
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(right_anti_dual.e12345) * this.group0.xyz, 0.0), 
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            float3(right_anti_dual.e12345) * this.group0.xyz, 
             /* e23, e31, e12, e45 */
             float4(right_anti_dual.e12345) * this.group1, 
             /* e15, e25, e35, scalar */
@@ -298,10 +290,9 @@ extension AntiCircleRotor: WeightContraction<Scalar> {
         );
     }
 }
-extension AntiCircleRotor: WeightContraction<VersorEven> {
-    associatedtype Output = RoundPoint;
-    func weight_contraction(other: VersorEven) -> Output {
-        VersorOdd right_anti_dual = VersorOdd.from_groups(
+public extension AntiCircleRotor {
+    public RoundPoint weight_contraction(VersorEven other) {
+        VersorOdd right_anti_dual = VersorOdd(
             /* e41, e42, e43, scalar */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e23, e31, e12, e45 */
@@ -311,18 +302,17 @@ extension AntiCircleRotor: WeightContraction<VersorEven> {
             /* e4235, e4315, e4125, e3215 */
             float4(other.group3.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return RoundPoint.from_groups(
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4((this.e41 * right_anti_dual.e3215) + (this.e31 * right_anti_dual.e4125), (this.e42 * right_anti_dual.e3215) + (this.e12 * right_anti_dual.e4235), (this.e43 * right_anti_dual.e3215) + (this.e23 * right_anti_dual.e4315), -(this.e43 * right_anti_dual.e4125) - (this.e45 * right_anti_dual.e1234)) - (right_anti_dual.group3.yzxx * float4(this.group1.zxy, this.e41)) - float4((right_anti_dual.group2.www * this.group2.xyz), this.e42 * right_anti_dual.e4315), 
-            /* e5, 0, 0, 0 */
-            float4((this.e45 * right_anti_dual.e3215) + (this.e15 * right_anti_dual.e4235) + (this.e25 * right_anti_dual.e4315) + (this.e35 * right_anti_dual.e4125), 0.0, 0.0, 0.0)
+            /* e5 */
+            (this.e45 * right_anti_dual.e3215) + (this.e15 * right_anti_dual.e4235) + (this.e25 * right_anti_dual.e4315) + (this.e35 * right_anti_dual.e4125)
         );
     }
 }
-extension AntiCircleRotor: WeightContraction<VersorOdd> {
-    associatedtype Output = AntiCircleRotor;
-    func weight_contraction(other: VersorOdd) -> Output {
-        VersorEven right_anti_dual = VersorEven.from_groups(
+public extension AntiCircleRotor {
+    public AntiCircleRotor weight_contraction(VersorOdd other) {
+        VersorEven right_anti_dual = VersorEven(
             /* e423, e431, e412, e12345 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e415, e425, e435, e321 */
@@ -332,9 +322,9 @@ extension AntiCircleRotor: WeightContraction<VersorOdd> {
             /* e1, e2, e3, e4 */
             float4(other.group3.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(right_anti_dual.e12345) * this.group0.xyz, 0.0), 
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            float3(right_anti_dual.e12345) * this.group0.xyz, 
             /* e23, e31, e12, e45 */
             float4(right_anti_dual.e12345) * this.group1, 
             /* e15, e25, e35, scalar */
@@ -342,26 +332,31 @@ extension AntiCircleRotor: WeightContraction<VersorOdd> {
         );
     }
 }
-extension AntiDipoleInversion {
-    // Fancy infix trick
-    func operator/(_rhs: WeightContractionInfix) -> WeightContractionInfixPartial<AntiDipoleInversion> {
-        return WeightContractionInfixPartial { a: this };
+public extension AntiDipoleInversion {
+    // Fancy infix trick (first half)
+    public WeightContractionInfixPartial<AntiDipoleInversion> operator /(WeightContractionInfix rhs) {
+        return WeightContractionInfixPartial<AntiDipoleInversion>(this);
     }
 }
-extension AntiDipoleInversion: WeightContraction<AntiCircleRotor> {
-    associatedtype Output = AntiDipoleInversion;
-    func weight_contraction(other: AntiCircleRotor) -> Output {
-        CircleRotor right_anti_dual = CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension WeightContractionInfixPartial<AntiDipoleInversion> {
+    // Fancy infix trick (second half)
+    public AntiDipoleInversion operator /(AntiCircleRotor rhs) {
+        return this.a.weight_contraction(rhs);
+    }
+}
+public extension AntiDipoleInversion {
+    public AntiDipoleInversion weight_contraction(AntiCircleRotor other) {
+        CircleRotor right_anti_dual = CircleRotor(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e12345 */
             other.group2 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(right_anti_dual.e12345) * this.group0.xyz, 0.0), 
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(right_anti_dual.e12345) * this.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(right_anti_dual.e12345) * this.group1, 
             /* e235, e315, e125, e4 */
@@ -371,12 +366,11 @@ extension AntiDipoleInversion: WeightContraction<AntiCircleRotor> {
         );
     }
 }
-extension AntiDipoleInversion: WeightContraction<AntiDipoleInversion> {
-    associatedtype Output = AntiCircleRotor;
-    func weight_contraction(other: AntiDipoleInversion) -> Output {
-        DipoleInversion right_anti_dual = DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension AntiDipoleInversion {
+    public AntiCircleRotor weight_contraction(AntiDipoleInversion other) {
+        DipoleInversion right_anti_dual = DipoleInversion(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, e1234 */
@@ -384,9 +378,9 @@ extension AntiDipoleInversion: WeightContraction<AntiDipoleInversion> {
             /* e4235, e4315, e4125, e3215 */
             other.group3 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4((float3(right_anti_dual.e1234) * this.group1.xyz) + (this.group0.xyz.zxy * right_anti_dual.group3.yzx) - (this.group0.xyz.yzx * right_anti_dual.group3.zxy), 0.0), 
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            (float3(right_anti_dual.e1234) * this.group1.xyz) + (this.group0.xyz.zxy * right_anti_dual.group3.yzx) - (this.group0.xyz.yzx * right_anti_dual.group3.zxy), 
             /* e23, e31, e12, e45 */
             float4((this.e423 * right_anti_dual.e3215) + (this.e235 * right_anti_dual.e1234), (this.e431 * right_anti_dual.e3215) + (this.e315 * right_anti_dual.e1234), (this.e412 * right_anti_dual.e3215) + (this.e125 * right_anti_dual.e1234), -(this.e425 * right_anti_dual.e4315) - (this.e435 * right_anti_dual.e4125)) - (this.group1.wwwx * right_anti_dual.group3.xyzx), 
             /* e15, e25, e35, scalar */
@@ -394,16 +388,15 @@ extension AntiDipoleInversion: WeightContraction<AntiDipoleInversion> {
         );
     }
 }
-extension AntiDipoleInversion: WeightContraction<AntiDualNum> {
-    associatedtype Output = AntiDipoleInversion;
-    func weight_contraction(other: AntiDualNum) -> Output {
-        DualNum right_anti_dual = DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(other.group0.xy, 0.0, 0.0)
+public extension AntiDipoleInversion {
+    public AntiDipoleInversion weight_contraction(AntiDualNum other) {
+        DualNum right_anti_dual = DualNum(
+            /* e5, e12345 */
+            other.group0.xy
         );
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(right_anti_dual.e12345) * this.group0.xyz, 0.0), 
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(right_anti_dual.e12345) * this.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(right_anti_dual.e12345) * this.group1, 
             /* e235, e315, e125, e4 */
@@ -413,31 +406,29 @@ extension AntiDipoleInversion: WeightContraction<AntiDualNum> {
         );
     }
 }
-extension AntiDipoleInversion: WeightContraction<AntiFlatPoint> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: AntiFlatPoint) -> Output {
-        FlatPoint right_anti_dual = FlatPoint.from_groups(
+public extension AntiDipoleInversion {
+    public Scalar weight_contraction(AntiFlatPoint other) {
+        FlatPoint right_anti_dual = FlatPoint(
             /* e15, e25, e35, e45 */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(-(this.e423 * right_anti_dual.e15) - (this.e431 * right_anti_dual.e25) - (this.e412 * right_anti_dual.e35) - (this.e321 * right_anti_dual.e45), 0.0, 0.0, 0.0)
+        return Scalar(
+            /* scalar */
+            -(this.e423 * right_anti_dual.e15) - (this.e431 * right_anti_dual.e25) - (this.e412 * right_anti_dual.e35) - (this.e321 * right_anti_dual.e45)
         );
     }
 }
-extension AntiDipoleInversion: WeightContraction<AntiFlector> {
-    associatedtype Output = AntiCircleRotor;
-    func weight_contraction(other: AntiFlector) -> Output {
-        Flector right_anti_dual = Flector.from_groups(
+public extension AntiDipoleInversion {
+    public AntiCircleRotor weight_contraction(AntiFlector other) {
+        Flector right_anti_dual = Flector(
             /* e15, e25, e35, e45 */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e4235, e4315, e4125, e3215 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4((this.group0.xyz.zxy * right_anti_dual.group1.yzx) - (this.group0.xyz.yzx * right_anti_dual.group1.zxy), 0.0), 
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            (this.group0.xyz.zxy * right_anti_dual.group1.yzx) - (this.group0.xyz.yzx * right_anti_dual.group1.zxy), 
             /* e23, e31, e12, e45 */
             float4(this.e423 * right_anti_dual.e3215, this.e431 * right_anti_dual.e3215, this.e412 * right_anti_dual.e3215, -(this.e425 * right_anti_dual.e4315) - (this.e435 * right_anti_dual.e4125)) - (this.group1.wwwx * right_anti_dual.group1.xyzx), 
             /* e15, e25, e35, scalar */
@@ -445,35 +436,33 @@ extension AntiDipoleInversion: WeightContraction<AntiFlector> {
         );
     }
 }
-extension AntiDipoleInversion: WeightContraction<AntiLine> {
-    associatedtype Output = RoundPoint;
-    func weight_contraction(other: AntiLine) -> Output {
-        Line right_anti_dual = Line.from_groups(
-            /* e415, e425, e435, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group1.xyz * float3(-1.0), 0.0)
+public extension AntiDipoleInversion {
+    public RoundPoint weight_contraction(AntiLine other) {
+        Line right_anti_dual = Line(
+            /* e415, e425, e435 */
+            other.group0.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            other.group1.xyz * float3(-1.0)
         );
-        return RoundPoint.from_groups(
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4((this.e412 * right_anti_dual.e315) + (this.e321 * right_anti_dual.e415), (this.e423 * right_anti_dual.e125) + (this.e321 * right_anti_dual.e425), (this.e431 * right_anti_dual.e235) + (this.e321 * right_anti_dual.e435), -(this.e431 * right_anti_dual.e425) - (this.e412 * right_anti_dual.e435)) - float4((this.group0.xyz.yzx * right_anti_dual.group1.xyz.zxy), this.e423 * right_anti_dual.e415), 
-            /* e5, 0, 0, 0 */
-            float4(-(this.e415 * right_anti_dual.e235) - (this.e425 * right_anti_dual.e315) - (this.e435 * right_anti_dual.e125) - (this.e235 * right_anti_dual.e415) - (this.e315 * right_anti_dual.e425) - (this.e125 * right_anti_dual.e435), 0.0, 0.0, 0.0)
+            /* e5 */
+            -(this.e415 * right_anti_dual.e235) - (this.e425 * right_anti_dual.e315) - (this.e435 * right_anti_dual.e125) - (this.e235 * right_anti_dual.e415) - (this.e315 * right_anti_dual.e425) - (this.e125 * right_anti_dual.e435)
         );
     }
 }
-extension AntiDipoleInversion: WeightContraction<AntiMotor> {
-    associatedtype Output = AntiDipoleInversion;
-    func weight_contraction(other: AntiMotor) -> Output {
-        Motor right_anti_dual = Motor.from_groups(
+public extension AntiDipoleInversion {
+    public AntiDipoleInversion weight_contraction(AntiMotor other) {
+        Motor right_anti_dual = Motor(
             /* e415, e425, e435, e12345 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e5 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(right_anti_dual.e12345) * this.group0.xyz, 0.0), 
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(right_anti_dual.e12345) * this.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(right_anti_dual.e12345) * this.group1, 
             /* e235, e315, e125, e4 */
@@ -483,16 +472,15 @@ extension AntiDipoleInversion: WeightContraction<AntiMotor> {
         );
     }
 }
-extension AntiDipoleInversion: WeightContraction<AntiPlane> {
-    associatedtype Output = AntiCircleRotor;
-    func weight_contraction(other: AntiPlane) -> Output {
-        Plane right_anti_dual = Plane.from_groups(
+public extension AntiDipoleInversion {
+    public AntiCircleRotor weight_contraction(AntiPlane other) {
+        Plane right_anti_dual = Plane(
             /* e4235, e4315, e4125, e3215 */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4((this.group0.xyz.zxy * right_anti_dual.group0.yzx) - (this.group0.xyz.yzx * right_anti_dual.group0.zxy), 0.0), 
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            (this.group0.xyz.zxy * right_anti_dual.group0.yzx) - (this.group0.xyz.yzx * right_anti_dual.group0.zxy), 
             /* e23, e31, e12, e45 */
             float4(this.e423 * right_anti_dual.e3215, this.e431 * right_anti_dual.e3215, this.e412 * right_anti_dual.e3215, -(this.e425 * right_anti_dual.e4315) - (this.e435 * right_anti_dual.e4125)) - (this.group1.wwwx * right_anti_dual.group0.xyzx), 
             /* e15, e25, e35, scalar */
@@ -500,65 +488,61 @@ extension AntiDipoleInversion: WeightContraction<AntiPlane> {
         );
     }
 }
-extension AntiDipoleInversion: WeightContraction<Circle> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: Circle) -> Output {
-        Dipole right_anti_dual = Dipole.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension AntiDipoleInversion {
+    public Scalar weight_contraction(Circle other) {
+        Dipole right_anti_dual = Dipole(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e15, e25, e35, 0 */
-            float4(other.group2.xyz, 0.0)
+            /* e15, e25, e35 */
+            other.group2.xyz
         );
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(-(this.e423 * right_anti_dual.e15) - (this.e431 * right_anti_dual.e25) - (this.e412 * right_anti_dual.e35) - (this.e415 * right_anti_dual.e23) - (this.e425 * right_anti_dual.e31) - (this.e435 * right_anti_dual.e12) - (this.e321 * right_anti_dual.e45) - (this.e235 * right_anti_dual.e41) - (this.e315 * right_anti_dual.e42) - (this.e125 * right_anti_dual.e43), 0.0, 0.0, 0.0)
+        return Scalar(
+            /* scalar */
+            -(this.e423 * right_anti_dual.e15) - (this.e431 * right_anti_dual.e25) - (this.e412 * right_anti_dual.e35) - (this.e415 * right_anti_dual.e23) - (this.e425 * right_anti_dual.e31) - (this.e435 * right_anti_dual.e12) - (this.e321 * right_anti_dual.e45) - (this.e235 * right_anti_dual.e41) - (this.e315 * right_anti_dual.e42) - (this.e125 * right_anti_dual.e43)
         );
     }
 }
-extension AntiDipoleInversion: WeightContraction<CircleRotor> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: CircleRotor) -> Output {
-        AntiCircleRotor right_anti_dual = AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension AntiDipoleInversion {
+    public Scalar weight_contraction(CircleRotor other) {
+        AntiCircleRotor right_anti_dual = AntiCircleRotor(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, scalar */
             other.group2 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(-(right_anti_dual.e41 * this.e235) - (right_anti_dual.e42 * this.e315) - (right_anti_dual.e43 * this.e125) - (right_anti_dual.e23 * this.e415) - (right_anti_dual.e31 * this.e425) - (right_anti_dual.e12 * this.e435) - (right_anti_dual.e45 * this.e321) - (right_anti_dual.e15 * this.e423) - (right_anti_dual.e25 * this.e431) - (right_anti_dual.e35 * this.e412), 0.0, 0.0, 0.0)
+        return Scalar(
+            /* scalar */
+            -(right_anti_dual.e41 * this.e235) - (right_anti_dual.e42 * this.e315) - (right_anti_dual.e43 * this.e125) - (right_anti_dual.e23 * this.e415) - (right_anti_dual.e31 * this.e425) - (right_anti_dual.e12 * this.e435) - (right_anti_dual.e45 * this.e321) - (right_anti_dual.e15 * this.e423) - (right_anti_dual.e25 * this.e431) - (right_anti_dual.e35 * this.e412)
         );
     }
 }
-extension AntiDipoleInversion: WeightContraction<Dipole> {
-    associatedtype Output = RoundPoint;
-    func weight_contraction(other: Dipole) -> Output {
-        Circle right_anti_dual = Circle.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension AntiDipoleInversion {
+    public RoundPoint weight_contraction(Dipole other) {
+        Circle right_anti_dual = Circle(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group2.xyz * float3(-1.0), 0.0)
+            /* e235, e315, e125 */
+            other.group2.xyz * float3(-1.0)
         );
-        return RoundPoint.from_groups(
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4((this.e412 * right_anti_dual.e315) + (this.e415 * right_anti_dual.e321) + (this.e321 * right_anti_dual.e415) + (this.e315 * right_anti_dual.e412), (this.e423 * right_anti_dual.e125) + (this.e425 * right_anti_dual.e321) + (this.e321 * right_anti_dual.e425) + (this.e125 * right_anti_dual.e423), (this.e431 * right_anti_dual.e235) + (this.e435 * right_anti_dual.e321) + (this.e321 * right_anti_dual.e435) + (this.e235 * right_anti_dual.e431), -(this.e412 * right_anti_dual.e435) - (this.e415 * right_anti_dual.e423) - (this.e425 * right_anti_dual.e431) - (this.e435 * right_anti_dual.e412)) - float4((this.group0.xyz.yzx * right_anti_dual.group2.xyz.zxy), this.e423 * right_anti_dual.e415) - float4((right_anti_dual.group0.xyz.yzx * this.group2.zxy), this.e431 * right_anti_dual.e425), 
-            /* e5, 0, 0, 0 */
-            float4(-(this.e415 * right_anti_dual.e235) - (this.e425 * right_anti_dual.e315) - (this.e435 * right_anti_dual.e125) - (this.e235 * right_anti_dual.e415) - (this.e315 * right_anti_dual.e425) - (this.e125 * right_anti_dual.e435), 0.0, 0.0, 0.0)
+            /* e5 */
+            -(this.e415 * right_anti_dual.e235) - (this.e425 * right_anti_dual.e315) - (this.e435 * right_anti_dual.e125) - (this.e235 * right_anti_dual.e415) - (this.e315 * right_anti_dual.e425) - (this.e125 * right_anti_dual.e435)
         );
     }
 }
-extension AntiDipoleInversion: WeightContraction<DipoleInversion> {
-    associatedtype Output = RoundPoint;
-    func weight_contraction(other: DipoleInversion) -> Output {
-        AntiDipoleInversion right_anti_dual = AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension AntiDipoleInversion {
+    public RoundPoint weight_contraction(DipoleInversion other) {
+        AntiDipoleInversion right_anti_dual = AntiDipoleInversion(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e4 */
@@ -566,22 +550,21 @@ extension AntiDipoleInversion: WeightContraction<DipoleInversion> {
             /* e1, e2, e3, e5 */
             other.group3 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return RoundPoint.from_groups(
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4((right_anti_dual.e412 * this.e315) + (right_anti_dual.e415 * this.e321) + (right_anti_dual.e321 * this.e415) + (right_anti_dual.e315 * this.e412), (right_anti_dual.e423 * this.e125) + (right_anti_dual.e425 * this.e321) + (right_anti_dual.e321 * this.e425) + (right_anti_dual.e125 * this.e423), (right_anti_dual.e431 * this.e235) + (right_anti_dual.e435 * this.e321) + (right_anti_dual.e321 * this.e435) + (right_anti_dual.e235 * this.e431), -(right_anti_dual.e412 * this.e435) - (right_anti_dual.e415 * this.e423) - (right_anti_dual.e425 * this.e431) - (right_anti_dual.e435 * this.e412)) - float4((right_anti_dual.group0.xyz.yzx * this.group2.zxy), right_anti_dual.e423 * this.e415) - float4((this.group0.xyz.yzx * right_anti_dual.group2.zxy), right_anti_dual.e431 * this.e425), 
-            /* e5, 0, 0, 0 */
-            float4(-(right_anti_dual.e415 * this.e235) - (right_anti_dual.e425 * this.e315) - (right_anti_dual.e435 * this.e125) - (right_anti_dual.e235 * this.e415) - (right_anti_dual.e315 * this.e425) - (right_anti_dual.e125 * this.e435), 0.0, 0.0, 0.0)
+            /* e5 */
+            -(right_anti_dual.e415 * this.e235) - (right_anti_dual.e425 * this.e315) - (right_anti_dual.e435 * this.e125) - (right_anti_dual.e235 * this.e415) - (right_anti_dual.e315 * this.e425) - (right_anti_dual.e125 * this.e435)
         );
     }
 }
-extension AntiDipoleInversion: WeightContraction<DualNum> {
-    associatedtype Output = AntiMotor;
-    func weight_contraction(other: DualNum) -> Output {
-        AntiDualNum right_anti_dual = AntiDualNum.from_groups(
-            /* e3215, scalar, 0, 0 */
-            float4(other.group0.xy * float2(-1.0), 0.0, 0.0)
+public extension AntiDipoleInversion {
+    public AntiMotor weight_contraction(DualNum other) {
+        AntiDualNum right_anti_dual = AntiDualNum(
+            /* e3215, scalar */
+            other.group0.xy * float2(-1.0)
         );
-        return AntiMotor.from_groups(
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(right_anti_dual.e3215) * float4(this.group0.xyz, this.e4), 
             /* e15, e25, e35, e3215 */
@@ -589,59 +572,55 @@ extension AntiDipoleInversion: WeightContraction<DualNum> {
         );
     }
 }
-extension AntiDipoleInversion: WeightContraction<FlatPoint> {
-    associatedtype Output = AntiPlane;
-    func weight_contraction(other: FlatPoint) -> Output {
-        AntiFlatPoint right_anti_dual = AntiFlatPoint.from_groups(
+public extension AntiDipoleInversion {
+    public AntiPlane weight_contraction(FlatPoint other) {
+        AntiFlatPoint right_anti_dual = AntiFlatPoint(
             /* e235, e315, e125, e321 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiPlane.from_groups(
+        return AntiPlane(
             /* e1, e2, e3, e5 */
             float4((this.e412 * right_anti_dual.e315) + (this.e415 * right_anti_dual.e321), (this.e423 * right_anti_dual.e125) + (this.e425 * right_anti_dual.e321), (this.e431 * right_anti_dual.e235) + (this.e435 * right_anti_dual.e321), -(this.e425 * right_anti_dual.e315) - (this.e435 * right_anti_dual.e125)) - (right_anti_dual.group0.zxyx * float4(this.group0.xyz.yzx, this.e415))
         );
     }
 }
-extension AntiDipoleInversion: WeightContraction<Flector> {
-    associatedtype Output = AntiPlane;
-    func weight_contraction(other: Flector) -> Output {
-        AntiFlector right_anti_dual = AntiFlector.from_groups(
+public extension AntiDipoleInversion {
+    public AntiPlane weight_contraction(Flector other) {
+        AntiFlector right_anti_dual = AntiFlector(
             /* e235, e315, e125, e321 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e1, e2, e3, e5 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiPlane.from_groups(
+        return AntiPlane(
             /* e1, e2, e3, e5 */
             float4((this.e412 * right_anti_dual.e315) + (this.e415 * right_anti_dual.e321), (this.e423 * right_anti_dual.e125) + (this.e425 * right_anti_dual.e321), (this.e431 * right_anti_dual.e235) + (this.e435 * right_anti_dual.e321), -(this.e425 * right_anti_dual.e315) - (this.e435 * right_anti_dual.e125)) - (right_anti_dual.group0.zxyx * float4(this.group0.xyz.yzx, this.e415))
         );
     }
 }
-extension AntiDipoleInversion: WeightContraction<Line> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: Line) -> Output {
-        AntiLine right_anti_dual = AntiLine.from_groups(
-            /* e23, e31, e12, 0 */
-            float4(other.group0.xyz, 0.0), 
-            /* e15, e25, e35, 0 */
-            float4(other.group1.xyz, 0.0)
+public extension AntiDipoleInversion {
+    public Scalar weight_contraction(Line other) {
+        AntiLine right_anti_dual = AntiLine(
+            /* e23, e31, e12 */
+            other.group0.xyz, 
+            /* e15, e25, e35 */
+            other.group1.xyz
         );
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(-(this.e423 * right_anti_dual.e15) - (this.e431 * right_anti_dual.e25) - (this.e412 * right_anti_dual.e35) - (this.e415 * right_anti_dual.e23) - (this.e425 * right_anti_dual.e31) - (this.e435 * right_anti_dual.e12), 0.0, 0.0, 0.0)
+        return Scalar(
+            /* scalar */
+            -(this.e423 * right_anti_dual.e15) - (this.e431 * right_anti_dual.e25) - (this.e412 * right_anti_dual.e35) - (this.e415 * right_anti_dual.e23) - (this.e425 * right_anti_dual.e31) - (this.e435 * right_anti_dual.e12)
         );
     }
 }
-extension AntiDipoleInversion: WeightContraction<Motor> {
-    associatedtype Output = AntiMotor;
-    func weight_contraction(other: Motor) -> Output {
-        AntiMotor right_anti_dual = AntiMotor.from_groups(
+public extension AntiDipoleInversion {
+    public AntiMotor weight_contraction(Motor other) {
+        AntiMotor right_anti_dual = AntiMotor(
             /* e23, e31, e12, scalar */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, e3215 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiMotor.from_groups(
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4((float3(right_anti_dual.e3215) * this.group0.xyz), (this.e4 * right_anti_dual.e3215) - (this.e423 * right_anti_dual.e15) - (this.e431 * right_anti_dual.e25) - (this.e412 * right_anti_dual.e35) - (this.e415 * right_anti_dual.e23) - (this.e425 * right_anti_dual.e31) - (this.e435 * right_anti_dual.e12)), 
             /* e15, e25, e35, e3215 */
@@ -649,71 +628,69 @@ extension AntiDipoleInversion: WeightContraction<Motor> {
         );
     }
 }
-extension AntiDipoleInversion: WeightContraction<MultiVector> {
-    associatedtype Output = MultiVector;
-    func weight_contraction(other: MultiVector) -> Output {
-        MultiVector right_anti_dual = MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(other.group0.xy.yx * float2(-1.0, 1.0), 0.0, 0.0), 
+public extension AntiDipoleInversion {
+    public MultiVector weight_contraction(MultiVector other) {
+        MultiVector right_anti_dual = MultiVector(
+            /* scalar, e12345 */
+            other.group0.xy.yx * float2(-1.0, 1.0), 
             /* e1, e2, e3, e4 */
             float4(other.group9.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e5, 0, 0, 0 */
-            float4(other.e3215, 0.0, 0.0, 0.0), 
+            /* e5 */
+            other.e3215, 
             /* e15, e25, e35, e45 */
             float4(other.group8.xyz, other.e321 * -1.0), 
-            /* e41, e42, e43, 0 */
-            float4(other.group7.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group6.xyz, 0.0), 
+            /* e41, e42, e43 */
+            other.group7.xyz, 
+            /* e23, e31, e12 */
+            other.group6.xyz, 
             /* e415, e425, e435, e321 */
             float4(other.group5.xyz, other.e45) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e423, e431, e412, 0 */
-            float4(other.group4.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group3.xyz * float3(-1.0), 0.0), 
+            /* e423, e431, e412 */
+            other.group4.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            other.group3.xyz * float3(-1.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(other.group1.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * -1.0
         );
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((this.e4 * right_anti_dual.e3215) + (this.e1 * right_anti_dual.e4235) + (this.e2 * right_anti_dual.e4315) + (this.e3 * right_anti_dual.e4125) + (this.e5 * right_anti_dual.e1234) - (this.e423 * right_anti_dual.e15) - (this.e431 * right_anti_dual.e25) - (this.e412 * right_anti_dual.e35) - (this.e415 * right_anti_dual.e23) - (this.e425 * right_anti_dual.e31) - (this.e435 * right_anti_dual.e12) - (this.e321 * right_anti_dual.e45) - (this.e235 * right_anti_dual.e41) - (this.e315 * right_anti_dual.e42) - (this.e125 * right_anti_dual.e43), 0.0), 0.0, 0.0), 
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((this.e4 * right_anti_dual.e3215) + (this.e1 * right_anti_dual.e4235) + (this.e2 * right_anti_dual.e4315) + (this.e3 * right_anti_dual.e4125) + (this.e5 * right_anti_dual.e1234) - (this.e423 * right_anti_dual.e15) - (this.e431 * right_anti_dual.e25) - (this.e412 * right_anti_dual.e35) - (this.e415 * right_anti_dual.e23) - (this.e425 * right_anti_dual.e31) - (this.e435 * right_anti_dual.e12) - (this.e321 * right_anti_dual.e45) - (this.e235 * right_anti_dual.e41) - (this.e315 * right_anti_dual.e42) - (this.e125 * right_anti_dual.e43), 0.0), 
             /* e1, e2, e3, e4 */
             float4((this.e412 * right_anti_dual.e315) + (this.e415 * right_anti_dual.e321) + (this.e321 * right_anti_dual.e415) + (this.e315 * right_anti_dual.e412), (this.e423 * right_anti_dual.e125) + (this.e425 * right_anti_dual.e321) + (this.e321 * right_anti_dual.e425) + (this.e125 * right_anti_dual.e423), (this.e431 * right_anti_dual.e235) + (this.e435 * right_anti_dual.e321) + (this.e321 * right_anti_dual.e435) + (this.e235 * right_anti_dual.e431), -(this.e412 * right_anti_dual.e435) - (this.e415 * right_anti_dual.e423) - (this.e425 * right_anti_dual.e431) - (this.e435 * right_anti_dual.e412)) + (float4(right_anti_dual.e12345) * float4(this.group3.xyz, this.e4)) - float4((this.group0.xyz.yzx * right_anti_dual.group8.xyz.zxy), this.e423 * right_anti_dual.e415) - float4((right_anti_dual.group7.xyz.yzx * this.group2.zxy), this.e431 * right_anti_dual.e425), 
-            /* e5, 0, 0, 0 */
-            float4((this.e5 * right_anti_dual.e12345) - (this.e415 * right_anti_dual.e235) - (this.e425 * right_anti_dual.e315) - (this.e435 * right_anti_dual.e125) - (this.e235 * right_anti_dual.e415) - (this.e315 * right_anti_dual.e425) - (this.e125 * right_anti_dual.e435), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (this.e5 * right_anti_dual.e12345) - (this.e415 * right_anti_dual.e235) - (this.e425 * right_anti_dual.e315) - (this.e435 * right_anti_dual.e125) - (this.e235 * right_anti_dual.e415) - (this.e315 * right_anti_dual.e425) - (this.e125 * right_anti_dual.e435), 
             /* e15, e25, e35, e45 */
             float4((this.e415 * right_anti_dual.e3215) + (this.e315 * right_anti_dual.e4125), (this.e425 * right_anti_dual.e3215) + (this.e125 * right_anti_dual.e4235), (this.e435 * right_anti_dual.e3215) + (this.e235 * right_anti_dual.e4315), -(this.e425 * right_anti_dual.e4315) - (this.e435 * right_anti_dual.e4125)) - (right_anti_dual.group9.yzxx * float4(this.group2.zxy, this.e415)), 
-            /* e41, e42, e43, 0 */
-            float4((float3(right_anti_dual.e1234) * this.group1.xyz) + (this.group0.xyz.zxy * right_anti_dual.group9.yzx) - (this.group0.xyz.yzx * right_anti_dual.group9.zxy), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(right_anti_dual.e3215) * this.group0.xyz) + (float3(right_anti_dual.e1234) * this.group2.xyz) - (float3(this.e321) * right_anti_dual.group9.xyz), 0.0), 
+            /* e41, e42, e43 */
+            (float3(right_anti_dual.e1234) * this.group1.xyz) + (this.group0.xyz.zxy * right_anti_dual.group9.yzx) - (this.group0.xyz.yzx * right_anti_dual.group9.zxy), 
+            /* e23, e31, e12 */
+            (float3(right_anti_dual.e3215) * this.group0.xyz) + (float3(right_anti_dual.e1234) * this.group2.xyz) - (float3(this.e321) * right_anti_dual.group9.xyz), 
             /* e415, e425, e435, e321 */
             float4(right_anti_dual.e12345) * this.group1, 
-            /* e423, e431, e412, 0 */
-            float4(float3(right_anti_dual.e12345) * this.group0.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(float3(right_anti_dual.e12345) * this.group2.xyz, 0.0), 
+            /* e423, e431, e412 */
+            float3(right_anti_dual.e12345) * this.group0.xyz, 
+            /* e235, e315, e125 */
+            float3(right_anti_dual.e12345) * this.group2.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension AntiDipoleInversion: WeightContraction<RoundPoint> {
-    associatedtype Output = AntiCircleRotor;
-    func weight_contraction(other: RoundPoint) -> Output {
-        Sphere right_anti_dual = Sphere.from_groups(
+public extension AntiDipoleInversion {
+    public AntiCircleRotor weight_contraction(RoundPoint other) {
+        Sphere right_anti_dual = Sphere(
             /* e4235, e4315, e4125, e3215 */
             float4(other.group0.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * -1.0
         );
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4((float3(right_anti_dual.e1234) * this.group1.xyz) + (this.group0.xyz.zxy * right_anti_dual.group0.yzx) - (this.group0.xyz.yzx * right_anti_dual.group0.zxy), 0.0), 
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            (float3(right_anti_dual.e1234) * this.group1.xyz) + (this.group0.xyz.zxy * right_anti_dual.group0.yzx) - (this.group0.xyz.yzx * right_anti_dual.group0.zxy), 
             /* e23, e31, e12, e45 */
             float4((this.e423 * right_anti_dual.e3215) + (this.e235 * right_anti_dual.e1234), (this.e431 * right_anti_dual.e3215) + (this.e315 * right_anti_dual.e1234), (this.e412 * right_anti_dual.e3215) + (this.e125 * right_anti_dual.e1234), -(this.e425 * right_anti_dual.e4315) - (this.e435 * right_anti_dual.e4125)) - (this.group1.wwwx * right_anti_dual.group0.xyzx), 
             /* e15, e25, e35, scalar */
@@ -721,16 +698,15 @@ extension AntiDipoleInversion: WeightContraction<RoundPoint> {
         );
     }
 }
-extension AntiDipoleInversion: WeightContraction<Scalar> {
-    associatedtype Output = AntiDipoleInversion;
-    func weight_contraction(other: Scalar) -> Output {
-        AntiScalar right_anti_dual = AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(other.scalar, 0.0, 0.0, 0.0)
+public extension AntiDipoleInversion {
+    public AntiDipoleInversion weight_contraction(Scalar other) {
+        AntiScalar right_anti_dual = AntiScalar(
+            /* e12345 */
+            other.scalar
         );
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(right_anti_dual.e12345) * this.group0.xyz, 0.0), 
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(right_anti_dual.e12345) * this.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(right_anti_dual.e12345) * this.group1, 
             /* e235, e315, e125, e4 */
@@ -740,10 +716,9 @@ extension AntiDipoleInversion: WeightContraction<Scalar> {
         );
     }
 }
-extension AntiDipoleInversion: WeightContraction<VersorEven> {
-    associatedtype Output = AntiCircleRotor;
-    func weight_contraction(other: VersorEven) -> Output {
-        VersorOdd right_anti_dual = VersorOdd.from_groups(
+public extension AntiDipoleInversion {
+    public AntiCircleRotor weight_contraction(VersorEven other) {
+        VersorOdd right_anti_dual = VersorOdd(
             /* e41, e42, e43, scalar */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e23, e31, e12, e45 */
@@ -753,9 +728,9 @@ extension AntiDipoleInversion: WeightContraction<VersorEven> {
             /* e4235, e4315, e4125, e3215 */
             float4(other.group3.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4((float3(right_anti_dual.e1234) * this.group1.xyz) + (this.group0.xyz.zxy * right_anti_dual.group3.yzx) - (this.group0.xyz.yzx * right_anti_dual.group3.zxy), 0.0), 
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            (float3(right_anti_dual.e1234) * this.group1.xyz) + (this.group0.xyz.zxy * right_anti_dual.group3.yzx) - (this.group0.xyz.yzx * right_anti_dual.group3.zxy), 
             /* e23, e31, e12, e45 */
             float4((this.e423 * right_anti_dual.e3215) + (this.e235 * right_anti_dual.e1234), (this.e431 * right_anti_dual.e3215) + (this.e315 * right_anti_dual.e1234), (this.e412 * right_anti_dual.e3215) + (this.e125 * right_anti_dual.e1234), -(this.e425 * right_anti_dual.e4315) - (this.e435 * right_anti_dual.e4125)) - (this.group1.wwwx * right_anti_dual.group3.xyzx), 
             /* e15, e25, e35, scalar */
@@ -763,10 +738,9 @@ extension AntiDipoleInversion: WeightContraction<VersorEven> {
         );
     }
 }
-extension AntiDipoleInversion: WeightContraction<VersorOdd> {
-    associatedtype Output = AntiDipoleInversion;
-    func weight_contraction(other: VersorOdd) -> Output {
-        VersorEven right_anti_dual = VersorEven.from_groups(
+public extension AntiDipoleInversion {
+    public AntiDipoleInversion weight_contraction(VersorOdd other) {
+        VersorEven right_anti_dual = VersorEven(
             /* e423, e431, e412, e12345 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e415, e425, e435, e321 */
@@ -776,9 +750,9 @@ extension AntiDipoleInversion: WeightContraction<VersorOdd> {
             /* e1, e2, e3, e4 */
             float4(other.group3.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(right_anti_dual.e12345) * this.group0.xyz, 0.0), 
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(right_anti_dual.e12345) * this.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(right_anti_dual.e12345) * this.group1, 
             /* e235, e315, e125, e4 */
@@ -788,24 +762,29 @@ extension AntiDipoleInversion: WeightContraction<VersorOdd> {
         );
     }
 }
-extension AntiDualNum {
-    // Fancy infix trick
-    func operator/(_rhs: WeightContractionInfix) -> WeightContractionInfixPartial<AntiDualNum> {
-        return WeightContractionInfixPartial { a: this };
+public extension AntiDualNum {
+    // Fancy infix trick (first half)
+    public WeightContractionInfixPartial<AntiDualNum> operator /(WeightContractionInfix rhs) {
+        return WeightContractionInfixPartial<AntiDualNum>(this);
     }
 }
-extension AntiDualNum: WeightContraction<AntiCircleRotor> {
-    associatedtype Output = AntiMotor;
-    func weight_contraction(other: AntiCircleRotor) -> Output {
-        CircleRotor right_anti_dual = CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension WeightContractionInfixPartial<AntiDualNum> {
+    // Fancy infix trick (second half)
+    public AntiMotor operator /(AntiCircleRotor rhs) {
+        return this.a.weight_contraction(rhs);
+    }
+}
+public extension AntiDualNum {
+    public AntiMotor weight_contraction(AntiCircleRotor other) {
+        CircleRotor right_anti_dual = CircleRotor(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e12345 */
             other.group2 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiMotor.from_groups(
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(this.group0.xy.xx, this.e3215, this.scalar) * float4(right_anti_dual.group0.xyz, right_anti_dual.e12345), 
             /* e15, e25, e35, e3215 */
@@ -813,12 +792,11 @@ extension AntiDualNum: WeightContraction<AntiCircleRotor> {
         );
     }
 }
-extension AntiDualNum: WeightContraction<AntiDipoleInversion> {
-    associatedtype Output = AntiFlector;
-    func weight_contraction(other: AntiDipoleInversion) -> Output {
-        DipoleInversion right_anti_dual = DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension AntiDualNum {
+    public AntiFlector weight_contraction(AntiDipoleInversion other) {
+        DipoleInversion right_anti_dual = DipoleInversion(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, e1234 */
@@ -826,7 +804,7 @@ extension AntiDualNum: WeightContraction<AntiDipoleInversion> {
             /* e4235, e4315, e4125, e3215 */
             other.group3 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiFlector.from_groups(
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(this.e3215) * float4(right_anti_dual.group3.xyz, right_anti_dual.e1234) * float4(-1.0), 
             /* e1, e2, e3, e5 */
@@ -834,34 +812,31 @@ extension AntiDualNum: WeightContraction<AntiDipoleInversion> {
         );
     }
 }
-extension AntiDualNum: WeightContraction<AntiDualNum> {
-    associatedtype Output = AntiDualNum;
-    func weight_contraction(other: AntiDualNum) -> Output {
-        return AntiDualNum.from_groups(
-            /* e3215, scalar, 0, 0 */
-            float4(float2(other.scalar) * this.group0.xy, 0.0, 0.0)
+public extension AntiDualNum {
+    public AntiDualNum weight_contraction(AntiDualNum other) {
+        return AntiDualNum(
+            /* e3215, scalar */
+            float2(other.scalar) * this.group0.xy
         );
     }
 }
-extension AntiDualNum: WeightContraction<AntiFlatPoint> {
-    associatedtype Output = DualNum;
-    func weight_contraction(other: AntiFlatPoint) -> Output {
-        return DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(float2(float4(other.group0.xyz, other.e321 * -1.0)[3] * this.e3215, 1.0) * float2(-1.0, 0.0), 0.0, 0.0)
+public extension AntiDualNum {
+    public DualNum weight_contraction(AntiFlatPoint other) {
+        return DualNum(
+            /* e5, e12345 */
+            float2(float4(other.group0.xyz, other.e321 * -1.0)[3] * this.e3215, 1.0) * float2(-1.0, 0.0)
         );
     }
 }
-extension AntiDualNum: WeightContraction<AntiFlector> {
-    associatedtype Output = AntiFlector;
-    func weight_contraction(other: AntiFlector) -> Output {
-        Flector right_anti_dual = Flector.from_groups(
+public extension AntiDualNum {
+    public AntiFlector weight_contraction(AntiFlector other) {
+        Flector right_anti_dual = Flector(
             /* e15, e25, e35, e45 */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e4235, e4315, e4125, e3215 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiFlector.from_groups(
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(this.group0.xy.xx, this.e3215, 0.0) * float4(float3(1.0), 0.0) * float4(right_anti_dual.group1.xyz, 0.0) * float4(-1.0, -1.0, -1.0, 0.0), 
             /* e1, e2, e3, e5 */
@@ -869,25 +844,23 @@ extension AntiDualNum: WeightContraction<AntiFlector> {
         );
     }
 }
-extension AntiDualNum: WeightContraction<AntiLine> {
-    associatedtype Output = FlatPoint;
-    func weight_contraction(other: AntiLine) -> Output {
-        return FlatPoint.from_groups(
+public extension AntiDualNum {
+    public FlatPoint weight_contraction(AntiLine other) {
+        return FlatPoint(
             /* e15, e25, e35, e45 */
             float4(this.group0.xy.xx, this.e3215, 0.0) * float4(float3(1.0), 0.0) * float4(float3(other.e23 * -1.0, other.e31 * -1.0, other.e12 * -1.0), 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         );
     }
 }
-extension AntiDualNum: WeightContraction<AntiMotor> {
-    associatedtype Output = AntiMotor;
-    func weight_contraction(other: AntiMotor) -> Output {
-        Motor right_anti_dual = Motor.from_groups(
+public extension AntiDualNum {
+    public AntiMotor weight_contraction(AntiMotor other) {
+        Motor right_anti_dual = Motor(
             /* e415, e425, e435, e12345 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e5 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiMotor.from_groups(
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(float3(0.0), this.scalar * right_anti_dual.e12345), 
             /* e15, e25, e35, e3215 */
@@ -895,74 +868,69 @@ extension AntiDualNum: WeightContraction<AntiMotor> {
         );
     }
 }
-extension AntiDualNum: WeightContraction<AntiPlane> {
-    associatedtype Output = AntiFlatPoint;
-    func weight_contraction(other: AntiPlane) -> Output {
-        return AntiFlatPoint.from_groups(
+public extension AntiDualNum {
+    public AntiFlatPoint weight_contraction(AntiPlane other) {
+        return AntiFlatPoint(
             /* e235, e315, e125, e321 */
             float4(this.group0.xy.xx, this.e3215, 0.0) * float4(float3(1.0), 0.0) * float4(other.group0.xyz, 0.0) * float4(-1.0, -1.0, -1.0, 0.0)
         );
     }
 }
-extension AntiDualNum: WeightContraction<Circle> {
-    associatedtype Output = AntiPlane;
-    func weight_contraction(other: Circle) -> Output {
-        Dipole right_anti_dual = Dipole.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension AntiDualNum {
+    public AntiPlane weight_contraction(Circle other) {
+        Dipole right_anti_dual = Dipole(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e15, e25, e35, 0 */
-            float4(other.group2.xyz, 0.0)
+            /* e15, e25, e35 */
+            other.group2.xyz
         );
-        return AntiPlane.from_groups(
+        return AntiPlane(
             /* e1, e2, e3, e5 */
             float4(this.e3215) * float4(right_anti_dual.group0.xyz, right_anti_dual.e45) * float4(-1.0)
         );
     }
 }
-extension AntiDualNum: WeightContraction<CircleRotor> {
-    associatedtype Output = AntiPlane;
-    func weight_contraction(other: CircleRotor) -> Output {
-        AntiCircleRotor right_anti_dual = AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension AntiDualNum {
+    public AntiPlane weight_contraction(CircleRotor other) {
+        AntiCircleRotor right_anti_dual = AntiCircleRotor(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, scalar */
             other.group2 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiPlane.from_groups(
+        return AntiPlane(
             /* e1, e2, e3, e5 */
             float4(this.e3215) * float4(right_anti_dual.group0.xyz, right_anti_dual.e45) * float4(-1.0)
         );
     }
 }
-extension AntiDualNum: WeightContraction<Dipole> {
-    associatedtype Output = AntiLine;
-    func weight_contraction(other: Dipole) -> Output {
-        Circle right_anti_dual = Circle.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension AntiDualNum {
+    public AntiLine weight_contraction(Dipole other) {
+        Circle right_anti_dual = Circle(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group2.xyz * float3(-1.0), 0.0)
+            /* e235, e315, e125 */
+            other.group2.xyz * float3(-1.0)
         );
-        return AntiLine.from_groups(
-            /* e23, e31, e12, 0 */
-            float4(float3(this.e3215) * right_anti_dual.group0.xyz, 0.0), 
-            /* e15, e25, e35, 0 */
-            float4(float3(this.e3215) * right_anti_dual.group1.xyz, 0.0)
+        return AntiLine(
+            /* e23, e31, e12 */
+            float3(this.e3215) * right_anti_dual.group0.xyz, 
+            /* e15, e25, e35 */
+            float3(this.e3215) * right_anti_dual.group1.xyz
         );
     }
 }
-extension AntiDualNum: WeightContraction<DipoleInversion> {
-    associatedtype Output = AntiMotor;
-    func weight_contraction(other: DipoleInversion) -> Output {
-        AntiDipoleInversion right_anti_dual = AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension AntiDualNum {
+    public AntiMotor weight_contraction(DipoleInversion other) {
+        AntiDipoleInversion right_anti_dual = AntiDipoleInversion(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e4 */
@@ -970,7 +938,7 @@ extension AntiDualNum: WeightContraction<DipoleInversion> {
             /* e1, e2, e3, e5 */
             other.group3 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiMotor.from_groups(
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(this.e3215) * float4(right_anti_dual.group0.xyz, right_anti_dual.e4), 
             /* e15, e25, e35, e3215 */
@@ -978,96 +946,91 @@ extension AntiDualNum: WeightContraction<DipoleInversion> {
         );
     }
 }
-extension AntiDualNum: WeightContraction<MultiVector> {
-    associatedtype Output = MultiVector;
-    func weight_contraction(other: MultiVector) -> Output {
-        MultiVector right_anti_dual = MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(other.group0.xy.yx * float2(-1.0, 1.0), 0.0, 0.0), 
+public extension AntiDualNum {
+    public MultiVector weight_contraction(MultiVector other) {
+        MultiVector right_anti_dual = MultiVector(
+            /* scalar, e12345 */
+            other.group0.xy.yx * float2(-1.0, 1.0), 
             /* e1, e2, e3, e4 */
             float4(other.group9.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e5, 0, 0, 0 */
-            float4(other.e3215, 0.0, 0.0, 0.0), 
+            /* e5 */
+            other.e3215, 
             /* e15, e25, e35, e45 */
             float4(other.group8.xyz, other.e321 * -1.0), 
-            /* e41, e42, e43, 0 */
-            float4(other.group7.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group6.xyz, 0.0), 
+            /* e41, e42, e43 */
+            other.group7.xyz, 
+            /* e23, e31, e12 */
+            other.group6.xyz, 
             /* e415, e425, e435, e321 */
             float4(other.group5.xyz, other.e45) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e423, e431, e412, 0 */
-            float4(other.group4.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group3.xyz * float3(-1.0), 0.0), 
+            /* e423, e431, e412 */
+            other.group4.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            other.group3.xyz * float3(-1.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(other.group1.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * -1.0
         );
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((this.e3215 * right_anti_dual.e4) + (this.scalar * right_anti_dual.e12345), 0.0), 0.0, 0.0), 
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((this.e3215 * right_anti_dual.e4) + (this.scalar * right_anti_dual.e12345), 0.0), 
             /* e1, e2, e3, e4 */
             float4(this.group0.xy.xx, this.e3215, 0.0) * float4(float3(1.0), 0.0) * float4(right_anti_dual.group4.xyz, 0.0) * float4(-1.0, -1.0, -1.0, 0.0), 
-            /* e5, 0, 0, 0 */
-            float4(this.e3215 * right_anti_dual.e45 * -1.0, 0.0, 0.0, 0.0), 
+            /* e5 */
+            this.e3215 * right_anti_dual.e45 * -1.0, 
             /* e15, e25, e35, e45 */
             float4(this.group0.xy.xx, this.e3215, 0.0) * float4(float3(1.0), 0.0) * float4(right_anti_dual.group6.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(float3(this.e3215) * right_anti_dual.group7.xyz, 0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(this.e3215) * right_anti_dual.group7.xyz, 
             /* e415, e425, e435, e321 */
             float4(float3(0.0), this.e3215 * right_anti_dual.e1234 * -1.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(float3(this.e3215) * right_anti_dual.group9.xyz * float3(-1.0), 0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(this.e3215) * right_anti_dual.group9.xyz * float3(-1.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(float3(0.0), this.e3215 * right_anti_dual.e12345), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension AntiDualNum: WeightContraction<RoundPoint> {
-    associatedtype Output = AntiFlatPoint;
-    func weight_contraction(other: RoundPoint) -> Output {
-        Sphere right_anti_dual = Sphere.from_groups(
+public extension AntiDualNum {
+    public AntiFlatPoint weight_contraction(RoundPoint other) {
+        Sphere right_anti_dual = Sphere(
             /* e4235, e4315, e4125, e3215 */
             float4(other.group0.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * -1.0
         );
-        return AntiFlatPoint.from_groups(
+        return AntiFlatPoint(
             /* e235, e315, e125, e321 */
             float4(this.e3215) * float4(right_anti_dual.group0.xyz, right_anti_dual.e1234) * float4(-1.0)
         );
     }
 }
-extension AntiDualNum: WeightContraction<Scalar> {
-    associatedtype Output = AntiDualNum;
-    func weight_contraction(other: Scalar) -> Output {
-        return AntiDualNum.from_groups(
-            /* e3215, scalar, 0, 0 */
-            float4(float2(other.scalar) * this.group0.xy, 0.0, 0.0)
+public extension AntiDualNum {
+    public AntiDualNum weight_contraction(Scalar other) {
+        return AntiDualNum(
+            /* e3215, scalar */
+            float2(other.scalar) * this.group0.xy
         );
     }
 }
-extension AntiDualNum: WeightContraction<Sphere> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: Sphere) -> Output {
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(this.e3215 * other.e1234, 0.0, 0.0, 0.0)
+public extension AntiDualNum {
+    public Scalar weight_contraction(Sphere other) {
+        return Scalar(
+            /* scalar */
+            this.e3215 * other.e1234
         );
     }
 }
-extension AntiDualNum: WeightContraction<VersorEven> {
-    associatedtype Output = AntiFlector;
-    func weight_contraction(other: VersorEven) -> Output {
-        VersorOdd right_anti_dual = VersorOdd.from_groups(
+public extension AntiDualNum {
+    public AntiFlector weight_contraction(VersorEven other) {
+        VersorOdd right_anti_dual = VersorOdd(
             /* e41, e42, e43, scalar */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e23, e31, e12, e45 */
@@ -1077,7 +1040,7 @@ extension AntiDualNum: WeightContraction<VersorEven> {
             /* e4235, e4315, e4125, e3215 */
             float4(other.group3.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiFlector.from_groups(
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(this.e3215) * float4(right_anti_dual.group3.xyz, right_anti_dual.e1234) * float4(-1.0), 
             /* e1, e2, e3, e5 */
@@ -1085,10 +1048,9 @@ extension AntiDualNum: WeightContraction<VersorEven> {
         );
     }
 }
-extension AntiDualNum: WeightContraction<VersorOdd> {
-    associatedtype Output = AntiMotor;
-    func weight_contraction(other: VersorOdd) -> Output {
-        VersorEven right_anti_dual = VersorEven.from_groups(
+public extension AntiDualNum {
+    public AntiMotor weight_contraction(VersorOdd other) {
+        VersorEven right_anti_dual = VersorEven(
             /* e423, e431, e412, e12345 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e415, e425, e435, e321 */
@@ -1098,7 +1060,7 @@ extension AntiDualNum: WeightContraction<VersorOdd> {
             /* e1, e2, e3, e4 */
             float4(other.group3.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiMotor.from_groups(
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(this.group0.xy.xx, this.e3215, (this.e3215 * right_anti_dual.e4) + (this.scalar * right_anti_dual.e12345)) * float4(right_anti_dual.group0.xyz, 1.0), 
             /* e15, e25, e35, e3215 */
@@ -1106,24 +1068,29 @@ extension AntiDualNum: WeightContraction<VersorOdd> {
         );
     }
 }
-extension AntiFlatPoint {
-    // Fancy infix trick
-    func operator/(_rhs: WeightContractionInfix) -> WeightContractionInfixPartial<AntiFlatPoint> {
-        return WeightContractionInfixPartial { a: this };
+public extension AntiFlatPoint {
+    // Fancy infix trick (first half)
+    public WeightContractionInfixPartial<AntiFlatPoint> operator /(WeightContractionInfix rhs) {
+        return WeightContractionInfixPartial<AntiFlatPoint>(this);
     }
 }
-extension AntiFlatPoint: WeightContraction<AntiCircleRotor> {
-    associatedtype Output = AntiFlector;
-    func weight_contraction(other: AntiCircleRotor) -> Output {
-        CircleRotor right_anti_dual = CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension WeightContractionInfixPartial<AntiFlatPoint> {
+    // Fancy infix trick (second half)
+    public AntiFlector operator /(AntiCircleRotor rhs) {
+        return this.a.weight_contraction(rhs);
+    }
+}
+public extension AntiFlatPoint {
+    public AntiFlector weight_contraction(AntiCircleRotor other) {
+        CircleRotor right_anti_dual = CircleRotor(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e12345 */
             other.group2 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiFlector.from_groups(
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(right_anti_dual.e12345) * this.group0, 
             /* e1, e2, e3, e5 */
@@ -1131,12 +1098,11 @@ extension AntiFlatPoint: WeightContraction<AntiCircleRotor> {
         );
     }
 }
-extension AntiFlatPoint: WeightContraction<AntiDipoleInversion> {
-    associatedtype Output = AntiMotor;
-    func weight_contraction(other: AntiDipoleInversion) -> Output {
-        DipoleInversion right_anti_dual = DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension AntiFlatPoint {
+    public AntiMotor weight_contraction(AntiDipoleInversion other) {
+        DipoleInversion right_anti_dual = DipoleInversion(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, e1234 */
@@ -1144,7 +1110,7 @@ extension AntiFlatPoint: WeightContraction<AntiDipoleInversion> {
             /* e4235, e4315, e4125, e3215 */
             other.group3 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiMotor.from_groups(
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(this.e235 * right_anti_dual.e1234, this.e315 * right_anti_dual.e1234, this.e125 * right_anti_dual.e1234, -(this.e315 * right_anti_dual.e42) - (this.e125 * right_anti_dual.e43) - (this.e321 * right_anti_dual.e45)) - float4((this.group0.www * right_anti_dual.group3.xyz), this.e235 * right_anti_dual.e41), 
             /* e15, e25, e35, e3215 */
@@ -1152,34 +1118,31 @@ extension AntiFlatPoint: WeightContraction<AntiDipoleInversion> {
         );
     }
 }
-extension AntiFlatPoint: WeightContraction<AntiDualNum> {
-    associatedtype Output = AntiFlatPoint;
-    func weight_contraction(other: AntiDualNum) -> Output {
-        return AntiFlatPoint.from_groups(
+public extension AntiFlatPoint {
+    public AntiFlatPoint weight_contraction(AntiDualNum other) {
+        return AntiFlatPoint(
             /* e235, e315, e125, e321 */
             float4(other.scalar) * this.group0
         );
     }
 }
-extension AntiFlatPoint: WeightContraction<AntiFlatPoint> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: AntiFlatPoint) -> Output {
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(float4(other.group0.xyz, other.e321 * -1.0)[3] * this.e321 * -1.0, 0.0, 0.0, 0.0)
+public extension AntiFlatPoint {
+    public Scalar weight_contraction(AntiFlatPoint other) {
+        return Scalar(
+            /* scalar */
+            float4(other.group0.xyz, other.e321 * -1.0)[3] * this.e321 * -1.0
         );
     }
 }
-extension AntiFlatPoint: WeightContraction<AntiFlector> {
-    associatedtype Output = AntiMotor;
-    func weight_contraction(other: AntiFlector) -> Output {
-        Flector right_anti_dual = Flector.from_groups(
+public extension AntiFlatPoint {
+    public AntiMotor weight_contraction(AntiFlector other) {
+        Flector right_anti_dual = Flector(
             /* e15, e25, e35, e45 */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e4235, e4315, e4125, e3215 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiMotor.from_groups(
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(this.e321) * float4(right_anti_dual.group1.xyz, right_anti_dual.e45) * float4(-1.0), 
             /* e15, e25, e35, e3215 */
@@ -1187,31 +1150,29 @@ extension AntiFlatPoint: WeightContraction<AntiFlector> {
         );
     }
 }
-extension AntiFlatPoint: WeightContraction<AntiLine> {
-    associatedtype Output = AntiPlane;
-    func weight_contraction(other: AntiLine) -> Output {
-        Line right_anti_dual = Line.from_groups(
-            /* e415, e425, e435, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group1.xyz * float3(-1.0), 0.0)
+public extension AntiFlatPoint {
+    public AntiPlane weight_contraction(AntiLine other) {
+        Line right_anti_dual = Line(
+            /* e415, e425, e435 */
+            other.group0.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            other.group1.xyz * float3(-1.0)
         );
-        return AntiPlane.from_groups(
+        return AntiPlane(
             /* e1, e2, e3, e5 */
             float4((float3(this.e321) * right_anti_dual.group0.xyz), -(this.e235 * right_anti_dual.e415) - (this.e315 * right_anti_dual.e425) - (this.e125 * right_anti_dual.e435))
         );
     }
 }
-extension AntiFlatPoint: WeightContraction<AntiMotor> {
-    associatedtype Output = AntiFlector;
-    func weight_contraction(other: AntiMotor) -> Output {
-        Motor right_anti_dual = Motor.from_groups(
+public extension AntiFlatPoint {
+    public AntiFlector weight_contraction(AntiMotor other) {
+        Motor right_anti_dual = Motor(
             /* e415, e425, e435, e12345 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e5 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiFlector.from_groups(
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(right_anti_dual.e12345) * this.group0, 
             /* e1, e2, e3, e5 */
@@ -1219,78 +1180,73 @@ extension AntiFlatPoint: WeightContraction<AntiMotor> {
         );
     }
 }
-extension AntiFlatPoint: WeightContraction<AntiPlane> {
-    associatedtype Output = AntiLine;
-    func weight_contraction(other: AntiPlane) -> Output {
-        Plane right_anti_dual = Plane.from_groups(
+public extension AntiFlatPoint {
+    public AntiLine weight_contraction(AntiPlane other) {
+        Plane right_anti_dual = Plane(
             /* e4235, e4315, e4125, e3215 */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiLine.from_groups(
-            /* e23, e31, e12, 0 */
-            float4(float3(this.e321) * right_anti_dual.group0.xyz * float3(-1.0), 0.0), 
-            /* e15, e25, e35, 0 */
-            float4((this.group0.yzx * right_anti_dual.group0.zxy) - (this.group0.zxy * right_anti_dual.group0.yzx), 0.0)
+        return AntiLine(
+            /* e23, e31, e12 */
+            float3(this.e321) * right_anti_dual.group0.xyz * float3(-1.0), 
+            /* e15, e25, e35 */
+            (this.group0.yzx * right_anti_dual.group0.zxy) - (this.group0.zxy * right_anti_dual.group0.yzx)
         );
     }
 }
-extension AntiFlatPoint: WeightContraction<Circle> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: Circle) -> Output {
-        Dipole right_anti_dual = Dipole.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension AntiFlatPoint {
+    public Scalar weight_contraction(Circle other) {
+        Dipole right_anti_dual = Dipole(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e15, e25, e35, 0 */
-            float4(other.group2.xyz, 0.0)
+            /* e15, e25, e35 */
+            other.group2.xyz
         );
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(-(this.e235 * right_anti_dual.e41) - (this.e315 * right_anti_dual.e42) - (this.e125 * right_anti_dual.e43) - (this.e321 * right_anti_dual.e45), 0.0, 0.0, 0.0)
+        return Scalar(
+            /* scalar */
+            -(this.e235 * right_anti_dual.e41) - (this.e315 * right_anti_dual.e42) - (this.e125 * right_anti_dual.e43) - (this.e321 * right_anti_dual.e45)
         );
     }
 }
-extension AntiFlatPoint: WeightContraction<CircleRotor> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: CircleRotor) -> Output {
-        AntiCircleRotor right_anti_dual = AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension AntiFlatPoint {
+    public Scalar weight_contraction(CircleRotor other) {
+        AntiCircleRotor right_anti_dual = AntiCircleRotor(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, scalar */
             other.group2 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(-(right_anti_dual.e41 * this.e235) - (right_anti_dual.e42 * this.e315) - (right_anti_dual.e43 * this.e125) - (right_anti_dual.e45 * this.e321), 0.0, 0.0, 0.0)
+        return Scalar(
+            /* scalar */
+            -(right_anti_dual.e41 * this.e235) - (right_anti_dual.e42 * this.e315) - (right_anti_dual.e43 * this.e125) - (right_anti_dual.e45 * this.e321)
         );
     }
 }
-extension AntiFlatPoint: WeightContraction<Dipole> {
-    associatedtype Output = AntiPlane;
-    func weight_contraction(other: Dipole) -> Output {
-        Circle right_anti_dual = Circle.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension AntiFlatPoint {
+    public AntiPlane weight_contraction(Dipole other) {
+        Circle right_anti_dual = Circle(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group2.xyz * float3(-1.0), 0.0)
+            /* e235, e315, e125 */
+            other.group2.xyz * float3(-1.0)
         );
-        return AntiPlane.from_groups(
+        return AntiPlane(
             /* e1, e2, e3, e5 */
             float4((this.e315 * right_anti_dual.e412) + (this.e321 * right_anti_dual.e415), (this.e125 * right_anti_dual.e423) + (this.e321 * right_anti_dual.e425), (this.e235 * right_anti_dual.e431) + (this.e321 * right_anti_dual.e435), -(this.e315 * right_anti_dual.e425) - (this.e125 * right_anti_dual.e435)) - float4((right_anti_dual.group0.xyz.yzx * this.group0.zxy), this.e235 * right_anti_dual.e415)
         );
     }
 }
-extension AntiFlatPoint: WeightContraction<DipoleInversion> {
-    associatedtype Output = AntiPlane;
-    func weight_contraction(other: DipoleInversion) -> Output {
-        AntiDipoleInversion right_anti_dual = AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension AntiFlatPoint {
+    public AntiPlane weight_contraction(DipoleInversion other) {
+        AntiDipoleInversion right_anti_dual = AntiDipoleInversion(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e4 */
@@ -1298,95 +1254,91 @@ extension AntiFlatPoint: WeightContraction<DipoleInversion> {
             /* e1, e2, e3, e5 */
             other.group3 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiPlane.from_groups(
+        return AntiPlane(
             /* e1, e2, e3, e5 */
             float4((right_anti_dual.e412 * this.e315) + (right_anti_dual.e415 * this.e321), (right_anti_dual.e423 * this.e125) + (right_anti_dual.e425 * this.e321), (right_anti_dual.e431 * this.e235) + (right_anti_dual.e435 * this.e321), -(right_anti_dual.e425 * this.e315) - (right_anti_dual.e435 * this.e125)) - (this.group0.zxyx * float4(right_anti_dual.group0.xyz.yzx, right_anti_dual.e415))
         );
     }
 }
-extension AntiFlatPoint: WeightContraction<MultiVector> {
-    associatedtype Output = MultiVector;
-    func weight_contraction(other: MultiVector) -> Output {
-        MultiVector right_anti_dual = MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(other.group0.xy.yx * float2(-1.0, 1.0), 0.0, 0.0), 
+public extension AntiFlatPoint {
+    public MultiVector weight_contraction(MultiVector other) {
+        MultiVector right_anti_dual = MultiVector(
+            /* scalar, e12345 */
+            other.group0.xy.yx * float2(-1.0, 1.0), 
             /* e1, e2, e3, e4 */
             float4(other.group9.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e5, 0, 0, 0 */
-            float4(other.e3215, 0.0, 0.0, 0.0), 
+            /* e5 */
+            other.e3215, 
             /* e15, e25, e35, e45 */
             float4(other.group8.xyz, other.e321 * -1.0), 
-            /* e41, e42, e43, 0 */
-            float4(other.group7.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group6.xyz, 0.0), 
+            /* e41, e42, e43 */
+            other.group7.xyz, 
+            /* e23, e31, e12 */
+            other.group6.xyz, 
             /* e415, e425, e435, e321 */
             float4(other.group5.xyz, other.e45) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e423, e431, e412, 0 */
-            float4(other.group4.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group3.xyz * float3(-1.0), 0.0), 
+            /* e423, e431, e412 */
+            other.group4.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            other.group3.xyz * float3(-1.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(other.group1.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * -1.0
         );
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(-(this.e235 * right_anti_dual.e41) - (this.e315 * right_anti_dual.e42) - (this.e125 * right_anti_dual.e43) - (this.e321 * right_anti_dual.e45), 0.0), 0.0, 0.0), 
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(-(this.e235 * right_anti_dual.e41) - (this.e315 * right_anti_dual.e42) - (this.e125 * right_anti_dual.e43) - (this.e321 * right_anti_dual.e45), 0.0), 
             /* e1, e2, e3, e4 */
             float4((float3(this.e321) * right_anti_dual.group6.xyz), 0.0) + float4((right_anti_dual.group7.xyz.zxy * this.group0.yzx), 0.0) - float4((right_anti_dual.group7.xyz.yzx * this.group0.zxy), 0.0), 
-            /* e5, 0, 0, 0 */
-            float4(-(this.e235 * right_anti_dual.e415) - (this.e315 * right_anti_dual.e425) - (this.e125 * right_anti_dual.e435), 0.0, 0.0, 0.0), 
+            /* e5 */
+            -(this.e235 * right_anti_dual.e415) - (this.e315 * right_anti_dual.e425) - (this.e125 * right_anti_dual.e435), 
             /* e15, e25, e35, e45 */
             float4(((this.group0.yzx * right_anti_dual.group9.zxy) - (this.group0.zxy * right_anti_dual.group9.yzx)), 0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(right_anti_dual.e1234) * this.group0.xyz) - (float3(this.e321) * right_anti_dual.group9.xyz), 0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            (float3(right_anti_dual.e1234) * this.group0.xyz) - (float3(this.e321) * right_anti_dual.group9.xyz), 
             /* e415, e425, e435, e321 */
             float4(float3(0.0), this.e321 * right_anti_dual.e12345), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(float3(right_anti_dual.e12345) * this.group0.xyz, 0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(right_anti_dual.e12345) * this.group0.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension AntiFlatPoint: WeightContraction<RoundPoint> {
-    associatedtype Output = AntiLine;
-    func weight_contraction(other: RoundPoint) -> Output {
-        Sphere right_anti_dual = Sphere.from_groups(
+public extension AntiFlatPoint {
+    public AntiLine weight_contraction(RoundPoint other) {
+        Sphere right_anti_dual = Sphere(
             /* e4235, e4315, e4125, e3215 */
             float4(other.group0.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * -1.0
         );
-        return AntiLine.from_groups(
-            /* e23, e31, e12, 0 */
-            float4((float3(right_anti_dual.e1234) * this.group0.xyz) - (float3(this.e321) * right_anti_dual.group0.xyz), 0.0), 
-            /* e15, e25, e35, 0 */
-            float4((this.group0.yzx * right_anti_dual.group0.zxy) - (this.group0.zxy * right_anti_dual.group0.yzx), 0.0)
+        return AntiLine(
+            /* e23, e31, e12 */
+            (float3(right_anti_dual.e1234) * this.group0.xyz) - (float3(this.e321) * right_anti_dual.group0.xyz), 
+            /* e15, e25, e35 */
+            (this.group0.yzx * right_anti_dual.group0.zxy) - (this.group0.zxy * right_anti_dual.group0.yzx)
         );
     }
 }
-extension AntiFlatPoint: WeightContraction<Scalar> {
-    associatedtype Output = AntiFlatPoint;
-    func weight_contraction(other: Scalar) -> Output {
-        return AntiFlatPoint.from_groups(
+public extension AntiFlatPoint {
+    public AntiFlatPoint weight_contraction(Scalar other) {
+        return AntiFlatPoint(
             /* e235, e315, e125, e321 */
             float4(other.scalar) * this.group0
         );
     }
 }
-extension AntiFlatPoint: WeightContraction<VersorEven> {
-    associatedtype Output = AntiMotor;
-    func weight_contraction(other: VersorEven) -> Output {
-        VersorOdd right_anti_dual = VersorOdd.from_groups(
+public extension AntiFlatPoint {
+    public AntiMotor weight_contraction(VersorEven other) {
+        VersorOdd right_anti_dual = VersorOdd(
             /* e41, e42, e43, scalar */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e23, e31, e12, e45 */
@@ -1396,7 +1348,7 @@ extension AntiFlatPoint: WeightContraction<VersorEven> {
             /* e4235, e4315, e4125, e3215 */
             float4(other.group3.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiMotor.from_groups(
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(this.e235 * right_anti_dual.e1234, this.e315 * right_anti_dual.e1234, this.e125 * right_anti_dual.e1234, -(this.e315 * right_anti_dual.e42) - (this.e125 * right_anti_dual.e43) - (this.e321 * right_anti_dual.e45)) - (this.group0.wwwx * float4(right_anti_dual.group3.xyz, right_anti_dual.e41)), 
             /* e15, e25, e35, e3215 */
@@ -1404,10 +1356,9 @@ extension AntiFlatPoint: WeightContraction<VersorEven> {
         );
     }
 }
-extension AntiFlatPoint: WeightContraction<VersorOdd> {
-    associatedtype Output = AntiFlector;
-    func weight_contraction(other: VersorOdd) -> Output {
-        VersorEven right_anti_dual = VersorEven.from_groups(
+public extension AntiFlatPoint {
+    public AntiFlector weight_contraction(VersorOdd other) {
+        VersorEven right_anti_dual = VersorEven(
             /* e423, e431, e412, e12345 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e415, e425, e435, e321 */
@@ -1417,7 +1368,7 @@ extension AntiFlatPoint: WeightContraction<VersorOdd> {
             /* e1, e2, e3, e4 */
             float4(other.group3.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiFlector.from_groups(
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(right_anti_dual.e12345) * this.group0, 
             /* e1, e2, e3, e5 */
@@ -1425,24 +1376,29 @@ extension AntiFlatPoint: WeightContraction<VersorOdd> {
         );
     }
 }
-extension AntiFlector {
-    // Fancy infix trick
-    func operator/(_rhs: WeightContractionInfix) -> WeightContractionInfixPartial<AntiFlector> {
-        return WeightContractionInfixPartial { a: this };
+public extension AntiFlector {
+    // Fancy infix trick (first half)
+    public WeightContractionInfixPartial<AntiFlector> operator /(WeightContractionInfix rhs) {
+        return WeightContractionInfixPartial<AntiFlector>(this);
     }
 }
-extension AntiFlector: WeightContraction<AntiCircleRotor> {
-    associatedtype Output = AntiFlector;
-    func weight_contraction(other: AntiCircleRotor) -> Output {
-        CircleRotor right_anti_dual = CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension WeightContractionInfixPartial<AntiFlector> {
+    // Fancy infix trick (second half)
+    public AntiFlector operator /(AntiCircleRotor rhs) {
+        return this.a.weight_contraction(rhs);
+    }
+}
+public extension AntiFlector {
+    public AntiFlector weight_contraction(AntiCircleRotor other) {
+        CircleRotor right_anti_dual = CircleRotor(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e12345 */
             other.group2 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiFlector.from_groups(
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(right_anti_dual.e12345) * this.group0, 
             /* e1, e2, e3, e5 */
@@ -1450,12 +1406,11 @@ extension AntiFlector: WeightContraction<AntiCircleRotor> {
         );
     }
 }
-extension AntiFlector: WeightContraction<AntiDipoleInversion> {
-    associatedtype Output = AntiMotor;
-    func weight_contraction(other: AntiDipoleInversion) -> Output {
-        DipoleInversion right_anti_dual = DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension AntiFlector {
+    public AntiMotor weight_contraction(AntiDipoleInversion other) {
+        DipoleInversion right_anti_dual = DipoleInversion(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, e1234 */
@@ -1463,7 +1418,7 @@ extension AntiFlector: WeightContraction<AntiDipoleInversion> {
             /* e4235, e4315, e4125, e3215 */
             other.group3 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiMotor.from_groups(
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(float3(0.0), (this.e2 * right_anti_dual.e4315) + (this.e3 * right_anti_dual.e4125) + (this.e5 * right_anti_dual.e1234) - (this.e315 * right_anti_dual.e42) - (this.e125 * right_anti_dual.e43) - (this.e321 * right_anti_dual.e45)) + float4((right_anti_dual.group2.www * this.group0.xyz), this.e1 * right_anti_dual.e4235) - float4((this.group0.www * right_anti_dual.group3.xyz), this.e235 * right_anti_dual.e41), 
             /* e15, e25, e35, e3215 */
@@ -1471,14 +1426,13 @@ extension AntiFlector: WeightContraction<AntiDipoleInversion> {
         );
     }
 }
-extension AntiFlector: WeightContraction<AntiDualNum> {
-    associatedtype Output = AntiFlector;
-    func weight_contraction(other: AntiDualNum) -> Output {
-        DualNum right_anti_dual = DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(other.group0.xy, 0.0, 0.0)
+public extension AntiFlector {
+    public AntiFlector weight_contraction(AntiDualNum other) {
+        DualNum right_anti_dual = DualNum(
+            /* e5, e12345 */
+            other.group0.xy
         );
-        return AntiFlector.from_groups(
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(right_anti_dual.e12345) * this.group0, 
             /* e1, e2, e3, e5 */
@@ -1486,25 +1440,23 @@ extension AntiFlector: WeightContraction<AntiDualNum> {
         );
     }
 }
-extension AntiFlector: WeightContraction<AntiFlatPoint> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: AntiFlatPoint) -> Output {
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(float4(other.group0.xyz, other.e321 * -1.0)[3] * this.e321 * -1.0, 0.0, 0.0, 0.0)
+public extension AntiFlector {
+    public Scalar weight_contraction(AntiFlatPoint other) {
+        return Scalar(
+            /* scalar */
+            float4(other.group0.xyz, other.e321 * -1.0)[3] * this.e321 * -1.0
         );
     }
 }
-extension AntiFlector: WeightContraction<AntiFlector> {
-    associatedtype Output = AntiMotor;
-    func weight_contraction(other: AntiFlector) -> Output {
-        Flector right_anti_dual = Flector.from_groups(
+public extension AntiFlector {
+    public AntiMotor weight_contraction(AntiFlector other) {
+        Flector right_anti_dual = Flector(
             /* e15, e25, e35, e45 */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e4235, e4315, e4125, e3215 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiMotor.from_groups(
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4((this.group0.www * right_anti_dual.group1.xyz * float3(-1.0)), (this.e1 * right_anti_dual.e4235) + (this.e2 * right_anti_dual.e4315) + (this.e3 * right_anti_dual.e4125) - (this.e321 * right_anti_dual.e45)), 
             /* e15, e25, e35, e3215 */
@@ -1512,31 +1464,29 @@ extension AntiFlector: WeightContraction<AntiFlector> {
         );
     }
 }
-extension AntiFlector: WeightContraction<AntiLine> {
-    associatedtype Output = AntiPlane;
-    func weight_contraction(other: AntiLine) -> Output {
-        Line right_anti_dual = Line.from_groups(
-            /* e415, e425, e435, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group1.xyz * float3(-1.0), 0.0)
+public extension AntiFlector {
+    public AntiPlane weight_contraction(AntiLine other) {
+        Line right_anti_dual = Line(
+            /* e415, e425, e435 */
+            other.group0.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            other.group1.xyz * float3(-1.0)
         );
-        return AntiPlane.from_groups(
+        return AntiPlane(
             /* e1, e2, e3, e5 */
             float4((float3(this.e321) * right_anti_dual.group0.xyz), -(this.e235 * right_anti_dual.e415) - (this.e315 * right_anti_dual.e425) - (this.e125 * right_anti_dual.e435))
         );
     }
 }
-extension AntiFlector: WeightContraction<AntiMotor> {
-    associatedtype Output = AntiFlector;
-    func weight_contraction(other: AntiMotor) -> Output {
-        Motor right_anti_dual = Motor.from_groups(
+public extension AntiFlector {
+    public AntiFlector weight_contraction(AntiMotor other) {
+        Motor right_anti_dual = Motor(
             /* e415, e425, e435, e12345 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e5 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiFlector.from_groups(
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(right_anti_dual.e12345) * this.group0, 
             /* e1, e2, e3, e5 */
@@ -1544,14 +1494,13 @@ extension AntiFlector: WeightContraction<AntiMotor> {
         );
     }
 }
-extension AntiFlector: WeightContraction<AntiPlane> {
-    associatedtype Output = AntiMotor;
-    func weight_contraction(other: AntiPlane) -> Output {
-        Plane right_anti_dual = Plane.from_groups(
+public extension AntiFlector {
+    public AntiMotor weight_contraction(AntiPlane other) {
+        Plane right_anti_dual = Plane(
             /* e4235, e4315, e4125, e3215 */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiMotor.from_groups(
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4((this.group0.www * right_anti_dual.group0.xyz * float3(-1.0)), (this.e1 * right_anti_dual.e4235) + (this.e2 * right_anti_dual.e4315) + (this.e3 * right_anti_dual.e4125)), 
             /* e15, e25, e35, e3215 */
@@ -1559,63 +1508,59 @@ extension AntiFlector: WeightContraction<AntiPlane> {
         );
     }
 }
-extension AntiFlector: WeightContraction<Circle> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: Circle) -> Output {
-        Dipole right_anti_dual = Dipole.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension AntiFlector {
+    public Scalar weight_contraction(Circle other) {
+        Dipole right_anti_dual = Dipole(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e15, e25, e35, 0 */
-            float4(other.group2.xyz, 0.0)
+            /* e15, e25, e35 */
+            other.group2.xyz
         );
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(-(this.e235 * right_anti_dual.e41) - (this.e315 * right_anti_dual.e42) - (this.e125 * right_anti_dual.e43) - (this.e321 * right_anti_dual.e45), 0.0, 0.0, 0.0)
+        return Scalar(
+            /* scalar */
+            -(this.e235 * right_anti_dual.e41) - (this.e315 * right_anti_dual.e42) - (this.e125 * right_anti_dual.e43) - (this.e321 * right_anti_dual.e45)
         );
     }
 }
-extension AntiFlector: WeightContraction<CircleRotor> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: CircleRotor) -> Output {
-        AntiCircleRotor right_anti_dual = AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension AntiFlector {
+    public Scalar weight_contraction(CircleRotor other) {
+        AntiCircleRotor right_anti_dual = AntiCircleRotor(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, scalar */
             other.group2 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(-(right_anti_dual.e41 * this.e235) - (right_anti_dual.e42 * this.e315) - (right_anti_dual.e43 * this.e125) - (right_anti_dual.e45 * this.e321), 0.0, 0.0, 0.0)
+        return Scalar(
+            /* scalar */
+            -(right_anti_dual.e41 * this.e235) - (right_anti_dual.e42 * this.e315) - (right_anti_dual.e43 * this.e125) - (right_anti_dual.e45 * this.e321)
         );
     }
 }
-extension AntiFlector: WeightContraction<Dipole> {
-    associatedtype Output = AntiPlane;
-    func weight_contraction(other: Dipole) -> Output {
-        Circle right_anti_dual = Circle.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension AntiFlector {
+    public AntiPlane weight_contraction(Dipole other) {
+        Circle right_anti_dual = Circle(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group2.xyz * float3(-1.0), 0.0)
+            /* e235, e315, e125 */
+            other.group2.xyz * float3(-1.0)
         );
-        return AntiPlane.from_groups(
+        return AntiPlane(
             /* e1, e2, e3, e5 */
             float4((this.e315 * right_anti_dual.e412) + (this.e321 * right_anti_dual.e415), (this.e125 * right_anti_dual.e423) + (this.e321 * right_anti_dual.e425), (this.e235 * right_anti_dual.e431) + (this.e321 * right_anti_dual.e435), -(this.e315 * right_anti_dual.e425) - (this.e125 * right_anti_dual.e435)) - float4((right_anti_dual.group0.xyz.yzx * this.group0.zxy), this.e235 * right_anti_dual.e415)
         );
     }
 }
-extension AntiFlector: WeightContraction<DipoleInversion> {
-    associatedtype Output = AntiPlane;
-    func weight_contraction(other: DipoleInversion) -> Output {
-        AntiDipoleInversion right_anti_dual = AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension AntiFlector {
+    public AntiPlane weight_contraction(DipoleInversion other) {
+        AntiDipoleInversion right_anti_dual = AntiDipoleInversion(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e4 */
@@ -1623,75 +1568,73 @@ extension AntiFlector: WeightContraction<DipoleInversion> {
             /* e1, e2, e3, e5 */
             other.group3 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiPlane.from_groups(
+        return AntiPlane(
             /* e1, e2, e3, e5 */
             float4((right_anti_dual.e412 * this.e315) + (right_anti_dual.e415 * this.e321), (right_anti_dual.e423 * this.e125) + (right_anti_dual.e425 * this.e321), (right_anti_dual.e431 * this.e235) + (right_anti_dual.e435 * this.e321), -(right_anti_dual.e425 * this.e315) - (right_anti_dual.e435 * this.e125)) - (this.group0.zxyx * float4(right_anti_dual.group0.xyz.yzx, right_anti_dual.e415))
         );
     }
 }
-extension AntiFlector: WeightContraction<MultiVector> {
-    associatedtype Output = MultiVector;
-    func weight_contraction(other: MultiVector) -> Output {
-        MultiVector right_anti_dual = MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(other.group0.xy.yx * float2(-1.0, 1.0), 0.0, 0.0), 
+public extension AntiFlector {
+    public MultiVector weight_contraction(MultiVector other) {
+        MultiVector right_anti_dual = MultiVector(
+            /* scalar, e12345 */
+            other.group0.xy.yx * float2(-1.0, 1.0), 
             /* e1, e2, e3, e4 */
             float4(other.group9.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e5, 0, 0, 0 */
-            float4(other.e3215, 0.0, 0.0, 0.0), 
+            /* e5 */
+            other.e3215, 
             /* e15, e25, e35, e45 */
             float4(other.group8.xyz, other.e321 * -1.0), 
-            /* e41, e42, e43, 0 */
-            float4(other.group7.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group6.xyz, 0.0), 
+            /* e41, e42, e43 */
+            other.group7.xyz, 
+            /* e23, e31, e12 */
+            other.group6.xyz, 
             /* e415, e425, e435, e321 */
             float4(other.group5.xyz, other.e45) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e423, e431, e412, 0 */
-            float4(other.group4.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group3.xyz * float3(-1.0), 0.0), 
+            /* e423, e431, e412 */
+            other.group4.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            other.group3.xyz * float3(-1.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(other.group1.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * -1.0
         );
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((this.e1 * right_anti_dual.e4235) + (this.e2 * right_anti_dual.e4315) + (this.e3 * right_anti_dual.e4125) + (this.e5 * right_anti_dual.e1234) - (this.e235 * right_anti_dual.e41) - (this.e315 * right_anti_dual.e42) - (this.e125 * right_anti_dual.e43) - (this.e321 * right_anti_dual.e45), 0.0), 0.0, 0.0), 
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((this.e1 * right_anti_dual.e4235) + (this.e2 * right_anti_dual.e4315) + (this.e3 * right_anti_dual.e4125) + (this.e5 * right_anti_dual.e1234) - (this.e235 * right_anti_dual.e41) - (this.e315 * right_anti_dual.e42) - (this.e125 * right_anti_dual.e43) - (this.e321 * right_anti_dual.e45), 0.0), 
             /* e1, e2, e3, e4 */
             float4((float3(this.e321) * right_anti_dual.group6.xyz), 0.0) + float4((float3(right_anti_dual.e12345) * this.group1.xyz), 0.0) + float4((right_anti_dual.group7.xyz.zxy * this.group0.yzx), 0.0) - float4((right_anti_dual.group7.xyz.yzx * this.group0.zxy), 0.0), 
-            /* e5, 0, 0, 0 */
-            float4((this.e5 * right_anti_dual.e12345) - (this.e235 * right_anti_dual.e415) - (this.e315 * right_anti_dual.e425) - (this.e125 * right_anti_dual.e435), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (this.e5 * right_anti_dual.e12345) - (this.e235 * right_anti_dual.e415) - (this.e315 * right_anti_dual.e425) - (this.e125 * right_anti_dual.e435), 
             /* e15, e25, e35, e45 */
             float4(((this.group0.yzx * right_anti_dual.group9.zxy) - (this.group0.zxy * right_anti_dual.group9.yzx)), 0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(right_anti_dual.e1234) * this.group0.xyz) - (float3(this.e321) * right_anti_dual.group9.xyz), 0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            (float3(right_anti_dual.e1234) * this.group0.xyz) - (float3(this.e321) * right_anti_dual.group9.xyz), 
             /* e415, e425, e435, e321 */
             float4(float3(0.0), this.e321 * right_anti_dual.e12345), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(float3(right_anti_dual.e12345) * this.group0.xyz, 0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(right_anti_dual.e12345) * this.group0.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension AntiFlector: WeightContraction<RoundPoint> {
-    associatedtype Output = AntiMotor;
-    func weight_contraction(other: RoundPoint) -> Output {
-        Sphere right_anti_dual = Sphere.from_groups(
+public extension AntiFlector {
+    public AntiMotor weight_contraction(RoundPoint other) {
+        Sphere right_anti_dual = Sphere(
             /* e4235, e4315, e4125, e3215 */
             float4(other.group0.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * -1.0
         );
-        return AntiMotor.from_groups(
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(this.e321 * right_anti_dual.e4235 * -1.0, this.e321 * right_anti_dual.e4315 * -1.0, this.e321 * right_anti_dual.e4125 * -1.0, (this.e2 * right_anti_dual.e4315) + (this.e3 * right_anti_dual.e4125) + (this.e5 * right_anti_dual.e1234)) + float4((float3(right_anti_dual.e1234) * this.group0.xyz), this.e1 * right_anti_dual.e4235), 
             /* e15, e25, e35, e3215 */
@@ -1699,14 +1642,13 @@ extension AntiFlector: WeightContraction<RoundPoint> {
         );
     }
 }
-extension AntiFlector: WeightContraction<Scalar> {
-    associatedtype Output = AntiFlector;
-    func weight_contraction(other: Scalar) -> Output {
-        AntiScalar right_anti_dual = AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(other.scalar, 0.0, 0.0, 0.0)
+public extension AntiFlector {
+    public AntiFlector weight_contraction(Scalar other) {
+        AntiScalar right_anti_dual = AntiScalar(
+            /* e12345 */
+            other.scalar
         );
-        return AntiFlector.from_groups(
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(right_anti_dual.e12345) * this.group0, 
             /* e1, e2, e3, e5 */
@@ -1714,10 +1656,9 @@ extension AntiFlector: WeightContraction<Scalar> {
         );
     }
 }
-extension AntiFlector: WeightContraction<VersorEven> {
-    associatedtype Output = AntiMotor;
-    func weight_contraction(other: VersorEven) -> Output {
-        VersorOdd right_anti_dual = VersorOdd.from_groups(
+public extension AntiFlector {
+    public AntiMotor weight_contraction(VersorEven other) {
+        VersorOdd right_anti_dual = VersorOdd(
             /* e41, e42, e43, scalar */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e23, e31, e12, e45 */
@@ -1727,7 +1668,7 @@ extension AntiFlector: WeightContraction<VersorEven> {
             /* e4235, e4315, e4125, e3215 */
             float4(other.group3.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiMotor.from_groups(
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(float3(0.0), (this.e2 * right_anti_dual.e4315) + (this.e3 * right_anti_dual.e4125) + (this.e5 * right_anti_dual.e1234) - (this.e315 * right_anti_dual.e42) - (this.e125 * right_anti_dual.e43) - (this.e321 * right_anti_dual.e45)) + float4((right_anti_dual.group2.www * this.group0.xyz), this.e1 * right_anti_dual.e4235) - (this.group0.wwwx * float4(right_anti_dual.group3.xyz, right_anti_dual.e41)), 
             /* e15, e25, e35, e3215 */
@@ -1735,10 +1676,9 @@ extension AntiFlector: WeightContraction<VersorEven> {
         );
     }
 }
-extension AntiFlector: WeightContraction<VersorOdd> {
-    associatedtype Output = AntiFlector;
-    func weight_contraction(other: VersorOdd) -> Output {
-        VersorEven right_anti_dual = VersorEven.from_groups(
+public extension AntiFlector {
+    public AntiFlector weight_contraction(VersorOdd other) {
+        VersorEven right_anti_dual = VersorEven(
             /* e423, e431, e412, e12345 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e415, e425, e435, e321 */
@@ -1748,7 +1688,7 @@ extension AntiFlector: WeightContraction<VersorOdd> {
             /* e1, e2, e3, e4 */
             float4(other.group3.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiFlector.from_groups(
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(right_anti_dual.e12345) * this.group0, 
             /* e1, e2, e3, e5 */
@@ -1756,24 +1696,29 @@ extension AntiFlector: WeightContraction<VersorOdd> {
         );
     }
 }
-extension AntiLine {
-    // Fancy infix trick
-    func operator/(_rhs: WeightContractionInfix) -> WeightContractionInfixPartial<AntiLine> {
-        return WeightContractionInfixPartial { a: this };
+public extension AntiLine {
+    // Fancy infix trick (first half)
+    public WeightContractionInfixPartial<AntiLine> operator /(WeightContractionInfix rhs) {
+        return WeightContractionInfixPartial<AntiLine>(this);
     }
 }
-extension AntiLine: WeightContraction<AntiCircleRotor> {
-    associatedtype Output = AntiMotor;
-    func weight_contraction(other: AntiCircleRotor) -> Output {
-        CircleRotor right_anti_dual = CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension WeightContractionInfixPartial<AntiLine> {
+    // Fancy infix trick (second half)
+    public AntiMotor operator /(AntiCircleRotor rhs) {
+        return this.a.weight_contraction(rhs);
+    }
+}
+public extension AntiLine {
+    public AntiMotor weight_contraction(AntiCircleRotor other) {
+        CircleRotor right_anti_dual = CircleRotor(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e12345 */
             other.group2 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiMotor.from_groups(
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4((float3(right_anti_dual.e12345) * this.group0.xyz), -(this.e23 * right_anti_dual.e415) - (this.e31 * right_anti_dual.e425) - (this.e12 * right_anti_dual.e435) - (this.e15 * right_anti_dual.e423) - (this.e25 * right_anti_dual.e431) - (this.e35 * right_anti_dual.e412)), 
             /* e15, e25, e35, e3215 */
@@ -1781,12 +1726,11 @@ extension AntiLine: WeightContraction<AntiCircleRotor> {
         );
     }
 }
-extension AntiLine: WeightContraction<AntiDipoleInversion> {
-    associatedtype Output = AntiPlane;
-    func weight_contraction(other: AntiDipoleInversion) -> Output {
-        DipoleInversion right_anti_dual = DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension AntiLine {
+    public AntiPlane weight_contraction(AntiDipoleInversion other) {
+        DipoleInversion right_anti_dual = DipoleInversion(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, e1234 */
@@ -1794,67 +1738,63 @@ extension AntiLine: WeightContraction<AntiDipoleInversion> {
             /* e4235, e4315, e4125, e3215 */
             other.group3 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiPlane.from_groups(
+        return AntiPlane(
             /* e1, e2, e3, e5 */
             float4(-(this.e12 * right_anti_dual.e4315) - (this.e15 * right_anti_dual.e1234), -(this.e23 * right_anti_dual.e4125) - (this.e25 * right_anti_dual.e1234), -(this.e31 * right_anti_dual.e4235) - (this.e35 * right_anti_dual.e1234), (this.e25 * right_anti_dual.e4315) + (this.e35 * right_anti_dual.e4125)) + (right_anti_dual.group3.zxyx * float4(this.group0.xyz.yzx, this.e15))
         );
     }
 }
-extension AntiLine: WeightContraction<AntiDualNum> {
-    associatedtype Output = AntiLine;
-    func weight_contraction(other: AntiDualNum) -> Output {
-        DualNum right_anti_dual = DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(other.group0.xy, 0.0, 0.0)
+public extension AntiLine {
+    public AntiLine weight_contraction(AntiDualNum other) {
+        DualNum right_anti_dual = DualNum(
+            /* e5, e12345 */
+            other.group0.xy
         );
-        return AntiLine.from_groups(
-            /* e23, e31, e12, 0 */
-            float4(float3(right_anti_dual.e12345) * this.group0.xyz, 0.0), 
-            /* e15, e25, e35, 0 */
-            float4(float3(right_anti_dual.e12345) * this.group1.xyz, 0.0)
+        return AntiLine(
+            /* e23, e31, e12 */
+            float3(right_anti_dual.e12345) * this.group0.xyz, 
+            /* e15, e25, e35 */
+            float3(right_anti_dual.e12345) * this.group1.xyz
         );
     }
 }
-extension AntiLine: WeightContraction<AntiFlector> {
-    associatedtype Output = AntiPlane;
-    func weight_contraction(other: AntiFlector) -> Output {
-        Flector right_anti_dual = Flector.from_groups(
+public extension AntiLine {
+    public AntiPlane weight_contraction(AntiFlector other) {
+        Flector right_anti_dual = Flector(
             /* e15, e25, e35, e45 */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e4235, e4315, e4125, e3215 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiPlane.from_groups(
+        return AntiPlane(
             /* e1, e2, e3, e5 */
             float4(this.e12 * right_anti_dual.e4315 * -1.0, this.e23 * right_anti_dual.e4125 * -1.0, this.e31 * right_anti_dual.e4235 * -1.0, (this.e25 * right_anti_dual.e4315) + (this.e35 * right_anti_dual.e4125)) + (right_anti_dual.group1.zxyx * float4(this.group0.xyz.yzx, this.e15))
         );
     }
 }
-extension AntiLine: WeightContraction<AntiLine> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: AntiLine) -> Output {
-        Line right_anti_dual = Line.from_groups(
-            /* e415, e425, e435, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group1.xyz * float3(-1.0), 0.0)
+public extension AntiLine {
+    public Scalar weight_contraction(AntiLine other) {
+        Line right_anti_dual = Line(
+            /* e415, e425, e435 */
+            other.group0.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            other.group1.xyz * float3(-1.0)
         );
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(-(this.e23 * right_anti_dual.e415) - (this.e31 * right_anti_dual.e425) - (this.e12 * right_anti_dual.e435), 0.0, 0.0, 0.0)
+        return Scalar(
+            /* scalar */
+            -(this.e23 * right_anti_dual.e415) - (this.e31 * right_anti_dual.e425) - (this.e12 * right_anti_dual.e435)
         );
     }
 }
-extension AntiLine: WeightContraction<AntiMotor> {
-    associatedtype Output = AntiMotor;
-    func weight_contraction(other: AntiMotor) -> Output {
-        Motor right_anti_dual = Motor.from_groups(
+public extension AntiLine {
+    public AntiMotor weight_contraction(AntiMotor other) {
+        Motor right_anti_dual = Motor(
             /* e415, e425, e435, e12345 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e5 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiMotor.from_groups(
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4((float3(right_anti_dual.e12345) * this.group0.xyz), -(this.e23 * right_anti_dual.e415) - (this.e31 * right_anti_dual.e425) - (this.e12 * right_anti_dual.e435)), 
             /* e15, e25, e35, e3215 */
@@ -1862,42 +1802,39 @@ extension AntiLine: WeightContraction<AntiMotor> {
         );
     }
 }
-extension AntiLine: WeightContraction<AntiPlane> {
-    associatedtype Output = AntiPlane;
-    func weight_contraction(other: AntiPlane) -> Output {
-        Plane right_anti_dual = Plane.from_groups(
+public extension AntiLine {
+    public AntiPlane weight_contraction(AntiPlane other) {
+        Plane right_anti_dual = Plane(
             /* e4235, e4315, e4125, e3215 */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiPlane.from_groups(
+        return AntiPlane(
             /* e1, e2, e3, e5 */
             float4(this.e12 * right_anti_dual.e4315 * -1.0, this.e23 * right_anti_dual.e4125 * -1.0, this.e31 * right_anti_dual.e4235 * -1.0, (this.e25 * right_anti_dual.e4315) + (this.e35 * right_anti_dual.e4125)) + (right_anti_dual.group0.zxyx * float4(this.group0.xyz.yzx, this.e15))
         );
     }
 }
-extension AntiLine: WeightContraction<Dipole> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: Dipole) -> Output {
-        Circle right_anti_dual = Circle.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension AntiLine {
+    public Scalar weight_contraction(Dipole other) {
+        Circle right_anti_dual = Circle(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group2.xyz * float3(-1.0), 0.0)
+            /* e235, e315, e125 */
+            other.group2.xyz * float3(-1.0)
         );
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(-(this.e23 * right_anti_dual.e415) - (this.e31 * right_anti_dual.e425) - (this.e12 * right_anti_dual.e435) - (this.e15 * right_anti_dual.e423) - (this.e25 * right_anti_dual.e431) - (this.e35 * right_anti_dual.e412), 0.0, 0.0, 0.0)
+        return Scalar(
+            /* scalar */
+            -(this.e23 * right_anti_dual.e415) - (this.e31 * right_anti_dual.e425) - (this.e12 * right_anti_dual.e435) - (this.e15 * right_anti_dual.e423) - (this.e25 * right_anti_dual.e431) - (this.e35 * right_anti_dual.e412)
         );
     }
 }
-extension AntiLine: WeightContraction<DipoleInversion> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: DipoleInversion) -> Output {
-        AntiDipoleInversion right_anti_dual = AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension AntiLine {
+    public Scalar weight_contraction(DipoleInversion other) {
+        AntiDipoleInversion right_anti_dual = AntiDipoleInversion(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e4 */
@@ -1905,99 +1842,95 @@ extension AntiLine: WeightContraction<DipoleInversion> {
             /* e1, e2, e3, e5 */
             other.group3 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(-(right_anti_dual.e423 * this.e15) - (right_anti_dual.e431 * this.e25) - (right_anti_dual.e412 * this.e35) - (right_anti_dual.e415 * this.e23) - (right_anti_dual.e425 * this.e31) - (right_anti_dual.e435 * this.e12), 0.0, 0.0, 0.0)
+        return Scalar(
+            /* scalar */
+            -(right_anti_dual.e423 * this.e15) - (right_anti_dual.e431 * this.e25) - (right_anti_dual.e412 * this.e35) - (right_anti_dual.e415 * this.e23) - (right_anti_dual.e425 * this.e31) - (right_anti_dual.e435 * this.e12)
         );
     }
 }
-extension AntiLine: WeightContraction<MultiVector> {
-    associatedtype Output = MultiVector;
-    func weight_contraction(other: MultiVector) -> Output {
-        MultiVector right_anti_dual = MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(other.group0.xy.yx * float2(-1.0, 1.0), 0.0, 0.0), 
+public extension AntiLine {
+    public MultiVector weight_contraction(MultiVector other) {
+        MultiVector right_anti_dual = MultiVector(
+            /* scalar, e12345 */
+            other.group0.xy.yx * float2(-1.0, 1.0), 
             /* e1, e2, e3, e4 */
             float4(other.group9.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e5, 0, 0, 0 */
-            float4(other.e3215, 0.0, 0.0, 0.0), 
+            /* e5 */
+            other.e3215, 
             /* e15, e25, e35, e45 */
             float4(other.group8.xyz, other.e321 * -1.0), 
-            /* e41, e42, e43, 0 */
-            float4(other.group7.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group6.xyz, 0.0), 
+            /* e41, e42, e43 */
+            other.group7.xyz, 
+            /* e23, e31, e12 */
+            other.group6.xyz, 
             /* e415, e425, e435, e321 */
             float4(other.group5.xyz, other.e45) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e423, e431, e412, 0 */
-            float4(other.group4.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group3.xyz * float3(-1.0), 0.0), 
+            /* e423, e431, e412 */
+            other.group4.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            other.group3.xyz * float3(-1.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(other.group1.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * -1.0
         );
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(-(this.e23 * right_anti_dual.e415) - (this.e31 * right_anti_dual.e425) - (this.e12 * right_anti_dual.e435) - (this.e15 * right_anti_dual.e423) - (this.e25 * right_anti_dual.e431) - (this.e35 * right_anti_dual.e412), 0.0), 0.0, 0.0), 
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(-(this.e23 * right_anti_dual.e415) - (this.e31 * right_anti_dual.e425) - (this.e12 * right_anti_dual.e435) - (this.e15 * right_anti_dual.e423) - (this.e25 * right_anti_dual.e431) - (this.e35 * right_anti_dual.e412), 0.0), 
             /* e1, e2, e3, e4 */
             float4((this.group0.xyz.yzx * right_anti_dual.group9.zxy), 0.0) - float4((float3(right_anti_dual.e1234) * this.group1.xyz), 0.0) - float4((this.group0.xyz.zxy * right_anti_dual.group9.yzx), 0.0), 
-            /* e5, 0, 0, 0 */
-            float4((this.e15 * right_anti_dual.e4235) + (this.e25 * right_anti_dual.e4315) + (this.e35 * right_anti_dual.e4125), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (this.e15 * right_anti_dual.e4235) + (this.e25 * right_anti_dual.e4315) + (this.e35 * right_anti_dual.e4125), 
             /* e15, e25, e35, e45 */
             float4(right_anti_dual.group0.xy.yy, right_anti_dual.e12345, 0.0) * float4(float3(1.0), 0.0) * float4(this.group1.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(float3(right_anti_dual.e12345) * this.group0.xyz, 0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(right_anti_dual.e12345) * this.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(0.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension AntiLine: WeightContraction<RoundPoint> {
-    associatedtype Output = AntiPlane;
-    func weight_contraction(other: RoundPoint) -> Output {
-        Sphere right_anti_dual = Sphere.from_groups(
+public extension AntiLine {
+    public AntiPlane weight_contraction(RoundPoint other) {
+        Sphere right_anti_dual = Sphere(
             /* e4235, e4315, e4125, e3215 */
             float4(other.group0.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * -1.0
         );
-        return AntiPlane.from_groups(
+        return AntiPlane(
             /* e1, e2, e3, e5 */
             float4(-(this.e12 * right_anti_dual.e4315) - (this.e15 * right_anti_dual.e1234), -(this.e23 * right_anti_dual.e4125) - (this.e25 * right_anti_dual.e1234), -(this.e31 * right_anti_dual.e4235) - (this.e35 * right_anti_dual.e1234), (this.e25 * right_anti_dual.e4315) + (this.e35 * right_anti_dual.e4125)) + (right_anti_dual.group0.zxyx * float4(this.group0.xyz.yzx, this.e15))
         );
     }
 }
-extension AntiLine: WeightContraction<Scalar> {
-    associatedtype Output = AntiLine;
-    func weight_contraction(other: Scalar) -> Output {
-        AntiScalar right_anti_dual = AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(other.scalar, 0.0, 0.0, 0.0)
+public extension AntiLine {
+    public AntiLine weight_contraction(Scalar other) {
+        AntiScalar right_anti_dual = AntiScalar(
+            /* e12345 */
+            other.scalar
         );
-        return AntiLine.from_groups(
-            /* e23, e31, e12, 0 */
-            float4(float3(right_anti_dual.e12345) * this.group0.xyz, 0.0), 
-            /* e15, e25, e35, 0 */
-            float4(float3(right_anti_dual.e12345) * this.group1.xyz, 0.0)
+        return AntiLine(
+            /* e23, e31, e12 */
+            float3(right_anti_dual.e12345) * this.group0.xyz, 
+            /* e15, e25, e35 */
+            float3(right_anti_dual.e12345) * this.group1.xyz
         );
     }
 }
-extension AntiLine: WeightContraction<VersorEven> {
-    associatedtype Output = AntiPlane;
-    func weight_contraction(other: VersorEven) -> Output {
-        VersorOdd right_anti_dual = VersorOdd.from_groups(
+public extension AntiLine {
+    public AntiPlane weight_contraction(VersorEven other) {
+        VersorOdd right_anti_dual = VersorOdd(
             /* e41, e42, e43, scalar */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e23, e31, e12, e45 */
@@ -2007,16 +1940,15 @@ extension AntiLine: WeightContraction<VersorEven> {
             /* e4235, e4315, e4125, e3215 */
             float4(other.group3.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiPlane.from_groups(
+        return AntiPlane(
             /* e1, e2, e3, e5 */
             float4(-(this.e12 * right_anti_dual.e4315) - (this.e15 * right_anti_dual.e1234), -(this.e23 * right_anti_dual.e4125) - (this.e25 * right_anti_dual.e1234), -(this.e31 * right_anti_dual.e4235) - (this.e35 * right_anti_dual.e1234), (this.e25 * right_anti_dual.e4315) + (this.e35 * right_anti_dual.e4125)) + (right_anti_dual.group3.zxyx * float4(this.group0.xyz.yzx, this.e15))
         );
     }
 }
-extension AntiLine: WeightContraction<VersorOdd> {
-    associatedtype Output = AntiMotor;
-    func weight_contraction(other: VersorOdd) -> Output {
-        VersorEven right_anti_dual = VersorEven.from_groups(
+public extension AntiLine {
+    public AntiMotor weight_contraction(VersorOdd other) {
+        VersorEven right_anti_dual = VersorEven(
             /* e423, e431, e412, e12345 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e415, e425, e435, e321 */
@@ -2026,7 +1958,7 @@ extension AntiLine: WeightContraction<VersorOdd> {
             /* e1, e2, e3, e4 */
             float4(other.group3.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiMotor.from_groups(
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4((float3(right_anti_dual.e12345) * this.group0.xyz), -(this.e23 * right_anti_dual.e415) - (this.e31 * right_anti_dual.e425) - (this.e12 * right_anti_dual.e435) - (this.e15 * right_anti_dual.e423) - (this.e25 * right_anti_dual.e431) - (this.e35 * right_anti_dual.e412)), 
             /* e15, e25, e35, e3215 */
@@ -2034,24 +1966,29 @@ extension AntiLine: WeightContraction<VersorOdd> {
         );
     }
 }
-extension AntiMotor {
-    // Fancy infix trick
-    func operator/(_rhs: WeightContractionInfix) -> WeightContractionInfixPartial<AntiMotor> {
-        return WeightContractionInfixPartial { a: this };
+public extension AntiMotor {
+    // Fancy infix trick (first half)
+    public WeightContractionInfixPartial<AntiMotor> operator /(WeightContractionInfix rhs) {
+        return WeightContractionInfixPartial<AntiMotor>(this);
     }
 }
-extension AntiMotor: WeightContraction<AntiCircleRotor> {
-    associatedtype Output = AntiMotor;
-    func weight_contraction(other: AntiCircleRotor) -> Output {
-        CircleRotor right_anti_dual = CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension WeightContractionInfixPartial<AntiMotor> {
+    // Fancy infix trick (second half)
+    public AntiMotor operator /(AntiCircleRotor rhs) {
+        return this.a.weight_contraction(rhs);
+    }
+}
+public extension AntiMotor {
+    public AntiMotor weight_contraction(AntiCircleRotor other) {
+        CircleRotor right_anti_dual = CircleRotor(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e12345 */
             other.group2 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiMotor.from_groups(
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(this.e23 * right_anti_dual.e12345, this.e31 * right_anti_dual.e12345, this.e12 * right_anti_dual.e12345, -(this.e23 * right_anti_dual.e415) - (this.e31 * right_anti_dual.e425) - (this.e12 * right_anti_dual.e435) - (this.e15 * right_anti_dual.e423) - (this.e25 * right_anti_dual.e431) - (this.e35 * right_anti_dual.e412)) + float4((right_anti_dual.group0.xyz * this.group1.www), this.scalar * right_anti_dual.e12345), 
             /* e15, e25, e35, e3215 */
@@ -2059,12 +1996,11 @@ extension AntiMotor: WeightContraction<AntiCircleRotor> {
         );
     }
 }
-extension AntiMotor: WeightContraction<AntiDipoleInversion> {
-    associatedtype Output = AntiFlector;
-    func weight_contraction(other: AntiDipoleInversion) -> Output {
-        DipoleInversion right_anti_dual = DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension AntiMotor {
+    public AntiFlector weight_contraction(AntiDipoleInversion other) {
+        DipoleInversion right_anti_dual = DipoleInversion(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, e1234 */
@@ -2072,7 +2008,7 @@ extension AntiMotor: WeightContraction<AntiDipoleInversion> {
             /* e4235, e4315, e4125, e3215 */
             other.group3 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiFlector.from_groups(
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(this.e3215) * float4(right_anti_dual.group3.xyz, right_anti_dual.e1234) * float4(-1.0), 
             /* e1, e2, e3, e5 */
@@ -2080,14 +2016,13 @@ extension AntiMotor: WeightContraction<AntiDipoleInversion> {
         );
     }
 }
-extension AntiMotor: WeightContraction<AntiDualNum> {
-    associatedtype Output = AntiMotor;
-    func weight_contraction(other: AntiDualNum) -> Output {
-        DualNum right_anti_dual = DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(other.group0.xy, 0.0, 0.0)
+public extension AntiMotor {
+    public AntiMotor weight_contraction(AntiDualNum other) {
+        DualNum right_anti_dual = DualNum(
+            /* e5, e12345 */
+            other.group0.xy
         );
-        return AntiMotor.from_groups(
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(right_anti_dual.e12345) * this.group0, 
             /* e15, e25, e35, e3215 */
@@ -2095,25 +2030,23 @@ extension AntiMotor: WeightContraction<AntiDualNum> {
         );
     }
 }
-extension AntiMotor: WeightContraction<AntiFlatPoint> {
-    associatedtype Output = DualNum;
-    func weight_contraction(other: AntiFlatPoint) -> Output {
-        return DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(float2(float4(other.group0.xyz, other.e321 * -1.0)[3] * this.e3215, 1.0) * float2(-1.0, 0.0), 0.0, 0.0)
+public extension AntiMotor {
+    public DualNum weight_contraction(AntiFlatPoint other) {
+        return DualNum(
+            /* e5, e12345 */
+            float2(float4(other.group0.xyz, other.e321 * -1.0)[3] * this.e3215, 1.0) * float2(-1.0, 0.0)
         );
     }
 }
-extension AntiMotor: WeightContraction<AntiFlector> {
-    associatedtype Output = AntiFlector;
-    func weight_contraction(other: AntiFlector) -> Output {
-        Flector right_anti_dual = Flector.from_groups(
+public extension AntiMotor {
+    public AntiFlector weight_contraction(AntiFlector other) {
+        Flector right_anti_dual = Flector(
             /* e15, e25, e35, e45 */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e4235, e4315, e4125, e3215 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiFlector.from_groups(
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(float3(1.0), 0.0) * float4(this.group1.www, 0.0) * float4(right_anti_dual.group1.xyz, 0.0) * float4(-1.0, -1.0, -1.0, 0.0), 
             /* e1, e2, e3, e5 */
@@ -2121,16 +2054,15 @@ extension AntiMotor: WeightContraction<AntiFlector> {
         );
     }
 }
-extension AntiMotor: WeightContraction<AntiLine> {
-    associatedtype Output = AntiMotor;
-    func weight_contraction(other: AntiLine) -> Output {
-        Line right_anti_dual = Line.from_groups(
-            /* e415, e425, e435, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group1.xyz * float3(-1.0), 0.0)
+public extension AntiMotor {
+    public AntiMotor weight_contraction(AntiLine other) {
+        Line right_anti_dual = Line(
+            /* e415, e425, e435 */
+            other.group0.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            other.group1.xyz * float3(-1.0)
         );
-        return AntiMotor.from_groups(
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(float3(0.0), -(this.e23 * right_anti_dual.e415) - (this.e31 * right_anti_dual.e425) - (this.e12 * right_anti_dual.e435)), 
             /* e15, e25, e35, e3215 */
@@ -2138,16 +2070,15 @@ extension AntiMotor: WeightContraction<AntiLine> {
         );
     }
 }
-extension AntiMotor: WeightContraction<AntiMotor> {
-    associatedtype Output = AntiMotor;
-    func weight_contraction(other: AntiMotor) -> Output {
-        Motor right_anti_dual = Motor.from_groups(
+public extension AntiMotor {
+    public AntiMotor weight_contraction(AntiMotor other) {
+        Motor right_anti_dual = Motor(
             /* e415, e425, e435, e12345 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e5 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiMotor.from_groups(
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4((float3(right_anti_dual.e12345) * this.group0.xyz), (this.scalar * right_anti_dual.e12345) - (this.e23 * right_anti_dual.e415) - (this.e31 * right_anti_dual.e425) - (this.e12 * right_anti_dual.e435)), 
             /* e15, e25, e35, e3215 */
@@ -2155,14 +2086,13 @@ extension AntiMotor: WeightContraction<AntiMotor> {
         );
     }
 }
-extension AntiMotor: WeightContraction<AntiPlane> {
-    associatedtype Output = AntiFlector;
-    func weight_contraction(other: AntiPlane) -> Output {
-        Plane right_anti_dual = Plane.from_groups(
+public extension AntiMotor {
+    public AntiFlector weight_contraction(AntiPlane other) {
+        Plane right_anti_dual = Plane(
             /* e4235, e4315, e4125, e3215 */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiFlector.from_groups(
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(float3(1.0), 0.0) * float4(this.group1.www, 0.0) * float4(right_anti_dual.group0.xyz, 0.0) * float4(-1.0, -1.0, -1.0, 0.0), 
             /* e1, e2, e3, e5 */
@@ -2170,52 +2100,49 @@ extension AntiMotor: WeightContraction<AntiPlane> {
         );
     }
 }
-extension AntiMotor: WeightContraction<Circle> {
-    associatedtype Output = AntiPlane;
-    func weight_contraction(other: Circle) -> Output {
-        Dipole right_anti_dual = Dipole.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension AntiMotor {
+    public AntiPlane weight_contraction(Circle other) {
+        Dipole right_anti_dual = Dipole(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e15, e25, e35, 0 */
-            float4(other.group2.xyz, 0.0)
+            /* e15, e25, e35 */
+            other.group2.xyz
         );
-        return AntiPlane.from_groups(
+        return AntiPlane(
             /* e1, e2, e3, e5 */
             float4((right_anti_dual.group0.xyz * this.group1.www * float3(-1.0)), this.e3215 * right_anti_dual.e45 * -1.0)
         );
     }
 }
-extension AntiMotor: WeightContraction<CircleRotor> {
-    associatedtype Output = AntiPlane;
-    func weight_contraction(other: CircleRotor) -> Output {
-        AntiCircleRotor right_anti_dual = AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension AntiMotor {
+    public AntiPlane weight_contraction(CircleRotor other) {
+        AntiCircleRotor right_anti_dual = AntiCircleRotor(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, scalar */
             other.group2 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiPlane.from_groups(
+        return AntiPlane(
             /* e1, e2, e3, e5 */
             float4(this.e3215) * float4(right_anti_dual.group0.xyz, right_anti_dual.e45) * float4(-1.0)
         );
     }
 }
-extension AntiMotor: WeightContraction<Dipole> {
-    associatedtype Output = AntiMotor;
-    func weight_contraction(other: Dipole) -> Output {
-        Circle right_anti_dual = Circle.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension AntiMotor {
+    public AntiMotor weight_contraction(Dipole other) {
+        Circle right_anti_dual = Circle(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group2.xyz * float3(-1.0), 0.0)
+            /* e235, e315, e125 */
+            other.group2.xyz * float3(-1.0)
         );
-        return AntiMotor.from_groups(
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4((float3(this.e3215) * right_anti_dual.group0.xyz), -(this.e23 * right_anti_dual.e415) - (this.e31 * right_anti_dual.e425) - (this.e12 * right_anti_dual.e435) - (this.e15 * right_anti_dual.e423) - (this.e25 * right_anti_dual.e431) - (this.e35 * right_anti_dual.e412)), 
             /* e15, e25, e35, e3215 */
@@ -2223,12 +2150,11 @@ extension AntiMotor: WeightContraction<Dipole> {
         );
     }
 }
-extension AntiMotor: WeightContraction<DipoleInversion> {
-    associatedtype Output = AntiMotor;
-    func weight_contraction(other: DipoleInversion) -> Output {
-        AntiDipoleInversion right_anti_dual = AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension AntiMotor {
+    public AntiMotor weight_contraction(DipoleInversion other) {
+        AntiDipoleInversion right_anti_dual = AntiDipoleInversion(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e4 */
@@ -2236,7 +2162,7 @@ extension AntiMotor: WeightContraction<DipoleInversion> {
             /* e1, e2, e3, e5 */
             other.group3 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiMotor.from_groups(
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4((float3(this.e3215) * right_anti_dual.group0.xyz), (right_anti_dual.e4 * this.e3215) - (right_anti_dual.e423 * this.e15) - (right_anti_dual.e431 * this.e25) - (right_anti_dual.e412 * this.e35) - (right_anti_dual.e415 * this.e23) - (right_anti_dual.e425 * this.e31) - (right_anti_dual.e435 * this.e12)), 
             /* e15, e25, e35, e3215 */
@@ -2244,69 +2170,67 @@ extension AntiMotor: WeightContraction<DipoleInversion> {
         );
     }
 }
-extension AntiMotor: WeightContraction<MultiVector> {
-    associatedtype Output = MultiVector;
-    func weight_contraction(other: MultiVector) -> Output {
-        MultiVector right_anti_dual = MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(other.group0.xy.yx * float2(-1.0, 1.0), 0.0, 0.0), 
+public extension AntiMotor {
+    public MultiVector weight_contraction(MultiVector other) {
+        MultiVector right_anti_dual = MultiVector(
+            /* scalar, e12345 */
+            other.group0.xy.yx * float2(-1.0, 1.0), 
             /* e1, e2, e3, e4 */
             float4(other.group9.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e5, 0, 0, 0 */
-            float4(other.e3215, 0.0, 0.0, 0.0), 
+            /* e5 */
+            other.e3215, 
             /* e15, e25, e35, e45 */
             float4(other.group8.xyz, other.e321 * -1.0), 
-            /* e41, e42, e43, 0 */
-            float4(other.group7.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group6.xyz, 0.0), 
+            /* e41, e42, e43 */
+            other.group7.xyz, 
+            /* e23, e31, e12 */
+            other.group6.xyz, 
             /* e415, e425, e435, e321 */
             float4(other.group5.xyz, other.e45) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e423, e431, e412, 0 */
-            float4(other.group4.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group3.xyz * float3(-1.0), 0.0), 
+            /* e423, e431, e412 */
+            other.group4.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            other.group3.xyz * float3(-1.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(other.group1.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * -1.0
         );
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((this.scalar * right_anti_dual.e12345) + (this.e3215 * right_anti_dual.e4) - (this.e23 * right_anti_dual.e415) - (this.e31 * right_anti_dual.e425) - (this.e12 * right_anti_dual.e435) - (this.e15 * right_anti_dual.e423) - (this.e25 * right_anti_dual.e431) - (this.e35 * right_anti_dual.e412), 0.0), 0.0, 0.0), 
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((this.scalar * right_anti_dual.e12345) + (this.e3215 * right_anti_dual.e4) - (this.e23 * right_anti_dual.e415) - (this.e31 * right_anti_dual.e425) - (this.e12 * right_anti_dual.e435) - (this.e15 * right_anti_dual.e423) - (this.e25 * right_anti_dual.e431) - (this.e35 * right_anti_dual.e412), 0.0), 
             /* e1, e2, e3, e4 */
             float4((this.group0.yzx * right_anti_dual.group9.zxy), 0.0) - float4((float3(this.e3215) * right_anti_dual.group4.xyz), 0.0) - float4((float3(right_anti_dual.e1234) * this.group1.xyz), 0.0) - float4((this.group0.zxy * right_anti_dual.group9.yzx), 0.0), 
-            /* e5, 0, 0, 0 */
-            float4((this.e15 * right_anti_dual.e4235) + (this.e25 * right_anti_dual.e4315) + (this.e35 * right_anti_dual.e4125) - (this.e3215 * right_anti_dual.e45), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (this.e15 * right_anti_dual.e4235) + (this.e25 * right_anti_dual.e4315) + (this.e35 * right_anti_dual.e4125) - (this.e3215 * right_anti_dual.e45), 
             /* e15, e25, e35, e45 */
             float4(((float3(this.e3215) * right_anti_dual.group6.xyz) + (float3(right_anti_dual.e12345) * this.group1.xyz)), 0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(this.e3215) * right_anti_dual.group7.xyz) + (float3(right_anti_dual.e12345) * this.group0.xyz), 0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            (float3(this.e3215) * right_anti_dual.group7.xyz) + (float3(right_anti_dual.e12345) * this.group0.xyz), 
             /* e415, e425, e435, e321 */
             float4(float3(0.0), this.e3215 * right_anti_dual.e1234 * -1.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(float3(this.e3215) * right_anti_dual.group9.xyz * float3(-1.0), 0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(this.e3215) * right_anti_dual.group9.xyz * float3(-1.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(float3(0.0), this.e3215 * right_anti_dual.e12345), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension AntiMotor: WeightContraction<RoundPoint> {
-    associatedtype Output = AntiFlector;
-    func weight_contraction(other: RoundPoint) -> Output {
-        Sphere right_anti_dual = Sphere.from_groups(
+public extension AntiMotor {
+    public AntiFlector weight_contraction(RoundPoint other) {
+        Sphere right_anti_dual = Sphere(
             /* e4235, e4315, e4125, e3215 */
             float4(other.group0.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * -1.0
         );
-        return AntiFlector.from_groups(
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(this.e3215) * float4(right_anti_dual.group0.xyz, right_anti_dual.e1234) * float4(-1.0), 
             /* e1, e2, e3, e5 */
@@ -2314,14 +2238,13 @@ extension AntiMotor: WeightContraction<RoundPoint> {
         );
     }
 }
-extension AntiMotor: WeightContraction<Scalar> {
-    associatedtype Output = AntiMotor;
-    func weight_contraction(other: Scalar) -> Output {
-        AntiScalar right_anti_dual = AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(other.scalar, 0.0, 0.0, 0.0)
+public extension AntiMotor {
+    public AntiMotor weight_contraction(Scalar other) {
+        AntiScalar right_anti_dual = AntiScalar(
+            /* e12345 */
+            other.scalar
         );
-        return AntiMotor.from_groups(
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(right_anti_dual.e12345) * this.group0, 
             /* e15, e25, e35, e3215 */
@@ -2329,19 +2252,17 @@ extension AntiMotor: WeightContraction<Scalar> {
         );
     }
 }
-extension AntiMotor: WeightContraction<Sphere> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: Sphere) -> Output {
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(this.e3215 * other.e1234, 0.0, 0.0, 0.0)
+public extension AntiMotor {
+    public Scalar weight_contraction(Sphere other) {
+        return Scalar(
+            /* scalar */
+            this.e3215 * other.e1234
         );
     }
 }
-extension AntiMotor: WeightContraction<VersorEven> {
-    associatedtype Output = AntiFlector;
-    func weight_contraction(other: VersorEven) -> Output {
-        VersorOdd right_anti_dual = VersorOdd.from_groups(
+public extension AntiMotor {
+    public AntiFlector weight_contraction(VersorEven other) {
+        VersorOdd right_anti_dual = VersorOdd(
             /* e41, e42, e43, scalar */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e23, e31, e12, e45 */
@@ -2351,7 +2272,7 @@ extension AntiMotor: WeightContraction<VersorEven> {
             /* e4235, e4315, e4125, e3215 */
             float4(other.group3.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiFlector.from_groups(
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(this.e3215) * float4(right_anti_dual.group3.xyz, right_anti_dual.e1234) * float4(-1.0), 
             /* e1, e2, e3, e5 */
@@ -2359,10 +2280,9 @@ extension AntiMotor: WeightContraction<VersorEven> {
         );
     }
 }
-extension AntiMotor: WeightContraction<VersorOdd> {
-    associatedtype Output = AntiMotor;
-    func weight_contraction(other: VersorOdd) -> Output {
-        VersorEven right_anti_dual = VersorEven.from_groups(
+public extension AntiMotor {
+    public AntiMotor weight_contraction(VersorOdd other) {
+        VersorEven right_anti_dual = VersorEven(
             /* e423, e431, e412, e12345 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e415, e425, e435, e321 */
@@ -2372,7 +2292,7 @@ extension AntiMotor: WeightContraction<VersorOdd> {
             /* e1, e2, e3, e4 */
             float4(other.group3.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiMotor.from_groups(
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             (float4(this.e3215) * float4(right_anti_dual.group0.xyz, right_anti_dual.e4)) + (float4(right_anti_dual.e12345) * this.group0) + float4(float3(0.0), -(this.e23 * right_anti_dual.e415) - (this.e31 * right_anti_dual.e425) - (this.e12 * right_anti_dual.e435) - (this.e15 * right_anti_dual.e423) - (this.e25 * right_anti_dual.e431) - (this.e35 * right_anti_dual.e412)), 
             /* e15, e25, e35, e3215 */
@@ -2380,27 +2300,31 @@ extension AntiMotor: WeightContraction<VersorOdd> {
         );
     }
 }
-extension AntiPlane {
-    // Fancy infix trick
-    func operator/(_rhs: WeightContractionInfix) -> WeightContractionInfixPartial<AntiPlane> {
-        return WeightContractionInfixPartial { a: this };
+public extension AntiPlane {
+    // Fancy infix trick (first half)
+    public WeightContractionInfixPartial<AntiPlane> operator /(WeightContractionInfix rhs) {
+        return WeightContractionInfixPartial<AntiPlane>(this);
     }
 }
-extension AntiPlane: WeightContraction<AntiCircleRotor> {
-    associatedtype Output = AntiPlane;
-    func weight_contraction(other: AntiCircleRotor) -> Output {
-        return AntiPlane.from_groups(
+public extension WeightContractionInfixPartial<AntiPlane> {
+    // Fancy infix trick (second half)
+    public AntiPlane operator /(AntiCircleRotor rhs) {
+        return this.a.weight_contraction(rhs);
+    }
+}
+public extension AntiPlane {
+    public AntiPlane weight_contraction(AntiCircleRotor other) {
+        return AntiPlane(
             /* e1, e2, e3, e5 */
             float4(other.scalar) * this.group0
         );
     }
 }
-extension AntiPlane: WeightContraction<AntiDipoleInversion> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: AntiDipoleInversion) -> Output {
-        DipoleInversion right_anti_dual = DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension AntiPlane {
+    public Scalar weight_contraction(AntiDipoleInversion other) {
+        DipoleInversion right_anti_dual = DipoleInversion(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, e1234 */
@@ -2408,139 +2332,131 @@ extension AntiPlane: WeightContraction<AntiDipoleInversion> {
             /* e4235, e4315, e4125, e3215 */
             other.group3 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4((this.e1 * right_anti_dual.e4235) + (this.e2 * right_anti_dual.e4315) + (this.e3 * right_anti_dual.e4125) + (this.e5 * right_anti_dual.e1234), 0.0, 0.0, 0.0)
+        return Scalar(
+            /* scalar */
+            (this.e1 * right_anti_dual.e4235) + (this.e2 * right_anti_dual.e4315) + (this.e3 * right_anti_dual.e4125) + (this.e5 * right_anti_dual.e1234)
         );
     }
 }
-extension AntiPlane: WeightContraction<AntiDualNum> {
-    associatedtype Output = AntiPlane;
-    func weight_contraction(other: AntiDualNum) -> Output {
-        return AntiPlane.from_groups(
+public extension AntiPlane {
+    public AntiPlane weight_contraction(AntiDualNum other) {
+        return AntiPlane(
             /* e1, e2, e3, e5 */
             float4(other.scalar) * this.group0
         );
     }
 }
-extension AntiPlane: WeightContraction<AntiFlector> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: AntiFlector) -> Output {
-        Flector right_anti_dual = Flector.from_groups(
+public extension AntiPlane {
+    public Scalar weight_contraction(AntiFlector other) {
+        Flector right_anti_dual = Flector(
             /* e15, e25, e35, e45 */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e4235, e4315, e4125, e3215 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4((this.e1 * right_anti_dual.e4235) + (this.e2 * right_anti_dual.e4315) + (this.e3 * right_anti_dual.e4125), 0.0, 0.0, 0.0)
+        return Scalar(
+            /* scalar */
+            (this.e1 * right_anti_dual.e4235) + (this.e2 * right_anti_dual.e4315) + (this.e3 * right_anti_dual.e4125)
         );
     }
 }
-extension AntiPlane: WeightContraction<AntiMotor> {
-    associatedtype Output = AntiPlane;
-    func weight_contraction(other: AntiMotor) -> Output {
-        return AntiPlane.from_groups(
+public extension AntiPlane {
+    public AntiPlane weight_contraction(AntiMotor other) {
+        return AntiPlane(
             /* e1, e2, e3, e5 */
             float4(other.scalar) * this.group0
         );
     }
 }
-extension AntiPlane: WeightContraction<AntiPlane> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: AntiPlane) -> Output {
-        Plane right_anti_dual = Plane.from_groups(
+public extension AntiPlane {
+    public Scalar weight_contraction(AntiPlane other) {
+        Plane right_anti_dual = Plane(
             /* e4235, e4315, e4125, e3215 */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4((this.e1 * right_anti_dual.e4235) + (this.e2 * right_anti_dual.e4315) + (this.e3 * right_anti_dual.e4125), 0.0, 0.0, 0.0)
+        return Scalar(
+            /* scalar */
+            (this.e1 * right_anti_dual.e4235) + (this.e2 * right_anti_dual.e4315) + (this.e3 * right_anti_dual.e4125)
         );
     }
 }
-extension AntiPlane: WeightContraction<MultiVector> {
-    associatedtype Output = MultiVector;
-    func weight_contraction(other: MultiVector) -> Output {
-        MultiVector right_anti_dual = MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(other.group0.xy.yx * float2(-1.0, 1.0), 0.0, 0.0), 
+public extension AntiPlane {
+    public MultiVector weight_contraction(MultiVector other) {
+        MultiVector right_anti_dual = MultiVector(
+            /* scalar, e12345 */
+            other.group0.xy.yx * float2(-1.0, 1.0), 
             /* e1, e2, e3, e4 */
             float4(other.group9.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e5, 0, 0, 0 */
-            float4(other.e3215, 0.0, 0.0, 0.0), 
+            /* e5 */
+            other.e3215, 
             /* e15, e25, e35, e45 */
             float4(other.group8.xyz, other.e321 * -1.0), 
-            /* e41, e42, e43, 0 */
-            float4(other.group7.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group6.xyz, 0.0), 
+            /* e41, e42, e43 */
+            other.group7.xyz, 
+            /* e23, e31, e12 */
+            other.group6.xyz, 
             /* e415, e425, e435, e321 */
             float4(other.group5.xyz, other.e45) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e423, e431, e412, 0 */
-            float4(other.group4.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group3.xyz * float3(-1.0), 0.0), 
+            /* e423, e431, e412 */
+            other.group4.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            other.group3.xyz * float3(-1.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(other.group1.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * -1.0
         );
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((this.e1 * right_anti_dual.e4235) + (this.e2 * right_anti_dual.e4315) + (this.e3 * right_anti_dual.e4125) + (this.e5 * right_anti_dual.e1234), 0.0), 0.0, 0.0), 
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((this.e1 * right_anti_dual.e4235) + (this.e2 * right_anti_dual.e4315) + (this.e3 * right_anti_dual.e4125) + (this.e5 * right_anti_dual.e1234), 0.0), 
             /* e1, e2, e3, e4 */
             float4(right_anti_dual.group0.xy.yy, right_anti_dual.e12345, 0.0) * float4(float3(1.0), 0.0) * float4(this.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
-            /* e5, 0, 0, 0 */
-            float4(this.e5 * right_anti_dual.e12345, 0.0, 0.0, 0.0), 
+            /* e5 */
+            this.e5 * right_anti_dual.e12345, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(0.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension AntiPlane: WeightContraction<RoundPoint> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: RoundPoint) -> Output {
-        Sphere right_anti_dual = Sphere.from_groups(
+public extension AntiPlane {
+    public Scalar weight_contraction(RoundPoint other) {
+        Sphere right_anti_dual = Sphere(
             /* e4235, e4315, e4125, e3215 */
             float4(other.group0.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * -1.0
         );
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4((this.e1 * right_anti_dual.e4235) + (this.e2 * right_anti_dual.e4315) + (this.e3 * right_anti_dual.e4125) + (this.e5 * right_anti_dual.e1234), 0.0, 0.0, 0.0)
+        return Scalar(
+            /* scalar */
+            (this.e1 * right_anti_dual.e4235) + (this.e2 * right_anti_dual.e4315) + (this.e3 * right_anti_dual.e4125) + (this.e5 * right_anti_dual.e1234)
         );
     }
 }
-extension AntiPlane: WeightContraction<Scalar> {
-    associatedtype Output = AntiPlane;
-    func weight_contraction(other: Scalar) -> Output {
-        return AntiPlane.from_groups(
+public extension AntiPlane {
+    public AntiPlane weight_contraction(Scalar other) {
+        return AntiPlane(
             /* e1, e2, e3, e5 */
             float4(other.scalar) * this.group0
         );
     }
 }
-extension AntiPlane: WeightContraction<VersorEven> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: VersorEven) -> Output {
-        VersorOdd right_anti_dual = VersorOdd.from_groups(
+public extension AntiPlane {
+    public Scalar weight_contraction(VersorEven other) {
+        VersorOdd right_anti_dual = VersorOdd(
             /* e41, e42, e43, scalar */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e23, e31, e12, e45 */
@@ -2550,41 +2466,45 @@ extension AntiPlane: WeightContraction<VersorEven> {
             /* e4235, e4315, e4125, e3215 */
             float4(other.group3.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4((this.e1 * right_anti_dual.e4235) + (this.e2 * right_anti_dual.e4315) + (this.e3 * right_anti_dual.e4125) + (this.e5 * right_anti_dual.e1234), 0.0, 0.0, 0.0)
+        return Scalar(
+            /* scalar */
+            (this.e1 * right_anti_dual.e4235) + (this.e2 * right_anti_dual.e4315) + (this.e3 * right_anti_dual.e4125) + (this.e5 * right_anti_dual.e1234)
         );
     }
 }
-extension AntiPlane: WeightContraction<VersorOdd> {
-    associatedtype Output = AntiPlane;
-    func weight_contraction(other: VersorOdd) -> Output {
-        return AntiPlane.from_groups(
+public extension AntiPlane {
+    public AntiPlane weight_contraction(VersorOdd other) {
+        return AntiPlane(
             /* e1, e2, e3, e5 */
             float4(other.scalar) * this.group0
         );
     }
 }
-extension AntiScalar {
-    // Fancy infix trick
-    func operator/(_rhs: WeightContractionInfix) -> WeightContractionInfixPartial<AntiScalar> {
-        return WeightContractionInfixPartial { a: this };
+public extension AntiScalar {
+    // Fancy infix trick (first half)
+    public WeightContractionInfixPartial<AntiScalar> operator /(WeightContractionInfix rhs) {
+        return WeightContractionInfixPartial<AntiScalar>(this);
     }
 }
-extension AntiScalar: WeightContraction<AntiCircleRotor> {
-    associatedtype Output = CircleRotor;
-    func weight_contraction(other: AntiCircleRotor) -> Output {
-        CircleRotor right_anti_dual = CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension WeightContractionInfixPartial<AntiScalar> {
+    // Fancy infix trick (second half)
+    public CircleRotor operator /(AntiCircleRotor rhs) {
+        return this.a.weight_contraction(rhs);
+    }
+}
+public extension AntiScalar {
+    public CircleRotor weight_contraction(AntiCircleRotor other) {
+        CircleRotor right_anti_dual = CircleRotor(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e12345 */
             other.group2 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(this.e12345) * right_anti_dual.group0.xyz, 0.0), 
+        return CircleRotor(
+            /* e423, e431, e412 */
+            float3(this.e12345) * right_anti_dual.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(this.e12345) * right_anti_dual.group1, 
             /* e235, e315, e125, e12345 */
@@ -2592,12 +2512,11 @@ extension AntiScalar: WeightContraction<AntiCircleRotor> {
         );
     }
 }
-extension AntiScalar: WeightContraction<AntiDipoleInversion> {
-    associatedtype Output = DipoleInversion;
-    func weight_contraction(other: AntiDipoleInversion) -> Output {
-        DipoleInversion right_anti_dual = DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension AntiScalar {
+    public DipoleInversion weight_contraction(AntiDipoleInversion other) {
+        DipoleInversion right_anti_dual = DipoleInversion(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, e1234 */
@@ -2605,9 +2524,9 @@ extension AntiScalar: WeightContraction<AntiDipoleInversion> {
             /* e4235, e4315, e4125, e3215 */
             other.group3 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(this.e12345) * right_anti_dual.group0.xyz, 0.0), 
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            float3(this.e12345) * right_anti_dual.group0.xyz, 
             /* e23, e31, e12, e45 */
             float4(this.e12345) * right_anti_dual.group1, 
             /* e15, e25, e35, e1234 */
@@ -2617,34 +2536,31 @@ extension AntiScalar: WeightContraction<AntiDipoleInversion> {
         );
     }
 }
-extension AntiScalar: WeightContraction<AntiDualNum> {
-    associatedtype Output = DualNum;
-    func weight_contraction(other: AntiDualNum) -> Output {
-        return DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(float2(this.e12345) * other.group0.xy, 0.0, 0.0)
+public extension AntiScalar {
+    public DualNum weight_contraction(AntiDualNum other) {
+        return DualNum(
+            /* e5, e12345 */
+            float2(this.e12345) * other.group0.xy
         );
     }
 }
-extension AntiScalar: WeightContraction<AntiFlatPoint> {
-    associatedtype Output = FlatPoint;
-    func weight_contraction(other: AntiFlatPoint) -> Output {
-        return FlatPoint.from_groups(
+public extension AntiScalar {
+    public FlatPoint weight_contraction(AntiFlatPoint other) {
+        return FlatPoint(
             /* e15, e25, e35, e45 */
             float4(this.e12345) * float4(other.group0.xyz, other.e321 * -1.0)
         );
     }
 }
-extension AntiScalar: WeightContraction<AntiFlector> {
-    associatedtype Output = Flector;
-    func weight_contraction(other: AntiFlector) -> Output {
-        Flector right_anti_dual = Flector.from_groups(
+public extension AntiScalar {
+    public Flector weight_contraction(AntiFlector other) {
+        Flector right_anti_dual = Flector(
             /* e15, e25, e35, e45 */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e4235, e4315, e4125, e3215 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return Flector.from_groups(
+        return Flector(
             /* e15, e25, e35, e45 */
             float4(this.e12345) * right_anti_dual.group0, 
             /* e4235, e4315, e4125, e3215 */
@@ -2652,33 +2568,31 @@ extension AntiScalar: WeightContraction<AntiFlector> {
         );
     }
 }
-extension AntiScalar: WeightContraction<AntiLine> {
-    associatedtype Output = Line;
-    func weight_contraction(other: AntiLine) -> Output {
-        Line right_anti_dual = Line.from_groups(
-            /* e415, e425, e435, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group1.xyz * float3(-1.0), 0.0)
+public extension AntiScalar {
+    public Line weight_contraction(AntiLine other) {
+        Line right_anti_dual = Line(
+            /* e415, e425, e435 */
+            other.group0.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            other.group1.xyz * float3(-1.0)
         );
-        return Line.from_groups(
-            /* e415, e425, e435, 0 */
-            float4(float3(this.e12345) * right_anti_dual.group0.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(float3(this.e12345) * right_anti_dual.group1.xyz, 0.0)
+        return Line(
+            /* e415, e425, e435 */
+            float3(this.e12345) * right_anti_dual.group0.xyz, 
+            /* e235, e315, e125 */
+            float3(this.e12345) * right_anti_dual.group1.xyz
         );
     }
 }
-extension AntiScalar: WeightContraction<AntiMotor> {
-    associatedtype Output = Motor;
-    func weight_contraction(other: AntiMotor) -> Output {
-        Motor right_anti_dual = Motor.from_groups(
+public extension AntiScalar {
+    public Motor weight_contraction(AntiMotor other) {
+        Motor right_anti_dual = Motor(
             /* e415, e425, e435, e12345 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e5 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return Motor.from_groups(
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4(this.e12345) * right_anti_dual.group0, 
             /* e235, e315, e125, e5 */
@@ -2686,59 +2600,55 @@ extension AntiScalar: WeightContraction<AntiMotor> {
         );
     }
 }
-extension AntiScalar: WeightContraction<AntiPlane> {
-    associatedtype Output = Plane;
-    func weight_contraction(other: AntiPlane) -> Output {
-        return Plane.from_groups(
+public extension AntiScalar {
+    public Plane weight_contraction(AntiPlane other) {
+        return Plane(
             /* e4235, e4315, e4125, e3215 */
             float4(this.e12345) * float4(other.group0.xyz, other.e5 * -1.0)
         );
     }
 }
-extension AntiScalar: WeightContraction<AntiScalar> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: AntiScalar) -> Output {
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(other.e12345 * this.e12345 * -1.0, 0.0, 0.0, 0.0)
+public extension AntiScalar {
+    public Scalar weight_contraction(AntiScalar other) {
+        return Scalar(
+            /* scalar */
+            other.e12345 * this.e12345 * -1.0
         );
     }
 }
-extension AntiScalar: WeightContraction<Circle> {
-    associatedtype Output = Dipole;
-    func weight_contraction(other: Circle) -> Output {
-        Dipole right_anti_dual = Dipole.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension AntiScalar {
+    public Dipole weight_contraction(Circle other) {
+        Dipole right_anti_dual = Dipole(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e15, e25, e35, 0 */
-            float4(other.group2.xyz, 0.0)
+            /* e15, e25, e35 */
+            other.group2.xyz
         );
-        return Dipole.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(this.e12345) * right_anti_dual.group0.xyz, 0.0), 
+        return Dipole(
+            /* e41, e42, e43 */
+            float3(this.e12345) * right_anti_dual.group0.xyz, 
             /* e23, e31, e12, e45 */
             float4(this.e12345) * right_anti_dual.group1, 
-            /* e15, e25, e35, 0 */
-            float4(float3(this.e12345) * right_anti_dual.group2.xyz, 0.0)
+            /* e15, e25, e35 */
+            float3(this.e12345) * right_anti_dual.group2.xyz
         );
     }
 }
-extension AntiScalar: WeightContraction<CircleRotor> {
-    associatedtype Output = AntiCircleRotor;
-    func weight_contraction(other: CircleRotor) -> Output {
-        AntiCircleRotor right_anti_dual = AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension AntiScalar {
+    public AntiCircleRotor weight_contraction(CircleRotor other) {
+        AntiCircleRotor right_anti_dual = AntiCircleRotor(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, scalar */
             other.group2 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(this.e12345) * right_anti_dual.group0.xyz, 0.0), 
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            float3(this.e12345) * right_anti_dual.group0.xyz, 
             /* e23, e31, e12, e45 */
             float4(this.e12345) * right_anti_dual.group1, 
             /* e15, e25, e35, scalar */
@@ -2746,33 +2656,31 @@ extension AntiScalar: WeightContraction<CircleRotor> {
         );
     }
 }
-extension AntiScalar: WeightContraction<Dipole> {
-    associatedtype Output = Circle;
-    func weight_contraction(other: Dipole) -> Output {
-        Circle right_anti_dual = Circle.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension AntiScalar {
+    public Circle weight_contraction(Dipole other) {
+        Circle right_anti_dual = Circle(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group2.xyz * float3(-1.0), 0.0)
+            /* e235, e315, e125 */
+            other.group2.xyz * float3(-1.0)
         );
-        return Circle.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(this.e12345) * right_anti_dual.group0.xyz, 0.0), 
+        return Circle(
+            /* e423, e431, e412 */
+            float3(this.e12345) * right_anti_dual.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(this.e12345) * right_anti_dual.group1, 
-            /* e235, e315, e125, 0 */
-            float4(float3(this.e12345) * right_anti_dual.group2.xyz, 0.0)
+            /* e235, e315, e125 */
+            float3(this.e12345) * right_anti_dual.group2.xyz
         );
     }
 }
-extension AntiScalar: WeightContraction<DipoleInversion> {
-    associatedtype Output = AntiDipoleInversion;
-    func weight_contraction(other: DipoleInversion) -> Output {
-        AntiDipoleInversion right_anti_dual = AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension AntiScalar {
+    public AntiDipoleInversion weight_contraction(DipoleInversion other) {
+        AntiDipoleInversion right_anti_dual = AntiDipoleInversion(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e4 */
@@ -2780,9 +2688,9 @@ extension AntiScalar: WeightContraction<DipoleInversion> {
             /* e1, e2, e3, e5 */
             other.group3 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(this.e12345) * right_anti_dual.group0.xyz, 0.0), 
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(this.e12345) * right_anti_dual.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(this.e12345) * right_anti_dual.group1, 
             /* e235, e315, e125, e4 */
@@ -2792,34 +2700,31 @@ extension AntiScalar: WeightContraction<DipoleInversion> {
         );
     }
 }
-extension AntiScalar: WeightContraction<DualNum> {
-    associatedtype Output = AntiDualNum;
-    func weight_contraction(other: DualNum) -> Output {
-        return AntiDualNum.from_groups(
-            /* e3215, scalar, 0, 0 */
-            float4(float2(this.e12345) * float2(other.e5 * -1.0, other.e12345 * -1.0), 0.0, 0.0)
+public extension AntiScalar {
+    public AntiDualNum weight_contraction(DualNum other) {
+        return AntiDualNum(
+            /* e3215, scalar */
+            float2(this.e12345) * float2(other.e5 * -1.0, other.e12345 * -1.0)
         );
     }
 }
-extension AntiScalar: WeightContraction<FlatPoint> {
-    associatedtype Output = AntiFlatPoint;
-    func weight_contraction(other: FlatPoint) -> Output {
-        return AntiFlatPoint.from_groups(
+public extension AntiScalar {
+    public AntiFlatPoint weight_contraction(FlatPoint other) {
+        return AntiFlatPoint(
             /* e235, e315, e125, e321 */
             float4(this.e12345) * float4(other.e15 * -1.0, other.e25 * -1.0, other.e35 * -1.0, other.e45)
         );
     }
 }
-extension AntiScalar: WeightContraction<Flector> {
-    associatedtype Output = AntiFlector;
-    func weight_contraction(other: Flector) -> Output {
-        AntiFlector right_anti_dual = AntiFlector.from_groups(
+public extension AntiScalar {
+    public AntiFlector weight_contraction(Flector other) {
+        AntiFlector right_anti_dual = AntiFlector(
             /* e235, e315, e125, e321 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e1, e2, e3, e5 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiFlector.from_groups(
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(this.e12345) * right_anti_dual.group0, 
             /* e1, e2, e3, e5 */
@@ -2827,33 +2732,31 @@ extension AntiScalar: WeightContraction<Flector> {
         );
     }
 }
-extension AntiScalar: WeightContraction<Line> {
-    associatedtype Output = AntiLine;
-    func weight_contraction(other: Line) -> Output {
-        AntiLine right_anti_dual = AntiLine.from_groups(
-            /* e23, e31, e12, 0 */
-            float4(other.group0.xyz, 0.0), 
-            /* e15, e25, e35, 0 */
-            float4(other.group1.xyz, 0.0)
+public extension AntiScalar {
+    public AntiLine weight_contraction(Line other) {
+        AntiLine right_anti_dual = AntiLine(
+            /* e23, e31, e12 */
+            other.group0.xyz, 
+            /* e15, e25, e35 */
+            other.group1.xyz
         );
-        return AntiLine.from_groups(
-            /* e23, e31, e12, 0 */
-            float4(float3(this.e12345) * right_anti_dual.group0.xyz, 0.0), 
-            /* e15, e25, e35, 0 */
-            float4(float3(this.e12345) * right_anti_dual.group1.xyz, 0.0)
+        return AntiLine(
+            /* e23, e31, e12 */
+            float3(this.e12345) * right_anti_dual.group0.xyz, 
+            /* e15, e25, e35 */
+            float3(this.e12345) * right_anti_dual.group1.xyz
         );
     }
 }
-extension AntiScalar: WeightContraction<Motor> {
-    associatedtype Output = AntiMotor;
-    func weight_contraction(other: Motor) -> Output {
-        AntiMotor right_anti_dual = AntiMotor.from_groups(
+public extension AntiScalar {
+    public AntiMotor weight_contraction(Motor other) {
+        AntiMotor right_anti_dual = AntiMotor(
             /* e23, e31, e12, scalar */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, e3215 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiMotor.from_groups(
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(this.e12345) * right_anti_dual.group0, 
             /* e15, e25, e35, e3215 */
@@ -2861,115 +2764,109 @@ extension AntiScalar: WeightContraction<Motor> {
         );
     }
 }
-extension AntiScalar: WeightContraction<MultiVector> {
-    associatedtype Output = MultiVector;
-    func weight_contraction(other: MultiVector) -> Output {
-        MultiVector right_anti_dual = MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(other.group0.xy.yx * float2(-1.0, 1.0), 0.0, 0.0), 
+public extension AntiScalar {
+    public MultiVector weight_contraction(MultiVector other) {
+        MultiVector right_anti_dual = MultiVector(
+            /* scalar, e12345 */
+            other.group0.xy.yx * float2(-1.0, 1.0), 
             /* e1, e2, e3, e4 */
             float4(other.group9.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e5, 0, 0, 0 */
-            float4(other.e3215, 0.0, 0.0, 0.0), 
+            /* e5 */
+            other.e3215, 
             /* e15, e25, e35, e45 */
             float4(other.group8.xyz, other.e321 * -1.0), 
-            /* e41, e42, e43, 0 */
-            float4(other.group7.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group6.xyz, 0.0), 
+            /* e41, e42, e43 */
+            other.group7.xyz, 
+            /* e23, e31, e12 */
+            other.group6.xyz, 
             /* e415, e425, e435, e321 */
             float4(other.group5.xyz, other.e45) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e423, e431, e412, 0 */
-            float4(other.group4.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group3.xyz * float3(-1.0), 0.0), 
+            /* e423, e431, e412 */
+            other.group4.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            other.group3.xyz * float3(-1.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(other.group1.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * -1.0
         );
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(this.e12345) * right_anti_dual.group0.xy, 0.0, 0.0), 
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(this.e12345) * right_anti_dual.group0.xy, 
             /* e1, e2, e3, e4 */
             float4(this.e12345) * right_anti_dual.group1, 
-            /* e5, 0, 0, 0 */
-            float4(this.e12345 * right_anti_dual.e5, 0.0, 0.0, 0.0), 
+            /* e5 */
+            this.e12345 * right_anti_dual.e5, 
             /* e15, e25, e35, e45 */
             float4(this.e12345) * right_anti_dual.group3, 
-            /* e41, e42, e43, 0 */
-            float4(float3(this.e12345) * right_anti_dual.group4.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(float3(this.e12345) * right_anti_dual.group5.xyz, 0.0), 
+            /* e41, e42, e43 */
+            float3(this.e12345) * right_anti_dual.group4.xyz, 
+            /* e23, e31, e12 */
+            float3(this.e12345) * right_anti_dual.group5.xyz, 
             /* e415, e425, e435, e321 */
             float4(this.e12345) * right_anti_dual.group6, 
-            /* e423, e431, e412, 0 */
-            float4(float3(this.e12345) * right_anti_dual.group7.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(float3(this.e12345) * right_anti_dual.group8.xyz, 0.0), 
+            /* e423, e431, e412 */
+            float3(this.e12345) * right_anti_dual.group7.xyz, 
+            /* e235, e315, e125 */
+            float3(this.e12345) * right_anti_dual.group8.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(this.e12345) * right_anti_dual.group9, 
-            /* e1234, 0, 0, 0 */
-            float4(this.e12345 * right_anti_dual.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            this.e12345 * right_anti_dual.e1234
         );
     }
 }
-extension AntiScalar: WeightContraction<Plane> {
-    associatedtype Output = AntiPlane;
-    func weight_contraction(other: Plane) -> Output {
-        return AntiPlane.from_groups(
+public extension AntiScalar {
+    public AntiPlane weight_contraction(Plane other) {
+        return AntiPlane(
             /* e1, e2, e3, e5 */
             float4(this.e12345) * float4(other.e4235 * -1.0, other.e4315 * -1.0, other.e4125 * -1.0, other.e3215)
         );
     }
 }
-extension AntiScalar: WeightContraction<RoundPoint> {
-    associatedtype Output = Sphere;
-    func weight_contraction(other: RoundPoint) -> Output {
-        Sphere right_anti_dual = Sphere.from_groups(
+public extension AntiScalar {
+    public Sphere weight_contraction(RoundPoint other) {
+        Sphere right_anti_dual = Sphere(
             /* e4235, e4315, e4125, e3215 */
             float4(other.group0.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * -1.0
         );
-        return Sphere.from_groups(
+        return Sphere(
             /* e4235, e4315, e4125, e3215 */
             float4(this.e12345) * right_anti_dual.group0, 
-            /* e1234, 0, 0, 0 */
-            float4(this.e12345 * right_anti_dual.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            this.e12345 * right_anti_dual.e1234
         );
     }
 }
-extension AntiScalar: WeightContraction<Scalar> {
-    associatedtype Output = AntiScalar;
-    func weight_contraction(other: Scalar) -> Output {
-        return AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(this.e12345 * other.scalar, 0.0, 0.0, 0.0)
+public extension AntiScalar {
+    public AntiScalar weight_contraction(Scalar other) {
+        return AntiScalar(
+            /* e12345 */
+            this.e12345 * other.scalar
         );
     }
 }
-extension AntiScalar: WeightContraction<Sphere> {
-    associatedtype Output = RoundPoint;
-    func weight_contraction(other: Sphere) -> Output {
-        RoundPoint right_anti_dual = RoundPoint.from_groups(
+public extension AntiScalar {
+    public RoundPoint weight_contraction(Sphere other) {
+        RoundPoint right_anti_dual = RoundPoint(
             /* e1, e2, e3, e4 */
             float4(other.group0.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e5, 0, 0, 0 */
-            float4(other.e3215, 0.0, 0.0, 0.0)
+            /* e5 */
+            other.e3215
         );
-        return RoundPoint.from_groups(
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4(this.e12345) * right_anti_dual.group0, 
-            /* e5, 0, 0, 0 */
-            float4(this.e12345 * right_anti_dual.e5, 0.0, 0.0, 0.0)
+            /* e5 */
+            this.e12345 * right_anti_dual.e5
         );
     }
 }
-extension AntiScalar: WeightContraction<VersorEven> {
-    associatedtype Output = VersorOdd;
-    func weight_contraction(other: VersorEven) -> Output {
-        VersorOdd right_anti_dual = VersorOdd.from_groups(
+public extension AntiScalar {
+    public VersorOdd weight_contraction(VersorEven other) {
+        VersorOdd right_anti_dual = VersorOdd(
             /* e41, e42, e43, scalar */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e23, e31, e12, e45 */
@@ -2979,7 +2876,7 @@ extension AntiScalar: WeightContraction<VersorEven> {
             /* e4235, e4315, e4125, e3215 */
             float4(other.group3.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return VersorOdd.from_groups(
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(this.e12345) * right_anti_dual.group0, 
             /* e23, e31, e12, e45 */
@@ -2991,10 +2888,9 @@ extension AntiScalar: WeightContraction<VersorEven> {
         );
     }
 }
-extension AntiScalar: WeightContraction<VersorOdd> {
-    associatedtype Output = VersorEven;
-    func weight_contraction(other: VersorOdd) -> Output {
-        VersorEven right_anti_dual = VersorEven.from_groups(
+public extension AntiScalar {
+    public VersorEven weight_contraction(VersorOdd other) {
+        VersorEven right_anti_dual = VersorEven(
             /* e423, e431, e412, e12345 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e415, e425, e435, e321 */
@@ -3004,7 +2900,7 @@ extension AntiScalar: WeightContraction<VersorOdd> {
             /* e1, e2, e3, e4 */
             float4(other.group3.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return VersorEven.from_groups(
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(this.e12345) * right_anti_dual.group0, 
             /* e415, e425, e435, e321 */
@@ -3016,26 +2912,31 @@ extension AntiScalar: WeightContraction<VersorOdd> {
         );
     }
 }
-extension Circle {
-    // Fancy infix trick
-    func operator/(_rhs: WeightContractionInfix) -> WeightContractionInfixPartial<Circle> {
-        return WeightContractionInfixPartial { a: this };
+public extension Circle {
+    // Fancy infix trick (first half)
+    public WeightContractionInfixPartial<Circle> operator /(WeightContractionInfix rhs) {
+        return WeightContractionInfixPartial<Circle>(this);
     }
 }
-extension Circle: WeightContraction<AntiCircleRotor> {
-    associatedtype Output = AntiDipoleInversion;
-    func weight_contraction(other: AntiCircleRotor) -> Output {
-        CircleRotor right_anti_dual = CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension WeightContractionInfixPartial<Circle> {
+    // Fancy infix trick (second half)
+    public AntiDipoleInversion operator /(AntiCircleRotor rhs) {
+        return this.a.weight_contraction(rhs);
+    }
+}
+public extension Circle {
+    public AntiDipoleInversion weight_contraction(AntiCircleRotor other) {
+        CircleRotor right_anti_dual = CircleRotor(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e12345 */
             other.group2 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(right_anti_dual.e12345) * this.group0.xyz, 0.0), 
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(right_anti_dual.e12345) * this.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(right_anti_dual.e12345) * this.group1, 
             /* e235, e315, e125, e4 */
@@ -3045,12 +2946,11 @@ extension Circle: WeightContraction<AntiCircleRotor> {
         );
     }
 }
-extension Circle: WeightContraction<AntiDipoleInversion> {
-    associatedtype Output = AntiCircleRotor;
-    func weight_contraction(other: AntiDipoleInversion) -> Output {
-        DipoleInversion right_anti_dual = DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension Circle {
+    public AntiCircleRotor weight_contraction(AntiDipoleInversion other) {
+        DipoleInversion right_anti_dual = DipoleInversion(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, e1234 */
@@ -3058,9 +2958,9 @@ extension Circle: WeightContraction<AntiDipoleInversion> {
             /* e4235, e4315, e4125, e3215 */
             other.group3 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4((float3(right_anti_dual.e1234) * this.group1.xyz) + (this.group0.xyz.zxy * right_anti_dual.group3.yzx) - (this.group0.xyz.yzx * right_anti_dual.group3.zxy), 0.0), 
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            (float3(right_anti_dual.e1234) * this.group1.xyz) + (this.group0.xyz.zxy * right_anti_dual.group3.yzx) - (this.group0.xyz.yzx * right_anti_dual.group3.zxy), 
             /* e23, e31, e12, e45 */
             float4((this.e423 * right_anti_dual.e3215) + (this.e235 * right_anti_dual.e1234), (this.e431 * right_anti_dual.e3215) + (this.e315 * right_anti_dual.e1234), (this.e412 * right_anti_dual.e3215) + (this.e125 * right_anti_dual.e1234), -(this.e425 * right_anti_dual.e4315) - (this.e435 * right_anti_dual.e4125)) - (this.group1.wwwx * right_anti_dual.group3.xyzx), 
             /* e15, e25, e35, scalar */
@@ -3068,48 +2968,45 @@ extension Circle: WeightContraction<AntiDipoleInversion> {
         );
     }
 }
-extension Circle: WeightContraction<AntiDualNum> {
-    associatedtype Output = Circle;
-    func weight_contraction(other: AntiDualNum) -> Output {
-        DualNum right_anti_dual = DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(other.group0.xy, 0.0, 0.0)
+public extension Circle {
+    public Circle weight_contraction(AntiDualNum other) {
+        DualNum right_anti_dual = DualNum(
+            /* e5, e12345 */
+            other.group0.xy
         );
-        return Circle.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(right_anti_dual.e12345) * this.group0.xyz, 0.0), 
+        return Circle(
+            /* e423, e431, e412 */
+            float3(right_anti_dual.e12345) * this.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(right_anti_dual.e12345) * this.group1, 
-            /* e235, e315, e125, 0 */
-            float4(float3(right_anti_dual.e12345) * this.group2.xyz, 0.0)
+            /* e235, e315, e125 */
+            float3(right_anti_dual.e12345) * this.group2.xyz
         );
     }
 }
-extension Circle: WeightContraction<AntiFlatPoint> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: AntiFlatPoint) -> Output {
-        FlatPoint right_anti_dual = FlatPoint.from_groups(
+public extension Circle {
+    public Scalar weight_contraction(AntiFlatPoint other) {
+        FlatPoint right_anti_dual = FlatPoint(
             /* e15, e25, e35, e45 */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(-(this.e423 * right_anti_dual.e15) - (this.e431 * right_anti_dual.e25) - (this.e412 * right_anti_dual.e35) - (this.e321 * right_anti_dual.e45), 0.0, 0.0, 0.0)
+        return Scalar(
+            /* scalar */
+            -(this.e423 * right_anti_dual.e15) - (this.e431 * right_anti_dual.e25) - (this.e412 * right_anti_dual.e35) - (this.e321 * right_anti_dual.e45)
         );
     }
 }
-extension Circle: WeightContraction<AntiFlector> {
-    associatedtype Output = AntiCircleRotor;
-    func weight_contraction(other: AntiFlector) -> Output {
-        Flector right_anti_dual = Flector.from_groups(
+public extension Circle {
+    public AntiCircleRotor weight_contraction(AntiFlector other) {
+        Flector right_anti_dual = Flector(
             /* e15, e25, e35, e45 */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e4235, e4315, e4125, e3215 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4((this.group0.xyz.zxy * right_anti_dual.group1.yzx) - (this.group0.xyz.yzx * right_anti_dual.group1.zxy), 0.0), 
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            (this.group0.xyz.zxy * right_anti_dual.group1.yzx) - (this.group0.xyz.yzx * right_anti_dual.group1.zxy), 
             /* e23, e31, e12, e45 */
             float4(this.e423 * right_anti_dual.e3215, this.e431 * right_anti_dual.e3215, this.e412 * right_anti_dual.e3215, -(this.e425 * right_anti_dual.e4315) - (this.e435 * right_anti_dual.e4125)) - (this.group1.wwwx * right_anti_dual.group1.xyzx), 
             /* e15, e25, e35, scalar */
@@ -3117,35 +3014,33 @@ extension Circle: WeightContraction<AntiFlector> {
         );
     }
 }
-extension Circle: WeightContraction<AntiLine> {
-    associatedtype Output = RoundPoint;
-    func weight_contraction(other: AntiLine) -> Output {
-        Line right_anti_dual = Line.from_groups(
-            /* e415, e425, e435, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group1.xyz * float3(-1.0), 0.0)
+public extension Circle {
+    public RoundPoint weight_contraction(AntiLine other) {
+        Line right_anti_dual = Line(
+            /* e415, e425, e435 */
+            other.group0.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            other.group1.xyz * float3(-1.0)
         );
-        return RoundPoint.from_groups(
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4((this.e412 * right_anti_dual.e315) + (this.e321 * right_anti_dual.e415), (this.e423 * right_anti_dual.e125) + (this.e321 * right_anti_dual.e425), (this.e431 * right_anti_dual.e235) + (this.e321 * right_anti_dual.e435), -(this.e431 * right_anti_dual.e425) - (this.e412 * right_anti_dual.e435)) - float4((this.group0.xyz.yzx * right_anti_dual.group1.xyz.zxy), this.e423 * right_anti_dual.e415), 
-            /* e5, 0, 0, 0 */
-            float4(-(this.e415 * right_anti_dual.e235) - (this.e425 * right_anti_dual.e315) - (this.e435 * right_anti_dual.e125) - (this.e235 * right_anti_dual.e415) - (this.e315 * right_anti_dual.e425) - (this.e125 * right_anti_dual.e435), 0.0, 0.0, 0.0)
+            /* e5 */
+            -(this.e415 * right_anti_dual.e235) - (this.e425 * right_anti_dual.e315) - (this.e435 * right_anti_dual.e125) - (this.e235 * right_anti_dual.e415) - (this.e315 * right_anti_dual.e425) - (this.e125 * right_anti_dual.e435)
         );
     }
 }
-extension Circle: WeightContraction<AntiMotor> {
-    associatedtype Output = AntiDipoleInversion;
-    func weight_contraction(other: AntiMotor) -> Output {
-        Motor right_anti_dual = Motor.from_groups(
+public extension Circle {
+    public AntiDipoleInversion weight_contraction(AntiMotor other) {
+        Motor right_anti_dual = Motor(
             /* e415, e425, e435, e12345 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e5 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(right_anti_dual.e12345) * this.group0.xyz, 0.0), 
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(right_anti_dual.e12345) * this.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(right_anti_dual.e12345) * this.group1, 
             /* e235, e315, e125, e4 */
@@ -3155,82 +3050,77 @@ extension Circle: WeightContraction<AntiMotor> {
         );
     }
 }
-extension Circle: WeightContraction<AntiPlane> {
-    associatedtype Output = Dipole;
-    func weight_contraction(other: AntiPlane) -> Output {
-        Plane right_anti_dual = Plane.from_groups(
+public extension Circle {
+    public Dipole weight_contraction(AntiPlane other) {
+        Plane right_anti_dual = Plane(
             /* e4235, e4315, e4125, e3215 */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return Dipole.from_groups(
-            /* e41, e42, e43, 0 */
-            float4((this.group0.xyz.zxy * right_anti_dual.group0.yzx) - (this.group0.xyz.yzx * right_anti_dual.group0.zxy), 0.0), 
+        return Dipole(
+            /* e41, e42, e43 */
+            (this.group0.xyz.zxy * right_anti_dual.group0.yzx) - (this.group0.xyz.yzx * right_anti_dual.group0.zxy), 
             /* e23, e31, e12, e45 */
             float4(this.e423 * right_anti_dual.e3215, this.e431 * right_anti_dual.e3215, this.e412 * right_anti_dual.e3215, -(this.e425 * right_anti_dual.e4315) - (this.e435 * right_anti_dual.e4125)) - (this.group1.wwwx * right_anti_dual.group0.xyzx), 
-            /* e15, e25, e35, 0 */
-            float4((float3(right_anti_dual.e3215) * this.group1.xyz) + (this.group2.xyz.yzx * right_anti_dual.group0.zxy) - (this.group2.xyz.zxy * right_anti_dual.group0.yzx), 0.0)
+            /* e15, e25, e35 */
+            (float3(right_anti_dual.e3215) * this.group1.xyz) + (this.group2.xyz.yzx * right_anti_dual.group0.zxy) - (this.group2.xyz.zxy * right_anti_dual.group0.yzx)
         );
     }
 }
-extension Circle: WeightContraction<Circle> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: Circle) -> Output {
-        Dipole right_anti_dual = Dipole.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension Circle {
+    public Scalar weight_contraction(Circle other) {
+        Dipole right_anti_dual = Dipole(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e15, e25, e35, 0 */
-            float4(other.group2.xyz, 0.0)
+            /* e15, e25, e35 */
+            other.group2.xyz
         );
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(-(this.e423 * right_anti_dual.e15) - (this.e431 * right_anti_dual.e25) - (this.e412 * right_anti_dual.e35) - (this.e415 * right_anti_dual.e23) - (this.e425 * right_anti_dual.e31) - (this.e435 * right_anti_dual.e12) - (this.e321 * right_anti_dual.e45) - (this.e235 * right_anti_dual.e41) - (this.e315 * right_anti_dual.e42) - (this.e125 * right_anti_dual.e43), 0.0, 0.0, 0.0)
+        return Scalar(
+            /* scalar */
+            -(this.e423 * right_anti_dual.e15) - (this.e431 * right_anti_dual.e25) - (this.e412 * right_anti_dual.e35) - (this.e415 * right_anti_dual.e23) - (this.e425 * right_anti_dual.e31) - (this.e435 * right_anti_dual.e12) - (this.e321 * right_anti_dual.e45) - (this.e235 * right_anti_dual.e41) - (this.e315 * right_anti_dual.e42) - (this.e125 * right_anti_dual.e43)
         );
     }
 }
-extension Circle: WeightContraction<CircleRotor> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: CircleRotor) -> Output {
-        AntiCircleRotor right_anti_dual = AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension Circle {
+    public Scalar weight_contraction(CircleRotor other) {
+        AntiCircleRotor right_anti_dual = AntiCircleRotor(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, scalar */
             other.group2 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(-(right_anti_dual.e41 * this.e235) - (right_anti_dual.e42 * this.e315) - (right_anti_dual.e43 * this.e125) - (right_anti_dual.e23 * this.e415) - (right_anti_dual.e31 * this.e425) - (right_anti_dual.e12 * this.e435) - (right_anti_dual.e45 * this.e321) - (right_anti_dual.e15 * this.e423) - (right_anti_dual.e25 * this.e431) - (right_anti_dual.e35 * this.e412), 0.0, 0.0, 0.0)
+        return Scalar(
+            /* scalar */
+            -(right_anti_dual.e41 * this.e235) - (right_anti_dual.e42 * this.e315) - (right_anti_dual.e43 * this.e125) - (right_anti_dual.e23 * this.e415) - (right_anti_dual.e31 * this.e425) - (right_anti_dual.e12 * this.e435) - (right_anti_dual.e45 * this.e321) - (right_anti_dual.e15 * this.e423) - (right_anti_dual.e25 * this.e431) - (right_anti_dual.e35 * this.e412)
         );
     }
 }
-extension Circle: WeightContraction<Dipole> {
-    associatedtype Output = RoundPoint;
-    func weight_contraction(other: Dipole) -> Output {
-        Circle right_anti_dual = Circle.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension Circle {
+    public RoundPoint weight_contraction(Dipole other) {
+        Circle right_anti_dual = Circle(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group2.xyz * float3(-1.0), 0.0)
+            /* e235, e315, e125 */
+            other.group2.xyz * float3(-1.0)
         );
-        return RoundPoint.from_groups(
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4((right_anti_dual.e412 * this.e315) + (right_anti_dual.e415 * this.e321) + (right_anti_dual.e321 * this.e415) + (right_anti_dual.e315 * this.e412), (right_anti_dual.e423 * this.e125) + (right_anti_dual.e425 * this.e321) + (right_anti_dual.e321 * this.e425) + (right_anti_dual.e125 * this.e423), (right_anti_dual.e431 * this.e235) + (right_anti_dual.e435 * this.e321) + (right_anti_dual.e321 * this.e435) + (right_anti_dual.e235 * this.e431), -(right_anti_dual.e412 * this.e435) - (right_anti_dual.e415 * this.e423) - (right_anti_dual.e425 * this.e431) - (right_anti_dual.e435 * this.e412)) - float4((right_anti_dual.group0.xyz.yzx * this.group2.xyz.zxy), right_anti_dual.e423 * this.e415) - float4((right_anti_dual.group2.xyz.zxy * this.group0.xyz.yzx), right_anti_dual.e431 * this.e425), 
-            /* e5, 0, 0, 0 */
-            float4(-(right_anti_dual.e415 * this.e235) - (right_anti_dual.e425 * this.e315) - (right_anti_dual.e435 * this.e125) - (right_anti_dual.e235 * this.e415) - (right_anti_dual.e315 * this.e425) - (right_anti_dual.e125 * this.e435), 0.0, 0.0, 0.0)
+            /* e5 */
+            -(right_anti_dual.e415 * this.e235) - (right_anti_dual.e425 * this.e315) - (right_anti_dual.e435 * this.e125) - (right_anti_dual.e235 * this.e415) - (right_anti_dual.e315 * this.e425) - (right_anti_dual.e125 * this.e435)
         );
     }
 }
-extension Circle: WeightContraction<DipoleInversion> {
-    associatedtype Output = RoundPoint;
-    func weight_contraction(other: DipoleInversion) -> Output {
-        AntiDipoleInversion right_anti_dual = AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension Circle {
+    public RoundPoint weight_contraction(DipoleInversion other) {
+        AntiDipoleInversion right_anti_dual = AntiDipoleInversion(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e4 */
@@ -3238,82 +3128,77 @@ extension Circle: WeightContraction<DipoleInversion> {
             /* e1, e2, e3, e5 */
             other.group3 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return RoundPoint.from_groups(
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4((right_anti_dual.e412 * this.e315) + (right_anti_dual.e415 * this.e321) + (right_anti_dual.e321 * this.e415) + (right_anti_dual.e315 * this.e412), (right_anti_dual.e423 * this.e125) + (right_anti_dual.e425 * this.e321) + (right_anti_dual.e321 * this.e425) + (right_anti_dual.e125 * this.e423), (right_anti_dual.e431 * this.e235) + (right_anti_dual.e435 * this.e321) + (right_anti_dual.e321 * this.e435) + (right_anti_dual.e235 * this.e431), -(right_anti_dual.e412 * this.e435) - (right_anti_dual.e415 * this.e423) - (right_anti_dual.e425 * this.e431) - (right_anti_dual.e435 * this.e412)) - float4((right_anti_dual.group0.xyz.yzx * this.group2.xyz.zxy), right_anti_dual.e423 * this.e415) - float4((this.group0.xyz.yzx * right_anti_dual.group2.zxy), right_anti_dual.e431 * this.e425), 
-            /* e5, 0, 0, 0 */
-            float4(-(right_anti_dual.e415 * this.e235) - (right_anti_dual.e425 * this.e315) - (right_anti_dual.e435 * this.e125) - (right_anti_dual.e235 * this.e415) - (right_anti_dual.e315 * this.e425) - (right_anti_dual.e125 * this.e435), 0.0, 0.0, 0.0)
+            /* e5 */
+            -(right_anti_dual.e415 * this.e235) - (right_anti_dual.e425 * this.e315) - (right_anti_dual.e435 * this.e125) - (right_anti_dual.e235 * this.e415) - (right_anti_dual.e315 * this.e425) - (right_anti_dual.e125 * this.e435)
         );
     }
 }
-extension Circle: WeightContraction<DualNum> {
-    associatedtype Output = AntiLine;
-    func weight_contraction(other: DualNum) -> Output {
-        AntiDualNum right_anti_dual = AntiDualNum.from_groups(
-            /* e3215, scalar, 0, 0 */
-            float4(other.group0.xy * float2(-1.0), 0.0, 0.0)
+public extension Circle {
+    public AntiLine weight_contraction(DualNum other) {
+        AntiDualNum right_anti_dual = AntiDualNum(
+            /* e3215, scalar */
+            other.group0.xy * float2(-1.0)
         );
-        return AntiLine.from_groups(
-            /* e23, e31, e12, 0 */
-            float4(float3(right_anti_dual.e3215) * this.group0.xyz, 0.0), 
-            /* e15, e25, e35, 0 */
-            float4(float3(right_anti_dual.e3215) * this.group1.xyz, 0.0)
+        return AntiLine(
+            /* e23, e31, e12 */
+            float3(right_anti_dual.e3215) * this.group0.xyz, 
+            /* e15, e25, e35 */
+            float3(right_anti_dual.e3215) * this.group1.xyz
         );
     }
 }
-extension Circle: WeightContraction<FlatPoint> {
-    associatedtype Output = AntiPlane;
-    func weight_contraction(other: FlatPoint) -> Output {
-        AntiFlatPoint right_anti_dual = AntiFlatPoint.from_groups(
+public extension Circle {
+    public AntiPlane weight_contraction(FlatPoint other) {
+        AntiFlatPoint right_anti_dual = AntiFlatPoint(
             /* e235, e315, e125, e321 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiPlane.from_groups(
+        return AntiPlane(
             /* e1, e2, e3, e5 */
             float4((right_anti_dual.e315 * this.e412) + (right_anti_dual.e321 * this.e415), (right_anti_dual.e125 * this.e423) + (right_anti_dual.e321 * this.e425), (right_anti_dual.e235 * this.e431) + (right_anti_dual.e321 * this.e435), -(right_anti_dual.e315 * this.e425) - (right_anti_dual.e125 * this.e435)) - float4((this.group0.xyz.yzx * right_anti_dual.group0.zxy), right_anti_dual.e235 * this.e415)
         );
     }
 }
-extension Circle: WeightContraction<Flector> {
-    associatedtype Output = AntiPlane;
-    func weight_contraction(other: Flector) -> Output {
-        AntiFlector right_anti_dual = AntiFlector.from_groups(
+public extension Circle {
+    public AntiPlane weight_contraction(Flector other) {
+        AntiFlector right_anti_dual = AntiFlector(
             /* e235, e315, e125, e321 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e1, e2, e3, e5 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiPlane.from_groups(
+        return AntiPlane(
             /* e1, e2, e3, e5 */
             float4((right_anti_dual.e315 * this.e412) + (right_anti_dual.e321 * this.e415), (right_anti_dual.e125 * this.e423) + (right_anti_dual.e321 * this.e425), (right_anti_dual.e235 * this.e431) + (right_anti_dual.e321 * this.e435), -(right_anti_dual.e315 * this.e425) - (right_anti_dual.e125 * this.e435)) - float4((this.group0.xyz.yzx * right_anti_dual.group0.zxy), right_anti_dual.e235 * this.e415)
         );
     }
 }
-extension Circle: WeightContraction<Line> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: Line) -> Output {
-        AntiLine right_anti_dual = AntiLine.from_groups(
-            /* e23, e31, e12, 0 */
-            float4(other.group0.xyz, 0.0), 
-            /* e15, e25, e35, 0 */
-            float4(other.group1.xyz, 0.0)
+public extension Circle {
+    public Scalar weight_contraction(Line other) {
+        AntiLine right_anti_dual = AntiLine(
+            /* e23, e31, e12 */
+            other.group0.xyz, 
+            /* e15, e25, e35 */
+            other.group1.xyz
         );
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(-(right_anti_dual.e23 * this.e415) - (right_anti_dual.e31 * this.e425) - (right_anti_dual.e12 * this.e435) - (right_anti_dual.e15 * this.e423) - (right_anti_dual.e25 * this.e431) - (right_anti_dual.e35 * this.e412), 0.0, 0.0, 0.0)
+        return Scalar(
+            /* scalar */
+            -(right_anti_dual.e23 * this.e415) - (right_anti_dual.e31 * this.e425) - (right_anti_dual.e12 * this.e435) - (right_anti_dual.e15 * this.e423) - (right_anti_dual.e25 * this.e431) - (right_anti_dual.e35 * this.e412)
         );
     }
 }
-extension Circle: WeightContraction<Motor> {
-    associatedtype Output = AntiMotor;
-    func weight_contraction(other: Motor) -> Output {
-        AntiMotor right_anti_dual = AntiMotor.from_groups(
+public extension Circle {
+    public AntiMotor weight_contraction(Motor other) {
+        AntiMotor right_anti_dual = AntiMotor(
             /* e23, e31, e12, scalar */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, e3215 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiMotor.from_groups(
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4((float3(right_anti_dual.e3215) * this.group0.xyz), -(right_anti_dual.e23 * this.e415) - (right_anti_dual.e31 * this.e425) - (right_anti_dual.e12 * this.e435) - (right_anti_dual.e15 * this.e423) - (right_anti_dual.e25 * this.e431) - (right_anti_dual.e35 * this.e412)), 
             /* e15, e25, e35, e3215 */
@@ -3321,99 +3206,95 @@ extension Circle: WeightContraction<Motor> {
         );
     }
 }
-extension Circle: WeightContraction<MultiVector> {
-    associatedtype Output = MultiVector;
-    func weight_contraction(other: MultiVector) -> Output {
-        MultiVector right_anti_dual = MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(other.group0.xy.yx * float2(-1.0, 1.0), 0.0, 0.0), 
+public extension Circle {
+    public MultiVector weight_contraction(MultiVector other) {
+        MultiVector right_anti_dual = MultiVector(
+            /* scalar, e12345 */
+            other.group0.xy.yx * float2(-1.0, 1.0), 
             /* e1, e2, e3, e4 */
             float4(other.group9.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e5, 0, 0, 0 */
-            float4(other.e3215, 0.0, 0.0, 0.0), 
+            /* e5 */
+            other.e3215, 
             /* e15, e25, e35, e45 */
             float4(other.group8.xyz, other.e321 * -1.0), 
-            /* e41, e42, e43, 0 */
-            float4(other.group7.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group6.xyz, 0.0), 
+            /* e41, e42, e43 */
+            other.group7.xyz, 
+            /* e23, e31, e12 */
+            other.group6.xyz, 
             /* e415, e425, e435, e321 */
             float4(other.group5.xyz, other.e45) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e423, e431, e412, 0 */
-            float4(other.group4.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group3.xyz * float3(-1.0), 0.0), 
+            /* e423, e431, e412 */
+            other.group4.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            other.group3.xyz * float3(-1.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(other.group1.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * -1.0
         );
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(-(this.e423 * right_anti_dual.e15) - (this.e431 * right_anti_dual.e25) - (this.e412 * right_anti_dual.e35) - (this.e415 * right_anti_dual.e23) - (this.e425 * right_anti_dual.e31) - (this.e435 * right_anti_dual.e12) - (this.e321 * right_anti_dual.e45) - (this.e235 * right_anti_dual.e41) - (this.e315 * right_anti_dual.e42) - (this.e125 * right_anti_dual.e43), 0.0), 0.0, 0.0), 
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(-(this.e423 * right_anti_dual.e15) - (this.e431 * right_anti_dual.e25) - (this.e412 * right_anti_dual.e35) - (this.e415 * right_anti_dual.e23) - (this.e425 * right_anti_dual.e31) - (this.e435 * right_anti_dual.e12) - (this.e321 * right_anti_dual.e45) - (this.e235 * right_anti_dual.e41) - (this.e315 * right_anti_dual.e42) - (this.e125 * right_anti_dual.e43), 0.0), 
             /* e1, e2, e3, e4 */
             float4((this.e412 * right_anti_dual.e315) + (this.e415 * right_anti_dual.e321) + (this.e321 * right_anti_dual.e415) + (this.e315 * right_anti_dual.e412), (this.e423 * right_anti_dual.e125) + (this.e425 * right_anti_dual.e321) + (this.e321 * right_anti_dual.e425) + (this.e125 * right_anti_dual.e423), (this.e431 * right_anti_dual.e235) + (this.e435 * right_anti_dual.e321) + (this.e321 * right_anti_dual.e435) + (this.e235 * right_anti_dual.e431), -(this.e412 * right_anti_dual.e435) - (this.e415 * right_anti_dual.e423) - (this.e425 * right_anti_dual.e431) - (this.e435 * right_anti_dual.e412)) - float4((this.group0.xyz.yzx * right_anti_dual.group8.xyz.zxy), this.e423 * right_anti_dual.e415) - float4((this.group2.xyz.zxy * right_anti_dual.group7.xyz.yzx), this.e431 * right_anti_dual.e425), 
-            /* e5, 0, 0, 0 */
-            float4(-(this.e415 * right_anti_dual.e235) - (this.e425 * right_anti_dual.e315) - (this.e435 * right_anti_dual.e125) - (this.e235 * right_anti_dual.e415) - (this.e315 * right_anti_dual.e425) - (this.e125 * right_anti_dual.e435), 0.0, 0.0, 0.0), 
+            /* e5 */
+            -(this.e415 * right_anti_dual.e235) - (this.e425 * right_anti_dual.e315) - (this.e435 * right_anti_dual.e125) - (this.e235 * right_anti_dual.e415) - (this.e315 * right_anti_dual.e425) - (this.e125 * right_anti_dual.e435), 
             /* e15, e25, e35, e45 */
             float4((this.e415 * right_anti_dual.e3215) + (this.e315 * right_anti_dual.e4125), (this.e425 * right_anti_dual.e3215) + (this.e125 * right_anti_dual.e4235), (this.e435 * right_anti_dual.e3215) + (this.e235 * right_anti_dual.e4315), -(this.e425 * right_anti_dual.e4315) - (this.e435 * right_anti_dual.e4125)) - (right_anti_dual.group9.yzxx * float4(this.group2.xyz.zxy, this.e415)), 
-            /* e41, e42, e43, 0 */
-            float4((float3(right_anti_dual.e1234) * this.group1.xyz) + (this.group0.xyz.zxy * right_anti_dual.group9.yzx) - (this.group0.xyz.yzx * right_anti_dual.group9.zxy), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(right_anti_dual.e3215) * this.group0.xyz) + (float3(right_anti_dual.e1234) * this.group2.xyz) - (float3(this.e321) * right_anti_dual.group9.xyz), 0.0), 
+            /* e41, e42, e43 */
+            (float3(right_anti_dual.e1234) * this.group1.xyz) + (this.group0.xyz.zxy * right_anti_dual.group9.yzx) - (this.group0.xyz.yzx * right_anti_dual.group9.zxy), 
+            /* e23, e31, e12 */
+            (float3(right_anti_dual.e3215) * this.group0.xyz) + (float3(right_anti_dual.e1234) * this.group2.xyz) - (float3(this.e321) * right_anti_dual.group9.xyz), 
             /* e415, e425, e435, e321 */
             float4(right_anti_dual.e12345) * this.group1, 
-            /* e423, e431, e412, 0 */
-            float4(float3(right_anti_dual.e12345) * this.group0.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(float3(right_anti_dual.e12345) * this.group2.xyz, 0.0), 
+            /* e423, e431, e412 */
+            float3(right_anti_dual.e12345) * this.group0.xyz, 
+            /* e235, e315, e125 */
+            float3(right_anti_dual.e12345) * this.group2.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension Circle: WeightContraction<RoundPoint> {
-    associatedtype Output = Dipole;
-    func weight_contraction(other: RoundPoint) -> Output {
-        Sphere right_anti_dual = Sphere.from_groups(
+public extension Circle {
+    public Dipole weight_contraction(RoundPoint other) {
+        Sphere right_anti_dual = Sphere(
             /* e4235, e4315, e4125, e3215 */
             float4(other.group0.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * -1.0
         );
-        return Dipole.from_groups(
-            /* e41, e42, e43, 0 */
-            float4((float3(right_anti_dual.e1234) * this.group1.xyz) + (this.group0.xyz.zxy * right_anti_dual.group0.yzx) - (this.group0.xyz.yzx * right_anti_dual.group0.zxy), 0.0), 
+        return Dipole(
+            /* e41, e42, e43 */
+            (float3(right_anti_dual.e1234) * this.group1.xyz) + (this.group0.xyz.zxy * right_anti_dual.group0.yzx) - (this.group0.xyz.yzx * right_anti_dual.group0.zxy), 
             /* e23, e31, e12, e45 */
             float4((this.e423 * right_anti_dual.e3215) + (this.e235 * right_anti_dual.e1234), (this.e431 * right_anti_dual.e3215) + (this.e315 * right_anti_dual.e1234), (this.e412 * right_anti_dual.e3215) + (this.e125 * right_anti_dual.e1234), -(this.e425 * right_anti_dual.e4315) - (this.e435 * right_anti_dual.e4125)) - (this.group1.wwwx * right_anti_dual.group0.xyzx), 
-            /* e15, e25, e35, 0 */
-            float4((float3(right_anti_dual.e3215) * this.group1.xyz) + (this.group2.xyz.yzx * right_anti_dual.group0.zxy) - (this.group2.xyz.zxy * right_anti_dual.group0.yzx), 0.0)
+            /* e15, e25, e35 */
+            (float3(right_anti_dual.e3215) * this.group1.xyz) + (this.group2.xyz.yzx * right_anti_dual.group0.zxy) - (this.group2.xyz.zxy * right_anti_dual.group0.yzx)
         );
     }
 }
-extension Circle: WeightContraction<Scalar> {
-    associatedtype Output = Circle;
-    func weight_contraction(other: Scalar) -> Output {
-        AntiScalar right_anti_dual = AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(other.scalar, 0.0, 0.0, 0.0)
+public extension Circle {
+    public Circle weight_contraction(Scalar other) {
+        AntiScalar right_anti_dual = AntiScalar(
+            /* e12345 */
+            other.scalar
         );
-        return Circle.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(right_anti_dual.e12345) * this.group0.xyz, 0.0), 
+        return Circle(
+            /* e423, e431, e412 */
+            float3(right_anti_dual.e12345) * this.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(right_anti_dual.e12345) * this.group1, 
-            /* e235, e315, e125, 0 */
-            float4(float3(right_anti_dual.e12345) * this.group2.xyz, 0.0)
+            /* e235, e315, e125 */
+            float3(right_anti_dual.e12345) * this.group2.xyz
         );
     }
 }
-extension Circle: WeightContraction<VersorEven> {
-    associatedtype Output = AntiCircleRotor;
-    func weight_contraction(other: VersorEven) -> Output {
-        VersorOdd right_anti_dual = VersorOdd.from_groups(
+public extension Circle {
+    public AntiCircleRotor weight_contraction(VersorEven other) {
+        VersorOdd right_anti_dual = VersorOdd(
             /* e41, e42, e43, scalar */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e23, e31, e12, e45 */
@@ -3423,9 +3304,9 @@ extension Circle: WeightContraction<VersorEven> {
             /* e4235, e4315, e4125, e3215 */
             float4(other.group3.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4((float3(right_anti_dual.e1234) * this.group1.xyz) + (this.group0.xyz.zxy * right_anti_dual.group3.yzx) - (this.group0.xyz.yzx * right_anti_dual.group3.zxy), 0.0), 
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            (float3(right_anti_dual.e1234) * this.group1.xyz) + (this.group0.xyz.zxy * right_anti_dual.group3.yzx) - (this.group0.xyz.yzx * right_anti_dual.group3.zxy), 
             /* e23, e31, e12, e45 */
             float4((this.e423 * right_anti_dual.e3215) + (this.e235 * right_anti_dual.e1234), (this.e431 * right_anti_dual.e3215) + (this.e315 * right_anti_dual.e1234), (this.e412 * right_anti_dual.e3215) + (this.e125 * right_anti_dual.e1234), -(this.e425 * right_anti_dual.e4315) - (this.e435 * right_anti_dual.e4125)) - (this.group1.wwwx * right_anti_dual.group3.xyzx), 
             /* e15, e25, e35, scalar */
@@ -3433,10 +3314,9 @@ extension Circle: WeightContraction<VersorEven> {
         );
     }
 }
-extension Circle: WeightContraction<VersorOdd> {
-    associatedtype Output = AntiDipoleInversion;
-    func weight_contraction(other: VersorOdd) -> Output {
-        VersorEven right_anti_dual = VersorEven.from_groups(
+public extension Circle {
+    public AntiDipoleInversion weight_contraction(VersorOdd other) {
+        VersorEven right_anti_dual = VersorEven(
             /* e423, e431, e412, e12345 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e415, e425, e435, e321 */
@@ -3446,9 +3326,9 @@ extension Circle: WeightContraction<VersorOdd> {
             /* e1, e2, e3, e4 */
             float4(other.group3.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(right_anti_dual.e12345) * this.group0.xyz, 0.0), 
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(right_anti_dual.e12345) * this.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(right_anti_dual.e12345) * this.group1, 
             /* e235, e315, e125, e4 */
@@ -3458,24 +3338,29 @@ extension Circle: WeightContraction<VersorOdd> {
         );
     }
 }
-extension CircleRotor {
-    // Fancy infix trick
-    func operator/(_rhs: WeightContractionInfix) -> WeightContractionInfixPartial<CircleRotor> {
-        return WeightContractionInfixPartial { a: this };
+public extension CircleRotor {
+    // Fancy infix trick (first half)
+    public WeightContractionInfixPartial<CircleRotor> operator /(WeightContractionInfix rhs) {
+        return WeightContractionInfixPartial<CircleRotor>(this);
     }
 }
-extension CircleRotor: WeightContraction<AntiCircleRotor> {
-    associatedtype Output = VersorEven;
-    func weight_contraction(other: AntiCircleRotor) -> Output {
-        CircleRotor right_anti_dual = CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension WeightContractionInfixPartial<CircleRotor> {
+    // Fancy infix trick (second half)
+    public VersorEven operator /(AntiCircleRotor rhs) {
+        return this.a.weight_contraction(rhs);
+    }
+}
+public extension CircleRotor {
+    public VersorEven weight_contraction(AntiCircleRotor other) {
+        CircleRotor right_anti_dual = CircleRotor(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e12345 */
             other.group2 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return VersorEven.from_groups(
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(((float3(right_anti_dual.e12345) * this.group0.xyz) + (float3(this.e12345) * right_anti_dual.group0.xyz)), right_anti_dual.e12345 * this.e12345), 
             /* e415, e425, e435, e321 */
@@ -3487,12 +3372,11 @@ extension CircleRotor: WeightContraction<AntiCircleRotor> {
         );
     }
 }
-extension CircleRotor: WeightContraction<AntiDipoleInversion> {
-    associatedtype Output = VersorOdd;
-    func weight_contraction(other: AntiDipoleInversion) -> Output {
-        DipoleInversion right_anti_dual = DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension CircleRotor {
+    public VersorOdd weight_contraction(AntiDipoleInversion other) {
+        DipoleInversion right_anti_dual = DipoleInversion(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, e1234 */
@@ -3500,7 +3384,7 @@ extension CircleRotor: WeightContraction<AntiDipoleInversion> {
             /* e4235, e4315, e4125, e3215 */
             other.group3 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return VersorOdd.from_groups(
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4((this.e412 * right_anti_dual.e4315) + (this.e415 * right_anti_dual.e1234) + (this.e12345 * right_anti_dual.e41), (this.e423 * right_anti_dual.e4125) + (this.e425 * right_anti_dual.e1234) + (this.e12345 * right_anti_dual.e42), (this.e431 * right_anti_dual.e4235) + (this.e435 * right_anti_dual.e1234) + (this.e12345 * right_anti_dual.e43), -(this.e431 * right_anti_dual.e25) - (this.e412 * right_anti_dual.e35) - (this.e415 * right_anti_dual.e23) - (this.e425 * right_anti_dual.e31) - (this.e435 * right_anti_dual.e12) - (this.e321 * right_anti_dual.e45) - (this.e235 * right_anti_dual.e41) - (this.e315 * right_anti_dual.e42) - (this.e125 * right_anti_dual.e43)) - float4((this.group0.xyz.yzx * right_anti_dual.group3.zxy), this.e423 * right_anti_dual.e15), 
             /* e23, e31, e12, e45 */
@@ -3512,14 +3396,13 @@ extension CircleRotor: WeightContraction<AntiDipoleInversion> {
         );
     }
 }
-extension CircleRotor: WeightContraction<AntiDualNum> {
-    associatedtype Output = VersorEven;
-    func weight_contraction(other: AntiDualNum) -> Output {
-        DualNum right_anti_dual = DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(other.group0.xy, 0.0, 0.0)
+public extension CircleRotor {
+    public VersorEven weight_contraction(AntiDualNum other) {
+        DualNum right_anti_dual = DualNum(
+            /* e5, e12345 */
+            other.group0.xy
         );
-        return VersorEven.from_groups(
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(right_anti_dual.e12345) * float4(this.group0.xyz, this.e12345), 
             /* e415, e425, e435, e321 */
@@ -3531,16 +3414,15 @@ extension CircleRotor: WeightContraction<AntiDualNum> {
         );
     }
 }
-extension CircleRotor: WeightContraction<AntiFlatPoint> {
-    associatedtype Output = AntiCircleRotor;
-    func weight_contraction(other: AntiFlatPoint) -> Output {
-        FlatPoint right_anti_dual = FlatPoint.from_groups(
+public extension CircleRotor {
+    public AntiCircleRotor weight_contraction(AntiFlatPoint other) {
+        FlatPoint right_anti_dual = FlatPoint(
             /* e15, e25, e35, e45 */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            float3(0.0), 
             /* e23, e31, e12, e45 */
             float4(float3(0.0), this.e12345 * right_anti_dual.e45), 
             /* e15, e25, e35, scalar */
@@ -3548,16 +3430,15 @@ extension CircleRotor: WeightContraction<AntiFlatPoint> {
         );
     }
 }
-extension CircleRotor: WeightContraction<AntiFlector> {
-    associatedtype Output = VersorOdd;
-    func weight_contraction(other: AntiFlector) -> Output {
-        Flector right_anti_dual = Flector.from_groups(
+public extension CircleRotor {
+    public VersorOdd weight_contraction(AntiFlector other) {
+        Flector right_anti_dual = Flector(
             /* e15, e25, e35, e45 */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e4235, e4315, e4125, e3215 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return VersorOdd.from_groups(
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(this.e412 * right_anti_dual.e4315, this.e423 * right_anti_dual.e4125, this.e431 * right_anti_dual.e4235, -(this.e431 * right_anti_dual.e25) - (this.e412 * right_anti_dual.e35) - (this.e321 * right_anti_dual.e45)) - float4((this.group0.xyz.yzx * right_anti_dual.group1.zxy), this.e423 * right_anti_dual.e15), 
             /* e23, e31, e12, e45 */
@@ -3569,18 +3450,17 @@ extension CircleRotor: WeightContraction<AntiFlector> {
         );
     }
 }
-extension CircleRotor: WeightContraction<AntiLine> {
-    associatedtype Output = AntiDipoleInversion;
-    func weight_contraction(other: AntiLine) -> Output {
-        Line right_anti_dual = Line.from_groups(
-            /* e415, e425, e435, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group1.xyz * float3(-1.0), 0.0)
+public extension CircleRotor {
+    public AntiDipoleInversion weight_contraction(AntiLine other) {
+        Line right_anti_dual = Line(
+            /* e415, e425, e435 */
+            other.group0.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            other.group1.xyz * float3(-1.0)
         );
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(float3(1.0), 0.0) * float4(right_anti_dual.group0.xyz, 0.0) * float4(this.group2.www, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
             /* e235, e315, e125, e4 */
@@ -3590,16 +3470,15 @@ extension CircleRotor: WeightContraction<AntiLine> {
         );
     }
 }
-extension CircleRotor: WeightContraction<AntiMotor> {
-    associatedtype Output = VersorEven;
-    func weight_contraction(other: AntiMotor) -> Output {
-        Motor right_anti_dual = Motor.from_groups(
+public extension CircleRotor {
+    public VersorEven weight_contraction(AntiMotor other) {
+        Motor right_anti_dual = Motor(
             /* e415, e425, e435, e12345 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e5 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return VersorEven.from_groups(
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(right_anti_dual.e12345) * float4(this.group0.xyz, this.e12345), 
             /* e415, e425, e435, e321 */
@@ -3611,16 +3490,15 @@ extension CircleRotor: WeightContraction<AntiMotor> {
         );
     }
 }
-extension CircleRotor: WeightContraction<AntiPlane> {
-    associatedtype Output = DipoleInversion;
-    func weight_contraction(other: AntiPlane) -> Output {
-        Plane right_anti_dual = Plane.from_groups(
+public extension CircleRotor {
+    public DipoleInversion weight_contraction(AntiPlane other) {
+        Plane right_anti_dual = Plane(
             /* e4235, e4315, e4125, e3215 */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4((this.group0.xyz.zxy * right_anti_dual.group0.yzx) - (this.group0.xyz.yzx * right_anti_dual.group0.zxy), 0.0), 
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            (this.group0.xyz.zxy * right_anti_dual.group0.yzx) - (this.group0.xyz.yzx * right_anti_dual.group0.zxy), 
             /* e23, e31, e12, e45 */
             float4(this.e423 * right_anti_dual.e3215, this.e431 * right_anti_dual.e3215, this.e412 * right_anti_dual.e3215, -(this.e425 * right_anti_dual.e4315) - (this.e435 * right_anti_dual.e4125)) - (this.group1.wwwx * right_anti_dual.group0.xyzx), 
             /* e15, e25, e35, e1234 */
@@ -3630,29 +3508,27 @@ extension CircleRotor: WeightContraction<AntiPlane> {
         );
     }
 }
-extension CircleRotor: WeightContraction<AntiScalar> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: AntiScalar) -> Output {
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(other.e12345 * this.e12345 * -1.0, 0.0, 0.0, 0.0)
+public extension CircleRotor {
+    public Scalar weight_contraction(AntiScalar other) {
+        return Scalar(
+            /* scalar */
+            other.e12345 * this.e12345 * -1.0
         );
     }
 }
-extension CircleRotor: WeightContraction<Circle> {
-    associatedtype Output = AntiCircleRotor;
-    func weight_contraction(other: Circle) -> Output {
-        Dipole right_anti_dual = Dipole.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension CircleRotor {
+    public AntiCircleRotor weight_contraction(Circle other) {
+        Dipole right_anti_dual = Dipole(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e15, e25, e35, 0 */
-            float4(other.group2.xyz, 0.0)
+            /* e15, e25, e35 */
+            other.group2.xyz
         );
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(this.e12345) * right_anti_dual.group0.xyz, 0.0), 
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            float3(this.e12345) * right_anti_dual.group0.xyz, 
             /* e23, e31, e12, e45 */
             float4(this.e12345) * right_anti_dual.group1, 
             /* e15, e25, e35, scalar */
@@ -3660,20 +3536,19 @@ extension CircleRotor: WeightContraction<Circle> {
         );
     }
 }
-extension CircleRotor: WeightContraction<CircleRotor> {
-    associatedtype Output = AntiCircleRotor;
-    func weight_contraction(other: CircleRotor) -> Output {
-        AntiCircleRotor right_anti_dual = AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension CircleRotor {
+    public AntiCircleRotor weight_contraction(CircleRotor other) {
+        AntiCircleRotor right_anti_dual = AntiCircleRotor(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, scalar */
             other.group2 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(this.e12345) * right_anti_dual.group0.xyz, 0.0), 
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            float3(this.e12345) * right_anti_dual.group0.xyz, 
             /* e23, e31, e12, e45 */
             float4(this.e12345) * right_anti_dual.group1, 
             /* e15, e25, e35, scalar */
@@ -3681,20 +3556,19 @@ extension CircleRotor: WeightContraction<CircleRotor> {
         );
     }
 }
-extension CircleRotor: WeightContraction<Dipole> {
-    associatedtype Output = AntiDipoleInversion;
-    func weight_contraction(other: Dipole) -> Output {
-        Circle right_anti_dual = Circle.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension CircleRotor {
+    public AntiDipoleInversion weight_contraction(Dipole other) {
+        Circle right_anti_dual = Circle(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group2.xyz * float3(-1.0), 0.0)
+            /* e235, e315, e125 */
+            other.group2.xyz * float3(-1.0)
         );
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(this.e12345) * right_anti_dual.group0.xyz, 0.0), 
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(this.e12345) * right_anti_dual.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(this.e12345) * right_anti_dual.group1, 
             /* e235, e315, e125, e4 */
@@ -3704,12 +3578,11 @@ extension CircleRotor: WeightContraction<Dipole> {
         );
     }
 }
-extension CircleRotor: WeightContraction<DipoleInversion> {
-    associatedtype Output = AntiDipoleInversion;
-    func weight_contraction(other: DipoleInversion) -> Output {
-        AntiDipoleInversion right_anti_dual = AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension CircleRotor {
+    public AntiDipoleInversion weight_contraction(DipoleInversion other) {
+        AntiDipoleInversion right_anti_dual = AntiDipoleInversion(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e4 */
@@ -3717,9 +3590,9 @@ extension CircleRotor: WeightContraction<DipoleInversion> {
             /* e1, e2, e3, e5 */
             other.group3 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(this.e12345) * right_anti_dual.group0.xyz, 0.0), 
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(this.e12345) * right_anti_dual.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(this.e12345) * right_anti_dual.group1, 
             /* e235, e315, e125, e4 */
@@ -3729,14 +3602,13 @@ extension CircleRotor: WeightContraction<DipoleInversion> {
         );
     }
 }
-extension CircleRotor: WeightContraction<DualNum> {
-    associatedtype Output = AntiMotor;
-    func weight_contraction(other: DualNum) -> Output {
-        AntiDualNum right_anti_dual = AntiDualNum.from_groups(
-            /* e3215, scalar, 0, 0 */
-            float4(other.group0.xy * float2(-1.0), 0.0, 0.0)
+public extension CircleRotor {
+    public AntiMotor weight_contraction(DualNum other) {
+        AntiDualNum right_anti_dual = AntiDualNum(
+            /* e3215, scalar */
+            other.group0.xy * float2(-1.0)
         );
-        return AntiMotor.from_groups(
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(right_anti_dual.group0.xy.xx, right_anti_dual.e3215, right_anti_dual.scalar) * float4(this.group0.xyz, this.e12345), 
             /* e15, e25, e35, e3215 */
@@ -3744,14 +3616,13 @@ extension CircleRotor: WeightContraction<DualNum> {
         );
     }
 }
-extension CircleRotor: WeightContraction<FlatPoint> {
-    associatedtype Output = AntiFlector;
-    func weight_contraction(other: FlatPoint) -> Output {
-        AntiFlatPoint right_anti_dual = AntiFlatPoint.from_groups(
+public extension CircleRotor {
+    public AntiFlector weight_contraction(FlatPoint other) {
+        AntiFlatPoint right_anti_dual = AntiFlatPoint(
             /* e235, e315, e125, e321 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiFlector.from_groups(
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(this.e12345) * right_anti_dual.group0, 
             /* e1, e2, e3, e5 */
@@ -3759,16 +3630,15 @@ extension CircleRotor: WeightContraction<FlatPoint> {
         );
     }
 }
-extension CircleRotor: WeightContraction<Flector> {
-    associatedtype Output = AntiFlector;
-    func weight_contraction(other: Flector) -> Output {
-        AntiFlector right_anti_dual = AntiFlector.from_groups(
+public extension CircleRotor {
+    public AntiFlector weight_contraction(Flector other) {
+        AntiFlector right_anti_dual = AntiFlector(
             /* e235, e315, e125, e321 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e1, e2, e3, e5 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiFlector.from_groups(
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(this.e12345) * right_anti_dual.group0, 
             /* e1, e2, e3, e5 */
@@ -3776,16 +3646,15 @@ extension CircleRotor: WeightContraction<Flector> {
         );
     }
 }
-extension CircleRotor: WeightContraction<Line> {
-    associatedtype Output = AntiMotor;
-    func weight_contraction(other: Line) -> Output {
-        AntiLine right_anti_dual = AntiLine.from_groups(
-            /* e23, e31, e12, 0 */
-            float4(other.group0.xyz, 0.0), 
-            /* e15, e25, e35, 0 */
-            float4(other.group1.xyz, 0.0)
+public extension CircleRotor {
+    public AntiMotor weight_contraction(Line other) {
+        AntiLine right_anti_dual = AntiLine(
+            /* e23, e31, e12 */
+            other.group0.xyz, 
+            /* e15, e25, e35 */
+            other.group1.xyz
         );
-        return AntiMotor.from_groups(
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4((float3(this.e12345) * right_anti_dual.group0.xyz), -(right_anti_dual.e23 * this.e415) - (right_anti_dual.e31 * this.e425) - (right_anti_dual.e12 * this.e435) - (right_anti_dual.e15 * this.e423) - (right_anti_dual.e25 * this.e431) - (right_anti_dual.e35 * this.e412)), 
             /* e15, e25, e35, e3215 */
@@ -3793,16 +3662,15 @@ extension CircleRotor: WeightContraction<Line> {
         );
     }
 }
-extension CircleRotor: WeightContraction<Motor> {
-    associatedtype Output = AntiMotor;
-    func weight_contraction(other: Motor) -> Output {
-        AntiMotor right_anti_dual = AntiMotor.from_groups(
+public extension CircleRotor {
+    public AntiMotor weight_contraction(Motor other) {
+        AntiMotor right_anti_dual = AntiMotor(
             /* e23, e31, e12, scalar */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, e3215 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiMotor.from_groups(
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(right_anti_dual.e23 * this.e12345, right_anti_dual.e31 * this.e12345, right_anti_dual.e12 * this.e12345, -(right_anti_dual.e23 * this.e415) - (right_anti_dual.e31 * this.e425) - (right_anti_dual.e12 * this.e435) - (right_anti_dual.e15 * this.e423) - (right_anti_dual.e25 * this.e431) - (right_anti_dual.e35 * this.e412)) + float4((this.group0.xyz * right_anti_dual.group1.www), right_anti_dual.scalar * this.e12345), 
             /* e15, e25, e35, e3215 */
@@ -3810,80 +3678,77 @@ extension CircleRotor: WeightContraction<Motor> {
         );
     }
 }
-extension CircleRotor: WeightContraction<MultiVector> {
-    associatedtype Output = MultiVector;
-    func weight_contraction(other: MultiVector) -> Output {
-        MultiVector right_anti_dual = MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(other.group0.xy.yx * float2(-1.0, 1.0), 0.0, 0.0), 
+public extension CircleRotor {
+    public MultiVector weight_contraction(MultiVector other) {
+        MultiVector right_anti_dual = MultiVector(
+            /* scalar, e12345 */
+            other.group0.xy.yx * float2(-1.0, 1.0), 
             /* e1, e2, e3, e4 */
             float4(other.group9.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e5, 0, 0, 0 */
-            float4(other.e3215, 0.0, 0.0, 0.0), 
+            /* e5 */
+            other.e3215, 
             /* e15, e25, e35, e45 */
             float4(other.group8.xyz, other.e321 * -1.0), 
-            /* e41, e42, e43, 0 */
-            float4(other.group7.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group6.xyz, 0.0), 
+            /* e41, e42, e43 */
+            other.group7.xyz, 
+            /* e23, e31, e12 */
+            other.group6.xyz, 
             /* e415, e425, e435, e321 */
             float4(other.group5.xyz, other.e45) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e423, e431, e412, 0 */
-            float4(other.group4.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group3.xyz * float3(-1.0), 0.0), 
+            /* e423, e431, e412 */
+            other.group4.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            other.group3.xyz * float3(-1.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(other.group1.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * -1.0
         );
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((this.e12345 * right_anti_dual.scalar) - (this.e423 * right_anti_dual.e15) - (this.e431 * right_anti_dual.e25) - (this.e412 * right_anti_dual.e35) - (this.e415 * right_anti_dual.e23) - (this.e425 * right_anti_dual.e31) - (this.e435 * right_anti_dual.e12) - (this.e321 * right_anti_dual.e45) - (this.e235 * right_anti_dual.e41) - (this.e315 * right_anti_dual.e42) - (this.e125 * right_anti_dual.e43), this.e12345 * right_anti_dual.e12345), 0.0, 0.0), 
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((this.e12345 * right_anti_dual.scalar) - (this.e423 * right_anti_dual.e15) - (this.e431 * right_anti_dual.e25) - (this.e412 * right_anti_dual.e35) - (this.e415 * right_anti_dual.e23) - (this.e425 * right_anti_dual.e31) - (this.e435 * right_anti_dual.e12) - (this.e321 * right_anti_dual.e45) - (this.e235 * right_anti_dual.e41) - (this.e315 * right_anti_dual.e42) - (this.e125 * right_anti_dual.e43), this.e12345 * right_anti_dual.e12345), 
             /* e1, e2, e3, e4 */
             float4((this.e415 * right_anti_dual.e321) + (this.e321 * right_anti_dual.e415) + (this.e315 * right_anti_dual.e412) + (this.e12345 * right_anti_dual.e1), (this.e425 * right_anti_dual.e321) + (this.e321 * right_anti_dual.e425) + (this.e125 * right_anti_dual.e423) + (this.e12345 * right_anti_dual.e2), (this.e435 * right_anti_dual.e321) + (this.e321 * right_anti_dual.e435) + (this.e235 * right_anti_dual.e431) + (this.e12345 * right_anti_dual.e3), -(this.e412 * right_anti_dual.e435) - (this.e415 * right_anti_dual.e423) - (this.e425 * right_anti_dual.e431) - (this.e435 * right_anti_dual.e412)) + float4((this.group0.xyz.zxy * right_anti_dual.group8.xyz.yzx), this.e12345 * right_anti_dual.e4) - float4((this.group0.xyz.yzx * right_anti_dual.group8.xyz.zxy), this.e423 * right_anti_dual.e415) - float4((right_anti_dual.group7.xyz.yzx * this.group2.zxy), this.e431 * right_anti_dual.e425), 
-            /* e5, 0, 0, 0 */
-            float4((this.e12345 * right_anti_dual.e5) - (this.e415 * right_anti_dual.e235) - (this.e425 * right_anti_dual.e315) - (this.e435 * right_anti_dual.e125) - (this.e235 * right_anti_dual.e415) - (this.e315 * right_anti_dual.e425) - (this.e125 * right_anti_dual.e435), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (this.e12345 * right_anti_dual.e5) - (this.e415 * right_anti_dual.e235) - (this.e425 * right_anti_dual.e315) - (this.e435 * right_anti_dual.e125) - (this.e235 * right_anti_dual.e415) - (this.e315 * right_anti_dual.e425) - (this.e125 * right_anti_dual.e435), 
             /* e15, e25, e35, e45 */
             float4((this.e315 * right_anti_dual.e4125) + (this.e12345 * right_anti_dual.e15), (this.e125 * right_anti_dual.e4235) + (this.e12345 * right_anti_dual.e25), (this.e235 * right_anti_dual.e4315) + (this.e12345 * right_anti_dual.e35), -(this.e425 * right_anti_dual.e4315) - (this.e435 * right_anti_dual.e4125)) + float4((right_anti_dual.group9.www * this.group1.xyz), this.e12345 * right_anti_dual.e45) - (right_anti_dual.group9.yzxx * float4(this.group2.zxy, this.e415)), 
-            /* e41, e42, e43, 0 */
-            float4((float3(this.e12345) * right_anti_dual.group4.xyz) + (float3(right_anti_dual.e1234) * this.group1.xyz) + (this.group0.xyz.zxy * right_anti_dual.group9.yzx) - (this.group0.xyz.yzx * right_anti_dual.group9.zxy), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(this.e12345) * right_anti_dual.group5.xyz) + (float3(right_anti_dual.e3215) * this.group0.xyz) + (float3(right_anti_dual.e1234) * this.group2.xyz) - (float3(this.e321) * right_anti_dual.group9.xyz), 0.0), 
+            /* e41, e42, e43 */
+            (float3(this.e12345) * right_anti_dual.group4.xyz) + (float3(right_anti_dual.e1234) * this.group1.xyz) + (this.group0.xyz.zxy * right_anti_dual.group9.yzx) - (this.group0.xyz.yzx * right_anti_dual.group9.zxy), 
+            /* e23, e31, e12 */
+            (float3(this.e12345) * right_anti_dual.group5.xyz) + (float3(right_anti_dual.e3215) * this.group0.xyz) + (float3(right_anti_dual.e1234) * this.group2.xyz) - (float3(this.e321) * right_anti_dual.group9.xyz), 
             /* e415, e425, e435, e321 */
             (float4(this.e12345) * right_anti_dual.group6) + (float4(right_anti_dual.e12345) * this.group1), 
-            /* e423, e431, e412, 0 */
-            float4((float3(this.e12345) * right_anti_dual.group7.xyz) + (float3(right_anti_dual.e12345) * this.group0.xyz), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(this.e12345) * right_anti_dual.group8.xyz) + (float3(right_anti_dual.e12345) * this.group2.xyz), 0.0), 
+            /* e423, e431, e412 */
+            (float3(this.e12345) * right_anti_dual.group7.xyz) + (float3(right_anti_dual.e12345) * this.group0.xyz), 
+            /* e235, e315, e125 */
+            (float3(this.e12345) * right_anti_dual.group8.xyz) + (float3(right_anti_dual.e12345) * this.group2.xyz), 
             /* e4235, e4315, e4125, e3215 */
             float4(this.e12345) * right_anti_dual.group9, 
-            /* e1234, 0, 0, 0 */
-            float4(this.e12345 * right_anti_dual.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            this.e12345 * right_anti_dual.e1234
         );
     }
 }
-extension CircleRotor: WeightContraction<Plane> {
-    associatedtype Output = AntiPlane;
-    func weight_contraction(other: Plane) -> Output {
-        return AntiPlane.from_groups(
+public extension CircleRotor {
+    public AntiPlane weight_contraction(Plane other) {
+        return AntiPlane(
             /* e1, e2, e3, e5 */
             float4(this.e12345) * float4(other.e4235 * -1.0, other.e4315 * -1.0, other.e4125 * -1.0, other.e3215)
         );
     }
 }
-extension CircleRotor: WeightContraction<RoundPoint> {
-    associatedtype Output = DipoleInversion;
-    func weight_contraction(other: RoundPoint) -> Output {
-        Sphere right_anti_dual = Sphere.from_groups(
+public extension CircleRotor {
+    public DipoleInversion weight_contraction(RoundPoint other) {
+        Sphere right_anti_dual = Sphere(
             /* e4235, e4315, e4125, e3215 */
             float4(other.group0.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * -1.0
         );
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4((float3(right_anti_dual.e1234) * this.group1.xyz) + (this.group0.xyz.zxy * right_anti_dual.group0.yzx) - (this.group0.xyz.yzx * right_anti_dual.group0.zxy), 0.0), 
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            (float3(right_anti_dual.e1234) * this.group1.xyz) + (this.group0.xyz.zxy * right_anti_dual.group0.yzx) - (this.group0.xyz.yzx * right_anti_dual.group0.zxy), 
             /* e23, e31, e12, e45 */
             float4((this.e423 * right_anti_dual.e3215) + (this.e235 * right_anti_dual.e1234), (this.e431 * right_anti_dual.e3215) + (this.e315 * right_anti_dual.e1234), (this.e412 * right_anti_dual.e3215) + (this.e125 * right_anti_dual.e1234), -(this.e425 * right_anti_dual.e4315) - (this.e435 * right_anti_dual.e4125)) - (this.group1.wwwx * right_anti_dual.group0.xyzx), 
             /* e15, e25, e35, e1234 */
@@ -3893,16 +3758,15 @@ extension CircleRotor: WeightContraction<RoundPoint> {
         );
     }
 }
-extension CircleRotor: WeightContraction<Scalar> {
-    associatedtype Output = CircleRotor;
-    func weight_contraction(other: Scalar) -> Output {
-        AntiScalar right_anti_dual = AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(other.scalar, 0.0, 0.0, 0.0)
+public extension CircleRotor {
+    public CircleRotor weight_contraction(Scalar other) {
+        AntiScalar right_anti_dual = AntiScalar(
+            /* e12345 */
+            other.scalar
         );
-        return CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(right_anti_dual.e12345) * this.group0.xyz, 0.0), 
+        return CircleRotor(
+            /* e423, e431, e412 */
+            float3(right_anti_dual.e12345) * this.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(right_anti_dual.e12345) * this.group1, 
             /* e235, e315, e125, e12345 */
@@ -3910,27 +3774,25 @@ extension CircleRotor: WeightContraction<Scalar> {
         );
     }
 }
-extension CircleRotor: WeightContraction<Sphere> {
-    associatedtype Output = RoundPoint;
-    func weight_contraction(other: Sphere) -> Output {
-        RoundPoint right_anti_dual = RoundPoint.from_groups(
+public extension CircleRotor {
+    public RoundPoint weight_contraction(Sphere other) {
+        RoundPoint right_anti_dual = RoundPoint(
             /* e1, e2, e3, e4 */
             float4(other.group0.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e5, 0, 0, 0 */
-            float4(other.e3215, 0.0, 0.0, 0.0)
+            /* e5 */
+            other.e3215
         );
-        return RoundPoint.from_groups(
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4(this.e12345) * right_anti_dual.group0, 
-            /* e5, 0, 0, 0 */
-            float4(this.e12345 * right_anti_dual.e5, 0.0, 0.0, 0.0)
+            /* e5 */
+            this.e12345 * right_anti_dual.e5
         );
     }
 }
-extension CircleRotor: WeightContraction<VersorEven> {
-    associatedtype Output = VersorOdd;
-    func weight_contraction(other: VersorEven) -> Output {
-        VersorOdd right_anti_dual = VersorOdd.from_groups(
+public extension CircleRotor {
+    public VersorOdd weight_contraction(VersorEven other) {
+        VersorOdd right_anti_dual = VersorOdd(
             /* e41, e42, e43, scalar */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e23, e31, e12, e45 */
@@ -3940,7 +3802,7 @@ extension CircleRotor: WeightContraction<VersorEven> {
             /* e4235, e4315, e4125, e3215 */
             float4(other.group3.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return VersorOdd.from_groups(
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4((this.e415 * right_anti_dual.e1234) + (this.e12345 * right_anti_dual.e41), (this.e425 * right_anti_dual.e1234) + (this.e12345 * right_anti_dual.e42), (this.e435 * right_anti_dual.e1234) + (this.e12345 * right_anti_dual.e43), -(this.e431 * right_anti_dual.e25) - (this.e412 * right_anti_dual.e35) - (this.e415 * right_anti_dual.e23) - (this.e425 * right_anti_dual.e31) - (this.e435 * right_anti_dual.e12) - (this.e321 * right_anti_dual.e45) - (this.e235 * right_anti_dual.e41) - (this.e315 * right_anti_dual.e42) - (this.e125 * right_anti_dual.e43)) + float4((this.group0.xyz.zxy * right_anti_dual.group3.yzx), this.e12345 * right_anti_dual.scalar) - float4((this.group0.xyz.yzx * right_anti_dual.group3.zxy), this.e423 * right_anti_dual.e15), 
             /* e23, e31, e12, e45 */
@@ -3952,10 +3814,9 @@ extension CircleRotor: WeightContraction<VersorEven> {
         );
     }
 }
-extension CircleRotor: WeightContraction<VersorOdd> {
-    associatedtype Output = VersorEven;
-    func weight_contraction(other: VersorOdd) -> Output {
-        VersorEven right_anti_dual = VersorEven.from_groups(
+public extension CircleRotor {
+    public VersorEven weight_contraction(VersorOdd other) {
+        VersorEven right_anti_dual = VersorEven(
             /* e423, e431, e412, e12345 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e415, e425, e435, e321 */
@@ -3965,7 +3826,7 @@ extension CircleRotor: WeightContraction<VersorOdd> {
             /* e1, e2, e3, e4 */
             float4(other.group3.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return VersorEven.from_groups(
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(((float3(this.e12345) * right_anti_dual.group0.xyz) + (float3(right_anti_dual.e12345) * this.group0.xyz)), this.e12345 * right_anti_dual.e12345), 
             /* e415, e425, e435, e321 */
@@ -3977,26 +3838,31 @@ extension CircleRotor: WeightContraction<VersorOdd> {
         );
     }
 }
-extension Dipole {
-    // Fancy infix trick
-    func operator/(_rhs: WeightContractionInfix) -> WeightContractionInfixPartial<Dipole> {
-        return WeightContractionInfixPartial { a: this };
+public extension Dipole {
+    // Fancy infix trick (first half)
+    public WeightContractionInfixPartial<Dipole> operator /(WeightContractionInfix rhs) {
+        return WeightContractionInfixPartial<Dipole>(this);
     }
 }
-extension Dipole: WeightContraction<AntiCircleRotor> {
-    associatedtype Output = AntiCircleRotor;
-    func weight_contraction(other: AntiCircleRotor) -> Output {
-        CircleRotor right_anti_dual = CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension WeightContractionInfixPartial<Dipole> {
+    // Fancy infix trick (second half)
+    public AntiCircleRotor operator /(AntiCircleRotor rhs) {
+        return this.a.weight_contraction(rhs);
+    }
+}
+public extension Dipole {
+    public AntiCircleRotor weight_contraction(AntiCircleRotor other) {
+        CircleRotor right_anti_dual = CircleRotor(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e12345 */
             other.group2 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(right_anti_dual.e12345) * this.group0.xyz, 0.0), 
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            float3(right_anti_dual.e12345) * this.group0.xyz, 
             /* e23, e31, e12, e45 */
             float4(right_anti_dual.e12345) * this.group1, 
             /* e15, e25, e35, scalar */
@@ -4004,12 +3870,11 @@ extension Dipole: WeightContraction<AntiCircleRotor> {
         );
     }
 }
-extension Dipole: WeightContraction<AntiDipoleInversion> {
-    associatedtype Output = RoundPoint;
-    func weight_contraction(other: AntiDipoleInversion) -> Output {
-        DipoleInversion right_anti_dual = DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension Dipole {
+    public RoundPoint weight_contraction(AntiDipoleInversion other) {
+        DipoleInversion right_anti_dual = DipoleInversion(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, e1234 */
@@ -4017,75 +3882,71 @@ extension Dipole: WeightContraction<AntiDipoleInversion> {
             /* e4235, e4315, e4125, e3215 */
             other.group3 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return RoundPoint.from_groups(
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4((this.e41 * right_anti_dual.e3215) + (this.e31 * right_anti_dual.e4125), (this.e42 * right_anti_dual.e3215) + (this.e12 * right_anti_dual.e4235), (this.e43 * right_anti_dual.e3215) + (this.e23 * right_anti_dual.e4315), -(this.e43 * right_anti_dual.e4125) - (this.e45 * right_anti_dual.e1234)) - (right_anti_dual.group3.yzxy * float4(this.group1.zxy, this.e42)) - float4((this.group2.xyz * right_anti_dual.group2.www), this.e41 * right_anti_dual.e4235), 
-            /* e5, 0, 0, 0 */
-            float4((this.e45 * right_anti_dual.e3215) + (this.e15 * right_anti_dual.e4235) + (this.e25 * right_anti_dual.e4315) + (this.e35 * right_anti_dual.e4125), 0.0, 0.0, 0.0)
+            /* e5 */
+            (this.e45 * right_anti_dual.e3215) + (this.e15 * right_anti_dual.e4235) + (this.e25 * right_anti_dual.e4315) + (this.e35 * right_anti_dual.e4125)
         );
     }
 }
-extension Dipole: WeightContraction<AntiDualNum> {
-    associatedtype Output = Dipole;
-    func weight_contraction(other: AntiDualNum) -> Output {
-        DualNum right_anti_dual = DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(other.group0.xy, 0.0, 0.0)
+public extension Dipole {
+    public Dipole weight_contraction(AntiDualNum other) {
+        DualNum right_anti_dual = DualNum(
+            /* e5, e12345 */
+            other.group0.xy
         );
-        return Dipole.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(right_anti_dual.e12345) * this.group0.xyz, 0.0), 
+        return Dipole(
+            /* e41, e42, e43 */
+            float3(right_anti_dual.e12345) * this.group0.xyz, 
             /* e23, e31, e12, e45 */
             float4(right_anti_dual.e12345) * this.group1, 
-            /* e15, e25, e35, 0 */
-            float4(float3(right_anti_dual.e12345) * this.group2.xyz, 0.0)
+            /* e15, e25, e35 */
+            float3(right_anti_dual.e12345) * this.group2.xyz
         );
     }
 }
-extension Dipole: WeightContraction<AntiFlector> {
-    associatedtype Output = RoundPoint;
-    func weight_contraction(other: AntiFlector) -> Output {
-        Flector right_anti_dual = Flector.from_groups(
+public extension Dipole {
+    public RoundPoint weight_contraction(AntiFlector other) {
+        Flector right_anti_dual = Flector(
             /* e15, e25, e35, e45 */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e4235, e4315, e4125, e3215 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return RoundPoint.from_groups(
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4((this.e41 * right_anti_dual.e3215) + (this.e31 * right_anti_dual.e4125), (this.e42 * right_anti_dual.e3215) + (this.e12 * right_anti_dual.e4235), (this.e43 * right_anti_dual.e3215) + (this.e23 * right_anti_dual.e4315), -(this.e42 * right_anti_dual.e4315) - (this.e43 * right_anti_dual.e4125)) - (right_anti_dual.group1.yzxx * float4(this.group1.zxy, this.e41)), 
-            /* e5, 0, 0, 0 */
-            float4((this.e45 * right_anti_dual.e3215) + (this.e15 * right_anti_dual.e4235) + (this.e25 * right_anti_dual.e4315) + (this.e35 * right_anti_dual.e4125), 0.0, 0.0, 0.0)
+            /* e5 */
+            (this.e45 * right_anti_dual.e3215) + (this.e15 * right_anti_dual.e4235) + (this.e25 * right_anti_dual.e4315) + (this.e35 * right_anti_dual.e4125)
         );
     }
 }
-extension Dipole: WeightContraction<AntiLine> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: AntiLine) -> Output {
-        Line right_anti_dual = Line.from_groups(
-            /* e415, e425, e435, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group1.xyz * float3(-1.0), 0.0)
+public extension Dipole {
+    public Scalar weight_contraction(AntiLine other) {
+        Line right_anti_dual = Line(
+            /* e415, e425, e435 */
+            other.group0.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            other.group1.xyz * float3(-1.0)
         );
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(-(this.e41 * right_anti_dual.e235) - (this.e42 * right_anti_dual.e315) - (this.e43 * right_anti_dual.e125) - (this.e23 * right_anti_dual.e415) - (this.e31 * right_anti_dual.e425) - (this.e12 * right_anti_dual.e435), 0.0, 0.0, 0.0)
+        return Scalar(
+            /* scalar */
+            -(this.e41 * right_anti_dual.e235) - (this.e42 * right_anti_dual.e315) - (this.e43 * right_anti_dual.e125) - (this.e23 * right_anti_dual.e415) - (this.e31 * right_anti_dual.e425) - (this.e12 * right_anti_dual.e435)
         );
     }
 }
-extension Dipole: WeightContraction<AntiMotor> {
-    associatedtype Output = AntiCircleRotor;
-    func weight_contraction(other: AntiMotor) -> Output {
-        Motor right_anti_dual = Motor.from_groups(
+public extension Dipole {
+    public AntiCircleRotor weight_contraction(AntiMotor other) {
+        Motor right_anti_dual = Motor(
             /* e415, e425, e435, e12345 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e5 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(right_anti_dual.e12345) * this.group0.xyz, 0.0), 
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            float3(right_anti_dual.e12345) * this.group0.xyz, 
             /* e23, e31, e12, e45 */
             float4(right_anti_dual.e12345) * this.group1, 
             /* e15, e25, e35, scalar */
@@ -4093,44 +3954,41 @@ extension Dipole: WeightContraction<AntiMotor> {
         );
     }
 }
-extension Dipole: WeightContraction<AntiPlane> {
-    associatedtype Output = RoundPoint;
-    func weight_contraction(other: AntiPlane) -> Output {
-        Plane right_anti_dual = Plane.from_groups(
+public extension Dipole {
+    public RoundPoint weight_contraction(AntiPlane other) {
+        Plane right_anti_dual = Plane(
             /* e4235, e4315, e4125, e3215 */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return RoundPoint.from_groups(
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4((this.e41 * right_anti_dual.e3215) + (this.e31 * right_anti_dual.e4125), (this.e42 * right_anti_dual.e3215) + (this.e12 * right_anti_dual.e4235), (this.e43 * right_anti_dual.e3215) + (this.e23 * right_anti_dual.e4315), -(this.e42 * right_anti_dual.e4315) - (this.e43 * right_anti_dual.e4125)) - (right_anti_dual.group0.yzxx * float4(this.group1.zxy, this.e41)), 
-            /* e5, 0, 0, 0 */
-            float4((this.e45 * right_anti_dual.e3215) + (this.e15 * right_anti_dual.e4235) + (this.e25 * right_anti_dual.e4315) + (this.e35 * right_anti_dual.e4125), 0.0, 0.0, 0.0)
+            /* e5 */
+            (this.e45 * right_anti_dual.e3215) + (this.e15 * right_anti_dual.e4235) + (this.e25 * right_anti_dual.e4315) + (this.e35 * right_anti_dual.e4125)
         );
     }
 }
-extension Dipole: WeightContraction<Dipole> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: Dipole) -> Output {
-        Circle right_anti_dual = Circle.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension Dipole {
+    public Scalar weight_contraction(Dipole other) {
+        Circle right_anti_dual = Circle(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group2.xyz * float3(-1.0), 0.0)
+            /* e235, e315, e125 */
+            other.group2.xyz * float3(-1.0)
         );
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(-(right_anti_dual.e423 * this.e15) - (right_anti_dual.e431 * this.e25) - (right_anti_dual.e412 * this.e35) - (right_anti_dual.e415 * this.e23) - (right_anti_dual.e425 * this.e31) - (right_anti_dual.e435 * this.e12) - (right_anti_dual.e321 * this.e45) - (right_anti_dual.e235 * this.e41) - (right_anti_dual.e315 * this.e42) - (right_anti_dual.e125 * this.e43), 0.0, 0.0, 0.0)
+        return Scalar(
+            /* scalar */
+            -(right_anti_dual.e423 * this.e15) - (right_anti_dual.e431 * this.e25) - (right_anti_dual.e412 * this.e35) - (right_anti_dual.e415 * this.e23) - (right_anti_dual.e425 * this.e31) - (right_anti_dual.e435 * this.e12) - (right_anti_dual.e321 * this.e45) - (right_anti_dual.e235 * this.e41) - (right_anti_dual.e315 * this.e42) - (right_anti_dual.e125 * this.e43)
         );
     }
 }
-extension Dipole: WeightContraction<DipoleInversion> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: DipoleInversion) -> Output {
-        AntiDipoleInversion right_anti_dual = AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension Dipole {
+    public Scalar weight_contraction(DipoleInversion other) {
+        AntiDipoleInversion right_anti_dual = AntiDipoleInversion(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e4 */
@@ -4138,155 +3996,147 @@ extension Dipole: WeightContraction<DipoleInversion> {
             /* e1, e2, e3, e5 */
             other.group3 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(-(right_anti_dual.e423 * this.e15) - (right_anti_dual.e431 * this.e25) - (right_anti_dual.e412 * this.e35) - (right_anti_dual.e415 * this.e23) - (right_anti_dual.e425 * this.e31) - (right_anti_dual.e435 * this.e12) - (right_anti_dual.e321 * this.e45) - (right_anti_dual.e235 * this.e41) - (right_anti_dual.e315 * this.e42) - (right_anti_dual.e125 * this.e43), 0.0, 0.0, 0.0)
+        return Scalar(
+            /* scalar */
+            -(right_anti_dual.e423 * this.e15) - (right_anti_dual.e431 * this.e25) - (right_anti_dual.e412 * this.e35) - (right_anti_dual.e415 * this.e23) - (right_anti_dual.e425 * this.e31) - (right_anti_dual.e435 * this.e12) - (right_anti_dual.e321 * this.e45) - (right_anti_dual.e235 * this.e41) - (right_anti_dual.e315 * this.e42) - (right_anti_dual.e125 * this.e43)
         );
     }
 }
-extension Dipole: WeightContraction<DualNum> {
-    associatedtype Output = AntiPlane;
-    func weight_contraction(other: DualNum) -> Output {
-        return AntiPlane.from_groups(
+public extension Dipole {
+    public AntiPlane weight_contraction(DualNum other) {
+        return AntiPlane(
             /* e1, e2, e3, e5 */
             float4(other.e5 * -1.0) * float4(this.group0.xyz, this.e45)
         );
     }
 }
-extension Dipole: WeightContraction<FlatPoint> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: FlatPoint) -> Output {
-        AntiFlatPoint right_anti_dual = AntiFlatPoint.from_groups(
+public extension Dipole {
+    public Scalar weight_contraction(FlatPoint other) {
+        AntiFlatPoint right_anti_dual = AntiFlatPoint(
             /* e235, e315, e125, e321 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(-(right_anti_dual.e235 * this.e41) - (right_anti_dual.e315 * this.e42) - (right_anti_dual.e125 * this.e43) - (right_anti_dual.e321 * this.e45), 0.0, 0.0, 0.0)
+        return Scalar(
+            /* scalar */
+            -(right_anti_dual.e235 * this.e41) - (right_anti_dual.e315 * this.e42) - (right_anti_dual.e125 * this.e43) - (right_anti_dual.e321 * this.e45)
         );
     }
 }
-extension Dipole: WeightContraction<Flector> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: Flector) -> Output {
-        AntiFlector right_anti_dual = AntiFlector.from_groups(
+public extension Dipole {
+    public Scalar weight_contraction(Flector other) {
+        AntiFlector right_anti_dual = AntiFlector(
             /* e235, e315, e125, e321 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e1, e2, e3, e5 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(-(right_anti_dual.e235 * this.e41) - (right_anti_dual.e315 * this.e42) - (right_anti_dual.e125 * this.e43) - (right_anti_dual.e321 * this.e45), 0.0, 0.0, 0.0)
+        return Scalar(
+            /* scalar */
+            -(right_anti_dual.e235 * this.e41) - (right_anti_dual.e315 * this.e42) - (right_anti_dual.e125 * this.e43) - (right_anti_dual.e321 * this.e45)
         );
     }
 }
-extension Dipole: WeightContraction<Motor> {
-    associatedtype Output = AntiPlane;
-    func weight_contraction(other: Motor) -> Output {
-        AntiMotor right_anti_dual = AntiMotor.from_groups(
+public extension Dipole {
+    public AntiPlane weight_contraction(Motor other) {
+        AntiMotor right_anti_dual = AntiMotor(
             /* e23, e31, e12, scalar */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, e3215 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiPlane.from_groups(
+        return AntiPlane(
             /* e1, e2, e3, e5 */
             float4((this.group0.xyz * right_anti_dual.group1.www), right_anti_dual.e3215 * this.e45)
         );
     }
 }
-extension Dipole: WeightContraction<MultiVector> {
-    associatedtype Output = MultiVector;
-    func weight_contraction(other: MultiVector) -> Output {
-        MultiVector right_anti_dual = MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(other.group0.xy.yx * float2(-1.0, 1.0), 0.0, 0.0), 
+public extension Dipole {
+    public MultiVector weight_contraction(MultiVector other) {
+        MultiVector right_anti_dual = MultiVector(
+            /* scalar, e12345 */
+            other.group0.xy.yx * float2(-1.0, 1.0), 
             /* e1, e2, e3, e4 */
             float4(other.group9.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e5, 0, 0, 0 */
-            float4(other.e3215, 0.0, 0.0, 0.0), 
+            /* e5 */
+            other.e3215, 
             /* e15, e25, e35, e45 */
             float4(other.group8.xyz, other.e321 * -1.0), 
-            /* e41, e42, e43, 0 */
-            float4(other.group7.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group6.xyz, 0.0), 
+            /* e41, e42, e43 */
+            other.group7.xyz, 
+            /* e23, e31, e12 */
+            other.group6.xyz, 
             /* e415, e425, e435, e321 */
             float4(other.group5.xyz, other.e45) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e423, e431, e412, 0 */
-            float4(other.group4.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group3.xyz * float3(-1.0), 0.0), 
+            /* e423, e431, e412 */
+            other.group4.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            other.group3.xyz * float3(-1.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(other.group1.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * -1.0
         );
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(-(this.e41 * right_anti_dual.e235) - (this.e42 * right_anti_dual.e315) - (this.e43 * right_anti_dual.e125) - (this.e23 * right_anti_dual.e415) - (this.e31 * right_anti_dual.e425) - (this.e12 * right_anti_dual.e435) - (this.e45 * right_anti_dual.e321) - (this.e15 * right_anti_dual.e423) - (this.e25 * right_anti_dual.e431) - (this.e35 * right_anti_dual.e412), 0.0), 0.0, 0.0), 
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(-(this.e41 * right_anti_dual.e235) - (this.e42 * right_anti_dual.e315) - (this.e43 * right_anti_dual.e125) - (this.e23 * right_anti_dual.e415) - (this.e31 * right_anti_dual.e425) - (this.e12 * right_anti_dual.e435) - (this.e45 * right_anti_dual.e321) - (this.e15 * right_anti_dual.e423) - (this.e25 * right_anti_dual.e431) - (this.e35 * right_anti_dual.e412), 0.0), 
             /* e1, e2, e3, e4 */
             float4((this.e41 * right_anti_dual.e3215) + (this.e31 * right_anti_dual.e4125), (this.e42 * right_anti_dual.e3215) + (this.e12 * right_anti_dual.e4235), (this.e43 * right_anti_dual.e3215) + (this.e23 * right_anti_dual.e4315), -(this.e43 * right_anti_dual.e4125) - (this.e45 * right_anti_dual.e1234)) - (right_anti_dual.group9.yzxy * float4(this.group1.zxy, this.e42)) - float4((float3(right_anti_dual.e1234) * this.group2.xyz), this.e41 * right_anti_dual.e4235), 
-            /* e5, 0, 0, 0 */
-            float4((this.e45 * right_anti_dual.e3215) + (this.e15 * right_anti_dual.e4235) + (this.e25 * right_anti_dual.e4315) + (this.e35 * right_anti_dual.e4125), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (this.e45 * right_anti_dual.e3215) + (this.e15 * right_anti_dual.e4235) + (this.e25 * right_anti_dual.e4315) + (this.e35 * right_anti_dual.e4125), 
             /* e15, e25, e35, e45 */
             float4(right_anti_dual.e12345) * float4(this.group2.xyz, this.e45), 
-            /* e41, e42, e43, 0 */
-            float4(float3(right_anti_dual.e12345) * this.group0.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(float3(right_anti_dual.e12345) * this.group1.xyz, 0.0), 
+            /* e41, e42, e43 */
+            float3(right_anti_dual.e12345) * this.group0.xyz, 
+            /* e23, e31, e12 */
+            float3(right_anti_dual.e12345) * this.group1.xyz, 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(0.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension Dipole: WeightContraction<RoundPoint> {
-    associatedtype Output = RoundPoint;
-    func weight_contraction(other: RoundPoint) -> Output {
-        Sphere right_anti_dual = Sphere.from_groups(
+public extension Dipole {
+    public RoundPoint weight_contraction(RoundPoint other) {
+        Sphere right_anti_dual = Sphere(
             /* e4235, e4315, e4125, e3215 */
             float4(other.group0.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * -1.0
         );
-        return RoundPoint.from_groups(
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4((this.e41 * right_anti_dual.e3215) + (this.e31 * right_anti_dual.e4125), (this.e42 * right_anti_dual.e3215) + (this.e12 * right_anti_dual.e4235), (this.e43 * right_anti_dual.e3215) + (this.e23 * right_anti_dual.e4315), -(this.e43 * right_anti_dual.e4125) - (this.e45 * right_anti_dual.e1234)) - (right_anti_dual.group0.yzxy * float4(this.group1.zxy, this.e42)) - float4((float3(right_anti_dual.e1234) * this.group2.xyz), this.e41 * right_anti_dual.e4235), 
-            /* e5, 0, 0, 0 */
-            float4((this.e45 * right_anti_dual.e3215) + (this.e15 * right_anti_dual.e4235) + (this.e25 * right_anti_dual.e4315) + (this.e35 * right_anti_dual.e4125), 0.0, 0.0, 0.0)
+            /* e5 */
+            (this.e45 * right_anti_dual.e3215) + (this.e15 * right_anti_dual.e4235) + (this.e25 * right_anti_dual.e4315) + (this.e35 * right_anti_dual.e4125)
         );
     }
 }
-extension Dipole: WeightContraction<Scalar> {
-    associatedtype Output = Dipole;
-    func weight_contraction(other: Scalar) -> Output {
-        AntiScalar right_anti_dual = AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(other.scalar, 0.0, 0.0, 0.0)
+public extension Dipole {
+    public Dipole weight_contraction(Scalar other) {
+        AntiScalar right_anti_dual = AntiScalar(
+            /* e12345 */
+            other.scalar
         );
-        return Dipole.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(right_anti_dual.e12345) * this.group0.xyz, 0.0), 
+        return Dipole(
+            /* e41, e42, e43 */
+            float3(right_anti_dual.e12345) * this.group0.xyz, 
             /* e23, e31, e12, e45 */
             float4(right_anti_dual.e12345) * this.group1, 
-            /* e15, e25, e35, 0 */
-            float4(float3(right_anti_dual.e12345) * this.group2.xyz, 0.0)
+            /* e15, e25, e35 */
+            float3(right_anti_dual.e12345) * this.group2.xyz
         );
     }
 }
-extension Dipole: WeightContraction<VersorEven> {
-    associatedtype Output = RoundPoint;
-    func weight_contraction(other: VersorEven) -> Output {
-        VersorOdd right_anti_dual = VersorOdd.from_groups(
+public extension Dipole {
+    public RoundPoint weight_contraction(VersorEven other) {
+        VersorOdd right_anti_dual = VersorOdd(
             /* e41, e42, e43, scalar */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e23, e31, e12, e45 */
@@ -4296,18 +4146,17 @@ extension Dipole: WeightContraction<VersorEven> {
             /* e4235, e4315, e4125, e3215 */
             float4(other.group3.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return RoundPoint.from_groups(
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4((this.e41 * right_anti_dual.e3215) + (this.e31 * right_anti_dual.e4125), (this.e42 * right_anti_dual.e3215) + (this.e12 * right_anti_dual.e4235), (this.e43 * right_anti_dual.e3215) + (this.e23 * right_anti_dual.e4315), -(this.e43 * right_anti_dual.e4125) - (this.e45 * right_anti_dual.e1234)) - (right_anti_dual.group3.yzxy * float4(this.group1.zxy, this.e42)) - float4((this.group2.xyz * right_anti_dual.group2.www), this.e41 * right_anti_dual.e4235), 
-            /* e5, 0, 0, 0 */
-            float4((this.e45 * right_anti_dual.e3215) + (this.e15 * right_anti_dual.e4235) + (this.e25 * right_anti_dual.e4315) + (this.e35 * right_anti_dual.e4125), 0.0, 0.0, 0.0)
+            /* e5 */
+            (this.e45 * right_anti_dual.e3215) + (this.e15 * right_anti_dual.e4235) + (this.e25 * right_anti_dual.e4315) + (this.e35 * right_anti_dual.e4125)
         );
     }
 }
-extension Dipole: WeightContraction<VersorOdd> {
-    associatedtype Output = AntiCircleRotor;
-    func weight_contraction(other: VersorOdd) -> Output {
-        VersorEven right_anti_dual = VersorEven.from_groups(
+public extension Dipole {
+    public AntiCircleRotor weight_contraction(VersorOdd other) {
+        VersorEven right_anti_dual = VersorEven(
             /* e423, e431, e412, e12345 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e415, e425, e435, e321 */
@@ -4317,9 +4166,9 @@ extension Dipole: WeightContraction<VersorOdd> {
             /* e1, e2, e3, e4 */
             float4(other.group3.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(right_anti_dual.e12345) * this.group0.xyz, 0.0), 
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            float3(right_anti_dual.e12345) * this.group0.xyz, 
             /* e23, e31, e12, e45 */
             float4(right_anti_dual.e12345) * this.group1, 
             /* e15, e25, e35, scalar */
@@ -4327,24 +4176,29 @@ extension Dipole: WeightContraction<VersorOdd> {
         );
     }
 }
-extension DipoleInversion {
-    // Fancy infix trick
-    func operator/(_rhs: WeightContractionInfix) -> WeightContractionInfixPartial<DipoleInversion> {
-        return WeightContractionInfixPartial { a: this };
+public extension DipoleInversion {
+    // Fancy infix trick (first half)
+    public WeightContractionInfixPartial<DipoleInversion> operator /(WeightContractionInfix rhs) {
+        return WeightContractionInfixPartial<DipoleInversion>(this);
     }
 }
-extension DipoleInversion: WeightContraction<AntiCircleRotor> {
-    associatedtype Output = VersorOdd;
-    func weight_contraction(other: AntiCircleRotor) -> Output {
-        CircleRotor right_anti_dual = CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension WeightContractionInfixPartial<DipoleInversion> {
+    // Fancy infix trick (second half)
+    public VersorOdd operator /(AntiCircleRotor rhs) {
+        return this.a.weight_contraction(rhs);
+    }
+}
+public extension DipoleInversion {
+    public VersorOdd weight_contraction(AntiCircleRotor other) {
+        CircleRotor right_anti_dual = CircleRotor(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e12345 */
             other.group2 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return VersorOdd.from_groups(
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4((right_anti_dual.e412 * this.e4315) + (right_anti_dual.e415 * this.e1234) + (right_anti_dual.e12345 * this.e41), (right_anti_dual.e423 * this.e4125) + (right_anti_dual.e425 * this.e1234) + (right_anti_dual.e12345 * this.e42), (right_anti_dual.e431 * this.e4235) + (right_anti_dual.e435 * this.e1234) + (right_anti_dual.e12345 * this.e43), -(right_anti_dual.e431 * this.e25) - (right_anti_dual.e412 * this.e35) - (right_anti_dual.e415 * this.e23) - (right_anti_dual.e425 * this.e31) - (right_anti_dual.e435 * this.e12) - (right_anti_dual.e321 * this.e45) - (right_anti_dual.e235 * this.e41) - (right_anti_dual.e315 * this.e42) - (right_anti_dual.e125 * this.e43)) - float4((right_anti_dual.group0.xyz.yzx * this.group3.zxy), right_anti_dual.e423 * this.e15), 
             /* e23, e31, e12, e45 */
@@ -4356,12 +4210,11 @@ extension DipoleInversion: WeightContraction<AntiCircleRotor> {
         );
     }
 }
-extension DipoleInversion: WeightContraction<AntiDipoleInversion> {
-    associatedtype Output = AntiDipoleInversion;
-    func weight_contraction(other: AntiDipoleInversion) -> Output {
-        DipoleInversion right_anti_dual = DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension DipoleInversion {
+    public AntiDipoleInversion weight_contraction(AntiDipoleInversion other) {
+        DipoleInversion right_anti_dual = DipoleInversion(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, e1234 */
@@ -4369,9 +4222,9 @@ extension DipoleInversion: WeightContraction<AntiDipoleInversion> {
             /* e4235, e4315, e4125, e3215 */
             other.group3 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4((float3(this.e1234) * right_anti_dual.group3.xyz) - (float3(right_anti_dual.e1234) * this.group3.xyz), 0.0), 
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            (float3(this.e1234) * right_anti_dual.group3.xyz) - (float3(right_anti_dual.e1234) * this.group3.xyz), 
             /* e415, e425, e435, e321 */
             (right_anti_dual.group3.yzxw * float4(this.group3.zxy, this.e1234)) - (this.group3.yzxw * float4(right_anti_dual.group3.zxy, right_anti_dual.e1234)), 
             /* e235, e315, e125, e4 */
@@ -4381,14 +4234,13 @@ extension DipoleInversion: WeightContraction<AntiDipoleInversion> {
         );
     }
 }
-extension DipoleInversion: WeightContraction<AntiDualNum> {
-    associatedtype Output = VersorOdd;
-    func weight_contraction(other: AntiDualNum) -> Output {
-        DualNum right_anti_dual = DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(other.group0.xy, 0.0, 0.0)
+public extension DipoleInversion {
+    public VersorOdd weight_contraction(AntiDualNum other) {
+        DualNum right_anti_dual = DualNum(
+            /* e5, e12345 */
+            other.group0.xy
         );
-        return VersorOdd.from_groups(
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(right_anti_dual.group0.xy.yy, right_anti_dual.e12345, right_anti_dual.e5) * float4(this.group0.xyz, this.e1234), 
             /* e23, e31, e12, e45 */
@@ -4400,33 +4252,31 @@ extension DipoleInversion: WeightContraction<AntiDualNum> {
         );
     }
 }
-extension DipoleInversion: WeightContraction<AntiFlatPoint> {
-    associatedtype Output = RoundPoint;
-    func weight_contraction(other: AntiFlatPoint) -> Output {
-        FlatPoint right_anti_dual = FlatPoint.from_groups(
+public extension DipoleInversion {
+    public RoundPoint weight_contraction(AntiFlatPoint other) {
+        FlatPoint right_anti_dual = FlatPoint(
             /* e15, e25, e35, e45 */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return RoundPoint.from_groups(
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4(this.e1234) * right_anti_dual.group0, 
-            /* e5, 0, 0, 0 */
-            float4(-(this.e4235 * right_anti_dual.e15) - (this.e4315 * right_anti_dual.e25) - (this.e4125 * right_anti_dual.e35) - (this.e3215 * right_anti_dual.e45), 0.0, 0.0, 0.0)
+            /* e5 */
+            -(this.e4235 * right_anti_dual.e15) - (this.e4315 * right_anti_dual.e25) - (this.e4125 * right_anti_dual.e35) - (this.e3215 * right_anti_dual.e45)
         );
     }
 }
-extension DipoleInversion: WeightContraction<AntiFlector> {
-    associatedtype Output = AntiDipoleInversion;
-    func weight_contraction(other: AntiFlector) -> Output {
-        Flector right_anti_dual = Flector.from_groups(
+public extension DipoleInversion {
+    public AntiDipoleInversion weight_contraction(AntiFlector other) {
+        Flector right_anti_dual = Flector(
             /* e15, e25, e35, e45 */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e4235, e4315, e4125, e3215 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(this.e1234) * right_anti_dual.group1.xyz, 0.0), 
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(this.e1234) * right_anti_dual.group1.xyz, 
             /* e415, e425, e435, e321 */
             float4(((this.group3.zxy * right_anti_dual.group1.yzx) - (this.group3.yzx * right_anti_dual.group1.zxy)), this.e1234 * right_anti_dual.e3215), 
             /* e235, e315, e125, e4 */
@@ -4436,18 +4286,17 @@ extension DipoleInversion: WeightContraction<AntiFlector> {
         );
     }
 }
-extension DipoleInversion: WeightContraction<AntiLine> {
-    associatedtype Output = AntiCircleRotor;
-    func weight_contraction(other: AntiLine) -> Output {
-        Line right_anti_dual = Line.from_groups(
-            /* e415, e425, e435, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group1.xyz * float3(-1.0), 0.0)
+public extension DipoleInversion {
+    public AntiCircleRotor weight_contraction(AntiLine other) {
+        Line right_anti_dual = Line(
+            /* e415, e425, e435 */
+            other.group0.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            other.group1.xyz * float3(-1.0)
         );
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(this.e1234) * right_anti_dual.group0.xyz, 0.0), 
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            float3(this.e1234) * right_anti_dual.group0.xyz, 
             /* e23, e31, e12, e45 */
             float4((float3(this.e1234) * right_anti_dual.group1.xyz), -(this.e4235 * right_anti_dual.e415) - (this.e4315 * right_anti_dual.e425) - (this.e4125 * right_anti_dual.e435)), 
             /* e15, e25, e35, scalar */
@@ -4455,16 +4304,15 @@ extension DipoleInversion: WeightContraction<AntiLine> {
         );
     }
 }
-extension DipoleInversion: WeightContraction<AntiMotor> {
-    associatedtype Output = VersorOdd;
-    func weight_contraction(other: AntiMotor) -> Output {
-        Motor right_anti_dual = Motor.from_groups(
+public extension DipoleInversion {
+    public VersorOdd weight_contraction(AntiMotor other) {
+        Motor right_anti_dual = Motor(
             /* e415, e425, e435, e12345 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e5 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return VersorOdd.from_groups(
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(this.e1234 * right_anti_dual.e415, this.e1234 * right_anti_dual.e425, this.e1234 * right_anti_dual.e435, -(this.e41 * right_anti_dual.e235) - (this.e42 * right_anti_dual.e315) - (this.e43 * right_anti_dual.e125) - (this.e23 * right_anti_dual.e415) - (this.e31 * right_anti_dual.e425) - (this.e12 * right_anti_dual.e435)) + float4((this.group0.xyz * right_anti_dual.group0.www), this.e1234 * right_anti_dual.e5), 
             /* e23, e31, e12, e45 */
@@ -4476,16 +4324,15 @@ extension DipoleInversion: WeightContraction<AntiMotor> {
         );
     }
 }
-extension DipoleInversion: WeightContraction<AntiPlane> {
-    associatedtype Output = AntiDipoleInversion;
-    func weight_contraction(other: AntiPlane) -> Output {
-        Plane right_anti_dual = Plane.from_groups(
+public extension DipoleInversion {
+    public AntiDipoleInversion weight_contraction(AntiPlane other) {
+        Plane right_anti_dual = Plane(
             /* e4235, e4315, e4125, e3215 */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(this.e1234) * right_anti_dual.group0.xyz, 0.0), 
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(this.e1234) * right_anti_dual.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(((this.group3.zxy * right_anti_dual.group0.yzx) - (this.group3.yzx * right_anti_dual.group0.zxy)), this.e1234 * right_anti_dual.e3215), 
             /* e235, e315, e125, e4 */
@@ -4495,58 +4342,55 @@ extension DipoleInversion: WeightContraction<AntiPlane> {
         );
     }
 }
-extension DipoleInversion: WeightContraction<Circle> {
-    associatedtype Output = RoundPoint;
-    func weight_contraction(other: Circle) -> Output {
-        Dipole right_anti_dual = Dipole.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension DipoleInversion {
+    public RoundPoint weight_contraction(Circle other) {
+        Dipole right_anti_dual = Dipole(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e15, e25, e35, 0 */
-            float4(other.group2.xyz, 0.0)
+            /* e15, e25, e35 */
+            other.group2.xyz
         );
-        return RoundPoint.from_groups(
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4(-(right_anti_dual.e41 * this.e3215) - (right_anti_dual.e31 * this.e4125), -(right_anti_dual.e42 * this.e3215) - (right_anti_dual.e12 * this.e4235), -(right_anti_dual.e43 * this.e3215) - (right_anti_dual.e23 * this.e4315), (right_anti_dual.e43 * this.e4125) + (right_anti_dual.e45 * this.e1234)) + (this.group3.yzxy * float4(right_anti_dual.group1.zxy, right_anti_dual.e42)) + float4((right_anti_dual.group2.xyz * this.group2.www), right_anti_dual.e41 * this.e4235), 
-            /* e5, 0, 0, 0 */
-            float4(-(right_anti_dual.e45 * this.e3215) - (right_anti_dual.e15 * this.e4235) - (right_anti_dual.e25 * this.e4315) - (right_anti_dual.e35 * this.e4125), 0.0, 0.0, 0.0)
+            /* e5 */
+            -(right_anti_dual.e45 * this.e3215) - (right_anti_dual.e15 * this.e4235) - (right_anti_dual.e25 * this.e4315) - (right_anti_dual.e35 * this.e4125)
         );
     }
 }
-extension DipoleInversion: WeightContraction<CircleRotor> {
-    associatedtype Output = RoundPoint;
-    func weight_contraction(other: CircleRotor) -> Output {
-        AntiCircleRotor right_anti_dual = AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension DipoleInversion {
+    public RoundPoint weight_contraction(CircleRotor other) {
+        AntiCircleRotor right_anti_dual = AntiCircleRotor(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, scalar */
             other.group2 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return RoundPoint.from_groups(
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4(-(right_anti_dual.e41 * this.e3215) - (right_anti_dual.e31 * this.e4125), -(right_anti_dual.e42 * this.e3215) - (right_anti_dual.e12 * this.e4235), -(right_anti_dual.e43 * this.e3215) - (right_anti_dual.e23 * this.e4315), (right_anti_dual.e43 * this.e4125) + (right_anti_dual.e45 * this.e1234)) + (this.group3.yzxx * float4(right_anti_dual.group1.zxy, right_anti_dual.e41)) + float4((this.group2.www * right_anti_dual.group2.xyz), right_anti_dual.e42 * this.e4315), 
-            /* e5, 0, 0, 0 */
-            float4(-(right_anti_dual.e45 * this.e3215) - (right_anti_dual.e15 * this.e4235) - (right_anti_dual.e25 * this.e4315) - (right_anti_dual.e35 * this.e4125), 0.0, 0.0, 0.0)
+            /* e5 */
+            -(right_anti_dual.e45 * this.e3215) - (right_anti_dual.e15 * this.e4235) - (right_anti_dual.e25 * this.e4315) - (right_anti_dual.e35 * this.e4125)
         );
     }
 }
-extension DipoleInversion: WeightContraction<Dipole> {
-    associatedtype Output = AntiCircleRotor;
-    func weight_contraction(other: Dipole) -> Output {
-        Circle right_anti_dual = Circle.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension DipoleInversion {
+    public AntiCircleRotor weight_contraction(Dipole other) {
+        Circle right_anti_dual = Circle(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group2.xyz * float3(-1.0), 0.0)
+            /* e235, e315, e125 */
+            other.group2.xyz * float3(-1.0)
         );
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4((float3(this.e1234) * right_anti_dual.group1.xyz) + (right_anti_dual.group0.xyz.zxy * this.group3.yzx) - (right_anti_dual.group0.xyz.yzx * this.group3.zxy), 0.0), 
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            (float3(this.e1234) * right_anti_dual.group1.xyz) + (right_anti_dual.group0.xyz.zxy * this.group3.yzx) - (right_anti_dual.group0.xyz.yzx * this.group3.zxy), 
             /* e23, e31, e12, e45 */
             float4((right_anti_dual.e423 * this.e3215) + (right_anti_dual.e235 * this.e1234), (right_anti_dual.e431 * this.e3215) + (right_anti_dual.e315 * this.e1234), (right_anti_dual.e412 * this.e3215) + (right_anti_dual.e125 * this.e1234), -(right_anti_dual.e425 * this.e4315) - (right_anti_dual.e435 * this.e4125)) - (right_anti_dual.group1.wwwx * this.group3.xyzx), 
             /* e15, e25, e35, scalar */
@@ -4554,12 +4398,11 @@ extension DipoleInversion: WeightContraction<Dipole> {
         );
     }
 }
-extension DipoleInversion: WeightContraction<DipoleInversion> {
-    associatedtype Output = AntiCircleRotor;
-    func weight_contraction(other: DipoleInversion) -> Output {
-        AntiDipoleInversion right_anti_dual = AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension DipoleInversion {
+    public AntiCircleRotor weight_contraction(DipoleInversion other) {
+        AntiDipoleInversion right_anti_dual = AntiDipoleInversion(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e4 */
@@ -4567,9 +4410,9 @@ extension DipoleInversion: WeightContraction<DipoleInversion> {
             /* e1, e2, e3, e5 */
             other.group3 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4((float3(this.e1234) * right_anti_dual.group1.xyz) + (right_anti_dual.group0.xyz.zxy * this.group3.yzx) - (right_anti_dual.group0.xyz.yzx * this.group3.zxy), 0.0), 
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            (float3(this.e1234) * right_anti_dual.group1.xyz) + (right_anti_dual.group0.xyz.zxy * this.group3.yzx) - (right_anti_dual.group0.xyz.yzx * this.group3.zxy), 
             /* e23, e31, e12, e45 */
             float4((right_anti_dual.e423 * this.e3215) + (right_anti_dual.e235 * this.e1234), (right_anti_dual.e431 * this.e3215) + (right_anti_dual.e315 * this.e1234), (right_anti_dual.e412 * this.e3215) + (right_anti_dual.e125 * this.e1234), -(right_anti_dual.e425 * this.e4315) - (right_anti_dual.e435 * this.e4125)) - (right_anti_dual.group1.wwwx * this.group3.xyzx), 
             /* e15, e25, e35, scalar */
@@ -4577,14 +4420,13 @@ extension DipoleInversion: WeightContraction<DipoleInversion> {
         );
     }
 }
-extension DipoleInversion: WeightContraction<DualNum> {
-    associatedtype Output = AntiFlector;
-    func weight_contraction(other: DualNum) -> Output {
-        AntiDualNum right_anti_dual = AntiDualNum.from_groups(
-            /* e3215, scalar, 0, 0 */
-            float4(other.group0.xy * float2(-1.0), 0.0, 0.0)
+public extension DipoleInversion {
+    public AntiFlector weight_contraction(DualNum other) {
+        AntiDualNum right_anti_dual = AntiDualNum(
+            /* e3215, scalar */
+            other.group0.xy * float2(-1.0)
         );
-        return AntiFlector.from_groups(
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(right_anti_dual.e3215) * float4(this.group3.xyz, this.e1234), 
             /* e1, e2, e3, e5 */
@@ -4592,14 +4434,13 @@ extension DipoleInversion: WeightContraction<DualNum> {
         );
     }
 }
-extension DipoleInversion: WeightContraction<FlatPoint> {
-    associatedtype Output = AntiMotor;
-    func weight_contraction(other: FlatPoint) -> Output {
-        AntiFlatPoint right_anti_dual = AntiFlatPoint.from_groups(
+public extension DipoleInversion {
+    public AntiMotor weight_contraction(FlatPoint other) {
+        AntiFlatPoint right_anti_dual = AntiFlatPoint(
             /* e235, e315, e125, e321 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiMotor.from_groups(
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(right_anti_dual.e235 * this.e1234, right_anti_dual.e315 * this.e1234, right_anti_dual.e125 * this.e1234, -(right_anti_dual.e315 * this.e42) - (right_anti_dual.e125 * this.e43) - (right_anti_dual.e321 * this.e45)) - float4((right_anti_dual.group0.www * this.group3.xyz), right_anti_dual.e235 * this.e41), 
             /* e15, e25, e35, e3215 */
@@ -4607,16 +4448,15 @@ extension DipoleInversion: WeightContraction<FlatPoint> {
         );
     }
 }
-extension DipoleInversion: WeightContraction<Flector> {
-    associatedtype Output = AntiMotor;
-    func weight_contraction(other: Flector) -> Output {
-        AntiFlector right_anti_dual = AntiFlector.from_groups(
+public extension DipoleInversion {
+    public AntiMotor weight_contraction(Flector other) {
+        AntiFlector right_anti_dual = AntiFlector(
             /* e235, e315, e125, e321 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e1, e2, e3, e5 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiMotor.from_groups(
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(float3(0.0), (right_anti_dual.e2 * this.e4315) + (right_anti_dual.e3 * this.e4125) + (right_anti_dual.e5 * this.e1234) - (right_anti_dual.e315 * this.e42) - (right_anti_dual.e125 * this.e43) - (right_anti_dual.e321 * this.e45)) + float4((this.group2.www * right_anti_dual.group0.xyz), right_anti_dual.e1 * this.e4235) - float4((right_anti_dual.group0.www * this.group3.xyz), right_anti_dual.e235 * this.e41), 
             /* e15, e25, e35, e3215 */
@@ -4624,31 +4464,29 @@ extension DipoleInversion: WeightContraction<Flector> {
         );
     }
 }
-extension DipoleInversion: WeightContraction<Line> {
-    associatedtype Output = AntiPlane;
-    func weight_contraction(other: Line) -> Output {
-        AntiLine right_anti_dual = AntiLine.from_groups(
-            /* e23, e31, e12, 0 */
-            float4(other.group0.xyz, 0.0), 
-            /* e15, e25, e35, 0 */
-            float4(other.group1.xyz, 0.0)
+public extension DipoleInversion {
+    public AntiPlane weight_contraction(Line other) {
+        AntiLine right_anti_dual = AntiLine(
+            /* e23, e31, e12 */
+            other.group0.xyz, 
+            /* e15, e25, e35 */
+            other.group1.xyz
         );
-        return AntiPlane.from_groups(
+        return AntiPlane(
             /* e1, e2, e3, e5 */
             float4((right_anti_dual.e12 * this.e4315) + (right_anti_dual.e15 * this.e1234), (right_anti_dual.e23 * this.e4125) + (right_anti_dual.e25 * this.e1234), (right_anti_dual.e31 * this.e4235) + (right_anti_dual.e35 * this.e1234), -(right_anti_dual.e25 * this.e4315) - (right_anti_dual.e35 * this.e4125)) - (this.group3.zxyx * float4(right_anti_dual.group0.xyz.yzx, right_anti_dual.e15))
         );
     }
 }
-extension DipoleInversion: WeightContraction<Motor> {
-    associatedtype Output = AntiFlector;
-    func weight_contraction(other: Motor) -> Output {
-        AntiMotor right_anti_dual = AntiMotor.from_groups(
+public extension DipoleInversion {
+    public AntiFlector weight_contraction(Motor other) {
+        AntiMotor right_anti_dual = AntiMotor(
             /* e23, e31, e12, scalar */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, e3215 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiFlector.from_groups(
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(right_anti_dual.e3215) * float4(this.group3.xyz, this.e1234), 
             /* e1, e2, e3, e5 */
@@ -4656,84 +4494,81 @@ extension DipoleInversion: WeightContraction<Motor> {
         );
     }
 }
-extension DipoleInversion: WeightContraction<MultiVector> {
-    associatedtype Output = MultiVector;
-    func weight_contraction(other: MultiVector) -> Output {
-        MultiVector right_anti_dual = MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(other.group0.xy.yx * float2(-1.0, 1.0), 0.0, 0.0), 
+public extension DipoleInversion {
+    public MultiVector weight_contraction(MultiVector other) {
+        MultiVector right_anti_dual = MultiVector(
+            /* scalar, e12345 */
+            other.group0.xy.yx * float2(-1.0, 1.0), 
             /* e1, e2, e3, e4 */
             float4(other.group9.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e5, 0, 0, 0 */
-            float4(other.e3215, 0.0, 0.0, 0.0), 
+            /* e5 */
+            other.e3215, 
             /* e15, e25, e35, e45 */
             float4(other.group8.xyz, other.e321 * -1.0), 
-            /* e41, e42, e43, 0 */
-            float4(other.group7.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group6.xyz, 0.0), 
+            /* e41, e42, e43 */
+            other.group7.xyz, 
+            /* e23, e31, e12 */
+            other.group6.xyz, 
             /* e415, e425, e435, e321 */
             float4(other.group5.xyz, other.e45) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e423, e431, e412, 0 */
-            float4(other.group4.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group3.xyz * float3(-1.0), 0.0), 
+            /* e423, e431, e412 */
+            other.group4.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            other.group3.xyz * float3(-1.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(other.group1.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * -1.0
         );
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((this.e1234 * right_anti_dual.e5) + (this.e4235 * right_anti_dual.e1) + (this.e4315 * right_anti_dual.e2) + (this.e4125 * right_anti_dual.e3) + (this.e3215 * right_anti_dual.e4) - (this.e41 * right_anti_dual.e235) - (this.e42 * right_anti_dual.e315) - (this.e43 * right_anti_dual.e125) - (this.e23 * right_anti_dual.e415) - (this.e31 * right_anti_dual.e425) - (this.e12 * right_anti_dual.e435) - (this.e45 * right_anti_dual.e321) - (this.e15 * right_anti_dual.e423) - (this.e25 * right_anti_dual.e431) - (this.e35 * right_anti_dual.e412), 0.0), 0.0, 0.0), 
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((this.e1234 * right_anti_dual.e5) + (this.e4235 * right_anti_dual.e1) + (this.e4315 * right_anti_dual.e2) + (this.e4125 * right_anti_dual.e3) + (this.e3215 * right_anti_dual.e4) - (this.e41 * right_anti_dual.e235) - (this.e42 * right_anti_dual.e315) - (this.e43 * right_anti_dual.e125) - (this.e23 * right_anti_dual.e415) - (this.e31 * right_anti_dual.e425) - (this.e12 * right_anti_dual.e435) - (this.e45 * right_anti_dual.e321) - (this.e15 * right_anti_dual.e423) - (this.e25 * right_anti_dual.e431) - (this.e35 * right_anti_dual.e412), 0.0), 
             /* e1, e2, e3, e4 */
             (float4(this.e1234) * right_anti_dual.group3) + (this.group3.yzxy * float4(right_anti_dual.group5.xyz.zxy, right_anti_dual.e42)) + float4((this.group0.xyz * right_anti_dual.group9.www), this.e4235 * right_anti_dual.e41) + float4((this.group1.yzx * right_anti_dual.group9.zxy), this.e4125 * right_anti_dual.e43) - (float4(right_anti_dual.e1234) * float4(this.group2.xyz, this.e45)) - (right_anti_dual.group9.yzxz * float4(this.group1.zxy, this.e43)) - float4((right_anti_dual.group4.xyz * this.group3.www), this.e41 * right_anti_dual.e4235) - float4((right_anti_dual.group5.xyz.yzx * this.group3.zxy), this.e42 * right_anti_dual.e4315), 
-            /* e5, 0, 0, 0 */
-            float4((this.e45 * right_anti_dual.e3215) + (this.e15 * right_anti_dual.e4235) + (this.e25 * right_anti_dual.e4315) + (this.e35 * right_anti_dual.e4125) - (this.e4235 * right_anti_dual.e15) - (this.e4315 * right_anti_dual.e25) - (this.e4125 * right_anti_dual.e35) - (this.e3215 * right_anti_dual.e45), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (this.e45 * right_anti_dual.e3215) + (this.e15 * right_anti_dual.e4235) + (this.e25 * right_anti_dual.e4315) + (this.e35 * right_anti_dual.e4125) - (this.e4235 * right_anti_dual.e15) - (this.e4315 * right_anti_dual.e25) - (this.e4125 * right_anti_dual.e35) - (this.e3215 * right_anti_dual.e45), 
             /* e15, e25, e35, e45 */
             float4((this.e4125 * right_anti_dual.e315) + (this.e3215 * right_anti_dual.e415), (this.e4235 * right_anti_dual.e125) + (this.e3215 * right_anti_dual.e425), (this.e4315 * right_anti_dual.e235) + (this.e3215 * right_anti_dual.e435), -(this.e4315 * right_anti_dual.e425) - (this.e4125 * right_anti_dual.e435)) + (float4(right_anti_dual.e12345) * float4(this.group2.xyz, this.e45)) - float4((right_anti_dual.group8.xyz.zxy * this.group3.yzx), this.e4235 * right_anti_dual.e415), 
-            /* e41, e42, e43, 0 */
-            float4((float3(this.e1234) * right_anti_dual.group6.xyz) + (float3(right_anti_dual.e12345) * this.group0.xyz) + (right_anti_dual.group7.xyz.zxy * this.group3.yzx) - (right_anti_dual.group7.xyz.yzx * this.group3.zxy), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(this.e1234) * right_anti_dual.group8.xyz) + (float3(this.e3215) * right_anti_dual.group7.xyz) + (float3(right_anti_dual.e12345) * this.group1.xyz) - (float3(right_anti_dual.e321) * this.group3.xyz), 0.0), 
+            /* e41, e42, e43 */
+            (float3(this.e1234) * right_anti_dual.group6.xyz) + (float3(right_anti_dual.e12345) * this.group0.xyz) + (right_anti_dual.group7.xyz.zxy * this.group3.yzx) - (right_anti_dual.group7.xyz.yzx * this.group3.zxy), 
+            /* e23, e31, e12 */
+            (float3(this.e1234) * right_anti_dual.group8.xyz) + (float3(this.e3215) * right_anti_dual.group7.xyz) + (float3(right_anti_dual.e12345) * this.group1.xyz) - (float3(right_anti_dual.e321) * this.group3.xyz), 
             /* e415, e425, e435, e321 */
             (right_anti_dual.group9.yzxw * float4(this.group3.zxy, this.e1234)) - (this.group3.yzxw * float4(right_anti_dual.group9.zxy, right_anti_dual.e1234)), 
-            /* e423, e431, e412, 0 */
-            float4((float3(this.e1234) * right_anti_dual.group9.xyz) - (float3(right_anti_dual.e1234) * this.group3.xyz), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(right_anti_dual.e3215) * this.group3.xyz) - (float3(this.e3215) * right_anti_dual.group9.xyz), 0.0), 
+            /* e423, e431, e412 */
+            (float3(this.e1234) * right_anti_dual.group9.xyz) - (float3(right_anti_dual.e1234) * this.group3.xyz), 
+            /* e235, e315, e125 */
+            (float3(right_anti_dual.e3215) * this.group3.xyz) - (float3(this.e3215) * right_anti_dual.group9.xyz), 
             /* e4235, e4315, e4125, e3215 */
             float4(right_anti_dual.e12345) * this.group3, 
-            /* e1234, 0, 0, 0 */
-            float4(this.e1234 * right_anti_dual.e12345, 0.0, 0.0, 0.0)
+            /* e1234 */
+            this.e1234 * right_anti_dual.e12345
         );
     }
 }
-extension DipoleInversion: WeightContraction<Plane> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: Plane) -> Output {
-        AntiPlane right_anti_dual = AntiPlane.from_groups(
+public extension DipoleInversion {
+    public Scalar weight_contraction(Plane other) {
+        AntiPlane right_anti_dual = AntiPlane(
             /* e1, e2, e3, e5 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4((right_anti_dual.e1 * this.e4235) + (right_anti_dual.e2 * this.e4315) + (right_anti_dual.e3 * this.e4125) + (right_anti_dual.e5 * this.e1234), 0.0, 0.0, 0.0)
+        return Scalar(
+            /* scalar */
+            (right_anti_dual.e1 * this.e4235) + (right_anti_dual.e2 * this.e4315) + (right_anti_dual.e3 * this.e4125) + (right_anti_dual.e5 * this.e1234)
         );
     }
 }
-extension DipoleInversion: WeightContraction<RoundPoint> {
-    associatedtype Output = AntiDipoleInversion;
-    func weight_contraction(other: RoundPoint) -> Output {
-        Sphere right_anti_dual = Sphere.from_groups(
+public extension DipoleInversion {
+    public AntiDipoleInversion weight_contraction(RoundPoint other) {
+        Sphere right_anti_dual = Sphere(
             /* e4235, e4315, e4125, e3215 */
             float4(other.group0.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * -1.0
         );
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4((float3(this.e1234) * right_anti_dual.group0.xyz) - (float3(right_anti_dual.e1234) * this.group3.xyz), 0.0), 
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            (float3(this.e1234) * right_anti_dual.group0.xyz) - (float3(right_anti_dual.e1234) * this.group3.xyz), 
             /* e415, e425, e435, e321 */
             (right_anti_dual.group0.yzxw * float4(this.group3.zxy, this.e1234)) - (this.group3.yzxw * float4(right_anti_dual.group0.zxy, right_anti_dual.e1234)), 
             /* e235, e315, e125, e4 */
@@ -4743,16 +4578,15 @@ extension DipoleInversion: WeightContraction<RoundPoint> {
         );
     }
 }
-extension DipoleInversion: WeightContraction<Scalar> {
-    associatedtype Output = DipoleInversion;
-    func weight_contraction(other: Scalar) -> Output {
-        AntiScalar right_anti_dual = AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(other.scalar, 0.0, 0.0, 0.0)
+public extension DipoleInversion {
+    public DipoleInversion weight_contraction(Scalar other) {
+        AntiScalar right_anti_dual = AntiScalar(
+            /* e12345 */
+            other.scalar
         );
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(right_anti_dual.e12345) * this.group0.xyz, 0.0), 
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            float3(right_anti_dual.e12345) * this.group0.xyz, 
             /* e23, e31, e12, e45 */
             float4(right_anti_dual.e12345) * this.group1, 
             /* e15, e25, e35, e1234 */
@@ -4762,25 +4596,23 @@ extension DipoleInversion: WeightContraction<Scalar> {
         );
     }
 }
-extension DipoleInversion: WeightContraction<Sphere> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: Sphere) -> Output {
-        RoundPoint right_anti_dual = RoundPoint.from_groups(
+public extension DipoleInversion {
+    public Scalar weight_contraction(Sphere other) {
+        RoundPoint right_anti_dual = RoundPoint(
             /* e1, e2, e3, e4 */
             float4(other.group0.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e5, 0, 0, 0 */
-            float4(other.e3215, 0.0, 0.0, 0.0)
+            /* e5 */
+            other.e3215
         );
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4((this.e1234 * right_anti_dual.e5) + (this.e4235 * right_anti_dual.e1) + (this.e4315 * right_anti_dual.e2) + (this.e4125 * right_anti_dual.e3) + (this.e3215 * right_anti_dual.e4), 0.0, 0.0, 0.0)
+        return Scalar(
+            /* scalar */
+            (this.e1234 * right_anti_dual.e5) + (this.e4235 * right_anti_dual.e1) + (this.e4315 * right_anti_dual.e2) + (this.e4125 * right_anti_dual.e3) + (this.e3215 * right_anti_dual.e4)
         );
     }
 }
-extension DipoleInversion: WeightContraction<VersorEven> {
-    associatedtype Output = AntiDipoleInversion;
-    func weight_contraction(other: VersorEven) -> Output {
-        VersorOdd right_anti_dual = VersorOdd.from_groups(
+public extension DipoleInversion {
+    public AntiDipoleInversion weight_contraction(VersorEven other) {
+        VersorOdd right_anti_dual = VersorOdd(
             /* e41, e42, e43, scalar */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e23, e31, e12, e45 */
@@ -4790,9 +4622,9 @@ extension DipoleInversion: WeightContraction<VersorEven> {
             /* e4235, e4315, e4125, e3215 */
             float4(other.group3.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4((float3(this.e1234) * right_anti_dual.group3.xyz) - (float3(right_anti_dual.e1234) * this.group3.xyz), 0.0), 
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            (float3(this.e1234) * right_anti_dual.group3.xyz) - (float3(right_anti_dual.e1234) * this.group3.xyz), 
             /* e415, e425, e435, e321 */
             (right_anti_dual.group3.yzxw * float4(this.group3.zxy, this.e1234)) - (this.group3.yzxw * float4(right_anti_dual.group3.zxy, right_anti_dual.e1234)), 
             /* e235, e315, e125, e4 */
@@ -4802,10 +4634,9 @@ extension DipoleInversion: WeightContraction<VersorEven> {
         );
     }
 }
-extension DipoleInversion: WeightContraction<VersorOdd> {
-    associatedtype Output = VersorOdd;
-    func weight_contraction(other: VersorOdd) -> Output {
-        VersorEven right_anti_dual = VersorEven.from_groups(
+public extension DipoleInversion {
+    public VersorOdd weight_contraction(VersorOdd other) {
+        VersorEven right_anti_dual = VersorEven(
             /* e423, e431, e412, e12345 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e415, e425, e435, e321 */
@@ -4815,7 +4646,7 @@ extension DipoleInversion: WeightContraction<VersorOdd> {
             /* e1, e2, e3, e4 */
             float4(other.group3.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return VersorOdd.from_groups(
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             (this.group3.yzxy * float4(right_anti_dual.group0.zxy, right_anti_dual.e2)) + float4(float3(0.0), (this.e4125 * right_anti_dual.e3) + (this.e3215 * right_anti_dual.e4) - (this.e42 * right_anti_dual.e315) - (this.e43 * right_anti_dual.e125) - (this.e23 * right_anti_dual.e415) - (this.e31 * right_anti_dual.e425) - (this.e12 * right_anti_dual.e435) - (this.e45 * right_anti_dual.e321) - (this.e15 * right_anti_dual.e423) - (this.e25 * right_anti_dual.e431) - (this.e35 * right_anti_dual.e412)) + float4((this.group0.xyz * right_anti_dual.group0.www), this.e1234 * right_anti_dual.e5) + float4((this.group2.www * right_anti_dual.group1.xyz), this.e4235 * right_anti_dual.e1) - float4((this.group3.zxy * right_anti_dual.group0.yzx), this.e41 * right_anti_dual.e235), 
             /* e23, e31, e12, e45 */
@@ -4827,24 +4658,29 @@ extension DipoleInversion: WeightContraction<VersorOdd> {
         );
     }
 }
-extension DualNum {
-    // Fancy infix trick
-    func operator/(_rhs: WeightContractionInfix) -> WeightContractionInfixPartial<DualNum> {
-        return WeightContractionInfixPartial { a: this };
+public extension DualNum {
+    // Fancy infix trick (first half)
+    public WeightContractionInfixPartial<DualNum> operator /(WeightContractionInfix rhs) {
+        return WeightContractionInfixPartial<DualNum>(this);
     }
 }
-extension DualNum: WeightContraction<AntiCircleRotor> {
-    associatedtype Output = VersorEven;
-    func weight_contraction(other: AntiCircleRotor) -> Output {
-        CircleRotor right_anti_dual = CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension WeightContractionInfixPartial<DualNum> {
+    // Fancy infix trick (second half)
+    public VersorEven operator /(AntiCircleRotor rhs) {
+        return this.a.weight_contraction(rhs);
+    }
+}
+public extension DualNum {
+    public VersorEven weight_contraction(AntiCircleRotor other) {
+        CircleRotor right_anti_dual = CircleRotor(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e12345 */
             other.group2 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return VersorEven.from_groups(
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(this.e12345) * float4(right_anti_dual.group0.xyz, right_anti_dual.e12345), 
             /* e415, e425, e435, e321 */
@@ -4856,12 +4692,11 @@ extension DualNum: WeightContraction<AntiCircleRotor> {
         );
     }
 }
-extension DualNum: WeightContraction<AntiDipoleInversion> {
-    associatedtype Output = VersorOdd;
-    func weight_contraction(other: AntiDipoleInversion) -> Output {
-        DipoleInversion right_anti_dual = DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension DualNum {
+    public VersorOdd weight_contraction(AntiDipoleInversion other) {
+        DipoleInversion right_anti_dual = DipoleInversion(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, e1234 */
@@ -4869,7 +4704,7 @@ extension DualNum: WeightContraction<AntiDipoleInversion> {
             /* e4235, e4315, e4125, e3215 */
             other.group3 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return VersorOdd.from_groups(
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(this.group0.xy.yy, this.e12345, this.e5) * float4(right_anti_dual.group0.xyz, right_anti_dual.e1234), 
             /* e23, e31, e12, e45 */
@@ -4881,38 +4716,35 @@ extension DualNum: WeightContraction<AntiDipoleInversion> {
         );
     }
 }
-extension DualNum: WeightContraction<AntiDualNum> {
-    associatedtype Output = DualNum;
-    func weight_contraction(other: AntiDualNum) -> Output {
-        DualNum right_anti_dual = DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(other.group0.xy, 0.0, 0.0)
+public extension DualNum {
+    public DualNum weight_contraction(AntiDualNum other) {
+        DualNum right_anti_dual = DualNum(
+            /* e5, e12345 */
+            other.group0.xy
         );
-        return DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(float2((right_anti_dual.e5 * this.e12345) + (right_anti_dual.e12345 * this.e5), right_anti_dual.e12345 * this.e12345), 0.0, 0.0)
+        return DualNum(
+            /* e5, e12345 */
+            float2((right_anti_dual.e5 * this.e12345) + (right_anti_dual.e12345 * this.e5), right_anti_dual.e12345 * this.e12345)
         );
     }
 }
-extension DualNum: WeightContraction<AntiFlatPoint> {
-    associatedtype Output = FlatPoint;
-    func weight_contraction(other: AntiFlatPoint) -> Output {
-        return FlatPoint.from_groups(
+public extension DualNum {
+    public FlatPoint weight_contraction(AntiFlatPoint other) {
+        return FlatPoint(
             /* e15, e25, e35, e45 */
             float4(this.e12345) * float4(other.group0.xyz, other.e321 * -1.0)
         );
     }
 }
-extension DualNum: WeightContraction<AntiFlector> {
-    associatedtype Output = Flector;
-    func weight_contraction(other: AntiFlector) -> Output {
-        Flector right_anti_dual = Flector.from_groups(
+public extension DualNum {
+    public Flector weight_contraction(AntiFlector other) {
+        Flector right_anti_dual = Flector(
             /* e15, e25, e35, e45 */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e4235, e4315, e4125, e3215 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return Flector.from_groups(
+        return Flector(
             /* e15, e25, e35, e45 */
             float4(this.e12345) * right_anti_dual.group0, 
             /* e4235, e4315, e4125, e3215 */
@@ -4920,33 +4752,31 @@ extension DualNum: WeightContraction<AntiFlector> {
         );
     }
 }
-extension DualNum: WeightContraction<AntiLine> {
-    associatedtype Output = Line;
-    func weight_contraction(other: AntiLine) -> Output {
-        Line right_anti_dual = Line.from_groups(
-            /* e415, e425, e435, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group1.xyz * float3(-1.0), 0.0)
+public extension DualNum {
+    public Line weight_contraction(AntiLine other) {
+        Line right_anti_dual = Line(
+            /* e415, e425, e435 */
+            other.group0.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            other.group1.xyz * float3(-1.0)
         );
-        return Line.from_groups(
-            /* e415, e425, e435, 0 */
-            float4(float3(this.e12345) * right_anti_dual.group0.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(float3(this.e12345) * right_anti_dual.group1.xyz, 0.0)
+        return Line(
+            /* e415, e425, e435 */
+            float3(this.e12345) * right_anti_dual.group0.xyz, 
+            /* e235, e315, e125 */
+            float3(this.e12345) * right_anti_dual.group1.xyz
         );
     }
 }
-extension DualNum: WeightContraction<AntiMotor> {
-    associatedtype Output = Motor;
-    func weight_contraction(other: AntiMotor) -> Output {
-        Motor right_anti_dual = Motor.from_groups(
+public extension DualNum {
+    public Motor weight_contraction(AntiMotor other) {
+        Motor right_anti_dual = Motor(
             /* e415, e425, e435, e12345 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e5 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return Motor.from_groups(
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4(this.e12345) * right_anti_dual.group0, 
             /* e235, e315, e125, e5 */
@@ -4954,59 +4784,55 @@ extension DualNum: WeightContraction<AntiMotor> {
         );
     }
 }
-extension DualNum: WeightContraction<AntiPlane> {
-    associatedtype Output = Plane;
-    func weight_contraction(other: AntiPlane) -> Output {
-        return Plane.from_groups(
+public extension DualNum {
+    public Plane weight_contraction(AntiPlane other) {
+        return Plane(
             /* e4235, e4315, e4125, e3215 */
             float4(this.e12345) * float4(other.group0.xyz, other.e5 * -1.0)
         );
     }
 }
-extension DualNum: WeightContraction<AntiScalar> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: AntiScalar) -> Output {
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(other.e12345 * this.e12345 * -1.0, 0.0, 0.0, 0.0)
+public extension DualNum {
+    public Scalar weight_contraction(AntiScalar other) {
+        return Scalar(
+            /* scalar */
+            other.e12345 * this.e12345 * -1.0
         );
     }
 }
-extension DualNum: WeightContraction<Circle> {
-    associatedtype Output = Dipole;
-    func weight_contraction(other: Circle) -> Output {
-        Dipole right_anti_dual = Dipole.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension DualNum {
+    public Dipole weight_contraction(Circle other) {
+        Dipole right_anti_dual = Dipole(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e15, e25, e35, 0 */
-            float4(other.group2.xyz, 0.0)
+            /* e15, e25, e35 */
+            other.group2.xyz
         );
-        return Dipole.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(this.e12345) * right_anti_dual.group0.xyz, 0.0), 
+        return Dipole(
+            /* e41, e42, e43 */
+            float3(this.e12345) * right_anti_dual.group0.xyz, 
             /* e23, e31, e12, e45 */
             float4(this.e12345) * right_anti_dual.group1, 
-            /* e15, e25, e35, 0 */
-            float4(float3(this.e12345) * right_anti_dual.group2.xyz, 0.0)
+            /* e15, e25, e35 */
+            float3(this.e12345) * right_anti_dual.group2.xyz
         );
     }
 }
-extension DualNum: WeightContraction<CircleRotor> {
-    associatedtype Output = AntiCircleRotor;
-    func weight_contraction(other: CircleRotor) -> Output {
-        AntiCircleRotor right_anti_dual = AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension DualNum {
+    public AntiCircleRotor weight_contraction(CircleRotor other) {
+        AntiCircleRotor right_anti_dual = AntiCircleRotor(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, scalar */
             other.group2 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(this.e12345) * right_anti_dual.group0.xyz, 0.0), 
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            float3(this.e12345) * right_anti_dual.group0.xyz, 
             /* e23, e31, e12, e45 */
             float4(this.e12345) * right_anti_dual.group1, 
             /* e15, e25, e35, scalar */
@@ -5014,33 +4840,31 @@ extension DualNum: WeightContraction<CircleRotor> {
         );
     }
 }
-extension DualNum: WeightContraction<Dipole> {
-    associatedtype Output = Circle;
-    func weight_contraction(other: Dipole) -> Output {
-        Circle right_anti_dual = Circle.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension DualNum {
+    public Circle weight_contraction(Dipole other) {
+        Circle right_anti_dual = Circle(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group2.xyz * float3(-1.0), 0.0)
+            /* e235, e315, e125 */
+            other.group2.xyz * float3(-1.0)
         );
-        return Circle.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(this.e12345) * right_anti_dual.group0.xyz, 0.0), 
+        return Circle(
+            /* e423, e431, e412 */
+            float3(this.e12345) * right_anti_dual.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(this.e12345) * right_anti_dual.group1, 
-            /* e235, e315, e125, 0 */
-            float4(float3(this.e12345) * right_anti_dual.group2.xyz, 0.0)
+            /* e235, e315, e125 */
+            float3(this.e12345) * right_anti_dual.group2.xyz
         );
     }
 }
-extension DualNum: WeightContraction<DipoleInversion> {
-    associatedtype Output = AntiDipoleInversion;
-    func weight_contraction(other: DipoleInversion) -> Output {
-        AntiDipoleInversion right_anti_dual = AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension DualNum {
+    public AntiDipoleInversion weight_contraction(DipoleInversion other) {
+        AntiDipoleInversion right_anti_dual = AntiDipoleInversion(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e4 */
@@ -5048,9 +4872,9 @@ extension DualNum: WeightContraction<DipoleInversion> {
             /* e1, e2, e3, e5 */
             other.group3 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(this.e12345) * right_anti_dual.group0.xyz, 0.0), 
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(this.e12345) * right_anti_dual.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(this.e12345) * right_anti_dual.group1, 
             /* e235, e315, e125, e4 */
@@ -5060,34 +4884,31 @@ extension DualNum: WeightContraction<DipoleInversion> {
         );
     }
 }
-extension DualNum: WeightContraction<DualNum> {
-    associatedtype Output = AntiDualNum;
-    func weight_contraction(other: DualNum) -> Output {
-        return AntiDualNum.from_groups(
-            /* e3215, scalar, 0, 0 */
-            float4(float2(this.e12345) * float2(other.e5 * -1.0, other.e12345 * -1.0), 0.0, 0.0)
+public extension DualNum {
+    public AntiDualNum weight_contraction(DualNum other) {
+        return AntiDualNum(
+            /* e3215, scalar */
+            float2(this.e12345) * float2(other.e5 * -1.0, other.e12345 * -1.0)
         );
     }
 }
-extension DualNum: WeightContraction<FlatPoint> {
-    associatedtype Output = AntiFlatPoint;
-    func weight_contraction(other: FlatPoint) -> Output {
-        return AntiFlatPoint.from_groups(
+public extension DualNum {
+    public AntiFlatPoint weight_contraction(FlatPoint other) {
+        return AntiFlatPoint(
             /* e235, e315, e125, e321 */
             float4(this.e12345) * float4(other.e15 * -1.0, other.e25 * -1.0, other.e35 * -1.0, other.e45)
         );
     }
 }
-extension DualNum: WeightContraction<Flector> {
-    associatedtype Output = AntiFlector;
-    func weight_contraction(other: Flector) -> Output {
-        AntiFlector right_anti_dual = AntiFlector.from_groups(
+public extension DualNum {
+    public AntiFlector weight_contraction(Flector other) {
+        AntiFlector right_anti_dual = AntiFlector(
             /* e235, e315, e125, e321 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e1, e2, e3, e5 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiFlector.from_groups(
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(this.e12345) * right_anti_dual.group0, 
             /* e1, e2, e3, e5 */
@@ -5095,33 +4916,31 @@ extension DualNum: WeightContraction<Flector> {
         );
     }
 }
-extension DualNum: WeightContraction<Line> {
-    associatedtype Output = AntiLine;
-    func weight_contraction(other: Line) -> Output {
-        AntiLine right_anti_dual = AntiLine.from_groups(
-            /* e23, e31, e12, 0 */
-            float4(other.group0.xyz, 0.0), 
-            /* e15, e25, e35, 0 */
-            float4(other.group1.xyz, 0.0)
+public extension DualNum {
+    public AntiLine weight_contraction(Line other) {
+        AntiLine right_anti_dual = AntiLine(
+            /* e23, e31, e12 */
+            other.group0.xyz, 
+            /* e15, e25, e35 */
+            other.group1.xyz
         );
-        return AntiLine.from_groups(
-            /* e23, e31, e12, 0 */
-            float4(float3(this.e12345) * right_anti_dual.group0.xyz, 0.0), 
-            /* e15, e25, e35, 0 */
-            float4(float3(this.e12345) * right_anti_dual.group1.xyz, 0.0)
+        return AntiLine(
+            /* e23, e31, e12 */
+            float3(this.e12345) * right_anti_dual.group0.xyz, 
+            /* e15, e25, e35 */
+            float3(this.e12345) * right_anti_dual.group1.xyz
         );
     }
 }
-extension DualNum: WeightContraction<Motor> {
-    associatedtype Output = AntiMotor;
-    func weight_contraction(other: Motor) -> Output {
-        AntiMotor right_anti_dual = AntiMotor.from_groups(
+public extension DualNum {
+    public AntiMotor weight_contraction(Motor other) {
+        AntiMotor right_anti_dual = AntiMotor(
             /* e23, e31, e12, scalar */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, e3215 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiMotor.from_groups(
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(this.e12345) * right_anti_dual.group0, 
             /* e15, e25, e35, e3215 */
@@ -5129,78 +4948,75 @@ extension DualNum: WeightContraction<Motor> {
         );
     }
 }
-extension DualNum: WeightContraction<MultiVector> {
-    associatedtype Output = MultiVector;
-    func weight_contraction(other: MultiVector) -> Output {
-        MultiVector right_anti_dual = MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(other.group0.xy.yx * float2(-1.0, 1.0), 0.0, 0.0), 
+public extension DualNum {
+    public MultiVector weight_contraction(MultiVector other) {
+        MultiVector right_anti_dual = MultiVector(
+            /* scalar, e12345 */
+            other.group0.xy.yx * float2(-1.0, 1.0), 
             /* e1, e2, e3, e4 */
             float4(other.group9.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e5, 0, 0, 0 */
-            float4(other.e3215, 0.0, 0.0, 0.0), 
+            /* e5 */
+            other.e3215, 
             /* e15, e25, e35, e45 */
             float4(other.group8.xyz, other.e321 * -1.0), 
-            /* e41, e42, e43, 0 */
-            float4(other.group7.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group6.xyz, 0.0), 
+            /* e41, e42, e43 */
+            other.group7.xyz, 
+            /* e23, e31, e12 */
+            other.group6.xyz, 
             /* e415, e425, e435, e321 */
             float4(other.group5.xyz, other.e45) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e423, e431, e412, 0 */
-            float4(other.group4.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group3.xyz * float3(-1.0), 0.0), 
+            /* e423, e431, e412 */
+            other.group4.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            other.group3.xyz * float3(-1.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(other.group1.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * -1.0
         );
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((this.e5 * right_anti_dual.e1234) + (this.e12345 * right_anti_dual.scalar), this.e12345 * right_anti_dual.e12345), 0.0, 0.0), 
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((this.e5 * right_anti_dual.e1234) + (this.e12345 * right_anti_dual.scalar), this.e12345 * right_anti_dual.e12345), 
             /* e1, e2, e3, e4 */
             float4(this.e12345) * right_anti_dual.group1, 
-            /* e5, 0, 0, 0 */
-            float4((this.e5 * right_anti_dual.e12345) + (this.e12345 * right_anti_dual.e5), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (this.e5 * right_anti_dual.e12345) + (this.e12345 * right_anti_dual.e5), 
             /* e15, e25, e35, e45 */
             float4(this.e12345) * right_anti_dual.group3, 
-            /* e41, e42, e43, 0 */
-            float4(float3(this.e12345) * right_anti_dual.group4.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(float3(this.e12345) * right_anti_dual.group5.xyz, 0.0), 
+            /* e41, e42, e43 */
+            float3(this.e12345) * right_anti_dual.group4.xyz, 
+            /* e23, e31, e12 */
+            float3(this.e12345) * right_anti_dual.group5.xyz, 
             /* e415, e425, e435, e321 */
             float4(this.e12345) * right_anti_dual.group6, 
-            /* e423, e431, e412, 0 */
-            float4(float3(this.e12345) * right_anti_dual.group7.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(float3(this.e12345) * right_anti_dual.group8.xyz, 0.0), 
+            /* e423, e431, e412 */
+            float3(this.e12345) * right_anti_dual.group7.xyz, 
+            /* e235, e315, e125 */
+            float3(this.e12345) * right_anti_dual.group8.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(this.e12345) * right_anti_dual.group9, 
-            /* e1234, 0, 0, 0 */
-            float4(this.e12345 * right_anti_dual.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            this.e12345 * right_anti_dual.e1234
         );
     }
 }
-extension DualNum: WeightContraction<Plane> {
-    associatedtype Output = AntiPlane;
-    func weight_contraction(other: Plane) -> Output {
-        return AntiPlane.from_groups(
+public extension DualNum {
+    public AntiPlane weight_contraction(Plane other) {
+        return AntiPlane(
             /* e1, e2, e3, e5 */
             float4(this.e12345) * float4(other.e4235 * -1.0, other.e4315 * -1.0, other.e4125 * -1.0, other.e3215)
         );
     }
 }
-extension DualNum: WeightContraction<RoundPoint> {
-    associatedtype Output = VersorOdd;
-    func weight_contraction(other: RoundPoint) -> Output {
-        Sphere right_anti_dual = Sphere.from_groups(
+public extension DualNum {
+    public VersorOdd weight_contraction(RoundPoint other) {
+        Sphere right_anti_dual = Sphere(
             /* e4235, e4315, e4125, e3215 */
             float4(other.group0.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * -1.0
         );
-        return VersorOdd.from_groups(
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(float3(0.0), this.e5 * right_anti_dual.e1234), 
             /* e23, e31, e12, e45 */
@@ -5212,36 +5028,33 @@ extension DualNum: WeightContraction<RoundPoint> {
         );
     }
 }
-extension DualNum: WeightContraction<Scalar> {
-    associatedtype Output = DualNum;
-    func weight_contraction(other: Scalar) -> Output {
-        return DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(float2(other.scalar) * this.group0.xy, 0.0, 0.0)
+public extension DualNum {
+    public DualNum weight_contraction(Scalar other) {
+        return DualNum(
+            /* e5, e12345 */
+            float2(other.scalar) * this.group0.xy
         );
     }
 }
-extension DualNum: WeightContraction<Sphere> {
-    associatedtype Output = RoundPoint;
-    func weight_contraction(other: Sphere) -> Output {
-        RoundPoint right_anti_dual = RoundPoint.from_groups(
+public extension DualNum {
+    public RoundPoint weight_contraction(Sphere other) {
+        RoundPoint right_anti_dual = RoundPoint(
             /* e1, e2, e3, e4 */
             float4(other.group0.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e5, 0, 0, 0 */
-            float4(other.e3215, 0.0, 0.0, 0.0)
+            /* e5 */
+            other.e3215
         );
-        return RoundPoint.from_groups(
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4(this.e12345) * right_anti_dual.group0, 
-            /* e5, 0, 0, 0 */
-            float4(this.e12345 * right_anti_dual.e5, 0.0, 0.0, 0.0)
+            /* e5 */
+            this.e12345 * right_anti_dual.e5
         );
     }
 }
-extension DualNum: WeightContraction<VersorEven> {
-    associatedtype Output = VersorOdd;
-    func weight_contraction(other: VersorEven) -> Output {
-        VersorOdd right_anti_dual = VersorOdd.from_groups(
+public extension DualNum {
+    public VersorOdd weight_contraction(VersorEven other) {
+        VersorOdd right_anti_dual = VersorOdd(
             /* e41, e42, e43, scalar */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e23, e31, e12, e45 */
@@ -5251,7 +5064,7 @@ extension DualNum: WeightContraction<VersorEven> {
             /* e4235, e4315, e4125, e3215 */
             float4(other.group3.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return VersorOdd.from_groups(
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(this.group0.xy.yy, this.e12345, (this.e5 * right_anti_dual.e1234) + (this.e12345 * right_anti_dual.scalar)) * float4(right_anti_dual.group0.xyz, 1.0), 
             /* e23, e31, e12, e45 */
@@ -5263,10 +5076,9 @@ extension DualNum: WeightContraction<VersorEven> {
         );
     }
 }
-extension DualNum: WeightContraction<VersorOdd> {
-    associatedtype Output = VersorEven;
-    func weight_contraction(other: VersorOdd) -> Output {
-        VersorEven right_anti_dual = VersorEven.from_groups(
+public extension DualNum {
+    public VersorEven weight_contraction(VersorOdd other) {
+        VersorEven right_anti_dual = VersorEven(
             /* e423, e431, e412, e12345 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e415, e425, e435, e321 */
@@ -5276,7 +5088,7 @@ extension DualNum: WeightContraction<VersorOdd> {
             /* e1, e2, e3, e4 */
             float4(other.group3.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return VersorEven.from_groups(
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(this.e12345) * right_anti_dual.group0, 
             /* e415, e425, e435, e321 */
@@ -5288,26 +5100,31 @@ extension DualNum: WeightContraction<VersorOdd> {
         );
     }
 }
-extension FlatPoint {
-    // Fancy infix trick
-    func operator/(_rhs: WeightContractionInfix) -> WeightContractionInfixPartial<FlatPoint> {
-        return WeightContractionInfixPartial { a: this };
+public extension FlatPoint {
+    // Fancy infix trick (first half)
+    public WeightContractionInfixPartial<FlatPoint> operator /(WeightContractionInfix rhs) {
+        return WeightContractionInfixPartial<FlatPoint>(this);
     }
 }
-extension FlatPoint: WeightContraction<AntiCircleRotor> {
-    associatedtype Output = AntiCircleRotor;
-    func weight_contraction(other: AntiCircleRotor) -> Output {
-        CircleRotor right_anti_dual = CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension WeightContractionInfixPartial<FlatPoint> {
+    // Fancy infix trick (second half)
+    public AntiCircleRotor operator /(AntiCircleRotor rhs) {
+        return this.a.weight_contraction(rhs);
+    }
+}
+public extension FlatPoint {
+    public AntiCircleRotor weight_contraction(AntiCircleRotor other) {
+        CircleRotor right_anti_dual = CircleRotor(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e12345 */
             other.group2 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            float3(0.0), 
             /* e23, e31, e12, e45 */
             float4(float3(0.0), right_anti_dual.e12345 * this.e45), 
             /* e15, e25, e35, scalar */
@@ -5315,12 +5132,11 @@ extension FlatPoint: WeightContraction<AntiCircleRotor> {
         );
     }
 }
-extension FlatPoint: WeightContraction<AntiDipoleInversion> {
-    associatedtype Output = RoundPoint;
-    func weight_contraction(other: AntiDipoleInversion) -> Output {
-        DipoleInversion right_anti_dual = DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension FlatPoint {
+    public RoundPoint weight_contraction(AntiDipoleInversion other) {
+        DipoleInversion right_anti_dual = DipoleInversion(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, e1234 */
@@ -5328,83 +5144,77 @@ extension FlatPoint: WeightContraction<AntiDipoleInversion> {
             /* e4235, e4315, e4125, e3215 */
             other.group3 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return RoundPoint.from_groups(
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4(right_anti_dual.e1234) * this.group0 * float4(-1.0), 
-            /* e5, 0, 0, 0 */
-            float4((right_anti_dual.e4235 * this.e15) + (right_anti_dual.e4315 * this.e25) + (right_anti_dual.e4125 * this.e35) + (right_anti_dual.e3215 * this.e45), 0.0, 0.0, 0.0)
+            /* e5 */
+            (right_anti_dual.e4235 * this.e15) + (right_anti_dual.e4315 * this.e25) + (right_anti_dual.e4125 * this.e35) + (right_anti_dual.e3215 * this.e45)
         );
     }
 }
-extension FlatPoint: WeightContraction<AntiDualNum> {
-    associatedtype Output = FlatPoint;
-    func weight_contraction(other: AntiDualNum) -> Output {
-        return FlatPoint.from_groups(
+public extension FlatPoint {
+    public FlatPoint weight_contraction(AntiDualNum other) {
+        return FlatPoint(
             /* e15, e25, e35, e45 */
             float4(other.scalar) * this.group0
         );
     }
 }
-extension FlatPoint: WeightContraction<AntiFlector> {
-    associatedtype Output = DualNum;
-    func weight_contraction(other: AntiFlector) -> Output {
-        Flector right_anti_dual = Flector.from_groups(
+public extension FlatPoint {
+    public DualNum weight_contraction(AntiFlector other) {
+        Flector right_anti_dual = Flector(
             /* e15, e25, e35, e45 */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e4235, e4315, e4125, e3215 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(float2((this.e15 * right_anti_dual.e4235) + (this.e25 * right_anti_dual.e4315) + (this.e35 * right_anti_dual.e4125) + (this.e45 * right_anti_dual.e3215), 0.0), 0.0, 0.0)
+        return DualNum(
+            /* e5, e12345 */
+            float2((this.e15 * right_anti_dual.e4235) + (this.e25 * right_anti_dual.e4315) + (this.e35 * right_anti_dual.e4125) + (this.e45 * right_anti_dual.e3215), 0.0)
         );
     }
 }
-extension FlatPoint: WeightContraction<AntiMotor> {
-    associatedtype Output = FlatPoint;
-    func weight_contraction(other: AntiMotor) -> Output {
-        return FlatPoint.from_groups(
+public extension FlatPoint {
+    public FlatPoint weight_contraction(AntiMotor other) {
+        return FlatPoint(
             /* e15, e25, e35, e45 */
             float4(other.scalar) * this.group0
         );
     }
 }
-extension FlatPoint: WeightContraction<AntiPlane> {
-    associatedtype Output = DualNum;
-    func weight_contraction(other: AntiPlane) -> Output {
-        Plane right_anti_dual = Plane.from_groups(
+public extension FlatPoint {
+    public DualNum weight_contraction(AntiPlane other) {
+        Plane right_anti_dual = Plane(
             /* e4235, e4315, e4125, e3215 */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(float2((this.e15 * right_anti_dual.e4235) + (this.e25 * right_anti_dual.e4315) + (this.e35 * right_anti_dual.e4125) + (this.e45 * right_anti_dual.e3215), 0.0), 0.0, 0.0)
+        return DualNum(
+            /* e5, e12345 */
+            float2((this.e15 * right_anti_dual.e4235) + (this.e25 * right_anti_dual.e4315) + (this.e35 * right_anti_dual.e4125) + (this.e45 * right_anti_dual.e3215), 0.0)
         );
     }
 }
-extension FlatPoint: WeightContraction<Dipole> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: Dipole) -> Output {
-        Circle right_anti_dual = Circle.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension FlatPoint {
+    public Scalar weight_contraction(Dipole other) {
+        Circle right_anti_dual = Circle(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group2.xyz * float3(-1.0), 0.0)
+            /* e235, e315, e125 */
+            other.group2.xyz * float3(-1.0)
         );
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(-(right_anti_dual.e423 * this.e15) - (right_anti_dual.e431 * this.e25) - (right_anti_dual.e412 * this.e35) - (right_anti_dual.e321 * this.e45), 0.0, 0.0, 0.0)
+        return Scalar(
+            /* scalar */
+            -(right_anti_dual.e423 * this.e15) - (right_anti_dual.e431 * this.e25) - (right_anti_dual.e412 * this.e35) - (right_anti_dual.e321 * this.e45)
         );
     }
 }
-extension FlatPoint: WeightContraction<DipoleInversion> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: DipoleInversion) -> Output {
-        AntiDipoleInversion right_anti_dual = AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension FlatPoint {
+    public Scalar weight_contraction(DipoleInversion other) {
+        AntiDipoleInversion right_anti_dual = AntiDipoleInversion(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e4 */
@@ -5412,131 +5222,123 @@ extension FlatPoint: WeightContraction<DipoleInversion> {
             /* e1, e2, e3, e5 */
             other.group3 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(-(right_anti_dual.e423 * this.e15) - (right_anti_dual.e431 * this.e25) - (right_anti_dual.e412 * this.e35) - (right_anti_dual.e321 * this.e45), 0.0, 0.0, 0.0)
+        return Scalar(
+            /* scalar */
+            -(right_anti_dual.e423 * this.e15) - (right_anti_dual.e431 * this.e25) - (right_anti_dual.e412 * this.e35) - (right_anti_dual.e321 * this.e45)
         );
     }
 }
-extension FlatPoint: WeightContraction<DualNum> {
-    associatedtype Output = DualNum;
-    func weight_contraction(other: DualNum) -> Output {
-        return DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(float2(other.e5 * this.e45 * -1.0, 1.0) * float2(1.0, 0.0), 0.0, 0.0)
+public extension FlatPoint {
+    public DualNum weight_contraction(DualNum other) {
+        return DualNum(
+            /* e5, e12345 */
+            float2(other.e5 * this.e45 * -1.0, 1.0) * float2(1.0, 0.0)
         );
     }
 }
-extension FlatPoint: WeightContraction<FlatPoint> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: FlatPoint) -> Output {
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(other.e45 * this.e45 * -1.0, 0.0, 0.0, 0.0)
+public extension FlatPoint {
+    public Scalar weight_contraction(FlatPoint other) {
+        return Scalar(
+            /* scalar */
+            other.e45 * this.e45 * -1.0
         );
     }
 }
-extension FlatPoint: WeightContraction<Flector> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: Flector) -> Output {
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(this.e45 * other.e45 * -1.0, 0.0, 0.0, 0.0)
+public extension FlatPoint {
+    public Scalar weight_contraction(Flector other) {
+        return Scalar(
+            /* scalar */
+            this.e45 * other.e45 * -1.0
         );
     }
 }
-extension FlatPoint: WeightContraction<Motor> {
-    associatedtype Output = DualNum;
-    func weight_contraction(other: Motor) -> Output {
-        return DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(float2(float4(other.group1.xyz, other.e5 * -1.0)[3] * this.e45, 1.0) * float2(1.0, 0.0), 0.0, 0.0)
+public extension FlatPoint {
+    public DualNum weight_contraction(Motor other) {
+        return DualNum(
+            /* e5, e12345 */
+            float2(float4(other.group1.xyz, other.e5 * -1.0)[3] * this.e45, 1.0) * float2(1.0, 0.0)
         );
     }
 }
-extension FlatPoint: WeightContraction<MultiVector> {
-    associatedtype Output = MultiVector;
-    func weight_contraction(other: MultiVector) -> Output {
-        MultiVector right_anti_dual = MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(other.group0.xy.yx * float2(-1.0, 1.0), 0.0, 0.0), 
+public extension FlatPoint {
+    public MultiVector weight_contraction(MultiVector other) {
+        MultiVector right_anti_dual = MultiVector(
+            /* scalar, e12345 */
+            other.group0.xy.yx * float2(-1.0, 1.0), 
             /* e1, e2, e3, e4 */
             float4(other.group9.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e5, 0, 0, 0 */
-            float4(other.e3215, 0.0, 0.0, 0.0), 
+            /* e5 */
+            other.e3215, 
             /* e15, e25, e35, e45 */
             float4(other.group8.xyz, other.e321 * -1.0), 
-            /* e41, e42, e43, 0 */
-            float4(other.group7.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group6.xyz, 0.0), 
+            /* e41, e42, e43 */
+            other.group7.xyz, 
+            /* e23, e31, e12 */
+            other.group6.xyz, 
             /* e415, e425, e435, e321 */
             float4(other.group5.xyz, other.e45) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e423, e431, e412, 0 */
-            float4(other.group4.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group3.xyz * float3(-1.0), 0.0), 
+            /* e423, e431, e412 */
+            other.group4.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            other.group3.xyz * float3(-1.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(other.group1.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * -1.0
         );
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(-(this.e15 * right_anti_dual.e423) - (this.e25 * right_anti_dual.e431) - (this.e35 * right_anti_dual.e412) - (this.e45 * right_anti_dual.e321), 0.0), 0.0, 0.0), 
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(-(this.e15 * right_anti_dual.e423) - (this.e25 * right_anti_dual.e431) - (this.e35 * right_anti_dual.e412) - (this.e45 * right_anti_dual.e321), 0.0), 
             /* e1, e2, e3, e4 */
             float4(right_anti_dual.e1234) * this.group0 * float4(-1.0), 
-            /* e5, 0, 0, 0 */
-            float4((this.e15 * right_anti_dual.e4235) + (this.e25 * right_anti_dual.e4315) + (this.e35 * right_anti_dual.e4125) + (this.e45 * right_anti_dual.e3215), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (this.e15 * right_anti_dual.e4235) + (this.e25 * right_anti_dual.e4315) + (this.e35 * right_anti_dual.e4125) + (this.e45 * right_anti_dual.e3215), 
             /* e15, e25, e35, e45 */
             float4(right_anti_dual.e12345) * this.group0, 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(0.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension FlatPoint: WeightContraction<RoundPoint> {
-    associatedtype Output = RoundPoint;
-    func weight_contraction(other: RoundPoint) -> Output {
-        Sphere right_anti_dual = Sphere.from_groups(
+public extension FlatPoint {
+    public RoundPoint weight_contraction(RoundPoint other) {
+        Sphere right_anti_dual = Sphere(
             /* e4235, e4315, e4125, e3215 */
             float4(other.group0.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * -1.0
         );
-        return RoundPoint.from_groups(
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4(right_anti_dual.e1234) * this.group0 * float4(-1.0), 
-            /* e5, 0, 0, 0 */
-            float4((this.e15 * right_anti_dual.e4235) + (this.e25 * right_anti_dual.e4315) + (this.e35 * right_anti_dual.e4125) + (this.e45 * right_anti_dual.e3215), 0.0, 0.0, 0.0)
+            /* e5 */
+            (this.e15 * right_anti_dual.e4235) + (this.e25 * right_anti_dual.e4315) + (this.e35 * right_anti_dual.e4125) + (this.e45 * right_anti_dual.e3215)
         );
     }
 }
-extension FlatPoint: WeightContraction<Scalar> {
-    associatedtype Output = FlatPoint;
-    func weight_contraction(other: Scalar) -> Output {
-        return FlatPoint.from_groups(
+public extension FlatPoint {
+    public FlatPoint weight_contraction(Scalar other) {
+        return FlatPoint(
             /* e15, e25, e35, e45 */
             float4(other.scalar) * this.group0
         );
     }
 }
-extension FlatPoint: WeightContraction<VersorEven> {
-    associatedtype Output = RoundPoint;
-    func weight_contraction(other: VersorEven) -> Output {
-        VersorOdd right_anti_dual = VersorOdd.from_groups(
+public extension FlatPoint {
+    public RoundPoint weight_contraction(VersorEven other) {
+        VersorOdd right_anti_dual = VersorOdd(
             /* e41, e42, e43, scalar */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e23, e31, e12, e45 */
@@ -5546,18 +5348,17 @@ extension FlatPoint: WeightContraction<VersorEven> {
             /* e4235, e4315, e4125, e3215 */
             float4(other.group3.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return RoundPoint.from_groups(
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4(right_anti_dual.e1234) * this.group0 * float4(-1.0), 
-            /* e5, 0, 0, 0 */
-            float4((this.e15 * right_anti_dual.e4235) + (this.e25 * right_anti_dual.e4315) + (this.e35 * right_anti_dual.e4125) + (this.e45 * right_anti_dual.e3215), 0.0, 0.0, 0.0)
+            /* e5 */
+            (this.e15 * right_anti_dual.e4235) + (this.e25 * right_anti_dual.e4315) + (this.e35 * right_anti_dual.e4125) + (this.e45 * right_anti_dual.e3215)
         );
     }
 }
-extension FlatPoint: WeightContraction<VersorOdd> {
-    associatedtype Output = AntiCircleRotor;
-    func weight_contraction(other: VersorOdd) -> Output {
-        VersorEven right_anti_dual = VersorEven.from_groups(
+public extension FlatPoint {
+    public AntiCircleRotor weight_contraction(VersorOdd other) {
+        VersorEven right_anti_dual = VersorEven(
             /* e423, e431, e412, e12345 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e415, e425, e435, e321 */
@@ -5567,9 +5368,9 @@ extension FlatPoint: WeightContraction<VersorOdd> {
             /* e1, e2, e3, e4 */
             float4(other.group3.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            float3(0.0), 
             /* e23, e31, e12, e45 */
             float4(float3(0.0), this.e45 * right_anti_dual.e12345), 
             /* e15, e25, e35, scalar */
@@ -5577,24 +5378,29 @@ extension FlatPoint: WeightContraction<VersorOdd> {
         );
     }
 }
-extension Flector {
-    // Fancy infix trick
-    func operator/(_rhs: WeightContractionInfix) -> WeightContractionInfixPartial<Flector> {
-        return WeightContractionInfixPartial { a: this };
+public extension Flector {
+    // Fancy infix trick (first half)
+    public WeightContractionInfixPartial<Flector> operator /(WeightContractionInfix rhs) {
+        return WeightContractionInfixPartial<Flector>(this);
     }
 }
-extension Flector: WeightContraction<AntiCircleRotor> {
-    associatedtype Output = VersorOdd;
-    func weight_contraction(other: AntiCircleRotor) -> Output {
-        CircleRotor right_anti_dual = CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension WeightContractionInfixPartial<Flector> {
+    // Fancy infix trick (second half)
+    public VersorOdd operator /(AntiCircleRotor rhs) {
+        return this.a.weight_contraction(rhs);
+    }
+}
+public extension Flector {
+    public VersorOdd weight_contraction(AntiCircleRotor other) {
+        CircleRotor right_anti_dual = CircleRotor(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e12345 */
             other.group2 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return VersorOdd.from_groups(
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(right_anti_dual.e412 * this.e4315, right_anti_dual.e423 * this.e4125, right_anti_dual.e431 * this.e4235, -(right_anti_dual.e431 * this.e25) - (right_anti_dual.e412 * this.e35) - (right_anti_dual.e321 * this.e45)) - float4((right_anti_dual.group0.xyz.yzx * this.group1.zxy), right_anti_dual.e423 * this.e15), 
             /* e23, e31, e12, e45 */
@@ -5606,12 +5412,11 @@ extension Flector: WeightContraction<AntiCircleRotor> {
         );
     }
 }
-extension Flector: WeightContraction<AntiDipoleInversion> {
-    associatedtype Output = AntiDipoleInversion;
-    func weight_contraction(other: AntiDipoleInversion) -> Output {
-        DipoleInversion right_anti_dual = DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension Flector {
+    public AntiDipoleInversion weight_contraction(AntiDipoleInversion other) {
+        DipoleInversion right_anti_dual = DipoleInversion(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, e1234 */
@@ -5619,9 +5424,9 @@ extension Flector: WeightContraction<AntiDipoleInversion> {
             /* e4235, e4315, e4125, e3215 */
             other.group3 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(right_anti_dual.e1234) * this.group1.xyz * float3(-1.0), 0.0), 
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(right_anti_dual.e1234) * this.group1.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             float4(((right_anti_dual.group3.yzx * this.group1.zxy) - (right_anti_dual.group3.zxy * this.group1.yzx)), right_anti_dual.e1234 * this.e3215 * -1.0), 
             /* e235, e315, e125, e4 */
@@ -5631,14 +5436,13 @@ extension Flector: WeightContraction<AntiDipoleInversion> {
         );
     }
 }
-extension Flector: WeightContraction<AntiDualNum> {
-    associatedtype Output = Flector;
-    func weight_contraction(other: AntiDualNum) -> Output {
-        DualNum right_anti_dual = DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(other.group0.xy, 0.0, 0.0)
+public extension Flector {
+    public Flector weight_contraction(AntiDualNum other) {
+        DualNum right_anti_dual = DualNum(
+            /* e5, e12345 */
+            other.group0.xy
         );
-        return Flector.from_groups(
+        return Flector(
             /* e15, e25, e35, e45 */
             float4(right_anti_dual.e12345) * this.group0, 
             /* e4235, e4315, e4125, e3215 */
@@ -5646,29 +5450,27 @@ extension Flector: WeightContraction<AntiDualNum> {
         );
     }
 }
-extension Flector: WeightContraction<AntiFlatPoint> {
-    associatedtype Output = DualNum;
-    func weight_contraction(other: AntiFlatPoint) -> Output {
-        FlatPoint right_anti_dual = FlatPoint.from_groups(
+public extension Flector {
+    public DualNum weight_contraction(AntiFlatPoint other) {
+        FlatPoint right_anti_dual = FlatPoint(
             /* e15, e25, e35, e45 */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(float2(-(right_anti_dual.e15 * this.e4235) - (right_anti_dual.e25 * this.e4315) - (right_anti_dual.e35 * this.e4125) - (right_anti_dual.e45 * this.e3215), 0.0), 0.0, 0.0)
+        return DualNum(
+            /* e5, e12345 */
+            float2(-(right_anti_dual.e15 * this.e4235) - (right_anti_dual.e25 * this.e4315) - (right_anti_dual.e35 * this.e4125) - (right_anti_dual.e45 * this.e3215), 0.0)
         );
     }
 }
-extension Flector: WeightContraction<AntiFlector> {
-    associatedtype Output = Motor;
-    func weight_contraction(other: AntiFlector) -> Output {
-        Flector right_anti_dual = Flector.from_groups(
+public extension Flector {
+    public Motor weight_contraction(AntiFlector other) {
+        Flector right_anti_dual = Flector(
             /* e15, e25, e35, e45 */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e4235, e4315, e4125, e3215 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return Motor.from_groups(
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4(((right_anti_dual.group1.yzx * this.group1.zxy) - (right_anti_dual.group1.zxy * this.group1.yzx)), 0.0), 
             /* e235, e315, e125, e5 */
@@ -5676,31 +5478,29 @@ extension Flector: WeightContraction<AntiFlector> {
         );
     }
 }
-extension Flector: WeightContraction<AntiLine> {
-    associatedtype Output = FlatPoint;
-    func weight_contraction(other: AntiLine) -> Output {
-        Line right_anti_dual = Line.from_groups(
-            /* e415, e425, e435, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group1.xyz * float3(-1.0), 0.0)
+public extension Flector {
+    public FlatPoint weight_contraction(AntiLine other) {
+        Line right_anti_dual = Line(
+            /* e415, e425, e435 */
+            other.group0.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            other.group1.xyz * float3(-1.0)
         );
-        return FlatPoint.from_groups(
+        return FlatPoint(
             /* e15, e25, e35, e45 */
             float4((this.e4125 * right_anti_dual.e315) + (this.e3215 * right_anti_dual.e415), (this.e4235 * right_anti_dual.e125) + (this.e3215 * right_anti_dual.e425), (this.e4315 * right_anti_dual.e235) + (this.e3215 * right_anti_dual.e435), -(this.e4315 * right_anti_dual.e425) - (this.e4125 * right_anti_dual.e435)) - (this.group1.yzxx * float4(right_anti_dual.group1.xyz.zxy, right_anti_dual.e415))
         );
     }
 }
-extension Flector: WeightContraction<AntiMotor> {
-    associatedtype Output = Flector;
-    func weight_contraction(other: AntiMotor) -> Output {
-        Motor right_anti_dual = Motor.from_groups(
+public extension Flector {
+    public Flector weight_contraction(AntiMotor other) {
+        Motor right_anti_dual = Motor(
             /* e415, e425, e435, e12345 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e5 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return Flector.from_groups(
+        return Flector(
             /* e15, e25, e35, e45 */
             float4((this.e4125 * right_anti_dual.e315) + (this.e3215 * right_anti_dual.e415), (this.e4235 * right_anti_dual.e125) + (this.e3215 * right_anti_dual.e425), (this.e4315 * right_anti_dual.e235) + (this.e3215 * right_anti_dual.e435), -(this.e4315 * right_anti_dual.e425) - (this.e4125 * right_anti_dual.e435)) + (float4(right_anti_dual.e12345) * this.group0) - (this.group1.yzxx * float4(right_anti_dual.group1.zxy, right_anti_dual.e415)), 
             /* e4235, e4315, e4125, e3215 */
@@ -5708,14 +5508,13 @@ extension Flector: WeightContraction<AntiMotor> {
         );
     }
 }
-extension Flector: WeightContraction<AntiPlane> {
-    associatedtype Output = Motor;
-    func weight_contraction(other: AntiPlane) -> Output {
-        Plane right_anti_dual = Plane.from_groups(
+public extension Flector {
+    public Motor weight_contraction(AntiPlane other) {
+        Plane right_anti_dual = Plane(
             /* e4235, e4315, e4125, e3215 */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return Motor.from_groups(
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4(((this.group1.zxy * right_anti_dual.group0.yzx) - (this.group1.yzx * right_anti_dual.group0.zxy)), 0.0), 
             /* e235, e315, e125, e5 */
@@ -5723,58 +5522,55 @@ extension Flector: WeightContraction<AntiPlane> {
         );
     }
 }
-extension Flector: WeightContraction<Circle> {
-    associatedtype Output = RoundPoint;
-    func weight_contraction(other: Circle) -> Output {
-        Dipole right_anti_dual = Dipole.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension Flector {
+    public RoundPoint weight_contraction(Circle other) {
+        Dipole right_anti_dual = Dipole(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e15, e25, e35, 0 */
-            float4(other.group2.xyz, 0.0)
+            /* e15, e25, e35 */
+            other.group2.xyz
         );
-        return RoundPoint.from_groups(
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4(-(right_anti_dual.e41 * this.e3215) - (right_anti_dual.e31 * this.e4125), -(right_anti_dual.e42 * this.e3215) - (right_anti_dual.e12 * this.e4235), -(right_anti_dual.e43 * this.e3215) - (right_anti_dual.e23 * this.e4315), (right_anti_dual.e42 * this.e4315) + (right_anti_dual.e43 * this.e4125)) + (this.group1.yzxx * float4(right_anti_dual.group1.zxy, right_anti_dual.e41)), 
-            /* e5, 0, 0, 0 */
-            float4(-(right_anti_dual.e45 * this.e3215) - (right_anti_dual.e15 * this.e4235) - (right_anti_dual.e25 * this.e4315) - (right_anti_dual.e35 * this.e4125), 0.0, 0.0, 0.0)
+            /* e5 */
+            -(right_anti_dual.e45 * this.e3215) - (right_anti_dual.e15 * this.e4235) - (right_anti_dual.e25 * this.e4315) - (right_anti_dual.e35 * this.e4125)
         );
     }
 }
-extension Flector: WeightContraction<CircleRotor> {
-    associatedtype Output = RoundPoint;
-    func weight_contraction(other: CircleRotor) -> Output {
-        AntiCircleRotor right_anti_dual = AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension Flector {
+    public RoundPoint weight_contraction(CircleRotor other) {
+        AntiCircleRotor right_anti_dual = AntiCircleRotor(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, scalar */
             other.group2 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return RoundPoint.from_groups(
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4(-(right_anti_dual.e41 * this.e3215) - (right_anti_dual.e31 * this.e4125), -(right_anti_dual.e42 * this.e3215) - (right_anti_dual.e12 * this.e4235), -(right_anti_dual.e43 * this.e3215) - (right_anti_dual.e23 * this.e4315), (right_anti_dual.e42 * this.e4315) + (right_anti_dual.e43 * this.e4125)) + (this.group1.yzxx * float4(right_anti_dual.group1.zxy, right_anti_dual.e41)), 
-            /* e5, 0, 0, 0 */
-            float4(-(right_anti_dual.e45 * this.e3215) - (right_anti_dual.e15 * this.e4235) - (right_anti_dual.e25 * this.e4315) - (right_anti_dual.e35 * this.e4125), 0.0, 0.0, 0.0)
+            /* e5 */
+            -(right_anti_dual.e45 * this.e3215) - (right_anti_dual.e15 * this.e4235) - (right_anti_dual.e25 * this.e4315) - (right_anti_dual.e35 * this.e4125)
         );
     }
 }
-extension Flector: WeightContraction<Dipole> {
-    associatedtype Output = AntiCircleRotor;
-    func weight_contraction(other: Dipole) -> Output {
-        Circle right_anti_dual = Circle.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension Flector {
+    public AntiCircleRotor weight_contraction(Dipole other) {
+        Circle right_anti_dual = Circle(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group2.xyz * float3(-1.0), 0.0)
+            /* e235, e315, e125 */
+            other.group2.xyz * float3(-1.0)
         );
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4((right_anti_dual.group0.xyz.zxy * this.group1.yzx) - (right_anti_dual.group0.xyz.yzx * this.group1.zxy), 0.0), 
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            (right_anti_dual.group0.xyz.zxy * this.group1.yzx) - (right_anti_dual.group0.xyz.yzx * this.group1.zxy), 
             /* e23, e31, e12, e45 */
             float4(right_anti_dual.e423 * this.e3215, right_anti_dual.e431 * this.e3215, right_anti_dual.e412 * this.e3215, -(right_anti_dual.e425 * this.e4315) - (right_anti_dual.e435 * this.e4125)) - (right_anti_dual.group1.wwwx * this.group1.xyzx), 
             /* e15, e25, e35, scalar */
@@ -5782,12 +5578,11 @@ extension Flector: WeightContraction<Dipole> {
         );
     }
 }
-extension Flector: WeightContraction<DipoleInversion> {
-    associatedtype Output = AntiCircleRotor;
-    func weight_contraction(other: DipoleInversion) -> Output {
-        AntiDipoleInversion right_anti_dual = AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension Flector {
+    public AntiCircleRotor weight_contraction(DipoleInversion other) {
+        AntiDipoleInversion right_anti_dual = AntiDipoleInversion(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e4 */
@@ -5795,9 +5590,9 @@ extension Flector: WeightContraction<DipoleInversion> {
             /* e1, e2, e3, e5 */
             other.group3 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4((right_anti_dual.group0.xyz.zxy * this.group1.yzx) - (right_anti_dual.group0.xyz.yzx * this.group1.zxy), 0.0), 
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            (right_anti_dual.group0.xyz.zxy * this.group1.yzx) - (right_anti_dual.group0.xyz.yzx * this.group1.zxy), 
             /* e23, e31, e12, e45 */
             float4(right_anti_dual.e423 * this.e3215, right_anti_dual.e431 * this.e3215, right_anti_dual.e412 * this.e3215, -(right_anti_dual.e425 * this.e4315) - (right_anti_dual.e435 * this.e4125)) - (right_anti_dual.group1.wwwx * this.group1.xyzx), 
             /* e15, e25, e35, scalar */
@@ -5805,14 +5600,13 @@ extension Flector: WeightContraction<DipoleInversion> {
         );
     }
 }
-extension Flector: WeightContraction<DualNum> {
-    associatedtype Output = AntiFlector;
-    func weight_contraction(other: DualNum) -> Output {
-        AntiDualNum right_anti_dual = AntiDualNum.from_groups(
-            /* e3215, scalar, 0, 0 */
-            float4(other.group0.xy * float2(-1.0), 0.0, 0.0)
+public extension Flector {
+    public AntiFlector weight_contraction(DualNum other) {
+        AntiDualNum right_anti_dual = AntiDualNum(
+            /* e3215, scalar */
+            other.group0.xy * float2(-1.0)
         );
-        return AntiFlector.from_groups(
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(right_anti_dual.group0.xy.xx, right_anti_dual.e3215, 0.0) * float4(float3(1.0), 0.0) * float4(this.group1.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
             /* e1, e2, e3, e5 */
@@ -5820,14 +5614,13 @@ extension Flector: WeightContraction<DualNum> {
         );
     }
 }
-extension Flector: WeightContraction<FlatPoint> {
-    associatedtype Output = AntiMotor;
-    func weight_contraction(other: FlatPoint) -> Output {
-        AntiFlatPoint right_anti_dual = AntiFlatPoint.from_groups(
+public extension Flector {
+    public AntiMotor weight_contraction(FlatPoint other) {
+        AntiFlatPoint right_anti_dual = AntiFlatPoint(
             /* e235, e315, e125, e321 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiMotor.from_groups(
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(right_anti_dual.e321) * float4(this.group1.xyz, this.e45) * float4(-1.0), 
             /* e15, e25, e35, e3215 */
@@ -5835,16 +5628,15 @@ extension Flector: WeightContraction<FlatPoint> {
         );
     }
 }
-extension Flector: WeightContraction<Flector> {
-    associatedtype Output = AntiMotor;
-    func weight_contraction(other: Flector) -> Output {
-        AntiFlector right_anti_dual = AntiFlector.from_groups(
+public extension Flector {
+    public AntiMotor weight_contraction(Flector other) {
+        AntiFlector right_anti_dual = AntiFlector(
             /* e235, e315, e125, e321 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e1, e2, e3, e5 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiMotor.from_groups(
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4((right_anti_dual.group0.www * this.group1.xyz * float3(-1.0)), (right_anti_dual.e1 * this.e4235) + (right_anti_dual.e2 * this.e4315) + (right_anti_dual.e3 * this.e4125) - (right_anti_dual.e321 * this.e45)), 
             /* e15, e25, e35, e3215 */
@@ -5852,31 +5644,29 @@ extension Flector: WeightContraction<Flector> {
         );
     }
 }
-extension Flector: WeightContraction<Line> {
-    associatedtype Output = AntiPlane;
-    func weight_contraction(other: Line) -> Output {
-        AntiLine right_anti_dual = AntiLine.from_groups(
-            /* e23, e31, e12, 0 */
-            float4(other.group0.xyz, 0.0), 
-            /* e15, e25, e35, 0 */
-            float4(other.group1.xyz, 0.0)
+public extension Flector {
+    public AntiPlane weight_contraction(Line other) {
+        AntiLine right_anti_dual = AntiLine(
+            /* e23, e31, e12 */
+            other.group0.xyz, 
+            /* e15, e25, e35 */
+            other.group1.xyz
         );
-        return AntiPlane.from_groups(
+        return AntiPlane(
             /* e1, e2, e3, e5 */
             float4(right_anti_dual.e12 * this.e4315, right_anti_dual.e23 * this.e4125, right_anti_dual.e31 * this.e4235, -(right_anti_dual.e25 * this.e4315) - (right_anti_dual.e35 * this.e4125)) - (this.group1.zxyx * float4(right_anti_dual.group0.xyz.yzx, right_anti_dual.e15))
         );
     }
 }
-extension Flector: WeightContraction<Motor> {
-    associatedtype Output = AntiFlector;
-    func weight_contraction(other: Motor) -> Output {
-        AntiMotor right_anti_dual = AntiMotor.from_groups(
+public extension Flector {
+    public AntiFlector weight_contraction(Motor other) {
+        AntiMotor right_anti_dual = AntiMotor(
             /* e23, e31, e12, scalar */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, e3215 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiFlector.from_groups(
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(float3(1.0), 0.0) * float4(right_anti_dual.group1.www, 0.0) * float4(this.group1.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
             /* e1, e2, e3, e5 */
@@ -5884,84 +5674,81 @@ extension Flector: WeightContraction<Motor> {
         );
     }
 }
-extension Flector: WeightContraction<MultiVector> {
-    associatedtype Output = MultiVector;
-    func weight_contraction(other: MultiVector) -> Output {
-        MultiVector right_anti_dual = MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(other.group0.xy.yx * float2(-1.0, 1.0), 0.0, 0.0), 
+public extension Flector {
+    public MultiVector weight_contraction(MultiVector other) {
+        MultiVector right_anti_dual = MultiVector(
+            /* scalar, e12345 */
+            other.group0.xy.yx * float2(-1.0, 1.0), 
             /* e1, e2, e3, e4 */
             float4(other.group9.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e5, 0, 0, 0 */
-            float4(other.e3215, 0.0, 0.0, 0.0), 
+            /* e5 */
+            other.e3215, 
             /* e15, e25, e35, e45 */
             float4(other.group8.xyz, other.e321 * -1.0), 
-            /* e41, e42, e43, 0 */
-            float4(other.group7.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group6.xyz, 0.0), 
+            /* e41, e42, e43 */
+            other.group7.xyz, 
+            /* e23, e31, e12 */
+            other.group6.xyz, 
             /* e415, e425, e435, e321 */
             float4(other.group5.xyz, other.e45) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e423, e431, e412, 0 */
-            float4(other.group4.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group3.xyz * float3(-1.0), 0.0), 
+            /* e423, e431, e412 */
+            other.group4.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            other.group3.xyz * float3(-1.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(other.group1.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * -1.0
         );
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((this.e4235 * right_anti_dual.e1) + (this.e4315 * right_anti_dual.e2) + (this.e4125 * right_anti_dual.e3) + (this.e3215 * right_anti_dual.e4) - (this.e15 * right_anti_dual.e423) - (this.e25 * right_anti_dual.e431) - (this.e35 * right_anti_dual.e412) - (this.e45 * right_anti_dual.e321), 0.0), 0.0, 0.0), 
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((this.e4235 * right_anti_dual.e1) + (this.e4315 * right_anti_dual.e2) + (this.e4125 * right_anti_dual.e3) + (this.e3215 * right_anti_dual.e4) - (this.e15 * right_anti_dual.e423) - (this.e25 * right_anti_dual.e431) - (this.e35 * right_anti_dual.e412) - (this.e45 * right_anti_dual.e321), 0.0), 
             /* e1, e2, e3, e4 */
             float4(-(this.e15 * right_anti_dual.e1234) - (this.e4125 * right_anti_dual.e31), -(this.e25 * right_anti_dual.e1234) - (this.e4235 * right_anti_dual.e12), -(this.e35 * right_anti_dual.e1234) - (this.e4315 * right_anti_dual.e23), (this.e4315 * right_anti_dual.e42) + (this.e4125 * right_anti_dual.e43)) + (this.group1.yzxx * float4(right_anti_dual.group5.xyz.zxy, right_anti_dual.e41)) - float4((right_anti_dual.group4.xyz * this.group1.www), this.e45 * right_anti_dual.e1234), 
-            /* e5, 0, 0, 0 */
-            float4((this.e15 * right_anti_dual.e4235) + (this.e25 * right_anti_dual.e4315) + (this.e35 * right_anti_dual.e4125) + (this.e45 * right_anti_dual.e3215) - (this.e4235 * right_anti_dual.e15) - (this.e4315 * right_anti_dual.e25) - (this.e4125 * right_anti_dual.e35) - (this.e3215 * right_anti_dual.e45), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (this.e15 * right_anti_dual.e4235) + (this.e25 * right_anti_dual.e4315) + (this.e35 * right_anti_dual.e4125) + (this.e45 * right_anti_dual.e3215) - (this.e4235 * right_anti_dual.e15) - (this.e4315 * right_anti_dual.e25) - (this.e4125 * right_anti_dual.e35) - (this.e3215 * right_anti_dual.e45), 
             /* e15, e25, e35, e45 */
             float4((this.e4125 * right_anti_dual.e315) + (this.e3215 * right_anti_dual.e415), (this.e4235 * right_anti_dual.e125) + (this.e3215 * right_anti_dual.e425), (this.e4315 * right_anti_dual.e235) + (this.e3215 * right_anti_dual.e435), -(this.e4315 * right_anti_dual.e425) - (this.e4125 * right_anti_dual.e435)) + (float4(right_anti_dual.e12345) * this.group0) - float4((right_anti_dual.group8.xyz.zxy * this.group1.yzx), this.e4235 * right_anti_dual.e415), 
-            /* e41, e42, e43, 0 */
-            float4((right_anti_dual.group7.xyz.zxy * this.group1.yzx) - (right_anti_dual.group7.xyz.yzx * this.group1.zxy), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(this.e3215) * right_anti_dual.group7.xyz) - (float3(right_anti_dual.e321) * this.group1.xyz), 0.0), 
+            /* e41, e42, e43 */
+            (right_anti_dual.group7.xyz.zxy * this.group1.yzx) - (right_anti_dual.group7.xyz.yzx * this.group1.zxy), 
+            /* e23, e31, e12 */
+            (float3(this.e3215) * right_anti_dual.group7.xyz) - (float3(right_anti_dual.e321) * this.group1.xyz), 
             /* e415, e425, e435, e321 */
             float4(((this.group1.zxy * right_anti_dual.group9.yzx) - (this.group1.yzx * right_anti_dual.group9.zxy)), this.e3215 * right_anti_dual.e1234 * -1.0), 
-            /* e423, e431, e412, 0 */
-            float4(float3(right_anti_dual.e1234) * this.group1.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(right_anti_dual.e3215) * this.group1.xyz) - (float3(this.e3215) * right_anti_dual.group9.xyz), 0.0), 
+            /* e423, e431, e412 */
+            float3(right_anti_dual.e1234) * this.group1.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            (float3(right_anti_dual.e3215) * this.group1.xyz) - (float3(this.e3215) * right_anti_dual.group9.xyz), 
             /* e4235, e4315, e4125, e3215 */
             float4(right_anti_dual.e12345) * this.group1, 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension Flector: WeightContraction<Plane> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: Plane) -> Output {
-        AntiPlane right_anti_dual = AntiPlane.from_groups(
+public extension Flector {
+    public Scalar weight_contraction(Plane other) {
+        AntiPlane right_anti_dual = AntiPlane(
             /* e1, e2, e3, e5 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4((right_anti_dual.e1 * this.e4235) + (right_anti_dual.e2 * this.e4315) + (right_anti_dual.e3 * this.e4125), 0.0, 0.0, 0.0)
+        return Scalar(
+            /* scalar */
+            (right_anti_dual.e1 * this.e4235) + (right_anti_dual.e2 * this.e4315) + (right_anti_dual.e3 * this.e4125)
         );
     }
 }
-extension Flector: WeightContraction<RoundPoint> {
-    associatedtype Output = AntiDipoleInversion;
-    func weight_contraction(other: RoundPoint) -> Output {
-        Sphere right_anti_dual = Sphere.from_groups(
+public extension Flector {
+    public AntiDipoleInversion weight_contraction(RoundPoint other) {
+        Sphere right_anti_dual = Sphere(
             /* e4235, e4315, e4125, e3215 */
             float4(other.group0.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * -1.0
         );
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(right_anti_dual.e1234) * this.group1.xyz * float3(-1.0), 0.0), 
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(right_anti_dual.e1234) * this.group1.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             float4(((this.group1.zxy * right_anti_dual.group0.yzx) - (this.group1.yzx * right_anti_dual.group0.zxy)), this.e3215 * right_anti_dual.e1234 * -1.0), 
             /* e235, e315, e125, e4 */
@@ -5971,14 +5758,13 @@ extension Flector: WeightContraction<RoundPoint> {
         );
     }
 }
-extension Flector: WeightContraction<Scalar> {
-    associatedtype Output = Flector;
-    func weight_contraction(other: Scalar) -> Output {
-        AntiScalar right_anti_dual = AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(other.scalar, 0.0, 0.0, 0.0)
+public extension Flector {
+    public Flector weight_contraction(Scalar other) {
+        AntiScalar right_anti_dual = AntiScalar(
+            /* e12345 */
+            other.scalar
         );
-        return Flector.from_groups(
+        return Flector(
             /* e15, e25, e35, e45 */
             float4(right_anti_dual.e12345) * this.group0, 
             /* e4235, e4315, e4125, e3215 */
@@ -5986,25 +5772,23 @@ extension Flector: WeightContraction<Scalar> {
         );
     }
 }
-extension Flector: WeightContraction<Sphere> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: Sphere) -> Output {
-        RoundPoint right_anti_dual = RoundPoint.from_groups(
+public extension Flector {
+    public Scalar weight_contraction(Sphere other) {
+        RoundPoint right_anti_dual = RoundPoint(
             /* e1, e2, e3, e4 */
             float4(other.group0.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e5, 0, 0, 0 */
-            float4(other.e3215, 0.0, 0.0, 0.0)
+            /* e5 */
+            other.e3215
         );
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4((this.e4235 * right_anti_dual.e1) + (this.e4315 * right_anti_dual.e2) + (this.e4125 * right_anti_dual.e3) + (this.e3215 * right_anti_dual.e4), 0.0, 0.0, 0.0)
+        return Scalar(
+            /* scalar */
+            (this.e4235 * right_anti_dual.e1) + (this.e4315 * right_anti_dual.e2) + (this.e4125 * right_anti_dual.e3) + (this.e3215 * right_anti_dual.e4)
         );
     }
 }
-extension Flector: WeightContraction<VersorEven> {
-    associatedtype Output = AntiDipoleInversion;
-    func weight_contraction(other: VersorEven) -> Output {
-        VersorOdd right_anti_dual = VersorOdd.from_groups(
+public extension Flector {
+    public AntiDipoleInversion weight_contraction(VersorEven other) {
+        VersorOdd right_anti_dual = VersorOdd(
             /* e41, e42, e43, scalar */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e23, e31, e12, e45 */
@@ -6014,9 +5798,9 @@ extension Flector: WeightContraction<VersorEven> {
             /* e4235, e4315, e4125, e3215 */
             float4(other.group3.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(right_anti_dual.e1234) * this.group1.xyz * float3(-1.0), 0.0), 
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(right_anti_dual.e1234) * this.group1.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             float4(((this.group1.zxy * right_anti_dual.group3.yzx) - (this.group1.yzx * right_anti_dual.group3.zxy)), this.e3215 * right_anti_dual.e1234 * -1.0), 
             /* e235, e315, e125, e4 */
@@ -6026,10 +5810,9 @@ extension Flector: WeightContraction<VersorEven> {
         );
     }
 }
-extension Flector: WeightContraction<VersorOdd> {
-    associatedtype Output = VersorOdd;
-    func weight_contraction(other: VersorOdd) -> Output {
-        VersorEven right_anti_dual = VersorEven.from_groups(
+public extension Flector {
+    public VersorOdd weight_contraction(VersorOdd other) {
+        VersorEven right_anti_dual = VersorEven(
             /* e423, e431, e412, e12345 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e415, e425, e435, e321 */
@@ -6039,7 +5822,7 @@ extension Flector: WeightContraction<VersorOdd> {
             /* e1, e2, e3, e4 */
             float4(other.group3.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return VersorOdd.from_groups(
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             (this.group1.yzxx * float4(right_anti_dual.group0.zxy, right_anti_dual.e1)) + float4(float3(0.0), (this.e4315 * right_anti_dual.e2) + (this.e4125 * right_anti_dual.e3) + (this.e3215 * right_anti_dual.e4) - (this.e25 * right_anti_dual.e431) - (this.e35 * right_anti_dual.e412) - (this.e45 * right_anti_dual.e321)) - (right_anti_dual.group0.yzxx * float4(this.group1.zxy, this.e15)), 
             /* e23, e31, e12, e45 */
@@ -6051,26 +5834,31 @@ extension Flector: WeightContraction<VersorOdd> {
         );
     }
 }
-extension Line {
-    // Fancy infix trick
-    func operator/(_rhs: WeightContractionInfix) -> WeightContractionInfixPartial<Line> {
-        return WeightContractionInfixPartial { a: this };
+public extension Line {
+    // Fancy infix trick (first half)
+    public WeightContractionInfixPartial<Line> operator /(WeightContractionInfix rhs) {
+        return WeightContractionInfixPartial<Line>(this);
     }
 }
-extension Line: WeightContraction<AntiCircleRotor> {
-    associatedtype Output = AntiDipoleInversion;
-    func weight_contraction(other: AntiCircleRotor) -> Output {
-        CircleRotor right_anti_dual = CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension WeightContractionInfixPartial<Line> {
+    // Fancy infix trick (second half)
+    public AntiDipoleInversion operator /(AntiCircleRotor rhs) {
+        return this.a.weight_contraction(rhs);
+    }
+}
+public extension Line {
+    public AntiDipoleInversion weight_contraction(AntiCircleRotor other) {
+        CircleRotor right_anti_dual = CircleRotor(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e12345 */
             other.group2 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(float3(1.0), 0.0) * float4(this.group0.xyz, 0.0) * float4(right_anti_dual.group2.www, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
             /* e235, e315, e125, e4 */
@@ -6080,12 +5868,11 @@ extension Line: WeightContraction<AntiCircleRotor> {
         );
     }
 }
-extension Line: WeightContraction<AntiDipoleInversion> {
-    associatedtype Output = AntiCircleRotor;
-    func weight_contraction(other: AntiDipoleInversion) -> Output {
-        DipoleInversion right_anti_dual = DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension Line {
+    public AntiCircleRotor weight_contraction(AntiDipoleInversion other) {
+        DipoleInversion right_anti_dual = DipoleInversion(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, e1234 */
@@ -6093,9 +5880,9 @@ extension Line: WeightContraction<AntiDipoleInversion> {
             /* e4235, e4315, e4125, e3215 */
             other.group3 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(right_anti_dual.e1234) * this.group0.xyz, 0.0), 
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            float3(right_anti_dual.e1234) * this.group0.xyz, 
             /* e23, e31, e12, e45 */
             float4((float3(right_anti_dual.e1234) * this.group1.xyz), -(right_anti_dual.e4235 * this.e415) - (right_anti_dual.e4315 * this.e425) - (right_anti_dual.e4125 * this.e435)), 
             /* e15, e25, e35, scalar */
@@ -6103,61 +5890,57 @@ extension Line: WeightContraction<AntiDipoleInversion> {
         );
     }
 }
-extension Line: WeightContraction<AntiDualNum> {
-    associatedtype Output = Line;
-    func weight_contraction(other: AntiDualNum) -> Output {
-        DualNum right_anti_dual = DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(other.group0.xy, 0.0, 0.0)
+public extension Line {
+    public Line weight_contraction(AntiDualNum other) {
+        DualNum right_anti_dual = DualNum(
+            /* e5, e12345 */
+            other.group0.xy
         );
-        return Line.from_groups(
-            /* e415, e425, e435, 0 */
-            float4(float3(right_anti_dual.e12345) * this.group0.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(float3(right_anti_dual.e12345) * this.group1.xyz, 0.0)
+        return Line(
+            /* e415, e425, e435 */
+            float3(right_anti_dual.e12345) * this.group0.xyz, 
+            /* e235, e315, e125 */
+            float3(right_anti_dual.e12345) * this.group1.xyz
         );
     }
 }
-extension Line: WeightContraction<AntiFlector> {
-    associatedtype Output = FlatPoint;
-    func weight_contraction(other: AntiFlector) -> Output {
-        Flector right_anti_dual = Flector.from_groups(
+public extension Line {
+    public FlatPoint weight_contraction(AntiFlector other) {
+        Flector right_anti_dual = Flector(
             /* e15, e25, e35, e45 */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e4235, e4315, e4125, e3215 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return FlatPoint.from_groups(
+        return FlatPoint(
             /* e15, e25, e35, e45 */
             float4((right_anti_dual.e4125 * this.e315) + (right_anti_dual.e3215 * this.e415), (right_anti_dual.e4235 * this.e125) + (right_anti_dual.e3215 * this.e425), (right_anti_dual.e4315 * this.e235) + (right_anti_dual.e3215 * this.e435), -(right_anti_dual.e4315 * this.e425) - (right_anti_dual.e4125 * this.e435)) - (right_anti_dual.group1.yzxx * float4(this.group1.xyz.zxy, this.e415))
         );
     }
 }
-extension Line: WeightContraction<AntiLine> {
-    associatedtype Output = DualNum;
-    func weight_contraction(other: AntiLine) -> Output {
-        Line right_anti_dual = Line.from_groups(
-            /* e415, e425, e435, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group1.xyz * float3(-1.0), 0.0)
+public extension Line {
+    public DualNum weight_contraction(AntiLine other) {
+        Line right_anti_dual = Line(
+            /* e415, e425, e435 */
+            other.group0.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            other.group1.xyz * float3(-1.0)
         );
-        return DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(float2(-(right_anti_dual.e415 * this.e235) - (right_anti_dual.e425 * this.e315) - (right_anti_dual.e435 * this.e125) - (right_anti_dual.e235 * this.e415) - (right_anti_dual.e315 * this.e425) - (right_anti_dual.e125 * this.e435), 0.0), 0.0, 0.0)
+        return DualNum(
+            /* e5, e12345 */
+            float2(-(right_anti_dual.e415 * this.e235) - (right_anti_dual.e425 * this.e315) - (right_anti_dual.e435 * this.e125) - (right_anti_dual.e235 * this.e415) - (right_anti_dual.e315 * this.e425) - (right_anti_dual.e125 * this.e435), 0.0)
         );
     }
 }
-extension Line: WeightContraction<AntiMotor> {
-    associatedtype Output = Motor;
-    func weight_contraction(other: AntiMotor) -> Output {
-        Motor right_anti_dual = Motor.from_groups(
+public extension Line {
+    public Motor weight_contraction(AntiMotor other) {
+        Motor right_anti_dual = Motor(
             /* e415, e425, e435, e12345 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e5 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return Motor.from_groups(
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4(float3(1.0), 0.0) * float4(this.group0.xyz, 0.0) * float4(right_anti_dual.group0.www, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
             /* e235, e315, e125, e5 */
@@ -6165,78 +5948,73 @@ extension Line: WeightContraction<AntiMotor> {
         );
     }
 }
-extension Line: WeightContraction<AntiPlane> {
-    associatedtype Output = FlatPoint;
-    func weight_contraction(other: AntiPlane) -> Output {
-        Plane right_anti_dual = Plane.from_groups(
+public extension Line {
+    public FlatPoint weight_contraction(AntiPlane other) {
+        Plane right_anti_dual = Plane(
             /* e4235, e4315, e4125, e3215 */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return FlatPoint.from_groups(
+        return FlatPoint(
             /* e15, e25, e35, e45 */
             float4((this.e415 * right_anti_dual.e3215) + (this.e315 * right_anti_dual.e4125), (this.e425 * right_anti_dual.e3215) + (this.e125 * right_anti_dual.e4235), (this.e435 * right_anti_dual.e3215) + (this.e235 * right_anti_dual.e4315), -(this.e425 * right_anti_dual.e4315) - (this.e435 * right_anti_dual.e4125)) - (right_anti_dual.group0.yzxx * float4(this.group1.xyz.zxy, this.e415))
         );
     }
 }
-extension Line: WeightContraction<Circle> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: Circle) -> Output {
-        Dipole right_anti_dual = Dipole.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension Line {
+    public Scalar weight_contraction(Circle other) {
+        Dipole right_anti_dual = Dipole(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e15, e25, e35, 0 */
-            float4(other.group2.xyz, 0.0)
+            /* e15, e25, e35 */
+            other.group2.xyz
         );
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(-(right_anti_dual.e41 * this.e235) - (right_anti_dual.e42 * this.e315) - (right_anti_dual.e43 * this.e125) - (right_anti_dual.e23 * this.e415) - (right_anti_dual.e31 * this.e425) - (right_anti_dual.e12 * this.e435), 0.0, 0.0, 0.0)
+        return Scalar(
+            /* scalar */
+            -(right_anti_dual.e41 * this.e235) - (right_anti_dual.e42 * this.e315) - (right_anti_dual.e43 * this.e125) - (right_anti_dual.e23 * this.e415) - (right_anti_dual.e31 * this.e425) - (right_anti_dual.e12 * this.e435)
         );
     }
 }
-extension Line: WeightContraction<CircleRotor> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: CircleRotor) -> Output {
-        AntiCircleRotor right_anti_dual = AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension Line {
+    public Scalar weight_contraction(CircleRotor other) {
+        AntiCircleRotor right_anti_dual = AntiCircleRotor(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, scalar */
             other.group2 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(-(right_anti_dual.e41 * this.e235) - (right_anti_dual.e42 * this.e315) - (right_anti_dual.e43 * this.e125) - (right_anti_dual.e23 * this.e415) - (right_anti_dual.e31 * this.e425) - (right_anti_dual.e12 * this.e435), 0.0, 0.0, 0.0)
+        return Scalar(
+            /* scalar */
+            -(right_anti_dual.e41 * this.e235) - (right_anti_dual.e42 * this.e315) - (right_anti_dual.e43 * this.e125) - (right_anti_dual.e23 * this.e415) - (right_anti_dual.e31 * this.e425) - (right_anti_dual.e12 * this.e435)
         );
     }
 }
-extension Line: WeightContraction<Dipole> {
-    associatedtype Output = RoundPoint;
-    func weight_contraction(other: Dipole) -> Output {
-        Circle right_anti_dual = Circle.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension Line {
+    public RoundPoint weight_contraction(Dipole other) {
+        Circle right_anti_dual = Circle(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group2.xyz * float3(-1.0), 0.0)
+            /* e235, e315, e125 */
+            other.group2.xyz * float3(-1.0)
         );
-        return RoundPoint.from_groups(
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4((right_anti_dual.e412 * this.e315) + (right_anti_dual.e321 * this.e415), (right_anti_dual.e423 * this.e125) + (right_anti_dual.e321 * this.e425), (right_anti_dual.e431 * this.e235) + (right_anti_dual.e321 * this.e435), -(right_anti_dual.e431 * this.e425) - (right_anti_dual.e412 * this.e435)) - float4((right_anti_dual.group0.xyz.yzx * this.group1.xyz.zxy), right_anti_dual.e423 * this.e415), 
-            /* e5, 0, 0, 0 */
-            float4(-(right_anti_dual.e415 * this.e235) - (right_anti_dual.e425 * this.e315) - (right_anti_dual.e435 * this.e125) - (right_anti_dual.e235 * this.e415) - (right_anti_dual.e315 * this.e425) - (right_anti_dual.e125 * this.e435), 0.0, 0.0, 0.0)
+            /* e5 */
+            -(right_anti_dual.e415 * this.e235) - (right_anti_dual.e425 * this.e315) - (right_anti_dual.e435 * this.e125) - (right_anti_dual.e235 * this.e415) - (right_anti_dual.e315 * this.e425) - (right_anti_dual.e125 * this.e435)
         );
     }
 }
-extension Line: WeightContraction<DipoleInversion> {
-    associatedtype Output = RoundPoint;
-    func weight_contraction(other: DipoleInversion) -> Output {
-        AntiDipoleInversion right_anti_dual = AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension Line {
+    public RoundPoint weight_contraction(DipoleInversion other) {
+        AntiDipoleInversion right_anti_dual = AntiDipoleInversion(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e4 */
@@ -6244,80 +6022,75 @@ extension Line: WeightContraction<DipoleInversion> {
             /* e1, e2, e3, e5 */
             other.group3 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return RoundPoint.from_groups(
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4((right_anti_dual.e412 * this.e315) + (right_anti_dual.e321 * this.e415), (right_anti_dual.e423 * this.e125) + (right_anti_dual.e321 * this.e425), (right_anti_dual.e431 * this.e235) + (right_anti_dual.e321 * this.e435), -(right_anti_dual.e431 * this.e425) - (right_anti_dual.e412 * this.e435)) - float4((right_anti_dual.group0.xyz.yzx * this.group1.xyz.zxy), right_anti_dual.e423 * this.e415), 
-            /* e5, 0, 0, 0 */
-            float4(-(right_anti_dual.e415 * this.e235) - (right_anti_dual.e425 * this.e315) - (right_anti_dual.e435 * this.e125) - (right_anti_dual.e235 * this.e415) - (right_anti_dual.e315 * this.e425) - (right_anti_dual.e125 * this.e435), 0.0, 0.0, 0.0)
+            /* e5 */
+            -(right_anti_dual.e415 * this.e235) - (right_anti_dual.e425 * this.e315) - (right_anti_dual.e435 * this.e125) - (right_anti_dual.e235 * this.e415) - (right_anti_dual.e315 * this.e425) - (right_anti_dual.e125 * this.e435)
         );
     }
 }
-extension Line: WeightContraction<DualNum> {
-    associatedtype Output = FlatPoint;
-    func weight_contraction(other: DualNum) -> Output {
-        AntiDualNum right_anti_dual = AntiDualNum.from_groups(
-            /* e3215, scalar, 0, 0 */
-            float4(other.group0.xy * float2(-1.0), 0.0, 0.0)
+public extension Line {
+    public FlatPoint weight_contraction(DualNum other) {
+        AntiDualNum right_anti_dual = AntiDualNum(
+            /* e3215, scalar */
+            other.group0.xy * float2(-1.0)
         );
-        return FlatPoint.from_groups(
+        return FlatPoint(
             /* e15, e25, e35, e45 */
             float4(right_anti_dual.group0.xy.xx, right_anti_dual.e3215, 0.0) * float4(float3(1.0), 0.0) * float4(this.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         );
     }
 }
-extension Line: WeightContraction<FlatPoint> {
-    associatedtype Output = AntiPlane;
-    func weight_contraction(other: FlatPoint) -> Output {
-        AntiFlatPoint right_anti_dual = AntiFlatPoint.from_groups(
+public extension Line {
+    public AntiPlane weight_contraction(FlatPoint other) {
+        AntiFlatPoint right_anti_dual = AntiFlatPoint(
             /* e235, e315, e125, e321 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiPlane.from_groups(
+        return AntiPlane(
             /* e1, e2, e3, e5 */
             float4((float3(right_anti_dual.e321) * this.group0.xyz), -(right_anti_dual.e235 * this.e415) - (right_anti_dual.e315 * this.e425) - (right_anti_dual.e125 * this.e435))
         );
     }
 }
-extension Line: WeightContraction<Flector> {
-    associatedtype Output = AntiPlane;
-    func weight_contraction(other: Flector) -> Output {
-        AntiFlector right_anti_dual = AntiFlector.from_groups(
+public extension Line {
+    public AntiPlane weight_contraction(Flector other) {
+        AntiFlector right_anti_dual = AntiFlector(
             /* e235, e315, e125, e321 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e1, e2, e3, e5 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiPlane.from_groups(
+        return AntiPlane(
             /* e1, e2, e3, e5 */
             float4((float3(right_anti_dual.e321) * this.group0.xyz), -(right_anti_dual.e235 * this.e415) - (right_anti_dual.e315 * this.e425) - (right_anti_dual.e125 * this.e435))
         );
     }
 }
-extension Line: WeightContraction<Line> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: Line) -> Output {
-        AntiLine right_anti_dual = AntiLine.from_groups(
-            /* e23, e31, e12, 0 */
-            float4(other.group0.xyz, 0.0), 
-            /* e15, e25, e35, 0 */
-            float4(other.group1.xyz, 0.0)
+public extension Line {
+    public Scalar weight_contraction(Line other) {
+        AntiLine right_anti_dual = AntiLine(
+            /* e23, e31, e12 */
+            other.group0.xyz, 
+            /* e15, e25, e35 */
+            other.group1.xyz
         );
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(-(right_anti_dual.e23 * this.e415) - (right_anti_dual.e31 * this.e425) - (right_anti_dual.e12 * this.e435), 0.0, 0.0, 0.0)
+        return Scalar(
+            /* scalar */
+            -(right_anti_dual.e23 * this.e415) - (right_anti_dual.e31 * this.e425) - (right_anti_dual.e12 * this.e435)
         );
     }
 }
-extension Line: WeightContraction<Motor> {
-    associatedtype Output = AntiMotor;
-    func weight_contraction(other: Motor) -> Output {
-        AntiMotor right_anti_dual = AntiMotor.from_groups(
+public extension Line {
+    public AntiMotor weight_contraction(Motor other) {
+        AntiMotor right_anti_dual = AntiMotor(
             /* e23, e31, e12, scalar */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, e3215 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiMotor.from_groups(
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(float3(0.0), -(right_anti_dual.e23 * this.e415) - (right_anti_dual.e31 * this.e425) - (right_anti_dual.e12 * this.e435)), 
             /* e15, e25, e35, e3215 */
@@ -6325,97 +6098,93 @@ extension Line: WeightContraction<Motor> {
         );
     }
 }
-extension Line: WeightContraction<MultiVector> {
-    associatedtype Output = MultiVector;
-    func weight_contraction(other: MultiVector) -> Output {
-        MultiVector right_anti_dual = MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(other.group0.xy.yx * float2(-1.0, 1.0), 0.0, 0.0), 
+public extension Line {
+    public MultiVector weight_contraction(MultiVector other) {
+        MultiVector right_anti_dual = MultiVector(
+            /* scalar, e12345 */
+            other.group0.xy.yx * float2(-1.0, 1.0), 
             /* e1, e2, e3, e4 */
             float4(other.group9.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e5, 0, 0, 0 */
-            float4(other.e3215, 0.0, 0.0, 0.0), 
+            /* e5 */
+            other.e3215, 
             /* e15, e25, e35, e45 */
             float4(other.group8.xyz, other.e321 * -1.0), 
-            /* e41, e42, e43, 0 */
-            float4(other.group7.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group6.xyz, 0.0), 
+            /* e41, e42, e43 */
+            other.group7.xyz, 
+            /* e23, e31, e12 */
+            other.group6.xyz, 
             /* e415, e425, e435, e321 */
             float4(other.group5.xyz, other.e45) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e423, e431, e412, 0 */
-            float4(other.group4.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group3.xyz * float3(-1.0), 0.0), 
+            /* e423, e431, e412 */
+            other.group4.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            other.group3.xyz * float3(-1.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(other.group1.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * -1.0
         );
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(-(this.e415 * right_anti_dual.e23) - (this.e425 * right_anti_dual.e31) - (this.e435 * right_anti_dual.e12) - (this.e235 * right_anti_dual.e41) - (this.e315 * right_anti_dual.e42) - (this.e125 * right_anti_dual.e43), 0.0), 0.0, 0.0), 
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(-(this.e415 * right_anti_dual.e23) - (this.e425 * right_anti_dual.e31) - (this.e435 * right_anti_dual.e12) - (this.e235 * right_anti_dual.e41) - (this.e315 * right_anti_dual.e42) - (this.e125 * right_anti_dual.e43), 0.0), 
             /* e1, e2, e3, e4 */
             float4((this.e415 * right_anti_dual.e321) + (this.e315 * right_anti_dual.e412), (this.e425 * right_anti_dual.e321) + (this.e125 * right_anti_dual.e423), (this.e435 * right_anti_dual.e321) + (this.e235 * right_anti_dual.e431), -(this.e425 * right_anti_dual.e431) - (this.e435 * right_anti_dual.e412)) - float4((this.group1.xyz.zxy * right_anti_dual.group7.xyz.yzx), this.e415 * right_anti_dual.e423), 
-            /* e5, 0, 0, 0 */
-            float4(-(this.e415 * right_anti_dual.e235) - (this.e425 * right_anti_dual.e315) - (this.e435 * right_anti_dual.e125) - (this.e235 * right_anti_dual.e415) - (this.e315 * right_anti_dual.e425) - (this.e125 * right_anti_dual.e435), 0.0, 0.0, 0.0), 
+            /* e5 */
+            -(this.e415 * right_anti_dual.e235) - (this.e425 * right_anti_dual.e315) - (this.e435 * right_anti_dual.e125) - (this.e235 * right_anti_dual.e415) - (this.e315 * right_anti_dual.e425) - (this.e125 * right_anti_dual.e435), 
             /* e15, e25, e35, e45 */
             float4((this.e415 * right_anti_dual.e3215) + (this.e315 * right_anti_dual.e4125), (this.e425 * right_anti_dual.e3215) + (this.e125 * right_anti_dual.e4235), (this.e435 * right_anti_dual.e3215) + (this.e235 * right_anti_dual.e4315), -(this.e425 * right_anti_dual.e4315) - (this.e435 * right_anti_dual.e4125)) - (right_anti_dual.group9.yzxx * float4(this.group1.xyz.zxy, this.e415)), 
-            /* e41, e42, e43, 0 */
-            float4(float3(right_anti_dual.e1234) * this.group0.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(float3(right_anti_dual.e1234) * this.group1.xyz, 0.0), 
+            /* e41, e42, e43 */
+            float3(right_anti_dual.e1234) * this.group0.xyz, 
+            /* e23, e31, e12 */
+            float3(right_anti_dual.e1234) * this.group1.xyz, 
             /* e415, e425, e435, e321 */
             float4(right_anti_dual.group0.xy.yy, right_anti_dual.e12345, 0.0) * float4(float3(1.0), 0.0) * float4(this.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(float3(right_anti_dual.e12345) * this.group1.xyz, 0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(right_anti_dual.e12345) * this.group1.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension Line: WeightContraction<RoundPoint> {
-    associatedtype Output = Dipole;
-    func weight_contraction(other: RoundPoint) -> Output {
-        Sphere right_anti_dual = Sphere.from_groups(
+public extension Line {
+    public Dipole weight_contraction(RoundPoint other) {
+        Sphere right_anti_dual = Sphere(
             /* e4235, e4315, e4125, e3215 */
             float4(other.group0.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * -1.0
         );
-        return Dipole.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(right_anti_dual.e1234) * this.group0.xyz, 0.0), 
+        return Dipole(
+            /* e41, e42, e43 */
+            float3(right_anti_dual.e1234) * this.group0.xyz, 
             /* e23, e31, e12, e45 */
             float4((float3(right_anti_dual.e1234) * this.group1.xyz), -(this.e415 * right_anti_dual.e4235) - (this.e425 * right_anti_dual.e4315) - (this.e435 * right_anti_dual.e4125)), 
-            /* e15, e25, e35, 0 */
-            float4((float3(right_anti_dual.e3215) * this.group0.xyz) + (this.group1.xyz.yzx * right_anti_dual.group0.zxy) - (this.group1.xyz.zxy * right_anti_dual.group0.yzx), 0.0)
+            /* e15, e25, e35 */
+            (float3(right_anti_dual.e3215) * this.group0.xyz) + (this.group1.xyz.yzx * right_anti_dual.group0.zxy) - (this.group1.xyz.zxy * right_anti_dual.group0.yzx)
         );
     }
 }
-extension Line: WeightContraction<Scalar> {
-    associatedtype Output = Line;
-    func weight_contraction(other: Scalar) -> Output {
-        AntiScalar right_anti_dual = AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(other.scalar, 0.0, 0.0, 0.0)
+public extension Line {
+    public Line weight_contraction(Scalar other) {
+        AntiScalar right_anti_dual = AntiScalar(
+            /* e12345 */
+            other.scalar
         );
-        return Line.from_groups(
-            /* e415, e425, e435, 0 */
-            float4(float3(right_anti_dual.e12345) * this.group0.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(float3(right_anti_dual.e12345) * this.group1.xyz, 0.0)
+        return Line(
+            /* e415, e425, e435 */
+            float3(right_anti_dual.e12345) * this.group0.xyz, 
+            /* e235, e315, e125 */
+            float3(right_anti_dual.e12345) * this.group1.xyz
         );
     }
 }
-extension Line: WeightContraction<VersorEven> {
-    associatedtype Output = AntiCircleRotor;
-    func weight_contraction(other: VersorEven) -> Output {
-        VersorOdd right_anti_dual = VersorOdd.from_groups(
+public extension Line {
+    public AntiCircleRotor weight_contraction(VersorEven other) {
+        VersorOdd right_anti_dual = VersorOdd(
             /* e41, e42, e43, scalar */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e23, e31, e12, e45 */
@@ -6425,9 +6194,9 @@ extension Line: WeightContraction<VersorEven> {
             /* e4235, e4315, e4125, e3215 */
             float4(other.group3.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(right_anti_dual.e1234) * this.group0.xyz, 0.0), 
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            float3(right_anti_dual.e1234) * this.group0.xyz, 
             /* e23, e31, e12, e45 */
             float4((float3(right_anti_dual.e1234) * this.group1.xyz), -(this.e415 * right_anti_dual.e4235) - (this.e425 * right_anti_dual.e4315) - (this.e435 * right_anti_dual.e4125)), 
             /* e15, e25, e35, scalar */
@@ -6435,10 +6204,9 @@ extension Line: WeightContraction<VersorEven> {
         );
     }
 }
-extension Line: WeightContraction<VersorOdd> {
-    associatedtype Output = AntiDipoleInversion;
-    func weight_contraction(other: VersorOdd) -> Output {
-        VersorEven right_anti_dual = VersorEven.from_groups(
+public extension Line {
+    public AntiDipoleInversion weight_contraction(VersorOdd other) {
+        VersorEven right_anti_dual = VersorEven(
             /* e423, e431, e412, e12345 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e415, e425, e435, e321 */
@@ -6448,9 +6216,9 @@ extension Line: WeightContraction<VersorOdd> {
             /* e1, e2, e3, e4 */
             float4(other.group3.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(float3(1.0), 0.0) * float4(this.group0.xyz, 0.0) * float4(right_anti_dual.group0.www, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
             /* e235, e315, e125, e4 */
@@ -6460,24 +6228,29 @@ extension Line: WeightContraction<VersorOdd> {
         );
     }
 }
-extension Motor {
-    // Fancy infix trick
-    func operator/(_rhs: WeightContractionInfix) -> WeightContractionInfixPartial<Motor> {
-        return WeightContractionInfixPartial { a: this };
+public extension Motor {
+    // Fancy infix trick (first half)
+    public WeightContractionInfixPartial<Motor> operator /(WeightContractionInfix rhs) {
+        return WeightContractionInfixPartial<Motor>(this);
     }
 }
-extension Motor: WeightContraction<AntiCircleRotor> {
-    associatedtype Output = VersorEven;
-    func weight_contraction(other: AntiCircleRotor) -> Output {
-        CircleRotor right_anti_dual = CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension WeightContractionInfixPartial<Motor> {
+    // Fancy infix trick (second half)
+    public VersorEven operator /(AntiCircleRotor rhs) {
+        return this.a.weight_contraction(rhs);
+    }
+}
+public extension Motor {
+    public VersorEven weight_contraction(AntiCircleRotor other) {
+        CircleRotor right_anti_dual = CircleRotor(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e12345 */
             other.group2 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return VersorEven.from_groups(
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(this.e12345) * float4(right_anti_dual.group0.xyz, right_anti_dual.e12345), 
             /* e415, e425, e435, e321 */
@@ -6489,12 +6262,11 @@ extension Motor: WeightContraction<AntiCircleRotor> {
         );
     }
 }
-extension Motor: WeightContraction<AntiDipoleInversion> {
-    associatedtype Output = VersorOdd;
-    func weight_contraction(other: AntiDipoleInversion) -> Output {
-        DipoleInversion right_anti_dual = DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension Motor {
+    public VersorOdd weight_contraction(AntiDipoleInversion other) {
+        DipoleInversion right_anti_dual = DipoleInversion(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, e1234 */
@@ -6502,7 +6274,7 @@ extension Motor: WeightContraction<AntiDipoleInversion> {
             /* e4235, e4315, e4125, e3215 */
             other.group3 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return VersorOdd.from_groups(
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(right_anti_dual.e1234 * this.e415, right_anti_dual.e1234 * this.e425, right_anti_dual.e1234 * this.e435, -(right_anti_dual.e41 * this.e235) - (right_anti_dual.e42 * this.e315) - (right_anti_dual.e43 * this.e125) - (right_anti_dual.e23 * this.e415) - (right_anti_dual.e31 * this.e425) - (right_anti_dual.e12 * this.e435)) + float4((right_anti_dual.group0.xyz * this.group0.www), right_anti_dual.e1234 * this.e5), 
             /* e23, e31, e12, e45 */
@@ -6514,14 +6286,13 @@ extension Motor: WeightContraction<AntiDipoleInversion> {
         );
     }
 }
-extension Motor: WeightContraction<AntiDualNum> {
-    associatedtype Output = Motor;
-    func weight_contraction(other: AntiDualNum) -> Output {
-        DualNum right_anti_dual = DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(other.group0.xy, 0.0, 0.0)
+public extension Motor {
+    public Motor weight_contraction(AntiDualNum other) {
+        DualNum right_anti_dual = DualNum(
+            /* e5, e12345 */
+            other.group0.xy
         );
-        return Motor.from_groups(
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4(right_anti_dual.e12345) * this.group0, 
             /* e235, e315, e125, e5 */
@@ -6529,25 +6300,23 @@ extension Motor: WeightContraction<AntiDualNum> {
         );
     }
 }
-extension Motor: WeightContraction<AntiFlatPoint> {
-    associatedtype Output = FlatPoint;
-    func weight_contraction(other: AntiFlatPoint) -> Output {
-        return FlatPoint.from_groups(
+public extension Motor {
+    public FlatPoint weight_contraction(AntiFlatPoint other) {
+        return FlatPoint(
             /* e15, e25, e35, e45 */
             float4(this.e12345) * float4(other.group0.xyz, other.e321 * -1.0)
         );
     }
 }
-extension Motor: WeightContraction<AntiFlector> {
-    associatedtype Output = Flector;
-    func weight_contraction(other: AntiFlector) -> Output {
-        Flector right_anti_dual = Flector.from_groups(
+public extension Motor {
+    public Flector weight_contraction(AntiFlector other) {
+        Flector right_anti_dual = Flector(
             /* e15, e25, e35, e45 */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e4235, e4315, e4125, e3215 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return Flector.from_groups(
+        return Flector(
             /* e15, e25, e35, e45 */
             float4((right_anti_dual.e4125 * this.e315) + (right_anti_dual.e3215 * this.e415), (right_anti_dual.e4235 * this.e125) + (right_anti_dual.e3215 * this.e425), (right_anti_dual.e4315 * this.e235) + (right_anti_dual.e3215 * this.e435), -(right_anti_dual.e4315 * this.e425) - (right_anti_dual.e4125 * this.e435)) + (float4(this.e12345) * right_anti_dual.group0) - (right_anti_dual.group1.yzxx * float4(this.group1.zxy, this.e415)), 
             /* e4235, e4315, e4125, e3215 */
@@ -6555,16 +6324,15 @@ extension Motor: WeightContraction<AntiFlector> {
         );
     }
 }
-extension Motor: WeightContraction<AntiLine> {
-    associatedtype Output = Motor;
-    func weight_contraction(other: AntiLine) -> Output {
-        Line right_anti_dual = Line.from_groups(
-            /* e415, e425, e435, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group1.xyz * float3(-1.0), 0.0)
+public extension Motor {
+    public Motor weight_contraction(AntiLine other) {
+        Line right_anti_dual = Line(
+            /* e415, e425, e435 */
+            other.group0.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            other.group1.xyz * float3(-1.0)
         );
-        return Motor.from_groups(
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4(float3(1.0), 0.0) * float4(right_anti_dual.group0.xyz, 0.0) * float4(this.group0.www, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
             /* e235, e315, e125, e5 */
@@ -6572,16 +6340,15 @@ extension Motor: WeightContraction<AntiLine> {
         );
     }
 }
-extension Motor: WeightContraction<AntiMotor> {
-    associatedtype Output = Motor;
-    func weight_contraction(other: AntiMotor) -> Output {
-        Motor right_anti_dual = Motor.from_groups(
+public extension Motor {
+    public Motor weight_contraction(AntiMotor other) {
+        Motor right_anti_dual = Motor(
             /* e415, e425, e435, e12345 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e5 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return Motor.from_groups(
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4(((float3(right_anti_dual.e12345) * this.group0.xyz) + (float3(this.e12345) * right_anti_dual.group0.xyz)), right_anti_dual.e12345 * this.e12345), 
             /* e235, e315, e125, e5 */
@@ -6589,14 +6356,13 @@ extension Motor: WeightContraction<AntiMotor> {
         );
     }
 }
-extension Motor: WeightContraction<AntiPlane> {
-    associatedtype Output = Flector;
-    func weight_contraction(other: AntiPlane) -> Output {
-        Plane right_anti_dual = Plane.from_groups(
+public extension Motor {
+    public Flector weight_contraction(AntiPlane other) {
+        Plane right_anti_dual = Plane(
             /* e4235, e4315, e4125, e3215 */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return Flector.from_groups(
+        return Flector(
             /* e15, e25, e35, e45 */
             float4((this.e415 * right_anti_dual.e3215) + (this.e315 * right_anti_dual.e4125), (this.e425 * right_anti_dual.e3215) + (this.e125 * right_anti_dual.e4235), (this.e435 * right_anti_dual.e3215) + (this.e235 * right_anti_dual.e4315), -(this.e425 * right_anti_dual.e4315) - (this.e435 * right_anti_dual.e4125)) - (right_anti_dual.group0.yzxx * float4(this.group1.zxy, this.e415)), 
             /* e4235, e4315, e4125, e3215 */
@@ -6604,29 +6370,27 @@ extension Motor: WeightContraction<AntiPlane> {
         );
     }
 }
-extension Motor: WeightContraction<AntiScalar> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: AntiScalar) -> Output {
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(other.e12345 * this.e12345 * -1.0, 0.0, 0.0, 0.0)
+public extension Motor {
+    public Scalar weight_contraction(AntiScalar other) {
+        return Scalar(
+            /* scalar */
+            other.e12345 * this.e12345 * -1.0
         );
     }
 }
-extension Motor: WeightContraction<Circle> {
-    associatedtype Output = AntiCircleRotor;
-    func weight_contraction(other: Circle) -> Output {
-        Dipole right_anti_dual = Dipole.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension Motor {
+    public AntiCircleRotor weight_contraction(Circle other) {
+        Dipole right_anti_dual = Dipole(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e15, e25, e35, 0 */
-            float4(other.group2.xyz, 0.0)
+            /* e15, e25, e35 */
+            other.group2.xyz
         );
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(this.e12345) * right_anti_dual.group0.xyz, 0.0), 
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            float3(this.e12345) * right_anti_dual.group0.xyz, 
             /* e23, e31, e12, e45 */
             float4(this.e12345) * right_anti_dual.group1, 
             /* e15, e25, e35, scalar */
@@ -6634,20 +6398,19 @@ extension Motor: WeightContraction<Circle> {
         );
     }
 }
-extension Motor: WeightContraction<CircleRotor> {
-    associatedtype Output = AntiCircleRotor;
-    func weight_contraction(other: CircleRotor) -> Output {
-        AntiCircleRotor right_anti_dual = AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension Motor {
+    public AntiCircleRotor weight_contraction(CircleRotor other) {
+        AntiCircleRotor right_anti_dual = AntiCircleRotor(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, scalar */
             other.group2 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(this.e12345) * right_anti_dual.group0.xyz, 0.0), 
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            float3(this.e12345) * right_anti_dual.group0.xyz, 
             /* e23, e31, e12, e45 */
             float4(this.e12345) * right_anti_dual.group1, 
             /* e15, e25, e35, scalar */
@@ -6655,20 +6418,19 @@ extension Motor: WeightContraction<CircleRotor> {
         );
     }
 }
-extension Motor: WeightContraction<Dipole> {
-    associatedtype Output = AntiDipoleInversion;
-    func weight_contraction(other: Dipole) -> Output {
-        Circle right_anti_dual = Circle.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension Motor {
+    public AntiDipoleInversion weight_contraction(Dipole other) {
+        Circle right_anti_dual = Circle(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group2.xyz * float3(-1.0), 0.0)
+            /* e235, e315, e125 */
+            other.group2.xyz * float3(-1.0)
         );
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(this.e12345) * right_anti_dual.group0.xyz, 0.0), 
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(this.e12345) * right_anti_dual.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(this.e12345) * right_anti_dual.group1, 
             /* e235, e315, e125, e4 */
@@ -6678,12 +6440,11 @@ extension Motor: WeightContraction<Dipole> {
         );
     }
 }
-extension Motor: WeightContraction<DipoleInversion> {
-    associatedtype Output = AntiDipoleInversion;
-    func weight_contraction(other: DipoleInversion) -> Output {
-        AntiDipoleInversion right_anti_dual = AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension Motor {
+    public AntiDipoleInversion weight_contraction(DipoleInversion other) {
+        AntiDipoleInversion right_anti_dual = AntiDipoleInversion(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e4 */
@@ -6691,9 +6452,9 @@ extension Motor: WeightContraction<DipoleInversion> {
             /* e1, e2, e3, e5 */
             other.group3 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(this.e12345) * right_anti_dual.group0.xyz, 0.0), 
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(this.e12345) * right_anti_dual.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(this.e12345) * right_anti_dual.group1, 
             /* e235, e315, e125, e4 */
@@ -6703,14 +6464,13 @@ extension Motor: WeightContraction<DipoleInversion> {
         );
     }
 }
-extension Motor: WeightContraction<DualNum> {
-    associatedtype Output = AntiMotor;
-    func weight_contraction(other: DualNum) -> Output {
-        AntiDualNum right_anti_dual = AntiDualNum.from_groups(
-            /* e3215, scalar, 0, 0 */
-            float4(other.group0.xy * float2(-1.0), 0.0, 0.0)
+public extension Motor {
+    public AntiMotor weight_contraction(DualNum other) {
+        AntiDualNum right_anti_dual = AntiDualNum(
+            /* e3215, scalar */
+            other.group0.xy * float2(-1.0)
         );
-        return AntiMotor.from_groups(
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(float3(0.0), right_anti_dual.scalar * this.e12345), 
             /* e15, e25, e35, e3215 */
@@ -6718,14 +6478,13 @@ extension Motor: WeightContraction<DualNum> {
         );
     }
 }
-extension Motor: WeightContraction<FlatPoint> {
-    associatedtype Output = AntiFlector;
-    func weight_contraction(other: FlatPoint) -> Output {
-        AntiFlatPoint right_anti_dual = AntiFlatPoint.from_groups(
+public extension Motor {
+    public AntiFlector weight_contraction(FlatPoint other) {
+        AntiFlatPoint right_anti_dual = AntiFlatPoint(
             /* e235, e315, e125, e321 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiFlector.from_groups(
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(this.e12345) * right_anti_dual.group0, 
             /* e1, e2, e3, e5 */
@@ -6733,16 +6492,15 @@ extension Motor: WeightContraction<FlatPoint> {
         );
     }
 }
-extension Motor: WeightContraction<Flector> {
-    associatedtype Output = AntiFlector;
-    func weight_contraction(other: Flector) -> Output {
-        AntiFlector right_anti_dual = AntiFlector.from_groups(
+public extension Motor {
+    public AntiFlector weight_contraction(Flector other) {
+        AntiFlector right_anti_dual = AntiFlector(
             /* e235, e315, e125, e321 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e1, e2, e3, e5 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiFlector.from_groups(
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(this.e12345) * right_anti_dual.group0, 
             /* e1, e2, e3, e5 */
@@ -6750,16 +6508,15 @@ extension Motor: WeightContraction<Flector> {
         );
     }
 }
-extension Motor: WeightContraction<Line> {
-    associatedtype Output = AntiMotor;
-    func weight_contraction(other: Line) -> Output {
-        AntiLine right_anti_dual = AntiLine.from_groups(
-            /* e23, e31, e12, 0 */
-            float4(other.group0.xyz, 0.0), 
-            /* e15, e25, e35, 0 */
-            float4(other.group1.xyz, 0.0)
+public extension Motor {
+    public AntiMotor weight_contraction(Line other) {
+        AntiLine right_anti_dual = AntiLine(
+            /* e23, e31, e12 */
+            other.group0.xyz, 
+            /* e15, e25, e35 */
+            other.group1.xyz
         );
-        return AntiMotor.from_groups(
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4((float3(this.e12345) * right_anti_dual.group0.xyz), -(right_anti_dual.e23 * this.e415) - (right_anti_dual.e31 * this.e425) - (right_anti_dual.e12 * this.e435)), 
             /* e15, e25, e35, e3215 */
@@ -6767,16 +6524,15 @@ extension Motor: WeightContraction<Line> {
         );
     }
 }
-extension Motor: WeightContraction<Motor> {
-    associatedtype Output = AntiMotor;
-    func weight_contraction(other: Motor) -> Output {
-        AntiMotor right_anti_dual = AntiMotor.from_groups(
+public extension Motor {
+    public AntiMotor weight_contraction(Motor other) {
+        AntiMotor right_anti_dual = AntiMotor(
             /* e23, e31, e12, scalar */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, e3215 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiMotor.from_groups(
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4((float3(this.e12345) * right_anti_dual.group0.xyz), (right_anti_dual.scalar * this.e12345) - (right_anti_dual.e23 * this.e415) - (right_anti_dual.e31 * this.e425) - (right_anti_dual.e12 * this.e435)), 
             /* e15, e25, e35, e3215 */
@@ -6784,78 +6540,75 @@ extension Motor: WeightContraction<Motor> {
         );
     }
 }
-extension Motor: WeightContraction<MultiVector> {
-    associatedtype Output = MultiVector;
-    func weight_contraction(other: MultiVector) -> Output {
-        MultiVector right_anti_dual = MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(other.group0.xy.yx * float2(-1.0, 1.0), 0.0, 0.0), 
+public extension Motor {
+    public MultiVector weight_contraction(MultiVector other) {
+        MultiVector right_anti_dual = MultiVector(
+            /* scalar, e12345 */
+            other.group0.xy.yx * float2(-1.0, 1.0), 
             /* e1, e2, e3, e4 */
             float4(other.group9.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e5, 0, 0, 0 */
-            float4(other.e3215, 0.0, 0.0, 0.0), 
+            /* e5 */
+            other.e3215, 
             /* e15, e25, e35, e45 */
             float4(other.group8.xyz, other.e321 * -1.0), 
-            /* e41, e42, e43, 0 */
-            float4(other.group7.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group6.xyz, 0.0), 
+            /* e41, e42, e43 */
+            other.group7.xyz, 
+            /* e23, e31, e12 */
+            other.group6.xyz, 
             /* e415, e425, e435, e321 */
             float4(other.group5.xyz, other.e45) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e423, e431, e412, 0 */
-            float4(other.group4.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group3.xyz * float3(-1.0), 0.0), 
+            /* e423, e431, e412 */
+            other.group4.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            other.group3.xyz * float3(-1.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(other.group1.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * -1.0
         );
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((this.e12345 * right_anti_dual.scalar) + (this.e5 * right_anti_dual.e1234) - (this.e415 * right_anti_dual.e23) - (this.e425 * right_anti_dual.e31) - (this.e435 * right_anti_dual.e12) - (this.e235 * right_anti_dual.e41) - (this.e315 * right_anti_dual.e42) - (this.e125 * right_anti_dual.e43), this.e12345 * right_anti_dual.e12345), 0.0, 0.0), 
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((this.e12345 * right_anti_dual.scalar) + (this.e5 * right_anti_dual.e1234) - (this.e415 * right_anti_dual.e23) - (this.e425 * right_anti_dual.e31) - (this.e435 * right_anti_dual.e12) - (this.e235 * right_anti_dual.e41) - (this.e315 * right_anti_dual.e42) - (this.e125 * right_anti_dual.e43), this.e12345 * right_anti_dual.e12345), 
             /* e1, e2, e3, e4 */
             float4((this.e415 * right_anti_dual.e321) + (this.e12345 * right_anti_dual.e1), (this.e425 * right_anti_dual.e321) + (this.e12345 * right_anti_dual.e2), (this.e435 * right_anti_dual.e321) + (this.e12345 * right_anti_dual.e3), -(this.e425 * right_anti_dual.e431) - (this.e435 * right_anti_dual.e412)) + float4((right_anti_dual.group7.xyz.zxy * this.group1.yzx), this.e12345 * right_anti_dual.e4) - float4((right_anti_dual.group7.xyz.yzx * this.group1.zxy), this.e415 * right_anti_dual.e423), 
-            /* e5, 0, 0, 0 */
-            float4((this.e12345 * right_anti_dual.e5) + (this.e5 * right_anti_dual.e12345) - (this.e415 * right_anti_dual.e235) - (this.e425 * right_anti_dual.e315) - (this.e435 * right_anti_dual.e125) - (this.e235 * right_anti_dual.e415) - (this.e315 * right_anti_dual.e425) - (this.e125 * right_anti_dual.e435), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (this.e12345 * right_anti_dual.e5) + (this.e5 * right_anti_dual.e12345) - (this.e415 * right_anti_dual.e235) - (this.e425 * right_anti_dual.e315) - (this.e435 * right_anti_dual.e125) - (this.e235 * right_anti_dual.e415) - (this.e315 * right_anti_dual.e425) - (this.e125 * right_anti_dual.e435), 
             /* e15, e25, e35, e45 */
             float4((this.e12345 * right_anti_dual.e15) + (this.e315 * right_anti_dual.e4125), (this.e12345 * right_anti_dual.e25) + (this.e125 * right_anti_dual.e4235), (this.e12345 * right_anti_dual.e35) + (this.e235 * right_anti_dual.e4315), -(this.e425 * right_anti_dual.e4315) - (this.e435 * right_anti_dual.e4125)) + (this.group0 * float4(right_anti_dual.group9.www, right_anti_dual.e45)) - (right_anti_dual.group9.yzxx * float4(this.group1.zxy, this.e415)), 
-            /* e41, e42, e43, 0 */
-            float4((float3(this.e12345) * right_anti_dual.group4.xyz) + (float3(right_anti_dual.e1234) * this.group0.xyz), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(this.e12345) * right_anti_dual.group5.xyz) + (float3(right_anti_dual.e1234) * this.group1.xyz), 0.0), 
+            /* e41, e42, e43 */
+            (float3(this.e12345) * right_anti_dual.group4.xyz) + (float3(right_anti_dual.e1234) * this.group0.xyz), 
+            /* e23, e31, e12 */
+            (float3(this.e12345) * right_anti_dual.group5.xyz) + (float3(right_anti_dual.e1234) * this.group1.xyz), 
             /* e415, e425, e435, e321 */
             float4(((float3(this.e12345) * right_anti_dual.group6.xyz) + (float3(right_anti_dual.e12345) * this.group0.xyz)), this.e12345 * right_anti_dual.e321), 
-            /* e423, e431, e412, 0 */
-            float4(float3(this.e12345) * right_anti_dual.group7.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(this.e12345) * right_anti_dual.group8.xyz) + (float3(right_anti_dual.e12345) * this.group1.xyz), 0.0), 
+            /* e423, e431, e412 */
+            float3(this.e12345) * right_anti_dual.group7.xyz, 
+            /* e235, e315, e125 */
+            (float3(this.e12345) * right_anti_dual.group8.xyz) + (float3(right_anti_dual.e12345) * this.group1.xyz), 
             /* e4235, e4315, e4125, e3215 */
             float4(this.e12345) * right_anti_dual.group9, 
-            /* e1234, 0, 0, 0 */
-            float4(this.e12345 * right_anti_dual.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            this.e12345 * right_anti_dual.e1234
         );
     }
 }
-extension Motor: WeightContraction<Plane> {
-    associatedtype Output = AntiPlane;
-    func weight_contraction(other: Plane) -> Output {
-        return AntiPlane.from_groups(
+public extension Motor {
+    public AntiPlane weight_contraction(Plane other) {
+        return AntiPlane(
             /* e1, e2, e3, e5 */
             float4(this.e12345) * float4(other.e4235 * -1.0, other.e4315 * -1.0, other.e4125 * -1.0, other.e3215)
         );
     }
 }
-extension Motor: WeightContraction<RoundPoint> {
-    associatedtype Output = VersorOdd;
-    func weight_contraction(other: RoundPoint) -> Output {
-        Sphere right_anti_dual = Sphere.from_groups(
+public extension Motor {
+    public VersorOdd weight_contraction(RoundPoint other) {
+        Sphere right_anti_dual = Sphere(
             /* e4235, e4315, e4125, e3215 */
             float4(other.group0.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * -1.0
         );
-        return VersorOdd.from_groups(
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(right_anti_dual.e1234) * float4(this.group0.xyz, this.e5), 
             /* e23, e31, e12, e45 */
@@ -6867,14 +6620,13 @@ extension Motor: WeightContraction<RoundPoint> {
         );
     }
 }
-extension Motor: WeightContraction<Scalar> {
-    associatedtype Output = Motor;
-    func weight_contraction(other: Scalar) -> Output {
-        AntiScalar right_anti_dual = AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(other.scalar, 0.0, 0.0, 0.0)
+public extension Motor {
+    public Motor weight_contraction(Scalar other) {
+        AntiScalar right_anti_dual = AntiScalar(
+            /* e12345 */
+            other.scalar
         );
-        return Motor.from_groups(
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4(right_anti_dual.e12345) * this.group0, 
             /* e235, e315, e125, e5 */
@@ -6882,27 +6634,25 @@ extension Motor: WeightContraction<Scalar> {
         );
     }
 }
-extension Motor: WeightContraction<Sphere> {
-    associatedtype Output = RoundPoint;
-    func weight_contraction(other: Sphere) -> Output {
-        RoundPoint right_anti_dual = RoundPoint.from_groups(
+public extension Motor {
+    public RoundPoint weight_contraction(Sphere other) {
+        RoundPoint right_anti_dual = RoundPoint(
             /* e1, e2, e3, e4 */
             float4(other.group0.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e5, 0, 0, 0 */
-            float4(other.e3215, 0.0, 0.0, 0.0)
+            /* e5 */
+            other.e3215
         );
-        return RoundPoint.from_groups(
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4(this.e12345) * right_anti_dual.group0, 
-            /* e5, 0, 0, 0 */
-            float4(this.e12345 * right_anti_dual.e5, 0.0, 0.0, 0.0)
+            /* e5 */
+            this.e12345 * right_anti_dual.e5
         );
     }
 }
-extension Motor: WeightContraction<VersorEven> {
-    associatedtype Output = VersorOdd;
-    func weight_contraction(other: VersorEven) -> Output {
-        VersorOdd right_anti_dual = VersorOdd.from_groups(
+public extension Motor {
+    public VersorOdd weight_contraction(VersorEven other) {
+        VersorOdd right_anti_dual = VersorOdd(
             /* e41, e42, e43, scalar */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e23, e31, e12, e45 */
@@ -6912,7 +6662,7 @@ extension Motor: WeightContraction<VersorEven> {
             /* e4235, e4315, e4125, e3215 */
             float4(other.group3.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return VersorOdd.from_groups(
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             (this.group0 * float4(right_anti_dual.group2.www, right_anti_dual.scalar)) + float4(float3(0.0), -(this.e415 * right_anti_dual.e23) - (this.e425 * right_anti_dual.e31) - (this.e435 * right_anti_dual.e12) - (this.e235 * right_anti_dual.e41) - (this.e315 * right_anti_dual.e42) - (this.e125 * right_anti_dual.e43)) + float4((this.group0.www * right_anti_dual.group0.xyz), this.e5 * right_anti_dual.e1234), 
             /* e23, e31, e12, e45 */
@@ -6924,10 +6674,9 @@ extension Motor: WeightContraction<VersorEven> {
         );
     }
 }
-extension Motor: WeightContraction<VersorOdd> {
-    associatedtype Output = VersorEven;
-    func weight_contraction(other: VersorOdd) -> Output {
-        VersorEven right_anti_dual = VersorEven.from_groups(
+public extension Motor {
+    public VersorEven weight_contraction(VersorOdd other) {
+        VersorEven right_anti_dual = VersorEven(
             /* e423, e431, e412, e12345 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e415, e425, e435, e321 */
@@ -6937,7 +6686,7 @@ extension Motor: WeightContraction<VersorOdd> {
             /* e1, e2, e3, e4 */
             float4(other.group3.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return VersorEven.from_groups(
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(this.e12345) * right_anti_dual.group0, 
             /* e415, e425, e435, e321 */
@@ -6949,55 +6698,59 @@ extension Motor: WeightContraction<VersorOdd> {
         );
     }
 }
-extension MultiVector {
-    // Fancy infix trick
-    func operator/(_rhs: WeightContractionInfix) -> WeightContractionInfixPartial<MultiVector> {
-        return WeightContractionInfixPartial { a: this };
+public extension MultiVector {
+    // Fancy infix trick (first half)
+    public WeightContractionInfixPartial<MultiVector> operator /(WeightContractionInfix rhs) {
+        return WeightContractionInfixPartial<MultiVector>(this);
     }
 }
-extension MultiVector: WeightContraction<AntiCircleRotor> {
-    associatedtype Output = MultiVector;
-    func weight_contraction(other: AntiCircleRotor) -> Output {
-        CircleRotor right_anti_dual = CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension WeightContractionInfixPartial<MultiVector> {
+    // Fancy infix trick (second half)
+    public MultiVector operator /(AntiCircleRotor rhs) {
+        return this.a.weight_contraction(rhs);
+    }
+}
+public extension MultiVector {
+    public MultiVector weight_contraction(AntiCircleRotor other) {
+        CircleRotor right_anti_dual = CircleRotor(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e12345 */
             other.group2 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((right_anti_dual.e12345 * this.scalar) - (right_anti_dual.e423 * this.e15) - (right_anti_dual.e431 * this.e25) - (right_anti_dual.e412 * this.e35) - (right_anti_dual.e415 * this.e23) - (right_anti_dual.e425 * this.e31) - (right_anti_dual.e435 * this.e12) - (right_anti_dual.e321 * this.e45) - (right_anti_dual.e235 * this.e41) - (right_anti_dual.e315 * this.e42) - (right_anti_dual.e125 * this.e43), right_anti_dual.e12345 * this.e12345), 0.0, 0.0), 
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((right_anti_dual.e12345 * this.scalar) - (right_anti_dual.e423 * this.e15) - (right_anti_dual.e431 * this.e25) - (right_anti_dual.e412 * this.e35) - (right_anti_dual.e415 * this.e23) - (right_anti_dual.e425 * this.e31) - (right_anti_dual.e435 * this.e12) - (right_anti_dual.e321 * this.e45) - (right_anti_dual.e235 * this.e41) - (right_anti_dual.e315 * this.e42) - (right_anti_dual.e125 * this.e43), right_anti_dual.e12345 * this.e12345), 
             /* e1, e2, e3, e4 */
             float4((right_anti_dual.e415 * this.e321) + (right_anti_dual.e321 * this.e415) + (right_anti_dual.e315 * this.e412) + (right_anti_dual.e12345 * this.e1), (right_anti_dual.e425 * this.e321) + (right_anti_dual.e321 * this.e425) + (right_anti_dual.e125 * this.e423) + (right_anti_dual.e12345 * this.e2), (right_anti_dual.e435 * this.e321) + (right_anti_dual.e321 * this.e435) + (right_anti_dual.e235 * this.e431) + (right_anti_dual.e12345 * this.e3), -(right_anti_dual.e412 * this.e435) - (right_anti_dual.e415 * this.e423) - (right_anti_dual.e425 * this.e431) - (right_anti_dual.e435 * this.e412)) + float4((right_anti_dual.group0.xyz.zxy * this.group8.xyz.yzx), right_anti_dual.e12345 * this.e4) - float4((right_anti_dual.group0.xyz.yzx * this.group8.xyz.zxy), right_anti_dual.e423 * this.e415) - float4((this.group7.xyz.yzx * right_anti_dual.group2.zxy), right_anti_dual.e431 * this.e425), 
-            /* e5, 0, 0, 0 */
-            float4((right_anti_dual.e12345 * this.e5) - (right_anti_dual.e415 * this.e235) - (right_anti_dual.e425 * this.e315) - (right_anti_dual.e435 * this.e125) - (right_anti_dual.e235 * this.e415) - (right_anti_dual.e315 * this.e425) - (right_anti_dual.e125 * this.e435), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (right_anti_dual.e12345 * this.e5) - (right_anti_dual.e415 * this.e235) - (right_anti_dual.e425 * this.e315) - (right_anti_dual.e435 * this.e125) - (right_anti_dual.e235 * this.e415) - (right_anti_dual.e315 * this.e425) - (right_anti_dual.e125 * this.e435), 
             /* e15, e25, e35, e45 */
             float4((right_anti_dual.e315 * this.e4125) + (right_anti_dual.e12345 * this.e15), (right_anti_dual.e125 * this.e4235) + (right_anti_dual.e12345 * this.e25), (right_anti_dual.e235 * this.e4315) + (right_anti_dual.e12345 * this.e35), -(right_anti_dual.e425 * this.e4315) - (right_anti_dual.e435 * this.e4125)) + float4((this.group9.www * right_anti_dual.group1.xyz), right_anti_dual.e12345 * this.e45) - (this.group9.yzxx * float4(right_anti_dual.group2.zxy, right_anti_dual.e415)), 
-            /* e41, e42, e43, 0 */
-            float4((float3(right_anti_dual.e12345) * this.group4.xyz) + (float3(this.e1234) * right_anti_dual.group1.xyz) + (right_anti_dual.group0.xyz.zxy * this.group9.yzx) - (right_anti_dual.group0.xyz.yzx * this.group9.zxy), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(right_anti_dual.e12345) * this.group5.xyz) + (float3(this.e3215) * right_anti_dual.group0.xyz) + (float3(this.e1234) * right_anti_dual.group2.xyz) - (float3(right_anti_dual.e321) * this.group9.xyz), 0.0), 
+            /* e41, e42, e43 */
+            (float3(right_anti_dual.e12345) * this.group4.xyz) + (float3(this.e1234) * right_anti_dual.group1.xyz) + (right_anti_dual.group0.xyz.zxy * this.group9.yzx) - (right_anti_dual.group0.xyz.yzx * this.group9.zxy), 
+            /* e23, e31, e12 */
+            (float3(right_anti_dual.e12345) * this.group5.xyz) + (float3(this.e3215) * right_anti_dual.group0.xyz) + (float3(this.e1234) * right_anti_dual.group2.xyz) - (float3(right_anti_dual.e321) * this.group9.xyz), 
             /* e415, e425, e435, e321 */
             (float4(right_anti_dual.e12345) * this.group6) + (float4(this.e12345) * right_anti_dual.group1), 
-            /* e423, e431, e412, 0 */
-            float4((float3(right_anti_dual.e12345) * this.group7.xyz) + (float3(this.e12345) * right_anti_dual.group0.xyz), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(right_anti_dual.e12345) * this.group8.xyz) + (float3(this.e12345) * right_anti_dual.group2.xyz), 0.0), 
+            /* e423, e431, e412 */
+            (float3(right_anti_dual.e12345) * this.group7.xyz) + (float3(this.e12345) * right_anti_dual.group0.xyz), 
+            /* e235, e315, e125 */
+            (float3(right_anti_dual.e12345) * this.group8.xyz) + (float3(this.e12345) * right_anti_dual.group2.xyz), 
             /* e4235, e4315, e4125, e3215 */
             float4(right_anti_dual.e12345) * this.group9, 
-            /* e1234, 0, 0, 0 */
-            float4(right_anti_dual.e12345 * this.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            right_anti_dual.e12345 * this.e1234
         );
     }
 }
-extension MultiVector: WeightContraction<AntiDipoleInversion> {
-    associatedtype Output = MultiVector;
-    func weight_contraction(other: AntiDipoleInversion) -> Output {
-        DipoleInversion right_anti_dual = DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension MultiVector {
+    public MultiVector weight_contraction(AntiDipoleInversion other) {
+        DipoleInversion right_anti_dual = DipoleInversion(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, e1234 */
@@ -7005,362 +6758,351 @@ extension MultiVector: WeightContraction<AntiDipoleInversion> {
             /* e4235, e4315, e4125, e3215 */
             other.group3 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((right_anti_dual.e1234 * this.e5) + (right_anti_dual.e4235 * this.e1) + (right_anti_dual.e4315 * this.e2) + (right_anti_dual.e4125 * this.e3) + (right_anti_dual.e3215 * this.e4) - (right_anti_dual.e41 * this.e235) - (right_anti_dual.e42 * this.e315) - (right_anti_dual.e43 * this.e125) - (right_anti_dual.e23 * this.e415) - (right_anti_dual.e31 * this.e425) - (right_anti_dual.e12 * this.e435) - (right_anti_dual.e45 * this.e321) - (right_anti_dual.e15 * this.e423) - (right_anti_dual.e25 * this.e431) - (right_anti_dual.e35 * this.e412), 0.0), 0.0, 0.0), 
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((right_anti_dual.e1234 * this.e5) + (right_anti_dual.e4235 * this.e1) + (right_anti_dual.e4315 * this.e2) + (right_anti_dual.e4125 * this.e3) + (right_anti_dual.e3215 * this.e4) - (right_anti_dual.e41 * this.e235) - (right_anti_dual.e42 * this.e315) - (right_anti_dual.e43 * this.e125) - (right_anti_dual.e23 * this.e415) - (right_anti_dual.e31 * this.e425) - (right_anti_dual.e12 * this.e435) - (right_anti_dual.e45 * this.e321) - (right_anti_dual.e15 * this.e423) - (right_anti_dual.e25 * this.e431) - (right_anti_dual.e35 * this.e412), 0.0), 
             /* e1, e2, e3, e4 */
             (float4(this.e1234) * float4(right_anti_dual.group2.xyz, right_anti_dual.e45)) + (this.group9.yzxz * float4(right_anti_dual.group1.zxy, right_anti_dual.e43)) + float4((this.group4.xyz * right_anti_dual.group3.www), right_anti_dual.e41 * this.e4235) + float4((this.group5.xyz.yzx * right_anti_dual.group3.zxy), right_anti_dual.e42 * this.e4315) - (float4(right_anti_dual.e1234) * this.group3) - (right_anti_dual.group3.yzxy * float4(this.group5.xyz.zxy, this.e42)) - float4((right_anti_dual.group0.xyz * this.group9.www), right_anti_dual.e4235 * this.e41) - float4((right_anti_dual.group1.yzx * this.group9.zxy), right_anti_dual.e4125 * this.e43), 
-            /* e5, 0, 0, 0 */
-            float4((right_anti_dual.e4235 * this.e15) + (right_anti_dual.e4315 * this.e25) + (right_anti_dual.e4125 * this.e35) + (right_anti_dual.e3215 * this.e45) - (right_anti_dual.e45 * this.e3215) - (right_anti_dual.e15 * this.e4235) - (right_anti_dual.e25 * this.e4315) - (right_anti_dual.e35 * this.e4125), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (right_anti_dual.e4235 * this.e15) + (right_anti_dual.e4315 * this.e25) + (right_anti_dual.e4125 * this.e35) + (right_anti_dual.e3215 * this.e45) - (right_anti_dual.e45 * this.e3215) - (right_anti_dual.e15 * this.e4235) - (right_anti_dual.e25 * this.e4315) - (right_anti_dual.e35 * this.e4125), 
             /* e15, e25, e35, e45 */
             float4((right_anti_dual.e4125 * this.e315) + (right_anti_dual.e3215 * this.e415), (right_anti_dual.e4235 * this.e125) + (right_anti_dual.e3215 * this.e425), (right_anti_dual.e4315 * this.e235) + (right_anti_dual.e3215 * this.e435), -(right_anti_dual.e4315 * this.e425) - (right_anti_dual.e4125 * this.e435)) + (float4(this.e12345) * float4(right_anti_dual.group2.xyz, right_anti_dual.e45)) - float4((this.group8.xyz.zxy * right_anti_dual.group3.yzx), right_anti_dual.e4235 * this.e415), 
-            /* e41, e42, e43, 0 */
-            float4((float3(right_anti_dual.e1234) * this.group6.xyz) + (float3(this.e12345) * right_anti_dual.group0.xyz) + (this.group7.xyz.zxy * right_anti_dual.group3.yzx) - (this.group7.xyz.yzx * right_anti_dual.group3.zxy), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(right_anti_dual.e1234) * this.group8.xyz) + (float3(right_anti_dual.e3215) * this.group7.xyz) + (float3(this.e12345) * right_anti_dual.group1.xyz) - (float3(this.e321) * right_anti_dual.group3.xyz), 0.0), 
+            /* e41, e42, e43 */
+            (float3(right_anti_dual.e1234) * this.group6.xyz) + (float3(this.e12345) * right_anti_dual.group0.xyz) + (this.group7.xyz.zxy * right_anti_dual.group3.yzx) - (this.group7.xyz.yzx * right_anti_dual.group3.zxy), 
+            /* e23, e31, e12 */
+            (float3(right_anti_dual.e1234) * this.group8.xyz) + (float3(right_anti_dual.e3215) * this.group7.xyz) + (float3(this.e12345) * right_anti_dual.group1.xyz) - (float3(this.e321) * right_anti_dual.group3.xyz), 
             /* e415, e425, e435, e321 */
             (right_anti_dual.group3.yzxw * float4(this.group9.zxy, this.e1234)) - (this.group9.yzxw * float4(right_anti_dual.group3.zxy, right_anti_dual.e1234)), 
-            /* e423, e431, e412, 0 */
-            float4((float3(this.e1234) * right_anti_dual.group3.xyz) - (float3(right_anti_dual.e1234) * this.group9.xyz), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(right_anti_dual.e3215) * this.group9.xyz) - (float3(this.e3215) * right_anti_dual.group3.xyz), 0.0), 
+            /* e423, e431, e412 */
+            (float3(this.e1234) * right_anti_dual.group3.xyz) - (float3(right_anti_dual.e1234) * this.group9.xyz), 
+            /* e235, e315, e125 */
+            (float3(right_anti_dual.e3215) * this.group9.xyz) - (float3(this.e3215) * right_anti_dual.group3.xyz), 
             /* e4235, e4315, e4125, e3215 */
             float4(this.e12345) * right_anti_dual.group3, 
-            /* e1234, 0, 0, 0 */
-            float4(right_anti_dual.e1234 * this.e12345, 0.0, 0.0, 0.0)
+            /* e1234 */
+            right_anti_dual.e1234 * this.e12345
         );
     }
 }
-extension MultiVector: WeightContraction<AntiDualNum> {
-    associatedtype Output = MultiVector;
-    func weight_contraction(other: AntiDualNum) -> Output {
-        DualNum right_anti_dual = DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(other.group0.xy, 0.0, 0.0)
+public extension MultiVector {
+    public MultiVector weight_contraction(AntiDualNum other) {
+        DualNum right_anti_dual = DualNum(
+            /* e5, e12345 */
+            other.group0.xy
         );
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((right_anti_dual.e5 * this.e1234) + (right_anti_dual.e12345 * this.scalar), right_anti_dual.e12345 * this.e12345), 0.0, 0.0), 
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((right_anti_dual.e5 * this.e1234) + (right_anti_dual.e12345 * this.scalar), right_anti_dual.e12345 * this.e12345), 
             /* e1, e2, e3, e4 */
             float4(right_anti_dual.e12345) * this.group1, 
-            /* e5, 0, 0, 0 */
-            float4((right_anti_dual.e5 * this.e12345) + (right_anti_dual.e12345 * this.e5), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (right_anti_dual.e5 * this.e12345) + (right_anti_dual.e12345 * this.e5), 
             /* e15, e25, e35, e45 */
             float4(right_anti_dual.e12345) * this.group3, 
-            /* e41, e42, e43, 0 */
-            float4(float3(right_anti_dual.e12345) * this.group4.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(float3(right_anti_dual.e12345) * this.group5.xyz, 0.0), 
+            /* e41, e42, e43 */
+            float3(right_anti_dual.e12345) * this.group4.xyz, 
+            /* e23, e31, e12 */
+            float3(right_anti_dual.e12345) * this.group5.xyz, 
             /* e415, e425, e435, e321 */
             float4(right_anti_dual.e12345) * this.group6, 
-            /* e423, e431, e412, 0 */
-            float4(float3(right_anti_dual.e12345) * this.group7.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(float3(right_anti_dual.e12345) * this.group8.xyz, 0.0), 
+            /* e423, e431, e412 */
+            float3(right_anti_dual.e12345) * this.group7.xyz, 
+            /* e235, e315, e125 */
+            float3(right_anti_dual.e12345) * this.group8.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(right_anti_dual.e12345) * this.group9, 
-            /* e1234, 0, 0, 0 */
-            float4(right_anti_dual.e12345 * this.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            right_anti_dual.e12345 * this.e1234
         );
     }
 }
-extension MultiVector: WeightContraction<AntiFlatPoint> {
-    associatedtype Output = MultiVector;
-    func weight_contraction(other: AntiFlatPoint) -> Output {
-        FlatPoint right_anti_dual = FlatPoint.from_groups(
+public extension MultiVector {
+    public MultiVector weight_contraction(AntiFlatPoint other) {
+        FlatPoint right_anti_dual = FlatPoint(
             /* e15, e25, e35, e45 */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(-(right_anti_dual.e15 * this.e423) - (right_anti_dual.e25 * this.e431) - (right_anti_dual.e35 * this.e412) - (right_anti_dual.e45 * this.e321), 0.0), 0.0, 0.0), 
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(-(right_anti_dual.e15 * this.e423) - (right_anti_dual.e25 * this.e431) - (right_anti_dual.e35 * this.e412) - (right_anti_dual.e45 * this.e321), 0.0), 
             /* e1, e2, e3, e4 */
             float4(this.e1234) * right_anti_dual.group0, 
-            /* e5, 0, 0, 0 */
-            float4(-(right_anti_dual.e15 * this.e4235) - (right_anti_dual.e25 * this.e4315) - (right_anti_dual.e35 * this.e4125) - (right_anti_dual.e45 * this.e3215), 0.0, 0.0, 0.0), 
+            /* e5 */
+            -(right_anti_dual.e15 * this.e4235) - (right_anti_dual.e25 * this.e4315) - (right_anti_dual.e35 * this.e4125) - (right_anti_dual.e45 * this.e3215), 
             /* e15, e25, e35, e45 */
             float4(this.e12345) * right_anti_dual.group0, 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(0.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension MultiVector: WeightContraction<AntiFlector> {
-    associatedtype Output = MultiVector;
-    func weight_contraction(other: AntiFlector) -> Output {
-        Flector right_anti_dual = Flector.from_groups(
+public extension MultiVector {
+    public MultiVector weight_contraction(AntiFlector other) {
+        Flector right_anti_dual = Flector(
             /* e15, e25, e35, e45 */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e4235, e4315, e4125, e3215 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((right_anti_dual.e4235 * this.e1) + (right_anti_dual.e4315 * this.e2) + (right_anti_dual.e4125 * this.e3) + (right_anti_dual.e3215 * this.e4) - (right_anti_dual.e15 * this.e423) - (right_anti_dual.e25 * this.e431) - (right_anti_dual.e35 * this.e412) - (right_anti_dual.e45 * this.e321), 0.0), 0.0, 0.0), 
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((right_anti_dual.e4235 * this.e1) + (right_anti_dual.e4315 * this.e2) + (right_anti_dual.e4125 * this.e3) + (right_anti_dual.e3215 * this.e4) - (right_anti_dual.e15 * this.e423) - (right_anti_dual.e25 * this.e431) - (right_anti_dual.e35 * this.e412) - (right_anti_dual.e45 * this.e321), 0.0), 
             /* e1, e2, e3, e4 */
             float4((right_anti_dual.e15 * this.e1234) + (right_anti_dual.e4125 * this.e31), (right_anti_dual.e25 * this.e1234) + (right_anti_dual.e4235 * this.e12), (right_anti_dual.e35 * this.e1234) + (right_anti_dual.e4315 * this.e23), -(right_anti_dual.e4315 * this.e42) - (right_anti_dual.e4125 * this.e43)) + float4((this.group4.xyz * right_anti_dual.group1.www), right_anti_dual.e45 * this.e1234) - (right_anti_dual.group1.yzxx * float4(this.group5.xyz.zxy, this.e41)), 
-            /* e5, 0, 0, 0 */
-            float4((right_anti_dual.e4235 * this.e15) + (right_anti_dual.e4315 * this.e25) + (right_anti_dual.e4125 * this.e35) + (right_anti_dual.e3215 * this.e45) - (right_anti_dual.e15 * this.e4235) - (right_anti_dual.e25 * this.e4315) - (right_anti_dual.e35 * this.e4125) - (right_anti_dual.e45 * this.e3215), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (right_anti_dual.e4235 * this.e15) + (right_anti_dual.e4315 * this.e25) + (right_anti_dual.e4125 * this.e35) + (right_anti_dual.e3215 * this.e45) - (right_anti_dual.e15 * this.e4235) - (right_anti_dual.e25 * this.e4315) - (right_anti_dual.e35 * this.e4125) - (right_anti_dual.e45 * this.e3215), 
             /* e15, e25, e35, e45 */
             float4((right_anti_dual.e4125 * this.e315) + (right_anti_dual.e3215 * this.e415), (right_anti_dual.e4235 * this.e125) + (right_anti_dual.e3215 * this.e425), (right_anti_dual.e4315 * this.e235) + (right_anti_dual.e3215 * this.e435), -(right_anti_dual.e4315 * this.e425) - (right_anti_dual.e4125 * this.e435)) + (float4(this.e12345) * right_anti_dual.group0) - float4((this.group8.xyz.zxy * right_anti_dual.group1.yzx), right_anti_dual.e4235 * this.e415), 
-            /* e41, e42, e43, 0 */
-            float4((this.group7.xyz.zxy * right_anti_dual.group1.yzx) - (this.group7.xyz.yzx * right_anti_dual.group1.zxy), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(right_anti_dual.e3215) * this.group7.xyz) - (float3(this.e321) * right_anti_dual.group1.xyz), 0.0), 
+            /* e41, e42, e43 */
+            (this.group7.xyz.zxy * right_anti_dual.group1.yzx) - (this.group7.xyz.yzx * right_anti_dual.group1.zxy), 
+            /* e23, e31, e12 */
+            (float3(right_anti_dual.e3215) * this.group7.xyz) - (float3(this.e321) * right_anti_dual.group1.xyz), 
             /* e415, e425, e435, e321 */
             float4(((right_anti_dual.group1.yzx * this.group9.zxy) - (right_anti_dual.group1.zxy * this.group9.yzx)), right_anti_dual.e3215 * this.e1234), 
-            /* e423, e431, e412, 0 */
-            float4(float3(this.e1234) * right_anti_dual.group1.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(right_anti_dual.e3215) * this.group9.xyz) - (float3(this.e3215) * right_anti_dual.group1.xyz), 0.0), 
+            /* e423, e431, e412 */
+            float3(this.e1234) * right_anti_dual.group1.xyz, 
+            /* e235, e315, e125 */
+            (float3(right_anti_dual.e3215) * this.group9.xyz) - (float3(this.e3215) * right_anti_dual.group1.xyz), 
             /* e4235, e4315, e4125, e3215 */
             float4(this.e12345) * right_anti_dual.group1, 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension MultiVector: WeightContraction<AntiLine> {
-    associatedtype Output = MultiVector;
-    func weight_contraction(other: AntiLine) -> Output {
-        Line right_anti_dual = Line.from_groups(
-            /* e415, e425, e435, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group1.xyz * float3(-1.0), 0.0)
+public extension MultiVector {
+    public MultiVector weight_contraction(AntiLine other) {
+        Line right_anti_dual = Line(
+            /* e415, e425, e435 */
+            other.group0.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            other.group1.xyz * float3(-1.0)
         );
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(-(right_anti_dual.e415 * this.e23) - (right_anti_dual.e425 * this.e31) - (right_anti_dual.e435 * this.e12) - (right_anti_dual.e235 * this.e41) - (right_anti_dual.e315 * this.e42) - (right_anti_dual.e125 * this.e43), 0.0), 0.0, 0.0), 
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(-(right_anti_dual.e415 * this.e23) - (right_anti_dual.e425 * this.e31) - (right_anti_dual.e435 * this.e12) - (right_anti_dual.e235 * this.e41) - (right_anti_dual.e315 * this.e42) - (right_anti_dual.e125 * this.e43), 0.0), 
             /* e1, e2, e3, e4 */
             float4((right_anti_dual.e415 * this.e321) + (right_anti_dual.e315 * this.e412), (right_anti_dual.e425 * this.e321) + (right_anti_dual.e125 * this.e423), (right_anti_dual.e435 * this.e321) + (right_anti_dual.e235 * this.e431), -(right_anti_dual.e425 * this.e431) - (right_anti_dual.e435 * this.e412)) - float4((right_anti_dual.group1.xyz.zxy * this.group7.xyz.yzx), right_anti_dual.e415 * this.e423), 
-            /* e5, 0, 0, 0 */
-            float4(-(right_anti_dual.e415 * this.e235) - (right_anti_dual.e425 * this.e315) - (right_anti_dual.e435 * this.e125) - (right_anti_dual.e235 * this.e415) - (right_anti_dual.e315 * this.e425) - (right_anti_dual.e125 * this.e435), 0.0, 0.0, 0.0), 
+            /* e5 */
+            -(right_anti_dual.e415 * this.e235) - (right_anti_dual.e425 * this.e315) - (right_anti_dual.e435 * this.e125) - (right_anti_dual.e235 * this.e415) - (right_anti_dual.e315 * this.e425) - (right_anti_dual.e125 * this.e435), 
             /* e15, e25, e35, e45 */
             float4((right_anti_dual.e415 * this.e3215) + (right_anti_dual.e315 * this.e4125), (right_anti_dual.e425 * this.e3215) + (right_anti_dual.e125 * this.e4235), (right_anti_dual.e435 * this.e3215) + (right_anti_dual.e235 * this.e4315), -(right_anti_dual.e425 * this.e4315) - (right_anti_dual.e435 * this.e4125)) - (this.group9.yzxx * float4(right_anti_dual.group1.xyz.zxy, right_anti_dual.e415)), 
-            /* e41, e42, e43, 0 */
-            float4(float3(this.e1234) * right_anti_dual.group0.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(float3(this.e1234) * right_anti_dual.group1.xyz, 0.0), 
+            /* e41, e42, e43 */
+            float3(this.e1234) * right_anti_dual.group0.xyz, 
+            /* e23, e31, e12 */
+            float3(this.e1234) * right_anti_dual.group1.xyz, 
             /* e415, e425, e435, e321 */
             float4(this.group0.xy.yy, this.e12345, 0.0) * float4(float3(1.0), 0.0) * float4(right_anti_dual.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(float3(this.e12345) * right_anti_dual.group1.xyz, 0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(this.e12345) * right_anti_dual.group1.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension MultiVector: WeightContraction<AntiMotor> {
-    associatedtype Output = MultiVector;
-    func weight_contraction(other: AntiMotor) -> Output {
-        Motor right_anti_dual = Motor.from_groups(
+public extension MultiVector {
+    public MultiVector weight_contraction(AntiMotor other) {
+        Motor right_anti_dual = Motor(
             /* e415, e425, e435, e12345 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e5 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((right_anti_dual.e12345 * this.scalar) + (right_anti_dual.e5 * this.e1234) - (right_anti_dual.e415 * this.e23) - (right_anti_dual.e425 * this.e31) - (right_anti_dual.e435 * this.e12) - (right_anti_dual.e235 * this.e41) - (right_anti_dual.e315 * this.e42) - (right_anti_dual.e125 * this.e43), right_anti_dual.e12345 * this.e12345), 0.0, 0.0), 
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((right_anti_dual.e12345 * this.scalar) + (right_anti_dual.e5 * this.e1234) - (right_anti_dual.e415 * this.e23) - (right_anti_dual.e425 * this.e31) - (right_anti_dual.e435 * this.e12) - (right_anti_dual.e235 * this.e41) - (right_anti_dual.e315 * this.e42) - (right_anti_dual.e125 * this.e43), right_anti_dual.e12345 * this.e12345), 
             /* e1, e2, e3, e4 */
             float4((right_anti_dual.e415 * this.e321) + (right_anti_dual.e12345 * this.e1), (right_anti_dual.e425 * this.e321) + (right_anti_dual.e12345 * this.e2), (right_anti_dual.e435 * this.e321) + (right_anti_dual.e12345 * this.e3), -(right_anti_dual.e425 * this.e431) - (right_anti_dual.e435 * this.e412)) + float4((this.group7.xyz.zxy * right_anti_dual.group1.yzx), right_anti_dual.e12345 * this.e4) - float4((this.group7.xyz.yzx * right_anti_dual.group1.zxy), right_anti_dual.e415 * this.e423), 
-            /* e5, 0, 0, 0 */
-            float4((right_anti_dual.e12345 * this.e5) + (right_anti_dual.e5 * this.e12345) - (right_anti_dual.e415 * this.e235) - (right_anti_dual.e425 * this.e315) - (right_anti_dual.e435 * this.e125) - (right_anti_dual.e235 * this.e415) - (right_anti_dual.e315 * this.e425) - (right_anti_dual.e125 * this.e435), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (right_anti_dual.e12345 * this.e5) + (right_anti_dual.e5 * this.e12345) - (right_anti_dual.e415 * this.e235) - (right_anti_dual.e425 * this.e315) - (right_anti_dual.e435 * this.e125) - (right_anti_dual.e235 * this.e415) - (right_anti_dual.e315 * this.e425) - (right_anti_dual.e125 * this.e435), 
             /* e15, e25, e35, e45 */
             float4((right_anti_dual.e12345 * this.e15) + (right_anti_dual.e315 * this.e4125), (right_anti_dual.e12345 * this.e25) + (right_anti_dual.e125 * this.e4235), (right_anti_dual.e12345 * this.e35) + (right_anti_dual.e235 * this.e4315), -(right_anti_dual.e425 * this.e4315) - (right_anti_dual.e435 * this.e4125)) + (right_anti_dual.group0 * float4(this.group9.www, this.e45)) - (this.group9.yzxx * float4(right_anti_dual.group1.zxy, right_anti_dual.e415)), 
-            /* e41, e42, e43, 0 */
-            float4((float3(right_anti_dual.e12345) * this.group4.xyz) + (float3(this.e1234) * right_anti_dual.group0.xyz), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(right_anti_dual.e12345) * this.group5.xyz) + (float3(this.e1234) * right_anti_dual.group1.xyz), 0.0), 
+            /* e41, e42, e43 */
+            (float3(right_anti_dual.e12345) * this.group4.xyz) + (float3(this.e1234) * right_anti_dual.group0.xyz), 
+            /* e23, e31, e12 */
+            (float3(right_anti_dual.e12345) * this.group5.xyz) + (float3(this.e1234) * right_anti_dual.group1.xyz), 
             /* e415, e425, e435, e321 */
             float4(((float3(right_anti_dual.e12345) * this.group6.xyz) + (float3(this.e12345) * right_anti_dual.group0.xyz)), right_anti_dual.e12345 * this.e321), 
-            /* e423, e431, e412, 0 */
-            float4(float3(right_anti_dual.e12345) * this.group7.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(right_anti_dual.e12345) * this.group8.xyz) + (float3(this.e12345) * right_anti_dual.group1.xyz), 0.0), 
+            /* e423, e431, e412 */
+            float3(right_anti_dual.e12345) * this.group7.xyz, 
+            /* e235, e315, e125 */
+            (float3(right_anti_dual.e12345) * this.group8.xyz) + (float3(this.e12345) * right_anti_dual.group1.xyz), 
             /* e4235, e4315, e4125, e3215 */
             float4(right_anti_dual.e12345) * this.group9, 
-            /* e1234, 0, 0, 0 */
-            float4(right_anti_dual.e12345 * this.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            right_anti_dual.e12345 * this.e1234
         );
     }
 }
-extension MultiVector: WeightContraction<AntiPlane> {
-    associatedtype Output = MultiVector;
-    func weight_contraction(other: AntiPlane) -> Output {
-        Plane right_anti_dual = Plane.from_groups(
+public extension MultiVector {
+    public MultiVector weight_contraction(AntiPlane other) {
+        Plane right_anti_dual = Plane(
             /* e4235, e4315, e4125, e3215 */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((this.e1 * right_anti_dual.e4235) + (this.e2 * right_anti_dual.e4315) + (this.e3 * right_anti_dual.e4125) + (this.e4 * right_anti_dual.e3215), 0.0), 0.0, 0.0), 
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((this.e1 * right_anti_dual.e4235) + (this.e2 * right_anti_dual.e4315) + (this.e3 * right_anti_dual.e4125) + (this.e4 * right_anti_dual.e3215), 0.0), 
             /* e1, e2, e3, e4 */
             float4((this.e41 * right_anti_dual.e3215) + (this.e31 * right_anti_dual.e4125), (this.e42 * right_anti_dual.e3215) + (this.e12 * right_anti_dual.e4235), (this.e43 * right_anti_dual.e3215) + (this.e23 * right_anti_dual.e4315), -(this.e42 * right_anti_dual.e4315) - (this.e43 * right_anti_dual.e4125)) - (right_anti_dual.group0.yzxx * float4(this.group5.xyz.zxy, this.e41)), 
-            /* e5, 0, 0, 0 */
-            float4((this.e15 * right_anti_dual.e4235) + (this.e25 * right_anti_dual.e4315) + (this.e35 * right_anti_dual.e4125) + (this.e45 * right_anti_dual.e3215), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (this.e15 * right_anti_dual.e4235) + (this.e25 * right_anti_dual.e4315) + (this.e35 * right_anti_dual.e4125) + (this.e45 * right_anti_dual.e3215), 
             /* e15, e25, e35, e45 */
             float4((this.e415 * right_anti_dual.e3215) + (this.e315 * right_anti_dual.e4125), (this.e425 * right_anti_dual.e3215) + (this.e125 * right_anti_dual.e4235), (this.e435 * right_anti_dual.e3215) + (this.e235 * right_anti_dual.e4315), -(this.e425 * right_anti_dual.e4315) - (this.e435 * right_anti_dual.e4125)) - (right_anti_dual.group0.yzxx * float4(this.group8.xyz.zxy, this.e415)), 
-            /* e41, e42, e43, 0 */
-            float4((this.group7.xyz.zxy * right_anti_dual.group0.yzx) - (this.group7.xyz.yzx * right_anti_dual.group0.zxy), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(right_anti_dual.e3215) * this.group7.xyz) - (float3(this.e321) * right_anti_dual.group0.xyz), 0.0), 
+            /* e41, e42, e43 */
+            (this.group7.xyz.zxy * right_anti_dual.group0.yzx) - (this.group7.xyz.yzx * right_anti_dual.group0.zxy), 
+            /* e23, e31, e12 */
+            (float3(right_anti_dual.e3215) * this.group7.xyz) - (float3(this.e321) * right_anti_dual.group0.xyz), 
             /* e415, e425, e435, e321 */
             float4(((this.group9.zxy * right_anti_dual.group0.yzx) - (this.group9.yzx * right_anti_dual.group0.zxy)), this.e1234 * right_anti_dual.e3215), 
-            /* e423, e431, e412, 0 */
-            float4(float3(this.e1234) * right_anti_dual.group0.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(right_anti_dual.e3215) * this.group9.xyz) - (float3(this.e3215) * right_anti_dual.group0.xyz), 0.0), 
+            /* e423, e431, e412 */
+            float3(this.e1234) * right_anti_dual.group0.xyz, 
+            /* e235, e315, e125 */
+            (float3(right_anti_dual.e3215) * this.group9.xyz) - (float3(this.e3215) * right_anti_dual.group0.xyz), 
             /* e4235, e4315, e4125, e3215 */
             float4(this.e12345) * right_anti_dual.group0, 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension MultiVector: WeightContraction<AntiScalar> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: AntiScalar) -> Output {
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(other.e12345 * this.e12345 * -1.0, 0.0, 0.0, 0.0)
+public extension MultiVector {
+    public Scalar weight_contraction(AntiScalar other) {
+        return Scalar(
+            /* scalar */
+            other.e12345 * this.e12345 * -1.0
         );
     }
 }
-extension MultiVector: WeightContraction<Circle> {
-    associatedtype Output = MultiVector;
-    func weight_contraction(other: Circle) -> Output {
-        Dipole right_anti_dual = Dipole.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension MultiVector {
+    public MultiVector weight_contraction(Circle other) {
+        Dipole right_anti_dual = Dipole(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e15, e25, e35, 0 */
-            float4(other.group2.xyz, 0.0)
+            /* e15, e25, e35 */
+            other.group2.xyz
         );
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(-(right_anti_dual.e41 * this.e235) - (right_anti_dual.e42 * this.e315) - (right_anti_dual.e43 * this.e125) - (right_anti_dual.e23 * this.e415) - (right_anti_dual.e31 * this.e425) - (right_anti_dual.e12 * this.e435) - (right_anti_dual.e45 * this.e321) - (right_anti_dual.e15 * this.e423) - (right_anti_dual.e25 * this.e431) - (right_anti_dual.e35 * this.e412), 0.0), 0.0, 0.0), 
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(-(right_anti_dual.e41 * this.e235) - (right_anti_dual.e42 * this.e315) - (right_anti_dual.e43 * this.e125) - (right_anti_dual.e23 * this.e415) - (right_anti_dual.e31 * this.e425) - (right_anti_dual.e12 * this.e435) - (right_anti_dual.e45 * this.e321) - (right_anti_dual.e15 * this.e423) - (right_anti_dual.e25 * this.e431) - (right_anti_dual.e35 * this.e412), 0.0), 
             /* e1, e2, e3, e4 */
             float4(-(right_anti_dual.e41 * this.e3215) - (right_anti_dual.e31 * this.e4125), -(right_anti_dual.e42 * this.e3215) - (right_anti_dual.e12 * this.e4235), -(right_anti_dual.e43 * this.e3215) - (right_anti_dual.e23 * this.e4315), (right_anti_dual.e43 * this.e4125) + (right_anti_dual.e45 * this.e1234)) + (this.group9.yzxy * float4(right_anti_dual.group1.zxy, right_anti_dual.e42)) + float4((float3(this.e1234) * right_anti_dual.group2.xyz), right_anti_dual.e41 * this.e4235), 
-            /* e5, 0, 0, 0 */
-            float4(-(right_anti_dual.e45 * this.e3215) - (right_anti_dual.e15 * this.e4235) - (right_anti_dual.e25 * this.e4315) - (right_anti_dual.e35 * this.e4125), 0.0, 0.0, 0.0), 
+            /* e5 */
+            -(right_anti_dual.e45 * this.e3215) - (right_anti_dual.e15 * this.e4235) - (right_anti_dual.e25 * this.e4315) - (right_anti_dual.e35 * this.e4125), 
             /* e15, e25, e35, e45 */
             float4(this.e12345) * float4(right_anti_dual.group2.xyz, right_anti_dual.e45), 
-            /* e41, e42, e43, 0 */
-            float4(float3(this.e12345) * right_anti_dual.group0.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(float3(this.e12345) * right_anti_dual.group1.xyz, 0.0), 
+            /* e41, e42, e43 */
+            float3(this.e12345) * right_anti_dual.group0.xyz, 
+            /* e23, e31, e12 */
+            float3(this.e12345) * right_anti_dual.group1.xyz, 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(0.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension MultiVector: WeightContraction<CircleRotor> {
-    associatedtype Output = MultiVector;
-    func weight_contraction(other: CircleRotor) -> Output {
-        AntiCircleRotor right_anti_dual = AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension MultiVector {
+    public MultiVector weight_contraction(CircleRotor other) {
+        AntiCircleRotor right_anti_dual = AntiCircleRotor(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, scalar */
             other.group2 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((right_anti_dual.scalar * this.e12345) - (right_anti_dual.e41 * this.e235) - (right_anti_dual.e42 * this.e315) - (right_anti_dual.e43 * this.e125) - (right_anti_dual.e23 * this.e415) - (right_anti_dual.e31 * this.e425) - (right_anti_dual.e12 * this.e435) - (right_anti_dual.e45 * this.e321) - (right_anti_dual.e15 * this.e423) - (right_anti_dual.e25 * this.e431) - (right_anti_dual.e35 * this.e412), 0.0), 0.0, 0.0), 
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((right_anti_dual.scalar * this.e12345) - (right_anti_dual.e41 * this.e235) - (right_anti_dual.e42 * this.e315) - (right_anti_dual.e43 * this.e125) - (right_anti_dual.e23 * this.e415) - (right_anti_dual.e31 * this.e425) - (right_anti_dual.e12 * this.e435) - (right_anti_dual.e45 * this.e321) - (right_anti_dual.e15 * this.e423) - (right_anti_dual.e25 * this.e431) - (right_anti_dual.e35 * this.e412), 0.0), 
             /* e1, e2, e3, e4 */
             float4(-(right_anti_dual.e41 * this.e3215) - (right_anti_dual.e31 * this.e4125), -(right_anti_dual.e42 * this.e3215) - (right_anti_dual.e12 * this.e4235), -(right_anti_dual.e43 * this.e3215) - (right_anti_dual.e23 * this.e4315), (right_anti_dual.e43 * this.e4125) + (right_anti_dual.e45 * this.e1234)) + (this.group9.yzxx * float4(right_anti_dual.group1.zxy, right_anti_dual.e41)) + float4((float3(this.e1234) * right_anti_dual.group2.xyz), right_anti_dual.e42 * this.e4315), 
-            /* e5, 0, 0, 0 */
-            float4(-(right_anti_dual.e45 * this.e3215) - (right_anti_dual.e15 * this.e4235) - (right_anti_dual.e25 * this.e4315) - (right_anti_dual.e35 * this.e4125), 0.0, 0.0, 0.0), 
+            /* e5 */
+            -(right_anti_dual.e45 * this.e3215) - (right_anti_dual.e15 * this.e4235) - (right_anti_dual.e25 * this.e4315) - (right_anti_dual.e35 * this.e4125), 
             /* e15, e25, e35, e45 */
             float4(this.e12345) * float4(right_anti_dual.group2.xyz, right_anti_dual.e45), 
-            /* e41, e42, e43, 0 */
-            float4(float3(this.e12345) * right_anti_dual.group0.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(float3(this.e12345) * right_anti_dual.group1.xyz, 0.0), 
+            /* e41, e42, e43 */
+            float3(this.e12345) * right_anti_dual.group0.xyz, 
+            /* e23, e31, e12 */
+            float3(this.e12345) * right_anti_dual.group1.xyz, 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(0.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension MultiVector: WeightContraction<Dipole> {
-    associatedtype Output = MultiVector;
-    func weight_contraction(other: Dipole) -> Output {
-        Circle right_anti_dual = Circle.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension MultiVector {
+    public MultiVector weight_contraction(Dipole other) {
+        Circle right_anti_dual = Circle(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group2.xyz * float3(-1.0), 0.0)
+            /* e235, e315, e125 */
+            other.group2.xyz * float3(-1.0)
         );
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(-(right_anti_dual.e423 * this.e15) - (right_anti_dual.e431 * this.e25) - (right_anti_dual.e412 * this.e35) - (right_anti_dual.e415 * this.e23) - (right_anti_dual.e425 * this.e31) - (right_anti_dual.e435 * this.e12) - (right_anti_dual.e321 * this.e45) - (right_anti_dual.e235 * this.e41) - (right_anti_dual.e315 * this.e42) - (right_anti_dual.e125 * this.e43), 0.0), 0.0, 0.0), 
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(-(right_anti_dual.e423 * this.e15) - (right_anti_dual.e431 * this.e25) - (right_anti_dual.e412 * this.e35) - (right_anti_dual.e415 * this.e23) - (right_anti_dual.e425 * this.e31) - (right_anti_dual.e435 * this.e12) - (right_anti_dual.e321 * this.e45) - (right_anti_dual.e235 * this.e41) - (right_anti_dual.e315 * this.e42) - (right_anti_dual.e125 * this.e43), 0.0), 
             /* e1, e2, e3, e4 */
             float4((right_anti_dual.e412 * this.e315) + (right_anti_dual.e415 * this.e321) + (right_anti_dual.e321 * this.e415) + (right_anti_dual.e315 * this.e412), (right_anti_dual.e423 * this.e125) + (right_anti_dual.e425 * this.e321) + (right_anti_dual.e321 * this.e425) + (right_anti_dual.e125 * this.e423), (right_anti_dual.e431 * this.e235) + (right_anti_dual.e435 * this.e321) + (right_anti_dual.e321 * this.e435) + (right_anti_dual.e235 * this.e431), -(right_anti_dual.e412 * this.e435) - (right_anti_dual.e415 * this.e423) - (right_anti_dual.e425 * this.e431) - (right_anti_dual.e435 * this.e412)) - float4((right_anti_dual.group0.xyz.yzx * this.group8.xyz.zxy), right_anti_dual.e423 * this.e415) - float4((right_anti_dual.group2.xyz.zxy * this.group7.xyz.yzx), right_anti_dual.e431 * this.e425), 
-            /* e5, 0, 0, 0 */
-            float4(-(right_anti_dual.e415 * this.e235) - (right_anti_dual.e425 * this.e315) - (right_anti_dual.e435 * this.e125) - (right_anti_dual.e235 * this.e415) - (right_anti_dual.e315 * this.e425) - (right_anti_dual.e125 * this.e435), 0.0, 0.0, 0.0), 
+            /* e5 */
+            -(right_anti_dual.e415 * this.e235) - (right_anti_dual.e425 * this.e315) - (right_anti_dual.e435 * this.e125) - (right_anti_dual.e235 * this.e415) - (right_anti_dual.e315 * this.e425) - (right_anti_dual.e125 * this.e435), 
             /* e15, e25, e35, e45 */
             float4((right_anti_dual.e415 * this.e3215) + (right_anti_dual.e315 * this.e4125), (right_anti_dual.e425 * this.e3215) + (right_anti_dual.e125 * this.e4235), (right_anti_dual.e435 * this.e3215) + (right_anti_dual.e235 * this.e4315), -(right_anti_dual.e425 * this.e4315) - (right_anti_dual.e435 * this.e4125)) - (this.group9.yzxx * float4(right_anti_dual.group2.xyz.zxy, right_anti_dual.e415)), 
-            /* e41, e42, e43, 0 */
-            float4((float3(this.e1234) * right_anti_dual.group1.xyz) + (right_anti_dual.group0.xyz.zxy * this.group9.yzx) - (right_anti_dual.group0.xyz.yzx * this.group9.zxy), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(this.e3215) * right_anti_dual.group0.xyz) + (float3(this.e1234) * right_anti_dual.group2.xyz) - (float3(right_anti_dual.e321) * this.group9.xyz), 0.0), 
+            /* e41, e42, e43 */
+            (float3(this.e1234) * right_anti_dual.group1.xyz) + (right_anti_dual.group0.xyz.zxy * this.group9.yzx) - (right_anti_dual.group0.xyz.yzx * this.group9.zxy), 
+            /* e23, e31, e12 */
+            (float3(this.e3215) * right_anti_dual.group0.xyz) + (float3(this.e1234) * right_anti_dual.group2.xyz) - (float3(right_anti_dual.e321) * this.group9.xyz), 
             /* e415, e425, e435, e321 */
             float4(this.e12345) * right_anti_dual.group1, 
-            /* e423, e431, e412, 0 */
-            float4(float3(this.e12345) * right_anti_dual.group0.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(float3(this.e12345) * right_anti_dual.group2.xyz, 0.0), 
+            /* e423, e431, e412 */
+            float3(this.e12345) * right_anti_dual.group0.xyz, 
+            /* e235, e315, e125 */
+            float3(this.e12345) * right_anti_dual.group2.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension MultiVector: WeightContraction<DipoleInversion> {
-    associatedtype Output = MultiVector;
-    func weight_contraction(other: DipoleInversion) -> Output {
-        AntiDipoleInversion right_anti_dual = AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension MultiVector {
+    public MultiVector weight_contraction(DipoleInversion other) {
+        AntiDipoleInversion right_anti_dual = AntiDipoleInversion(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e4 */
@@ -7368,396 +7110,385 @@ extension MultiVector: WeightContraction<DipoleInversion> {
             /* e1, e2, e3, e5 */
             other.group3 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((right_anti_dual.e4 * this.e3215) + (right_anti_dual.e1 * this.e4235) + (right_anti_dual.e2 * this.e4315) + (right_anti_dual.e3 * this.e4125) + (right_anti_dual.e5 * this.e1234) - (right_anti_dual.e423 * this.e15) - (right_anti_dual.e431 * this.e25) - (right_anti_dual.e412 * this.e35) - (right_anti_dual.e415 * this.e23) - (right_anti_dual.e425 * this.e31) - (right_anti_dual.e435 * this.e12) - (right_anti_dual.e321 * this.e45) - (right_anti_dual.e235 * this.e41) - (right_anti_dual.e315 * this.e42) - (right_anti_dual.e125 * this.e43), 0.0), 0.0, 0.0), 
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((right_anti_dual.e4 * this.e3215) + (right_anti_dual.e1 * this.e4235) + (right_anti_dual.e2 * this.e4315) + (right_anti_dual.e3 * this.e4125) + (right_anti_dual.e5 * this.e1234) - (right_anti_dual.e423 * this.e15) - (right_anti_dual.e431 * this.e25) - (right_anti_dual.e412 * this.e35) - (right_anti_dual.e415 * this.e23) - (right_anti_dual.e425 * this.e31) - (right_anti_dual.e435 * this.e12) - (right_anti_dual.e321 * this.e45) - (right_anti_dual.e235 * this.e41) - (right_anti_dual.e315 * this.e42) - (right_anti_dual.e125 * this.e43), 0.0), 
             /* e1, e2, e3, e4 */
             float4((right_anti_dual.e412 * this.e315) + (right_anti_dual.e415 * this.e321) + (right_anti_dual.e321 * this.e415) + (right_anti_dual.e315 * this.e412), (right_anti_dual.e423 * this.e125) + (right_anti_dual.e425 * this.e321) + (right_anti_dual.e321 * this.e425) + (right_anti_dual.e125 * this.e423), (right_anti_dual.e431 * this.e235) + (right_anti_dual.e435 * this.e321) + (right_anti_dual.e321 * this.e435) + (right_anti_dual.e235 * this.e431), -(right_anti_dual.e412 * this.e435) - (right_anti_dual.e415 * this.e423) - (right_anti_dual.e425 * this.e431) - (right_anti_dual.e435 * this.e412)) + (float4(this.e12345) * float4(right_anti_dual.group3.xyz, right_anti_dual.e4)) - float4((right_anti_dual.group0.xyz.yzx * this.group8.xyz.zxy), right_anti_dual.e423 * this.e415) - float4((this.group7.xyz.yzx * right_anti_dual.group2.zxy), right_anti_dual.e431 * this.e425), 
-            /* e5, 0, 0, 0 */
-            float4((right_anti_dual.e5 * this.e12345) - (right_anti_dual.e415 * this.e235) - (right_anti_dual.e425 * this.e315) - (right_anti_dual.e435 * this.e125) - (right_anti_dual.e235 * this.e415) - (right_anti_dual.e315 * this.e425) - (right_anti_dual.e125 * this.e435), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (right_anti_dual.e5 * this.e12345) - (right_anti_dual.e415 * this.e235) - (right_anti_dual.e425 * this.e315) - (right_anti_dual.e435 * this.e125) - (right_anti_dual.e235 * this.e415) - (right_anti_dual.e315 * this.e425) - (right_anti_dual.e125 * this.e435), 
             /* e15, e25, e35, e45 */
             float4((right_anti_dual.e415 * this.e3215) + (right_anti_dual.e315 * this.e4125), (right_anti_dual.e425 * this.e3215) + (right_anti_dual.e125 * this.e4235), (right_anti_dual.e435 * this.e3215) + (right_anti_dual.e235 * this.e4315), -(right_anti_dual.e425 * this.e4315) - (right_anti_dual.e435 * this.e4125)) - (this.group9.yzxx * float4(right_anti_dual.group2.zxy, right_anti_dual.e415)), 
-            /* e41, e42, e43, 0 */
-            float4((float3(this.e1234) * right_anti_dual.group1.xyz) + (right_anti_dual.group0.xyz.zxy * this.group9.yzx) - (right_anti_dual.group0.xyz.yzx * this.group9.zxy), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(this.e3215) * right_anti_dual.group0.xyz) + (float3(this.e1234) * right_anti_dual.group2.xyz) - (float3(right_anti_dual.e321) * this.group9.xyz), 0.0), 
+            /* e41, e42, e43 */
+            (float3(this.e1234) * right_anti_dual.group1.xyz) + (right_anti_dual.group0.xyz.zxy * this.group9.yzx) - (right_anti_dual.group0.xyz.yzx * this.group9.zxy), 
+            /* e23, e31, e12 */
+            (float3(this.e3215) * right_anti_dual.group0.xyz) + (float3(this.e1234) * right_anti_dual.group2.xyz) - (float3(right_anti_dual.e321) * this.group9.xyz), 
             /* e415, e425, e435, e321 */
             float4(this.e12345) * right_anti_dual.group1, 
-            /* e423, e431, e412, 0 */
-            float4(float3(this.e12345) * right_anti_dual.group0.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(float3(this.e12345) * right_anti_dual.group2.xyz, 0.0), 
+            /* e423, e431, e412 */
+            float3(this.e12345) * right_anti_dual.group0.xyz, 
+            /* e235, e315, e125 */
+            float3(this.e12345) * right_anti_dual.group2.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension MultiVector: WeightContraction<DualNum> {
-    associatedtype Output = MultiVector;
-    func weight_contraction(other: DualNum) -> Output {
-        AntiDualNum right_anti_dual = AntiDualNum.from_groups(
-            /* e3215, scalar, 0, 0 */
-            float4(other.group0.xy * float2(-1.0), 0.0, 0.0)
+public extension MultiVector {
+    public MultiVector weight_contraction(DualNum other) {
+        AntiDualNum right_anti_dual = AntiDualNum(
+            /* e3215, scalar */
+            other.group0.xy * float2(-1.0)
         );
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((right_anti_dual.e3215 * this.e4) + (right_anti_dual.scalar * this.e12345), 0.0), 0.0, 0.0), 
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((right_anti_dual.e3215 * this.e4) + (right_anti_dual.scalar * this.e12345), 0.0), 
             /* e1, e2, e3, e4 */
             float4(right_anti_dual.group0.xy.xx, right_anti_dual.e3215, 0.0) * float4(float3(1.0), 0.0) * float4(this.group4.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
-            /* e5, 0, 0, 0 */
-            float4(right_anti_dual.e3215 * this.e45, 0.0, 0.0, 0.0), 
+            /* e5 */
+            right_anti_dual.e3215 * this.e45, 
             /* e15, e25, e35, e45 */
             float4(right_anti_dual.group0.xy.xx, right_anti_dual.e3215, 0.0) * float4(float3(1.0), 0.0) * float4(this.group6.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(float3(right_anti_dual.e3215) * this.group7.xyz, 0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(right_anti_dual.e3215) * this.group7.xyz, 
             /* e415, e425, e435, e321 */
             float4(float3(0.0), right_anti_dual.e3215 * this.e1234), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(float3(right_anti_dual.e3215) * this.group9.xyz, 0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(right_anti_dual.e3215) * this.group9.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(float3(0.0), right_anti_dual.e3215 * this.e12345), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension MultiVector: WeightContraction<FlatPoint> {
-    associatedtype Output = MultiVector;
-    func weight_contraction(other: FlatPoint) -> Output {
-        AntiFlatPoint right_anti_dual = AntiFlatPoint.from_groups(
+public extension MultiVector {
+    public MultiVector weight_contraction(FlatPoint other) {
+        AntiFlatPoint right_anti_dual = AntiFlatPoint(
             /* e235, e315, e125, e321 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(-(right_anti_dual.e235 * this.e41) - (right_anti_dual.e315 * this.e42) - (right_anti_dual.e125 * this.e43) - (right_anti_dual.e321 * this.e45), 0.0), 0.0, 0.0), 
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(-(right_anti_dual.e235 * this.e41) - (right_anti_dual.e315 * this.e42) - (right_anti_dual.e125 * this.e43) - (right_anti_dual.e321 * this.e45), 0.0), 
             /* e1, e2, e3, e4 */
             float4((float3(right_anti_dual.e321) * this.group6.xyz), 0.0) + float4((this.group7.xyz.zxy * right_anti_dual.group0.yzx), 0.0) - float4((this.group7.xyz.yzx * right_anti_dual.group0.zxy), 0.0), 
-            /* e5, 0, 0, 0 */
-            float4(-(right_anti_dual.e235 * this.e415) - (right_anti_dual.e315 * this.e425) - (right_anti_dual.e125 * this.e435), 0.0, 0.0, 0.0), 
+            /* e5 */
+            -(right_anti_dual.e235 * this.e415) - (right_anti_dual.e315 * this.e425) - (right_anti_dual.e125 * this.e435), 
             /* e15, e25, e35, e45 */
             float4(((right_anti_dual.group0.yzx * this.group9.zxy) - (right_anti_dual.group0.zxy * this.group9.yzx)), 0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(this.e1234) * right_anti_dual.group0.xyz) - (float3(right_anti_dual.e321) * this.group9.xyz), 0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            (float3(this.e1234) * right_anti_dual.group0.xyz) - (float3(right_anti_dual.e321) * this.group9.xyz), 
             /* e415, e425, e435, e321 */
             float4(float3(0.0), right_anti_dual.e321 * this.e12345), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(float3(this.e12345) * right_anti_dual.group0.xyz, 0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(this.e12345) * right_anti_dual.group0.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension MultiVector: WeightContraction<Flector> {
-    associatedtype Output = MultiVector;
-    func weight_contraction(other: Flector) -> Output {
-        AntiFlector right_anti_dual = AntiFlector.from_groups(
+public extension MultiVector {
+    public MultiVector weight_contraction(Flector other) {
+        AntiFlector right_anti_dual = AntiFlector(
             /* e235, e315, e125, e321 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e1, e2, e3, e5 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((right_anti_dual.e1 * this.e4235) + (right_anti_dual.e2 * this.e4315) + (right_anti_dual.e3 * this.e4125) + (right_anti_dual.e5 * this.e1234) - (right_anti_dual.e235 * this.e41) - (right_anti_dual.e315 * this.e42) - (right_anti_dual.e125 * this.e43) - (right_anti_dual.e321 * this.e45), 0.0), 0.0, 0.0), 
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((right_anti_dual.e1 * this.e4235) + (right_anti_dual.e2 * this.e4315) + (right_anti_dual.e3 * this.e4125) + (right_anti_dual.e5 * this.e1234) - (right_anti_dual.e235 * this.e41) - (right_anti_dual.e315 * this.e42) - (right_anti_dual.e125 * this.e43) - (right_anti_dual.e321 * this.e45), 0.0), 
             /* e1, e2, e3, e4 */
             float4((float3(right_anti_dual.e321) * this.group6.xyz), 0.0) + float4((float3(this.e12345) * right_anti_dual.group1.xyz), 0.0) + float4((this.group7.xyz.zxy * right_anti_dual.group0.yzx), 0.0) - float4((this.group7.xyz.yzx * right_anti_dual.group0.zxy), 0.0), 
-            /* e5, 0, 0, 0 */
-            float4((right_anti_dual.e5 * this.e12345) - (right_anti_dual.e235 * this.e415) - (right_anti_dual.e315 * this.e425) - (right_anti_dual.e125 * this.e435), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (right_anti_dual.e5 * this.e12345) - (right_anti_dual.e235 * this.e415) - (right_anti_dual.e315 * this.e425) - (right_anti_dual.e125 * this.e435), 
             /* e15, e25, e35, e45 */
             float4(((right_anti_dual.group0.yzx * this.group9.zxy) - (right_anti_dual.group0.zxy * this.group9.yzx)), 0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(this.e1234) * right_anti_dual.group0.xyz) - (float3(right_anti_dual.e321) * this.group9.xyz), 0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            (float3(this.e1234) * right_anti_dual.group0.xyz) - (float3(right_anti_dual.e321) * this.group9.xyz), 
             /* e415, e425, e435, e321 */
             float4(float3(0.0), right_anti_dual.e321 * this.e12345), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(float3(this.e12345) * right_anti_dual.group0.xyz, 0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(this.e12345) * right_anti_dual.group0.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension MultiVector: WeightContraction<Line> {
-    associatedtype Output = MultiVector;
-    func weight_contraction(other: Line) -> Output {
-        AntiLine right_anti_dual = AntiLine.from_groups(
-            /* e23, e31, e12, 0 */
-            float4(other.group0.xyz, 0.0), 
-            /* e15, e25, e35, 0 */
-            float4(other.group1.xyz, 0.0)
+public extension MultiVector {
+    public MultiVector weight_contraction(Line other) {
+        AntiLine right_anti_dual = AntiLine(
+            /* e23, e31, e12 */
+            other.group0.xyz, 
+            /* e15, e25, e35 */
+            other.group1.xyz
         );
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(-(right_anti_dual.e23 * this.e415) - (right_anti_dual.e31 * this.e425) - (right_anti_dual.e12 * this.e435) - (right_anti_dual.e15 * this.e423) - (right_anti_dual.e25 * this.e431) - (right_anti_dual.e35 * this.e412), 0.0), 0.0, 0.0), 
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(-(right_anti_dual.e23 * this.e415) - (right_anti_dual.e31 * this.e425) - (right_anti_dual.e12 * this.e435) - (right_anti_dual.e15 * this.e423) - (right_anti_dual.e25 * this.e431) - (right_anti_dual.e35 * this.e412), 0.0), 
             /* e1, e2, e3, e4 */
             float4((float3(this.e1234) * right_anti_dual.group1.xyz), 0.0) + float4((right_anti_dual.group0.xyz.zxy * this.group9.yzx), 0.0) - float4((right_anti_dual.group0.xyz.yzx * this.group9.zxy), 0.0), 
-            /* e5, 0, 0, 0 */
-            float4(-(right_anti_dual.e15 * this.e4235) - (right_anti_dual.e25 * this.e4315) - (right_anti_dual.e35 * this.e4125), 0.0, 0.0, 0.0), 
+            /* e5 */
+            -(right_anti_dual.e15 * this.e4235) - (right_anti_dual.e25 * this.e4315) - (right_anti_dual.e35 * this.e4125), 
             /* e15, e25, e35, e45 */
             float4(this.group0.xy.yy, this.e12345, 0.0) * float4(float3(1.0), 0.0) * float4(right_anti_dual.group1.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(float3(this.e12345) * right_anti_dual.group0.xyz, 0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(this.e12345) * right_anti_dual.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(0.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension MultiVector: WeightContraction<Motor> {
-    associatedtype Output = MultiVector;
-    func weight_contraction(other: Motor) -> Output {
-        AntiMotor right_anti_dual = AntiMotor.from_groups(
+public extension MultiVector {
+    public MultiVector weight_contraction(Motor other) {
+        AntiMotor right_anti_dual = AntiMotor(
             /* e23, e31, e12, scalar */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, e3215 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((right_anti_dual.scalar * this.e12345) + (right_anti_dual.e3215 * this.e4) - (right_anti_dual.e23 * this.e415) - (right_anti_dual.e31 * this.e425) - (right_anti_dual.e12 * this.e435) - (right_anti_dual.e15 * this.e423) - (right_anti_dual.e25 * this.e431) - (right_anti_dual.e35 * this.e412), 0.0), 0.0, 0.0), 
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((right_anti_dual.scalar * this.e12345) + (right_anti_dual.e3215 * this.e4) - (right_anti_dual.e23 * this.e415) - (right_anti_dual.e31 * this.e425) - (right_anti_dual.e12 * this.e435) - (right_anti_dual.e15 * this.e423) - (right_anti_dual.e25 * this.e431) - (right_anti_dual.e35 * this.e412), 0.0), 
             /* e1, e2, e3, e4 */
             float4((float3(right_anti_dual.e3215) * this.group4.xyz), 0.0) + float4((float3(this.e1234) * right_anti_dual.group1.xyz), 0.0) + float4((right_anti_dual.group0.zxy * this.group9.yzx), 0.0) - float4((right_anti_dual.group0.yzx * this.group9.zxy), 0.0), 
-            /* e5, 0, 0, 0 */
-            float4((right_anti_dual.e3215 * this.e45) - (right_anti_dual.e15 * this.e4235) - (right_anti_dual.e25 * this.e4315) - (right_anti_dual.e35 * this.e4125), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (right_anti_dual.e3215 * this.e45) - (right_anti_dual.e15 * this.e4235) - (right_anti_dual.e25 * this.e4315) - (right_anti_dual.e35 * this.e4125), 
             /* e15, e25, e35, e45 */
             float4(((float3(right_anti_dual.e3215) * this.group6.xyz) + (float3(this.e12345) * right_anti_dual.group1.xyz)), 0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(right_anti_dual.e3215) * this.group7.xyz) + (float3(this.e12345) * right_anti_dual.group0.xyz), 0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            (float3(right_anti_dual.e3215) * this.group7.xyz) + (float3(this.e12345) * right_anti_dual.group0.xyz), 
             /* e415, e425, e435, e321 */
             float4(float3(0.0), right_anti_dual.e3215 * this.e1234), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(float3(right_anti_dual.e3215) * this.group9.xyz, 0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(right_anti_dual.e3215) * this.group9.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(float3(0.0), right_anti_dual.e3215 * this.e12345), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension MultiVector: WeightContraction<MultiVector> {
-    associatedtype Output = MultiVector;
-    func weight_contraction(other: MultiVector) -> Output {
-        MultiVector right_anti_dual = MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(other.group0.xy.yx * float2(-1.0, 1.0), 0.0, 0.0), 
+public extension MultiVector {
+    public MultiVector weight_contraction(MultiVector other) {
+        MultiVector right_anti_dual = MultiVector(
+            /* scalar, e12345 */
+            other.group0.xy.yx * float2(-1.0, 1.0), 
             /* e1, e2, e3, e4 */
             float4(other.group9.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e5, 0, 0, 0 */
-            float4(other.e3215, 0.0, 0.0, 0.0), 
+            /* e5 */
+            other.e3215, 
             /* e15, e25, e35, e45 */
             float4(other.group8.xyz, other.e321 * -1.0), 
-            /* e41, e42, e43, 0 */
-            float4(other.group7.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group6.xyz, 0.0), 
+            /* e41, e42, e43 */
+            other.group7.xyz, 
+            /* e23, e31, e12 */
+            other.group6.xyz, 
             /* e415, e425, e435, e321 */
             float4(other.group5.xyz, other.e45) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e423, e431, e412, 0 */
-            float4(other.group4.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group3.xyz * float3(-1.0), 0.0), 
+            /* e423, e431, e412 */
+            other.group4.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            other.group3.xyz * float3(-1.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(other.group1.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * -1.0
         );
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((right_anti_dual.scalar * this.e12345) + (right_anti_dual.e12345 * this.scalar) + (right_anti_dual.e1 * this.e4235) + (right_anti_dual.e2 * this.e4315) + (right_anti_dual.e3 * this.e4125) + (right_anti_dual.e4 * this.e3215) + (right_anti_dual.e5 * this.e1234) + (right_anti_dual.e4235 * this.e1) + (right_anti_dual.e4315 * this.e2) + (right_anti_dual.e4125 * this.e3) + (right_anti_dual.e3215 * this.e4) + (right_anti_dual.e1234 * this.e5) - (right_anti_dual.e15 * this.e423) - (right_anti_dual.e25 * this.e431) - (right_anti_dual.e35 * this.e412) - (right_anti_dual.e45 * this.e321) - (right_anti_dual.e41 * this.e235) - (right_anti_dual.e42 * this.e315) - (right_anti_dual.e43 * this.e125) - (right_anti_dual.e23 * this.e415) - (right_anti_dual.e31 * this.e425) - (right_anti_dual.e12 * this.e435) - (right_anti_dual.e415 * this.e23) - (right_anti_dual.e425 * this.e31) - (right_anti_dual.e435 * this.e12) - (right_anti_dual.e321 * this.e45) - (right_anti_dual.e423 * this.e15) - (right_anti_dual.e431 * this.e25) - (right_anti_dual.e412 * this.e35) - (right_anti_dual.e235 * this.e41) - (right_anti_dual.e315 * this.e42) - (right_anti_dual.e125 * this.e43), right_anti_dual.e12345 * this.e12345), 0.0, 0.0), 
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((right_anti_dual.scalar * this.e12345) + (right_anti_dual.e12345 * this.scalar) + (right_anti_dual.e1 * this.e4235) + (right_anti_dual.e2 * this.e4315) + (right_anti_dual.e3 * this.e4125) + (right_anti_dual.e4 * this.e3215) + (right_anti_dual.e5 * this.e1234) + (right_anti_dual.e4235 * this.e1) + (right_anti_dual.e4315 * this.e2) + (right_anti_dual.e4125 * this.e3) + (right_anti_dual.e3215 * this.e4) + (right_anti_dual.e1234 * this.e5) - (right_anti_dual.e15 * this.e423) - (right_anti_dual.e25 * this.e431) - (right_anti_dual.e35 * this.e412) - (right_anti_dual.e45 * this.e321) - (right_anti_dual.e41 * this.e235) - (right_anti_dual.e42 * this.e315) - (right_anti_dual.e43 * this.e125) - (right_anti_dual.e23 * this.e415) - (right_anti_dual.e31 * this.e425) - (right_anti_dual.e12 * this.e435) - (right_anti_dual.e415 * this.e23) - (right_anti_dual.e425 * this.e31) - (right_anti_dual.e435 * this.e12) - (right_anti_dual.e321 * this.e45) - (right_anti_dual.e423 * this.e15) - (right_anti_dual.e431 * this.e25) - (right_anti_dual.e412 * this.e35) - (right_anti_dual.e235 * this.e41) - (right_anti_dual.e315 * this.e42) - (right_anti_dual.e125 * this.e43), right_anti_dual.e12345 * this.e12345), 
             /* e1, e2, e3, e4 */
             float4((right_anti_dual.e15 * this.e1234) + (right_anti_dual.e415 * this.e321) + (right_anti_dual.e321 * this.e415) + (right_anti_dual.e4125 * this.e31), (right_anti_dual.e25 * this.e1234) + (right_anti_dual.e425 * this.e321) + (right_anti_dual.e321 * this.e425) + (right_anti_dual.e4235 * this.e12), (right_anti_dual.e35 * this.e1234) + (right_anti_dual.e435 * this.e321) + (right_anti_dual.e321 * this.e435) + (right_anti_dual.e4315 * this.e23), -(right_anti_dual.e415 * this.e423) - (right_anti_dual.e425 * this.e431) - (right_anti_dual.e435 * this.e412) - (right_anti_dual.e1234 * this.e45)) + (float4(right_anti_dual.e12345) * this.group1) + (float4(this.e12345) * right_anti_dual.group1) + (this.group9.yzxx * float4(right_anti_dual.group5.xyz.zxy, right_anti_dual.e41)) + float4((this.group4.xyz * right_anti_dual.group9.www), right_anti_dual.e45 * this.e1234) + float4((right_anti_dual.group7.xyz.zxy * this.group8.xyz.yzx), right_anti_dual.e42 * this.e4315) + float4((right_anti_dual.group8.xyz.yzx * this.group7.xyz.zxy), right_anti_dual.e43 * this.e4125) - (right_anti_dual.group9.yzxy * float4(this.group5.xyz.zxy, this.e42)) - float4((float3(right_anti_dual.e1234) * this.group3.xyz), right_anti_dual.e4125 * this.e43) - float4((right_anti_dual.group4.xyz * this.group9.www), right_anti_dual.e423 * this.e415) - float4((right_anti_dual.group5.xyz.yzx * this.group9.zxy), right_anti_dual.e431 * this.e425) - float4((right_anti_dual.group7.xyz.yzx * this.group8.xyz.zxy), right_anti_dual.e412 * this.e435) - float4((right_anti_dual.group8.xyz.zxy * this.group7.xyz.yzx), right_anti_dual.e4235 * this.e41), 
-            /* e5, 0, 0, 0 */
-            float4((right_anti_dual.e12345 * this.e5) + (right_anti_dual.e5 * this.e12345) + (right_anti_dual.e4235 * this.e15) + (right_anti_dual.e4315 * this.e25) + (right_anti_dual.e4125 * this.e35) + (right_anti_dual.e3215 * this.e45) - (right_anti_dual.e15 * this.e4235) - (right_anti_dual.e25 * this.e4315) - (right_anti_dual.e35 * this.e4125) - (right_anti_dual.e45 * this.e3215) - (right_anti_dual.e415 * this.e235) - (right_anti_dual.e425 * this.e315) - (right_anti_dual.e435 * this.e125) - (right_anti_dual.e235 * this.e415) - (right_anti_dual.e315 * this.e425) - (right_anti_dual.e125 * this.e435), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (right_anti_dual.e12345 * this.e5) + (right_anti_dual.e5 * this.e12345) + (right_anti_dual.e4235 * this.e15) + (right_anti_dual.e4315 * this.e25) + (right_anti_dual.e4125 * this.e35) + (right_anti_dual.e3215 * this.e45) - (right_anti_dual.e15 * this.e4235) - (right_anti_dual.e25 * this.e4315) - (right_anti_dual.e35 * this.e4125) - (right_anti_dual.e45 * this.e3215) - (right_anti_dual.e415 * this.e235) - (right_anti_dual.e425 * this.e315) - (right_anti_dual.e435 * this.e125) - (right_anti_dual.e235 * this.e415) - (right_anti_dual.e315 * this.e425) - (right_anti_dual.e125 * this.e435), 
             /* e15, e25, e35, e45 */
             float4((right_anti_dual.e415 * this.e3215) + (right_anti_dual.e315 * this.e4125) + (right_anti_dual.e4125 * this.e315) + (right_anti_dual.e3215 * this.e415), (right_anti_dual.e425 * this.e3215) + (right_anti_dual.e125 * this.e4235) + (right_anti_dual.e4235 * this.e125) + (right_anti_dual.e3215 * this.e425), (right_anti_dual.e435 * this.e3215) + (right_anti_dual.e235 * this.e4315) + (right_anti_dual.e4315 * this.e235) + (right_anti_dual.e3215 * this.e435), -(right_anti_dual.e435 * this.e4125) - (right_anti_dual.e4235 * this.e415) - (right_anti_dual.e4315 * this.e425) - (right_anti_dual.e4125 * this.e435)) + (float4(right_anti_dual.e12345) * this.group3) + (float4(this.e12345) * right_anti_dual.group3) - (this.group9.yzxx * float4(right_anti_dual.group8.xyz.zxy, right_anti_dual.e415)) - float4((this.group8.xyz.zxy * right_anti_dual.group9.yzx), right_anti_dual.e425 * this.e4315), 
-            /* e41, e42, e43, 0 */
-            float4((float3(right_anti_dual.e12345) * this.group4.xyz) + (float3(right_anti_dual.e1234) * this.group6.xyz) + (float3(this.e12345) * right_anti_dual.group4.xyz) + (float3(this.e1234) * right_anti_dual.group6.xyz) + (right_anti_dual.group7.xyz.zxy * this.group9.yzx) + (this.group7.xyz.zxy * right_anti_dual.group9.yzx) - (right_anti_dual.group7.xyz.yzx * this.group9.zxy) - (this.group7.xyz.yzx * right_anti_dual.group9.zxy), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(right_anti_dual.e12345) * this.group5.xyz) + (float3(right_anti_dual.e3215) * this.group7.xyz) + (float3(right_anti_dual.e1234) * this.group8.xyz) + (float3(this.e12345) * right_anti_dual.group5.xyz) + (float3(this.e3215) * right_anti_dual.group7.xyz) + (float3(this.e1234) * right_anti_dual.group8.xyz) - (float3(right_anti_dual.e321) * this.group9.xyz) - (float3(this.e321) * right_anti_dual.group9.xyz), 0.0), 
+            /* e41, e42, e43 */
+            (float3(right_anti_dual.e12345) * this.group4.xyz) + (float3(right_anti_dual.e1234) * this.group6.xyz) + (float3(this.e12345) * right_anti_dual.group4.xyz) + (float3(this.e1234) * right_anti_dual.group6.xyz) + (right_anti_dual.group7.xyz.zxy * this.group9.yzx) + (this.group7.xyz.zxy * right_anti_dual.group9.yzx) - (right_anti_dual.group7.xyz.yzx * this.group9.zxy) - (this.group7.xyz.yzx * right_anti_dual.group9.zxy), 
+            /* e23, e31, e12 */
+            (float3(right_anti_dual.e12345) * this.group5.xyz) + (float3(right_anti_dual.e3215) * this.group7.xyz) + (float3(right_anti_dual.e1234) * this.group8.xyz) + (float3(this.e12345) * right_anti_dual.group5.xyz) + (float3(this.e3215) * right_anti_dual.group7.xyz) + (float3(this.e1234) * right_anti_dual.group8.xyz) - (float3(right_anti_dual.e321) * this.group9.xyz) - (float3(this.e321) * right_anti_dual.group9.xyz), 
             /* e415, e425, e435, e321 */
             (float4(right_anti_dual.e12345) * this.group6) + (float4(this.e12345) * right_anti_dual.group6) + (right_anti_dual.group9.yzxw * float4(this.group9.zxy, this.e1234)) - float4((right_anti_dual.group9.zxy * this.group9.yzx), right_anti_dual.e1234 * this.e3215), 
-            /* e423, e431, e412, 0 */
-            float4((float3(right_anti_dual.e12345) * this.group7.xyz) + (float3(this.e12345) * right_anti_dual.group7.xyz) + (float3(this.e1234) * right_anti_dual.group9.xyz) - (float3(right_anti_dual.e1234) * this.group9.xyz), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(right_anti_dual.e12345) * this.group8.xyz) + (float3(right_anti_dual.e3215) * this.group9.xyz) + (float3(this.e12345) * right_anti_dual.group8.xyz) - (float3(this.e3215) * right_anti_dual.group9.xyz), 0.0), 
+            /* e423, e431, e412 */
+            (float3(right_anti_dual.e12345) * this.group7.xyz) + (float3(this.e12345) * right_anti_dual.group7.xyz) + (float3(this.e1234) * right_anti_dual.group9.xyz) - (float3(right_anti_dual.e1234) * this.group9.xyz), 
+            /* e235, e315, e125 */
+            (float3(right_anti_dual.e12345) * this.group8.xyz) + (float3(right_anti_dual.e3215) * this.group9.xyz) + (float3(this.e12345) * right_anti_dual.group8.xyz) - (float3(this.e3215) * right_anti_dual.group9.xyz), 
             /* e4235, e4315, e4125, e3215 */
             (float4(right_anti_dual.e12345) * this.group9) + (float4(this.e12345) * right_anti_dual.group9), 
-            /* e1234, 0, 0, 0 */
-            float4((right_anti_dual.e12345 * this.e1234) + (right_anti_dual.e1234 * this.e12345), 0.0, 0.0, 0.0)
+            /* e1234 */
+            (right_anti_dual.e12345 * this.e1234) + (right_anti_dual.e1234 * this.e12345)
         );
     }
 }
-extension MultiVector: WeightContraction<Plane> {
-    associatedtype Output = MultiVector;
-    func weight_contraction(other: Plane) -> Output {
-        AntiPlane right_anti_dual = AntiPlane.from_groups(
+public extension MultiVector {
+    public MultiVector weight_contraction(Plane other) {
+        AntiPlane right_anti_dual = AntiPlane(
             /* e1, e2, e3, e5 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((right_anti_dual.e1 * this.e4235) + (right_anti_dual.e2 * this.e4315) + (right_anti_dual.e3 * this.e4125) + (right_anti_dual.e5 * this.e1234), 0.0), 0.0, 0.0), 
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((right_anti_dual.e1 * this.e4235) + (right_anti_dual.e2 * this.e4315) + (right_anti_dual.e3 * this.e4125) + (right_anti_dual.e5 * this.e1234), 0.0), 
             /* e1, e2, e3, e4 */
             float4(this.group0.xy.yy, this.e12345, 0.0) * float4(float3(1.0), 0.0) * float4(right_anti_dual.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
-            /* e5, 0, 0, 0 */
-            float4(right_anti_dual.e5 * this.e12345, 0.0, 0.0, 0.0), 
+            /* e5 */
+            right_anti_dual.e5 * this.e12345, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(0.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension MultiVector: WeightContraction<RoundPoint> {
-    associatedtype Output = MultiVector;
-    func weight_contraction(other: RoundPoint) -> Output {
-        Sphere right_anti_dual = Sphere.from_groups(
+public extension MultiVector {
+    public MultiVector weight_contraction(RoundPoint other) {
+        Sphere right_anti_dual = Sphere(
             /* e4235, e4315, e4125, e3215 */
             float4(other.group0.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * -1.0
         );
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((this.e1 * right_anti_dual.e4235) + (this.e2 * right_anti_dual.e4315) + (this.e3 * right_anti_dual.e4125) + (this.e4 * right_anti_dual.e3215) + (this.e5 * right_anti_dual.e1234), 0.0), 0.0, 0.0), 
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((this.e1 * right_anti_dual.e4235) + (this.e2 * right_anti_dual.e4315) + (this.e3 * right_anti_dual.e4125) + (this.e4 * right_anti_dual.e3215) + (this.e5 * right_anti_dual.e1234), 0.0), 
             /* e1, e2, e3, e4 */
             float4((this.e41 * right_anti_dual.e3215) + (this.e31 * right_anti_dual.e4125), (this.e42 * right_anti_dual.e3215) + (this.e12 * right_anti_dual.e4235), (this.e43 * right_anti_dual.e3215) + (this.e23 * right_anti_dual.e4315), -(this.e45 * right_anti_dual.e1234) - (this.e43 * right_anti_dual.e4125)) - (right_anti_dual.group0.yzxx * float4(this.group5.xyz.zxy, this.e41)) - float4((float3(right_anti_dual.e1234) * this.group3.xyz), this.e42 * right_anti_dual.e4315), 
-            /* e5, 0, 0, 0 */
-            float4((this.e15 * right_anti_dual.e4235) + (this.e25 * right_anti_dual.e4315) + (this.e35 * right_anti_dual.e4125) + (this.e45 * right_anti_dual.e3215), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (this.e15 * right_anti_dual.e4235) + (this.e25 * right_anti_dual.e4315) + (this.e35 * right_anti_dual.e4125) + (this.e45 * right_anti_dual.e3215), 
             /* e15, e25, e35, e45 */
             float4((this.e415 * right_anti_dual.e3215) + (this.e315 * right_anti_dual.e4125), (this.e425 * right_anti_dual.e3215) + (this.e125 * right_anti_dual.e4235), (this.e435 * right_anti_dual.e3215) + (this.e235 * right_anti_dual.e4315), -(this.e425 * right_anti_dual.e4315) - (this.e435 * right_anti_dual.e4125)) - (right_anti_dual.group0.yzxx * float4(this.group8.xyz.zxy, this.e415)), 
-            /* e41, e42, e43, 0 */
-            float4((float3(right_anti_dual.e1234) * this.group6.xyz) + (this.group7.xyz.zxy * right_anti_dual.group0.yzx) - (this.group7.xyz.yzx * right_anti_dual.group0.zxy), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(right_anti_dual.e3215) * this.group7.xyz) + (float3(right_anti_dual.e1234) * this.group8.xyz) - (float3(this.e321) * right_anti_dual.group0.xyz), 0.0), 
+            /* e41, e42, e43 */
+            (float3(right_anti_dual.e1234) * this.group6.xyz) + (this.group7.xyz.zxy * right_anti_dual.group0.yzx) - (this.group7.xyz.yzx * right_anti_dual.group0.zxy), 
+            /* e23, e31, e12 */
+            (float3(right_anti_dual.e3215) * this.group7.xyz) + (float3(right_anti_dual.e1234) * this.group8.xyz) - (float3(this.e321) * right_anti_dual.group0.xyz), 
             /* e415, e425, e435, e321 */
             float4((this.group9.zxy * right_anti_dual.group0.yzx), this.e1234 * right_anti_dual.e3215) - (this.group9.yzxw * float4(right_anti_dual.group0.zxy, right_anti_dual.e1234)), 
-            /* e423, e431, e412, 0 */
-            float4((float3(this.e1234) * right_anti_dual.group0.xyz) - (float3(right_anti_dual.e1234) * this.group9.xyz), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(right_anti_dual.e3215) * this.group9.xyz) - (float3(this.e3215) * right_anti_dual.group0.xyz), 0.0), 
+            /* e423, e431, e412 */
+            (float3(this.e1234) * right_anti_dual.group0.xyz) - (float3(right_anti_dual.e1234) * this.group9.xyz), 
+            /* e235, e315, e125 */
+            (float3(right_anti_dual.e3215) * this.group9.xyz) - (float3(this.e3215) * right_anti_dual.group0.xyz), 
             /* e4235, e4315, e4125, e3215 */
             float4(this.e12345) * right_anti_dual.group0, 
-            /* e1234, 0, 0, 0 */
-            float4(this.e12345 * right_anti_dual.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            this.e12345 * right_anti_dual.e1234
         );
     }
 }
-extension MultiVector: WeightContraction<Scalar> {
-    associatedtype Output = MultiVector;
-    func weight_contraction(other: Scalar) -> Output {
-        AntiScalar right_anti_dual = AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(other.scalar, 0.0, 0.0, 0.0)
+public extension MultiVector {
+    public MultiVector weight_contraction(Scalar other) {
+        AntiScalar right_anti_dual = AntiScalar(
+            /* e12345 */
+            other.scalar
         );
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(right_anti_dual.e12345) * this.group0.xy, 0.0, 0.0), 
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(right_anti_dual.e12345) * this.group0.xy, 
             /* e1, e2, e3, e4 */
             float4(right_anti_dual.e12345) * this.group1, 
-            /* e5, 0, 0, 0 */
-            float4(right_anti_dual.e12345 * this.e5, 0.0, 0.0, 0.0), 
+            /* e5 */
+            right_anti_dual.e12345 * this.e5, 
             /* e15, e25, e35, e45 */
             float4(right_anti_dual.e12345) * this.group3, 
-            /* e41, e42, e43, 0 */
-            float4(float3(right_anti_dual.e12345) * this.group4.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(float3(right_anti_dual.e12345) * this.group5.xyz, 0.0), 
+            /* e41, e42, e43 */
+            float3(right_anti_dual.e12345) * this.group4.xyz, 
+            /* e23, e31, e12 */
+            float3(right_anti_dual.e12345) * this.group5.xyz, 
             /* e415, e425, e435, e321 */
             float4(right_anti_dual.e12345) * this.group6, 
-            /* e423, e431, e412, 0 */
-            float4(float3(right_anti_dual.e12345) * this.group7.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(float3(right_anti_dual.e12345) * this.group8.xyz, 0.0), 
+            /* e423, e431, e412 */
+            float3(right_anti_dual.e12345) * this.group7.xyz, 
+            /* e235, e315, e125 */
+            float3(right_anti_dual.e12345) * this.group8.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(right_anti_dual.e12345) * this.group9, 
-            /* e1234, 0, 0, 0 */
-            float4(right_anti_dual.e12345 * this.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            right_anti_dual.e12345 * this.e1234
         );
     }
 }
-extension MultiVector: WeightContraction<Sphere> {
-    associatedtype Output = MultiVector;
-    func weight_contraction(other: Sphere) -> Output {
-        RoundPoint right_anti_dual = RoundPoint.from_groups(
+public extension MultiVector {
+    public MultiVector weight_contraction(Sphere other) {
+        RoundPoint right_anti_dual = RoundPoint(
             /* e1, e2, e3, e4 */
             float4(other.group0.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e5, 0, 0, 0 */
-            float4(other.e3215, 0.0, 0.0, 0.0)
+            /* e5 */
+            other.e3215
         );
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((this.e4235 * right_anti_dual.e1) + (this.e4315 * right_anti_dual.e2) + (this.e4125 * right_anti_dual.e3) + (this.e3215 * right_anti_dual.e4) + (this.e1234 * right_anti_dual.e5), 0.0), 0.0, 0.0), 
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((this.e4235 * right_anti_dual.e1) + (this.e4315 * right_anti_dual.e2) + (this.e4125 * right_anti_dual.e3) + (this.e3215 * right_anti_dual.e4) + (this.e1234 * right_anti_dual.e5), 0.0), 
             /* e1, e2, e3, e4 */
             float4(this.e12345) * right_anti_dual.group0, 
-            /* e5, 0, 0, 0 */
-            float4(this.e12345 * right_anti_dual.e5, 0.0, 0.0, 0.0), 
+            /* e5 */
+            this.e12345 * right_anti_dual.e5, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(0.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension MultiVector: WeightContraction<VersorEven> {
-    associatedtype Output = MultiVector;
-    func weight_contraction(other: VersorEven) -> Output {
-        VersorOdd right_anti_dual = VersorOdd.from_groups(
+public extension MultiVector {
+    public MultiVector weight_contraction(VersorEven other) {
+        VersorOdd right_anti_dual = VersorOdd(
             /* e41, e42, e43, scalar */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e23, e31, e12, e45 */
@@ -7767,36 +7498,35 @@ extension MultiVector: WeightContraction<VersorEven> {
             /* e4235, e4315, e4125, e3215 */
             float4(other.group3.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((this.e12345 * right_anti_dual.scalar) + (this.e1 * right_anti_dual.e4235) + (this.e2 * right_anti_dual.e4315) + (this.e3 * right_anti_dual.e4125) + (this.e4 * right_anti_dual.e3215) + (this.e5 * right_anti_dual.e1234) - (this.e415 * right_anti_dual.e23) - (this.e425 * right_anti_dual.e31) - (this.e435 * right_anti_dual.e12) - (this.e321 * right_anti_dual.e45) - (this.e423 * right_anti_dual.e15) - (this.e431 * right_anti_dual.e25) - (this.e412 * right_anti_dual.e35) - (this.e235 * right_anti_dual.e41) - (this.e315 * right_anti_dual.e42) - (this.e125 * right_anti_dual.e43), 0.0), 0.0, 0.0), 
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((this.e12345 * right_anti_dual.scalar) + (this.e1 * right_anti_dual.e4235) + (this.e2 * right_anti_dual.e4315) + (this.e3 * right_anti_dual.e4125) + (this.e4 * right_anti_dual.e3215) + (this.e5 * right_anti_dual.e1234) - (this.e415 * right_anti_dual.e23) - (this.e425 * right_anti_dual.e31) - (this.e435 * right_anti_dual.e12) - (this.e321 * right_anti_dual.e45) - (this.e423 * right_anti_dual.e15) - (this.e431 * right_anti_dual.e25) - (this.e412 * right_anti_dual.e35) - (this.e235 * right_anti_dual.e41) - (this.e315 * right_anti_dual.e42) - (this.e125 * right_anti_dual.e43), 0.0), 
             /* e1, e2, e3, e4 */
             (float4(this.e1234) * float4(right_anti_dual.group2.xyz, right_anti_dual.e45)) + (this.group9.yzxz * float4(right_anti_dual.group1.zxy, right_anti_dual.e43)) + float4((this.group4.xyz * right_anti_dual.group3.www), this.e4235 * right_anti_dual.e41) + float4((this.group5.xyz.yzx * right_anti_dual.group3.zxy), this.e4315 * right_anti_dual.e42) - (right_anti_dual.group3.yzxx * float4(this.group5.xyz.zxy, this.e41)) - float4((this.group9.zxy * right_anti_dual.group1.yzx), this.e43 * right_anti_dual.e4125) - float4((this.group9.www * right_anti_dual.group0.xyz), this.e45 * right_anti_dual.e1234) - float4((right_anti_dual.group2.www * this.group3.xyz), this.e42 * right_anti_dual.e4315), 
-            /* e5, 0, 0, 0 */
-            float4((this.e15 * right_anti_dual.e4235) + (this.e25 * right_anti_dual.e4315) + (this.e35 * right_anti_dual.e4125) + (this.e45 * right_anti_dual.e3215) - (this.e4235 * right_anti_dual.e15) - (this.e4315 * right_anti_dual.e25) - (this.e4125 * right_anti_dual.e35) - (this.e3215 * right_anti_dual.e45), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (this.e15 * right_anti_dual.e4235) + (this.e25 * right_anti_dual.e4315) + (this.e35 * right_anti_dual.e4125) + (this.e45 * right_anti_dual.e3215) - (this.e4235 * right_anti_dual.e15) - (this.e4315 * right_anti_dual.e25) - (this.e4125 * right_anti_dual.e35) - (this.e3215 * right_anti_dual.e45), 
             /* e15, e25, e35, e45 */
             float4((this.e415 * right_anti_dual.e3215) + (this.e315 * right_anti_dual.e4125), (this.e425 * right_anti_dual.e3215) + (this.e125 * right_anti_dual.e4235), (this.e435 * right_anti_dual.e3215) + (this.e235 * right_anti_dual.e4315), -(this.e425 * right_anti_dual.e4315) - (this.e435 * right_anti_dual.e4125)) + (float4(this.e12345) * float4(right_anti_dual.group2.xyz, right_anti_dual.e45)) - (right_anti_dual.group3.yzxx * float4(this.group8.xyz.zxy, this.e415)), 
-            /* e41, e42, e43, 0 */
-            float4((float3(this.e12345) * right_anti_dual.group0.xyz) + (float3(right_anti_dual.e1234) * this.group6.xyz) + (this.group7.xyz.zxy * right_anti_dual.group3.yzx) - (this.group7.xyz.yzx * right_anti_dual.group3.zxy), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(this.e12345) * right_anti_dual.group1.xyz) + (float3(right_anti_dual.e1234) * this.group8.xyz) + (float3(right_anti_dual.e3215) * this.group7.xyz) - (float3(this.e321) * right_anti_dual.group3.xyz), 0.0), 
+            /* e41, e42, e43 */
+            (float3(this.e12345) * right_anti_dual.group0.xyz) + (float3(right_anti_dual.e1234) * this.group6.xyz) + (this.group7.xyz.zxy * right_anti_dual.group3.yzx) - (this.group7.xyz.yzx * right_anti_dual.group3.zxy), 
+            /* e23, e31, e12 */
+            (float3(this.e12345) * right_anti_dual.group1.xyz) + (float3(right_anti_dual.e1234) * this.group8.xyz) + (float3(right_anti_dual.e3215) * this.group7.xyz) - (float3(this.e321) * right_anti_dual.group3.xyz), 
             /* e415, e425, e435, e321 */
             float4((this.group9.zxy * right_anti_dual.group3.yzx), this.e1234 * right_anti_dual.e3215) - (this.group9.yzxw * float4(right_anti_dual.group3.zxy, right_anti_dual.e1234)), 
-            /* e423, e431, e412, 0 */
-            float4((float3(this.e1234) * right_anti_dual.group3.xyz) - (float3(right_anti_dual.e1234) * this.group9.xyz), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(right_anti_dual.e3215) * this.group9.xyz) - (float3(this.e3215) * right_anti_dual.group3.xyz), 0.0), 
+            /* e423, e431, e412 */
+            (float3(this.e1234) * right_anti_dual.group3.xyz) - (float3(right_anti_dual.e1234) * this.group9.xyz), 
+            /* e235, e315, e125 */
+            (float3(right_anti_dual.e3215) * this.group9.xyz) - (float3(this.e3215) * right_anti_dual.group3.xyz), 
             /* e4235, e4315, e4125, e3215 */
             float4(this.e12345) * right_anti_dual.group3, 
-            /* e1234, 0, 0, 0 */
-            float4(this.e12345 * right_anti_dual.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            this.e12345 * right_anti_dual.e1234
         );
     }
 }
-extension MultiVector: WeightContraction<VersorOdd> {
-    associatedtype Output = MultiVector;
-    func weight_contraction(other: VersorOdd) -> Output {
-        VersorEven right_anti_dual = VersorEven.from_groups(
+public extension MultiVector {
+    public MultiVector weight_contraction(VersorOdd other) {
+        VersorEven right_anti_dual = VersorEven(
             /* e423, e431, e412, e12345 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e415, e425, e435, e321 */
@@ -7806,52 +7536,57 @@ extension MultiVector: WeightContraction<VersorOdd> {
             /* e1, e2, e3, e4 */
             float4(other.group3.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((this.scalar * right_anti_dual.e12345) + (this.e4235 * right_anti_dual.e1) + (this.e4315 * right_anti_dual.e2) + (this.e4125 * right_anti_dual.e3) + (this.e3215 * right_anti_dual.e4) + (this.e1234 * right_anti_dual.e5) - (this.e15 * right_anti_dual.e423) - (this.e25 * right_anti_dual.e431) - (this.e35 * right_anti_dual.e412) - (this.e45 * right_anti_dual.e321) - (this.e41 * right_anti_dual.e235) - (this.e42 * right_anti_dual.e315) - (this.e43 * right_anti_dual.e125) - (this.e23 * right_anti_dual.e415) - (this.e31 * right_anti_dual.e425) - (this.e12 * right_anti_dual.e435), this.e12345 * right_anti_dual.e12345), 0.0, 0.0), 
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((this.scalar * right_anti_dual.e12345) + (this.e4235 * right_anti_dual.e1) + (this.e4315 * right_anti_dual.e2) + (this.e4125 * right_anti_dual.e3) + (this.e3215 * right_anti_dual.e4) + (this.e1234 * right_anti_dual.e5) - (this.e15 * right_anti_dual.e423) - (this.e25 * right_anti_dual.e431) - (this.e35 * right_anti_dual.e412) - (this.e45 * right_anti_dual.e321) - (this.e41 * right_anti_dual.e235) - (this.e42 * right_anti_dual.e315) - (this.e43 * right_anti_dual.e125) - (this.e23 * right_anti_dual.e415) - (this.e31 * right_anti_dual.e425) - (this.e12 * right_anti_dual.e435), this.e12345 * right_anti_dual.e12345), 
             /* e1, e2, e3, e4 */
             float4((this.e1 * right_anti_dual.e12345) + (this.e415 * right_anti_dual.e321) + (this.e321 * right_anti_dual.e415) + (this.e315 * right_anti_dual.e412), (this.e2 * right_anti_dual.e12345) + (this.e425 * right_anti_dual.e321) + (this.e321 * right_anti_dual.e425) + (this.e125 * right_anti_dual.e423), (this.e3 * right_anti_dual.e12345) + (this.e435 * right_anti_dual.e321) + (this.e321 * right_anti_dual.e435) + (this.e235 * right_anti_dual.e431), -(this.e415 * right_anti_dual.e423) - (this.e425 * right_anti_dual.e431) - (this.e435 * right_anti_dual.e412) - (this.e412 * right_anti_dual.e435)) + (float4(this.e12345) * right_anti_dual.group3) + float4((this.group7.xyz.zxy * right_anti_dual.group2.yzx), this.e4 * right_anti_dual.e12345) - float4((this.group7.xyz.yzx * right_anti_dual.group2.zxy), this.e423 * right_anti_dual.e415) - float4((this.group8.xyz.zxy * right_anti_dual.group0.yzx), this.e431 * right_anti_dual.e425), 
-            /* e5, 0, 0, 0 */
-            float4((this.e12345 * right_anti_dual.e5) + (this.e5 * right_anti_dual.e12345) - (this.e415 * right_anti_dual.e235) - (this.e425 * right_anti_dual.e315) - (this.e435 * right_anti_dual.e125) - (this.e235 * right_anti_dual.e415) - (this.e315 * right_anti_dual.e425) - (this.e125 * right_anti_dual.e435), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (this.e12345 * right_anti_dual.e5) + (this.e5 * right_anti_dual.e12345) - (this.e415 * right_anti_dual.e235) - (this.e425 * right_anti_dual.e315) - (this.e435 * right_anti_dual.e125) - (this.e235 * right_anti_dual.e415) - (this.e315 * right_anti_dual.e425) - (this.e125 * right_anti_dual.e435), 
             /* e15, e25, e35, e45 */
             float4((this.e4125 * right_anti_dual.e315) + (this.e3215 * right_anti_dual.e415), (this.e4235 * right_anti_dual.e125) + (this.e3215 * right_anti_dual.e425), (this.e4315 * right_anti_dual.e235) + (this.e3215 * right_anti_dual.e435), -(this.e4315 * right_anti_dual.e425) - (this.e4125 * right_anti_dual.e435)) + (float4(right_anti_dual.e12345) * this.group3) - (this.group9.yzxx * float4(right_anti_dual.group2.zxy, right_anti_dual.e415)), 
-            /* e41, e42, e43, 0 */
-            float4((float3(this.e1234) * right_anti_dual.group1.xyz) + (float3(right_anti_dual.e12345) * this.group4.xyz) + (this.group9.yzx * right_anti_dual.group0.zxy) - (this.group9.zxy * right_anti_dual.group0.yzx), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(this.e3215) * right_anti_dual.group0.xyz) + (float3(this.e1234) * right_anti_dual.group2.xyz) + (float3(right_anti_dual.e12345) * this.group5.xyz) - (float3(right_anti_dual.e321) * this.group9.xyz), 0.0), 
+            /* e41, e42, e43 */
+            (float3(this.e1234) * right_anti_dual.group1.xyz) + (float3(right_anti_dual.e12345) * this.group4.xyz) + (this.group9.yzx * right_anti_dual.group0.zxy) - (this.group9.zxy * right_anti_dual.group0.yzx), 
+            /* e23, e31, e12 */
+            (float3(this.e3215) * right_anti_dual.group0.xyz) + (float3(this.e1234) * right_anti_dual.group2.xyz) + (float3(right_anti_dual.e12345) * this.group5.xyz) - (float3(right_anti_dual.e321) * this.group9.xyz), 
             /* e415, e425, e435, e321 */
             (float4(this.e12345) * right_anti_dual.group1) + (float4(right_anti_dual.e12345) * this.group6), 
-            /* e423, e431, e412, 0 */
-            float4((float3(this.e12345) * right_anti_dual.group0.xyz) + (float3(right_anti_dual.e12345) * this.group7.xyz), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(this.e12345) * right_anti_dual.group2.xyz) + (float3(right_anti_dual.e12345) * this.group8.xyz), 0.0), 
+            /* e423, e431, e412 */
+            (float3(this.e12345) * right_anti_dual.group0.xyz) + (float3(right_anti_dual.e12345) * this.group7.xyz), 
+            /* e235, e315, e125 */
+            (float3(this.e12345) * right_anti_dual.group2.xyz) + (float3(right_anti_dual.e12345) * this.group8.xyz), 
             /* e4235, e4315, e4125, e3215 */
             float4(right_anti_dual.e12345) * this.group9, 
-            /* e1234, 0, 0, 0 */
-            float4(this.e1234 * right_anti_dual.e12345, 0.0, 0.0, 0.0)
+            /* e1234 */
+            this.e1234 * right_anti_dual.e12345
         );
     }
 }
-extension Plane {
-    // Fancy infix trick
-    func operator/(_rhs: WeightContractionInfix) -> WeightContractionInfixPartial<Plane> {
-        return WeightContractionInfixPartial { a: this };
+public extension Plane {
+    // Fancy infix trick (first half)
+    public WeightContractionInfixPartial<Plane> operator /(WeightContractionInfix rhs) {
+        return WeightContractionInfixPartial<Plane>(this);
     }
 }
-extension Plane: WeightContraction<AntiCircleRotor> {
-    associatedtype Output = DipoleInversion;
-    func weight_contraction(other: AntiCircleRotor) -> Output {
-        CircleRotor right_anti_dual = CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension WeightContractionInfixPartial<Plane> {
+    // Fancy infix trick (second half)
+    public DipoleInversion operator /(AntiCircleRotor rhs) {
+        return this.a.weight_contraction(rhs);
+    }
+}
+public extension Plane {
+    public DipoleInversion weight_contraction(AntiCircleRotor other) {
+        CircleRotor right_anti_dual = CircleRotor(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e12345 */
             other.group2 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4((right_anti_dual.group0.xyz.zxy * this.group0.yzx) - (right_anti_dual.group0.xyz.yzx * this.group0.zxy), 0.0), 
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            (right_anti_dual.group0.xyz.zxy * this.group0.yzx) - (right_anti_dual.group0.xyz.yzx * this.group0.zxy), 
             /* e23, e31, e12, e45 */
             float4(right_anti_dual.e423 * this.e3215, right_anti_dual.e431 * this.e3215, right_anti_dual.e412 * this.e3215, -(right_anti_dual.e425 * this.e4315) - (right_anti_dual.e435 * this.e4125)) - (right_anti_dual.group1.wwwx * this.group0.xyzx), 
             /* e15, e25, e35, e1234 */
@@ -7861,12 +7596,11 @@ extension Plane: WeightContraction<AntiCircleRotor> {
         );
     }
 }
-extension Plane: WeightContraction<AntiDipoleInversion> {
-    associatedtype Output = AntiDipoleInversion;
-    func weight_contraction(other: AntiDipoleInversion) -> Output {
-        DipoleInversion right_anti_dual = DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension Plane {
+    public AntiDipoleInversion weight_contraction(AntiDipoleInversion other) {
+        DipoleInversion right_anti_dual = DipoleInversion(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, e1234 */
@@ -7874,9 +7608,9 @@ extension Plane: WeightContraction<AntiDipoleInversion> {
             /* e4235, e4315, e4125, e3215 */
             other.group3 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(right_anti_dual.e1234) * this.group0.xyz * float3(-1.0), 0.0), 
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(right_anti_dual.e1234) * this.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             float4(((right_anti_dual.group3.yzx * this.group0.zxy) - (right_anti_dual.group3.zxy * this.group0.yzx)), right_anti_dual.e1234 * this.e3215 * -1.0), 
             /* e235, e315, e125, e4 */
@@ -7886,38 +7620,35 @@ extension Plane: WeightContraction<AntiDipoleInversion> {
         );
     }
 }
-extension Plane: WeightContraction<AntiDualNum> {
-    associatedtype Output = Plane;
-    func weight_contraction(other: AntiDualNum) -> Output {
-        return Plane.from_groups(
+public extension Plane {
+    public Plane weight_contraction(AntiDualNum other) {
+        return Plane(
             /* e4235, e4315, e4125, e3215 */
             float4(other.scalar) * this.group0
         );
     }
 }
-extension Plane: WeightContraction<AntiFlatPoint> {
-    associatedtype Output = DualNum;
-    func weight_contraction(other: AntiFlatPoint) -> Output {
-        FlatPoint right_anti_dual = FlatPoint.from_groups(
+public extension Plane {
+    public DualNum weight_contraction(AntiFlatPoint other) {
+        FlatPoint right_anti_dual = FlatPoint(
             /* e15, e25, e35, e45 */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(float2(-(right_anti_dual.e15 * this.e4235) - (right_anti_dual.e25 * this.e4315) - (right_anti_dual.e35 * this.e4125) - (right_anti_dual.e45 * this.e3215), 0.0), 0.0, 0.0)
+        return DualNum(
+            /* e5, e12345 */
+            float2(-(right_anti_dual.e15 * this.e4235) - (right_anti_dual.e25 * this.e4315) - (right_anti_dual.e35 * this.e4125) - (right_anti_dual.e45 * this.e3215), 0.0)
         );
     }
 }
-extension Plane: WeightContraction<AntiFlector> {
-    associatedtype Output = Motor;
-    func weight_contraction(other: AntiFlector) -> Output {
-        Flector right_anti_dual = Flector.from_groups(
+public extension Plane {
+    public Motor weight_contraction(AntiFlector other) {
+        Flector right_anti_dual = Flector(
             /* e15, e25, e35, e45 */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e4235, e4315, e4125, e3215 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return Motor.from_groups(
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4(((right_anti_dual.group1.yzx * this.group0.zxy) - (right_anti_dual.group1.zxy * this.group0.yzx)), 0.0), 
             /* e235, e315, e125, e5 */
@@ -7925,31 +7656,29 @@ extension Plane: WeightContraction<AntiFlector> {
         );
     }
 }
-extension Plane: WeightContraction<AntiLine> {
-    associatedtype Output = FlatPoint;
-    func weight_contraction(other: AntiLine) -> Output {
-        Line right_anti_dual = Line.from_groups(
-            /* e415, e425, e435, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group1.xyz * float3(-1.0), 0.0)
+public extension Plane {
+    public FlatPoint weight_contraction(AntiLine other) {
+        Line right_anti_dual = Line(
+            /* e415, e425, e435 */
+            other.group0.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            other.group1.xyz * float3(-1.0)
         );
-        return FlatPoint.from_groups(
+        return FlatPoint(
             /* e15, e25, e35, e45 */
             float4((right_anti_dual.e415 * this.e3215) + (right_anti_dual.e315 * this.e4125), (right_anti_dual.e425 * this.e3215) + (right_anti_dual.e125 * this.e4235), (right_anti_dual.e435 * this.e3215) + (right_anti_dual.e235 * this.e4315), -(right_anti_dual.e425 * this.e4315) - (right_anti_dual.e435 * this.e4125)) - (this.group0.yzxx * float4(right_anti_dual.group1.xyz.zxy, right_anti_dual.e415))
         );
     }
 }
-extension Plane: WeightContraction<AntiMotor> {
-    associatedtype Output = Flector;
-    func weight_contraction(other: AntiMotor) -> Output {
-        Motor right_anti_dual = Motor.from_groups(
+public extension Plane {
+    public Flector weight_contraction(AntiMotor other) {
+        Motor right_anti_dual = Motor(
             /* e415, e425, e435, e12345 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e5 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return Flector.from_groups(
+        return Flector(
             /* e15, e25, e35, e45 */
             float4((right_anti_dual.e415 * this.e3215) + (right_anti_dual.e315 * this.e4125), (right_anti_dual.e425 * this.e3215) + (right_anti_dual.e125 * this.e4235), (right_anti_dual.e435 * this.e3215) + (right_anti_dual.e235 * this.e4315), -(right_anti_dual.e425 * this.e4315) - (right_anti_dual.e435 * this.e4125)) - (this.group0.yzxx * float4(right_anti_dual.group1.zxy, right_anti_dual.e415)), 
             /* e4235, e4315, e4125, e3215 */
@@ -7957,86 +7686,81 @@ extension Plane: WeightContraction<AntiMotor> {
         );
     }
 }
-extension Plane: WeightContraction<AntiPlane> {
-    associatedtype Output = Line;
-    func weight_contraction(other: AntiPlane) -> Output {
-        Plane right_anti_dual = Plane.from_groups(
+public extension Plane {
+    public Line weight_contraction(AntiPlane other) {
+        Plane right_anti_dual = Plane(
             /* e4235, e4315, e4125, e3215 */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return Line.from_groups(
-            /* e415, e425, e435, 0 */
-            float4((right_anti_dual.group0.yzx * this.group0.zxy) - (right_anti_dual.group0.zxy * this.group0.yzx), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(right_anti_dual.e3215) * this.group0.xyz) - (float3(this.e3215) * right_anti_dual.group0.xyz), 0.0)
+        return Line(
+            /* e415, e425, e435 */
+            (right_anti_dual.group0.yzx * this.group0.zxy) - (right_anti_dual.group0.zxy * this.group0.yzx), 
+            /* e235, e315, e125 */
+            (float3(right_anti_dual.e3215) * this.group0.xyz) - (float3(this.e3215) * right_anti_dual.group0.xyz)
         );
     }
 }
-extension Plane: WeightContraction<Circle> {
-    associatedtype Output = RoundPoint;
-    func weight_contraction(other: Circle) -> Output {
-        Dipole right_anti_dual = Dipole.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension Plane {
+    public RoundPoint weight_contraction(Circle other) {
+        Dipole right_anti_dual = Dipole(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e15, e25, e35, 0 */
-            float4(other.group2.xyz, 0.0)
+            /* e15, e25, e35 */
+            other.group2.xyz
         );
-        return RoundPoint.from_groups(
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4(-(right_anti_dual.e41 * this.e3215) - (right_anti_dual.e31 * this.e4125), -(right_anti_dual.e42 * this.e3215) - (right_anti_dual.e12 * this.e4235), -(right_anti_dual.e43 * this.e3215) - (right_anti_dual.e23 * this.e4315), (right_anti_dual.e42 * this.e4315) + (right_anti_dual.e43 * this.e4125)) + (this.group0.yzxx * float4(right_anti_dual.group1.zxy, right_anti_dual.e41)), 
-            /* e5, 0, 0, 0 */
-            float4(-(right_anti_dual.e45 * this.e3215) - (right_anti_dual.e15 * this.e4235) - (right_anti_dual.e25 * this.e4315) - (right_anti_dual.e35 * this.e4125), 0.0, 0.0, 0.0)
+            /* e5 */
+            -(right_anti_dual.e45 * this.e3215) - (right_anti_dual.e15 * this.e4235) - (right_anti_dual.e25 * this.e4315) - (right_anti_dual.e35 * this.e4125)
         );
     }
 }
-extension Plane: WeightContraction<CircleRotor> {
-    associatedtype Output = RoundPoint;
-    func weight_contraction(other: CircleRotor) -> Output {
-        AntiCircleRotor right_anti_dual = AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension Plane {
+    public RoundPoint weight_contraction(CircleRotor other) {
+        AntiCircleRotor right_anti_dual = AntiCircleRotor(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, scalar */
             other.group2 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return RoundPoint.from_groups(
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4(-(right_anti_dual.e41 * this.e3215) - (right_anti_dual.e31 * this.e4125), -(right_anti_dual.e42 * this.e3215) - (right_anti_dual.e12 * this.e4235), -(right_anti_dual.e43 * this.e3215) - (right_anti_dual.e23 * this.e4315), (right_anti_dual.e42 * this.e4315) + (right_anti_dual.e43 * this.e4125)) + (this.group0.yzxx * float4(right_anti_dual.group1.zxy, right_anti_dual.e41)), 
-            /* e5, 0, 0, 0 */
-            float4(-(right_anti_dual.e45 * this.e3215) - (right_anti_dual.e15 * this.e4235) - (right_anti_dual.e25 * this.e4315) - (right_anti_dual.e35 * this.e4125), 0.0, 0.0, 0.0)
+            /* e5 */
+            -(right_anti_dual.e45 * this.e3215) - (right_anti_dual.e15 * this.e4235) - (right_anti_dual.e25 * this.e4315) - (right_anti_dual.e35 * this.e4125)
         );
     }
 }
-extension Plane: WeightContraction<Dipole> {
-    associatedtype Output = Dipole;
-    func weight_contraction(other: Dipole) -> Output {
-        Circle right_anti_dual = Circle.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension Plane {
+    public Dipole weight_contraction(Dipole other) {
+        Circle right_anti_dual = Circle(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group2.xyz * float3(-1.0), 0.0)
+            /* e235, e315, e125 */
+            other.group2.xyz * float3(-1.0)
         );
-        return Dipole.from_groups(
-            /* e41, e42, e43, 0 */
-            float4((right_anti_dual.group0.xyz.zxy * this.group0.yzx) - (right_anti_dual.group0.xyz.yzx * this.group0.zxy), 0.0), 
+        return Dipole(
+            /* e41, e42, e43 */
+            (right_anti_dual.group0.xyz.zxy * this.group0.yzx) - (right_anti_dual.group0.xyz.yzx * this.group0.zxy), 
             /* e23, e31, e12, e45 */
             float4(right_anti_dual.e423 * this.e3215, right_anti_dual.e431 * this.e3215, right_anti_dual.e412 * this.e3215, -(right_anti_dual.e425 * this.e4315) - (right_anti_dual.e435 * this.e4125)) - (right_anti_dual.group1.wwwx * this.group0.xyzx), 
-            /* e15, e25, e35, 0 */
-            float4((float3(this.e3215) * right_anti_dual.group1.xyz) + (right_anti_dual.group2.xyz.yzx * this.group0.zxy) - (right_anti_dual.group2.xyz.zxy * this.group0.yzx), 0.0)
+            /* e15, e25, e35 */
+            (float3(this.e3215) * right_anti_dual.group1.xyz) + (right_anti_dual.group2.xyz.yzx * this.group0.zxy) - (right_anti_dual.group2.xyz.zxy * this.group0.yzx)
         );
     }
 }
-extension Plane: WeightContraction<DipoleInversion> {
-    associatedtype Output = AntiCircleRotor;
-    func weight_contraction(other: DipoleInversion) -> Output {
-        AntiDipoleInversion right_anti_dual = AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension Plane {
+    public AntiCircleRotor weight_contraction(DipoleInversion other) {
+        AntiDipoleInversion right_anti_dual = AntiDipoleInversion(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e4 */
@@ -8044,9 +7768,9 @@ extension Plane: WeightContraction<DipoleInversion> {
             /* e1, e2, e3, e5 */
             other.group3 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4((right_anti_dual.group0.xyz.zxy * this.group0.yzx) - (right_anti_dual.group0.xyz.yzx * this.group0.zxy), 0.0), 
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            (right_anti_dual.group0.xyz.zxy * this.group0.yzx) - (right_anti_dual.group0.xyz.yzx * this.group0.zxy), 
             /* e23, e31, e12, e45 */
             float4(right_anti_dual.e423 * this.e3215, right_anti_dual.e431 * this.e3215, right_anti_dual.e412 * this.e3215, -(right_anti_dual.e425 * this.e4315) - (right_anti_dual.e435 * this.e4125)) - (right_anti_dual.group1.wwwx * this.group0.xyzx), 
             /* e15, e25, e35, scalar */
@@ -8054,44 +7778,41 @@ extension Plane: WeightContraction<DipoleInversion> {
         );
     }
 }
-extension Plane: WeightContraction<DualNum> {
-    associatedtype Output = AntiFlatPoint;
-    func weight_contraction(other: DualNum) -> Output {
-        AntiDualNum right_anti_dual = AntiDualNum.from_groups(
-            /* e3215, scalar, 0, 0 */
-            float4(other.group0.xy * float2(-1.0), 0.0, 0.0)
+public extension Plane {
+    public AntiFlatPoint weight_contraction(DualNum other) {
+        AntiDualNum right_anti_dual = AntiDualNum(
+            /* e3215, scalar */
+            other.group0.xy * float2(-1.0)
         );
-        return AntiFlatPoint.from_groups(
+        return AntiFlatPoint(
             /* e235, e315, e125, e321 */
             float4(right_anti_dual.group0.xy.xx, right_anti_dual.e3215, 0.0) * float4(float3(1.0), 0.0) * float4(this.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         );
     }
 }
-extension Plane: WeightContraction<FlatPoint> {
-    associatedtype Output = AntiLine;
-    func weight_contraction(other: FlatPoint) -> Output {
-        AntiFlatPoint right_anti_dual = AntiFlatPoint.from_groups(
+public extension Plane {
+    public AntiLine weight_contraction(FlatPoint other) {
+        AntiFlatPoint right_anti_dual = AntiFlatPoint(
             /* e235, e315, e125, e321 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiLine.from_groups(
-            /* e23, e31, e12, 0 */
-            float4(float3(right_anti_dual.e321) * this.group0.xyz * float3(-1.0), 0.0), 
-            /* e15, e25, e35, 0 */
-            float4((right_anti_dual.group0.yzx * this.group0.zxy) - (right_anti_dual.group0.zxy * this.group0.yzx), 0.0)
+        return AntiLine(
+            /* e23, e31, e12 */
+            float3(right_anti_dual.e321) * this.group0.xyz * float3(-1.0), 
+            /* e15, e25, e35 */
+            (right_anti_dual.group0.yzx * this.group0.zxy) - (right_anti_dual.group0.zxy * this.group0.yzx)
         );
     }
 }
-extension Plane: WeightContraction<Flector> {
-    associatedtype Output = AntiMotor;
-    func weight_contraction(other: Flector) -> Output {
-        AntiFlector right_anti_dual = AntiFlector.from_groups(
+public extension Plane {
+    public AntiMotor weight_contraction(Flector other) {
+        AntiFlector right_anti_dual = AntiFlector(
             /* e235, e315, e125, e321 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e1, e2, e3, e5 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiMotor.from_groups(
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4((right_anti_dual.group0.www * this.group0.xyz * float3(-1.0)), (right_anti_dual.e1 * this.e4235) + (right_anti_dual.e2 * this.e4315) + (right_anti_dual.e3 * this.e4125)), 
             /* e15, e25, e35, e3215 */
@@ -8099,31 +7820,29 @@ extension Plane: WeightContraction<Flector> {
         );
     }
 }
-extension Plane: WeightContraction<Line> {
-    associatedtype Output = AntiPlane;
-    func weight_contraction(other: Line) -> Output {
-        AntiLine right_anti_dual = AntiLine.from_groups(
-            /* e23, e31, e12, 0 */
-            float4(other.group0.xyz, 0.0), 
-            /* e15, e25, e35, 0 */
-            float4(other.group1.xyz, 0.0)
+public extension Plane {
+    public AntiPlane weight_contraction(Line other) {
+        AntiLine right_anti_dual = AntiLine(
+            /* e23, e31, e12 */
+            other.group0.xyz, 
+            /* e15, e25, e35 */
+            other.group1.xyz
         );
-        return AntiPlane.from_groups(
+        return AntiPlane(
             /* e1, e2, e3, e5 */
             float4(right_anti_dual.e12 * this.e4315, right_anti_dual.e23 * this.e4125, right_anti_dual.e31 * this.e4235, -(right_anti_dual.e25 * this.e4315) - (right_anti_dual.e35 * this.e4125)) - (this.group0.zxyx * float4(right_anti_dual.group0.xyz.yzx, right_anti_dual.e15))
         );
     }
 }
-extension Plane: WeightContraction<Motor> {
-    associatedtype Output = AntiFlector;
-    func weight_contraction(other: Motor) -> Output {
-        AntiMotor right_anti_dual = AntiMotor.from_groups(
+public extension Plane {
+    public AntiFlector weight_contraction(Motor other) {
+        AntiMotor right_anti_dual = AntiMotor(
             /* e23, e31, e12, scalar */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, e3215 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiFlector.from_groups(
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(float3(1.0), 0.0) * float4(right_anti_dual.group1.www, 0.0) * float4(this.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
             /* e1, e2, e3, e5 */
@@ -8131,119 +7850,113 @@ extension Plane: WeightContraction<Motor> {
         );
     }
 }
-extension Plane: WeightContraction<MultiVector> {
-    associatedtype Output = MultiVector;
-    func weight_contraction(other: MultiVector) -> Output {
-        MultiVector right_anti_dual = MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(other.group0.xy.yx * float2(-1.0, 1.0), 0.0, 0.0), 
+public extension Plane {
+    public MultiVector weight_contraction(MultiVector other) {
+        MultiVector right_anti_dual = MultiVector(
+            /* scalar, e12345 */
+            other.group0.xy.yx * float2(-1.0, 1.0), 
             /* e1, e2, e3, e4 */
             float4(other.group9.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e5, 0, 0, 0 */
-            float4(other.e3215, 0.0, 0.0, 0.0), 
+            /* e5 */
+            other.e3215, 
             /* e15, e25, e35, e45 */
             float4(other.group8.xyz, other.e321 * -1.0), 
-            /* e41, e42, e43, 0 */
-            float4(other.group7.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group6.xyz, 0.0), 
+            /* e41, e42, e43 */
+            other.group7.xyz, 
+            /* e23, e31, e12 */
+            other.group6.xyz, 
             /* e415, e425, e435, e321 */
             float4(other.group5.xyz, other.e45) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e423, e431, e412, 0 */
-            float4(other.group4.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group3.xyz * float3(-1.0), 0.0), 
+            /* e423, e431, e412 */
+            other.group4.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            other.group3.xyz * float3(-1.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(other.group1.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * -1.0
         );
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((right_anti_dual.e1 * this.e4235) + (right_anti_dual.e2 * this.e4315) + (right_anti_dual.e3 * this.e4125) + (right_anti_dual.e4 * this.e3215), 0.0), 0.0, 0.0), 
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((right_anti_dual.e1 * this.e4235) + (right_anti_dual.e2 * this.e4315) + (right_anti_dual.e3 * this.e4125) + (right_anti_dual.e4 * this.e3215), 0.0), 
             /* e1, e2, e3, e4 */
             float4(-(right_anti_dual.e41 * this.e3215) - (right_anti_dual.e31 * this.e4125), -(right_anti_dual.e42 * this.e3215) - (right_anti_dual.e12 * this.e4235), -(right_anti_dual.e43 * this.e3215) - (right_anti_dual.e23 * this.e4315), (right_anti_dual.e42 * this.e4315) + (right_anti_dual.e43 * this.e4125)) + (this.group0.yzxx * float4(right_anti_dual.group5.xyz.zxy, right_anti_dual.e41)), 
-            /* e5, 0, 0, 0 */
-            float4(-(right_anti_dual.e15 * this.e4235) - (right_anti_dual.e25 * this.e4315) - (right_anti_dual.e35 * this.e4125) - (right_anti_dual.e45 * this.e3215), 0.0, 0.0, 0.0), 
+            /* e5 */
+            -(right_anti_dual.e15 * this.e4235) - (right_anti_dual.e25 * this.e4315) - (right_anti_dual.e35 * this.e4125) - (right_anti_dual.e45 * this.e3215), 
             /* e15, e25, e35, e45 */
             float4((right_anti_dual.e415 * this.e3215) + (right_anti_dual.e315 * this.e4125), (right_anti_dual.e425 * this.e3215) + (right_anti_dual.e125 * this.e4235), (right_anti_dual.e435 * this.e3215) + (right_anti_dual.e235 * this.e4315), -(right_anti_dual.e425 * this.e4315) - (right_anti_dual.e435 * this.e4125)) - (this.group0.yzxx * float4(right_anti_dual.group8.xyz.zxy, right_anti_dual.e415)), 
-            /* e41, e42, e43, 0 */
-            float4((right_anti_dual.group7.xyz.zxy * this.group0.yzx) - (right_anti_dual.group7.xyz.yzx * this.group0.zxy), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(this.e3215) * right_anti_dual.group7.xyz) - (float3(right_anti_dual.e321) * this.group0.xyz), 0.0), 
+            /* e41, e42, e43 */
+            (right_anti_dual.group7.xyz.zxy * this.group0.yzx) - (right_anti_dual.group7.xyz.yzx * this.group0.zxy), 
+            /* e23, e31, e12 */
+            (float3(this.e3215) * right_anti_dual.group7.xyz) - (float3(right_anti_dual.e321) * this.group0.xyz), 
             /* e415, e425, e435, e321 */
             float4(((right_anti_dual.group9.yzx * this.group0.zxy) - (right_anti_dual.group9.zxy * this.group0.yzx)), right_anti_dual.e1234 * this.e3215 * -1.0), 
-            /* e423, e431, e412, 0 */
-            float4(float3(right_anti_dual.e1234) * this.group0.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(right_anti_dual.e3215) * this.group0.xyz) - (float3(this.e3215) * right_anti_dual.group9.xyz), 0.0), 
+            /* e423, e431, e412 */
+            float3(right_anti_dual.e1234) * this.group0.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            (float3(right_anti_dual.e3215) * this.group0.xyz) - (float3(this.e3215) * right_anti_dual.group9.xyz), 
             /* e4235, e4315, e4125, e3215 */
             float4(right_anti_dual.e12345) * this.group0, 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension Plane: WeightContraction<Plane> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: Plane) -> Output {
-        AntiPlane right_anti_dual = AntiPlane.from_groups(
+public extension Plane {
+    public Scalar weight_contraction(Plane other) {
+        AntiPlane right_anti_dual = AntiPlane(
             /* e1, e2, e3, e5 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4((right_anti_dual.e1 * this.e4235) + (right_anti_dual.e2 * this.e4315) + (right_anti_dual.e3 * this.e4125), 0.0, 0.0, 0.0)
+        return Scalar(
+            /* scalar */
+            (right_anti_dual.e1 * this.e4235) + (right_anti_dual.e2 * this.e4315) + (right_anti_dual.e3 * this.e4125)
         );
     }
 }
-extension Plane: WeightContraction<RoundPoint> {
-    associatedtype Output = Circle;
-    func weight_contraction(other: RoundPoint) -> Output {
-        Sphere right_anti_dual = Sphere.from_groups(
+public extension Plane {
+    public Circle weight_contraction(RoundPoint other) {
+        Sphere right_anti_dual = Sphere(
             /* e4235, e4315, e4125, e3215 */
             float4(other.group0.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * -1.0
         );
-        return Circle.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(right_anti_dual.e1234) * this.group0.xyz * float3(-1.0), 0.0), 
+        return Circle(
+            /* e423, e431, e412 */
+            float3(right_anti_dual.e1234) * this.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             float4(((this.group0.zxy * right_anti_dual.group0.yzx) - (this.group0.yzx * right_anti_dual.group0.zxy)), this.e3215 * right_anti_dual.e1234 * -1.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(right_anti_dual.e3215) * this.group0.xyz) - (float3(this.e3215) * right_anti_dual.group0.xyz), 0.0)
+            /* e235, e315, e125 */
+            (float3(right_anti_dual.e3215) * this.group0.xyz) - (float3(this.e3215) * right_anti_dual.group0.xyz)
         );
     }
 }
-extension Plane: WeightContraction<Scalar> {
-    associatedtype Output = Plane;
-    func weight_contraction(other: Scalar) -> Output {
-        return Plane.from_groups(
+public extension Plane {
+    public Plane weight_contraction(Scalar other) {
+        return Plane(
             /* e4235, e4315, e4125, e3215 */
             float4(other.scalar) * this.group0
         );
     }
 }
-extension Plane: WeightContraction<Sphere> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: Sphere) -> Output {
-        RoundPoint right_anti_dual = RoundPoint.from_groups(
+public extension Plane {
+    public Scalar weight_contraction(Sphere other) {
+        RoundPoint right_anti_dual = RoundPoint(
             /* e1, e2, e3, e4 */
             float4(other.group0.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e5, 0, 0, 0 */
-            float4(other.e3215, 0.0, 0.0, 0.0)
+            /* e5 */
+            other.e3215
         );
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4((this.e4235 * right_anti_dual.e1) + (this.e4315 * right_anti_dual.e2) + (this.e4125 * right_anti_dual.e3) + (this.e3215 * right_anti_dual.e4), 0.0, 0.0, 0.0)
+        return Scalar(
+            /* scalar */
+            (this.e4235 * right_anti_dual.e1) + (this.e4315 * right_anti_dual.e2) + (this.e4125 * right_anti_dual.e3) + (this.e3215 * right_anti_dual.e4)
         );
     }
 }
-extension Plane: WeightContraction<VersorEven> {
-    associatedtype Output = AntiDipoleInversion;
-    func weight_contraction(other: VersorEven) -> Output {
-        VersorOdd right_anti_dual = VersorOdd.from_groups(
+public extension Plane {
+    public AntiDipoleInversion weight_contraction(VersorEven other) {
+        VersorOdd right_anti_dual = VersorOdd(
             /* e41, e42, e43, scalar */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e23, e31, e12, e45 */
@@ -8253,9 +7966,9 @@ extension Plane: WeightContraction<VersorEven> {
             /* e4235, e4315, e4125, e3215 */
             float4(other.group3.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(right_anti_dual.e1234) * this.group0.xyz * float3(-1.0), 0.0), 
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(right_anti_dual.e1234) * this.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             float4(((this.group0.zxy * right_anti_dual.group3.yzx) - (this.group0.yzx * right_anti_dual.group3.zxy)), this.e3215 * right_anti_dual.e1234 * -1.0), 
             /* e235, e315, e125, e4 */
@@ -8265,10 +7978,9 @@ extension Plane: WeightContraction<VersorEven> {
         );
     }
 }
-extension Plane: WeightContraction<VersorOdd> {
-    associatedtype Output = VersorOdd;
-    func weight_contraction(other: VersorOdd) -> Output {
-        VersorEven right_anti_dual = VersorEven.from_groups(
+public extension Plane {
+    public VersorOdd weight_contraction(VersorOdd other) {
+        VersorEven right_anti_dual = VersorEven(
             /* e423, e431, e412, e12345 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e415, e425, e435, e321 */
@@ -8278,7 +7990,7 @@ extension Plane: WeightContraction<VersorOdd> {
             /* e1, e2, e3, e4 */
             float4(other.group3.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return VersorOdd.from_groups(
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(this.e4125 * right_anti_dual.e431 * -1.0, this.e4235 * right_anti_dual.e412 * -1.0, this.e4315 * right_anti_dual.e423 * -1.0, (this.e4315 * right_anti_dual.e2) + (this.e4125 * right_anti_dual.e3) + (this.e3215 * right_anti_dual.e4)) + (this.group0.yzxx * float4(right_anti_dual.group0.zxy, right_anti_dual.e1)), 
             /* e23, e31, e12, e45 */
@@ -8290,37 +8002,41 @@ extension Plane: WeightContraction<VersorOdd> {
         );
     }
 }
-extension RoundPoint {
-    // Fancy infix trick
-    func operator/(_rhs: WeightContractionInfix) -> WeightContractionInfixPartial<RoundPoint> {
-        return WeightContractionInfixPartial { a: this };
+public extension RoundPoint {
+    // Fancy infix trick (first half)
+    public WeightContractionInfixPartial<RoundPoint> operator /(WeightContractionInfix rhs) {
+        return WeightContractionInfixPartial<RoundPoint>(this);
     }
 }
-extension RoundPoint: WeightContraction<AntiCircleRotor> {
-    associatedtype Output = RoundPoint;
-    func weight_contraction(other: AntiCircleRotor) -> Output {
-        CircleRotor right_anti_dual = CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension WeightContractionInfixPartial<RoundPoint> {
+    // Fancy infix trick (second half)
+    public RoundPoint operator /(AntiCircleRotor rhs) {
+        return this.a.weight_contraction(rhs);
+    }
+}
+public extension RoundPoint {
+    public RoundPoint weight_contraction(AntiCircleRotor other) {
+        CircleRotor right_anti_dual = CircleRotor(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e12345 */
             other.group2 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return RoundPoint.from_groups(
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4(right_anti_dual.e12345) * this.group0, 
-            /* e5, 0, 0, 0 */
-            float4(right_anti_dual.e12345 * this.e5, 0.0, 0.0, 0.0)
+            /* e5 */
+            right_anti_dual.e12345 * this.e5
         );
     }
 }
-extension RoundPoint: WeightContraction<AntiDipoleInversion> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: AntiDipoleInversion) -> Output {
-        DipoleInversion right_anti_dual = DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension RoundPoint {
+    public Scalar weight_contraction(AntiDipoleInversion other) {
+        DipoleInversion right_anti_dual = DipoleInversion(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, e1234 */
@@ -8328,177 +8044,167 @@ extension RoundPoint: WeightContraction<AntiDipoleInversion> {
             /* e4235, e4315, e4125, e3215 */
             other.group3 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4((right_anti_dual.e1234 * this.e5) + (right_anti_dual.e4235 * this.e1) + (right_anti_dual.e4315 * this.e2) + (right_anti_dual.e4125 * this.e3) + (right_anti_dual.e3215 * this.e4), 0.0, 0.0, 0.0)
+        return Scalar(
+            /* scalar */
+            (right_anti_dual.e1234 * this.e5) + (right_anti_dual.e4235 * this.e1) + (right_anti_dual.e4315 * this.e2) + (right_anti_dual.e4125 * this.e3) + (right_anti_dual.e3215 * this.e4)
         );
     }
 }
-extension RoundPoint: WeightContraction<AntiDualNum> {
-    associatedtype Output = RoundPoint;
-    func weight_contraction(other: AntiDualNum) -> Output {
-        DualNum right_anti_dual = DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(other.group0.xy, 0.0, 0.0)
+public extension RoundPoint {
+    public RoundPoint weight_contraction(AntiDualNum other) {
+        DualNum right_anti_dual = DualNum(
+            /* e5, e12345 */
+            other.group0.xy
         );
-        return RoundPoint.from_groups(
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4(right_anti_dual.e12345) * this.group0, 
-            /* e5, 0, 0, 0 */
-            float4(right_anti_dual.e12345 * this.e5, 0.0, 0.0, 0.0)
+            /* e5 */
+            right_anti_dual.e12345 * this.e5
         );
     }
 }
-extension RoundPoint: WeightContraction<AntiFlector> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: AntiFlector) -> Output {
-        Flector right_anti_dual = Flector.from_groups(
+public extension RoundPoint {
+    public Scalar weight_contraction(AntiFlector other) {
+        Flector right_anti_dual = Flector(
             /* e15, e25, e35, e45 */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e4235, e4315, e4125, e3215 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4((right_anti_dual.e4235 * this.e1) + (right_anti_dual.e4315 * this.e2) + (right_anti_dual.e4125 * this.e3) + (right_anti_dual.e3215 * this.e4), 0.0, 0.0, 0.0)
+        return Scalar(
+            /* scalar */
+            (right_anti_dual.e4235 * this.e1) + (right_anti_dual.e4315 * this.e2) + (right_anti_dual.e4125 * this.e3) + (right_anti_dual.e3215 * this.e4)
         );
     }
 }
-extension RoundPoint: WeightContraction<AntiMotor> {
-    associatedtype Output = RoundPoint;
-    func weight_contraction(other: AntiMotor) -> Output {
-        Motor right_anti_dual = Motor.from_groups(
+public extension RoundPoint {
+    public RoundPoint weight_contraction(AntiMotor other) {
+        Motor right_anti_dual = Motor(
             /* e415, e425, e435, e12345 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e5 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return RoundPoint.from_groups(
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4(right_anti_dual.e12345) * this.group0, 
-            /* e5, 0, 0, 0 */
-            float4(right_anti_dual.e12345 * this.e5, 0.0, 0.0, 0.0)
+            /* e5 */
+            right_anti_dual.e12345 * this.e5
         );
     }
 }
-extension RoundPoint: WeightContraction<AntiPlane> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: AntiPlane) -> Output {
-        Plane right_anti_dual = Plane.from_groups(
+public extension RoundPoint {
+    public Scalar weight_contraction(AntiPlane other) {
+        Plane right_anti_dual = Plane(
             /* e4235, e4315, e4125, e3215 */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4((right_anti_dual.e4235 * this.e1) + (right_anti_dual.e4315 * this.e2) + (right_anti_dual.e4125 * this.e3) + (right_anti_dual.e3215 * this.e4), 0.0, 0.0, 0.0)
+        return Scalar(
+            /* scalar */
+            (right_anti_dual.e4235 * this.e1) + (right_anti_dual.e4315 * this.e2) + (right_anti_dual.e4125 * this.e3) + (right_anti_dual.e3215 * this.e4)
         );
     }
 }
-extension RoundPoint: WeightContraction<DualNum> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: DualNum) -> Output {
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(other.e5 * this.e4 * -1.0, 0.0, 0.0, 0.0)
+public extension RoundPoint {
+    public Scalar weight_contraction(DualNum other) {
+        return Scalar(
+            /* scalar */
+            other.e5 * this.e4 * -1.0
         );
     }
 }
-extension RoundPoint: WeightContraction<Motor> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: Motor) -> Output {
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(float4(other.group1.xyz, other.e5 * -1.0)[3] * this.e4, 0.0, 0.0, 0.0)
+public extension RoundPoint {
+    public Scalar weight_contraction(Motor other) {
+        return Scalar(
+            /* scalar */
+            float4(other.group1.xyz, other.e5 * -1.0)[3] * this.e4
         );
     }
 }
-extension RoundPoint: WeightContraction<MultiVector> {
-    associatedtype Output = MultiVector;
-    func weight_contraction(other: MultiVector) -> Output {
-        MultiVector right_anti_dual = MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(other.group0.xy.yx * float2(-1.0, 1.0), 0.0, 0.0), 
+public extension RoundPoint {
+    public MultiVector weight_contraction(MultiVector other) {
+        MultiVector right_anti_dual = MultiVector(
+            /* scalar, e12345 */
+            other.group0.xy.yx * float2(-1.0, 1.0), 
             /* e1, e2, e3, e4 */
             float4(other.group9.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e5, 0, 0, 0 */
-            float4(other.e3215, 0.0, 0.0, 0.0), 
+            /* e5 */
+            other.e3215, 
             /* e15, e25, e35, e45 */
             float4(other.group8.xyz, other.e321 * -1.0), 
-            /* e41, e42, e43, 0 */
-            float4(other.group7.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group6.xyz, 0.0), 
+            /* e41, e42, e43 */
+            other.group7.xyz, 
+            /* e23, e31, e12 */
+            other.group6.xyz, 
             /* e415, e425, e435, e321 */
             float4(other.group5.xyz, other.e45) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e423, e431, e412, 0 */
-            float4(other.group4.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group3.xyz * float3(-1.0), 0.0), 
+            /* e423, e431, e412 */
+            other.group4.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            other.group3.xyz * float3(-1.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(other.group1.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * -1.0
         );
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((right_anti_dual.e4235 * this.e1) + (right_anti_dual.e4315 * this.e2) + (right_anti_dual.e4125 * this.e3) + (right_anti_dual.e3215 * this.e4) + (right_anti_dual.e1234 * this.e5), 0.0), 0.0, 0.0), 
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((right_anti_dual.e4235 * this.e1) + (right_anti_dual.e4315 * this.e2) + (right_anti_dual.e4125 * this.e3) + (right_anti_dual.e3215 * this.e4) + (right_anti_dual.e1234 * this.e5), 0.0), 
             /* e1, e2, e3, e4 */
             float4(right_anti_dual.e12345) * this.group0, 
-            /* e5, 0, 0, 0 */
-            float4(right_anti_dual.e12345 * this.e5, 0.0, 0.0, 0.0), 
+            /* e5 */
+            right_anti_dual.e12345 * this.e5, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(0.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension RoundPoint: WeightContraction<RoundPoint> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: RoundPoint) -> Output {
-        Sphere right_anti_dual = Sphere.from_groups(
+public extension RoundPoint {
+    public Scalar weight_contraction(RoundPoint other) {
+        Sphere right_anti_dual = Sphere(
             /* e4235, e4315, e4125, e3215 */
             float4(other.group0.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * -1.0
         );
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4((this.e1 * right_anti_dual.e4235) + (this.e2 * right_anti_dual.e4315) + (this.e3 * right_anti_dual.e4125) + (this.e4 * right_anti_dual.e3215) + (this.e5 * right_anti_dual.e1234), 0.0, 0.0, 0.0)
+        return Scalar(
+            /* scalar */
+            (this.e1 * right_anti_dual.e4235) + (this.e2 * right_anti_dual.e4315) + (this.e3 * right_anti_dual.e4125) + (this.e4 * right_anti_dual.e3215) + (this.e5 * right_anti_dual.e1234)
         );
     }
 }
-extension RoundPoint: WeightContraction<Scalar> {
-    associatedtype Output = RoundPoint;
-    func weight_contraction(other: Scalar) -> Output {
-        AntiScalar right_anti_dual = AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(other.scalar, 0.0, 0.0, 0.0)
+public extension RoundPoint {
+    public RoundPoint weight_contraction(Scalar other) {
+        AntiScalar right_anti_dual = AntiScalar(
+            /* e12345 */
+            other.scalar
         );
-        return RoundPoint.from_groups(
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4(right_anti_dual.e12345) * this.group0, 
-            /* e5, 0, 0, 0 */
-            float4(right_anti_dual.e12345 * this.e5, 0.0, 0.0, 0.0)
+            /* e5 */
+            right_anti_dual.e12345 * this.e5
         );
     }
 }
-extension RoundPoint: WeightContraction<VersorEven> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: VersorEven) -> Output {
-        VersorOdd right_anti_dual = VersorOdd.from_groups(
+public extension RoundPoint {
+    public Scalar weight_contraction(VersorEven other) {
+        VersorOdd right_anti_dual = VersorOdd(
             /* e41, e42, e43, scalar */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e23, e31, e12, e45 */
@@ -8508,16 +8214,15 @@ extension RoundPoint: WeightContraction<VersorEven> {
             /* e4235, e4315, e4125, e3215 */
             float4(other.group3.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4((this.e1 * right_anti_dual.e4235) + (this.e2 * right_anti_dual.e4315) + (this.e3 * right_anti_dual.e4125) + (this.e4 * right_anti_dual.e3215) + (this.e5 * right_anti_dual.e1234), 0.0, 0.0, 0.0)
+        return Scalar(
+            /* scalar */
+            (this.e1 * right_anti_dual.e4235) + (this.e2 * right_anti_dual.e4315) + (this.e3 * right_anti_dual.e4125) + (this.e4 * right_anti_dual.e3215) + (this.e5 * right_anti_dual.e1234)
         );
     }
 }
-extension RoundPoint: WeightContraction<VersorOdd> {
-    associatedtype Output = RoundPoint;
-    func weight_contraction(other: VersorOdd) -> Output {
-        VersorEven right_anti_dual = VersorEven.from_groups(
+public extension RoundPoint {
+    public RoundPoint weight_contraction(VersorOdd other) {
+        VersorEven right_anti_dual = VersorEven(
             /* e423, e431, e412, e12345 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e415, e425, e435, e321 */
@@ -8527,94 +8232,99 @@ extension RoundPoint: WeightContraction<VersorOdd> {
             /* e1, e2, e3, e4 */
             float4(other.group3.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return RoundPoint.from_groups(
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4(right_anti_dual.e12345) * this.group0, 
-            /* e5, 0, 0, 0 */
-            float4(this.e5 * right_anti_dual.e12345, 0.0, 0.0, 0.0)
+            /* e5 */
+            this.e5 * right_anti_dual.e12345
         );
     }
 }
-extension Scalar {
-    // Fancy infix trick
-    func operator/(_rhs: WeightContractionInfix) -> WeightContractionInfixPartial<Scalar> {
-        return WeightContractionInfixPartial { a: this };
+public extension Scalar {
+    // Fancy infix trick (first half)
+    public WeightContractionInfixPartial<Scalar> operator /(WeightContractionInfix rhs) {
+        return WeightContractionInfixPartial<Scalar>(this);
     }
 }
-extension Scalar: WeightContraction<AntiCircleRotor> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: AntiCircleRotor) -> Output {
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(other.scalar * this.scalar, 0.0, 0.0, 0.0)
+public extension WeightContractionInfixPartial<Scalar> {
+    // Fancy infix trick (second half)
+    public Scalar operator /(AntiCircleRotor rhs) {
+        return this.a.weight_contraction(rhs);
+    }
+}
+public extension Scalar {
+    public Scalar weight_contraction(AntiCircleRotor other) {
+        return Scalar(
+            /* scalar */
+            other.scalar * this.scalar
         );
     }
 }
-extension Scalar: WeightContraction<AntiDualNum> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: AntiDualNum) -> Output {
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(other.scalar * this.scalar, 0.0, 0.0, 0.0)
+public extension Scalar {
+    public Scalar weight_contraction(AntiDualNum other) {
+        return Scalar(
+            /* scalar */
+            other.scalar * this.scalar
         );
     }
 }
-extension Scalar: WeightContraction<AntiMotor> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: AntiMotor) -> Output {
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(other.scalar * this.scalar, 0.0, 0.0, 0.0)
+public extension Scalar {
+    public Scalar weight_contraction(AntiMotor other) {
+        return Scalar(
+            /* scalar */
+            other.scalar * this.scalar
         );
     }
 }
-extension Scalar: WeightContraction<MultiVector> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: MultiVector) -> Output {
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(other.scalar * this.scalar, 0.0, 0.0, 0.0)
+public extension Scalar {
+    public Scalar weight_contraction(MultiVector other) {
+        return Scalar(
+            /* scalar */
+            other.scalar * this.scalar
         );
     }
 }
-extension Scalar: WeightContraction<Scalar> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: Scalar) -> Output {
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(other.scalar * this.scalar, 0.0, 0.0, 0.0)
+public extension Scalar {
+    public Scalar weight_contraction(Scalar other) {
+        return Scalar(
+            /* scalar */
+            other.scalar * this.scalar
         );
     }
 }
-extension Scalar: WeightContraction<VersorOdd> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: VersorOdd) -> Output {
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(this.scalar * other.scalar, 0.0, 0.0, 0.0)
+public extension Scalar {
+    public Scalar weight_contraction(VersorOdd other) {
+        return Scalar(
+            /* scalar */
+            this.scalar * other.scalar
         );
     }
 }
-extension Sphere {
-    // Fancy infix trick
-    func operator/(_rhs: WeightContractionInfix) -> WeightContractionInfixPartial<Sphere> {
-        return WeightContractionInfixPartial { a: this };
+public extension Sphere {
+    // Fancy infix trick (first half)
+    public WeightContractionInfixPartial<Sphere> operator /(WeightContractionInfix rhs) {
+        return WeightContractionInfixPartial<Sphere>(this);
     }
 }
-extension Sphere: WeightContraction<AntiCircleRotor> {
-    associatedtype Output = DipoleInversion;
-    func weight_contraction(other: AntiCircleRotor) -> Output {
-        CircleRotor right_anti_dual = CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension WeightContractionInfixPartial<Sphere> {
+    // Fancy infix trick (second half)
+    public DipoleInversion operator /(AntiCircleRotor rhs) {
+        return this.a.weight_contraction(rhs);
+    }
+}
+public extension Sphere {
+    public DipoleInversion weight_contraction(AntiCircleRotor other) {
+        CircleRotor right_anti_dual = CircleRotor(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e12345 */
             other.group2 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4((float3(this.e1234) * right_anti_dual.group1.xyz) + (right_anti_dual.group0.xyz.zxy * this.group0.yzx) - (right_anti_dual.group0.xyz.yzx * this.group0.zxy), 0.0), 
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            (float3(this.e1234) * right_anti_dual.group1.xyz) + (right_anti_dual.group0.xyz.zxy * this.group0.yzx) - (right_anti_dual.group0.xyz.yzx * this.group0.zxy), 
             /* e23, e31, e12, e45 */
             float4((right_anti_dual.e423 * this.e3215) + (right_anti_dual.e235 * this.e1234), (right_anti_dual.e431 * this.e3215) + (right_anti_dual.e315 * this.e1234), (right_anti_dual.e412 * this.e3215) + (right_anti_dual.e125 * this.e1234), -(right_anti_dual.e425 * this.e4315) - (right_anti_dual.e435 * this.e4125)) - (right_anti_dual.group1.wwwx * this.group0.xyzx), 
             /* e15, e25, e35, e1234 */
@@ -8624,12 +8334,11 @@ extension Sphere: WeightContraction<AntiCircleRotor> {
         );
     }
 }
-extension Sphere: WeightContraction<AntiDipoleInversion> {
-    associatedtype Output = AntiDipoleInversion;
-    func weight_contraction(other: AntiDipoleInversion) -> Output {
-        DipoleInversion right_anti_dual = DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension Sphere {
+    public AntiDipoleInversion weight_contraction(AntiDipoleInversion other) {
+        DipoleInversion right_anti_dual = DipoleInversion(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, e1234 */
@@ -8637,9 +8346,9 @@ extension Sphere: WeightContraction<AntiDipoleInversion> {
             /* e4235, e4315, e4125, e3215 */
             other.group3 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4((float3(this.e1234) * right_anti_dual.group3.xyz) - (float3(right_anti_dual.e1234) * this.group0.xyz), 0.0), 
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            (float3(this.e1234) * right_anti_dual.group3.xyz) - (float3(right_anti_dual.e1234) * this.group0.xyz), 
             /* e415, e425, e435, e321 */
             (right_anti_dual.group3.yzxw * float4(this.group0.zxy, this.e1234)) - (this.group0.yzxw * float4(right_anti_dual.group3.zxy, right_anti_dual.e1234)), 
             /* e235, e315, e125, e4 */
@@ -8649,14 +8358,13 @@ extension Sphere: WeightContraction<AntiDipoleInversion> {
         );
     }
 }
-extension Sphere: WeightContraction<AntiDualNum> {
-    associatedtype Output = VersorOdd;
-    func weight_contraction(other: AntiDualNum) -> Output {
-        DualNum right_anti_dual = DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(other.group0.xy, 0.0, 0.0)
+public extension Sphere {
+    public VersorOdd weight_contraction(AntiDualNum other) {
+        DualNum right_anti_dual = DualNum(
+            /* e5, e12345 */
+            other.group0.xy
         );
-        return VersorOdd.from_groups(
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(float3(0.0), right_anti_dual.e5 * this.e1234), 
             /* e23, e31, e12, e45 */
@@ -8668,33 +8376,31 @@ extension Sphere: WeightContraction<AntiDualNum> {
         );
     }
 }
-extension Sphere: WeightContraction<AntiFlatPoint> {
-    associatedtype Output = RoundPoint;
-    func weight_contraction(other: AntiFlatPoint) -> Output {
-        FlatPoint right_anti_dual = FlatPoint.from_groups(
+public extension Sphere {
+    public RoundPoint weight_contraction(AntiFlatPoint other) {
+        FlatPoint right_anti_dual = FlatPoint(
             /* e15, e25, e35, e45 */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return RoundPoint.from_groups(
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4(this.e1234) * right_anti_dual.group0, 
-            /* e5, 0, 0, 0 */
-            float4(-(right_anti_dual.e15 * this.e4235) - (right_anti_dual.e25 * this.e4315) - (right_anti_dual.e35 * this.e4125) - (right_anti_dual.e45 * this.e3215), 0.0, 0.0, 0.0)
+            /* e5 */
+            -(right_anti_dual.e15 * this.e4235) - (right_anti_dual.e25 * this.e4315) - (right_anti_dual.e35 * this.e4125) - (right_anti_dual.e45 * this.e3215)
         );
     }
 }
-extension Sphere: WeightContraction<AntiFlector> {
-    associatedtype Output = AntiDipoleInversion;
-    func weight_contraction(other: AntiFlector) -> Output {
-        Flector right_anti_dual = Flector.from_groups(
+public extension Sphere {
+    public AntiDipoleInversion weight_contraction(AntiFlector other) {
+        Flector right_anti_dual = Flector(
             /* e15, e25, e35, e45 */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e4235, e4315, e4125, e3215 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(this.e1234) * right_anti_dual.group1.xyz, 0.0), 
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(this.e1234) * right_anti_dual.group1.xyz, 
             /* e415, e425, e435, e321 */
             float4(((right_anti_dual.group1.yzx * this.group0.zxy) - (right_anti_dual.group1.zxy * this.group0.yzx)), right_anti_dual.e3215 * this.e1234), 
             /* e235, e315, e125, e4 */
@@ -8704,35 +8410,33 @@ extension Sphere: WeightContraction<AntiFlector> {
         );
     }
 }
-extension Sphere: WeightContraction<AntiLine> {
-    associatedtype Output = Dipole;
-    func weight_contraction(other: AntiLine) -> Output {
-        Line right_anti_dual = Line.from_groups(
-            /* e415, e425, e435, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group1.xyz * float3(-1.0), 0.0)
+public extension Sphere {
+    public Dipole weight_contraction(AntiLine other) {
+        Line right_anti_dual = Line(
+            /* e415, e425, e435 */
+            other.group0.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            other.group1.xyz * float3(-1.0)
         );
-        return Dipole.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(this.e1234) * right_anti_dual.group0.xyz, 0.0), 
+        return Dipole(
+            /* e41, e42, e43 */
+            float3(this.e1234) * right_anti_dual.group0.xyz, 
             /* e23, e31, e12, e45 */
             float4((float3(this.e1234) * right_anti_dual.group1.xyz), -(right_anti_dual.e415 * this.e4235) - (right_anti_dual.e425 * this.e4315) - (right_anti_dual.e435 * this.e4125)), 
-            /* e15, e25, e35, 0 */
-            float4((float3(this.e3215) * right_anti_dual.group0.xyz) + (right_anti_dual.group1.xyz.yzx * this.group0.zxy) - (right_anti_dual.group1.xyz.zxy * this.group0.yzx), 0.0)
+            /* e15, e25, e35 */
+            (float3(this.e3215) * right_anti_dual.group0.xyz) + (right_anti_dual.group1.xyz.yzx * this.group0.zxy) - (right_anti_dual.group1.xyz.zxy * this.group0.yzx)
         );
     }
 }
-extension Sphere: WeightContraction<AntiMotor> {
-    associatedtype Output = VersorOdd;
-    func weight_contraction(other: AntiMotor) -> Output {
-        Motor right_anti_dual = Motor.from_groups(
+public extension Sphere {
+    public VersorOdd weight_contraction(AntiMotor other) {
+        Motor right_anti_dual = Motor(
             /* e415, e425, e435, e12345 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e5 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return VersorOdd.from_groups(
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(this.e1234) * float4(right_anti_dual.group0.xyz, right_anti_dual.e5), 
             /* e23, e31, e12, e45 */
@@ -8744,88 +8448,83 @@ extension Sphere: WeightContraction<AntiMotor> {
         );
     }
 }
-extension Sphere: WeightContraction<AntiPlane> {
-    associatedtype Output = Circle;
-    func weight_contraction(other: AntiPlane) -> Output {
-        Plane right_anti_dual = Plane.from_groups(
+public extension Sphere {
+    public Circle weight_contraction(AntiPlane other) {
+        Plane right_anti_dual = Plane(
             /* e4235, e4315, e4125, e3215 */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return Circle.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(this.e1234) * right_anti_dual.group0.xyz, 0.0), 
+        return Circle(
+            /* e423, e431, e412 */
+            float3(this.e1234) * right_anti_dual.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(((right_anti_dual.group0.yzx * this.group0.zxy) - (right_anti_dual.group0.zxy * this.group0.yzx)), right_anti_dual.e3215 * this.e1234), 
-            /* e235, e315, e125, 0 */
-            float4((float3(right_anti_dual.e3215) * this.group0.xyz) - (float3(this.e3215) * right_anti_dual.group0.xyz), 0.0)
+            /* e235, e315, e125 */
+            (float3(right_anti_dual.e3215) * this.group0.xyz) - (float3(this.e3215) * right_anti_dual.group0.xyz)
         );
     }
 }
-extension Sphere: WeightContraction<Circle> {
-    associatedtype Output = RoundPoint;
-    func weight_contraction(other: Circle) -> Output {
-        Dipole right_anti_dual = Dipole.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension Sphere {
+    public RoundPoint weight_contraction(Circle other) {
+        Dipole right_anti_dual = Dipole(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e15, e25, e35, 0 */
-            float4(other.group2.xyz, 0.0)
+            /* e15, e25, e35 */
+            other.group2.xyz
         );
-        return RoundPoint.from_groups(
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4(-(right_anti_dual.e41 * this.e3215) - (right_anti_dual.e31 * this.e4125), -(right_anti_dual.e42 * this.e3215) - (right_anti_dual.e12 * this.e4235), -(right_anti_dual.e43 * this.e3215) - (right_anti_dual.e23 * this.e4315), (right_anti_dual.e43 * this.e4125) + (right_anti_dual.e45 * this.e1234)) + (this.group0.yzxy * float4(right_anti_dual.group1.zxy, right_anti_dual.e42)) + float4((float3(this.e1234) * right_anti_dual.group2.xyz), right_anti_dual.e41 * this.e4235), 
-            /* e5, 0, 0, 0 */
-            float4(-(right_anti_dual.e45 * this.e3215) - (right_anti_dual.e15 * this.e4235) - (right_anti_dual.e25 * this.e4315) - (right_anti_dual.e35 * this.e4125), 0.0, 0.0, 0.0)
+            /* e5 */
+            -(right_anti_dual.e45 * this.e3215) - (right_anti_dual.e15 * this.e4235) - (right_anti_dual.e25 * this.e4315) - (right_anti_dual.e35 * this.e4125)
         );
     }
 }
-extension Sphere: WeightContraction<CircleRotor> {
-    associatedtype Output = RoundPoint;
-    func weight_contraction(other: CircleRotor) -> Output {
-        AntiCircleRotor right_anti_dual = AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension Sphere {
+    public RoundPoint weight_contraction(CircleRotor other) {
+        AntiCircleRotor right_anti_dual = AntiCircleRotor(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, scalar */
             other.group2 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return RoundPoint.from_groups(
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4(-(right_anti_dual.e41 * this.e3215) - (right_anti_dual.e31 * this.e4125), -(right_anti_dual.e42 * this.e3215) - (right_anti_dual.e12 * this.e4235), -(right_anti_dual.e43 * this.e3215) - (right_anti_dual.e23 * this.e4315), (right_anti_dual.e43 * this.e4125) + (right_anti_dual.e45 * this.e1234)) + (this.group0.yzxx * float4(right_anti_dual.group1.zxy, right_anti_dual.e41)) + float4((float3(this.e1234) * right_anti_dual.group2.xyz), right_anti_dual.e42 * this.e4315), 
-            /* e5, 0, 0, 0 */
-            float4(-(right_anti_dual.e45 * this.e3215) - (right_anti_dual.e15 * this.e4235) - (right_anti_dual.e25 * this.e4315) - (right_anti_dual.e35 * this.e4125), 0.0, 0.0, 0.0)
+            /* e5 */
+            -(right_anti_dual.e45 * this.e3215) - (right_anti_dual.e15 * this.e4235) - (right_anti_dual.e25 * this.e4315) - (right_anti_dual.e35 * this.e4125)
         );
     }
 }
-extension Sphere: WeightContraction<Dipole> {
-    associatedtype Output = Dipole;
-    func weight_contraction(other: Dipole) -> Output {
-        Circle right_anti_dual = Circle.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension Sphere {
+    public Dipole weight_contraction(Dipole other) {
+        Circle right_anti_dual = Circle(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group2.xyz * float3(-1.0), 0.0)
+            /* e235, e315, e125 */
+            other.group2.xyz * float3(-1.0)
         );
-        return Dipole.from_groups(
-            /* e41, e42, e43, 0 */
-            float4((float3(this.e1234) * right_anti_dual.group1.xyz) + (right_anti_dual.group0.xyz.zxy * this.group0.yzx) - (right_anti_dual.group0.xyz.yzx * this.group0.zxy), 0.0), 
+        return Dipole(
+            /* e41, e42, e43 */
+            (float3(this.e1234) * right_anti_dual.group1.xyz) + (right_anti_dual.group0.xyz.zxy * this.group0.yzx) - (right_anti_dual.group0.xyz.yzx * this.group0.zxy), 
             /* e23, e31, e12, e45 */
             float4((right_anti_dual.e423 * this.e3215) + (right_anti_dual.e235 * this.e1234), (right_anti_dual.e431 * this.e3215) + (right_anti_dual.e315 * this.e1234), (right_anti_dual.e412 * this.e3215) + (right_anti_dual.e125 * this.e1234), -(right_anti_dual.e425 * this.e4315) - (right_anti_dual.e435 * this.e4125)) - (right_anti_dual.group1.wwwx * this.group0.xyzx), 
-            /* e15, e25, e35, 0 */
-            float4((float3(this.e3215) * right_anti_dual.group1.xyz) + (right_anti_dual.group2.xyz.yzx * this.group0.zxy) - (right_anti_dual.group2.xyz.zxy * this.group0.yzx), 0.0)
+            /* e15, e25, e35 */
+            (float3(this.e3215) * right_anti_dual.group1.xyz) + (right_anti_dual.group2.xyz.yzx * this.group0.zxy) - (right_anti_dual.group2.xyz.zxy * this.group0.yzx)
         );
     }
 }
-extension Sphere: WeightContraction<DipoleInversion> {
-    associatedtype Output = AntiCircleRotor;
-    func weight_contraction(other: DipoleInversion) -> Output {
-        AntiDipoleInversion right_anti_dual = AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension Sphere {
+    public AntiCircleRotor weight_contraction(DipoleInversion other) {
+        AntiDipoleInversion right_anti_dual = AntiDipoleInversion(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e4 */
@@ -8833,9 +8532,9 @@ extension Sphere: WeightContraction<DipoleInversion> {
             /* e1, e2, e3, e5 */
             other.group3 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4((float3(this.e1234) * right_anti_dual.group1.xyz) + (right_anti_dual.group0.xyz.zxy * this.group0.yzx) - (right_anti_dual.group0.xyz.yzx * this.group0.zxy), 0.0), 
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            (float3(this.e1234) * right_anti_dual.group1.xyz) + (right_anti_dual.group0.xyz.zxy * this.group0.yzx) - (right_anti_dual.group0.xyz.yzx * this.group0.zxy), 
             /* e23, e31, e12, e45 */
             float4((right_anti_dual.e423 * this.e3215) + (right_anti_dual.e235 * this.e1234), (right_anti_dual.e431 * this.e3215) + (right_anti_dual.e315 * this.e1234), (right_anti_dual.e412 * this.e3215) + (right_anti_dual.e125 * this.e1234), -(right_anti_dual.e425 * this.e4315) - (right_anti_dual.e435 * this.e4125)) - (right_anti_dual.group1.wwwx * this.group0.xyzx), 
             /* e15, e25, e35, scalar */
@@ -8843,40 +8542,37 @@ extension Sphere: WeightContraction<DipoleInversion> {
         );
     }
 }
-extension Sphere: WeightContraction<DualNum> {
-    associatedtype Output = AntiFlatPoint;
-    func weight_contraction(other: DualNum) -> Output {
-        return AntiFlatPoint.from_groups(
+public extension Sphere {
+    public AntiFlatPoint weight_contraction(DualNum other) {
+        return AntiFlatPoint(
             /* e235, e315, e125, e321 */
             float4(other.e5 * -1.0) * float4(this.group0.xyz, this.e1234)
         );
     }
 }
-extension Sphere: WeightContraction<FlatPoint> {
-    associatedtype Output = AntiLine;
-    func weight_contraction(other: FlatPoint) -> Output {
-        AntiFlatPoint right_anti_dual = AntiFlatPoint.from_groups(
+public extension Sphere {
+    public AntiLine weight_contraction(FlatPoint other) {
+        AntiFlatPoint right_anti_dual = AntiFlatPoint(
             /* e235, e315, e125, e321 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiLine.from_groups(
-            /* e23, e31, e12, 0 */
-            float4((float3(this.e1234) * right_anti_dual.group0.xyz) - (float3(right_anti_dual.e321) * this.group0.xyz), 0.0), 
-            /* e15, e25, e35, 0 */
-            float4((right_anti_dual.group0.yzx * this.group0.zxy) - (right_anti_dual.group0.zxy * this.group0.yzx), 0.0)
+        return AntiLine(
+            /* e23, e31, e12 */
+            (float3(this.e1234) * right_anti_dual.group0.xyz) - (float3(right_anti_dual.e321) * this.group0.xyz), 
+            /* e15, e25, e35 */
+            (right_anti_dual.group0.yzx * this.group0.zxy) - (right_anti_dual.group0.zxy * this.group0.yzx)
         );
     }
 }
-extension Sphere: WeightContraction<Flector> {
-    associatedtype Output = AntiMotor;
-    func weight_contraction(other: Flector) -> Output {
-        AntiFlector right_anti_dual = AntiFlector.from_groups(
+public extension Sphere {
+    public AntiMotor weight_contraction(Flector other) {
+        AntiFlector right_anti_dual = AntiFlector(
             /* e235, e315, e125, e321 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e1, e2, e3, e5 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiMotor.from_groups(
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(right_anti_dual.e321 * this.e4235 * -1.0, right_anti_dual.e321 * this.e4315 * -1.0, right_anti_dual.e321 * this.e4125 * -1.0, (right_anti_dual.e2 * this.e4315) + (right_anti_dual.e3 * this.e4125) + (right_anti_dual.e5 * this.e1234)) + float4((float3(this.e1234) * right_anti_dual.group0.xyz), right_anti_dual.e1 * this.e4235), 
             /* e15, e25, e35, e3215 */
@@ -8884,31 +8580,29 @@ extension Sphere: WeightContraction<Flector> {
         );
     }
 }
-extension Sphere: WeightContraction<Line> {
-    associatedtype Output = AntiPlane;
-    func weight_contraction(other: Line) -> Output {
-        AntiLine right_anti_dual = AntiLine.from_groups(
-            /* e23, e31, e12, 0 */
-            float4(other.group0.xyz, 0.0), 
-            /* e15, e25, e35, 0 */
-            float4(other.group1.xyz, 0.0)
+public extension Sphere {
+    public AntiPlane weight_contraction(Line other) {
+        AntiLine right_anti_dual = AntiLine(
+            /* e23, e31, e12 */
+            other.group0.xyz, 
+            /* e15, e25, e35 */
+            other.group1.xyz
         );
-        return AntiPlane.from_groups(
+        return AntiPlane(
             /* e1, e2, e3, e5 */
             float4((right_anti_dual.e12 * this.e4315) + (right_anti_dual.e15 * this.e1234), (right_anti_dual.e23 * this.e4125) + (right_anti_dual.e25 * this.e1234), (right_anti_dual.e31 * this.e4235) + (right_anti_dual.e35 * this.e1234), -(right_anti_dual.e25 * this.e4315) - (right_anti_dual.e35 * this.e4125)) - (this.group0.zxyx * float4(right_anti_dual.group0.xyz.yzx, right_anti_dual.e15))
         );
     }
 }
-extension Sphere: WeightContraction<Motor> {
-    associatedtype Output = AntiFlector;
-    func weight_contraction(other: Motor) -> Output {
-        AntiMotor right_anti_dual = AntiMotor.from_groups(
+public extension Sphere {
+    public AntiFlector weight_contraction(Motor other) {
+        AntiMotor right_anti_dual = AntiMotor(
             /* e23, e31, e12, scalar */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, e3215 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiFlector.from_groups(
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(right_anti_dual.e3215) * float4(this.group0.xyz, this.e1234), 
             /* e1, e2, e3, e5 */
@@ -8916,125 +8610,119 @@ extension Sphere: WeightContraction<Motor> {
         );
     }
 }
-extension Sphere: WeightContraction<MultiVector> {
-    associatedtype Output = MultiVector;
-    func weight_contraction(other: MultiVector) -> Output {
-        MultiVector right_anti_dual = MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(other.group0.xy.yx * float2(-1.0, 1.0), 0.0, 0.0), 
+public extension Sphere {
+    public MultiVector weight_contraction(MultiVector other) {
+        MultiVector right_anti_dual = MultiVector(
+            /* scalar, e12345 */
+            other.group0.xy.yx * float2(-1.0, 1.0), 
             /* e1, e2, e3, e4 */
             float4(other.group9.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e5, 0, 0, 0 */
-            float4(other.e3215, 0.0, 0.0, 0.0), 
+            /* e5 */
+            other.e3215, 
             /* e15, e25, e35, e45 */
             float4(other.group8.xyz, other.e321 * -1.0), 
-            /* e41, e42, e43, 0 */
-            float4(other.group7.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group6.xyz, 0.0), 
+            /* e41, e42, e43 */
+            other.group7.xyz, 
+            /* e23, e31, e12 */
+            other.group6.xyz, 
             /* e415, e425, e435, e321 */
             float4(other.group5.xyz, other.e45) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e423, e431, e412, 0 */
-            float4(other.group4.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group3.xyz * float3(-1.0), 0.0), 
+            /* e423, e431, e412 */
+            other.group4.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            other.group3.xyz * float3(-1.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(other.group1.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * -1.0
         );
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((right_anti_dual.e1 * this.e4235) + (right_anti_dual.e2 * this.e4315) + (right_anti_dual.e3 * this.e4125) + (right_anti_dual.e4 * this.e3215) + (right_anti_dual.e5 * this.e1234), 0.0), 0.0, 0.0), 
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((right_anti_dual.e1 * this.e4235) + (right_anti_dual.e2 * this.e4315) + (right_anti_dual.e3 * this.e4125) + (right_anti_dual.e4 * this.e3215) + (right_anti_dual.e5 * this.e1234), 0.0), 
             /* e1, e2, e3, e4 */
             float4(-(right_anti_dual.e41 * this.e3215) - (right_anti_dual.e31 * this.e4125), -(right_anti_dual.e42 * this.e3215) - (right_anti_dual.e12 * this.e4235), -(right_anti_dual.e43 * this.e3215) - (right_anti_dual.e23 * this.e4315), (right_anti_dual.e45 * this.e1234) + (right_anti_dual.e43 * this.e4125)) + (this.group0.yzxx * float4(right_anti_dual.group5.xyz.zxy, right_anti_dual.e41)) + float4((float3(this.e1234) * right_anti_dual.group3.xyz), right_anti_dual.e42 * this.e4315), 
-            /* e5, 0, 0, 0 */
-            float4(-(right_anti_dual.e15 * this.e4235) - (right_anti_dual.e25 * this.e4315) - (right_anti_dual.e35 * this.e4125) - (right_anti_dual.e45 * this.e3215), 0.0, 0.0, 0.0), 
+            /* e5 */
+            -(right_anti_dual.e15 * this.e4235) - (right_anti_dual.e25 * this.e4315) - (right_anti_dual.e35 * this.e4125) - (right_anti_dual.e45 * this.e3215), 
             /* e15, e25, e35, e45 */
             float4((right_anti_dual.e415 * this.e3215) + (right_anti_dual.e315 * this.e4125), (right_anti_dual.e425 * this.e3215) + (right_anti_dual.e125 * this.e4235), (right_anti_dual.e435 * this.e3215) + (right_anti_dual.e235 * this.e4315), -(right_anti_dual.e425 * this.e4315) - (right_anti_dual.e435 * this.e4125)) - (this.group0.yzxx * float4(right_anti_dual.group8.xyz.zxy, right_anti_dual.e415)), 
-            /* e41, e42, e43, 0 */
-            float4((float3(this.e1234) * right_anti_dual.group6.xyz) + (right_anti_dual.group7.xyz.zxy * this.group0.yzx) - (right_anti_dual.group7.xyz.yzx * this.group0.zxy), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(this.e3215) * right_anti_dual.group7.xyz) + (float3(this.e1234) * right_anti_dual.group8.xyz) - (float3(right_anti_dual.e321) * this.group0.xyz), 0.0), 
+            /* e41, e42, e43 */
+            (float3(this.e1234) * right_anti_dual.group6.xyz) + (right_anti_dual.group7.xyz.zxy * this.group0.yzx) - (right_anti_dual.group7.xyz.yzx * this.group0.zxy), 
+            /* e23, e31, e12 */
+            (float3(this.e3215) * right_anti_dual.group7.xyz) + (float3(this.e1234) * right_anti_dual.group8.xyz) - (float3(right_anti_dual.e321) * this.group0.xyz), 
             /* e415, e425, e435, e321 */
             (right_anti_dual.group9.yzxw * float4(this.group0.zxy, this.e1234)) - float4((right_anti_dual.group9.zxy * this.group0.yzx), right_anti_dual.e1234 * this.e3215), 
-            /* e423, e431, e412, 0 */
-            float4((float3(this.e1234) * right_anti_dual.group9.xyz) - (float3(right_anti_dual.e1234) * this.group0.xyz), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(right_anti_dual.e3215) * this.group0.xyz) - (float3(this.e3215) * right_anti_dual.group9.xyz), 0.0), 
+            /* e423, e431, e412 */
+            (float3(this.e1234) * right_anti_dual.group9.xyz) - (float3(right_anti_dual.e1234) * this.group0.xyz), 
+            /* e235, e315, e125 */
+            (float3(right_anti_dual.e3215) * this.group0.xyz) - (float3(this.e3215) * right_anti_dual.group9.xyz), 
             /* e4235, e4315, e4125, e3215 */
             float4(right_anti_dual.e12345) * this.group0, 
-            /* e1234, 0, 0, 0 */
-            float4(right_anti_dual.e12345 * this.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            right_anti_dual.e12345 * this.e1234
         );
     }
 }
-extension Sphere: WeightContraction<Plane> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: Plane) -> Output {
-        AntiPlane right_anti_dual = AntiPlane.from_groups(
+public extension Sphere {
+    public Scalar weight_contraction(Plane other) {
+        AntiPlane right_anti_dual = AntiPlane(
             /* e1, e2, e3, e5 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4((right_anti_dual.e1 * this.e4235) + (right_anti_dual.e2 * this.e4315) + (right_anti_dual.e3 * this.e4125) + (right_anti_dual.e5 * this.e1234), 0.0, 0.0, 0.0)
+        return Scalar(
+            /* scalar */
+            (right_anti_dual.e1 * this.e4235) + (right_anti_dual.e2 * this.e4315) + (right_anti_dual.e3 * this.e4125) + (right_anti_dual.e5 * this.e1234)
         );
     }
 }
-extension Sphere: WeightContraction<RoundPoint> {
-    associatedtype Output = Circle;
-    func weight_contraction(other: RoundPoint) -> Output {
-        Sphere right_anti_dual = Sphere.from_groups(
+public extension Sphere {
+    public Circle weight_contraction(RoundPoint other) {
+        Sphere right_anti_dual = Sphere(
             /* e4235, e4315, e4125, e3215 */
             float4(other.group0.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * -1.0
         );
-        return Circle.from_groups(
-            /* e423, e431, e412, 0 */
-            float4((float3(this.e1234) * right_anti_dual.group0.xyz) - (float3(right_anti_dual.e1234) * this.group0.xyz), 0.0), 
+        return Circle(
+            /* e423, e431, e412 */
+            (float3(this.e1234) * right_anti_dual.group0.xyz) - (float3(right_anti_dual.e1234) * this.group0.xyz), 
             /* e415, e425, e435, e321 */
             (right_anti_dual.group0.yzxw * float4(this.group0.zxy, this.e1234)) - float4((right_anti_dual.group0.zxy * this.group0.yzx), right_anti_dual.e1234 * this.e3215), 
-            /* e235, e315, e125, 0 */
-            float4((float3(right_anti_dual.e3215) * this.group0.xyz) - (float3(this.e3215) * right_anti_dual.group0.xyz), 0.0)
+            /* e235, e315, e125 */
+            (float3(right_anti_dual.e3215) * this.group0.xyz) - (float3(this.e3215) * right_anti_dual.group0.xyz)
         );
     }
 }
-extension Sphere: WeightContraction<Scalar> {
-    associatedtype Output = Sphere;
-    func weight_contraction(other: Scalar) -> Output {
-        AntiScalar right_anti_dual = AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(other.scalar, 0.0, 0.0, 0.0)
+public extension Sphere {
+    public Sphere weight_contraction(Scalar other) {
+        AntiScalar right_anti_dual = AntiScalar(
+            /* e12345 */
+            other.scalar
         );
-        return Sphere.from_groups(
+        return Sphere(
             /* e4235, e4315, e4125, e3215 */
             float4(right_anti_dual.e12345) * this.group0, 
-            /* e1234, 0, 0, 0 */
-            float4(right_anti_dual.e12345 * this.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            right_anti_dual.e12345 * this.e1234
         );
     }
 }
-extension Sphere: WeightContraction<Sphere> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: Sphere) -> Output {
-        RoundPoint right_anti_dual = RoundPoint.from_groups(
+public extension Sphere {
+    public Scalar weight_contraction(Sphere other) {
+        RoundPoint right_anti_dual = RoundPoint(
             /* e1, e2, e3, e4 */
             float4(other.group0.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e5, 0, 0, 0 */
-            float4(other.e3215, 0.0, 0.0, 0.0)
+            /* e5 */
+            other.e3215
         );
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4((right_anti_dual.e1 * this.e4235) + (right_anti_dual.e2 * this.e4315) + (right_anti_dual.e3 * this.e4125) + (right_anti_dual.e4 * this.e3215) + (right_anti_dual.e5 * this.e1234), 0.0, 0.0, 0.0)
+        return Scalar(
+            /* scalar */
+            (right_anti_dual.e1 * this.e4235) + (right_anti_dual.e2 * this.e4315) + (right_anti_dual.e3 * this.e4125) + (right_anti_dual.e4 * this.e3215) + (right_anti_dual.e5 * this.e1234)
         );
     }
 }
-extension Sphere: WeightContraction<VersorEven> {
-    associatedtype Output = AntiDipoleInversion;
-    func weight_contraction(other: VersorEven) -> Output {
-        VersorOdd right_anti_dual = VersorOdd.from_groups(
+public extension Sphere {
+    public AntiDipoleInversion weight_contraction(VersorEven other) {
+        VersorOdd right_anti_dual = VersorOdd(
             /* e41, e42, e43, scalar */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e23, e31, e12, e45 */
@@ -9044,9 +8732,9 @@ extension Sphere: WeightContraction<VersorEven> {
             /* e4235, e4315, e4125, e3215 */
             float4(other.group3.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4((float3(this.e1234) * right_anti_dual.group3.xyz) - (float3(right_anti_dual.e1234) * this.group0.xyz), 0.0), 
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            (float3(this.e1234) * right_anti_dual.group3.xyz) - (float3(right_anti_dual.e1234) * this.group0.xyz), 
             /* e415, e425, e435, e321 */
             float4((this.group0.zxy * right_anti_dual.group3.yzx), this.e1234 * right_anti_dual.e3215) - (this.group0.yzxw * float4(right_anti_dual.group3.zxy, right_anti_dual.e1234)), 
             /* e235, e315, e125, e4 */
@@ -9056,10 +8744,9 @@ extension Sphere: WeightContraction<VersorEven> {
         );
     }
 }
-extension Sphere: WeightContraction<VersorOdd> {
-    associatedtype Output = VersorOdd;
-    func weight_contraction(other: VersorOdd) -> Output {
-        VersorEven right_anti_dual = VersorEven.from_groups(
+public extension Sphere {
+    public VersorOdd weight_contraction(VersorOdd other) {
+        VersorEven right_anti_dual = VersorEven(
             /* e423, e431, e412, e12345 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e415, e425, e435, e321 */
@@ -9069,7 +8756,7 @@ extension Sphere: WeightContraction<VersorOdd> {
             /* e1, e2, e3, e4 */
             float4(other.group3.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return VersorOdd.from_groups(
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(this.e4125 * right_anti_dual.e431 * -1.0, this.e4235 * right_anti_dual.e412 * -1.0, this.e4315 * right_anti_dual.e423 * -1.0, (this.e4125 * right_anti_dual.e3) + (this.e3215 * right_anti_dual.e4) + (this.e1234 * right_anti_dual.e5)) + (this.group0.yzxx * float4(right_anti_dual.group0.zxy, right_anti_dual.e1)) + float4((float3(this.e1234) * right_anti_dual.group1.xyz), this.e4315 * right_anti_dual.e2), 
             /* e23, e31, e12, e45 */
@@ -9081,24 +8768,29 @@ extension Sphere: WeightContraction<VersorOdd> {
         );
     }
 }
-extension VersorEven {
-    // Fancy infix trick
-    func operator/(_rhs: WeightContractionInfix) -> WeightContractionInfixPartial<VersorEven> {
-        return WeightContractionInfixPartial { a: this };
+public extension VersorEven {
+    // Fancy infix trick (first half)
+    public WeightContractionInfixPartial<VersorEven> operator /(WeightContractionInfix rhs) {
+        return WeightContractionInfixPartial<VersorEven>(this);
     }
 }
-extension VersorEven: WeightContraction<AntiCircleRotor> {
-    associatedtype Output = VersorEven;
-    func weight_contraction(other: AntiCircleRotor) -> Output {
-        CircleRotor right_anti_dual = CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension WeightContractionInfixPartial<VersorEven> {
+    // Fancy infix trick (second half)
+    public VersorEven operator /(AntiCircleRotor rhs) {
+        return this.a.weight_contraction(rhs);
+    }
+}
+public extension VersorEven {
+    public VersorEven weight_contraction(AntiCircleRotor other) {
+        CircleRotor right_anti_dual = CircleRotor(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e12345 */
             other.group2 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return VersorEven.from_groups(
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(((float3(right_anti_dual.e12345) * this.group0.xyz) + (float3(this.e12345) * right_anti_dual.group0.xyz)), right_anti_dual.e12345 * this.e12345), 
             /* e415, e425, e435, e321 */
@@ -9110,12 +8802,11 @@ extension VersorEven: WeightContraction<AntiCircleRotor> {
         );
     }
 }
-extension VersorEven: WeightContraction<AntiDipoleInversion> {
-    associatedtype Output = VersorOdd;
-    func weight_contraction(other: AntiDipoleInversion) -> Output {
-        DipoleInversion right_anti_dual = DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension VersorEven {
+    public VersorOdd weight_contraction(AntiDipoleInversion other) {
+        DipoleInversion right_anti_dual = DipoleInversion(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, e1234 */
@@ -9123,7 +8814,7 @@ extension VersorEven: WeightContraction<AntiDipoleInversion> {
             /* e4235, e4315, e4125, e3215 */
             other.group3 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return VersorOdd.from_groups(
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             (right_anti_dual.group3.yzxy * float4(this.group0.zxy, this.e2)) + float4(float3(0.0), (right_anti_dual.e4125 * this.e3) + (right_anti_dual.e3215 * this.e4) - (right_anti_dual.e42 * this.e315) - (right_anti_dual.e43 * this.e125) - (right_anti_dual.e23 * this.e415) - (right_anti_dual.e31 * this.e425) - (right_anti_dual.e12 * this.e435) - (right_anti_dual.e45 * this.e321) - (right_anti_dual.e15 * this.e423) - (right_anti_dual.e25 * this.e431) - (right_anti_dual.e35 * this.e412)) + float4((right_anti_dual.group0.xyz * this.group0.www), right_anti_dual.e1234 * this.e5) + float4((right_anti_dual.group2.www * this.group1.xyz), right_anti_dual.e4235 * this.e1) - float4((right_anti_dual.group3.zxy * this.group0.yzx), right_anti_dual.e41 * this.e235), 
             /* e23, e31, e12, e45 */
@@ -9135,14 +8826,13 @@ extension VersorEven: WeightContraction<AntiDipoleInversion> {
         );
     }
 }
-extension VersorEven: WeightContraction<AntiDualNum> {
-    associatedtype Output = VersorEven;
-    func weight_contraction(other: AntiDualNum) -> Output {
-        DualNum right_anti_dual = DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(other.group0.xy, 0.0, 0.0)
+public extension VersorEven {
+    public VersorEven weight_contraction(AntiDualNum other) {
+        DualNum right_anti_dual = DualNum(
+            /* e5, e12345 */
+            other.group0.xy
         );
-        return VersorEven.from_groups(
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(right_anti_dual.e12345) * this.group0, 
             /* e415, e425, e435, e321 */
@@ -9154,16 +8844,15 @@ extension VersorEven: WeightContraction<AntiDualNum> {
         );
     }
 }
-extension VersorEven: WeightContraction<AntiFlatPoint> {
-    associatedtype Output = AntiCircleRotor;
-    func weight_contraction(other: AntiFlatPoint) -> Output {
-        FlatPoint right_anti_dual = FlatPoint.from_groups(
+public extension VersorEven {
+    public AntiCircleRotor weight_contraction(AntiFlatPoint other) {
+        FlatPoint right_anti_dual = FlatPoint(
             /* e15, e25, e35, e45 */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            float3(0.0), 
             /* e23, e31, e12, e45 */
             float4(float3(0.0), right_anti_dual.e45 * this.e12345), 
             /* e15, e25, e35, scalar */
@@ -9171,16 +8860,15 @@ extension VersorEven: WeightContraction<AntiFlatPoint> {
         );
     }
 }
-extension VersorEven: WeightContraction<AntiFlector> {
-    associatedtype Output = VersorOdd;
-    func weight_contraction(other: AntiFlector) -> Output {
-        Flector right_anti_dual = Flector.from_groups(
+public extension VersorEven {
+    public VersorOdd weight_contraction(AntiFlector other) {
+        Flector right_anti_dual = Flector(
             /* e15, e25, e35, e45 */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e4235, e4315, e4125, e3215 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return VersorOdd.from_groups(
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             (right_anti_dual.group1.yzxx * float4(this.group0.zxy, this.e1)) + float4(float3(0.0), (right_anti_dual.e4315 * this.e2) + (right_anti_dual.e4125 * this.e3) + (right_anti_dual.e3215 * this.e4) - (right_anti_dual.e25 * this.e431) - (right_anti_dual.e35 * this.e412) - (right_anti_dual.e45 * this.e321)) - (this.group0.yzxx * float4(right_anti_dual.group1.zxy, right_anti_dual.e15)), 
             /* e23, e31, e12, e45 */
@@ -9192,18 +8880,17 @@ extension VersorEven: WeightContraction<AntiFlector> {
         );
     }
 }
-extension VersorEven: WeightContraction<AntiLine> {
-    associatedtype Output = AntiDipoleInversion;
-    func weight_contraction(other: AntiLine) -> Output {
-        Line right_anti_dual = Line.from_groups(
-            /* e415, e425, e435, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group1.xyz * float3(-1.0), 0.0)
+public extension VersorEven {
+    public AntiDipoleInversion weight_contraction(AntiLine other) {
+        Line right_anti_dual = Line(
+            /* e415, e425, e435 */
+            other.group0.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            other.group1.xyz * float3(-1.0)
         );
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(float3(1.0), 0.0) * float4(right_anti_dual.group0.xyz, 0.0) * float4(this.group0.www, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
             /* e235, e315, e125, e4 */
@@ -9213,16 +8900,15 @@ extension VersorEven: WeightContraction<AntiLine> {
         );
     }
 }
-extension VersorEven: WeightContraction<AntiMotor> {
-    associatedtype Output = VersorEven;
-    func weight_contraction(other: AntiMotor) -> Output {
-        Motor right_anti_dual = Motor.from_groups(
+public extension VersorEven {
+    public VersorEven weight_contraction(AntiMotor other) {
+        Motor right_anti_dual = Motor(
             /* e415, e425, e435, e12345 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e5 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return VersorEven.from_groups(
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(right_anti_dual.e12345) * this.group0, 
             /* e415, e425, e435, e321 */
@@ -9234,14 +8920,13 @@ extension VersorEven: WeightContraction<AntiMotor> {
         );
     }
 }
-extension VersorEven: WeightContraction<AntiPlane> {
-    associatedtype Output = VersorOdd;
-    func weight_contraction(other: AntiPlane) -> Output {
-        Plane right_anti_dual = Plane.from_groups(
+public extension VersorEven {
+    public VersorOdd weight_contraction(AntiPlane other) {
+        Plane right_anti_dual = Plane(
             /* e4235, e4315, e4125, e3215 */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return VersorOdd.from_groups(
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(right_anti_dual.e4125 * this.e431 * -1.0, right_anti_dual.e4235 * this.e412 * -1.0, right_anti_dual.e4315 * this.e423 * -1.0, (right_anti_dual.e4315 * this.e2) + (right_anti_dual.e4125 * this.e3) + (right_anti_dual.e3215 * this.e4)) + (right_anti_dual.group0.yzxx * float4(this.group0.zxy, this.e1)), 
             /* e23, e31, e12, e45 */
@@ -9253,29 +8938,27 @@ extension VersorEven: WeightContraction<AntiPlane> {
         );
     }
 }
-extension VersorEven: WeightContraction<AntiScalar> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: AntiScalar) -> Output {
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(other.e12345 * this.e12345 * -1.0, 0.0, 0.0, 0.0)
+public extension VersorEven {
+    public Scalar weight_contraction(AntiScalar other) {
+        return Scalar(
+            /* scalar */
+            other.e12345 * this.e12345 * -1.0
         );
     }
 }
-extension VersorEven: WeightContraction<Circle> {
-    associatedtype Output = AntiCircleRotor;
-    func weight_contraction(other: Circle) -> Output {
-        Dipole right_anti_dual = Dipole.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension VersorEven {
+    public AntiCircleRotor weight_contraction(Circle other) {
+        Dipole right_anti_dual = Dipole(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e15, e25, e35, 0 */
-            float4(other.group2.xyz, 0.0)
+            /* e15, e25, e35 */
+            other.group2.xyz
         );
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(this.e12345) * right_anti_dual.group0.xyz, 0.0), 
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            float3(this.e12345) * right_anti_dual.group0.xyz, 
             /* e23, e31, e12, e45 */
             float4(this.e12345) * right_anti_dual.group1, 
             /* e15, e25, e35, scalar */
@@ -9283,20 +8966,19 @@ extension VersorEven: WeightContraction<Circle> {
         );
     }
 }
-extension VersorEven: WeightContraction<CircleRotor> {
-    associatedtype Output = AntiCircleRotor;
-    func weight_contraction(other: CircleRotor) -> Output {
-        AntiCircleRotor right_anti_dual = AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension VersorEven {
+    public AntiCircleRotor weight_contraction(CircleRotor other) {
+        AntiCircleRotor right_anti_dual = AntiCircleRotor(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, scalar */
             other.group2 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(this.e12345) * right_anti_dual.group0.xyz, 0.0), 
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            float3(this.e12345) * right_anti_dual.group0.xyz, 
             /* e23, e31, e12, e45 */
             float4(this.e12345) * right_anti_dual.group1, 
             /* e15, e25, e35, scalar */
@@ -9304,20 +8986,19 @@ extension VersorEven: WeightContraction<CircleRotor> {
         );
     }
 }
-extension VersorEven: WeightContraction<Dipole> {
-    associatedtype Output = AntiDipoleInversion;
-    func weight_contraction(other: Dipole) -> Output {
-        Circle right_anti_dual = Circle.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension VersorEven {
+    public AntiDipoleInversion weight_contraction(Dipole other) {
+        Circle right_anti_dual = Circle(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group2.xyz * float3(-1.0), 0.0)
+            /* e235, e315, e125 */
+            other.group2.xyz * float3(-1.0)
         );
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(this.e12345) * right_anti_dual.group0.xyz, 0.0), 
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(this.e12345) * right_anti_dual.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(this.e12345) * right_anti_dual.group1, 
             /* e235, e315, e125, e4 */
@@ -9327,12 +9008,11 @@ extension VersorEven: WeightContraction<Dipole> {
         );
     }
 }
-extension VersorEven: WeightContraction<DipoleInversion> {
-    associatedtype Output = AntiDipoleInversion;
-    func weight_contraction(other: DipoleInversion) -> Output {
-        AntiDipoleInversion right_anti_dual = AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension VersorEven {
+    public AntiDipoleInversion weight_contraction(DipoleInversion other) {
+        AntiDipoleInversion right_anti_dual = AntiDipoleInversion(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e4 */
@@ -9340,9 +9020,9 @@ extension VersorEven: WeightContraction<DipoleInversion> {
             /* e1, e2, e3, e5 */
             other.group3 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(this.e12345) * right_anti_dual.group0.xyz, 0.0), 
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(this.e12345) * right_anti_dual.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(this.e12345) * right_anti_dual.group1, 
             /* e235, e315, e125, e4 */
@@ -9352,14 +9032,13 @@ extension VersorEven: WeightContraction<DipoleInversion> {
         );
     }
 }
-extension VersorEven: WeightContraction<DualNum> {
-    associatedtype Output = AntiMotor;
-    func weight_contraction(other: DualNum) -> Output {
-        AntiDualNum right_anti_dual = AntiDualNum.from_groups(
-            /* e3215, scalar, 0, 0 */
-            float4(other.group0.xy * float2(-1.0), 0.0, 0.0)
+public extension VersorEven {
+    public AntiMotor weight_contraction(DualNum other) {
+        AntiDualNum right_anti_dual = AntiDualNum(
+            /* e3215, scalar */
+            other.group0.xy * float2(-1.0)
         );
-        return AntiMotor.from_groups(
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(right_anti_dual.group0.xy.xx, right_anti_dual.e3215, (right_anti_dual.e3215 * this.e4) + (right_anti_dual.scalar * this.e12345)) * float4(this.group0.xyz, 1.0), 
             /* e15, e25, e35, e3215 */
@@ -9367,14 +9046,13 @@ extension VersorEven: WeightContraction<DualNum> {
         );
     }
 }
-extension VersorEven: WeightContraction<FlatPoint> {
-    associatedtype Output = AntiFlector;
-    func weight_contraction(other: FlatPoint) -> Output {
-        AntiFlatPoint right_anti_dual = AntiFlatPoint.from_groups(
+public extension VersorEven {
+    public AntiFlector weight_contraction(FlatPoint other) {
+        AntiFlatPoint right_anti_dual = AntiFlatPoint(
             /* e235, e315, e125, e321 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiFlector.from_groups(
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(this.e12345) * right_anti_dual.group0, 
             /* e1, e2, e3, e5 */
@@ -9382,16 +9060,15 @@ extension VersorEven: WeightContraction<FlatPoint> {
         );
     }
 }
-extension VersorEven: WeightContraction<Flector> {
-    associatedtype Output = AntiFlector;
-    func weight_contraction(other: Flector) -> Output {
-        AntiFlector right_anti_dual = AntiFlector.from_groups(
+public extension VersorEven {
+    public AntiFlector weight_contraction(Flector other) {
+        AntiFlector right_anti_dual = AntiFlector(
             /* e235, e315, e125, e321 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e1, e2, e3, e5 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiFlector.from_groups(
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(this.e12345) * right_anti_dual.group0, 
             /* e1, e2, e3, e5 */
@@ -9399,16 +9076,15 @@ extension VersorEven: WeightContraction<Flector> {
         );
     }
 }
-extension VersorEven: WeightContraction<Line> {
-    associatedtype Output = AntiMotor;
-    func weight_contraction(other: Line) -> Output {
-        AntiLine right_anti_dual = AntiLine.from_groups(
-            /* e23, e31, e12, 0 */
-            float4(other.group0.xyz, 0.0), 
-            /* e15, e25, e35, 0 */
-            float4(other.group1.xyz, 0.0)
+public extension VersorEven {
+    public AntiMotor weight_contraction(Line other) {
+        AntiLine right_anti_dual = AntiLine(
+            /* e23, e31, e12 */
+            other.group0.xyz, 
+            /* e15, e25, e35 */
+            other.group1.xyz
         );
-        return AntiMotor.from_groups(
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4((float3(this.e12345) * right_anti_dual.group0.xyz), -(right_anti_dual.e23 * this.e415) - (right_anti_dual.e31 * this.e425) - (right_anti_dual.e12 * this.e435) - (right_anti_dual.e15 * this.e423) - (right_anti_dual.e25 * this.e431) - (right_anti_dual.e35 * this.e412)), 
             /* e15, e25, e35, e3215 */
@@ -9416,16 +9092,15 @@ extension VersorEven: WeightContraction<Line> {
         );
     }
 }
-extension VersorEven: WeightContraction<Motor> {
-    associatedtype Output = AntiMotor;
-    func weight_contraction(other: Motor) -> Output {
-        AntiMotor right_anti_dual = AntiMotor.from_groups(
+public extension VersorEven {
+    public AntiMotor weight_contraction(Motor other) {
+        AntiMotor right_anti_dual = AntiMotor(
             /* e23, e31, e12, scalar */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, e3215 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiMotor.from_groups(
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             (float4(right_anti_dual.e3215) * float4(this.group0.xyz, this.e4)) + (float4(this.e12345) * right_anti_dual.group0) + float4(float3(0.0), -(right_anti_dual.e23 * this.e415) - (right_anti_dual.e31 * this.e425) - (right_anti_dual.e12 * this.e435) - (right_anti_dual.e15 * this.e423) - (right_anti_dual.e25 * this.e431) - (right_anti_dual.e35 * this.e412)), 
             /* e15, e25, e35, e3215 */
@@ -9433,78 +9108,75 @@ extension VersorEven: WeightContraction<Motor> {
         );
     }
 }
-extension VersorEven: WeightContraction<MultiVector> {
-    associatedtype Output = MultiVector;
-    func weight_contraction(other: MultiVector) -> Output {
-        MultiVector right_anti_dual = MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(other.group0.xy.yx * float2(-1.0, 1.0), 0.0, 0.0), 
+public extension VersorEven {
+    public MultiVector weight_contraction(MultiVector other) {
+        MultiVector right_anti_dual = MultiVector(
+            /* scalar, e12345 */
+            other.group0.xy.yx * float2(-1.0, 1.0), 
             /* e1, e2, e3, e4 */
             float4(other.group9.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e5, 0, 0, 0 */
-            float4(other.e3215, 0.0, 0.0, 0.0), 
+            /* e5 */
+            other.e3215, 
             /* e15, e25, e35, e45 */
             float4(other.group8.xyz, other.e321 * -1.0), 
-            /* e41, e42, e43, 0 */
-            float4(other.group7.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group6.xyz, 0.0), 
+            /* e41, e42, e43 */
+            other.group7.xyz, 
+            /* e23, e31, e12 */
+            other.group6.xyz, 
             /* e415, e425, e435, e321 */
             float4(other.group5.xyz, other.e45) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e423, e431, e412, 0 */
-            float4(other.group4.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group3.xyz * float3(-1.0), 0.0), 
+            /* e423, e431, e412 */
+            other.group4.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            other.group3.xyz * float3(-1.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(other.group1.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * -1.0
         );
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((right_anti_dual.scalar * this.e12345) + (right_anti_dual.e4235 * this.e1) + (right_anti_dual.e4315 * this.e2) + (right_anti_dual.e4125 * this.e3) + (right_anti_dual.e3215 * this.e4) + (right_anti_dual.e1234 * this.e5) - (right_anti_dual.e15 * this.e423) - (right_anti_dual.e25 * this.e431) - (right_anti_dual.e35 * this.e412) - (right_anti_dual.e45 * this.e321) - (right_anti_dual.e41 * this.e235) - (right_anti_dual.e42 * this.e315) - (right_anti_dual.e43 * this.e125) - (right_anti_dual.e23 * this.e415) - (right_anti_dual.e31 * this.e425) - (right_anti_dual.e12 * this.e435), right_anti_dual.e12345 * this.e12345), 0.0, 0.0), 
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((right_anti_dual.scalar * this.e12345) + (right_anti_dual.e4235 * this.e1) + (right_anti_dual.e4315 * this.e2) + (right_anti_dual.e4125 * this.e3) + (right_anti_dual.e3215 * this.e4) + (right_anti_dual.e1234 * this.e5) - (right_anti_dual.e15 * this.e423) - (right_anti_dual.e25 * this.e431) - (right_anti_dual.e35 * this.e412) - (right_anti_dual.e45 * this.e321) - (right_anti_dual.e41 * this.e235) - (right_anti_dual.e42 * this.e315) - (right_anti_dual.e43 * this.e125) - (right_anti_dual.e23 * this.e415) - (right_anti_dual.e31 * this.e425) - (right_anti_dual.e12 * this.e435), right_anti_dual.e12345 * this.e12345), 
             /* e1, e2, e3, e4 */
             float4((right_anti_dual.e1 * this.e12345) + (right_anti_dual.e415 * this.e321) + (right_anti_dual.e321 * this.e415) + (right_anti_dual.e315 * this.e412), (right_anti_dual.e2 * this.e12345) + (right_anti_dual.e425 * this.e321) + (right_anti_dual.e321 * this.e425) + (right_anti_dual.e125 * this.e423), (right_anti_dual.e3 * this.e12345) + (right_anti_dual.e435 * this.e321) + (right_anti_dual.e321 * this.e435) + (right_anti_dual.e235 * this.e431), -(right_anti_dual.e415 * this.e423) - (right_anti_dual.e425 * this.e431) - (right_anti_dual.e435 * this.e412) - (right_anti_dual.e412 * this.e435)) + (float4(right_anti_dual.e12345) * this.group3) + float4((right_anti_dual.group7.xyz.zxy * this.group2.yzx), right_anti_dual.e4 * this.e12345) - float4((right_anti_dual.group7.xyz.yzx * this.group2.zxy), right_anti_dual.e423 * this.e415) - float4((right_anti_dual.group8.xyz.zxy * this.group0.yzx), right_anti_dual.e431 * this.e425), 
-            /* e5, 0, 0, 0 */
-            float4((right_anti_dual.e12345 * this.e5) + (right_anti_dual.e5 * this.e12345) - (right_anti_dual.e415 * this.e235) - (right_anti_dual.e425 * this.e315) - (right_anti_dual.e435 * this.e125) - (right_anti_dual.e235 * this.e415) - (right_anti_dual.e315 * this.e425) - (right_anti_dual.e125 * this.e435), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (right_anti_dual.e12345 * this.e5) + (right_anti_dual.e5 * this.e12345) - (right_anti_dual.e415 * this.e235) - (right_anti_dual.e425 * this.e315) - (right_anti_dual.e435 * this.e125) - (right_anti_dual.e235 * this.e415) - (right_anti_dual.e315 * this.e425) - (right_anti_dual.e125 * this.e435), 
             /* e15, e25, e35, e45 */
             float4((right_anti_dual.e4125 * this.e315) + (right_anti_dual.e3215 * this.e415), (right_anti_dual.e4235 * this.e125) + (right_anti_dual.e3215 * this.e425), (right_anti_dual.e4315 * this.e235) + (right_anti_dual.e3215 * this.e435), -(right_anti_dual.e4315 * this.e425) - (right_anti_dual.e4125 * this.e435)) + (float4(this.e12345) * right_anti_dual.group3) - (right_anti_dual.group9.yzxx * float4(this.group2.zxy, this.e415)), 
-            /* e41, e42, e43, 0 */
-            float4((float3(right_anti_dual.e1234) * this.group1.xyz) + (float3(this.e12345) * right_anti_dual.group4.xyz) + (right_anti_dual.group9.yzx * this.group0.zxy) - (right_anti_dual.group9.zxy * this.group0.yzx), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(right_anti_dual.e3215) * this.group0.xyz) + (float3(right_anti_dual.e1234) * this.group2.xyz) + (float3(this.e12345) * right_anti_dual.group5.xyz) - (float3(this.e321) * right_anti_dual.group9.xyz), 0.0), 
+            /* e41, e42, e43 */
+            (float3(right_anti_dual.e1234) * this.group1.xyz) + (float3(this.e12345) * right_anti_dual.group4.xyz) + (right_anti_dual.group9.yzx * this.group0.zxy) - (right_anti_dual.group9.zxy * this.group0.yzx), 
+            /* e23, e31, e12 */
+            (float3(right_anti_dual.e3215) * this.group0.xyz) + (float3(right_anti_dual.e1234) * this.group2.xyz) + (float3(this.e12345) * right_anti_dual.group5.xyz) - (float3(this.e321) * right_anti_dual.group9.xyz), 
             /* e415, e425, e435, e321 */
             (float4(right_anti_dual.e12345) * this.group1) + (float4(this.e12345) * right_anti_dual.group6), 
-            /* e423, e431, e412, 0 */
-            float4((float3(right_anti_dual.e12345) * this.group0.xyz) + (float3(this.e12345) * right_anti_dual.group7.xyz), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(right_anti_dual.e12345) * this.group2.xyz) + (float3(this.e12345) * right_anti_dual.group8.xyz), 0.0), 
+            /* e423, e431, e412 */
+            (float3(right_anti_dual.e12345) * this.group0.xyz) + (float3(this.e12345) * right_anti_dual.group7.xyz), 
+            /* e235, e315, e125 */
+            (float3(right_anti_dual.e12345) * this.group2.xyz) + (float3(this.e12345) * right_anti_dual.group8.xyz), 
             /* e4235, e4315, e4125, e3215 */
             float4(this.e12345) * right_anti_dual.group9, 
-            /* e1234, 0, 0, 0 */
-            float4(right_anti_dual.e1234 * this.e12345, 0.0, 0.0, 0.0)
+            /* e1234 */
+            right_anti_dual.e1234 * this.e12345
         );
     }
 }
-extension VersorEven: WeightContraction<Plane> {
-    associatedtype Output = AntiPlane;
-    func weight_contraction(other: Plane) -> Output {
-        return AntiPlane.from_groups(
+public extension VersorEven {
+    public AntiPlane weight_contraction(Plane other) {
+        return AntiPlane(
             /* e1, e2, e3, e5 */
             float4(this.e12345) * float4(other.e4235 * -1.0, other.e4315 * -1.0, other.e4125 * -1.0, other.e3215)
         );
     }
 }
-extension VersorEven: WeightContraction<RoundPoint> {
-    associatedtype Output = VersorOdd;
-    func weight_contraction(other: RoundPoint) -> Output {
-        Sphere right_anti_dual = Sphere.from_groups(
+public extension VersorEven {
+    public VersorOdd weight_contraction(RoundPoint other) {
+        Sphere right_anti_dual = Sphere(
             /* e4235, e4315, e4125, e3215 */
             float4(other.group0.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * -1.0
         );
-        return VersorOdd.from_groups(
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(right_anti_dual.e4125 * this.e431 * -1.0, right_anti_dual.e4235 * this.e412 * -1.0, right_anti_dual.e4315 * this.e423 * -1.0, (right_anti_dual.e4125 * this.e3) + (right_anti_dual.e3215 * this.e4) + (right_anti_dual.e1234 * this.e5)) + (right_anti_dual.group0.yzxx * float4(this.group0.zxy, this.e1)) + float4((float3(right_anti_dual.e1234) * this.group1.xyz), right_anti_dual.e4315 * this.e2), 
             /* e23, e31, e12, e45 */
@@ -9516,14 +9188,13 @@ extension VersorEven: WeightContraction<RoundPoint> {
         );
     }
 }
-extension VersorEven: WeightContraction<Scalar> {
-    associatedtype Output = VersorEven;
-    func weight_contraction(other: Scalar) -> Output {
-        AntiScalar right_anti_dual = AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(other.scalar, 0.0, 0.0, 0.0)
+public extension VersorEven {
+    public VersorEven weight_contraction(Scalar other) {
+        AntiScalar right_anti_dual = AntiScalar(
+            /* e12345 */
+            other.scalar
         );
-        return VersorEven.from_groups(
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(right_anti_dual.e12345) * this.group0, 
             /* e415, e425, e435, e321 */
@@ -9535,27 +9206,25 @@ extension VersorEven: WeightContraction<Scalar> {
         );
     }
 }
-extension VersorEven: WeightContraction<Sphere> {
-    associatedtype Output = RoundPoint;
-    func weight_contraction(other: Sphere) -> Output {
-        RoundPoint right_anti_dual = RoundPoint.from_groups(
+public extension VersorEven {
+    public RoundPoint weight_contraction(Sphere other) {
+        RoundPoint right_anti_dual = RoundPoint(
             /* e1, e2, e3, e4 */
             float4(other.group0.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e5, 0, 0, 0 */
-            float4(other.e3215, 0.0, 0.0, 0.0)
+            /* e5 */
+            other.e3215
         );
-        return RoundPoint.from_groups(
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4(this.e12345) * right_anti_dual.group0, 
-            /* e5, 0, 0, 0 */
-            float4(right_anti_dual.e5 * this.e12345, 0.0, 0.0, 0.0)
+            /* e5 */
+            right_anti_dual.e5 * this.e12345
         );
     }
 }
-extension VersorEven: WeightContraction<VersorEven> {
-    associatedtype Output = VersorOdd;
-    func weight_contraction(other: VersorEven) -> Output {
-        VersorOdd right_anti_dual = VersorOdd.from_groups(
+public extension VersorEven {
+    public VersorOdd weight_contraction(VersorEven other) {
+        VersorOdd right_anti_dual = VersorOdd(
             /* e41, e42, e43, scalar */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e23, e31, e12, e45 */
@@ -9565,7 +9234,7 @@ extension VersorEven: WeightContraction<VersorEven> {
             /* e4235, e4315, e4125, e3215 */
             float4(other.group3.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return VersorOdd.from_groups(
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             (this.group0.zxyw * float4(right_anti_dual.group3.yzx, right_anti_dual.scalar)) + float4(float3(0.0), (this.e2 * right_anti_dual.e4315) + (this.e3 * right_anti_dual.e4125) + (this.e4 * right_anti_dual.e3215) - (this.e431 * right_anti_dual.e25) - (this.e412 * right_anti_dual.e35) - (this.e415 * right_anti_dual.e23) - (this.e425 * right_anti_dual.e31) - (this.e435 * right_anti_dual.e12) - (this.e321 * right_anti_dual.e45) - (this.e235 * right_anti_dual.e41) - (this.e315 * right_anti_dual.e42) - (this.e125 * right_anti_dual.e43)) + float4((this.group0.www * right_anti_dual.group0.xyz), this.e5 * right_anti_dual.e1234) + float4((right_anti_dual.group2.www * this.group1.xyz), this.e1 * right_anti_dual.e4235) - (this.group0.yzxx * float4(right_anti_dual.group3.zxy, right_anti_dual.e15)), 
             /* e23, e31, e12, e45 */
@@ -9577,10 +9246,9 @@ extension VersorEven: WeightContraction<VersorEven> {
         );
     }
 }
-extension VersorEven: WeightContraction<VersorOdd> {
-    associatedtype Output = VersorEven;
-    func weight_contraction(other: VersorOdd) -> Output {
-        VersorEven right_anti_dual = VersorEven.from_groups(
+public extension VersorEven {
+    public VersorEven weight_contraction(VersorOdd other) {
+        VersorEven right_anti_dual = VersorEven(
             /* e423, e431, e412, e12345 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e415, e425, e435, e321 */
@@ -9590,7 +9258,7 @@ extension VersorEven: WeightContraction<VersorOdd> {
             /* e1, e2, e3, e4 */
             float4(other.group3.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return VersorEven.from_groups(
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(((float3(right_anti_dual.e12345) * this.group0.xyz) + (float3(this.e12345) * right_anti_dual.group0.xyz)), right_anti_dual.e12345 * this.e12345), 
             /* e415, e425, e435, e321 */
@@ -9602,24 +9270,29 @@ extension VersorEven: WeightContraction<VersorOdd> {
         );
     }
 }
-extension VersorOdd {
-    // Fancy infix trick
-    func operator/(_rhs: WeightContractionInfix) -> WeightContractionInfixPartial<VersorOdd> {
-        return WeightContractionInfixPartial { a: this };
+public extension VersorOdd {
+    // Fancy infix trick (first half)
+    public WeightContractionInfixPartial<VersorOdd> operator /(WeightContractionInfix rhs) {
+        return WeightContractionInfixPartial<VersorOdd>(this);
     }
 }
-extension VersorOdd: WeightContraction<AntiCircleRotor> {
-    associatedtype Output = VersorOdd;
-    func weight_contraction(other: AntiCircleRotor) -> Output {
-        CircleRotor right_anti_dual = CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension WeightContractionInfixPartial<VersorOdd> {
+    // Fancy infix trick (second half)
+    public VersorOdd operator /(AntiCircleRotor rhs) {
+        return this.a.weight_contraction(rhs);
+    }
+}
+public extension VersorOdd {
+    public VersorOdd weight_contraction(AntiCircleRotor other) {
+        CircleRotor right_anti_dual = CircleRotor(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e12345 */
             other.group2 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return VersorOdd.from_groups(
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4((right_anti_dual.e415 * this.e1234) + (right_anti_dual.e12345 * this.e41), (right_anti_dual.e425 * this.e1234) + (right_anti_dual.e12345 * this.e42), (right_anti_dual.e435 * this.e1234) + (right_anti_dual.e12345 * this.e43), -(right_anti_dual.e431 * this.e25) - (right_anti_dual.e412 * this.e35) - (right_anti_dual.e415 * this.e23) - (right_anti_dual.e425 * this.e31) - (right_anti_dual.e435 * this.e12) - (right_anti_dual.e321 * this.e45) - (right_anti_dual.e235 * this.e41) - (right_anti_dual.e315 * this.e42) - (right_anti_dual.e125 * this.e43)) + float4((right_anti_dual.group0.xyz.zxy * this.group3.yzx), right_anti_dual.e12345 * this.scalar) - float4((right_anti_dual.group0.xyz.yzx * this.group3.zxy), right_anti_dual.e423 * this.e15), 
             /* e23, e31, e12, e45 */
@@ -9631,12 +9304,11 @@ extension VersorOdd: WeightContraction<AntiCircleRotor> {
         );
     }
 }
-extension VersorOdd: WeightContraction<AntiDipoleInversion> {
-    associatedtype Output = AntiDipoleInversion;
-    func weight_contraction(other: AntiDipoleInversion) -> Output {
-        DipoleInversion right_anti_dual = DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension VersorOdd {
+    public AntiDipoleInversion weight_contraction(AntiDipoleInversion other) {
+        DipoleInversion right_anti_dual = DipoleInversion(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, e1234 */
@@ -9644,9 +9316,9 @@ extension VersorOdd: WeightContraction<AntiDipoleInversion> {
             /* e4235, e4315, e4125, e3215 */
             other.group3 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4((float3(this.e1234) * right_anti_dual.group3.xyz) - (float3(right_anti_dual.e1234) * this.group3.xyz), 0.0), 
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            (float3(this.e1234) * right_anti_dual.group3.xyz) - (float3(right_anti_dual.e1234) * this.group3.xyz), 
             /* e415, e425, e435, e321 */
             (right_anti_dual.group3.yzxw * float4(this.group3.zxy, this.e1234)) - (this.group3.yzxw * float4(right_anti_dual.group3.zxy, right_anti_dual.e1234)), 
             /* e235, e315, e125, e4 */
@@ -9656,14 +9328,13 @@ extension VersorOdd: WeightContraction<AntiDipoleInversion> {
         );
     }
 }
-extension VersorOdd: WeightContraction<AntiDualNum> {
-    associatedtype Output = VersorOdd;
-    func weight_contraction(other: AntiDualNum) -> Output {
-        DualNum right_anti_dual = DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(other.group0.xy, 0.0, 0.0)
+public extension VersorOdd {
+    public VersorOdd weight_contraction(AntiDualNum other) {
+        DualNum right_anti_dual = DualNum(
+            /* e5, e12345 */
+            other.group0.xy
         );
-        return VersorOdd.from_groups(
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(right_anti_dual.group0.xy.yy, right_anti_dual.e12345, (right_anti_dual.e5 * this.e1234) + (right_anti_dual.e12345 * this.scalar)) * float4(this.group0.xyz, 1.0), 
             /* e23, e31, e12, e45 */
@@ -9675,33 +9346,31 @@ extension VersorOdd: WeightContraction<AntiDualNum> {
         );
     }
 }
-extension VersorOdd: WeightContraction<AntiFlatPoint> {
-    associatedtype Output = RoundPoint;
-    func weight_contraction(other: AntiFlatPoint) -> Output {
-        FlatPoint right_anti_dual = FlatPoint.from_groups(
+public extension VersorOdd {
+    public RoundPoint weight_contraction(AntiFlatPoint other) {
+        FlatPoint right_anti_dual = FlatPoint(
             /* e15, e25, e35, e45 */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return RoundPoint.from_groups(
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4(this.e1234) * right_anti_dual.group0, 
-            /* e5, 0, 0, 0 */
-            float4(-(right_anti_dual.e15 * this.e4235) - (right_anti_dual.e25 * this.e4315) - (right_anti_dual.e35 * this.e4125) - (right_anti_dual.e45 * this.e3215), 0.0, 0.0, 0.0)
+            /* e5 */
+            -(right_anti_dual.e15 * this.e4235) - (right_anti_dual.e25 * this.e4315) - (right_anti_dual.e35 * this.e4125) - (right_anti_dual.e45 * this.e3215)
         );
     }
 }
-extension VersorOdd: WeightContraction<AntiFlector> {
-    associatedtype Output = AntiDipoleInversion;
-    func weight_contraction(other: AntiFlector) -> Output {
-        Flector right_anti_dual = Flector.from_groups(
+public extension VersorOdd {
+    public AntiDipoleInversion weight_contraction(AntiFlector other) {
+        Flector right_anti_dual = Flector(
             /* e15, e25, e35, e45 */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e4235, e4315, e4125, e3215 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(this.e1234) * right_anti_dual.group1.xyz, 0.0), 
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(this.e1234) * right_anti_dual.group1.xyz, 
             /* e415, e425, e435, e321 */
             float4(((right_anti_dual.group1.yzx * this.group3.zxy) - (right_anti_dual.group1.zxy * this.group3.yzx)), right_anti_dual.e3215 * this.e1234), 
             /* e235, e315, e125, e4 */
@@ -9711,18 +9380,17 @@ extension VersorOdd: WeightContraction<AntiFlector> {
         );
     }
 }
-extension VersorOdd: WeightContraction<AntiLine> {
-    associatedtype Output = AntiCircleRotor;
-    func weight_contraction(other: AntiLine) -> Output {
-        Line right_anti_dual = Line.from_groups(
-            /* e415, e425, e435, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group1.xyz * float3(-1.0), 0.0)
+public extension VersorOdd {
+    public AntiCircleRotor weight_contraction(AntiLine other) {
+        Line right_anti_dual = Line(
+            /* e415, e425, e435 */
+            other.group0.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            other.group1.xyz * float3(-1.0)
         );
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(float3(this.e1234) * right_anti_dual.group0.xyz, 0.0), 
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            float3(this.e1234) * right_anti_dual.group0.xyz, 
             /* e23, e31, e12, e45 */
             float4((float3(this.e1234) * right_anti_dual.group1.xyz), -(right_anti_dual.e415 * this.e4235) - (right_anti_dual.e425 * this.e4315) - (right_anti_dual.e435 * this.e4125)), 
             /* e15, e25, e35, scalar */
@@ -9730,16 +9398,15 @@ extension VersorOdd: WeightContraction<AntiLine> {
         );
     }
 }
-extension VersorOdd: WeightContraction<AntiMotor> {
-    associatedtype Output = VersorOdd;
-    func weight_contraction(other: AntiMotor) -> Output {
-        Motor right_anti_dual = Motor.from_groups(
+public extension VersorOdd {
+    public VersorOdd weight_contraction(AntiMotor other) {
+        Motor right_anti_dual = Motor(
             /* e415, e425, e435, e12345 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e5 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return VersorOdd.from_groups(
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             (right_anti_dual.group0 * float4(this.group2.www, this.scalar)) + float4(float3(0.0), -(right_anti_dual.e415 * this.e23) - (right_anti_dual.e425 * this.e31) - (right_anti_dual.e435 * this.e12) - (right_anti_dual.e235 * this.e41) - (right_anti_dual.e315 * this.e42) - (right_anti_dual.e125 * this.e43)) + float4((right_anti_dual.group0.www * this.group0.xyz), right_anti_dual.e5 * this.e1234), 
             /* e23, e31, e12, e45 */
@@ -9751,16 +9418,15 @@ extension VersorOdd: WeightContraction<AntiMotor> {
         );
     }
 }
-extension VersorOdd: WeightContraction<AntiPlane> {
-    associatedtype Output = AntiDipoleInversion;
-    func weight_contraction(other: AntiPlane) -> Output {
-        Plane right_anti_dual = Plane.from_groups(
+public extension VersorOdd {
+    public AntiDipoleInversion weight_contraction(AntiPlane other) {
+        Plane right_anti_dual = Plane(
             /* e4235, e4315, e4125, e3215 */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(float3(this.e1234) * right_anti_dual.group0.xyz, 0.0), 
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(this.e1234) * right_anti_dual.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(((right_anti_dual.group0.yzx * this.group3.zxy) - (right_anti_dual.group0.zxy * this.group3.yzx)), right_anti_dual.e3215 * this.e1234), 
             /* e235, e315, e125, e4 */
@@ -9770,58 +9436,55 @@ extension VersorOdd: WeightContraction<AntiPlane> {
         );
     }
 }
-extension VersorOdd: WeightContraction<Circle> {
-    associatedtype Output = RoundPoint;
-    func weight_contraction(other: Circle) -> Output {
-        Dipole right_anti_dual = Dipole.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension VersorOdd {
+    public RoundPoint weight_contraction(Circle other) {
+        Dipole right_anti_dual = Dipole(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e15, e25, e35, 0 */
-            float4(other.group2.xyz, 0.0)
+            /* e15, e25, e35 */
+            other.group2.xyz
         );
-        return RoundPoint.from_groups(
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4(-(right_anti_dual.e41 * this.e3215) - (right_anti_dual.e31 * this.e4125), -(right_anti_dual.e42 * this.e3215) - (right_anti_dual.e12 * this.e4235), -(right_anti_dual.e43 * this.e3215) - (right_anti_dual.e23 * this.e4315), (right_anti_dual.e43 * this.e4125) + (right_anti_dual.e45 * this.e1234)) + (this.group3.yzxy * float4(right_anti_dual.group1.zxy, right_anti_dual.e42)) + float4((right_anti_dual.group2.xyz * this.group2.www), right_anti_dual.e41 * this.e4235), 
-            /* e5, 0, 0, 0 */
-            float4(-(right_anti_dual.e45 * this.e3215) - (right_anti_dual.e15 * this.e4235) - (right_anti_dual.e25 * this.e4315) - (right_anti_dual.e35 * this.e4125), 0.0, 0.0, 0.0)
+            /* e5 */
+            -(right_anti_dual.e45 * this.e3215) - (right_anti_dual.e15 * this.e4235) - (right_anti_dual.e25 * this.e4315) - (right_anti_dual.e35 * this.e4125)
         );
     }
 }
-extension VersorOdd: WeightContraction<CircleRotor> {
-    associatedtype Output = RoundPoint;
-    func weight_contraction(other: CircleRotor) -> Output {
-        AntiCircleRotor right_anti_dual = AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension VersorOdd {
+    public RoundPoint weight_contraction(CircleRotor other) {
+        AntiCircleRotor right_anti_dual = AntiCircleRotor(
+            /* e41, e42, e43 */
+            other.group0.xyz, 
             /* e23, e31, e12, e45 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, scalar */
             other.group2 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return RoundPoint.from_groups(
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4(-(right_anti_dual.e41 * this.e3215) - (right_anti_dual.e31 * this.e4125), -(right_anti_dual.e42 * this.e3215) - (right_anti_dual.e12 * this.e4235), -(right_anti_dual.e43 * this.e3215) - (right_anti_dual.e23 * this.e4315), (right_anti_dual.e43 * this.e4125) + (right_anti_dual.e45 * this.e1234)) + (this.group3.yzxx * float4(right_anti_dual.group1.zxy, right_anti_dual.e41)) + float4((this.group2.www * right_anti_dual.group2.xyz), right_anti_dual.e42 * this.e4315), 
-            /* e5, 0, 0, 0 */
-            float4(-(right_anti_dual.e45 * this.e3215) - (right_anti_dual.e15 * this.e4235) - (right_anti_dual.e25 * this.e4315) - (right_anti_dual.e35 * this.e4125), 0.0, 0.0, 0.0)
+            /* e5 */
+            -(right_anti_dual.e45 * this.e3215) - (right_anti_dual.e15 * this.e4235) - (right_anti_dual.e25 * this.e4315) - (right_anti_dual.e35 * this.e4125)
         );
     }
 }
-extension VersorOdd: WeightContraction<Dipole> {
-    associatedtype Output = AntiCircleRotor;
-    func weight_contraction(other: Dipole) -> Output {
-        Circle right_anti_dual = Circle.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension VersorOdd {
+    public AntiCircleRotor weight_contraction(Dipole other) {
+        Circle right_anti_dual = Circle(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group2.xyz * float3(-1.0), 0.0)
+            /* e235, e315, e125 */
+            other.group2.xyz * float3(-1.0)
         );
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4((float3(this.e1234) * right_anti_dual.group1.xyz) + (right_anti_dual.group0.xyz.zxy * this.group3.yzx) - (right_anti_dual.group0.xyz.yzx * this.group3.zxy), 0.0), 
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            (float3(this.e1234) * right_anti_dual.group1.xyz) + (right_anti_dual.group0.xyz.zxy * this.group3.yzx) - (right_anti_dual.group0.xyz.yzx * this.group3.zxy), 
             /* e23, e31, e12, e45 */
             float4((right_anti_dual.e423 * this.e3215) + (right_anti_dual.e235 * this.e1234), (right_anti_dual.e431 * this.e3215) + (right_anti_dual.e315 * this.e1234), (right_anti_dual.e412 * this.e3215) + (right_anti_dual.e125 * this.e1234), -(right_anti_dual.e425 * this.e4315) - (right_anti_dual.e435 * this.e4125)) - (right_anti_dual.group1.wwwx * this.group3.xyzx), 
             /* e15, e25, e35, scalar */
@@ -9829,12 +9492,11 @@ extension VersorOdd: WeightContraction<Dipole> {
         );
     }
 }
-extension VersorOdd: WeightContraction<DipoleInversion> {
-    associatedtype Output = AntiCircleRotor;
-    func weight_contraction(other: DipoleInversion) -> Output {
-        AntiDipoleInversion right_anti_dual = AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension VersorOdd {
+    public AntiCircleRotor weight_contraction(DipoleInversion other) {
+        AntiDipoleInversion right_anti_dual = AntiDipoleInversion(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e4 */
@@ -9842,9 +9504,9 @@ extension VersorOdd: WeightContraction<DipoleInversion> {
             /* e1, e2, e3, e5 */
             other.group3 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4((float3(this.e1234) * right_anti_dual.group1.xyz) + (right_anti_dual.group0.xyz.zxy * this.group3.yzx) - (right_anti_dual.group0.xyz.yzx * this.group3.zxy), 0.0), 
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            (float3(this.e1234) * right_anti_dual.group1.xyz) + (right_anti_dual.group0.xyz.zxy * this.group3.yzx) - (right_anti_dual.group0.xyz.yzx * this.group3.zxy), 
             /* e23, e31, e12, e45 */
             float4((right_anti_dual.e423 * this.e3215) + (right_anti_dual.e235 * this.e1234), (right_anti_dual.e431 * this.e3215) + (right_anti_dual.e315 * this.e1234), (right_anti_dual.e412 * this.e3215) + (right_anti_dual.e125 * this.e1234), -(right_anti_dual.e425 * this.e4315) - (right_anti_dual.e435 * this.e4125)) - (right_anti_dual.group1.wwwx * this.group3.xyzx), 
             /* e15, e25, e35, scalar */
@@ -9852,14 +9514,13 @@ extension VersorOdd: WeightContraction<DipoleInversion> {
         );
     }
 }
-extension VersorOdd: WeightContraction<DualNum> {
-    associatedtype Output = AntiFlector;
-    func weight_contraction(other: DualNum) -> Output {
-        AntiDualNum right_anti_dual = AntiDualNum.from_groups(
-            /* e3215, scalar, 0, 0 */
-            float4(other.group0.xy * float2(-1.0), 0.0, 0.0)
+public extension VersorOdd {
+    public AntiFlector weight_contraction(DualNum other) {
+        AntiDualNum right_anti_dual = AntiDualNum(
+            /* e3215, scalar */
+            other.group0.xy * float2(-1.0)
         );
-        return AntiFlector.from_groups(
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(right_anti_dual.e3215) * float4(this.group3.xyz, this.e1234), 
             /* e1, e2, e3, e5 */
@@ -9867,14 +9528,13 @@ extension VersorOdd: WeightContraction<DualNum> {
         );
     }
 }
-extension VersorOdd: WeightContraction<FlatPoint> {
-    associatedtype Output = AntiMotor;
-    func weight_contraction(other: FlatPoint) -> Output {
-        AntiFlatPoint right_anti_dual = AntiFlatPoint.from_groups(
+public extension VersorOdd {
+    public AntiMotor weight_contraction(FlatPoint other) {
+        AntiFlatPoint right_anti_dual = AntiFlatPoint(
             /* e235, e315, e125, e321 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiMotor.from_groups(
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(right_anti_dual.e235 * this.e1234, right_anti_dual.e315 * this.e1234, right_anti_dual.e125 * this.e1234, -(right_anti_dual.e315 * this.e42) - (right_anti_dual.e125 * this.e43) - (right_anti_dual.e321 * this.e45)) - (right_anti_dual.group0.wwwx * float4(this.group3.xyz, this.e41)), 
             /* e15, e25, e35, e3215 */
@@ -9882,16 +9542,15 @@ extension VersorOdd: WeightContraction<FlatPoint> {
         );
     }
 }
-extension VersorOdd: WeightContraction<Flector> {
-    associatedtype Output = AntiMotor;
-    func weight_contraction(other: Flector) -> Output {
-        AntiFlector right_anti_dual = AntiFlector.from_groups(
+public extension VersorOdd {
+    public AntiMotor weight_contraction(Flector other) {
+        AntiFlector right_anti_dual = AntiFlector(
             /* e235, e315, e125, e321 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e1, e2, e3, e5 */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiMotor.from_groups(
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(float3(0.0), (right_anti_dual.e2 * this.e4315) + (right_anti_dual.e3 * this.e4125) + (right_anti_dual.e5 * this.e1234) - (right_anti_dual.e315 * this.e42) - (right_anti_dual.e125 * this.e43) - (right_anti_dual.e321 * this.e45)) + float4((this.group2.www * right_anti_dual.group0.xyz), right_anti_dual.e1 * this.e4235) - (right_anti_dual.group0.wwwx * float4(this.group3.xyz, this.e41)), 
             /* e15, e25, e35, e3215 */
@@ -9899,31 +9558,29 @@ extension VersorOdd: WeightContraction<Flector> {
         );
     }
 }
-extension VersorOdd: WeightContraction<Line> {
-    associatedtype Output = AntiPlane;
-    func weight_contraction(other: Line) -> Output {
-        AntiLine right_anti_dual = AntiLine.from_groups(
-            /* e23, e31, e12, 0 */
-            float4(other.group0.xyz, 0.0), 
-            /* e15, e25, e35, 0 */
-            float4(other.group1.xyz, 0.0)
+public extension VersorOdd {
+    public AntiPlane weight_contraction(Line other) {
+        AntiLine right_anti_dual = AntiLine(
+            /* e23, e31, e12 */
+            other.group0.xyz, 
+            /* e15, e25, e35 */
+            other.group1.xyz
         );
-        return AntiPlane.from_groups(
+        return AntiPlane(
             /* e1, e2, e3, e5 */
             float4((right_anti_dual.e12 * this.e4315) + (right_anti_dual.e15 * this.e1234), (right_anti_dual.e23 * this.e4125) + (right_anti_dual.e25 * this.e1234), (right_anti_dual.e31 * this.e4235) + (right_anti_dual.e35 * this.e1234), -(right_anti_dual.e25 * this.e4315) - (right_anti_dual.e35 * this.e4125)) - (this.group3.zxyx * float4(right_anti_dual.group0.xyz.yzx, right_anti_dual.e15))
         );
     }
 }
-extension VersorOdd: WeightContraction<Motor> {
-    associatedtype Output = AntiFlector;
-    func weight_contraction(other: Motor) -> Output {
-        AntiMotor right_anti_dual = AntiMotor.from_groups(
+public extension VersorOdd {
+    public AntiFlector weight_contraction(Motor other) {
+        AntiMotor right_anti_dual = AntiMotor(
             /* e23, e31, e12, scalar */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, e3215 */
             other.group1 * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiFlector.from_groups(
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(right_anti_dual.e3215) * float4(this.group3.xyz, this.e1234), 
             /* e1, e2, e3, e5 */
@@ -9931,84 +9588,81 @@ extension VersorOdd: WeightContraction<Motor> {
         );
     }
 }
-extension VersorOdd: WeightContraction<MultiVector> {
-    associatedtype Output = MultiVector;
-    func weight_contraction(other: MultiVector) -> Output {
-        MultiVector right_anti_dual = MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(other.group0.xy.yx * float2(-1.0, 1.0), 0.0, 0.0), 
+public extension VersorOdd {
+    public MultiVector weight_contraction(MultiVector other) {
+        MultiVector right_anti_dual = MultiVector(
+            /* scalar, e12345 */
+            other.group0.xy.yx * float2(-1.0, 1.0), 
             /* e1, e2, e3, e4 */
             float4(other.group9.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e5, 0, 0, 0 */
-            float4(other.e3215, 0.0, 0.0, 0.0), 
+            /* e5 */
+            other.e3215, 
             /* e15, e25, e35, e45 */
             float4(other.group8.xyz, other.e321 * -1.0), 
-            /* e41, e42, e43, 0 */
-            float4(other.group7.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group6.xyz, 0.0), 
+            /* e41, e42, e43 */
+            other.group7.xyz, 
+            /* e23, e31, e12 */
+            other.group6.xyz, 
             /* e415, e425, e435, e321 */
             float4(other.group5.xyz, other.e45) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e423, e431, e412, 0 */
-            float4(other.group4.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group3.xyz * float3(-1.0), 0.0), 
+            /* e423, e431, e412 */
+            other.group4.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            other.group3.xyz * float3(-1.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(other.group1.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * -1.0
         );
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2((right_anti_dual.e12345 * this.scalar) + (right_anti_dual.e1 * this.e4235) + (right_anti_dual.e2 * this.e4315) + (right_anti_dual.e3 * this.e4125) + (right_anti_dual.e4 * this.e3215) + (right_anti_dual.e5 * this.e1234) - (right_anti_dual.e415 * this.e23) - (right_anti_dual.e425 * this.e31) - (right_anti_dual.e435 * this.e12) - (right_anti_dual.e321 * this.e45) - (right_anti_dual.e423 * this.e15) - (right_anti_dual.e431 * this.e25) - (right_anti_dual.e412 * this.e35) - (right_anti_dual.e235 * this.e41) - (right_anti_dual.e315 * this.e42) - (right_anti_dual.e125 * this.e43), 0.0), 0.0, 0.0), 
+        return MultiVector(
+            /* scalar, e12345 */
+            float2((right_anti_dual.e12345 * this.scalar) + (right_anti_dual.e1 * this.e4235) + (right_anti_dual.e2 * this.e4315) + (right_anti_dual.e3 * this.e4125) + (right_anti_dual.e4 * this.e3215) + (right_anti_dual.e5 * this.e1234) - (right_anti_dual.e415 * this.e23) - (right_anti_dual.e425 * this.e31) - (right_anti_dual.e435 * this.e12) - (right_anti_dual.e321 * this.e45) - (right_anti_dual.e423 * this.e15) - (right_anti_dual.e431 * this.e25) - (right_anti_dual.e412 * this.e35) - (right_anti_dual.e235 * this.e41) - (right_anti_dual.e315 * this.e42) - (right_anti_dual.e125 * this.e43), 0.0), 
             /* e1, e2, e3, e4 */
             (this.group3.yzxx * float4(right_anti_dual.group5.xyz.zxy, right_anti_dual.e41)) + float4((right_anti_dual.group9.zxy * this.group1.yzx), right_anti_dual.e43 * this.e4125) + float4((right_anti_dual.group9.www * this.group0.xyz), right_anti_dual.e45 * this.e1234) + float4((this.group2.www * right_anti_dual.group3.xyz), right_anti_dual.e42 * this.e4315) - (float4(right_anti_dual.e1234) * float4(this.group2.xyz, this.e45)) - (right_anti_dual.group9.yzxz * float4(this.group1.zxy, this.e43)) - float4((right_anti_dual.group4.xyz * this.group3.www), right_anti_dual.e4235 * this.e41) - float4((right_anti_dual.group5.xyz.yzx * this.group3.zxy), right_anti_dual.e4315 * this.e42), 
-            /* e5, 0, 0, 0 */
-            float4((right_anti_dual.e4235 * this.e15) + (right_anti_dual.e4315 * this.e25) + (right_anti_dual.e4125 * this.e35) + (right_anti_dual.e3215 * this.e45) - (right_anti_dual.e15 * this.e4235) - (right_anti_dual.e25 * this.e4315) - (right_anti_dual.e35 * this.e4125) - (right_anti_dual.e45 * this.e3215), 0.0, 0.0, 0.0), 
+            /* e5 */
+            (right_anti_dual.e4235 * this.e15) + (right_anti_dual.e4315 * this.e25) + (right_anti_dual.e4125 * this.e35) + (right_anti_dual.e3215 * this.e45) - (right_anti_dual.e15 * this.e4235) - (right_anti_dual.e25 * this.e4315) - (right_anti_dual.e35 * this.e4125) - (right_anti_dual.e45 * this.e3215), 
             /* e15, e25, e35, e45 */
             float4((right_anti_dual.e415 * this.e3215) + (right_anti_dual.e315 * this.e4125), (right_anti_dual.e425 * this.e3215) + (right_anti_dual.e125 * this.e4235), (right_anti_dual.e435 * this.e3215) + (right_anti_dual.e235 * this.e4315), -(right_anti_dual.e425 * this.e4315) - (right_anti_dual.e435 * this.e4125)) + (float4(right_anti_dual.e12345) * float4(this.group2.xyz, this.e45)) - (this.group3.yzxx * float4(right_anti_dual.group8.xyz.zxy, right_anti_dual.e415)), 
-            /* e41, e42, e43, 0 */
-            float4((float3(right_anti_dual.e12345) * this.group0.xyz) + (float3(this.e1234) * right_anti_dual.group6.xyz) + (right_anti_dual.group7.xyz.zxy * this.group3.yzx) - (right_anti_dual.group7.xyz.yzx * this.group3.zxy), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4((float3(right_anti_dual.e12345) * this.group1.xyz) + (float3(this.e1234) * right_anti_dual.group8.xyz) + (float3(this.e3215) * right_anti_dual.group7.xyz) - (float3(right_anti_dual.e321) * this.group3.xyz), 0.0), 
+            /* e41, e42, e43 */
+            (float3(right_anti_dual.e12345) * this.group0.xyz) + (float3(this.e1234) * right_anti_dual.group6.xyz) + (right_anti_dual.group7.xyz.zxy * this.group3.yzx) - (right_anti_dual.group7.xyz.yzx * this.group3.zxy), 
+            /* e23, e31, e12 */
+            (float3(right_anti_dual.e12345) * this.group1.xyz) + (float3(this.e1234) * right_anti_dual.group8.xyz) + (float3(this.e3215) * right_anti_dual.group7.xyz) - (float3(right_anti_dual.e321) * this.group3.xyz), 
             /* e415, e425, e435, e321 */
             (right_anti_dual.group9.yzxw * float4(this.group3.zxy, this.e1234)) - float4((right_anti_dual.group9.zxy * this.group3.yzx), right_anti_dual.e1234 * this.e3215), 
-            /* e423, e431, e412, 0 */
-            float4((float3(this.e1234) * right_anti_dual.group9.xyz) - (float3(right_anti_dual.e1234) * this.group3.xyz), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4((float3(right_anti_dual.e3215) * this.group3.xyz) - (float3(this.e3215) * right_anti_dual.group9.xyz), 0.0), 
+            /* e423, e431, e412 */
+            (float3(this.e1234) * right_anti_dual.group9.xyz) - (float3(right_anti_dual.e1234) * this.group3.xyz), 
+            /* e235, e315, e125 */
+            (float3(right_anti_dual.e3215) * this.group3.xyz) - (float3(this.e3215) * right_anti_dual.group9.xyz), 
             /* e4235, e4315, e4125, e3215 */
             float4(right_anti_dual.e12345) * this.group3, 
-            /* e1234, 0, 0, 0 */
-            float4(right_anti_dual.e12345 * this.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            right_anti_dual.e12345 * this.e1234
         );
     }
 }
-extension VersorOdd: WeightContraction<Plane> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: Plane) -> Output {
-        AntiPlane right_anti_dual = AntiPlane.from_groups(
+public extension VersorOdd {
+    public Scalar weight_contraction(Plane other) {
+        AntiPlane right_anti_dual = AntiPlane(
             /* e1, e2, e3, e5 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4((right_anti_dual.e1 * this.e4235) + (right_anti_dual.e2 * this.e4315) + (right_anti_dual.e3 * this.e4125) + (right_anti_dual.e5 * this.e1234), 0.0, 0.0, 0.0)
+        return Scalar(
+            /* scalar */
+            (right_anti_dual.e1 * this.e4235) + (right_anti_dual.e2 * this.e4315) + (right_anti_dual.e3 * this.e4125) + (right_anti_dual.e5 * this.e1234)
         );
     }
 }
-extension VersorOdd: WeightContraction<RoundPoint> {
-    associatedtype Output = AntiDipoleInversion;
-    func weight_contraction(other: RoundPoint) -> Output {
-        Sphere right_anti_dual = Sphere.from_groups(
+public extension VersorOdd {
+    public AntiDipoleInversion weight_contraction(RoundPoint other) {
+        Sphere right_anti_dual = Sphere(
             /* e4235, e4315, e4125, e3215 */
             float4(other.group0.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e4 * -1.0
         );
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4((float3(this.e1234) * right_anti_dual.group0.xyz) - (float3(right_anti_dual.e1234) * this.group3.xyz), 0.0), 
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            (float3(this.e1234) * right_anti_dual.group0.xyz) - (float3(right_anti_dual.e1234) * this.group3.xyz), 
             /* e415, e425, e435, e321 */
             (right_anti_dual.group0.yzxw * float4(this.group3.zxy, this.e1234)) - float4((right_anti_dual.group0.zxy * this.group3.yzx), right_anti_dual.e1234 * this.e3215), 
             /* e235, e315, e125, e4 */
@@ -10018,14 +9672,13 @@ extension VersorOdd: WeightContraction<RoundPoint> {
         );
     }
 }
-extension VersorOdd: WeightContraction<Scalar> {
-    associatedtype Output = VersorOdd;
-    func weight_contraction(other: Scalar) -> Output {
-        AntiScalar right_anti_dual = AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(other.scalar, 0.0, 0.0, 0.0)
+public extension VersorOdd {
+    public VersorOdd weight_contraction(Scalar other) {
+        AntiScalar right_anti_dual = AntiScalar(
+            /* e12345 */
+            other.scalar
         );
-        return VersorOdd.from_groups(
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(right_anti_dual.e12345) * this.group0, 
             /* e23, e31, e12, e45 */
@@ -10037,25 +9690,23 @@ extension VersorOdd: WeightContraction<Scalar> {
         );
     }
 }
-extension VersorOdd: WeightContraction<Sphere> {
-    associatedtype Output = Scalar;
-    func weight_contraction(other: Sphere) -> Output {
-        RoundPoint right_anti_dual = RoundPoint.from_groups(
+public extension VersorOdd {
+    public Scalar weight_contraction(Sphere other) {
+        RoundPoint right_anti_dual = RoundPoint(
             /* e1, e2, e3, e4 */
             float4(other.group0.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e5, 0, 0, 0 */
-            float4(other.e3215, 0.0, 0.0, 0.0)
+            /* e5 */
+            other.e3215
         );
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4((right_anti_dual.e1 * this.e4235) + (right_anti_dual.e2 * this.e4315) + (right_anti_dual.e3 * this.e4125) + (right_anti_dual.e4 * this.e3215) + (right_anti_dual.e5 * this.e1234), 0.0, 0.0, 0.0)
+        return Scalar(
+            /* scalar */
+            (right_anti_dual.e1 * this.e4235) + (right_anti_dual.e2 * this.e4315) + (right_anti_dual.e3 * this.e4125) + (right_anti_dual.e4 * this.e3215) + (right_anti_dual.e5 * this.e1234)
         );
     }
 }
-extension VersorOdd: WeightContraction<VersorEven> {
-    associatedtype Output = AntiDipoleInversion;
-    func weight_contraction(other: VersorEven) -> Output {
-        VersorOdd right_anti_dual = VersorOdd.from_groups(
+public extension VersorOdd {
+    public AntiDipoleInversion weight_contraction(VersorEven other) {
+        VersorOdd right_anti_dual = VersorOdd(
             /* e41, e42, e43, scalar */
             other.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e23, e31, e12, e45 */
@@ -10065,9 +9716,9 @@ extension VersorOdd: WeightContraction<VersorEven> {
             /* e4235, e4315, e4125, e3215 */
             float4(other.group3.xyz, other.e5) * float4(1.0, 1.0, 1.0, -1.0)
         );
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4((float3(this.e1234) * right_anti_dual.group3.xyz) - (float3(right_anti_dual.e1234) * this.group3.xyz), 0.0), 
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            (float3(this.e1234) * right_anti_dual.group3.xyz) - (float3(right_anti_dual.e1234) * this.group3.xyz), 
             /* e415, e425, e435, e321 */
             (right_anti_dual.group3.yzxw * float4(this.group3.zxy, this.e1234)) - (this.group3.yzxw * float4(right_anti_dual.group3.zxy, right_anti_dual.e1234)), 
             /* e235, e315, e125, e4 */
@@ -10077,10 +9728,9 @@ extension VersorOdd: WeightContraction<VersorEven> {
         );
     }
 }
-extension VersorOdd: WeightContraction<VersorOdd> {
-    associatedtype Output = VersorOdd;
-    func weight_contraction(other: VersorOdd) -> Output {
-        VersorEven right_anti_dual = VersorEven.from_groups(
+public extension VersorOdd {
+    public VersorOdd weight_contraction(VersorOdd other) {
+        VersorEven right_anti_dual = VersorEven(
             /* e423, e431, e412, e12345 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e415, e425, e435, e321 */
@@ -10090,7 +9740,7 @@ extension VersorOdd: WeightContraction<VersorOdd> {
             /* e1, e2, e3, e4 */
             float4(other.group3.xyz, other.e1234) * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return VersorOdd.from_groups(
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             (right_anti_dual.group0.zxyw * float4(this.group3.yzx, this.scalar)) + float4(float3(0.0), (right_anti_dual.e2 * this.e4315) + (right_anti_dual.e3 * this.e4125) + (right_anti_dual.e4 * this.e3215) - (right_anti_dual.e431 * this.e25) - (right_anti_dual.e412 * this.e35) - (right_anti_dual.e415 * this.e23) - (right_anti_dual.e425 * this.e31) - (right_anti_dual.e435 * this.e12) - (right_anti_dual.e321 * this.e45) - (right_anti_dual.e235 * this.e41) - (right_anti_dual.e315 * this.e42) - (right_anti_dual.e125 * this.e43)) + float4((right_anti_dual.group0.www * this.group0.xyz), right_anti_dual.e5 * this.e1234) + float4((this.group2.www * right_anti_dual.group1.xyz), right_anti_dual.e1 * this.e4235) - (right_anti_dual.group0.yzxx * float4(this.group3.zxy, this.e15)), 
             /* e23, e31, e12, e45 */

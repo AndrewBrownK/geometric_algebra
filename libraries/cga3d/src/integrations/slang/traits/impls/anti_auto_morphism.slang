@@ -1,19 +1,22 @@
-extension AntiCircleRotor {
-    // Fancy infix trick
-    func operator/(_rhs: AntiAutoMorphismPrefixOrPostfix) -> AntiCircleRotor {
+implementing cga3d;
+using traits;
+public extension AntiCircleRotor {
+    // Fancy postfix trick
+    public AntiCircleRotor operator /(AntiAutoMorphismPrefixOrPostfix rhs)  {
         return this.anti_auto_morphism();
     }
-    func operator/=(const AntiAutoMorphismPrefixOrPostfix& _rhs) -> AntiCircleRotor& {
-        this = this.anti_auto_morphism();
-        return *this;
+}
+public extension AntiAutoMorphismPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiCircleRotor operator /(AntiCircleRotor rhs) {
+        return rhs.anti_auto_morphism();
     }
 }
-extension AntiCircleRotor: AntiAutoMorphism {
-    associatedtype Output = AntiCircleRotor;
-    func anti_auto_morphism() -> Output {
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(this.group0.xyz * float3(-1.0), 0.0), 
+public extension AntiCircleRotor {
+    public AntiCircleRotor anti_auto_morphism() {
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            this.group0.xyz * float3(-1.0), 
             /* e23, e31, e12, e45 */
             this.group1 * float4(-1.0), 
             /* e15, e25, e35, scalar */
@@ -21,108 +24,114 @@ extension AntiCircleRotor: AntiAutoMorphism {
         );
     }
 }
-extension AntiDipoleInversion {
-    // Fancy infix trick
-    func operator/(_rhs: AntiAutoMorphismPrefixOrPostfix) -> AntiDipoleInversion {
+public extension AntiDipoleInversion {
+    // Fancy postfix trick
+    public AntiDipoleInversion operator /(AntiAutoMorphismPrefixOrPostfix rhs)  {
         return this.anti_auto_morphism();
     }
-    func operator/=(const AntiAutoMorphismPrefixOrPostfix& _rhs) -> AntiDipoleInversion& {
-        this = this.anti_auto_morphism();
-        return *this;
+}
+public extension AntiAutoMorphismPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiDipoleInversion operator /(AntiDipoleInversion rhs) {
+        return rhs.anti_auto_morphism();
     }
 }
-extension AntiDipoleInversion: AntiAutoMorphism {
-    associatedtype Output = AntiDipoleInversion;
-    func anti_auto_morphism() -> Output {
+public extension AntiDipoleInversion {
+    public AntiDipoleInversion anti_auto_morphism() {
         return this;
     }
 }
-extension AntiDualNum {
-    // Fancy infix trick
-    func operator/(_rhs: AntiAutoMorphismPrefixOrPostfix) -> AntiDualNum {
+public extension AntiDualNum {
+    // Fancy postfix trick
+    public AntiDualNum operator /(AntiAutoMorphismPrefixOrPostfix rhs)  {
         return this.anti_auto_morphism();
     }
-    func operator/=(const AntiAutoMorphismPrefixOrPostfix& _rhs) -> AntiDualNum& {
-        this = this.anti_auto_morphism();
-        return *this;
+}
+public extension AntiAutoMorphismPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiDualNum operator /(AntiDualNum rhs) {
+        return rhs.anti_auto_morphism();
     }
 }
-extension AntiDualNum: AntiAutoMorphism {
-    associatedtype Output = AntiDualNum;
-    func anti_auto_morphism() -> Output {
-        return AntiDualNum.from_groups(
-            /* e3215, scalar, 0, 0 */
-            float4(this.group0.xy * float2(-1.0), 0.0, 0.0)
+public extension AntiDualNum {
+    public AntiDualNum anti_auto_morphism() {
+        return AntiDualNum(
+            /* e3215, scalar */
+            this.group0.xy * float2(-1.0)
         );
     }
 }
-extension AntiFlatPoint {
-    // Fancy infix trick
-    func operator/(_rhs: AntiAutoMorphismPrefixOrPostfix) -> AntiFlatPoint {
+public extension AntiFlatPoint {
+    // Fancy postfix trick
+    public AntiFlatPoint operator /(AntiAutoMorphismPrefixOrPostfix rhs)  {
         return this.anti_auto_morphism();
     }
-    func operator/=(const AntiAutoMorphismPrefixOrPostfix& _rhs) -> AntiFlatPoint& {
-        this = this.anti_auto_morphism();
-        return *this;
+}
+public extension AntiAutoMorphismPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiFlatPoint operator /(AntiFlatPoint rhs) {
+        return rhs.anti_auto_morphism();
     }
 }
-extension AntiFlatPoint: AntiAutoMorphism {
-    associatedtype Output = AntiFlatPoint;
-    func anti_auto_morphism() -> Output {
+public extension AntiFlatPoint {
+    public AntiFlatPoint anti_auto_morphism() {
         return this;
     }
 }
-extension AntiFlector {
-    // Fancy infix trick
-    func operator/(_rhs: AntiAutoMorphismPrefixOrPostfix) -> AntiFlector {
+public extension AntiFlector {
+    // Fancy postfix trick
+    public AntiFlector operator /(AntiAutoMorphismPrefixOrPostfix rhs)  {
         return this.anti_auto_morphism();
     }
-    func operator/=(const AntiAutoMorphismPrefixOrPostfix& _rhs) -> AntiFlector& {
-        this = this.anti_auto_morphism();
-        return *this;
+}
+public extension AntiAutoMorphismPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiFlector operator /(AntiFlector rhs) {
+        return rhs.anti_auto_morphism();
     }
 }
-extension AntiFlector: AntiAutoMorphism {
-    associatedtype Output = AntiFlector;
-    func anti_auto_morphism() -> Output {
+public extension AntiFlector {
+    public AntiFlector anti_auto_morphism() {
         return this;
     }
 }
-extension AntiLine {
-    // Fancy infix trick
-    func operator/(_rhs: AntiAutoMorphismPrefixOrPostfix) -> AntiLine {
+public extension AntiLine {
+    // Fancy postfix trick
+    public AntiLine operator /(AntiAutoMorphismPrefixOrPostfix rhs)  {
         return this.anti_auto_morphism();
     }
-    func operator/=(const AntiAutoMorphismPrefixOrPostfix& _rhs) -> AntiLine& {
-        this = this.anti_auto_morphism();
-        return *this;
+}
+public extension AntiAutoMorphismPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiLine operator /(AntiLine rhs) {
+        return rhs.anti_auto_morphism();
     }
 }
-extension AntiLine: AntiAutoMorphism {
-    associatedtype Output = AntiLine;
-    func anti_auto_morphism() -> Output {
-        return AntiLine.from_groups(
-            /* e23, e31, e12, 0 */
-            float4(this.group0.xyz * float3(-1.0), 0.0), 
-            /* e15, e25, e35, 0 */
-            float4(this.group1.xyz * float3(-1.0), 0.0)
+public extension AntiLine {
+    public AntiLine anti_auto_morphism() {
+        return AntiLine(
+            /* e23, e31, e12 */
+            this.group0.xyz * float3(-1.0), 
+            /* e15, e25, e35 */
+            this.group1.xyz * float3(-1.0)
         );
     }
 }
-extension AntiMotor {
-    // Fancy infix trick
-    func operator/(_rhs: AntiAutoMorphismPrefixOrPostfix) -> AntiMotor {
+public extension AntiMotor {
+    // Fancy postfix trick
+    public AntiMotor operator /(AntiAutoMorphismPrefixOrPostfix rhs)  {
         return this.anti_auto_morphism();
     }
-    func operator/=(const AntiAutoMorphismPrefixOrPostfix& _rhs) -> AntiMotor& {
-        this = this.anti_auto_morphism();
-        return *this;
+}
+public extension AntiAutoMorphismPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiMotor operator /(AntiMotor rhs) {
+        return rhs.anti_auto_morphism();
     }
 }
-extension AntiMotor: AntiAutoMorphism {
-    associatedtype Output = AntiMotor;
-    func anti_auto_morphism() -> Output {
-        return AntiMotor.from_groups(
+public extension AntiMotor {
+    public AntiMotor anti_auto_morphism() {
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             this.group0 * float4(-1.0), 
             /* e15, e25, e35, e3215 */
@@ -130,109 +139,115 @@ extension AntiMotor: AntiAutoMorphism {
         );
     }
 }
-extension AntiPlane {
-    // Fancy infix trick
-    func operator/(_rhs: AntiAutoMorphismPrefixOrPostfix) -> AntiPlane {
+public extension AntiPlane {
+    // Fancy postfix trick
+    public AntiPlane operator /(AntiAutoMorphismPrefixOrPostfix rhs)  {
         return this.anti_auto_morphism();
     }
-    func operator/=(const AntiAutoMorphismPrefixOrPostfix& _rhs) -> AntiPlane& {
-        this = this.anti_auto_morphism();
-        return *this;
+}
+public extension AntiAutoMorphismPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiPlane operator /(AntiPlane rhs) {
+        return rhs.anti_auto_morphism();
     }
 }
-extension AntiPlane: AntiAutoMorphism {
-    associatedtype Output = AntiPlane;
-    func anti_auto_morphism() -> Output {
+public extension AntiPlane {
+    public AntiPlane anti_auto_morphism() {
         return this;
     }
 }
-extension AntiScalar {
-    // Fancy infix trick
-    func operator/(_rhs: AntiAutoMorphismPrefixOrPostfix) -> AntiScalar {
+public extension AntiScalar {
+    // Fancy postfix trick
+    public AntiScalar operator /(AntiAutoMorphismPrefixOrPostfix rhs)  {
         return this.anti_auto_morphism();
     }
-    func operator/=(const AntiAutoMorphismPrefixOrPostfix& _rhs) -> AntiScalar& {
-        this = this.anti_auto_morphism();
-        return *this;
+}
+public extension AntiAutoMorphismPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiScalar operator /(AntiScalar rhs) {
+        return rhs.anti_auto_morphism();
     }
 }
-extension AntiScalar: AntiAutoMorphism {
-    associatedtype Output = AntiScalar;
-    func anti_auto_morphism() -> Output {
+public extension AntiScalar {
+    public AntiScalar anti_auto_morphism() {
         return this;
     }
 }
-extension Circle {
-    // Fancy infix trick
-    func operator/(_rhs: AntiAutoMorphismPrefixOrPostfix) -> Circle {
+public extension Circle {
+    // Fancy postfix trick
+    public Circle operator /(AntiAutoMorphismPrefixOrPostfix rhs)  {
         return this.anti_auto_morphism();
     }
-    func operator/=(const AntiAutoMorphismPrefixOrPostfix& _rhs) -> Circle& {
-        this = this.anti_auto_morphism();
-        return *this;
+}
+public extension AntiAutoMorphismPrefixOrPostfix {
+    // Fancy prefix trick
+    public Circle operator /(Circle rhs) {
+        return rhs.anti_auto_morphism();
     }
 }
-extension Circle: AntiAutoMorphism {
-    associatedtype Output = Circle;
-    func anti_auto_morphism() -> Output {
+public extension Circle {
+    public Circle anti_auto_morphism() {
         return this;
     }
 }
-extension CircleRotor {
-    // Fancy infix trick
-    func operator/(_rhs: AntiAutoMorphismPrefixOrPostfix) -> CircleRotor {
+public extension CircleRotor {
+    // Fancy postfix trick
+    public CircleRotor operator /(AntiAutoMorphismPrefixOrPostfix rhs)  {
         return this.anti_auto_morphism();
     }
-    func operator/=(const AntiAutoMorphismPrefixOrPostfix& _rhs) -> CircleRotor& {
-        this = this.anti_auto_morphism();
-        return *this;
+}
+public extension AntiAutoMorphismPrefixOrPostfix {
+    // Fancy prefix trick
+    public CircleRotor operator /(CircleRotor rhs) {
+        return rhs.anti_auto_morphism();
     }
 }
-extension CircleRotor: AntiAutoMorphism {
-    associatedtype Output = CircleRotor;
-    func anti_auto_morphism() -> Output {
+public extension CircleRotor {
+    public CircleRotor anti_auto_morphism() {
         return this;
     }
 }
-extension Dipole {
-    // Fancy infix trick
-    func operator/(_rhs: AntiAutoMorphismPrefixOrPostfix) -> Dipole {
+public extension Dipole {
+    // Fancy postfix trick
+    public Dipole operator /(AntiAutoMorphismPrefixOrPostfix rhs)  {
         return this.anti_auto_morphism();
     }
-    func operator/=(const AntiAutoMorphismPrefixOrPostfix& _rhs) -> Dipole& {
-        this = this.anti_auto_morphism();
-        return *this;
+}
+public extension AntiAutoMorphismPrefixOrPostfix {
+    // Fancy prefix trick
+    public Dipole operator /(Dipole rhs) {
+        return rhs.anti_auto_morphism();
     }
 }
-extension Dipole: AntiAutoMorphism {
-    associatedtype Output = Dipole;
-    func anti_auto_morphism() -> Output {
-        return Dipole.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(this.group0.xyz * float3(-1.0), 0.0), 
+public extension Dipole {
+    public Dipole anti_auto_morphism() {
+        return Dipole(
+            /* e41, e42, e43 */
+            this.group0.xyz * float3(-1.0), 
             /* e23, e31, e12, e45 */
             this.group1 * float4(-1.0), 
-            /* e15, e25, e35, 0 */
-            float4(this.group2.xyz * float3(-1.0), 0.0)
+            /* e15, e25, e35 */
+            this.group2.xyz * float3(-1.0)
         );
     }
 }
-extension DipoleInversion {
-    // Fancy infix trick
-    func operator/(_rhs: AntiAutoMorphismPrefixOrPostfix) -> DipoleInversion {
+public extension DipoleInversion {
+    // Fancy postfix trick
+    public DipoleInversion operator /(AntiAutoMorphismPrefixOrPostfix rhs)  {
         return this.anti_auto_morphism();
     }
-    func operator/=(const AntiAutoMorphismPrefixOrPostfix& _rhs) -> DipoleInversion& {
-        this = this.anti_auto_morphism();
-        return *this;
+}
+public extension AntiAutoMorphismPrefixOrPostfix {
+    // Fancy prefix trick
+    public DipoleInversion operator /(DipoleInversion rhs) {
+        return rhs.anti_auto_morphism();
     }
 }
-extension DipoleInversion: AntiAutoMorphism {
-    associatedtype Output = DipoleInversion;
-    func anti_auto_morphism() -> Output {
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(this.group0.xyz * float3(-1.0), 0.0), 
+public extension DipoleInversion {
+    public DipoleInversion anti_auto_morphism() {
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            this.group0.xyz * float3(-1.0), 
             /* e23, e31, e12, e45 */
             this.group1 * float4(-1.0), 
             /* e15, e25, e35, e1234 */
@@ -242,55 +257,58 @@ extension DipoleInversion: AntiAutoMorphism {
         );
     }
 }
-extension DualNum {
-    // Fancy infix trick
-    func operator/(_rhs: AntiAutoMorphismPrefixOrPostfix) -> DualNum {
+public extension DualNum {
+    // Fancy postfix trick
+    public DualNum operator /(AntiAutoMorphismPrefixOrPostfix rhs)  {
         return this.anti_auto_morphism();
     }
-    func operator/=(const AntiAutoMorphismPrefixOrPostfix& _rhs) -> DualNum& {
-        this = this.anti_auto_morphism();
-        return *this;
+}
+public extension AntiAutoMorphismPrefixOrPostfix {
+    // Fancy prefix trick
+    public DualNum operator /(DualNum rhs) {
+        return rhs.anti_auto_morphism();
     }
 }
-extension DualNum: AntiAutoMorphism {
-    associatedtype Output = DualNum;
-    func anti_auto_morphism() -> Output {
+public extension DualNum {
+    public DualNum anti_auto_morphism() {
         return this;
     }
 }
-extension FlatPoint {
-    // Fancy infix trick
-    func operator/(_rhs: AntiAutoMorphismPrefixOrPostfix) -> FlatPoint {
+public extension FlatPoint {
+    // Fancy postfix trick
+    public FlatPoint operator /(AntiAutoMorphismPrefixOrPostfix rhs)  {
         return this.anti_auto_morphism();
     }
-    func operator/=(const AntiAutoMorphismPrefixOrPostfix& _rhs) -> FlatPoint& {
-        this = this.anti_auto_morphism();
-        return *this;
+}
+public extension AntiAutoMorphismPrefixOrPostfix {
+    // Fancy prefix trick
+    public FlatPoint operator /(FlatPoint rhs) {
+        return rhs.anti_auto_morphism();
     }
 }
-extension FlatPoint: AntiAutoMorphism {
-    associatedtype Output = FlatPoint;
-    func anti_auto_morphism() -> Output {
-        return FlatPoint.from_groups(
+public extension FlatPoint {
+    public FlatPoint anti_auto_morphism() {
+        return FlatPoint(
             /* e15, e25, e35, e45 */
             this.group0 * float4(-1.0)
         );
     }
 }
-extension Flector {
-    // Fancy infix trick
-    func operator/(_rhs: AntiAutoMorphismPrefixOrPostfix) -> Flector {
+public extension Flector {
+    // Fancy postfix trick
+    public Flector operator /(AntiAutoMorphismPrefixOrPostfix rhs)  {
         return this.anti_auto_morphism();
     }
-    func operator/=(const AntiAutoMorphismPrefixOrPostfix& _rhs) -> Flector& {
-        this = this.anti_auto_morphism();
-        return *this;
+}
+public extension AntiAutoMorphismPrefixOrPostfix {
+    // Fancy prefix trick
+    public Flector operator /(Flector rhs) {
+        return rhs.anti_auto_morphism();
     }
 }
-extension Flector: AntiAutoMorphism {
-    associatedtype Output = Flector;
-    func anti_auto_morphism() -> Output {
-        return Flector.from_groups(
+public extension Flector {
+    public Flector anti_auto_morphism() {
+        return Flector(
             /* e15, e25, e35, e45 */
             this.group0 * float4(-1.0), 
             /* e4235, e4315, e4125, e3215 */
@@ -298,182 +316,191 @@ extension Flector: AntiAutoMorphism {
         );
     }
 }
-extension Line {
-    // Fancy infix trick
-    func operator/(_rhs: AntiAutoMorphismPrefixOrPostfix) -> Line {
+public extension Line {
+    // Fancy postfix trick
+    public Line operator /(AntiAutoMorphismPrefixOrPostfix rhs)  {
         return this.anti_auto_morphism();
     }
-    func operator/=(const AntiAutoMorphismPrefixOrPostfix& _rhs) -> Line& {
-        this = this.anti_auto_morphism();
-        return *this;
+}
+public extension AntiAutoMorphismPrefixOrPostfix {
+    // Fancy prefix trick
+    public Line operator /(Line rhs) {
+        return rhs.anti_auto_morphism();
     }
 }
-extension Line: AntiAutoMorphism {
-    associatedtype Output = Line;
-    func anti_auto_morphism() -> Output {
+public extension Line {
+    public Line anti_auto_morphism() {
         return this;
     }
 }
-extension Motor {
-    // Fancy infix trick
-    func operator/(_rhs: AntiAutoMorphismPrefixOrPostfix) -> Motor {
+public extension Motor {
+    // Fancy postfix trick
+    public Motor operator /(AntiAutoMorphismPrefixOrPostfix rhs)  {
         return this.anti_auto_morphism();
     }
-    func operator/=(const AntiAutoMorphismPrefixOrPostfix& _rhs) -> Motor& {
-        this = this.anti_auto_morphism();
-        return *this;
+}
+public extension AntiAutoMorphismPrefixOrPostfix {
+    // Fancy prefix trick
+    public Motor operator /(Motor rhs) {
+        return rhs.anti_auto_morphism();
     }
 }
-extension Motor: AntiAutoMorphism {
-    associatedtype Output = Motor;
-    func anti_auto_morphism() -> Output {
+public extension Motor {
+    public Motor anti_auto_morphism() {
         return this;
     }
 }
-extension MultiVector {
-    // Fancy infix trick
-    func operator/(_rhs: AntiAutoMorphismPrefixOrPostfix) -> MultiVector {
+public extension MultiVector {
+    // Fancy postfix trick
+    public MultiVector operator /(AntiAutoMorphismPrefixOrPostfix rhs)  {
         return this.anti_auto_morphism();
     }
-    func operator/=(const AntiAutoMorphismPrefixOrPostfix& _rhs) -> MultiVector& {
-        this = this.anti_auto_morphism();
-        return *this;
+}
+public extension AntiAutoMorphismPrefixOrPostfix {
+    // Fancy prefix trick
+    public MultiVector operator /(MultiVector rhs) {
+        return rhs.anti_auto_morphism();
     }
 }
-extension MultiVector: AntiAutoMorphism {
-    associatedtype Output = MultiVector;
-    func anti_auto_morphism() -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(this.group0.xy * float2(-1.0, 1.0), 0.0, 0.0), 
+public extension MultiVector {
+    public MultiVector anti_auto_morphism() {
+        return MultiVector(
+            /* scalar, e12345 */
+            this.group0.xy * float2(-1.0, 1.0), 
             /* e1, e2, e3, e4 */
             this.group1, 
-            /* e5, 0, 0, 0 */
-            float4(this.e5, 0.0, 0.0, 0.0), 
+            /* e5 */
+            this.e5, 
             /* e15, e25, e35, e45 */
             this.group3 * float4(-1.0), 
-            /* e41, e42, e43, 0 */
-            float4(this.group4.xyz * float3(-1.0), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(this.group5.xyz * float3(-1.0), 0.0), 
+            /* e41, e42, e43 */
+            this.group4.xyz * float3(-1.0), 
+            /* e23, e31, e12 */
+            this.group5.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             this.group6, 
-            /* e423, e431, e412, 0 */
-            float4(this.group7.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group8.xyz, 0.0), 
+            /* e423, e431, e412 */
+            this.group7.xyz, 
+            /* e235, e315, e125 */
+            this.group8.xyz, 
             /* e4235, e4315, e4125, e3215 */
             this.group9 * float4(-1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(this.e1234 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            this.e1234 * -1.0
         );
     }
 }
-extension Plane {
-    // Fancy infix trick
-    func operator/(_rhs: AntiAutoMorphismPrefixOrPostfix) -> Plane {
+public extension Plane {
+    // Fancy postfix trick
+    public Plane operator /(AntiAutoMorphismPrefixOrPostfix rhs)  {
         return this.anti_auto_morphism();
     }
-    func operator/=(const AntiAutoMorphismPrefixOrPostfix& _rhs) -> Plane& {
-        this = this.anti_auto_morphism();
-        return *this;
+}
+public extension AntiAutoMorphismPrefixOrPostfix {
+    // Fancy prefix trick
+    public Plane operator /(Plane rhs) {
+        return rhs.anti_auto_morphism();
     }
 }
-extension Plane: AntiAutoMorphism {
-    associatedtype Output = Plane;
-    func anti_auto_morphism() -> Output {
-        return Plane.from_groups(
+public extension Plane {
+    public Plane anti_auto_morphism() {
+        return Plane(
             /* e4235, e4315, e4125, e3215 */
             this.group0 * float4(-1.0)
         );
     }
 }
-extension RoundPoint {
-    // Fancy infix trick
-    func operator/(_rhs: AntiAutoMorphismPrefixOrPostfix) -> RoundPoint {
+public extension RoundPoint {
+    // Fancy postfix trick
+    public RoundPoint operator /(AntiAutoMorphismPrefixOrPostfix rhs)  {
         return this.anti_auto_morphism();
     }
-    func operator/=(const AntiAutoMorphismPrefixOrPostfix& _rhs) -> RoundPoint& {
-        this = this.anti_auto_morphism();
-        return *this;
+}
+public extension AntiAutoMorphismPrefixOrPostfix {
+    // Fancy prefix trick
+    public RoundPoint operator /(RoundPoint rhs) {
+        return rhs.anti_auto_morphism();
     }
 }
-extension RoundPoint: AntiAutoMorphism {
-    associatedtype Output = RoundPoint;
-    func anti_auto_morphism() -> Output {
+public extension RoundPoint {
+    public RoundPoint anti_auto_morphism() {
         return this;
     }
 }
-extension Scalar {
-    // Fancy infix trick
-    func operator/(_rhs: AntiAutoMorphismPrefixOrPostfix) -> Scalar {
+public extension Scalar {
+    // Fancy postfix trick
+    public Scalar operator /(AntiAutoMorphismPrefixOrPostfix rhs)  {
         return this.anti_auto_morphism();
     }
-    func operator/=(const AntiAutoMorphismPrefixOrPostfix& _rhs) -> Scalar& {
-        this = this.anti_auto_morphism();
-        return *this;
+}
+public extension AntiAutoMorphismPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(Scalar rhs) {
+        return rhs.anti_auto_morphism();
     }
 }
-extension Scalar: AntiAutoMorphism {
-    associatedtype Output = Scalar;
-    func anti_auto_morphism() -> Output {
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(this.scalar * -1.0, 0.0, 0.0, 0.0)
+public extension Scalar {
+    public Scalar anti_auto_morphism() {
+        return Scalar(
+            /* scalar */
+            this.scalar * -1.0
         );
     }
 }
-extension Sphere {
-    // Fancy infix trick
-    func operator/(_rhs: AntiAutoMorphismPrefixOrPostfix) -> Sphere {
+public extension Sphere {
+    // Fancy postfix trick
+    public Sphere operator /(AntiAutoMorphismPrefixOrPostfix rhs)  {
         return this.anti_auto_morphism();
     }
-    func operator/=(const AntiAutoMorphismPrefixOrPostfix& _rhs) -> Sphere& {
-        this = this.anti_auto_morphism();
-        return *this;
+}
+public extension AntiAutoMorphismPrefixOrPostfix {
+    // Fancy prefix trick
+    public Sphere operator /(Sphere rhs) {
+        return rhs.anti_auto_morphism();
     }
 }
-extension Sphere: AntiAutoMorphism {
-    associatedtype Output = Sphere;
-    func anti_auto_morphism() -> Output {
-        return Sphere.from_groups(
+public extension Sphere {
+    public Sphere anti_auto_morphism() {
+        return Sphere(
             /* e4235, e4315, e4125, e3215 */
             this.group0 * float4(-1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(this.e1234 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            this.e1234 * -1.0
         );
     }
 }
-extension VersorEven {
-    // Fancy infix trick
-    func operator/(_rhs: AntiAutoMorphismPrefixOrPostfix) -> VersorEven {
+public extension VersorEven {
+    // Fancy postfix trick
+    public VersorEven operator /(AntiAutoMorphismPrefixOrPostfix rhs)  {
         return this.anti_auto_morphism();
     }
-    func operator/=(const AntiAutoMorphismPrefixOrPostfix& _rhs) -> VersorEven& {
-        this = this.anti_auto_morphism();
-        return *this;
+}
+public extension AntiAutoMorphismPrefixOrPostfix {
+    // Fancy prefix trick
+    public VersorEven operator /(VersorEven rhs) {
+        return rhs.anti_auto_morphism();
     }
 }
-extension VersorEven: AntiAutoMorphism {
-    associatedtype Output = VersorEven;
-    func anti_auto_morphism() -> Output {
+public extension VersorEven {
+    public VersorEven anti_auto_morphism() {
         return this;
     }
 }
-extension VersorOdd {
-    // Fancy infix trick
-    func operator/(_rhs: AntiAutoMorphismPrefixOrPostfix) -> VersorOdd {
+public extension VersorOdd {
+    // Fancy postfix trick
+    public VersorOdd operator /(AntiAutoMorphismPrefixOrPostfix rhs)  {
         return this.anti_auto_morphism();
     }
-    func operator/=(const AntiAutoMorphismPrefixOrPostfix& _rhs) -> VersorOdd& {
-        this = this.anti_auto_morphism();
-        return *this;
+}
+public extension AntiAutoMorphismPrefixOrPostfix {
+    // Fancy prefix trick
+    public VersorOdd operator /(VersorOdd rhs) {
+        return rhs.anti_auto_morphism();
     }
 }
-extension VersorOdd: AntiAutoMorphism {
-    associatedtype Output = VersorOdd;
-    func anti_auto_morphism() -> Output {
-        return VersorOdd.from_groups(
+public extension VersorOdd {
+    public VersorOdd anti_auto_morphism() {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             this.group0 * float4(-1.0), 
             /* e23, e31, e12, e45 */

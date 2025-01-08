@@ -78,21 +78,6 @@ fn main() {
     }
     let traits = traits.finish();
 
-    let wgsl = codegen::Wgsl::new();
-    wgsl.write_shader_file(
-        "libraries/rga3d/src/",
-        "rga3d",
-        1,
-        0,
-        0,
-        "",
-        "Latest generation test case",
-        "https://github.com/AndrewBrownK/projective_ga/",
-        &[],
-        repo.clone(),
-        traits.clone(),
-    );
-
     let slang = codegen::Slang::new();
     slang.write_src(
         "libraries/rga3d/src",
@@ -104,6 +89,8 @@ fn main() {
 
     let mut rust = codegen::Rust::new(true).all_features();
     rust.sql = false;
+    rust.wgsl = false;
+    rust.glsl = false;
     rust.write_crate(
         "libraries/rga3d/",
         "rga3d",

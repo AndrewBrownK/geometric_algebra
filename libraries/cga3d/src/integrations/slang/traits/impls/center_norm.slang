@@ -1,110 +1,155 @@
-using traits::CenterNormSquared;
-using traits::SquareRoot;
-extension AntiCircleRotor {
-    // Fancy infix trick
-    func operator/(_rhs: CenterNormPrefixOrPostfix) -> Scalar {
+implementing cga3d;
+using traits;
+public extension AntiCircleRotor {
+    // Fancy postfix trick
+    public Scalar operator /(CenterNormPrefixOrPostfix rhs)  {
         return this.center_norm();
     }
 }
-extension AntiCircleRotor: CenterNorm {
-    associatedtype Output = Scalar;
-    func center_norm() -> Output {
+public extension CenterNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(AntiCircleRotor rhs) {
+        return rhs.center_norm();
+    }
+}
+public extension AntiCircleRotor {
+    public Scalar center_norm() {
         return this.center_norm_squared().square_root();
     }
 }
-extension AntiDipoleInversion {
-    // Fancy infix trick
-    func operator/(_rhs: CenterNormPrefixOrPostfix) -> Scalar {
+public extension AntiDipoleInversion {
+    // Fancy postfix trick
+    public Scalar operator /(CenterNormPrefixOrPostfix rhs)  {
         return this.center_norm();
     }
 }
-extension AntiDipoleInversion: CenterNorm {
-    associatedtype Output = Scalar;
-    func center_norm() -> Output {
+public extension CenterNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(AntiDipoleInversion rhs) {
+        return rhs.center_norm();
+    }
+}
+public extension AntiDipoleInversion {
+    public Scalar center_norm() {
         return this.center_norm_squared().square_root();
     }
 }
-extension Circle {
-    // Fancy infix trick
-    func operator/(_rhs: CenterNormPrefixOrPostfix) -> Scalar {
+public extension Circle {
+    // Fancy postfix trick
+    public Scalar operator /(CenterNormPrefixOrPostfix rhs)  {
         return this.center_norm();
     }
 }
-extension Circle: CenterNorm {
-    associatedtype Output = Scalar;
-    func center_norm() -> Output {
+public extension CenterNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(Circle rhs) {
+        return rhs.center_norm();
+    }
+}
+public extension Circle {
+    public Scalar center_norm() {
         return this.center_norm_squared().square_root();
     }
 }
-extension CircleRotor {
-    // Fancy infix trick
-    func operator/(_rhs: CenterNormPrefixOrPostfix) -> Scalar {
+public extension CircleRotor {
+    // Fancy postfix trick
+    public Scalar operator /(CenterNormPrefixOrPostfix rhs)  {
         return this.center_norm();
     }
 }
-extension CircleRotor: CenterNorm {
-    associatedtype Output = Scalar;
-    func center_norm() -> Output {
+public extension CenterNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(CircleRotor rhs) {
+        return rhs.center_norm();
+    }
+}
+public extension CircleRotor {
+    public Scalar center_norm() {
         return this.center_norm_squared().square_root();
     }
 }
-extension Dipole {
-    // Fancy infix trick
-    func operator/(_rhs: CenterNormPrefixOrPostfix) -> Scalar {
+public extension Dipole {
+    // Fancy postfix trick
+    public Scalar operator /(CenterNormPrefixOrPostfix rhs)  {
         return this.center_norm();
     }
 }
-extension Dipole: CenterNorm {
-    associatedtype Output = Scalar;
-    func center_norm() -> Output {
+public extension CenterNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(Dipole rhs) {
+        return rhs.center_norm();
+    }
+}
+public extension Dipole {
+    public Scalar center_norm() {
         return this.center_norm_squared().square_root();
     }
 }
-extension DipoleInversion {
-    // Fancy infix trick
-    func operator/(_rhs: CenterNormPrefixOrPostfix) -> Scalar {
+public extension DipoleInversion {
+    // Fancy postfix trick
+    public Scalar operator /(CenterNormPrefixOrPostfix rhs)  {
         return this.center_norm();
     }
 }
-extension DipoleInversion: CenterNorm {
-    associatedtype Output = Scalar;
-    func center_norm() -> Output {
+public extension CenterNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(DipoleInversion rhs) {
+        return rhs.center_norm();
+    }
+}
+public extension DipoleInversion {
+    public Scalar center_norm() {
         return this.center_norm_squared().square_root();
     }
 }
-extension MultiVector {
-    // Fancy infix trick
-    func operator/(_rhs: CenterNormPrefixOrPostfix) -> Scalar {
+public extension MultiVector {
+    // Fancy postfix trick
+    public Scalar operator /(CenterNormPrefixOrPostfix rhs)  {
         return this.center_norm();
     }
 }
-extension MultiVector: CenterNorm {
-    associatedtype Output = Scalar;
-    func center_norm() -> Output {
+public extension CenterNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(MultiVector rhs) {
+        return rhs.center_norm();
+    }
+}
+public extension MultiVector {
+    public Scalar center_norm() {
         return this.center_norm_squared().square_root();
     }
 }
-extension VersorEven {
-    // Fancy infix trick
-    func operator/(_rhs: CenterNormPrefixOrPostfix) -> Scalar {
+public extension VersorEven {
+    // Fancy postfix trick
+    public Scalar operator /(CenterNormPrefixOrPostfix rhs)  {
         return this.center_norm();
     }
 }
-extension VersorEven: CenterNorm {
-    associatedtype Output = Scalar;
-    func center_norm() -> Output {
+public extension CenterNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(VersorEven rhs) {
+        return rhs.center_norm();
+    }
+}
+public extension VersorEven {
+    public Scalar center_norm() {
         return this.center_norm_squared().square_root();
     }
 }
-extension VersorOdd {
-    // Fancy infix trick
-    func operator/(_rhs: CenterNormPrefixOrPostfix) -> Scalar {
+public extension VersorOdd {
+    // Fancy postfix trick
+    public Scalar operator /(CenterNormPrefixOrPostfix rhs)  {
         return this.center_norm();
     }
 }
-extension VersorOdd: CenterNorm {
-    associatedtype Output = Scalar;
-    func center_norm() -> Output {
+public extension CenterNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(VersorOdd rhs) {
+        return rhs.center_norm();
+    }
+}
+public extension VersorOdd {
+    public Scalar center_norm() {
         return this.center_norm_squared().square_root();
     }
 }

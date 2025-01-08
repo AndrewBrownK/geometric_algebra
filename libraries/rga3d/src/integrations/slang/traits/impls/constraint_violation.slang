@@ -14,7 +14,7 @@ public extension ConstraintViolationPrefixOrPostfix {
 }
 public extension DualNum {
     public AntiScalar constraint_violation() {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             this.scalar * this.e1234 * 2.0
         );
@@ -34,13 +34,13 @@ public extension ConstraintViolationPrefixOrPostfix {
 }
 public extension Flector {
     public AntiScalar constraint_violation() {
-        Flector reverse = Flector.from_groups(
+        Flector reverse = Flector(
             /* e1, e2, e3, e4 */
             this.group0, 
             /* e423, e431, e412, e321 */
             this.group1 * float4(-1.0)
         );
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             (reverse.e423 * this.e1) + (reverse.e431 * this.e2) + (reverse.e412 * this.e3) + (reverse.e321 * this.e4) - (reverse.e1 * this.e423) - (reverse.e2 * this.e431) - (reverse.e3 * this.e412) - (reverse.e4 * this.e321)
         );
@@ -60,13 +60,13 @@ public extension ConstraintViolationPrefixOrPostfix {
 }
 public extension Line {
     public AntiScalar constraint_violation() {
-        Line reverse = Line.from_groups(
+        Line reverse = Line(
             /* e41, e42, e43 */
             this.group0.xyz * float3(-1.0), 
             /* e23, e31, e12 */
             this.group1.xyz * float3(-1.0)
         );
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             -(reverse.e41 * this.e23) - (reverse.e42 * this.e31) - (reverse.e43 * this.e12) - (reverse.e23 * this.e41) - (reverse.e31 * this.e42) - (reverse.e12 * this.e43)
         );
@@ -86,13 +86,13 @@ public extension ConstraintViolationPrefixOrPostfix {
 }
 public extension Motor {
     public AntiScalar constraint_violation() {
-        Motor reverse = Motor.from_groups(
+        Motor reverse = Motor(
             /* e41, e42, e43, e1234 */
             this.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, scalar */
             this.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             (reverse.e1234 * this.scalar) + (reverse.scalar * this.e1234) - (reverse.e41 * this.e23) - (reverse.e42 * this.e31) - (reverse.e43 * this.e12) - (reverse.e23 * this.e41) - (reverse.e31 * this.e42) - (reverse.e12 * this.e43)
         );
@@ -112,7 +112,7 @@ public extension ConstraintViolationPrefixOrPostfix {
 }
 public extension MultiVector {
     public MultiVector constraint_violation() {
-        MultiVector reverse = MultiVector.from_groups(
+        MultiVector reverse = MultiVector(
             /* scalar, e1234 */
             this.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -124,7 +124,7 @@ public extension MultiVector {
             /* e423, e431, e412, e321 */
             this.group4 * float4(-1.0)
         );
-        MultiVector geometric_product = MultiVector.from_groups(
+        MultiVector geometric_product = MultiVector(
             /* scalar, e1234 */
             float2(0.0, (reverse.e1234 * this.scalar) + (reverse.e321 * this.e4) - (reverse.e2 * this.e431) - (reverse.e3 * this.e412) - (reverse.e4 * this.e321) - (reverse.e23 * this.e41) - (reverse.e31 * this.e42) - (reverse.e12 * this.e43)) + (float2(reverse.scalar) * this.group0.xy) + (float2(this.e1) * float2(reverse.e1, reverse.e423)) + (float2(this.e2) * float2(reverse.e2, reverse.e431)) + (float2(this.e3) * float2(reverse.e3, reverse.e412)) - (float2(this.e23) * float2(reverse.e23, reverse.e41)) - (float2(this.e31) * float2(reverse.e31, reverse.e42)) - (float2(this.e12) * float2(reverse.e12, reverse.e43)) - (float2(reverse.e321, reverse.e1) * this.group4.wx), 
             /* e1, e2, e3, e4 */
@@ -136,7 +136,7 @@ public extension MultiVector {
             /* e423, e431, e412, e321 */
             float4(0.0)
         );
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(0.0, geometric_product.e1234), 
             /* e1, e2, e3, e4 */

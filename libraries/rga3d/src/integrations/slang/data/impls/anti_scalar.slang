@@ -2,7 +2,7 @@ implementing rga3d;
 using traits;
 public extension AntiScalar {
     public AntiScalar operator +(AntiScalar other) {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             other.e1234 + this.e1234
         );
@@ -10,7 +10,7 @@ public extension AntiScalar {
 }
 public extension AntiScalar {
     public DualNum operator +(DualNum other) {
-        return DualNum.from_groups(
+        return DualNum(
             /* scalar, e1234 */
             float2(0.0, this.e1234) + other.group0.xy
         );
@@ -18,7 +18,7 @@ public extension AntiScalar {
 }
 public extension AntiScalar {
     public MultiVector operator +(Flector other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(0.0, this.e1234), 
             /* e1, e2, e3, e4 */
@@ -34,7 +34,7 @@ public extension AntiScalar {
 }
 public extension AntiScalar {
     public MultiVector operator +(Horizon other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(0.0, this.e1234), 
             /* e1, e2, e3, e4 */
@@ -50,7 +50,7 @@ public extension AntiScalar {
 }
 public extension AntiScalar {
     public Motor operator +(Line other) {
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(other.group0.xyz, this.e1234), 
             /* e23, e31, e12, scalar */
@@ -60,7 +60,7 @@ public extension AntiScalar {
 }
 public extension AntiScalar {
     public Motor operator +(Motor other) {
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             other.group0 + float4(float3(0.0), this.e1234), 
             /* e23, e31, e12, scalar */
@@ -70,7 +70,7 @@ public extension AntiScalar {
 }
 public extension AntiScalar {
     public MultiVector operator +(MultiVector other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(0.0, this.e1234) + other.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -86,7 +86,7 @@ public extension AntiScalar {
 }
 public extension AntiScalar {
     public MultiVector operator +(Origin other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(0.0, this.e1234), 
             /* e1, e2, e3, e4 */
@@ -102,7 +102,7 @@ public extension AntiScalar {
 }
 public extension AntiScalar {
     public MultiVector operator +(Plane other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(0.0, this.e1234), 
             /* e1, e2, e3, e4 */
@@ -118,7 +118,7 @@ public extension AntiScalar {
 }
 public extension AntiScalar {
     public MultiVector operator +(Point other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(0.0, this.e1234), 
             /* e1, e2, e3, e4 */
@@ -134,7 +134,7 @@ public extension AntiScalar {
 }
 public extension AntiScalar {
     public DualNum operator +(Scalar other) {
-        return DualNum.from_groups(
+        return DualNum(
             /* scalar, e1234 */
             float2(other.scalar, this.e1234)
         );
@@ -187,7 +187,7 @@ public extension AntiScalar {
 }
 public extension AntiScalar {
     public AntiScalar neg() {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             this.e1234 * -1.0
         );
@@ -195,7 +195,7 @@ public extension AntiScalar {
 }
 public extension AntiScalar {
     public AntiScalar operator -(AntiScalar other) {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             this.e1234 - other.e1234
         );
@@ -203,7 +203,7 @@ public extension AntiScalar {
 }
 public extension AntiScalar {
     public DualNum operator -(DualNum other) {
-        return DualNum.from_groups(
+        return DualNum(
             /* scalar, e1234 */
             float2(other.scalar, this.e1234 - other.e1234) * float2(-1.0, 1.0)
         );
@@ -211,7 +211,7 @@ public extension AntiScalar {
 }
 public extension AntiScalar {
     public MultiVector operator -(Flector other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(0.0, this.e1234), 
             /* e1, e2, e3, e4 */
@@ -227,7 +227,7 @@ public extension AntiScalar {
 }
 public extension AntiScalar {
     public MultiVector operator -(Horizon other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(0.0, this.e1234), 
             /* e1, e2, e3, e4 */
@@ -243,7 +243,7 @@ public extension AntiScalar {
 }
 public extension AntiScalar {
     public Motor operator -(Line other) {
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(other.group0.xyz, this.e1234) * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, scalar */
@@ -253,7 +253,7 @@ public extension AntiScalar {
 }
 public extension AntiScalar {
     public Motor operator -(Motor other) {
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(other.group0.xyz, this.e1234 - other.e1234) * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, scalar */
@@ -263,7 +263,7 @@ public extension AntiScalar {
 }
 public extension AntiScalar {
     public MultiVector operator -(MultiVector other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(other.scalar, this.e1234 - other.e1234) * float2(-1.0, 1.0), 
             /* e1, e2, e3, e4 */
@@ -279,7 +279,7 @@ public extension AntiScalar {
 }
 public extension AntiScalar {
     public MultiVector operator -(Origin other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(0.0, this.e1234), 
             /* e1, e2, e3, e4 */
@@ -295,7 +295,7 @@ public extension AntiScalar {
 }
 public extension AntiScalar {
     public MultiVector operator -(Plane other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(0.0, this.e1234), 
             /* e1, e2, e3, e4 */
@@ -311,7 +311,7 @@ public extension AntiScalar {
 }
 public extension AntiScalar {
     public MultiVector operator -(Point other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(0.0, this.e1234), 
             /* e1, e2, e3, e4 */
@@ -327,7 +327,7 @@ public extension AntiScalar {
 }
 public extension AntiScalar {
     public DualNum operator -(Scalar other) {
-        return DualNum.from_groups(
+        return DualNum(
             /* scalar, e1234 */
             float2(other.scalar, this.e1234) * float2(-1.0, 1.0)
         );

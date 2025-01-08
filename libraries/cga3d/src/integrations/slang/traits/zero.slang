@@ -1,8 +1,6 @@
-using data::*;
+implementing cga3d;
+using data;
 
 /// Zero
 /// All elements set to zero.
-public interface Zero {
-    func zero() -> Output;
-}
-__include ./impls/zero;
+__include "./impls/zero";

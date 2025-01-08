@@ -48,7 +48,7 @@ public extension ConjugationPrefixOrPostfix {
 }
 public extension Flector {
     public Flector conjugation() {
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             this.group0 * float4(-1.0), 
             /* e423, e431, e412, e321 */
@@ -87,7 +87,7 @@ public extension ConjugationPrefixOrPostfix {
 }
 public extension Line {
     public Line conjugation() {
-        return Line.from_groups(
+        return Line(
             /* e41, e42, e43 */
             this.group0.xyz * float3(-1.0), 
             /* e23, e31, e12 */
@@ -109,7 +109,7 @@ public extension ConjugationPrefixOrPostfix {
 }
 public extension Motor {
     public Motor conjugation() {
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             this.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, scalar */
@@ -131,7 +131,7 @@ public extension ConjugationPrefixOrPostfix {
 }
 public extension MultiVector {
     public MultiVector conjugation() {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             this.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -159,7 +159,7 @@ public extension ConjugationPrefixOrPostfix {
 }
 public extension Origin {
     public Origin conjugation() {
-        return Origin.from_groups(
+        return Origin(
             /* e4 */
             this.e4 * -1.0
         );
@@ -196,7 +196,7 @@ public extension ConjugationPrefixOrPostfix {
 }
 public extension Point {
     public Point conjugation() {
-        return Point.from_groups(
+        return Point(
             /* e1, e2, e3, e4 */
             this.group0 * float4(-1.0)
         );

@@ -1,18 +1,35 @@
 implementing cga3d;
-using data::*;
+using data;
 
 /// VersorOdd
 public struct VersorOdd {
     // e41, e42, e43, scalar
-    internal group0: float4,
+    internal float4 group0;
     // e23, e31, e12, e45
-    internal group1: float4,
+    internal float4 group1;
     // e15, e25, e35, e1234
-    internal group2: float4,
+    internal float4 group2;
     // e4235, e4315, e4125, e3215
-    internal group3: float4
+    internal float4 group3;
+
+    __init(
+        float e41, float e42, float e43, float scalar, float e23, float e31, float e12, float e45, float e15, float e25, float e35, float e1234, float e4235, float e4315, float e4125, float e3215
+    ) {
+        group0 = float4(e41, e42, e43, scalar);
+        group1 = float4(e23, e31, e12, e45);
+        group2 = float4(e15, e25, e35, e1234);
+        group3 = float4(e4235, e4315, e4125, e3215);
+    }
+    internal __init(
+        float4 g0, float4 g1, float4 g2, float4 g3
+    ) {
+        group0 = g0;
+        group1 = g1;
+        group2 = g2;
+        group3 = g3;
+    }
 }
-extension VersorOdd {
+public extension VersorOdd {
     public property e41: float {
         get { return group0[0]; }
         set { group0[0] = newValue; }
@@ -77,33 +94,28 @@ extension VersorOdd {
         get { return group3[3]; }
         set { group3[3] = newValue; }
     }
-    public static func from_elements(
-        e41: float, e42: float, e43: float, scalar: float, e23: float, e31: float, e12: float, e45: float, e15: float, e25: float, e35: float, e1234: float, e4235: float, e4315: float, e4125: float, e3215: float
-    ) -> VersorOdd {
-        return VersorOdd { float4(e41, e42, e43, scalar), float4(e23, e31, e12, e45), float4(e15, e25, e35, e1234), float4(e4235, e4315, e4125, e3215) };
-    }
-    internal static func from_groups(
-        g0: float4, g1: float4, g2: float4, g3: float4
-    ) -> VersorOdd {
-        return VersorOdd {
-            group0: g0, group1: g1, group2: g2, group3: g3
-        };
-    }
 }
-extension VersorOdd: IComparable {
-    bool lessThan(IComparable another) {
-        VersorOdd other = (VersorOdd)another;
-        if (this.group0 != other.group0)
-            return this.group0.lessThan(other.group0);
-        if (this.group1 != other.group1)
-            return this.group1.lessThan(other.group1);
-        if (this.group2 != other.group2)
-            return this.group2.lessThan(other.group2);
-        return this.group3.lessThan(other.group3);
+public extension VersorOdd: IComparable {
+    public bool equals(VersorOdd other) {
+        return equalsHelper(this.group0, other.group0) && equalsHelper(this.group1, other.group1) && equalsHelper(this.group2, other.group2) && equalsHelper(this.group3, other.group3);
     }
-    bool equals(IComparable another) {
-        VersorOdd other = (VersorOdd)another;
-        return this.group0.equals(other.group0) && this.group1.equals(other.group1) && this.group2.equals(other.group2) && this.group3.equals(other.group3);
+    public bool lessThan(VersorOdd other) {
+        if (!equalsHelper(this.group0, other.group0))
+            return lessThanHelper(this.group0, other.group0);
+        if (!equalsHelper(this.group1, other.group1))
+            return lessThanHelper(this.group1, other.group1);
+        if (!equalsHelper(this.group2, other.group2))
+            return lessThanHelper(this.group2, other.group2);
+        return lessThanHelper(this.group3, other.group3);
+    }
+    public bool lessThanOrEquals(VersorOdd other) {
+        if (!equalsHelper(this.group0, other.group0))
+            return lessThanOrEqualsHelper(this.group0, other.group0);
+        if (!equalsHelper(this.group1, other.group1))
+            return lessThanOrEqualsHelper(this.group1, other.group1);
+        if (!equalsHelper(this.group2, other.group2))
+            return lessThanOrEqualsHelper(this.group2, other.group2);
+        return lessThanOrEqualsHelper(this.group3, other.group3);
     }
 }
 __include "impls/versor_odd";

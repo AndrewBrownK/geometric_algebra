@@ -1,28 +1,40 @@
-extension AntiCircleRotor {
-    // Fancy infix trick
-    func operator/(_rhs: FlatBulkPrefixOrPostfix) -> FlatPoint {
+implementing cga3d;
+using traits;
+public extension AntiCircleRotor {
+    // Fancy postfix trick
+    public FlatPoint operator /(FlatBulkPrefixOrPostfix rhs)  {
         return this.flat_bulk();
     }
 }
-extension AntiCircleRotor: FlatBulk {
-    associatedtype Output = FlatPoint;
-    func flat_bulk() -> Output {
-        return FlatPoint.from_groups(
+public extension FlatBulkPrefixOrPostfix {
+    // Fancy prefix trick
+    public FlatPoint operator /(AntiCircleRotor rhs) {
+        return rhs.flat_bulk();
+    }
+}
+public extension AntiCircleRotor {
+    public FlatPoint flat_bulk() {
+        return FlatPoint(
             /* e15, e25, e35, e45 */
             float4(this.group2.xyz, 0.0)
         );
     }
 }
-extension AntiDipoleInversion {
-    // Fancy infix trick
-    func operator/(_rhs: FlatBulkPrefixOrPostfix) -> AntiFlector {
+public extension AntiDipoleInversion {
+    // Fancy postfix trick
+    public AntiFlector operator /(FlatBulkPrefixOrPostfix rhs)  {
         return this.flat_bulk();
     }
 }
-extension AntiDipoleInversion: FlatBulk {
-    associatedtype Output = AntiFlector;
-    func flat_bulk() -> Output {
-        return AntiFlector.from_groups(
+public extension FlatBulkPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiFlector operator /(AntiDipoleInversion rhs) {
+        return rhs.flat_bulk();
+    }
+}
+public extension AntiDipoleInversion {
+    public AntiFlector flat_bulk() {
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(this.group2.xyz, 0.0), 
             /* e1, e2, e3, e5 */
@@ -30,58 +42,61 @@ extension AntiDipoleInversion: FlatBulk {
         );
     }
 }
-extension AntiDualNum {
-    // Fancy infix trick
-    func operator/(_rhs: FlatBulkPrefixOrPostfix) -> AntiDualNum {
+public extension AntiDualNum {
+    // Fancy postfix trick
+    public AntiDualNum operator /(FlatBulkPrefixOrPostfix rhs)  {
         return this.flat_bulk();
     }
-    func operator/=(const FlatBulkPrefixOrPostfix& _rhs) -> AntiDualNum& {
-        this = this.flat_bulk();
-        return *this;
+}
+public extension FlatBulkPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiDualNum operator /(AntiDualNum rhs) {
+        return rhs.flat_bulk();
     }
 }
-extension AntiDualNum: FlatBulk {
-    associatedtype Output = AntiDualNum;
-    func flat_bulk() -> Output {
-        return AntiDualNum.from_groups(
-            /* e3215, scalar, 0, 0 */
-            float4(float2(this.e3215, 0.0), 0.0, 0.0)
+public extension AntiDualNum {
+    public AntiDualNum flat_bulk() {
+        return AntiDualNum(
+            /* e3215, scalar */
+            float2(this.e3215, 0.0)
         );
     }
 }
-extension AntiFlatPoint {
-    // Fancy infix trick
-    func operator/(_rhs: FlatBulkPrefixOrPostfix) -> AntiFlatPoint {
+public extension AntiFlatPoint {
+    // Fancy postfix trick
+    public AntiFlatPoint operator /(FlatBulkPrefixOrPostfix rhs)  {
         return this.flat_bulk();
     }
-    func operator/=(const FlatBulkPrefixOrPostfix& _rhs) -> AntiFlatPoint& {
-        this = this.flat_bulk();
-        return *this;
+}
+public extension FlatBulkPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiFlatPoint operator /(AntiFlatPoint rhs) {
+        return rhs.flat_bulk();
     }
 }
-extension AntiFlatPoint: FlatBulk {
-    associatedtype Output = AntiFlatPoint;
-    func flat_bulk() -> Output {
-        return AntiFlatPoint.from_groups(
+public extension AntiFlatPoint {
+    public AntiFlatPoint flat_bulk() {
+        return AntiFlatPoint(
             /* e235, e315, e125, e321 */
             float4(this.group0.xyz, 0.0)
         );
     }
 }
-extension AntiFlector {
-    // Fancy infix trick
-    func operator/(_rhs: FlatBulkPrefixOrPostfix) -> AntiFlector {
+public extension AntiFlector {
+    // Fancy postfix trick
+    public AntiFlector operator /(FlatBulkPrefixOrPostfix rhs)  {
         return this.flat_bulk();
     }
-    func operator/=(const FlatBulkPrefixOrPostfix& _rhs) -> AntiFlector& {
-        this = this.flat_bulk();
-        return *this;
+}
+public extension FlatBulkPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiFlector operator /(AntiFlector rhs) {
+        return rhs.flat_bulk();
     }
 }
-extension AntiFlector: FlatBulk {
-    associatedtype Output = AntiFlector;
-    func flat_bulk() -> Output {
-        return AntiFlector.from_groups(
+public extension AntiFlector {
+    public AntiFlector flat_bulk() {
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(this.group0.xyz, 0.0), 
             /* e1, e2, e3, e5 */
@@ -89,31 +104,41 @@ extension AntiFlector: FlatBulk {
         );
     }
 }
-extension AntiLine {
-    // Fancy infix trick
-    func operator/(_rhs: FlatBulkPrefixOrPostfix) -> FlatPoint {
+public extension AntiLine {
+    // Fancy postfix trick
+    public FlatPoint operator /(FlatBulkPrefixOrPostfix rhs)  {
         return this.flat_bulk();
     }
 }
-extension AntiLine: FlatBulk {
-    associatedtype Output = FlatPoint;
-    func flat_bulk() -> Output {
-        return FlatPoint.from_groups(
+public extension FlatBulkPrefixOrPostfix {
+    // Fancy prefix trick
+    public FlatPoint operator /(AntiLine rhs) {
+        return rhs.flat_bulk();
+    }
+}
+public extension AntiLine {
+    public FlatPoint flat_bulk() {
+        return FlatPoint(
             /* e15, e25, e35, e45 */
             float4(this.group1.xyz, 0.0)
         );
     }
 }
-extension AntiMotor {
-    // Fancy infix trick
-    func operator/(_rhs: FlatBulkPrefixOrPostfix) -> Flector {
+public extension AntiMotor {
+    // Fancy postfix trick
+    public Flector operator /(FlatBulkPrefixOrPostfix rhs)  {
         return this.flat_bulk();
     }
 }
-extension AntiMotor: FlatBulk {
-    associatedtype Output = Flector;
-    func flat_bulk() -> Output {
-        return Flector.from_groups(
+public extension FlatBulkPrefixOrPostfix {
+    // Fancy prefix trick
+    public Flector operator /(AntiMotor rhs) {
+        return rhs.flat_bulk();
+    }
+}
+public extension AntiMotor {
+    public Flector flat_bulk() {
+        return Flector(
             /* e15, e25, e35, e45 */
             float4(this.group1.xyz, 0.0), 
             /* e4235, e4315, e4125, e3215 */
@@ -121,76 +146,101 @@ extension AntiMotor: FlatBulk {
         );
     }
 }
-extension AntiPlane {
-    // Fancy infix trick
-    func operator/(_rhs: FlatBulkPrefixOrPostfix) -> DualNum {
+public extension AntiPlane {
+    // Fancy postfix trick
+    public DualNum operator /(FlatBulkPrefixOrPostfix rhs)  {
         return this.flat_bulk();
     }
 }
-extension AntiPlane: FlatBulk {
-    associatedtype Output = DualNum;
-    func flat_bulk() -> Output {
-        return DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(float2(this.e5, 0.0), 0.0, 0.0)
+public extension FlatBulkPrefixOrPostfix {
+    // Fancy prefix trick
+    public DualNum operator /(AntiPlane rhs) {
+        return rhs.flat_bulk();
+    }
+}
+public extension AntiPlane {
+    public DualNum flat_bulk() {
+        return DualNum(
+            /* e5, e12345 */
+            float2(this.e5, 0.0)
         );
     }
 }
-extension Circle {
-    // Fancy infix trick
-    func operator/(_rhs: FlatBulkPrefixOrPostfix) -> AntiFlatPoint {
+public extension Circle {
+    // Fancy postfix trick
+    public AntiFlatPoint operator /(FlatBulkPrefixOrPostfix rhs)  {
         return this.flat_bulk();
     }
 }
-extension Circle: FlatBulk {
-    associatedtype Output = AntiFlatPoint;
-    func flat_bulk() -> Output {
-        return AntiFlatPoint.from_groups(
+public extension FlatBulkPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiFlatPoint operator /(Circle rhs) {
+        return rhs.flat_bulk();
+    }
+}
+public extension Circle {
+    public AntiFlatPoint flat_bulk() {
+        return AntiFlatPoint(
             /* e235, e315, e125, e321 */
             float4(this.group2.xyz, 0.0)
         );
     }
 }
-extension CircleRotor {
-    // Fancy infix trick
-    func operator/(_rhs: FlatBulkPrefixOrPostfix) -> AntiFlatPoint {
+public extension CircleRotor {
+    // Fancy postfix trick
+    public AntiFlatPoint operator /(FlatBulkPrefixOrPostfix rhs)  {
         return this.flat_bulk();
     }
 }
-extension CircleRotor: FlatBulk {
-    associatedtype Output = AntiFlatPoint;
-    func flat_bulk() -> Output {
-        return AntiFlatPoint.from_groups(
+public extension FlatBulkPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiFlatPoint operator /(CircleRotor rhs) {
+        return rhs.flat_bulk();
+    }
+}
+public extension CircleRotor {
+    public AntiFlatPoint flat_bulk() {
+        return AntiFlatPoint(
             /* e235, e315, e125, e321 */
             float4(this.group2.xyz, 0.0)
         );
     }
 }
-extension Dipole {
-    // Fancy infix trick
-    func operator/(_rhs: FlatBulkPrefixOrPostfix) -> FlatPoint {
+public extension Dipole {
+    // Fancy postfix trick
+    public FlatPoint operator /(FlatBulkPrefixOrPostfix rhs)  {
         return this.flat_bulk();
     }
 }
-extension Dipole: FlatBulk {
-    associatedtype Output = FlatPoint;
-    func flat_bulk() -> Output {
-        return FlatPoint.from_groups(
+public extension FlatBulkPrefixOrPostfix {
+    // Fancy prefix trick
+    public FlatPoint operator /(Dipole rhs) {
+        return rhs.flat_bulk();
+    }
+}
+public extension Dipole {
+    public FlatPoint flat_bulk() {
+        return FlatPoint(
             /* e15, e25, e35, e45 */
             float4(this.group2.xyz, 0.0)
         );
     }
 }
-extension DipoleInversion {
-    // Fancy infix trick
-    func operator/(_rhs: FlatBulkPrefixOrPostfix) -> Flector {
+public extension DipoleInversion {
+    // Fancy postfix trick
+    public Flector operator /(FlatBulkPrefixOrPostfix rhs)  {
         return this.flat_bulk();
     }
 }
-extension DipoleInversion: FlatBulk {
-    associatedtype Output = Flector;
-    func flat_bulk() -> Output {
-        return Flector.from_groups(
+public extension FlatBulkPrefixOrPostfix {
+    // Fancy prefix trick
+    public Flector operator /(DipoleInversion rhs) {
+        return rhs.flat_bulk();
+    }
+}
+public extension DipoleInversion {
+    public Flector flat_bulk() {
+        return Flector(
             /* e15, e25, e35, e45 */
             float4(this.group2.xyz, 0.0), 
             /* e4235, e4315, e4125, e3215 */
@@ -198,58 +248,61 @@ extension DipoleInversion: FlatBulk {
         );
     }
 }
-extension DualNum {
-    // Fancy infix trick
-    func operator/(_rhs: FlatBulkPrefixOrPostfix) -> DualNum {
+public extension DualNum {
+    // Fancy postfix trick
+    public DualNum operator /(FlatBulkPrefixOrPostfix rhs)  {
         return this.flat_bulk();
     }
-    func operator/=(const FlatBulkPrefixOrPostfix& _rhs) -> DualNum& {
-        this = this.flat_bulk();
-        return *this;
+}
+public extension FlatBulkPrefixOrPostfix {
+    // Fancy prefix trick
+    public DualNum operator /(DualNum rhs) {
+        return rhs.flat_bulk();
     }
 }
-extension DualNum: FlatBulk {
-    associatedtype Output = DualNum;
-    func flat_bulk() -> Output {
-        return DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(float2(this.e5, 0.0), 0.0, 0.0)
+public extension DualNum {
+    public DualNum flat_bulk() {
+        return DualNum(
+            /* e5, e12345 */
+            float2(this.e5, 0.0)
         );
     }
 }
-extension FlatPoint {
-    // Fancy infix trick
-    func operator/(_rhs: FlatBulkPrefixOrPostfix) -> FlatPoint {
+public extension FlatPoint {
+    // Fancy postfix trick
+    public FlatPoint operator /(FlatBulkPrefixOrPostfix rhs)  {
         return this.flat_bulk();
     }
-    func operator/=(const FlatBulkPrefixOrPostfix& _rhs) -> FlatPoint& {
-        this = this.flat_bulk();
-        return *this;
+}
+public extension FlatBulkPrefixOrPostfix {
+    // Fancy prefix trick
+    public FlatPoint operator /(FlatPoint rhs) {
+        return rhs.flat_bulk();
     }
 }
-extension FlatPoint: FlatBulk {
-    associatedtype Output = FlatPoint;
-    func flat_bulk() -> Output {
-        return FlatPoint.from_groups(
+public extension FlatPoint {
+    public FlatPoint flat_bulk() {
+        return FlatPoint(
             /* e15, e25, e35, e45 */
             float4(this.group0.xyz, 0.0)
         );
     }
 }
-extension Flector {
-    // Fancy infix trick
-    func operator/(_rhs: FlatBulkPrefixOrPostfix) -> Flector {
+public extension Flector {
+    // Fancy postfix trick
+    public Flector operator /(FlatBulkPrefixOrPostfix rhs)  {
         return this.flat_bulk();
     }
-    func operator/=(const FlatBulkPrefixOrPostfix& _rhs) -> Flector& {
-        this = this.flat_bulk();
-        return *this;
+}
+public extension FlatBulkPrefixOrPostfix {
+    // Fancy prefix trick
+    public Flector operator /(Flector rhs) {
+        return rhs.flat_bulk();
     }
 }
-extension Flector: FlatBulk {
-    associatedtype Output = Flector;
-    func flat_bulk() -> Output {
-        return Flector.from_groups(
+public extension Flector {
+    public Flector flat_bulk() {
+        return Flector(
             /* e15, e25, e35, e45 */
             float4(this.group0.xyz, 0.0), 
             /* e4235, e4315, e4125, e3215 */
@@ -257,31 +310,41 @@ extension Flector: FlatBulk {
         );
     }
 }
-extension Line {
-    // Fancy infix trick
-    func operator/(_rhs: FlatBulkPrefixOrPostfix) -> AntiFlatPoint {
+public extension Line {
+    // Fancy postfix trick
+    public AntiFlatPoint operator /(FlatBulkPrefixOrPostfix rhs)  {
         return this.flat_bulk();
     }
 }
-extension Line: FlatBulk {
-    associatedtype Output = AntiFlatPoint;
-    func flat_bulk() -> Output {
-        return AntiFlatPoint.from_groups(
+public extension FlatBulkPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiFlatPoint operator /(Line rhs) {
+        return rhs.flat_bulk();
+    }
+}
+public extension Line {
+    public AntiFlatPoint flat_bulk() {
+        return AntiFlatPoint(
             /* e235, e315, e125, e321 */
             float4(this.group1.xyz, 0.0)
         );
     }
 }
-extension Motor {
-    // Fancy infix trick
-    func operator/(_rhs: FlatBulkPrefixOrPostfix) -> AntiFlector {
+public extension Motor {
+    // Fancy postfix trick
+    public AntiFlector operator /(FlatBulkPrefixOrPostfix rhs)  {
         return this.flat_bulk();
     }
 }
-extension Motor: FlatBulk {
-    associatedtype Output = AntiFlector;
-    func flat_bulk() -> Output {
-        return AntiFlector.from_groups(
+public extension FlatBulkPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiFlector operator /(Motor rhs) {
+        return rhs.flat_bulk();
+    }
+}
+public extension Motor {
+    public AntiFlector flat_bulk() {
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(this.group1.xyz, 0.0), 
             /* e1, e2, e3, e5 */
@@ -289,100 +352,121 @@ extension Motor: FlatBulk {
         );
     }
 }
-extension MultiVector {
-    // Fancy infix trick
-    func operator/(_rhs: FlatBulkPrefixOrPostfix) -> MultiVector {
+public extension MultiVector {
+    // Fancy postfix trick
+    public MultiVector operator /(FlatBulkPrefixOrPostfix rhs)  {
         return this.flat_bulk();
     }
-    func operator/=(const FlatBulkPrefixOrPostfix& _rhs) -> MultiVector& {
-        this = this.flat_bulk();
-        return *this;
+}
+public extension FlatBulkPrefixOrPostfix {
+    // Fancy prefix trick
+    public MultiVector operator /(MultiVector rhs) {
+        return rhs.flat_bulk();
     }
 }
-extension MultiVector: FlatBulk {
-    associatedtype Output = MultiVector;
-    func flat_bulk() -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(0.0), 
+public extension MultiVector {
+    public MultiVector flat_bulk() {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(this.e5, 0.0, 0.0, 0.0), 
+            /* e5 */
+            this.e5, 
             /* e15, e25, e35, e45 */
             float4(this.group3.xyz, 0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group8.xyz, 0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            this.group8.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(float3(0.0), this.e3215), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension Plane {
-    // Fancy infix trick
-    func operator/(_rhs: FlatBulkPrefixOrPostfix) -> AntiDualNum {
+public extension Plane {
+    // Fancy postfix trick
+    public AntiDualNum operator /(FlatBulkPrefixOrPostfix rhs)  {
         return this.flat_bulk();
     }
 }
-extension Plane: FlatBulk {
-    associatedtype Output = AntiDualNum;
-    func flat_bulk() -> Output {
-        return AntiDualNum.from_groups(
-            /* e3215, scalar, 0, 0 */
-            float4(float2(this.e3215, 0.0), 0.0, 0.0)
+public extension FlatBulkPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiDualNum operator /(Plane rhs) {
+        return rhs.flat_bulk();
+    }
+}
+public extension Plane {
+    public AntiDualNum flat_bulk() {
+        return AntiDualNum(
+            /* e3215, scalar */
+            float2(this.e3215, 0.0)
         );
     }
 }
-extension RoundPoint {
-    // Fancy infix trick
-    func operator/(_rhs: FlatBulkPrefixOrPostfix) -> DualNum {
+public extension RoundPoint {
+    // Fancy postfix trick
+    public DualNum operator /(FlatBulkPrefixOrPostfix rhs)  {
         return this.flat_bulk();
     }
 }
-extension RoundPoint: FlatBulk {
-    associatedtype Output = DualNum;
-    func flat_bulk() -> Output {
-        return DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(float2(this.e5, 0.0), 0.0, 0.0)
+public extension FlatBulkPrefixOrPostfix {
+    // Fancy prefix trick
+    public DualNum operator /(RoundPoint rhs) {
+        return rhs.flat_bulk();
+    }
+}
+public extension RoundPoint {
+    public DualNum flat_bulk() {
+        return DualNum(
+            /* e5, e12345 */
+            float2(this.e5, 0.0)
         );
     }
 }
-extension Sphere {
-    // Fancy infix trick
-    func operator/(_rhs: FlatBulkPrefixOrPostfix) -> AntiDualNum {
+public extension Sphere {
+    // Fancy postfix trick
+    public AntiDualNum operator /(FlatBulkPrefixOrPostfix rhs)  {
         return this.flat_bulk();
     }
 }
-extension Sphere: FlatBulk {
-    associatedtype Output = AntiDualNum;
-    func flat_bulk() -> Output {
-        return AntiDualNum.from_groups(
-            /* e3215, scalar, 0, 0 */
-            float4(float2(this.e3215, 0.0), 0.0, 0.0)
+public extension FlatBulkPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiDualNum operator /(Sphere rhs) {
+        return rhs.flat_bulk();
+    }
+}
+public extension Sphere {
+    public AntiDualNum flat_bulk() {
+        return AntiDualNum(
+            /* e3215, scalar */
+            float2(this.e3215, 0.0)
         );
     }
 }
-extension VersorEven {
-    // Fancy infix trick
-    func operator/(_rhs: FlatBulkPrefixOrPostfix) -> AntiFlector {
+public extension VersorEven {
+    // Fancy postfix trick
+    public AntiFlector operator /(FlatBulkPrefixOrPostfix rhs)  {
         return this.flat_bulk();
     }
 }
-extension VersorEven: FlatBulk {
-    associatedtype Output = AntiFlector;
-    func flat_bulk() -> Output {
-        return AntiFlector.from_groups(
+public extension FlatBulkPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiFlector operator /(VersorEven rhs) {
+        return rhs.flat_bulk();
+    }
+}
+public extension VersorEven {
+    public AntiFlector flat_bulk() {
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(this.group2.xyz, 0.0), 
             /* e1, e2, e3, e5 */
@@ -390,16 +474,21 @@ extension VersorEven: FlatBulk {
         );
     }
 }
-extension VersorOdd {
-    // Fancy infix trick
-    func operator/(_rhs: FlatBulkPrefixOrPostfix) -> Flector {
+public extension VersorOdd {
+    // Fancy postfix trick
+    public Flector operator /(FlatBulkPrefixOrPostfix rhs)  {
         return this.flat_bulk();
     }
 }
-extension VersorOdd: FlatBulk {
-    associatedtype Output = Flector;
-    func flat_bulk() -> Output {
-        return Flector.from_groups(
+public extension FlatBulkPrefixOrPostfix {
+    // Fancy prefix trick
+    public Flector operator /(VersorOdd rhs) {
+        return rhs.flat_bulk();
+    }
+}
+public extension VersorOdd {
+    public Flector flat_bulk() {
+        return Flector(
             /* e15, e25, e35, e45 */
             float4(this.group2.xyz, 0.0), 
             /* e4235, e4315, e4125, e3215 */

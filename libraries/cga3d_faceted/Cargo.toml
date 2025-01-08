@@ -15,11 +15,11 @@ glsl = []
 sql = []
 
 [dependencies]
-naga_oil = { version =  "0.13.0", features = ["prune", "glsl"] }
-naga = "0.19.2"
+naga_oil = { version =  "0.14.0", features = ["prune", "glsl"] }
+naga = "0.20.0"
 anyhow = "1.0.86"
 bytemuck = { version = "1.16.3", features = ["derive"] }
-encase = "0.9.0"
+encase = "0.10.0"
 nearly = "0.4.0"
 float-ord = "0.3.2"
 serde = { version = "1.0.204", features = ["derive"] }

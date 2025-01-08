@@ -1,128 +1,138 @@
-extension AntiFlatPoint {
-    // Fancy infix trick
-    func operator/(_rhs: AntiConstraintValidPrefixOrPostfix) -> AntiFlatPoint {
+implementing cga3d;
+using traits;
+public extension AntiFlatPoint {
+    // Fancy postfix trick
+    public AntiFlatPoint operator /(AntiConstraintValidPrefixOrPostfix rhs)  {
         return this.anti_constraint_valid();
     }
-    func operator/=(const AntiConstraintValidPrefixOrPostfix& _rhs) -> AntiFlatPoint& {
-        this = this.anti_constraint_valid();
-        return *this;
+}
+public extension AntiConstraintValidPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiFlatPoint operator /(AntiFlatPoint rhs) {
+        return rhs.anti_constraint_valid();
     }
 }
-extension AntiFlatPoint: AntiConstraintValid {
-    associatedtype Output = AntiFlatPoint;
-    func anti_constraint_valid() -> Output {
+public extension AntiFlatPoint {
+    public AntiFlatPoint anti_constraint_valid() {
         return this;
     }
 }
-extension AntiPlane {
-    // Fancy infix trick
-    func operator/(_rhs: AntiConstraintValidPrefixOrPostfix) -> AntiPlane {
+public extension AntiPlane {
+    // Fancy postfix trick
+    public AntiPlane operator /(AntiConstraintValidPrefixOrPostfix rhs)  {
         return this.anti_constraint_valid();
     }
-    func operator/=(const AntiConstraintValidPrefixOrPostfix& _rhs) -> AntiPlane& {
-        this = this.anti_constraint_valid();
-        return *this;
+}
+public extension AntiConstraintValidPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiPlane operator /(AntiPlane rhs) {
+        return rhs.anti_constraint_valid();
     }
 }
-extension AntiPlane: AntiConstraintValid {
-    associatedtype Output = AntiPlane;
-    func anti_constraint_valid() -> Output {
+public extension AntiPlane {
+    public AntiPlane anti_constraint_valid() {
         return this;
     }
 }
-extension AntiScalar {
-    // Fancy infix trick
-    func operator/(_rhs: AntiConstraintValidPrefixOrPostfix) -> AntiScalar {
+public extension AntiScalar {
+    // Fancy postfix trick
+    public AntiScalar operator /(AntiConstraintValidPrefixOrPostfix rhs)  {
         return this.anti_constraint_valid();
     }
-    func operator/=(const AntiConstraintValidPrefixOrPostfix& _rhs) -> AntiScalar& {
-        this = this.anti_constraint_valid();
-        return *this;
+}
+public extension AntiConstraintValidPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiScalar operator /(AntiScalar rhs) {
+        return rhs.anti_constraint_valid();
     }
 }
-extension AntiScalar: AntiConstraintValid {
-    associatedtype Output = AntiScalar;
-    func anti_constraint_valid() -> Output {
+public extension AntiScalar {
+    public AntiScalar anti_constraint_valid() {
         return this;
     }
 }
-extension FlatPoint {
-    // Fancy infix trick
-    func operator/(_rhs: AntiConstraintValidPrefixOrPostfix) -> FlatPoint {
+public extension FlatPoint {
+    // Fancy postfix trick
+    public FlatPoint operator /(AntiConstraintValidPrefixOrPostfix rhs)  {
         return this.anti_constraint_valid();
     }
-    func operator/=(const AntiConstraintValidPrefixOrPostfix& _rhs) -> FlatPoint& {
-        this = this.anti_constraint_valid();
-        return *this;
+}
+public extension AntiConstraintValidPrefixOrPostfix {
+    // Fancy prefix trick
+    public FlatPoint operator /(FlatPoint rhs) {
+        return rhs.anti_constraint_valid();
     }
 }
-extension FlatPoint: AntiConstraintValid {
-    associatedtype Output = FlatPoint;
-    func anti_constraint_valid() -> Output {
+public extension FlatPoint {
+    public FlatPoint anti_constraint_valid() {
         return this;
     }
 }
-extension Plane {
-    // Fancy infix trick
-    func operator/(_rhs: AntiConstraintValidPrefixOrPostfix) -> Plane {
+public extension Plane {
+    // Fancy postfix trick
+    public Plane operator /(AntiConstraintValidPrefixOrPostfix rhs)  {
         return this.anti_constraint_valid();
     }
-    func operator/=(const AntiConstraintValidPrefixOrPostfix& _rhs) -> Plane& {
-        this = this.anti_constraint_valid();
-        return *this;
+}
+public extension AntiConstraintValidPrefixOrPostfix {
+    // Fancy prefix trick
+    public Plane operator /(Plane rhs) {
+        return rhs.anti_constraint_valid();
     }
 }
-extension Plane: AntiConstraintValid {
-    associatedtype Output = Plane;
-    func anti_constraint_valid() -> Output {
+public extension Plane {
+    public Plane anti_constraint_valid() {
         return this;
     }
 }
-extension RoundPoint {
-    // Fancy infix trick
-    func operator/(_rhs: AntiConstraintValidPrefixOrPostfix) -> RoundPoint {
+public extension RoundPoint {
+    // Fancy postfix trick
+    public RoundPoint operator /(AntiConstraintValidPrefixOrPostfix rhs)  {
         return this.anti_constraint_valid();
     }
-    func operator/=(const AntiConstraintValidPrefixOrPostfix& _rhs) -> RoundPoint& {
-        this = this.anti_constraint_valid();
-        return *this;
+}
+public extension AntiConstraintValidPrefixOrPostfix {
+    // Fancy prefix trick
+    public RoundPoint operator /(RoundPoint rhs) {
+        return rhs.anti_constraint_valid();
     }
 }
-extension RoundPoint: AntiConstraintValid {
-    associatedtype Output = RoundPoint;
-    func anti_constraint_valid() -> Output {
+public extension RoundPoint {
+    public RoundPoint anti_constraint_valid() {
         return this;
     }
 }
-extension Scalar {
-    // Fancy infix trick
-    func operator/(_rhs: AntiConstraintValidPrefixOrPostfix) -> Scalar {
+public extension Scalar {
+    // Fancy postfix trick
+    public Scalar operator /(AntiConstraintValidPrefixOrPostfix rhs)  {
         return this.anti_constraint_valid();
     }
-    func operator/=(const AntiConstraintValidPrefixOrPostfix& _rhs) -> Scalar& {
-        this = this.anti_constraint_valid();
-        return *this;
+}
+public extension AntiConstraintValidPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(Scalar rhs) {
+        return rhs.anti_constraint_valid();
     }
 }
-extension Scalar: AntiConstraintValid {
-    associatedtype Output = Scalar;
-    func anti_constraint_valid() -> Output {
+public extension Scalar {
+    public Scalar anti_constraint_valid() {
         return this;
     }
 }
-extension Sphere {
-    // Fancy infix trick
-    func operator/(_rhs: AntiConstraintValidPrefixOrPostfix) -> Sphere {
+public extension Sphere {
+    // Fancy postfix trick
+    public Sphere operator /(AntiConstraintValidPrefixOrPostfix rhs)  {
         return this.anti_constraint_valid();
     }
-    func operator/=(const AntiConstraintValidPrefixOrPostfix& _rhs) -> Sphere& {
-        this = this.anti_constraint_valid();
-        return *this;
+}
+public extension AntiConstraintValidPrefixOrPostfix {
+    // Fancy prefix trick
+    public Sphere operator /(Sphere rhs) {
+        return rhs.anti_constraint_valid();
     }
 }
-extension Sphere: AntiConstraintValid {
-    associatedtype Output = Sphere;
-    func anti_constraint_valid() -> Output {
+public extension Sphere {
+    public Sphere anti_constraint_valid() {
         return this;
     }
 }

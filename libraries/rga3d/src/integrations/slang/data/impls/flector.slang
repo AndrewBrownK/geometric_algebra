@@ -2,7 +2,7 @@ implementing rga3d;
 using traits;
 public extension Flector {
     public MultiVector operator +(AntiScalar other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(0.0, other.e1234), 
             /* e1, e2, e3, e4 */
@@ -18,7 +18,7 @@ public extension Flector {
 }
 public extension Flector {
     public MultiVector operator +(DualNum other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             other.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -34,7 +34,7 @@ public extension Flector {
 }
 public extension Flector {
     public Flector operator +(Flector other) {
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             other.group0 + this.group0, 
             /* e423, e431, e412, e321 */
@@ -44,7 +44,7 @@ public extension Flector {
 }
 public extension Flector {
     public Flector operator +(Horizon other) {
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             this.group0, 
             /* e423, e431, e412, e321 */
@@ -54,7 +54,7 @@ public extension Flector {
 }
 public extension Flector {
     public MultiVector operator +(Line other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(0.0), 
             /* e1, e2, e3, e4 */
@@ -70,7 +70,7 @@ public extension Flector {
 }
 public extension Flector {
     public MultiVector operator +(Motor other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(other.scalar, other.e1234), 
             /* e1, e2, e3, e4 */
@@ -86,7 +86,7 @@ public extension Flector {
 }
 public extension Flector {
     public MultiVector operator +(MultiVector other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             other.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -102,7 +102,7 @@ public extension Flector {
 }
 public extension Flector {
     public Flector operator +(Origin other) {
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             this.group0 + float4(float3(0.0), other.e4), 
             /* e423, e431, e412, e321 */
@@ -112,7 +112,7 @@ public extension Flector {
 }
 public extension Flector {
     public Flector operator +(Plane other) {
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             this.group0, 
             /* e423, e431, e412, e321 */
@@ -122,7 +122,7 @@ public extension Flector {
 }
 public extension Flector {
     public Flector operator +(Point other) {
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             this.group0 + other.group0, 
             /* e423, e431, e412, e321 */
@@ -132,7 +132,7 @@ public extension Flector {
 }
 public extension Flector {
     public MultiVector operator +(Scalar other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(other.scalar, 0.0), 
             /* e1, e2, e3, e4 */
@@ -203,7 +203,7 @@ public extension Flector {
 }
 public extension Flector {
     public Flector neg() {
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             this.group0 * float4(-1.0), 
             /* e423, e431, e412, e321 */
@@ -218,7 +218,7 @@ public extension Flector {
 }
 public extension Flector {
     public MultiVector operator -(AntiScalar other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(1.0, other.e1234) * float2(0.0, -1.0), 
             /* e1, e2, e3, e4 */
@@ -234,7 +234,7 @@ public extension Flector {
 }
 public extension Flector {
     public MultiVector operator -(DualNum other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             other.group0.xy * float2(-1.0), 
             /* e1, e2, e3, e4 */
@@ -250,7 +250,7 @@ public extension Flector {
 }
 public extension Flector {
     public Flector operator -(Flector other) {
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             this.group0 - other.group0, 
             /* e423, e431, e412, e321 */
@@ -260,7 +260,7 @@ public extension Flector {
 }
 public extension Flector {
     public Flector operator -(Horizon other) {
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             this.group0, 
             /* e423, e431, e412, e321 */
@@ -270,7 +270,7 @@ public extension Flector {
 }
 public extension Flector {
     public MultiVector operator -(Line other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(0.0), 
             /* e1, e2, e3, e4 */
@@ -286,7 +286,7 @@ public extension Flector {
 }
 public extension Flector {
     public MultiVector operator -(Motor other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(other.scalar, other.e1234) * float2(-1.0), 
             /* e1, e2, e3, e4 */
@@ -302,7 +302,7 @@ public extension Flector {
 }
 public extension Flector {
     public MultiVector operator -(MultiVector other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             other.group0.xy * float2(-1.0), 
             /* e1, e2, e3, e4 */
@@ -318,7 +318,7 @@ public extension Flector {
 }
 public extension Flector {
     public Flector operator -(Origin other) {
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             this.group0 + float4(float3(0.0), other.e4 * -1.0), 
             /* e423, e431, e412, e321 */
@@ -328,7 +328,7 @@ public extension Flector {
 }
 public extension Flector {
     public Flector operator -(Plane other) {
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             this.group0, 
             /* e423, e431, e412, e321 */
@@ -338,7 +338,7 @@ public extension Flector {
 }
 public extension Flector {
     public Flector operator -(Point other) {
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             this.group0 - other.group0, 
             /* e423, e431, e412, e321 */
@@ -348,7 +348,7 @@ public extension Flector {
 }
 public extension Flector {
     public MultiVector operator -(Scalar other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(other.scalar, 1.0) * float2(-1.0, 0.0), 
             /* e1, e2, e3, e4 */

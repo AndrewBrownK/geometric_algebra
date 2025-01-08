@@ -1,12 +1,23 @@
 implementing cga3d;
-using data::*;
+using data;
 
 /// FlatPoint
 public struct FlatPoint {
     // e15, e25, e35, e45
-    internal group0: float4
+    internal float4 group0;
+
+    __init(
+        float e15, float e25, float e35, float e45
+    ) {
+        group0 = float4(e15, e25, e35, e45);
+    }
+    internal __init(
+        float4 g0
+    ) {
+        group0 = g0;
+    }
 }
-extension FlatPoint {
+public extension FlatPoint {
     public property e15: float {
         get { return group0[0]; }
         set { group0[0] = newValue; }
@@ -23,27 +34,16 @@ extension FlatPoint {
         get { return group0[3]; }
         set { group0[3] = newValue; }
     }
-    public static func from_elements(
-        e15: float, e25: float, e35: float, e45: float
-    ) -> FlatPoint {
-        return FlatPoint { float4(e15, e25, e35, e45) };
-    }
-    internal static func from_groups(
-        g0: float4
-    ) -> FlatPoint {
-        return FlatPoint {
-            group0: g0
-        };
-    }
 }
-extension FlatPoint: IComparable {
-    bool lessThan(IComparable another) {
-        FlatPoint other = (FlatPoint)another;
-        return this.group0.lessThan(other.group0);
+public extension FlatPoint: IComparable {
+    public bool equals(FlatPoint other) {
+        return equalsHelper(this.group0, other.group0);
     }
-    bool equals(IComparable another) {
-        FlatPoint other = (FlatPoint)another;
-        return this.group0.equals(other.group0);
+    public bool lessThan(FlatPoint other) {
+        return lessThanHelper(this.group0, other.group0);
+    }
+    public bool lessThanOrEquals(FlatPoint other) {
+        return lessThanOrEqualsHelper(this.group0, other.group0);
     }
 }
 __include "impls/flat_point";

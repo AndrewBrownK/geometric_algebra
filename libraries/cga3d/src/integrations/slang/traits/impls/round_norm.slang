@@ -1,356 +1,402 @@
-using traits::RoundBulkNorm;
-using traits::RoundWeightNorm;
-extension AntiCircleRotor {
-    // Fancy infix trick
-    func operator/(_rhs: RoundNormPrefixOrPostfix) -> MultiVector {
+implementing cga3d;
+using traits;
+public extension AntiCircleRotor {
+    // Fancy postfix trick
+    public MultiVector operator /(RoundNormPrefixOrPostfix rhs)  {
         return this.round_norm();
     }
 }
-extension AntiCircleRotor: RoundNorm {
-    associatedtype Output = MultiVector;
-    func round_norm() -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(this.round_bulk_norm().scalar, this.round_weight_norm().e12345), 0.0, 0.0), 
+public extension RoundNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public MultiVector operator /(AntiCircleRotor rhs) {
+        return rhs.round_norm();
+    }
+}
+public extension AntiCircleRotor {
+    public MultiVector round_norm() {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(this.round_bulk_norm().scalar, this.round_weight_norm().e12345), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(0.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension AntiDipoleInversion {
-    // Fancy infix trick
-    func operator/(_rhs: RoundNormPrefixOrPostfix) -> MultiVector {
+public extension AntiDipoleInversion {
+    // Fancy postfix trick
+    public MultiVector operator /(RoundNormPrefixOrPostfix rhs)  {
         return this.round_norm();
     }
 }
-extension AntiDipoleInversion: RoundNorm {
-    associatedtype Output = MultiVector;
-    func round_norm() -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(this.round_bulk_norm().scalar, this.round_weight_norm().e12345), 0.0, 0.0), 
+public extension RoundNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public MultiVector operator /(AntiDipoleInversion rhs) {
+        return rhs.round_norm();
+    }
+}
+public extension AntiDipoleInversion {
+    public MultiVector round_norm() {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(this.round_bulk_norm().scalar, this.round_weight_norm().e12345), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(0.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension Circle {
-    // Fancy infix trick
-    func operator/(_rhs: RoundNormPrefixOrPostfix) -> MultiVector {
+public extension Circle {
+    // Fancy postfix trick
+    public MultiVector operator /(RoundNormPrefixOrPostfix rhs)  {
         return this.round_norm();
     }
 }
-extension Circle: RoundNorm {
-    associatedtype Output = MultiVector;
-    func round_norm() -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(this.round_bulk_norm().scalar, this.round_weight_norm().e12345), 0.0, 0.0), 
+public extension RoundNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public MultiVector operator /(Circle rhs) {
+        return rhs.round_norm();
+    }
+}
+public extension Circle {
+    public MultiVector round_norm() {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(this.round_bulk_norm().scalar, this.round_weight_norm().e12345), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(0.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension CircleRotor {
-    // Fancy infix trick
-    func operator/(_rhs: RoundNormPrefixOrPostfix) -> MultiVector {
+public extension CircleRotor {
+    // Fancy postfix trick
+    public MultiVector operator /(RoundNormPrefixOrPostfix rhs)  {
         return this.round_norm();
     }
 }
-extension CircleRotor: RoundNorm {
-    associatedtype Output = MultiVector;
-    func round_norm() -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(this.round_bulk_norm().scalar, this.round_weight_norm().e12345), 0.0, 0.0), 
+public extension RoundNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public MultiVector operator /(CircleRotor rhs) {
+        return rhs.round_norm();
+    }
+}
+public extension CircleRotor {
+    public MultiVector round_norm() {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(this.round_bulk_norm().scalar, this.round_weight_norm().e12345), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(0.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension Dipole {
-    // Fancy infix trick
-    func operator/(_rhs: RoundNormPrefixOrPostfix) -> MultiVector {
+public extension Dipole {
+    // Fancy postfix trick
+    public MultiVector operator /(RoundNormPrefixOrPostfix rhs)  {
         return this.round_norm();
     }
 }
-extension Dipole: RoundNorm {
-    associatedtype Output = MultiVector;
-    func round_norm() -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(this.round_bulk_norm().scalar, this.round_weight_norm().e12345), 0.0, 0.0), 
+public extension RoundNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public MultiVector operator /(Dipole rhs) {
+        return rhs.round_norm();
+    }
+}
+public extension Dipole {
+    public MultiVector round_norm() {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(this.round_bulk_norm().scalar, this.round_weight_norm().e12345), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(0.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension DipoleInversion {
-    // Fancy infix trick
-    func operator/(_rhs: RoundNormPrefixOrPostfix) -> MultiVector {
+public extension DipoleInversion {
+    // Fancy postfix trick
+    public MultiVector operator /(RoundNormPrefixOrPostfix rhs)  {
         return this.round_norm();
     }
 }
-extension DipoleInversion: RoundNorm {
-    associatedtype Output = MultiVector;
-    func round_norm() -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(this.round_bulk_norm().scalar, this.round_weight_norm().e12345), 0.0, 0.0), 
+public extension RoundNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public MultiVector operator /(DipoleInversion rhs) {
+        return rhs.round_norm();
+    }
+}
+public extension DipoleInversion {
+    public MultiVector round_norm() {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(this.round_bulk_norm().scalar, this.round_weight_norm().e12345), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(0.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension MultiVector {
-    // Fancy infix trick
-    func operator/(_rhs: RoundNormPrefixOrPostfix) -> MultiVector {
+public extension MultiVector {
+    // Fancy postfix trick
+    public MultiVector operator /(RoundNormPrefixOrPostfix rhs)  {
         return this.round_norm();
     }
-    func operator/=(const RoundNormPrefixOrPostfix& _rhs) -> MultiVector& {
-        this = this.round_norm();
-        return *this;
+}
+public extension RoundNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public MultiVector operator /(MultiVector rhs) {
+        return rhs.round_norm();
     }
 }
-extension MultiVector: RoundNorm {
-    associatedtype Output = MultiVector;
-    func round_norm() -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(this.round_bulk_norm().scalar, this.round_weight_norm().e12345), 0.0, 0.0), 
+public extension MultiVector {
+    public MultiVector round_norm() {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(this.round_bulk_norm().scalar, this.round_weight_norm().e12345), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(0.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension RoundPoint {
-    // Fancy infix trick
-    func operator/(_rhs: RoundNormPrefixOrPostfix) -> MultiVector {
+public extension RoundPoint {
+    // Fancy postfix trick
+    public MultiVector operator /(RoundNormPrefixOrPostfix rhs)  {
         return this.round_norm();
     }
 }
-extension RoundPoint: RoundNorm {
-    associatedtype Output = MultiVector;
-    func round_norm() -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(this.round_bulk_norm().scalar, this.round_weight_norm().e12345), 0.0, 0.0), 
+public extension RoundNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public MultiVector operator /(RoundPoint rhs) {
+        return rhs.round_norm();
+    }
+}
+public extension RoundPoint {
+    public MultiVector round_norm() {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(this.round_bulk_norm().scalar, this.round_weight_norm().e12345), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(0.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension VersorEven {
-    // Fancy infix trick
-    func operator/(_rhs: RoundNormPrefixOrPostfix) -> MultiVector {
+public extension VersorEven {
+    // Fancy postfix trick
+    public MultiVector operator /(RoundNormPrefixOrPostfix rhs)  {
         return this.round_norm();
     }
 }
-extension VersorEven: RoundNorm {
-    associatedtype Output = MultiVector;
-    func round_norm() -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(this.round_bulk_norm().scalar, this.round_weight_norm().e12345), 0.0, 0.0), 
+public extension RoundNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public MultiVector operator /(VersorEven rhs) {
+        return rhs.round_norm();
+    }
+}
+public extension VersorEven {
+    public MultiVector round_norm() {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(this.round_bulk_norm().scalar, this.round_weight_norm().e12345), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(0.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension VersorOdd {
-    // Fancy infix trick
-    func operator/(_rhs: RoundNormPrefixOrPostfix) -> MultiVector {
+public extension VersorOdd {
+    // Fancy postfix trick
+    public MultiVector operator /(RoundNormPrefixOrPostfix rhs)  {
         return this.round_norm();
     }
 }
-extension VersorOdd: RoundNorm {
-    associatedtype Output = MultiVector;
-    func round_norm() -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(this.round_bulk_norm().scalar, this.round_weight_norm().e12345), 0.0, 0.0), 
+public extension RoundNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public MultiVector operator /(VersorOdd rhs) {
+        return rhs.round_norm();
+    }
+}
+public extension VersorOdd {
+    public MultiVector round_norm() {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(this.round_bulk_norm().scalar, this.round_weight_norm().e12345), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(0.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }

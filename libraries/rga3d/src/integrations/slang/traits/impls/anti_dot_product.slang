@@ -14,7 +14,7 @@ public extension AntiDotProductInfixPartial<AntiScalar> {
 }
 public extension AntiScalar {
     public AntiScalar anti_dot_product(AntiScalar other) {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             other.e1234 * this.e1234
         );
@@ -22,7 +22,7 @@ public extension AntiScalar {
 }
 public extension AntiScalar {
     public AntiScalar anti_dot_product(DualNum other) {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             this.e1234 * other.e1234
         );
@@ -30,7 +30,7 @@ public extension AntiScalar {
 }
 public extension AntiScalar {
     public AntiScalar anti_dot_product(Motor other) {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             this.e1234 * other.e1234
         );
@@ -38,7 +38,7 @@ public extension AntiScalar {
 }
 public extension AntiScalar {
     public AntiScalar anti_dot_product(MultiVector other) {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             this.e1234 * other.e1234
         );
@@ -58,7 +58,7 @@ public extension AntiDotProductInfixPartial<DualNum> {
 }
 public extension DualNum {
     public AntiScalar anti_dot_product(AntiScalar other) {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             other.e1234 * this.e1234
         );
@@ -66,7 +66,7 @@ public extension DualNum {
 }
 public extension DualNum {
     public AntiScalar anti_dot_product(DualNum other) {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             other.e1234 * this.e1234
         );
@@ -74,7 +74,7 @@ public extension DualNum {
 }
 public extension DualNum {
     public AntiScalar anti_dot_product(Motor other) {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             this.e1234 * other.e1234
         );
@@ -82,7 +82,7 @@ public extension DualNum {
 }
 public extension DualNum {
     public AntiScalar anti_dot_product(MultiVector other) {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             this.e1234 * other.e1234
         );
@@ -102,7 +102,7 @@ public extension AntiDotProductInfixPartial<Flector> {
 }
 public extension Flector {
     public AntiScalar anti_dot_product(Flector other) {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             (other.e4 * this.e4) + (other.e423 * this.e423) + (other.e431 * this.e431) + (other.e412 * this.e412)
         );
@@ -110,7 +110,7 @@ public extension Flector {
 }
 public extension Flector {
     public AntiScalar anti_dot_product(MultiVector other) {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             (this.e4 * other.e4) + (this.e423 * other.e423) + (this.e431 * other.e431) + (this.e412 * other.e412)
         );
@@ -118,7 +118,7 @@ public extension Flector {
 }
 public extension Flector {
     public AntiScalar anti_dot_product(Origin other) {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             this.e4 * other.e4
         );
@@ -126,7 +126,7 @@ public extension Flector {
 }
 public extension Flector {
     public AntiScalar anti_dot_product(Plane other) {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             (this.e423 * other.e423) + (this.e431 * other.e431) + (this.e412 * other.e412)
         );
@@ -134,7 +134,7 @@ public extension Flector {
 }
 public extension Flector {
     public AntiScalar anti_dot_product(Point other) {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             this.e4 * other.e4
         );
@@ -154,7 +154,7 @@ public extension AntiDotProductInfixPartial<Line> {
 }
 public extension Line {
     public AntiScalar anti_dot_product(Line other) {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             (other.e41 * this.e41) + (other.e42 * this.e42) + (other.e43 * this.e43)
         );
@@ -162,7 +162,7 @@ public extension Line {
 }
 public extension Line {
     public AntiScalar anti_dot_product(Motor other) {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             (this.e41 * other.e41) + (this.e42 * other.e42) + (this.e43 * other.e43)
         );
@@ -170,7 +170,7 @@ public extension Line {
 }
 public extension Line {
     public AntiScalar anti_dot_product(MultiVector other) {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             (this.e41 * other.e41) + (this.e42 * other.e42) + (this.e43 * other.e43)
         );
@@ -190,7 +190,7 @@ public extension AntiDotProductInfixPartial<Motor> {
 }
 public extension Motor {
     public AntiScalar anti_dot_product(AntiScalar other) {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             other.e1234 * this.e1234
         );
@@ -198,7 +198,7 @@ public extension Motor {
 }
 public extension Motor {
     public AntiScalar anti_dot_product(DualNum other) {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             other.e1234 * this.e1234
         );
@@ -206,7 +206,7 @@ public extension Motor {
 }
 public extension Motor {
     public AntiScalar anti_dot_product(Line other) {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             (other.e41 * this.e41) + (other.e42 * this.e42) + (other.e43 * this.e43)
         );
@@ -214,7 +214,7 @@ public extension Motor {
 }
 public extension Motor {
     public AntiScalar anti_dot_product(Motor other) {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             (other.e41 * this.e41) + (other.e42 * this.e42) + (other.e43 * this.e43) + (other.e1234 * this.e1234)
         );
@@ -222,7 +222,7 @@ public extension Motor {
 }
 public extension Motor {
     public AntiScalar anti_dot_product(MultiVector other) {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             (this.e41 * other.e41) + (this.e42 * other.e42) + (this.e43 * other.e43) + (this.e1234 * other.e1234)
         );
@@ -242,7 +242,7 @@ public extension AntiDotProductInfixPartial<MultiVector> {
 }
 public extension MultiVector {
     public AntiScalar anti_dot_product(AntiScalar other) {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             other.e1234 * this.e1234
         );
@@ -250,7 +250,7 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public AntiScalar anti_dot_product(DualNum other) {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             other.e1234 * this.e1234
         );
@@ -258,7 +258,7 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public AntiScalar anti_dot_product(Flector other) {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             (other.e4 * this.e4) + (other.e423 * this.e423) + (other.e431 * this.e431) + (other.e412 * this.e412)
         );
@@ -266,7 +266,7 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public AntiScalar anti_dot_product(Line other) {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             (other.e41 * this.e41) + (other.e42 * this.e42) + (other.e43 * this.e43)
         );
@@ -274,7 +274,7 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public AntiScalar anti_dot_product(Motor other) {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             (other.e41 * this.e41) + (other.e42 * this.e42) + (other.e43 * this.e43) + (other.e1234 * this.e1234)
         );
@@ -282,7 +282,7 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public AntiScalar anti_dot_product(MultiVector other) {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             (other.e1234 * this.e1234) + (other.e4 * this.e4) + (other.e41 * this.e41) + (other.e42 * this.e42) + (other.e43 * this.e43) + (other.e423 * this.e423) + (other.e431 * this.e431) + (other.e412 * this.e412)
         );
@@ -290,7 +290,7 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public AntiScalar anti_dot_product(Origin other) {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             this.e4 * other.e4
         );
@@ -298,7 +298,7 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public AntiScalar anti_dot_product(Plane other) {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             (this.e423 * other.e423) + (this.e431 * other.e431) + (this.e412 * other.e412)
         );
@@ -306,7 +306,7 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public AntiScalar anti_dot_product(Point other) {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             this.e4 * other.e4
         );
@@ -326,7 +326,7 @@ public extension AntiDotProductInfixPartial<Origin> {
 }
 public extension Origin {
     public AntiScalar anti_dot_product(Flector other) {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             other.e4 * this.e4
         );
@@ -334,7 +334,7 @@ public extension Origin {
 }
 public extension Origin {
     public AntiScalar anti_dot_product(MultiVector other) {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             other.e4 * this.e4
         );
@@ -342,7 +342,7 @@ public extension Origin {
 }
 public extension Origin {
     public AntiScalar anti_dot_product(Origin other) {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             other.e4 * this.e4
         );
@@ -350,7 +350,7 @@ public extension Origin {
 }
 public extension Origin {
     public AntiScalar anti_dot_product(Point other) {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             this.e4 * other.e4
         );
@@ -370,7 +370,7 @@ public extension AntiDotProductInfixPartial<Plane> {
 }
 public extension Plane {
     public AntiScalar anti_dot_product(Flector other) {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             (other.e423 * this.e423) + (other.e431 * this.e431) + (other.e412 * this.e412)
         );
@@ -378,7 +378,7 @@ public extension Plane {
 }
 public extension Plane {
     public AntiScalar anti_dot_product(MultiVector other) {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             (other.e423 * this.e423) + (other.e431 * this.e431) + (other.e412 * this.e412)
         );
@@ -386,7 +386,7 @@ public extension Plane {
 }
 public extension Plane {
     public AntiScalar anti_dot_product(Plane other) {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             (other.e423 * this.e423) + (other.e431 * this.e431) + (other.e412 * this.e412)
         );
@@ -406,7 +406,7 @@ public extension AntiDotProductInfixPartial<Point> {
 }
 public extension Point {
     public AntiScalar anti_dot_product(Flector other) {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             other.e4 * this.e4
         );
@@ -414,7 +414,7 @@ public extension Point {
 }
 public extension Point {
     public AntiScalar anti_dot_product(MultiVector other) {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             other.e4 * this.e4
         );
@@ -422,7 +422,7 @@ public extension Point {
 }
 public extension Point {
     public AntiScalar anti_dot_product(Origin other) {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             other.e4 * this.e4
         );
@@ -430,7 +430,7 @@ public extension Point {
 }
 public extension Point {
     public AntiScalar anti_dot_product(Point other) {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             other.e4 * this.e4
         );

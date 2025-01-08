@@ -5,6 +5,17 @@ using data;
 public struct Point {
     // e1, e2, e3, e4
     internal float4 group0;
+
+    __init(
+        float e1, float e2, float e3, float e4
+    ) {
+        group0 = float4(e1, e2, e3, e4);
+    }
+    internal __init(
+        float4 g0
+    ) {
+        group0 = g0;
+    }
 }
 public extension Point {
     public property e1: float {
@@ -22,16 +33,6 @@ public extension Point {
     public property e4: float {
         get { return group0[3]; }
         set { group0[3] = newValue; }
-    }
-    public static Point from_elements(
-        float e1, float e2, float e3, float e4
-    ) {
-        return Point(float4(e1, e2, e3, e4));
-    }
-    internal static Point from_groups(
-        float4 g0
-    ) {
-        return Point(g0);
     }
 }
 public extension Point: IComparable {

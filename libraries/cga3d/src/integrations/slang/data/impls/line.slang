@@ -1,40 +1,38 @@
-using traits::GeometricProduct;
-using traits::RightDual;
-extension Line: Add<AntiCircleRotor> {
-    associatedtype Output = MultiVector;
-    func operator+(other: AntiCircleRotor) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(other.scalar, 0.0), 0.0, 0.0), 
+implementing cga3d;
+using traits;
+public extension Line {
+    public MultiVector operator +(AntiCircleRotor other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(other.scalar, 0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(other.e15, other.e25, other.e35, other.e45), 
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group1.xyz, 0.0), 
+            /* e41, e42, e43 */
+            other.group0.xyz, 
+            /* e23, e31, e12 */
+            other.group1.xyz, 
             /* e415, e425, e435, e321 */
             float4(this.group0.xyz, 0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group1.xyz, 0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            this.group1.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension Line: Add<AntiDipoleInversion> {
-    associatedtype Output = AntiDipoleInversion;
-    func operator+(other: AntiDipoleInversion) -> Output {
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension Line {
+    public AntiDipoleInversion operator +(AntiDipoleInversion other) {
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            other.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4((this.group0.xyz + other.group1.xyz), other.e321), 
             /* e235, e315, e125, e4 */
@@ -44,54 +42,51 @@ extension Line: Add<AntiDipoleInversion> {
         );
     }
 }
-extension Line: Add<AntiDualNum> {
-    associatedtype Output = MultiVector;
-    func operator+(other: AntiDualNum) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(other.scalar, 0.0), 0.0, 0.0), 
+public extension Line {
+    public MultiVector operator +(AntiDualNum other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(other.scalar, 0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(this.group0.xyz, 0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group1.xyz, 0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            this.group1.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(float3(0.0), other.e3215), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension Line: Add<AntiFlatPoint> {
-    associatedtype Output = Circle;
-    func operator+(other: AntiFlatPoint) -> Output {
-        return Circle.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
+public extension Line {
+    public Circle operator +(AntiFlatPoint other) {
+        return Circle(
+            /* e423, e431, e412 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(this.group0.xyz, other.e321), 
-            /* e235, e315, e125, 0 */
-            float4(this.group1.xyz + other.group0.xyz, 0.0)
+            /* e235, e315, e125 */
+            this.group1.xyz + other.group0.xyz
         );
     }
 }
-extension Line: Add<AntiFlector> {
-    associatedtype Output = AntiDipoleInversion;
-    func operator+(other: AntiFlector) -> Output {
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
+public extension Line {
+    public AntiDipoleInversion operator +(AntiFlector other) {
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(this.group0.xyz, other.e321), 
             /* e235, e315, e125, e4 */
@@ -101,70 +96,67 @@ extension Line: Add<AntiFlector> {
         );
     }
 }
-extension Line: Add<AntiLine> {
-    associatedtype Output = MultiVector;
-    func operator+(other: AntiLine) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(0.0), 
+public extension Line {
+    public MultiVector operator +(AntiLine other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(other.group1.xyz, 0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group0.xyz, 0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            other.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(this.group0.xyz, 0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group1.xyz, 0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            this.group1.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension Line: Add<AntiMotor> {
-    associatedtype Output = MultiVector;
-    func operator+(other: AntiMotor) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(other.scalar, 0.0), 0.0, 0.0), 
+public extension Line {
+    public MultiVector operator +(AntiMotor other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(other.scalar, 0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(other.group1.xyz, 0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group0.xyz, 0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            other.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(this.group0.xyz, 0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group1.xyz, 0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            this.group1.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(float3(0.0), other.e3215), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension Line: Add<AntiPlane> {
-    associatedtype Output = AntiDipoleInversion;
-    func operator+(other: AntiPlane) -> Output {
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
+public extension Line {
+    public AntiDipoleInversion operator +(AntiPlane other) {
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(this.group0.xyz, 0.0), 
             /* e235, e315, e125, e4 */
@@ -174,10 +166,9 @@ extension Line: Add<AntiPlane> {
         );
     }
 }
-extension Line: Add<AntiScalar> {
-    associatedtype Output = Motor;
-    func operator+(other: AntiScalar) -> Output {
-        return Motor.from_groups(
+public extension Line {
+    public Motor operator +(AntiScalar other) {
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4(this.group0.xyz, other.e12345), 
             /* e235, e315, e125, e5 */
@@ -185,25 +176,23 @@ extension Line: Add<AntiScalar> {
         );
     }
 }
-extension Line: Add<Circle> {
-    associatedtype Output = Circle;
-    func operator+(other: Circle) -> Output {
-        return Circle.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension Line {
+    public Circle operator +(Circle other) {
+        return Circle(
+            /* e423, e431, e412 */
+            other.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4((this.group0.xyz + other.group1.xyz), other.e321), 
-            /* e235, e315, e125, 0 */
-            float4(other.group2.xyz + this.group1.xyz, 0.0)
+            /* e235, e315, e125 */
+            other.group2.xyz + this.group1.xyz
         );
     }
 }
-extension Line: Add<CircleRotor> {
-    associatedtype Output = CircleRotor;
-    func operator+(other: CircleRotor) -> Output {
-        return CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz, 0.0), 
+public extension Line {
+    public CircleRotor operator +(CircleRotor other) {
+        return CircleRotor(
+            /* e423, e431, e412 */
+            other.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4((this.group0.xyz + other.group1.xyz), other.e321), 
             /* e235, e315, e125, e12345 */
@@ -211,68 +200,65 @@ extension Line: Add<CircleRotor> {
         );
     }
 }
-extension Line: Add<Dipole> {
-    associatedtype Output = MultiVector;
-    func operator+(other: Dipole) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(0.0), 
+public extension Line {
+    public MultiVector operator +(Dipole other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(other.group2.xyz, other.e45), 
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group1.xyz, 0.0), 
+            /* e41, e42, e43 */
+            other.group0.xyz, 
+            /* e23, e31, e12 */
+            other.group1.xyz, 
             /* e415, e425, e435, e321 */
             float4(this.group0.xyz, 0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group1.xyz, 0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            this.group1.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension Line: Add<DipoleInversion> {
-    associatedtype Output = MultiVector;
-    func operator+(other: DipoleInversion) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(0.0), 
+public extension Line {
+    public MultiVector operator +(DipoleInversion other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(other.e15, other.e25, other.e35, other.e45), 
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group1.xyz, 0.0), 
+            /* e41, e42, e43 */
+            other.group0.xyz, 
+            /* e23, e31, e12 */
+            other.group1.xyz, 
             /* e415, e425, e435, e321 */
             float4(this.group0.xyz, 0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group1.xyz, 0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            this.group1.xyz, 
             /* e4235, e4315, e4125, e3215 */
             other.group3, 
-            /* e1234, 0, 0, 0 */
-            float4(other.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e1234
         );
     }
 }
-extension Line: Add<DualNum> {
-    associatedtype Output = Motor;
-    func operator+(other: DualNum) -> Output {
-        return Motor.from_groups(
+public extension Line {
+    public Motor operator +(DualNum other) {
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4(this.group0.xyz, other.e12345), 
             /* e235, e315, e125, e5 */
@@ -280,90 +266,75 @@ extension Line: Add<DualNum> {
         );
     }
 }
-extension Line: Add<FlatPoint> {
-    associatedtype Output = MultiVector;
-    func operator+(other: FlatPoint) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(0.0), 
+public extension Line {
+    public MultiVector operator +(FlatPoint other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             other.group0, 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(this.group0.xyz, 0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group1.xyz, 0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            this.group1.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension Line: Add<Flector> {
-    associatedtype Output = MultiVector;
-    func operator+(other: Flector) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(0.0), 
+public extension Line {
+    public MultiVector operator +(Flector other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             other.group0, 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(this.group0.xyz, 0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group1.xyz, 0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            this.group1.xyz, 
             /* e4235, e4315, e4125, e3215 */
             other.group1, 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension Line: Add<Line> {
-    associatedtype Output = Line;
-    func operator+(other: Line) -> Output {
-        return Line.from_groups(
-            /* e415, e425, e435, 0 */
-            float4(other.group0.xyz + this.group0.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group1.xyz + this.group1.xyz, 0.0)
+public extension Line {
+    public Line operator +(Line other) {
+        return Line(
+            /* e415, e425, e435 */
+            other.group0.xyz + this.group0.xyz, 
+            /* e235, e315, e125 */
+            other.group1.xyz + this.group1.xyz
         );
     }
 }
-extension Line {
-    associatedtype Output = Line;
-    func operator+=(const Line& other) {
-        *this = Line.from_groups(
-            /* e415, e425, e435, 0 */
-            float4(other.group0.xyz + this.group0.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(other.group1.xyz + this.group1.xyz, 0.0)
-        );
-    }
-}
-extension Line: Add<Motor> {
-    associatedtype Output = Motor;
-    func operator+(other: Motor) -> Output {
-        return Motor.from_groups(
+public extension Line {
+    public Motor operator +(Motor other) {
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4((this.group0.xyz + other.group0.xyz), other.e12345), 
             /* e235, e315, e125, e5 */
@@ -371,70 +342,67 @@ extension Line: Add<Motor> {
         );
     }
 }
-extension Line: Add<MultiVector> {
-    associatedtype Output = MultiVector;
-    func operator+(other: MultiVector) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(other.group0.xy, 0.0, 0.0), 
+public extension Line {
+    public MultiVector operator +(MultiVector other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            other.group0.xy, 
             /* e1, e2, e3, e4 */
             other.group1, 
-            /* e5, 0, 0, 0 */
-            float4(other.e5, 0.0, 0.0, 0.0), 
+            /* e5 */
+            other.e5, 
             /* e15, e25, e35, e45 */
             other.group3, 
-            /* e41, e42, e43, 0 */
-            float4(other.group4.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group5.xyz, 0.0), 
+            /* e41, e42, e43 */
+            other.group4.xyz, 
+            /* e23, e31, e12 */
+            other.group5.xyz, 
             /* e415, e425, e435, e321 */
             float4((this.group0.xyz + other.group6.xyz), other.e321), 
-            /* e423, e431, e412, 0 */
-            float4(other.group7.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group1.xyz + other.group8.xyz, 0.0), 
+            /* e423, e431, e412 */
+            other.group7.xyz, 
+            /* e235, e315, e125 */
+            this.group1.xyz + other.group8.xyz, 
             /* e4235, e4315, e4125, e3215 */
             other.group9, 
-            /* e1234, 0, 0, 0 */
-            float4(other.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e1234
         );
     }
 }
-extension Line: Add<Plane> {
-    associatedtype Output = MultiVector;
-    func operator+(other: Plane) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(0.0), 
+public extension Line {
+    public MultiVector operator +(Plane other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(this.group0.xyz, 0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group1.xyz, 0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            this.group1.xyz, 
             /* e4235, e4315, e4125, e3215 */
             other.group0, 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension Line: Add<RoundPoint> {
-    associatedtype Output = AntiDipoleInversion;
-    func operator+(other: RoundPoint) -> Output {
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
+public extension Line {
+    public AntiDipoleInversion operator +(RoundPoint other) {
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(this.group0.xyz, 0.0), 
             /* e235, e315, e125, e4 */
@@ -444,68 +412,65 @@ extension Line: Add<RoundPoint> {
         );
     }
 }
-extension Line: Add<Scalar> {
-    associatedtype Output = MultiVector;
-    func operator+(other: Scalar) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(other.scalar, 0.0), 0.0, 0.0), 
+public extension Line {
+    public MultiVector operator +(Scalar other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(other.scalar, 0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(this.group0.xyz, 0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group1.xyz, 0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            this.group1.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension Line: Add<Sphere> {
-    associatedtype Output = MultiVector;
-    func operator+(other: Sphere) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(0.0), 
+public extension Line {
+    public MultiVector operator +(Sphere other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(this.group0.xyz, 0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group1.xyz, 0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            this.group1.xyz, 
             /* e4235, e4315, e4125, e3215 */
             other.group0, 
-            /* e1234, 0, 0, 0 */
-            float4(other.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e1234
         );
     }
 }
-extension Line: Add<VersorEven> {
-    associatedtype Output = VersorEven;
-    func operator+(other: VersorEven) -> Output {
-        return VersorEven.from_groups(
+public extension Line {
+    public VersorEven operator +(VersorEven other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             other.group0, 
             /* e415, e425, e435, e321 */
@@ -517,249 +482,207 @@ extension Line: Add<VersorEven> {
         );
     }
 }
-extension Line: Add<VersorOdd> {
-    associatedtype Output = MultiVector;
-    func operator+(other: VersorOdd) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(other.scalar, 0.0), 0.0, 0.0), 
+public extension Line {
+    public MultiVector operator +(VersorOdd other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(other.scalar, 0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(other.e15, other.e25, other.e35, other.e45), 
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group1.xyz, 0.0), 
+            /* e41, e42, e43 */
+            other.group0.xyz, 
+            /* e23, e31, e12 */
+            other.group1.xyz, 
             /* e415, e425, e435, e321 */
             float4(this.group0.xyz, 0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group1.xyz, 0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            this.group1.xyz, 
             /* e4235, e4315, e4125, e3215 */
             other.group3, 
-            /* e1234, 0, 0, 0 */
-            float4(other.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e1234
         );
     }
 }
-extension Line: Mul<AntiCircleRotor> {
-    associatedtype Output = VersorEven;
-    func operator*(other: AntiCircleRotor) -> Output {
+public extension Line {
+    public VersorEven operator *(AntiCircleRotor other) {
         return this.geometric_product(other);
     }
 }
-extension Line: Mul<AntiDipoleInversion> {
-    associatedtype Output = VersorOdd;
-    func operator*(other: AntiDipoleInversion) -> Output {
+public extension Line {
+    public VersorOdd operator *(AntiDipoleInversion other) {
         return this.geometric_product(other);
     }
 }
-extension Line: Mul<AntiDualNum> {
-    associatedtype Output = Line;
-    func operator*(other: AntiDualNum) -> Output {
+public extension Line {
+    public Line operator *(AntiDualNum other) {
         return this.geometric_product(other);
     }
 }
-extension Line {
-    associatedtype Output = Line;
-    func operator*=(const AntiDualNum& other) {
-        *this = this.geometric_product(other);
-    }
-}
-extension Line: Mul<AntiFlatPoint> {
-    associatedtype Output = Flector;
-    func operator*(other: AntiFlatPoint) -> Output {
+public extension Line {
+    public Flector operator *(AntiFlatPoint other) {
         return this.geometric_product(other);
     }
 }
-extension Line: Mul<AntiFlector> {
-    associatedtype Output = Flector;
-    func operator*(other: AntiFlector) -> Output {
+public extension Line {
+    public Flector operator *(AntiFlector other) {
         return this.geometric_product(other);
     }
 }
-extension Line: Mul<AntiLine> {
-    associatedtype Output = Motor;
-    func operator*(other: AntiLine) -> Output {
+public extension Line {
+    public Motor operator *(AntiLine other) {
         return this.geometric_product(other);
     }
 }
-extension Line: Mul<AntiMotor> {
-    associatedtype Output = Motor;
-    func operator*(other: AntiMotor) -> Output {
+public extension Line {
+    public Motor operator *(AntiMotor other) {
         return this.geometric_product(other);
     }
 }
-extension Line: Mul<AntiPlane> {
-    associatedtype Output = Flector;
-    func operator*(other: AntiPlane) -> Output {
+public extension Line {
+    public Flector operator *(AntiPlane other) {
         return this.geometric_product(other);
     }
 }
-extension Line: Mul<AntiScalar> {
-    associatedtype Output = AntiLine;
-    func operator*(other: AntiScalar) -> Output {
+public extension Line {
+    public AntiLine operator *(AntiScalar other) {
         return this.geometric_product(other);
     }
 }
-extension Line: Mul<Circle> {
-    associatedtype Output = VersorOdd;
-    func operator*(other: Circle) -> Output {
+public extension Line {
+    public VersorOdd operator *(Circle other) {
         return this.geometric_product(other);
     }
 }
-extension Line: Mul<CircleRotor> {
-    associatedtype Output = VersorOdd;
-    func operator*(other: CircleRotor) -> Output {
+public extension Line {
+    public VersorOdd operator *(CircleRotor other) {
         return this.geometric_product(other);
     }
 }
-extension Line: Mul<Dipole> {
-    associatedtype Output = VersorEven;
-    func operator*(other: Dipole) -> Output {
+public extension Line {
+    public VersorEven operator *(Dipole other) {
         return this.geometric_product(other);
     }
 }
-extension Line: Mul<DipoleInversion> {
-    associatedtype Output = VersorEven;
-    func operator*(other: DipoleInversion) -> Output {
+public extension Line {
+    public VersorEven operator *(DipoleInversion other) {
         return this.geometric_product(other);
     }
 }
-extension Line: Mul<DualNum> {
-    associatedtype Output = AntiLine;
-    func operator*(other: DualNum) -> Output {
+public extension Line {
+    public AntiLine operator *(DualNum other) {
         return this.geometric_product(other);
     }
 }
-extension Line: Mul<FlatPoint> {
-    associatedtype Output = AntiFlector;
-    func operator*(other: FlatPoint) -> Output {
+public extension Line {
+    public AntiFlector operator *(FlatPoint other) {
         return this.geometric_product(other);
     }
 }
-extension Line: Mul<Flector> {
-    associatedtype Output = AntiFlector;
-    func operator*(other: Flector) -> Output {
+public extension Line {
+    public AntiFlector operator *(Flector other) {
         return this.geometric_product(other);
     }
 }
-extension Line: Mul<Line> {
-    associatedtype Output = AntiMotor;
-    func operator*(other: Line) -> Output {
+public extension Line {
+    public AntiMotor operator *(Line other) {
         return this.geometric_product(other);
     }
 }
-extension Line: Mul<Motor> {
-    associatedtype Output = AntiMotor;
-    func operator*(other: Motor) -> Output {
+public extension Line {
+    public AntiMotor operator *(Motor other) {
         return this.geometric_product(other);
     }
 }
-extension Line: Mul<MultiVector> {
-    associatedtype Output = MultiVector;
-    func operator*(other: MultiVector) -> Output {
+public extension Line {
+    public MultiVector operator *(MultiVector other) {
         return this.geometric_product(other);
     }
 }
-extension Line: Mul<Plane> {
-    associatedtype Output = AntiFlector;
-    func operator*(other: Plane) -> Output {
+public extension Line {
+    public AntiFlector operator *(Plane other) {
         return this.geometric_product(other);
     }
 }
-extension Line: Mul<RoundPoint> {
-    associatedtype Output = DipoleInversion;
-    func operator*(other: RoundPoint) -> Output {
+public extension Line {
+    public DipoleInversion operator *(RoundPoint other) {
         return this.geometric_product(other);
     }
 }
-extension Line: Mul<Scalar> {
-    associatedtype Output = Line;
-    func operator*(other: Scalar) -> Output {
+public extension Line {
+    public Line operator *(Scalar other) {
         return this.geometric_product(other);
     }
 }
-extension Line {
-    associatedtype Output = Line;
-    func operator*=(const Scalar& other) {
-        *this = this.geometric_product(other);
-    }
-}
-extension Line: Mul<Sphere> {
-    associatedtype Output = AntiDipoleInversion;
-    func operator*(other: Sphere) -> Output {
+public extension Line {
+    public AntiDipoleInversion operator *(Sphere other) {
         return this.geometric_product(other);
     }
 }
-extension Line: Mul<VersorEven> {
-    associatedtype Output = VersorOdd;
-    func operator*(other: VersorEven) -> Output {
+public extension Line {
+    public VersorOdd operator *(VersorEven other) {
         return this.geometric_product(other);
     }
 }
-extension Line: Mul<VersorOdd> {
-    associatedtype Output = VersorEven;
-    func operator*(other: VersorOdd) -> Output {
+public extension Line {
+    public VersorEven operator *(VersorOdd other) {
         return this.geometric_product(other);
     }
 }
-extension Line: Neg {
-    associatedtype Output = Line;
-    func neg() -> Output {
-        return Line.from_groups(
-            /* e415, e425, e435, 0 */
-            float4(this.group0.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group1.xyz * float3(-1.0), 0.0)
+public extension Line {
+    public Line neg() {
+        return Line(
+            /* e415, e425, e435 */
+            this.group0.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            this.group1.xyz * float3(-1.0)
         );
     }
 }
-extension Line: Not {
-    associatedtype Output = AntiLine;
-    func not() -> Output {
+public extension Line {
+    public AntiLine not() {
         return this.right_dual();
     }
 }
-extension Line: Sub<AntiCircleRotor> {
-    associatedtype Output = MultiVector;
-    func operator-(other: AntiCircleRotor) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(other.scalar, 1.0) * float2(-1.0, 0.0), 0.0, 0.0), 
+public extension Line {
+    public MultiVector operator -(AntiCircleRotor other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(other.scalar, 1.0) * float2(-1.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(other.group2.xyz, other.e45) * float4(-1.0), 
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group1.xyz * float3(-1.0), 0.0), 
+            /* e41, e42, e43 */
+            other.group0.xyz * float3(-1.0), 
+            /* e23, e31, e12 */
+            other.group1.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             float4(this.group0.xyz, 0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group1.xyz, 0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            this.group1.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension Line: Sub<AntiDipoleInversion> {
-    associatedtype Output = AntiDipoleInversion;
-    func operator-(other: AntiDipoleInversion) -> Output {
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension Line {
+    public AntiDipoleInversion operator -(AntiDipoleInversion other) {
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             float4((this.group0.xyz - other.group1.xyz), other.e321) * float4(1.0, 1.0, 1.0, -1.0), 
             /* e235, e315, e125, e4 */
@@ -769,54 +692,51 @@ extension Line: Sub<AntiDipoleInversion> {
         );
     }
 }
-extension Line: Sub<AntiDualNum> {
-    associatedtype Output = MultiVector;
-    func operator-(other: AntiDualNum) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(other.scalar, 1.0) * float2(-1.0, 0.0), 0.0, 0.0), 
+public extension Line {
+    public MultiVector operator -(AntiDualNum other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(other.scalar, 1.0) * float2(-1.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(this.group0.xyz, 0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group1.xyz, 0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            this.group1.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(float3(0.0), other.e3215 * -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension Line: Sub<AntiFlatPoint> {
-    associatedtype Output = Circle;
-    func operator-(other: AntiFlatPoint) -> Output {
-        return Circle.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
+public extension Line {
+    public Circle operator -(AntiFlatPoint other) {
+        return Circle(
+            /* e423, e431, e412 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(this.group0.xyz, other.e321 * -1.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group1.xyz - other.group0.xyz, 0.0)
+            /* e235, e315, e125 */
+            this.group1.xyz - other.group0.xyz
         );
     }
 }
-extension Line: Sub<AntiFlector> {
-    associatedtype Output = AntiDipoleInversion;
-    func operator-(other: AntiFlector) -> Output {
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
+public extension Line {
+    public AntiDipoleInversion operator -(AntiFlector other) {
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(this.group0.xyz, other.e321 * -1.0), 
             /* e235, e315, e125, e4 */
@@ -826,70 +746,67 @@ extension Line: Sub<AntiFlector> {
         );
     }
 }
-extension Line: Sub<AntiLine> {
-    associatedtype Output = MultiVector;
-    func operator-(other: AntiLine) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(0.0), 
+public extension Line {
+    public MultiVector operator -(AntiLine other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4((other.group1.xyz * float3(-1.0)), 0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             float4(this.group0.xyz, 0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group1.xyz, 0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            this.group1.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension Line: Sub<AntiMotor> {
-    associatedtype Output = MultiVector;
-    func operator-(other: AntiMotor) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(other.scalar, 1.0) * float2(-1.0, 0.0), 0.0, 0.0), 
+public extension Line {
+    public MultiVector operator -(AntiMotor other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(other.scalar, 1.0) * float2(-1.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4((other.group1.xyz * float3(-1.0)), 0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             float4(this.group0.xyz, 0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group1.xyz, 0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            this.group1.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(float3(0.0), other.e3215 * -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension Line: Sub<AntiPlane> {
-    associatedtype Output = AntiDipoleInversion;
-    func operator-(other: AntiPlane) -> Output {
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
+public extension Line {
+    public AntiDipoleInversion operator -(AntiPlane other) {
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(this.group0.xyz, 0.0), 
             /* e235, e315, e125, e4 */
@@ -899,10 +816,9 @@ extension Line: Sub<AntiPlane> {
         );
     }
 }
-extension Line: Sub<AntiScalar> {
-    associatedtype Output = Motor;
-    func operator-(other: AntiScalar) -> Output {
-        return Motor.from_groups(
+public extension Line {
+    public Motor operator -(AntiScalar other) {
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4(this.group0.xyz, other.e12345 * -1.0), 
             /* e235, e315, e125, e5 */
@@ -910,25 +826,23 @@ extension Line: Sub<AntiScalar> {
         );
     }
 }
-extension Line: Sub<Circle> {
-    associatedtype Output = Circle;
-    func operator-(other: Circle) -> Output {
-        return Circle.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension Line {
+    public Circle operator -(Circle other) {
+        return Circle(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             float4((this.group0.xyz - other.group1.xyz), other.e321) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group1.xyz - other.group2.xyz, 0.0)
+            /* e235, e315, e125 */
+            this.group1.xyz - other.group2.xyz
         );
     }
 }
-extension Line: Sub<CircleRotor> {
-    associatedtype Output = CircleRotor;
-    func operator-(other: CircleRotor) -> Output {
-        return CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
+public extension Line {
+    public CircleRotor operator -(CircleRotor other) {
+        return CircleRotor(
+            /* e423, e431, e412 */
+            other.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             float4((this.group0.xyz - other.group1.xyz), other.e321) * float4(1.0, 1.0, 1.0, -1.0), 
             /* e235, e315, e125, e12345 */
@@ -936,68 +850,65 @@ extension Line: Sub<CircleRotor> {
         );
     }
 }
-extension Line: Sub<Dipole> {
-    associatedtype Output = MultiVector;
-    func operator-(other: Dipole) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(0.0), 
+public extension Line {
+    public MultiVector operator -(Dipole other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(other.group2.xyz, other.e45) * float4(-1.0), 
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group1.xyz * float3(-1.0), 0.0), 
+            /* e41, e42, e43 */
+            other.group0.xyz * float3(-1.0), 
+            /* e23, e31, e12 */
+            other.group1.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             float4(this.group0.xyz, 0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group1.xyz, 0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            this.group1.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension Line: Sub<DipoleInversion> {
-    associatedtype Output = MultiVector;
-    func operator-(other: DipoleInversion) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(0.0), 
+public extension Line {
+    public MultiVector operator -(DipoleInversion other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(other.group2.xyz, other.e45) * float4(-1.0), 
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group1.xyz * float3(-1.0), 0.0), 
+            /* e41, e42, e43 */
+            other.group0.xyz * float3(-1.0), 
+            /* e23, e31, e12 */
+            other.group1.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             float4(this.group0.xyz, 0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group1.xyz, 0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            this.group1.xyz, 
             /* e4235, e4315, e4125, e3215 */
             other.group3 * float4(-1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e1234 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e1234 * -1.0
         );
     }
 }
-extension Line: Sub<DualNum> {
-    associatedtype Output = Motor;
-    func operator-(other: DualNum) -> Output {
-        return Motor.from_groups(
+public extension Line {
+    public Motor operator -(DualNum other) {
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4(this.group0.xyz, other.e12345 * -1.0), 
             /* e235, e315, e125, e5 */
@@ -1005,90 +916,75 @@ extension Line: Sub<DualNum> {
         );
     }
 }
-extension Line: Sub<FlatPoint> {
-    associatedtype Output = MultiVector;
-    func operator-(other: FlatPoint) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(0.0), 
+public extension Line {
+    public MultiVector operator -(FlatPoint other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             other.group0 * float4(-1.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(this.group0.xyz, 0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group1.xyz, 0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            this.group1.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension Line: Sub<Flector> {
-    associatedtype Output = MultiVector;
-    func operator-(other: Flector) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(0.0), 
+public extension Line {
+    public MultiVector operator -(Flector other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             other.group0 * float4(-1.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(this.group0.xyz, 0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group1.xyz, 0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            this.group1.xyz, 
             /* e4235, e4315, e4125, e3215 */
             other.group1 * float4(-1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension Line: Sub<Line> {
-    associatedtype Output = Line;
-    func operator-(other: Line) -> Output {
-        return Line.from_groups(
-            /* e415, e425, e435, 0 */
-            float4(this.group0.xyz - other.group0.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group1.xyz - other.group1.xyz, 0.0)
+public extension Line {
+    public Line operator -(Line other) {
+        return Line(
+            /* e415, e425, e435 */
+            this.group0.xyz - other.group0.xyz, 
+            /* e235, e315, e125 */
+            this.group1.xyz - other.group1.xyz
         );
     }
 }
-extension Line {
-    associatedtype Output = Line;
-    func operator-=(const Line& other) {
-        *this = Line.from_groups(
-            /* e415, e425, e435, 0 */
-            float4(this.group0.xyz - other.group0.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group1.xyz - other.group1.xyz, 0.0)
-        );
-    }
-}
-extension Line: Sub<Motor> {
-    associatedtype Output = Motor;
-    func operator-(other: Motor) -> Output {
-        return Motor.from_groups(
+public extension Line {
+    public Motor operator -(Motor other) {
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4((this.group0.xyz - other.group0.xyz), other.e12345) * float4(1.0, 1.0, 1.0, -1.0), 
             /* e235, e315, e125, e5 */
@@ -1096,70 +992,67 @@ extension Line: Sub<Motor> {
         );
     }
 }
-extension Line: Sub<MultiVector> {
-    associatedtype Output = MultiVector;
-    func operator-(other: MultiVector) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(other.group0.xy * float2(-1.0), 0.0, 0.0), 
+public extension Line {
+    public MultiVector operator -(MultiVector other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            other.group0.xy * float2(-1.0), 
             /* e1, e2, e3, e4 */
             other.group1 * float4(-1.0), 
-            /* e5, 0, 0, 0 */
-            float4(other.e5 * -1.0, 0.0, 0.0, 0.0), 
+            /* e5 */
+            other.e5 * -1.0, 
             /* e15, e25, e35, e45 */
             other.group3 * float4(-1.0), 
-            /* e41, e42, e43, 0 */
-            float4(other.group4.xyz * float3(-1.0), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group5.xyz * float3(-1.0), 0.0), 
+            /* e41, e42, e43 */
+            other.group4.xyz * float3(-1.0), 
+            /* e23, e31, e12 */
+            other.group5.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             float4((this.group0.xyz - other.group6.xyz), other.e321) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e423, e431, e412, 0 */
-            float4(other.group7.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group1.xyz - other.group8.xyz, 0.0), 
+            /* e423, e431, e412 */
+            other.group7.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            this.group1.xyz - other.group8.xyz, 
             /* e4235, e4315, e4125, e3215 */
             other.group9 * float4(-1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e1234 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e1234 * -1.0
         );
     }
 }
-extension Line: Sub<Plane> {
-    associatedtype Output = MultiVector;
-    func operator-(other: Plane) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(0.0), 
+public extension Line {
+    public MultiVector operator -(Plane other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(this.group0.xyz, 0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group1.xyz, 0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            this.group1.xyz, 
             /* e4235, e4315, e4125, e3215 */
             other.group0 * float4(-1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension Line: Sub<RoundPoint> {
-    associatedtype Output = AntiDipoleInversion;
-    func operator-(other: RoundPoint) -> Output {
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
+public extension Line {
+    public AntiDipoleInversion operator -(RoundPoint other) {
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(this.group0.xyz, 0.0), 
             /* e235, e315, e125, e4 */
@@ -1169,68 +1062,65 @@ extension Line: Sub<RoundPoint> {
         );
     }
 }
-extension Line: Sub<Scalar> {
-    associatedtype Output = MultiVector;
-    func operator-(other: Scalar) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(other.scalar, 1.0) * float2(-1.0, 0.0), 0.0, 0.0), 
+public extension Line {
+    public MultiVector operator -(Scalar other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(other.scalar, 1.0) * float2(-1.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(this.group0.xyz, 0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group1.xyz, 0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            this.group1.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension Line: Sub<Sphere> {
-    associatedtype Output = MultiVector;
-    func operator-(other: Sphere) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(0.0), 
+public extension Line {
+    public MultiVector operator -(Sphere other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(this.group0.xyz, 0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group1.xyz, 0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            this.group1.xyz, 
             /* e4235, e4315, e4125, e3215 */
             other.group0 * float4(-1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e1234 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e1234 * -1.0
         );
     }
 }
-extension Line: Sub<VersorEven> {
-    associatedtype Output = VersorEven;
-    func operator-(other: VersorEven) -> Output {
-        return VersorEven.from_groups(
+public extension Line {
+    public VersorEven operator -(VersorEven other) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             other.group0 * float4(-1.0), 
             /* e415, e425, e435, e321 */
@@ -1242,32 +1132,31 @@ extension Line: Sub<VersorEven> {
         );
     }
 }
-extension Line: Sub<VersorOdd> {
-    associatedtype Output = MultiVector;
-    func operator-(other: VersorOdd) -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(other.scalar, 1.0) * float2(-1.0, 0.0), 0.0, 0.0), 
+public extension Line {
+    public MultiVector operator -(VersorOdd other) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(other.scalar, 1.0) * float2(-1.0, 0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(other.group2.xyz, other.e45) * float4(-1.0), 
-            /* e41, e42, e43, 0 */
-            float4(other.group0.xyz * float3(-1.0), 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(other.group1.xyz * float3(-1.0), 0.0), 
+            /* e41, e42, e43 */
+            other.group0.xyz * float3(-1.0), 
+            /* e23, e31, e12 */
+            other.group1.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             float4(this.group0.xyz, 0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group1.xyz, 0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            this.group1.xyz, 
             /* e4235, e4315, e4125, e3215 */
             other.group3 * float4(-1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(other.e1234 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            other.e1234 * -1.0
         );
     }
 }

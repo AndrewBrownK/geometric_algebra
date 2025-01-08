@@ -1,5 +1,15 @@
 implementing cga3d;
-__include "data/anti_circle_rotor";
+
+internal bool lessThanHelper<T: IComparable>(T a, T b) {
+    return a.lessThan(b);
+}
+internal bool equalsHelper<T: IComparable>(T a, T b) {
+    return a.equals(b);
+}
+internal bool lessThanOrEqualsHelper<T: IComparable>(T a, T b) {
+    return a.lessThanOrEquals(b);
+}
+            __include "data/anti_circle_rotor";
 __include "data/anti_dipole_inversion";
 __include "data/anti_dual_num";
 __include "data/anti_flat_point";

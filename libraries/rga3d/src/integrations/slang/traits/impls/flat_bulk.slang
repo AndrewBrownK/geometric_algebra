@@ -14,7 +14,7 @@ public extension FlatBulkPrefixOrPostfix {
 }
 public extension DualNum {
     public Scalar flat_bulk() {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             this.scalar
         );
@@ -34,7 +34,7 @@ public extension FlatBulkPrefixOrPostfix {
 }
 public extension Flector {
     public Flector flat_bulk() {
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4(this.group0.xyz, 0.0), 
             /* e423, e431, e412, e321 */
@@ -73,7 +73,7 @@ public extension FlatBulkPrefixOrPostfix {
 }
 public extension Line {
     public Line flat_bulk() {
-        return Line.from_groups(
+        return Line(
             /* e41, e42, e43 */
             float3(0.0), 
             /* e23, e31, e12 */
@@ -95,7 +95,7 @@ public extension FlatBulkPrefixOrPostfix {
 }
 public extension Motor {
     public Motor flat_bulk() {
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(0.0), 
             /* e23, e31, e12, scalar */
@@ -117,7 +117,7 @@ public extension FlatBulkPrefixOrPostfix {
 }
 public extension MultiVector {
     public MultiVector flat_bulk() {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(this.scalar, 0.0), 
             /* e1, e2, e3, e4 */
@@ -145,7 +145,7 @@ public extension FlatBulkPrefixOrPostfix {
 }
 public extension Plane {
     public Horizon flat_bulk() {
-        return Horizon.from_groups(
+        return Horizon(
             /* e321 */
             this.e321
         );
@@ -165,7 +165,7 @@ public extension FlatBulkPrefixOrPostfix {
 }
 public extension Point {
     public Point flat_bulk() {
-        return Point.from_groups(
+        return Point(
             /* e1, e2, e3, e4 */
             float4(this.group0.xyz, 0.0)
         );

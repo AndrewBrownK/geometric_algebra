@@ -1,72 +1,62 @@
-extension AntiFlatPoint: Grade {
-    associatedtype Output = uint;
-    func grade() -> Output {
+implementing cga3d;
+using traits;
+public extension AntiFlatPoint {
+    public uint grade() {
         return 3;
     }
 }
-extension AntiLine: Grade {
-    associatedtype Output = uint;
-    func grade() -> Output {
+public extension AntiLine {
+    public uint grade() {
         return 2;
     }
 }
-extension AntiPlane: Grade {
-    associatedtype Output = uint;
-    func grade() -> Output {
+public extension AntiPlane {
+    public uint grade() {
         return 1;
     }
 }
-extension AntiScalar: Grade {
-    associatedtype Output = uint;
-    func grade() -> Output {
+public extension AntiScalar {
+    public uint grade() {
         return 5;
     }
 }
-extension Circle: Grade {
-    associatedtype Output = uint;
-    func grade() -> Output {
+public extension Circle {
+    public uint grade() {
         return 3;
     }
 }
-extension Dipole: Grade {
-    associatedtype Output = uint;
-    func grade() -> Output {
+public extension Dipole {
+    public uint grade() {
         return 2;
     }
 }
-extension FlatPoint: Grade {
-    associatedtype Output = uint;
-    func grade() -> Output {
+public extension FlatPoint {
+    public uint grade() {
         return 2;
     }
 }
-extension Line: Grade {
-    associatedtype Output = uint;
-    func grade() -> Output {
+public extension Line {
+    public uint grade() {
         return 3;
     }
 }
-extension Plane: Grade {
-    associatedtype Output = uint;
-    func grade() -> Output {
+public extension Plane {
+    public uint grade() {
         return 4;
     }
 }
-extension RoundPoint: Grade {
-    associatedtype Output = uint;
-    func grade() -> Output {
+public extension RoundPoint {
+    public uint grade() {
         return 1;
     }
 }
-extension Scalar: Grade {
-    associatedtype Output = uint;
-    func grade() -> Output {
+public extension Scalar {
+    public uint grade() {
         return 0;
     }
 }
-extension Sphere: Grade {
-    associatedtype Output = uint;
-    func grade() -> Output {
+public extension Sphere {
+    public uint grade() {
         return 4;
     }
 }

@@ -5,21 +5,17 @@ using data;
 public struct Scalar {
     // scalar, 0, 0, 0
     internal float4 group0;
+
+    __init(
+        float scalar
+    ) {
+        group0 = float4(scalar, 0.0, 0.0, 0.0);
+    }
 }
 public extension Scalar {
     public property scalar: float {
         get { return group0[0]; }
         set { group0[0] = newValue; }
-    }
-    public static Scalar from_elements(
-        float scalar
-    ) {
-        return Scalar(float4(scalar, 0.0, 0.0, 0.0));
-    }
-    internal static Scalar from_groups(
-        float g0
-    ) {
-        return Scalar(float4(g0, 0.0, 0.0, 0.0));
     }
 }
 public extension Scalar: IComparable {

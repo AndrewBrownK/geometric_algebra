@@ -17,7 +17,7 @@ very-large-basis-elements = ["large-basis-elements"]
 incorrect-wip-traits = []
 
 [dependencies]
-naga = { version = "0.19.2", features = ["default", "glsl-in", "wgsl-in"] }
+#naga = { version = "0.20.0", features = ["default", "glsl-in", "wgsl-in"] }
 anyhow = "1.0.81"
 parking_lot = "0.12.2"
 bitflags = "2.5.0"

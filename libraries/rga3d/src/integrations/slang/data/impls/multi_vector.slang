@@ -2,7 +2,7 @@ implementing rga3d;
 using traits;
 public extension MultiVector {
     public MultiVector operator +(AntiScalar other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(0.0, other.e1234) + this.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -18,7 +18,7 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public MultiVector operator +(DualNum other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             other.group0.xy + this.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -34,7 +34,7 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public MultiVector operator +(Flector other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             this.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -50,7 +50,7 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public MultiVector operator +(Horizon other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             this.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -66,7 +66,7 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public MultiVector operator +(Line other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             this.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -82,7 +82,7 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public MultiVector operator +(Motor other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(other.scalar, other.e1234) + this.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -98,7 +98,7 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public MultiVector operator +(MultiVector other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             other.group0.xy + this.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -114,7 +114,7 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public MultiVector operator +(Origin other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             this.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -130,7 +130,7 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public MultiVector operator +(Plane other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             this.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -146,7 +146,7 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public MultiVector operator +(Point other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             this.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -162,7 +162,7 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public MultiVector operator +(Scalar other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(other.scalar, 0.0) + this.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -233,7 +233,7 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public MultiVector neg() {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             this.group0.xy * float2(-1.0), 
             /* e1, e2, e3, e4 */
@@ -254,7 +254,7 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public MultiVector operator -(AntiScalar other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(0.0, other.e1234 * -1.0) + this.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -270,7 +270,7 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public MultiVector operator -(DualNum other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             this.group0.xy - other.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -286,7 +286,7 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public MultiVector operator -(Flector other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             this.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -302,7 +302,7 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public MultiVector operator -(Horizon other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             this.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -318,7 +318,7 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public MultiVector operator -(Line other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             this.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -334,7 +334,7 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public MultiVector operator -(Motor other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(other.scalar * -1.0, other.e1234 * -1.0) + this.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -350,7 +350,7 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public MultiVector operator -(MultiVector other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             this.group0.xy - other.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -366,7 +366,7 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public MultiVector operator -(Origin other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             this.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -382,7 +382,7 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public MultiVector operator -(Plane other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             this.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -398,7 +398,7 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public MultiVector operator -(Point other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             this.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -414,7 +414,7 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public MultiVector operator -(Scalar other) {
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(other.scalar * -1.0, 0.0) + this.group0.xy, 
             /* e1, e2, e3, e4 */

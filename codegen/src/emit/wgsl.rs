@@ -179,7 +179,7 @@ impl Wgsl {
         // Alright, enough excuses for this insanity, let's get started
 
         let src_folder = src_folder.as_ref().to_path_buf();
-        let folder_integrations = src_folder.join(Path::new("integrations"));
+        let folder_integrations = src_folder.join(Path::new("integrations/wgsl"));
         let mut mvs = multi_vecs.declarations();
         mvs.sort_by(|a, b| a.name.cmp(&b.name));
         let mvs = mvs;
@@ -225,20 +225,42 @@ impl Wgsl {
             data_pb.set_message("WGSL - Data Definitions");
 
             let qty_impls = impls.len() as u64;
-            let impls_pb = Arc::new(multi_progress.add(indicatif::ProgressBar::new(qty_impls).with_finish(ProgressFinish::AndLeave)));
-            impls_pb.set_style(progress_style());
-            impls_pb.set_message("WGSL - Trait Implementations");
+            // let impls_pb = Arc::new(multi_progress.add(indicatif::ProgressBar::new(qty_impls).with_finish(ProgressFinish::AndLeave)));
+            // impls_pb.set_style(progress_style());
+            // impls_pb.set_message("WGSL - Trait Implementations");
 
             for multi_vec in mvs.iter() {
                 self.declare_multi_vector(&mut file, *multi_vec)?;
                 data_pb.inc(1);
             }
 
-            sort_trait_impls(&mut impls, HashSet::new())?;
-            for i in impls {
-                self.declare_trait_impl(&mut file, i)?;
-                impls_pb.inc(1);
-            }
+
+            write!(&mut file, r#"
+// The naga_oil pruner has a bug where it can't handle these expressions inlined
+// so we have to wrap the operation in a function so it doesn't choke.
+// It's an index out of bounds (3 exceeding 2, or 4 exceeding 3)
+// in Pruner.add_expression -> match Expression::Compose -> match PartReq::Part.
+// Obviously we want an issue/PR fix in naga_oil but the PartReq tracking is
+// insufferable to read and/or debug, so I'm procrastinating that.
+fn extendVec2toVec3(v: vec2<f32>, z: f32) -> vec3<f32> {{
+    // return vec3<f32>(v, z);
+    return vec3<f32>(v[0], v[1], z);
+}}
+fn extendVec2toVec4(v: vec2<f32>, z: f32, w: f32) -> vec4<f32> {{
+    // return vec4<f32>(v, z, w);
+    return vec4<f32>(v[0], v[1], z, w);
+}}
+fn extendVec3toVec4(v: vec2<f32>, w: f32) -> vec4<f32> {{
+    // return vec4<f32>(v, w);
+    return vec4<f32>(v[0], v[1], v[2], w);
+}}
+            "#)?;
+
+            // sort_trait_impls(&mut impls, HashSet::new())?;
+            // for i in impls {
+            //     self.declare_trait_impl(&mut file, i)?;
+            //     impls_pb.inc(1);
+            // }
         };
         if let Err(e) = e {
             panic!("WGSL Errors: {e:?}");
@@ -1143,7 +1165,13 @@ impl Wgsl {
                 write!(w, ", 0.0)")?;
             }
             Vec3Expr::Extend2to3(v2, f1) => {
-                write!(w, "vec4<f32>(")?;
+                // write!(w, "vec4<f32>(")?;
+                // self.write_vec2(w, v2, false)?;
+                // write!(w, ".xy, ")?;
+                // self.write_float(w, f1, true, false)?;
+                // write!(w, ", 0.0)")?;
+
+                write!(w, "extendVec2toVec3(")?;
                 self.write_vec2(w, v2, false)?;
                 write!(w, ".xy, ")?;
                 self.write_float(w, f1, true, false)?;
@@ -1376,7 +1404,15 @@ impl Wgsl {
                 //  capable of being organized and modular. So here we go with slang.
 
 
-                write!(w, "vec4<f32>(")?;
+                // write!(w, "vec4<f32>(")?;
+                // self.write_vec2(w, v2, false)?;
+                // write!(w, ".xy, ")?;
+                // self.write_float(w, f1, true, false)?;
+                // write!(w, ", ")?;
+                // self.write_float(w, f2, true, false)?;
+                // write!(w, ")")?;
+
+                write!(w, "extendVec2toVec4(")?;
                 self.write_vec2(w, v2, false)?;
                 write!(w, ".xy, ")?;
                 self.write_float(w, f1, true, false)?;
@@ -1385,7 +1421,13 @@ impl Wgsl {
                 write!(w, ")")?;
             }
             Vec4Expr::Extend3to4(v2, f1) => {
-                write!(w, "vec4<f32>(")?;
+                // write!(w, "vec4<f32>(")?;
+                // self.write_vec3(w, v2, false)?;
+                // write!(w, ".xyz, ")?;
+                // self.write_float(w, f1, true, false)?;
+                // write!(w, ")")?;
+
+                write!(w, "extendVec3toVec4(")?;
                 self.write_vec3(w, v2, false)?;
                 write!(w, ".xyz, ")?;
                 self.write_float(w, f1, true, false)?;

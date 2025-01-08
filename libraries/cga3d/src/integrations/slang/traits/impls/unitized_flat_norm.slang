@@ -1,193 +1,274 @@
-using traits::UnitizedFlatNormSquared;
-extension AntiCircleRotor {
-    // Fancy infix trick
-    func operator/(_rhs: UnitizedFlatNormPrefixOrPostfix) -> float {
+implementing cga3d;
+using traits;
+public extension AntiCircleRotor {
+    // Fancy postfix trick
+    public float operator /(UnitizedFlatNormPrefixOrPostfix rhs)  {
         return this.unitized_flat_norm();
     }
 }
-extension AntiCircleRotor: UnitizedFlatNorm {
-    associatedtype Output = float;
-    func unitized_flat_norm() -> Output {
-        return powf(this.unitized_flat_norm_squared(), 0.5);
+public extension UnitizedFlatNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public float operator /(AntiCircleRotor rhs) {
+        return rhs.unitized_flat_norm();
     }
 }
-extension AntiDipoleInversion {
-    // Fancy infix trick
-    func operator/(_rhs: UnitizedFlatNormPrefixOrPostfix) -> float {
+public extension AntiCircleRotor {
+    public float unitized_flat_norm() {
+        return pow(this.unitized_flat_norm_squared(), 0.5);
+    }
+}
+public extension AntiDipoleInversion {
+    // Fancy postfix trick
+    public float operator /(UnitizedFlatNormPrefixOrPostfix rhs)  {
         return this.unitized_flat_norm();
     }
 }
-extension AntiDipoleInversion: UnitizedFlatNorm {
-    associatedtype Output = float;
-    func unitized_flat_norm() -> Output {
-        return powf(this.unitized_flat_norm_squared(), 0.5);
+public extension UnitizedFlatNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public float operator /(AntiDipoleInversion rhs) {
+        return rhs.unitized_flat_norm();
     }
 }
-extension Circle {
-    // Fancy infix trick
-    func operator/(_rhs: UnitizedFlatNormPrefixOrPostfix) -> float {
+public extension AntiDipoleInversion {
+    public float unitized_flat_norm() {
+        return pow(this.unitized_flat_norm_squared(), 0.5);
+    }
+}
+public extension Circle {
+    // Fancy postfix trick
+    public float operator /(UnitizedFlatNormPrefixOrPostfix rhs)  {
         return this.unitized_flat_norm();
     }
 }
-extension Circle: UnitizedFlatNorm {
-    associatedtype Output = float;
-    func unitized_flat_norm() -> Output {
-        return powf(this.unitized_flat_norm_squared(), 0.5);
+public extension UnitizedFlatNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public float operator /(Circle rhs) {
+        return rhs.unitized_flat_norm();
     }
 }
-extension CircleRotor {
-    // Fancy infix trick
-    func operator/(_rhs: UnitizedFlatNormPrefixOrPostfix) -> float {
+public extension Circle {
+    public float unitized_flat_norm() {
+        return pow(this.unitized_flat_norm_squared(), 0.5);
+    }
+}
+public extension CircleRotor {
+    // Fancy postfix trick
+    public float operator /(UnitizedFlatNormPrefixOrPostfix rhs)  {
         return this.unitized_flat_norm();
     }
 }
-extension CircleRotor: UnitizedFlatNorm {
-    associatedtype Output = float;
-    func unitized_flat_norm() -> Output {
-        return powf(this.unitized_flat_norm_squared(), 0.5);
+public extension UnitizedFlatNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public float operator /(CircleRotor rhs) {
+        return rhs.unitized_flat_norm();
     }
 }
-extension Dipole {
-    // Fancy infix trick
-    func operator/(_rhs: UnitizedFlatNormPrefixOrPostfix) -> float {
+public extension CircleRotor {
+    public float unitized_flat_norm() {
+        return pow(this.unitized_flat_norm_squared(), 0.5);
+    }
+}
+public extension Dipole {
+    // Fancy postfix trick
+    public float operator /(UnitizedFlatNormPrefixOrPostfix rhs)  {
         return this.unitized_flat_norm();
     }
 }
-extension Dipole: UnitizedFlatNorm {
-    associatedtype Output = float;
-    func unitized_flat_norm() -> Output {
-        return powf(this.unitized_flat_norm_squared(), 0.5);
+public extension UnitizedFlatNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public float operator /(Dipole rhs) {
+        return rhs.unitized_flat_norm();
     }
 }
-extension DipoleInversion {
-    // Fancy infix trick
-    func operator/(_rhs: UnitizedFlatNormPrefixOrPostfix) -> float {
+public extension Dipole {
+    public float unitized_flat_norm() {
+        return pow(this.unitized_flat_norm_squared(), 0.5);
+    }
+}
+public extension DipoleInversion {
+    // Fancy postfix trick
+    public float operator /(UnitizedFlatNormPrefixOrPostfix rhs)  {
         return this.unitized_flat_norm();
     }
 }
-extension DipoleInversion: UnitizedFlatNorm {
-    associatedtype Output = float;
-    func unitized_flat_norm() -> Output {
-        return powf(this.unitized_flat_norm_squared(), 0.5);
+public extension UnitizedFlatNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public float operator /(DipoleInversion rhs) {
+        return rhs.unitized_flat_norm();
     }
 }
-extension DualNum {
-    // Fancy infix trick
-    func operator/(_rhs: UnitizedFlatNormPrefixOrPostfix) -> float {
+public extension DipoleInversion {
+    public float unitized_flat_norm() {
+        return pow(this.unitized_flat_norm_squared(), 0.5);
+    }
+}
+public extension DualNum {
+    // Fancy postfix trick
+    public float operator /(UnitizedFlatNormPrefixOrPostfix rhs)  {
         return this.unitized_flat_norm();
     }
 }
-extension DualNum: UnitizedFlatNorm {
-    associatedtype Output = float;
-    func unitized_flat_norm() -> Output {
-        return powf(this.unitized_flat_norm_squared(), 0.5);
+public extension UnitizedFlatNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public float operator /(DualNum rhs) {
+        return rhs.unitized_flat_norm();
     }
 }
-extension FlatPoint {
-    // Fancy infix trick
-    func operator/(_rhs: UnitizedFlatNormPrefixOrPostfix) -> float {
+public extension DualNum {
+    public float unitized_flat_norm() {
+        return pow(this.unitized_flat_norm_squared(), 0.5);
+    }
+}
+public extension FlatPoint {
+    // Fancy postfix trick
+    public float operator /(UnitizedFlatNormPrefixOrPostfix rhs)  {
         return this.unitized_flat_norm();
     }
 }
-extension FlatPoint: UnitizedFlatNorm {
-    associatedtype Output = float;
-    func unitized_flat_norm() -> Output {
-        return powf(this.unitized_flat_norm_squared(), 0.5);
+public extension UnitizedFlatNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public float operator /(FlatPoint rhs) {
+        return rhs.unitized_flat_norm();
     }
 }
-extension Flector {
-    // Fancy infix trick
-    func operator/(_rhs: UnitizedFlatNormPrefixOrPostfix) -> float {
+public extension FlatPoint {
+    public float unitized_flat_norm() {
+        return pow(this.unitized_flat_norm_squared(), 0.5);
+    }
+}
+public extension Flector {
+    // Fancy postfix trick
+    public float operator /(UnitizedFlatNormPrefixOrPostfix rhs)  {
         return this.unitized_flat_norm();
     }
 }
-extension Flector: UnitizedFlatNorm {
-    associatedtype Output = float;
-    func unitized_flat_norm() -> Output {
-        return powf(this.unitized_flat_norm_squared(), 0.5);
+public extension UnitizedFlatNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public float operator /(Flector rhs) {
+        return rhs.unitized_flat_norm();
     }
 }
-extension Line {
-    // Fancy infix trick
-    func operator/(_rhs: UnitizedFlatNormPrefixOrPostfix) -> float {
+public extension Flector {
+    public float unitized_flat_norm() {
+        return pow(this.unitized_flat_norm_squared(), 0.5);
+    }
+}
+public extension Line {
+    // Fancy postfix trick
+    public float operator /(UnitizedFlatNormPrefixOrPostfix rhs)  {
         return this.unitized_flat_norm();
     }
 }
-extension Line: UnitizedFlatNorm {
-    associatedtype Output = float;
-    func unitized_flat_norm() -> Output {
-        return powf(this.unitized_flat_norm_squared(), 0.5);
+public extension UnitizedFlatNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public float operator /(Line rhs) {
+        return rhs.unitized_flat_norm();
     }
 }
-extension Motor {
-    // Fancy infix trick
-    func operator/(_rhs: UnitizedFlatNormPrefixOrPostfix) -> float {
+public extension Line {
+    public float unitized_flat_norm() {
+        return pow(this.unitized_flat_norm_squared(), 0.5);
+    }
+}
+public extension Motor {
+    // Fancy postfix trick
+    public float operator /(UnitizedFlatNormPrefixOrPostfix rhs)  {
         return this.unitized_flat_norm();
     }
 }
-extension Motor: UnitizedFlatNorm {
-    associatedtype Output = float;
-    func unitized_flat_norm() -> Output {
-        return powf(this.unitized_flat_norm_squared(), 0.5);
+public extension UnitizedFlatNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public float operator /(Motor rhs) {
+        return rhs.unitized_flat_norm();
     }
 }
-extension MultiVector {
-    // Fancy infix trick
-    func operator/(_rhs: UnitizedFlatNormPrefixOrPostfix) -> float {
+public extension Motor {
+    public float unitized_flat_norm() {
+        return pow(this.unitized_flat_norm_squared(), 0.5);
+    }
+}
+public extension MultiVector {
+    // Fancy postfix trick
+    public float operator /(UnitizedFlatNormPrefixOrPostfix rhs)  {
         return this.unitized_flat_norm();
     }
 }
-extension MultiVector: UnitizedFlatNorm {
-    associatedtype Output = float;
-    func unitized_flat_norm() -> Output {
-        return powf(this.unitized_flat_norm_squared(), 0.5);
+public extension UnitizedFlatNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public float operator /(MultiVector rhs) {
+        return rhs.unitized_flat_norm();
     }
 }
-extension Plane {
-    // Fancy infix trick
-    func operator/(_rhs: UnitizedFlatNormPrefixOrPostfix) -> float {
+public extension MultiVector {
+    public float unitized_flat_norm() {
+        return pow(this.unitized_flat_norm_squared(), 0.5);
+    }
+}
+public extension Plane {
+    // Fancy postfix trick
+    public float operator /(UnitizedFlatNormPrefixOrPostfix rhs)  {
         return this.unitized_flat_norm();
     }
 }
-extension Plane: UnitizedFlatNorm {
-    associatedtype Output = float;
-    func unitized_flat_norm() -> Output {
-        return powf(this.unitized_flat_norm_squared(), 0.5);
+public extension UnitizedFlatNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public float operator /(Plane rhs) {
+        return rhs.unitized_flat_norm();
     }
 }
-extension Sphere {
-    // Fancy infix trick
-    func operator/(_rhs: UnitizedFlatNormPrefixOrPostfix) -> float {
+public extension Plane {
+    public float unitized_flat_norm() {
+        return pow(this.unitized_flat_norm_squared(), 0.5);
+    }
+}
+public extension Sphere {
+    // Fancy postfix trick
+    public float operator /(UnitizedFlatNormPrefixOrPostfix rhs)  {
         return this.unitized_flat_norm();
     }
 }
-extension Sphere: UnitizedFlatNorm {
-    associatedtype Output = float;
-    func unitized_flat_norm() -> Output {
-        return powf(this.unitized_flat_norm_squared(), 0.5);
+public extension UnitizedFlatNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public float operator /(Sphere rhs) {
+        return rhs.unitized_flat_norm();
     }
 }
-extension VersorEven {
-    // Fancy infix trick
-    func operator/(_rhs: UnitizedFlatNormPrefixOrPostfix) -> float {
+public extension Sphere {
+    public float unitized_flat_norm() {
+        return pow(this.unitized_flat_norm_squared(), 0.5);
+    }
+}
+public extension VersorEven {
+    // Fancy postfix trick
+    public float operator /(UnitizedFlatNormPrefixOrPostfix rhs)  {
         return this.unitized_flat_norm();
     }
 }
-extension VersorEven: UnitizedFlatNorm {
-    associatedtype Output = float;
-    func unitized_flat_norm() -> Output {
-        return powf(this.unitized_flat_norm_squared(), 0.5);
+public extension UnitizedFlatNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public float operator /(VersorEven rhs) {
+        return rhs.unitized_flat_norm();
     }
 }
-extension VersorOdd {
-    // Fancy infix trick
-    func operator/(_rhs: UnitizedFlatNormPrefixOrPostfix) -> float {
+public extension VersorEven {
+    public float unitized_flat_norm() {
+        return pow(this.unitized_flat_norm_squared(), 0.5);
+    }
+}
+public extension VersorOdd {
+    // Fancy postfix trick
+    public float operator /(UnitizedFlatNormPrefixOrPostfix rhs)  {
         return this.unitized_flat_norm();
     }
 }
-extension VersorOdd: UnitizedFlatNorm {
-    associatedtype Output = float;
-    func unitized_flat_norm() -> Output {
-        return powf(this.unitized_flat_norm_squared(), 0.5);
+public extension UnitizedFlatNormPrefixOrPostfix {
+    // Fancy prefix trick
+    public float operator /(VersorOdd rhs) {
+        return rhs.unitized_flat_norm();
+    }
+}
+public extension VersorOdd {
+    public float unitized_flat_norm() {
+        return pow(this.unitized_flat_norm_squared(), 0.5);
     }
 }

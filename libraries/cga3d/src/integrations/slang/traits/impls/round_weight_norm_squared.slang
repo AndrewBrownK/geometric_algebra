@@ -1,178 +1,232 @@
-using traits::AntiDotProduct;
-using traits::RoundWeight;
-using traits::Wedge;
-extension AntiCircleRotor {
-    // Fancy infix trick
-    func operator/(_rhs: RoundWeightNormSquaredPrefixOrPostfix) -> AntiScalar {
+implementing cga3d;
+using traits;
+public extension AntiCircleRotor {
+    // Fancy postfix trick
+    public AntiScalar operator /(RoundWeightNormSquaredPrefixOrPostfix rhs)  {
         return this.round_weight_norm_squared();
     }
 }
-extension AntiCircleRotor: RoundWeightNormSquared {
-    associatedtype Output = AntiScalar;
-    func round_weight_norm_squared() -> Output {
-        Line round_weight_carrier = this.round_weight().wedge(DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(float2(1.0, 0.0), 0.0, 0.0)
+public extension RoundWeightNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiScalar operator /(AntiCircleRotor rhs) {
+        return rhs.round_weight_norm_squared();
+    }
+}
+public extension AntiCircleRotor {
+    public AntiScalar round_weight_norm_squared() {
+        Line round_weight_carrier = this.round_weight().wedge(DualNum(
+            /* e5, e12345 */
+            float2(1.0, 0.0)
         ));
         return round_weight_carrier.anti_dot_product(round_weight_carrier);
     }
 }
-extension AntiDipoleInversion {
-    // Fancy infix trick
-    func operator/(_rhs: RoundWeightNormSquaredPrefixOrPostfix) -> AntiScalar {
+public extension AntiDipoleInversion {
+    // Fancy postfix trick
+    public AntiScalar operator /(RoundWeightNormSquaredPrefixOrPostfix rhs)  {
         return this.round_weight_norm_squared();
     }
 }
-extension AntiDipoleInversion: RoundWeightNormSquared {
-    associatedtype Output = AntiScalar;
-    func round_weight_norm_squared() -> Output {
-        Flector round_weight_carrier = this.round_weight().wedge(DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(float2(1.0, 0.0), 0.0, 0.0)
+public extension RoundWeightNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiScalar operator /(AntiDipoleInversion rhs) {
+        return rhs.round_weight_norm_squared();
+    }
+}
+public extension AntiDipoleInversion {
+    public AntiScalar round_weight_norm_squared() {
+        Flector round_weight_carrier = this.round_weight().wedge(DualNum(
+            /* e5, e12345 */
+            float2(1.0, 0.0)
         ));
         return round_weight_carrier.anti_dot_product(round_weight_carrier);
     }
 }
-extension Circle {
-    // Fancy infix trick
-    func operator/(_rhs: RoundWeightNormSquaredPrefixOrPostfix) -> AntiScalar {
+public extension Circle {
+    // Fancy postfix trick
+    public AntiScalar operator /(RoundWeightNormSquaredPrefixOrPostfix rhs)  {
         return this.round_weight_norm_squared();
     }
 }
-extension Circle: RoundWeightNormSquared {
-    associatedtype Output = AntiScalar;
-    func round_weight_norm_squared() -> Output {
-        Plane round_weight_carrier = this.round_weight().wedge(DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(float2(1.0, 0.0), 0.0, 0.0)
+public extension RoundWeightNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiScalar operator /(Circle rhs) {
+        return rhs.round_weight_norm_squared();
+    }
+}
+public extension Circle {
+    public AntiScalar round_weight_norm_squared() {
+        Plane round_weight_carrier = this.round_weight().wedge(DualNum(
+            /* e5, e12345 */
+            float2(1.0, 0.0)
         ));
         return round_weight_carrier.anti_dot_product(round_weight_carrier);
     }
 }
-extension CircleRotor {
-    // Fancy infix trick
-    func operator/(_rhs: RoundWeightNormSquaredPrefixOrPostfix) -> AntiScalar {
+public extension CircleRotor {
+    // Fancy postfix trick
+    public AntiScalar operator /(RoundWeightNormSquaredPrefixOrPostfix rhs)  {
         return this.round_weight_norm_squared();
     }
 }
-extension CircleRotor: RoundWeightNormSquared {
-    associatedtype Output = AntiScalar;
-    func round_weight_norm_squared() -> Output {
-        Plane round_weight_carrier = this.round_weight().wedge(DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(float2(1.0, 0.0), 0.0, 0.0)
+public extension RoundWeightNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiScalar operator /(CircleRotor rhs) {
+        return rhs.round_weight_norm_squared();
+    }
+}
+public extension CircleRotor {
+    public AntiScalar round_weight_norm_squared() {
+        Plane round_weight_carrier = this.round_weight().wedge(DualNum(
+            /* e5, e12345 */
+            float2(1.0, 0.0)
         ));
         return round_weight_carrier.anti_dot_product(round_weight_carrier);
     }
 }
-extension Dipole {
-    // Fancy infix trick
-    func operator/(_rhs: RoundWeightNormSquaredPrefixOrPostfix) -> AntiScalar {
+public extension Dipole {
+    // Fancy postfix trick
+    public AntiScalar operator /(RoundWeightNormSquaredPrefixOrPostfix rhs)  {
         return this.round_weight_norm_squared();
     }
 }
-extension Dipole: RoundWeightNormSquared {
-    associatedtype Output = AntiScalar;
-    func round_weight_norm_squared() -> Output {
-        Line round_weight_carrier = this.round_weight().wedge(DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(float2(1.0, 0.0), 0.0, 0.0)
+public extension RoundWeightNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiScalar operator /(Dipole rhs) {
+        return rhs.round_weight_norm_squared();
+    }
+}
+public extension Dipole {
+    public AntiScalar round_weight_norm_squared() {
+        Line round_weight_carrier = this.round_weight().wedge(DualNum(
+            /* e5, e12345 */
+            float2(1.0, 0.0)
         ));
         return round_weight_carrier.anti_dot_product(round_weight_carrier);
     }
 }
-extension DipoleInversion {
-    // Fancy infix trick
-    func operator/(_rhs: RoundWeightNormSquaredPrefixOrPostfix) -> AntiScalar {
+public extension DipoleInversion {
+    // Fancy postfix trick
+    public AntiScalar operator /(RoundWeightNormSquaredPrefixOrPostfix rhs)  {
         return this.round_weight_norm_squared();
     }
 }
-extension DipoleInversion: RoundWeightNormSquared {
-    associatedtype Output = AntiScalar;
-    func round_weight_norm_squared() -> Output {
-        Motor round_weight_carrier = this.round_weight().wedge(DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(float2(1.0, 0.0), 0.0, 0.0)
+public extension RoundWeightNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiScalar operator /(DipoleInversion rhs) {
+        return rhs.round_weight_norm_squared();
+    }
+}
+public extension DipoleInversion {
+    public AntiScalar round_weight_norm_squared() {
+        Motor round_weight_carrier = this.round_weight().wedge(DualNum(
+            /* e5, e12345 */
+            float2(1.0, 0.0)
         ));
         return round_weight_carrier.anti_dot_product(round_weight_carrier);
     }
 }
-extension MultiVector {
-    // Fancy infix trick
-    func operator/(_rhs: RoundWeightNormSquaredPrefixOrPostfix) -> AntiScalar {
+public extension MultiVector {
+    // Fancy postfix trick
+    public AntiScalar operator /(RoundWeightNormSquaredPrefixOrPostfix rhs)  {
         return this.round_weight_norm_squared();
     }
 }
-extension MultiVector: RoundWeightNormSquared {
-    associatedtype Output = AntiScalar;
-    func round_weight_norm_squared() -> Output {
-        MultiVector round_weight_carrier = this.round_weight().wedge(DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(float2(1.0, 0.0), 0.0, 0.0)
+public extension RoundWeightNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiScalar operator /(MultiVector rhs) {
+        return rhs.round_weight_norm_squared();
+    }
+}
+public extension MultiVector {
+    public AntiScalar round_weight_norm_squared() {
+        MultiVector round_weight_carrier = this.round_weight().wedge(DualNum(
+            /* e5, e12345 */
+            float2(1.0, 0.0)
         ));
         return round_weight_carrier.anti_dot_product(round_weight_carrier);
     }
 }
-extension RoundPoint {
-    // Fancy infix trick
-    func operator/(_rhs: RoundWeightNormSquaredPrefixOrPostfix) -> AntiScalar {
+public extension RoundPoint {
+    // Fancy postfix trick
+    public AntiScalar operator /(RoundWeightNormSquaredPrefixOrPostfix rhs)  {
         return this.round_weight_norm_squared();
     }
 }
-extension RoundPoint: RoundWeightNormSquared {
-    associatedtype Output = AntiScalar;
-    func round_weight_norm_squared() -> Output {
-        FlatPoint round_weight_carrier = this.round_weight().wedge(DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(float2(1.0, 0.0), 0.0, 0.0)
+public extension RoundWeightNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiScalar operator /(RoundPoint rhs) {
+        return rhs.round_weight_norm_squared();
+    }
+}
+public extension RoundPoint {
+    public AntiScalar round_weight_norm_squared() {
+        FlatPoint round_weight_carrier = this.round_weight().wedge(DualNum(
+            /* e5, e12345 */
+            float2(1.0, 0.0)
         ));
         return round_weight_carrier.anti_dot_product(round_weight_carrier);
     }
 }
-extension Sphere {
-    // Fancy infix trick
-    func operator/(_rhs: RoundWeightNormSquaredPrefixOrPostfix) -> AntiScalar {
+public extension Sphere {
+    // Fancy postfix trick
+    public AntiScalar operator /(RoundWeightNormSquaredPrefixOrPostfix rhs)  {
         return this.round_weight_norm_squared();
     }
 }
-extension Sphere: RoundWeightNormSquared {
-    associatedtype Output = AntiScalar;
-    func round_weight_norm_squared() -> Output {
-        AntiScalar round_weight_carrier = this.round_weight().wedge(DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(float2(1.0, 0.0), 0.0, 0.0)
+public extension RoundWeightNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiScalar operator /(Sphere rhs) {
+        return rhs.round_weight_norm_squared();
+    }
+}
+public extension Sphere {
+    public AntiScalar round_weight_norm_squared() {
+        AntiScalar round_weight_carrier = this.round_weight().wedge(DualNum(
+            /* e5, e12345 */
+            float2(1.0, 0.0)
         ));
         return round_weight_carrier.anti_dot_product(round_weight_carrier);
     }
 }
-extension VersorEven {
-    // Fancy infix trick
-    func operator/(_rhs: RoundWeightNormSquaredPrefixOrPostfix) -> AntiScalar {
+public extension VersorEven {
+    // Fancy postfix trick
+    public AntiScalar operator /(RoundWeightNormSquaredPrefixOrPostfix rhs)  {
         return this.round_weight_norm_squared();
     }
 }
-extension VersorEven: RoundWeightNormSquared {
-    associatedtype Output = AntiScalar;
-    func round_weight_norm_squared() -> Output {
-        Flector round_weight_carrier = this.round_weight().wedge(DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(float2(1.0, 0.0), 0.0, 0.0)
+public extension RoundWeightNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiScalar operator /(VersorEven rhs) {
+        return rhs.round_weight_norm_squared();
+    }
+}
+public extension VersorEven {
+    public AntiScalar round_weight_norm_squared() {
+        Flector round_weight_carrier = this.round_weight().wedge(DualNum(
+            /* e5, e12345 */
+            float2(1.0, 0.0)
         ));
         return round_weight_carrier.anti_dot_product(round_weight_carrier);
     }
 }
-extension VersorOdd {
-    // Fancy infix trick
-    func operator/(_rhs: RoundWeightNormSquaredPrefixOrPostfix) -> AntiScalar {
+public extension VersorOdd {
+    // Fancy postfix trick
+    public AntiScalar operator /(RoundWeightNormSquaredPrefixOrPostfix rhs)  {
         return this.round_weight_norm_squared();
     }
 }
-extension VersorOdd: RoundWeightNormSquared {
-    associatedtype Output = AntiScalar;
-    func round_weight_norm_squared() -> Output {
-        Motor round_weight_carrier = this.round_weight().wedge(DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(float2(1.0, 0.0), 0.0, 0.0)
+public extension RoundWeightNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiScalar operator /(VersorOdd rhs) {
+        return rhs.round_weight_norm_squared();
+    }
+}
+public extension VersorOdd {
+    public AntiScalar round_weight_norm_squared() {
+        Motor round_weight_carrier = this.round_weight().wedge(DualNum(
+            /* e5, e12345 */
+            float2(1.0, 0.0)
         ));
         return round_weight_carrier.anti_dot_product(round_weight_carrier);
     }

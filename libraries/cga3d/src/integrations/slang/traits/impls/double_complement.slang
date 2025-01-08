@@ -1,400 +1,427 @@
-extension AntiCircleRotor {
-    // Fancy infix trick
-    func operator/(_rhs: DoubleComplementPrefixOrPostfix) -> AntiCircleRotor {
+implementing cga3d;
+using traits;
+public extension AntiCircleRotor {
+    // Fancy postfix trick
+    public AntiCircleRotor operator /(DoubleComplementPrefixOrPostfix rhs)  {
         return this.double_complement();
     }
-    func operator/=(const DoubleComplementPrefixOrPostfix& _rhs) -> AntiCircleRotor& {
-        this = this.double_complement();
-        return *this;
+}
+public extension DoubleComplementPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiCircleRotor operator /(AntiCircleRotor rhs) {
+        return rhs.double_complement();
     }
 }
-extension AntiCircleRotor: DoubleComplement {
-    associatedtype Output = AntiCircleRotor;
-    func double_complement() -> Output {
+public extension AntiCircleRotor {
+    public AntiCircleRotor double_complement() {
         return this;
     }
 }
-extension AntiDipoleInversion {
-    // Fancy infix trick
-    func operator/(_rhs: DoubleComplementPrefixOrPostfix) -> AntiDipoleInversion {
+public extension AntiDipoleInversion {
+    // Fancy postfix trick
+    public AntiDipoleInversion operator /(DoubleComplementPrefixOrPostfix rhs)  {
         return this.double_complement();
     }
-    func operator/=(const DoubleComplementPrefixOrPostfix& _rhs) -> AntiDipoleInversion& {
-        this = this.double_complement();
-        return *this;
+}
+public extension DoubleComplementPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiDipoleInversion operator /(AntiDipoleInversion rhs) {
+        return rhs.double_complement();
     }
 }
-extension AntiDipoleInversion: DoubleComplement {
-    associatedtype Output = AntiDipoleInversion;
-    func double_complement() -> Output {
+public extension AntiDipoleInversion {
+    public AntiDipoleInversion double_complement() {
         return this;
     }
 }
-extension AntiDualNum {
-    // Fancy infix trick
-    func operator/(_rhs: DoubleComplementPrefixOrPostfix) -> AntiDualNum {
+public extension AntiDualNum {
+    // Fancy postfix trick
+    public AntiDualNum operator /(DoubleComplementPrefixOrPostfix rhs)  {
         return this.double_complement();
     }
-    func operator/=(const DoubleComplementPrefixOrPostfix& _rhs) -> AntiDualNum& {
-        this = this.double_complement();
-        return *this;
+}
+public extension DoubleComplementPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiDualNum operator /(AntiDualNum rhs) {
+        return rhs.double_complement();
     }
 }
-extension AntiDualNum: DoubleComplement {
-    associatedtype Output = AntiDualNum;
-    func double_complement() -> Output {
+public extension AntiDualNum {
+    public AntiDualNum double_complement() {
         return this;
     }
 }
-extension AntiFlatPoint {
-    // Fancy infix trick
-    func operator/(_rhs: DoubleComplementPrefixOrPostfix) -> AntiFlatPoint {
+public extension AntiFlatPoint {
+    // Fancy postfix trick
+    public AntiFlatPoint operator /(DoubleComplementPrefixOrPostfix rhs)  {
         return this.double_complement();
     }
-    func operator/=(const DoubleComplementPrefixOrPostfix& _rhs) -> AntiFlatPoint& {
-        this = this.double_complement();
-        return *this;
+}
+public extension DoubleComplementPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiFlatPoint operator /(AntiFlatPoint rhs) {
+        return rhs.double_complement();
     }
 }
-extension AntiFlatPoint: DoubleComplement {
-    associatedtype Output = AntiFlatPoint;
-    func double_complement() -> Output {
+public extension AntiFlatPoint {
+    public AntiFlatPoint double_complement() {
         return this;
     }
 }
-extension AntiFlector {
-    // Fancy infix trick
-    func operator/(_rhs: DoubleComplementPrefixOrPostfix) -> AntiFlector {
+public extension AntiFlector {
+    // Fancy postfix trick
+    public AntiFlector operator /(DoubleComplementPrefixOrPostfix rhs)  {
         return this.double_complement();
     }
-    func operator/=(const DoubleComplementPrefixOrPostfix& _rhs) -> AntiFlector& {
-        this = this.double_complement();
-        return *this;
+}
+public extension DoubleComplementPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiFlector operator /(AntiFlector rhs) {
+        return rhs.double_complement();
     }
 }
-extension AntiFlector: DoubleComplement {
-    associatedtype Output = AntiFlector;
-    func double_complement() -> Output {
+public extension AntiFlector {
+    public AntiFlector double_complement() {
         return this;
     }
 }
-extension AntiLine {
-    // Fancy infix trick
-    func operator/(_rhs: DoubleComplementPrefixOrPostfix) -> AntiLine {
+public extension AntiLine {
+    // Fancy postfix trick
+    public AntiLine operator /(DoubleComplementPrefixOrPostfix rhs)  {
         return this.double_complement();
     }
-    func operator/=(const DoubleComplementPrefixOrPostfix& _rhs) -> AntiLine& {
-        this = this.double_complement();
-        return *this;
+}
+public extension DoubleComplementPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiLine operator /(AntiLine rhs) {
+        return rhs.double_complement();
     }
 }
-extension AntiLine: DoubleComplement {
-    associatedtype Output = AntiLine;
-    func double_complement() -> Output {
+public extension AntiLine {
+    public AntiLine double_complement() {
         return this;
     }
 }
-extension AntiMotor {
-    // Fancy infix trick
-    func operator/(_rhs: DoubleComplementPrefixOrPostfix) -> AntiMotor {
+public extension AntiMotor {
+    // Fancy postfix trick
+    public AntiMotor operator /(DoubleComplementPrefixOrPostfix rhs)  {
         return this.double_complement();
     }
-    func operator/=(const DoubleComplementPrefixOrPostfix& _rhs) -> AntiMotor& {
-        this = this.double_complement();
-        return *this;
+}
+public extension DoubleComplementPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiMotor operator /(AntiMotor rhs) {
+        return rhs.double_complement();
     }
 }
-extension AntiMotor: DoubleComplement {
-    associatedtype Output = AntiMotor;
-    func double_complement() -> Output {
+public extension AntiMotor {
+    public AntiMotor double_complement() {
         return this;
     }
 }
-extension AntiPlane {
-    // Fancy infix trick
-    func operator/(_rhs: DoubleComplementPrefixOrPostfix) -> AntiPlane {
+public extension AntiPlane {
+    // Fancy postfix trick
+    public AntiPlane operator /(DoubleComplementPrefixOrPostfix rhs)  {
         return this.double_complement();
     }
-    func operator/=(const DoubleComplementPrefixOrPostfix& _rhs) -> AntiPlane& {
-        this = this.double_complement();
-        return *this;
+}
+public extension DoubleComplementPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiPlane operator /(AntiPlane rhs) {
+        return rhs.double_complement();
     }
 }
-extension AntiPlane: DoubleComplement {
-    associatedtype Output = AntiPlane;
-    func double_complement() -> Output {
+public extension AntiPlane {
+    public AntiPlane double_complement() {
         return this;
     }
 }
-extension AntiScalar {
-    // Fancy infix trick
-    func operator/(_rhs: DoubleComplementPrefixOrPostfix) -> AntiScalar {
+public extension AntiScalar {
+    // Fancy postfix trick
+    public AntiScalar operator /(DoubleComplementPrefixOrPostfix rhs)  {
         return this.double_complement();
     }
-    func operator/=(const DoubleComplementPrefixOrPostfix& _rhs) -> AntiScalar& {
-        this = this.double_complement();
-        return *this;
+}
+public extension DoubleComplementPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiScalar operator /(AntiScalar rhs) {
+        return rhs.double_complement();
     }
 }
-extension AntiScalar: DoubleComplement {
-    associatedtype Output = AntiScalar;
-    func double_complement() -> Output {
+public extension AntiScalar {
+    public AntiScalar double_complement() {
         return this;
     }
 }
-extension Circle {
-    // Fancy infix trick
-    func operator/(_rhs: DoubleComplementPrefixOrPostfix) -> Circle {
+public extension Circle {
+    // Fancy postfix trick
+    public Circle operator /(DoubleComplementPrefixOrPostfix rhs)  {
         return this.double_complement();
     }
-    func operator/=(const DoubleComplementPrefixOrPostfix& _rhs) -> Circle& {
-        this = this.double_complement();
-        return *this;
+}
+public extension DoubleComplementPrefixOrPostfix {
+    // Fancy prefix trick
+    public Circle operator /(Circle rhs) {
+        return rhs.double_complement();
     }
 }
-extension Circle: DoubleComplement {
-    associatedtype Output = Circle;
-    func double_complement() -> Output {
+public extension Circle {
+    public Circle double_complement() {
         return this;
     }
 }
-extension CircleRotor {
-    // Fancy infix trick
-    func operator/(_rhs: DoubleComplementPrefixOrPostfix) -> CircleRotor {
+public extension CircleRotor {
+    // Fancy postfix trick
+    public CircleRotor operator /(DoubleComplementPrefixOrPostfix rhs)  {
         return this.double_complement();
     }
-    func operator/=(const DoubleComplementPrefixOrPostfix& _rhs) -> CircleRotor& {
-        this = this.double_complement();
-        return *this;
+}
+public extension DoubleComplementPrefixOrPostfix {
+    // Fancy prefix trick
+    public CircleRotor operator /(CircleRotor rhs) {
+        return rhs.double_complement();
     }
 }
-extension CircleRotor: DoubleComplement {
-    associatedtype Output = CircleRotor;
-    func double_complement() -> Output {
+public extension CircleRotor {
+    public CircleRotor double_complement() {
         return this;
     }
 }
-extension Dipole {
-    // Fancy infix trick
-    func operator/(_rhs: DoubleComplementPrefixOrPostfix) -> Dipole {
+public extension Dipole {
+    // Fancy postfix trick
+    public Dipole operator /(DoubleComplementPrefixOrPostfix rhs)  {
         return this.double_complement();
     }
-    func operator/=(const DoubleComplementPrefixOrPostfix& _rhs) -> Dipole& {
-        this = this.double_complement();
-        return *this;
+}
+public extension DoubleComplementPrefixOrPostfix {
+    // Fancy prefix trick
+    public Dipole operator /(Dipole rhs) {
+        return rhs.double_complement();
     }
 }
-extension Dipole: DoubleComplement {
-    associatedtype Output = Dipole;
-    func double_complement() -> Output {
+public extension Dipole {
+    public Dipole double_complement() {
         return this;
     }
 }
-extension DipoleInversion {
-    // Fancy infix trick
-    func operator/(_rhs: DoubleComplementPrefixOrPostfix) -> DipoleInversion {
+public extension DipoleInversion {
+    // Fancy postfix trick
+    public DipoleInversion operator /(DoubleComplementPrefixOrPostfix rhs)  {
         return this.double_complement();
     }
-    func operator/=(const DoubleComplementPrefixOrPostfix& _rhs) -> DipoleInversion& {
-        this = this.double_complement();
-        return *this;
+}
+public extension DoubleComplementPrefixOrPostfix {
+    // Fancy prefix trick
+    public DipoleInversion operator /(DipoleInversion rhs) {
+        return rhs.double_complement();
     }
 }
-extension DipoleInversion: DoubleComplement {
-    associatedtype Output = DipoleInversion;
-    func double_complement() -> Output {
+public extension DipoleInversion {
+    public DipoleInversion double_complement() {
         return this;
     }
 }
-extension DualNum {
-    // Fancy infix trick
-    func operator/(_rhs: DoubleComplementPrefixOrPostfix) -> DualNum {
+public extension DualNum {
+    // Fancy postfix trick
+    public DualNum operator /(DoubleComplementPrefixOrPostfix rhs)  {
         return this.double_complement();
     }
-    func operator/=(const DoubleComplementPrefixOrPostfix& _rhs) -> DualNum& {
-        this = this.double_complement();
-        return *this;
+}
+public extension DoubleComplementPrefixOrPostfix {
+    // Fancy prefix trick
+    public DualNum operator /(DualNum rhs) {
+        return rhs.double_complement();
     }
 }
-extension DualNum: DoubleComplement {
-    associatedtype Output = DualNum;
-    func double_complement() -> Output {
+public extension DualNum {
+    public DualNum double_complement() {
         return this;
     }
 }
-extension FlatPoint {
-    // Fancy infix trick
-    func operator/(_rhs: DoubleComplementPrefixOrPostfix) -> FlatPoint {
+public extension FlatPoint {
+    // Fancy postfix trick
+    public FlatPoint operator /(DoubleComplementPrefixOrPostfix rhs)  {
         return this.double_complement();
     }
-    func operator/=(const DoubleComplementPrefixOrPostfix& _rhs) -> FlatPoint& {
-        this = this.double_complement();
-        return *this;
+}
+public extension DoubleComplementPrefixOrPostfix {
+    // Fancy prefix trick
+    public FlatPoint operator /(FlatPoint rhs) {
+        return rhs.double_complement();
     }
 }
-extension FlatPoint: DoubleComplement {
-    associatedtype Output = FlatPoint;
-    func double_complement() -> Output {
+public extension FlatPoint {
+    public FlatPoint double_complement() {
         return this;
     }
 }
-extension Flector {
-    // Fancy infix trick
-    func operator/(_rhs: DoubleComplementPrefixOrPostfix) -> Flector {
+public extension Flector {
+    // Fancy postfix trick
+    public Flector operator /(DoubleComplementPrefixOrPostfix rhs)  {
         return this.double_complement();
     }
-    func operator/=(const DoubleComplementPrefixOrPostfix& _rhs) -> Flector& {
-        this = this.double_complement();
-        return *this;
+}
+public extension DoubleComplementPrefixOrPostfix {
+    // Fancy prefix trick
+    public Flector operator /(Flector rhs) {
+        return rhs.double_complement();
     }
 }
-extension Flector: DoubleComplement {
-    associatedtype Output = Flector;
-    func double_complement() -> Output {
+public extension Flector {
+    public Flector double_complement() {
         return this;
     }
 }
-extension Line {
-    // Fancy infix trick
-    func operator/(_rhs: DoubleComplementPrefixOrPostfix) -> Line {
+public extension Line {
+    // Fancy postfix trick
+    public Line operator /(DoubleComplementPrefixOrPostfix rhs)  {
         return this.double_complement();
     }
-    func operator/=(const DoubleComplementPrefixOrPostfix& _rhs) -> Line& {
-        this = this.double_complement();
-        return *this;
+}
+public extension DoubleComplementPrefixOrPostfix {
+    // Fancy prefix trick
+    public Line operator /(Line rhs) {
+        return rhs.double_complement();
     }
 }
-extension Line: DoubleComplement {
-    associatedtype Output = Line;
-    func double_complement() -> Output {
+public extension Line {
+    public Line double_complement() {
         return this;
     }
 }
-extension Motor {
-    // Fancy infix trick
-    func operator/(_rhs: DoubleComplementPrefixOrPostfix) -> Motor {
+public extension Motor {
+    // Fancy postfix trick
+    public Motor operator /(DoubleComplementPrefixOrPostfix rhs)  {
         return this.double_complement();
     }
-    func operator/=(const DoubleComplementPrefixOrPostfix& _rhs) -> Motor& {
-        this = this.double_complement();
-        return *this;
+}
+public extension DoubleComplementPrefixOrPostfix {
+    // Fancy prefix trick
+    public Motor operator /(Motor rhs) {
+        return rhs.double_complement();
     }
 }
-extension Motor: DoubleComplement {
-    associatedtype Output = Motor;
-    func double_complement() -> Output {
+public extension Motor {
+    public Motor double_complement() {
         return this;
     }
 }
-extension MultiVector {
-    // Fancy infix trick
-    func operator/(_rhs: DoubleComplementPrefixOrPostfix) -> MultiVector {
+public extension MultiVector {
+    // Fancy postfix trick
+    public MultiVector operator /(DoubleComplementPrefixOrPostfix rhs)  {
         return this.double_complement();
     }
-    func operator/=(const DoubleComplementPrefixOrPostfix& _rhs) -> MultiVector& {
-        this = this.double_complement();
-        return *this;
+}
+public extension DoubleComplementPrefixOrPostfix {
+    // Fancy prefix trick
+    public MultiVector operator /(MultiVector rhs) {
+        return rhs.double_complement();
     }
 }
-extension MultiVector: DoubleComplement {
-    associatedtype Output = MultiVector;
-    func double_complement() -> Output {
+public extension MultiVector {
+    public MultiVector double_complement() {
         return this;
     }
 }
-extension Plane {
-    // Fancy infix trick
-    func operator/(_rhs: DoubleComplementPrefixOrPostfix) -> Plane {
+public extension Plane {
+    // Fancy postfix trick
+    public Plane operator /(DoubleComplementPrefixOrPostfix rhs)  {
         return this.double_complement();
     }
-    func operator/=(const DoubleComplementPrefixOrPostfix& _rhs) -> Plane& {
-        this = this.double_complement();
-        return *this;
+}
+public extension DoubleComplementPrefixOrPostfix {
+    // Fancy prefix trick
+    public Plane operator /(Plane rhs) {
+        return rhs.double_complement();
     }
 }
-extension Plane: DoubleComplement {
-    associatedtype Output = Plane;
-    func double_complement() -> Output {
+public extension Plane {
+    public Plane double_complement() {
         return this;
     }
 }
-extension RoundPoint {
-    // Fancy infix trick
-    func operator/(_rhs: DoubleComplementPrefixOrPostfix) -> RoundPoint {
+public extension RoundPoint {
+    // Fancy postfix trick
+    public RoundPoint operator /(DoubleComplementPrefixOrPostfix rhs)  {
         return this.double_complement();
     }
-    func operator/=(const DoubleComplementPrefixOrPostfix& _rhs) -> RoundPoint& {
-        this = this.double_complement();
-        return *this;
+}
+public extension DoubleComplementPrefixOrPostfix {
+    // Fancy prefix trick
+    public RoundPoint operator /(RoundPoint rhs) {
+        return rhs.double_complement();
     }
 }
-extension RoundPoint: DoubleComplement {
-    associatedtype Output = RoundPoint;
-    func double_complement() -> Output {
+public extension RoundPoint {
+    public RoundPoint double_complement() {
         return this;
     }
 }
-extension Scalar {
-    // Fancy infix trick
-    func operator/(_rhs: DoubleComplementPrefixOrPostfix) -> Scalar {
+public extension Scalar {
+    // Fancy postfix trick
+    public Scalar operator /(DoubleComplementPrefixOrPostfix rhs)  {
         return this.double_complement();
     }
-    func operator/=(const DoubleComplementPrefixOrPostfix& _rhs) -> Scalar& {
-        this = this.double_complement();
-        return *this;
+}
+public extension DoubleComplementPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(Scalar rhs) {
+        return rhs.double_complement();
     }
 }
-extension Scalar: DoubleComplement {
-    associatedtype Output = Scalar;
-    func double_complement() -> Output {
+public extension Scalar {
+    public Scalar double_complement() {
         return this;
     }
 }
-extension Sphere {
-    // Fancy infix trick
-    func operator/(_rhs: DoubleComplementPrefixOrPostfix) -> Sphere {
+public extension Sphere {
+    // Fancy postfix trick
+    public Sphere operator /(DoubleComplementPrefixOrPostfix rhs)  {
         return this.double_complement();
     }
-    func operator/=(const DoubleComplementPrefixOrPostfix& _rhs) -> Sphere& {
-        this = this.double_complement();
-        return *this;
+}
+public extension DoubleComplementPrefixOrPostfix {
+    // Fancy prefix trick
+    public Sphere operator /(Sphere rhs) {
+        return rhs.double_complement();
     }
 }
-extension Sphere: DoubleComplement {
-    associatedtype Output = Sphere;
-    func double_complement() -> Output {
+public extension Sphere {
+    public Sphere double_complement() {
         return this;
     }
 }
-extension VersorEven {
-    // Fancy infix trick
-    func operator/(_rhs: DoubleComplementPrefixOrPostfix) -> VersorEven {
+public extension VersorEven {
+    // Fancy postfix trick
+    public VersorEven operator /(DoubleComplementPrefixOrPostfix rhs)  {
         return this.double_complement();
     }
-    func operator/=(const DoubleComplementPrefixOrPostfix& _rhs) -> VersorEven& {
-        this = this.double_complement();
-        return *this;
+}
+public extension DoubleComplementPrefixOrPostfix {
+    // Fancy prefix trick
+    public VersorEven operator /(VersorEven rhs) {
+        return rhs.double_complement();
     }
 }
-extension VersorEven: DoubleComplement {
-    associatedtype Output = VersorEven;
-    func double_complement() -> Output {
+public extension VersorEven {
+    public VersorEven double_complement() {
         return this;
     }
 }
-extension VersorOdd {
-    // Fancy infix trick
-    func operator/(_rhs: DoubleComplementPrefixOrPostfix) -> VersorOdd {
+public extension VersorOdd {
+    // Fancy postfix trick
+    public VersorOdd operator /(DoubleComplementPrefixOrPostfix rhs)  {
         return this.double_complement();
     }
-    func operator/=(const DoubleComplementPrefixOrPostfix& _rhs) -> VersorOdd& {
-        this = this.double_complement();
-        return *this;
+}
+public extension DoubleComplementPrefixOrPostfix {
+    // Fancy prefix trick
+    public VersorOdd operator /(VersorOdd rhs) {
+        return rhs.double_complement();
     }
 }
-extension VersorOdd: DoubleComplement {
-    associatedtype Output = VersorOdd;
-    func double_complement() -> Output {
+public extension VersorOdd {
+    public VersorOdd double_complement() {
         return this;
     }
 }

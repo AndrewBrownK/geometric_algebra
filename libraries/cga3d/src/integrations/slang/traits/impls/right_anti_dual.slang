@@ -1,15 +1,22 @@
-extension AntiCircleRotor {
-    // Fancy infix trick
-    func operator/(_rhs: RightAntiDualPrefixOrPostfix) -> CircleRotor {
+implementing cga3d;
+using traits;
+public extension AntiCircleRotor {
+    // Fancy postfix trick
+    public CircleRotor operator /(RightAntiDualPrefixOrPostfix rhs)  {
         return this.right_anti_dual();
     }
 }
-extension AntiCircleRotor: RightAntiDual {
-    associatedtype Output = CircleRotor;
-    func right_anti_dual() -> Output {
-        return CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz * float3(-1.0), 0.0), 
+public extension RightAntiDualPrefixOrPostfix {
+    // Fancy prefix trick
+    public CircleRotor operator /(AntiCircleRotor rhs) {
+        return rhs.right_anti_dual();
+    }
+}
+public extension AntiCircleRotor {
+    public CircleRotor right_anti_dual() {
+        return CircleRotor(
+            /* e423, e431, e412 */
+            this.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             this.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e12345 */
@@ -17,18 +24,23 @@ extension AntiCircleRotor: RightAntiDual {
         );
     }
 }
-extension AntiDipoleInversion {
-    // Fancy infix trick
-    func operator/(_rhs: RightAntiDualPrefixOrPostfix) -> DipoleInversion {
+public extension AntiDipoleInversion {
+    // Fancy postfix trick
+    public DipoleInversion operator /(RightAntiDualPrefixOrPostfix rhs)  {
         return this.right_anti_dual();
     }
 }
-extension AntiDipoleInversion: RightAntiDual {
-    associatedtype Output = DipoleInversion;
-    func right_anti_dual() -> Output {
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(this.group0.xyz, 0.0), 
+public extension RightAntiDualPrefixOrPostfix {
+    // Fancy prefix trick
+    public DipoleInversion operator /(AntiDipoleInversion rhs) {
+        return rhs.right_anti_dual();
+    }
+}
+public extension AntiDipoleInversion {
+    public DipoleInversion right_anti_dual() {
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            this.group0.xyz, 
             /* e23, e31, e12, e45 */
             this.group1 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, e1234 */
@@ -38,46 +50,61 @@ extension AntiDipoleInversion: RightAntiDual {
         );
     }
 }
-extension AntiDualNum {
-    // Fancy infix trick
-    func operator/(_rhs: RightAntiDualPrefixOrPostfix) -> DualNum {
+public extension AntiDualNum {
+    // Fancy postfix trick
+    public DualNum operator /(RightAntiDualPrefixOrPostfix rhs)  {
         return this.right_anti_dual();
     }
 }
-extension AntiDualNum: RightAntiDual {
-    associatedtype Output = DualNum;
-    func right_anti_dual() -> Output {
-        return DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(this.group0.xy, 0.0, 0.0)
+public extension RightAntiDualPrefixOrPostfix {
+    // Fancy prefix trick
+    public DualNum operator /(AntiDualNum rhs) {
+        return rhs.right_anti_dual();
+    }
+}
+public extension AntiDualNum {
+    public DualNum right_anti_dual() {
+        return DualNum(
+            /* e5, e12345 */
+            this.group0.xy
         );
     }
 }
-extension AntiFlatPoint {
-    // Fancy infix trick
-    func operator/(_rhs: RightAntiDualPrefixOrPostfix) -> FlatPoint {
+public extension AntiFlatPoint {
+    // Fancy postfix trick
+    public FlatPoint operator /(RightAntiDualPrefixOrPostfix rhs)  {
         return this.right_anti_dual();
     }
 }
-extension AntiFlatPoint: RightAntiDual {
-    associatedtype Output = FlatPoint;
-    func right_anti_dual() -> Output {
-        return FlatPoint.from_groups(
+public extension RightAntiDualPrefixOrPostfix {
+    // Fancy prefix trick
+    public FlatPoint operator /(AntiFlatPoint rhs) {
+        return rhs.right_anti_dual();
+    }
+}
+public extension AntiFlatPoint {
+    public FlatPoint right_anti_dual() {
+        return FlatPoint(
             /* e15, e25, e35, e45 */
             this.group0 * float4(1.0, 1.0, 1.0, -1.0)
         );
     }
 }
-extension AntiFlector {
-    // Fancy infix trick
-    func operator/(_rhs: RightAntiDualPrefixOrPostfix) -> Flector {
+public extension AntiFlector {
+    // Fancy postfix trick
+    public Flector operator /(RightAntiDualPrefixOrPostfix rhs)  {
         return this.right_anti_dual();
     }
 }
-extension AntiFlector: RightAntiDual {
-    associatedtype Output = Flector;
-    func right_anti_dual() -> Output {
-        return Flector.from_groups(
+public extension RightAntiDualPrefixOrPostfix {
+    // Fancy prefix trick
+    public Flector operator /(AntiFlector rhs) {
+        return rhs.right_anti_dual();
+    }
+}
+public extension AntiFlector {
+    public Flector right_anti_dual() {
+        return Flector(
             /* e15, e25, e35, e45 */
             this.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e4235, e4315, e4125, e3215 */
@@ -85,33 +112,43 @@ extension AntiFlector: RightAntiDual {
         );
     }
 }
-extension AntiLine {
-    // Fancy infix trick
-    func operator/(_rhs: RightAntiDualPrefixOrPostfix) -> Line {
+public extension AntiLine {
+    // Fancy postfix trick
+    public Line operator /(RightAntiDualPrefixOrPostfix rhs)  {
         return this.right_anti_dual();
     }
 }
-extension AntiLine: RightAntiDual {
-    associatedtype Output = Line;
-    func right_anti_dual() -> Output {
-        return Line.from_groups(
-            /* e415, e425, e435, 0 */
-            float4(this.group0.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group1.xyz * float3(-1.0), 0.0)
+public extension RightAntiDualPrefixOrPostfix {
+    // Fancy prefix trick
+    public Line operator /(AntiLine rhs) {
+        return rhs.right_anti_dual();
+    }
+}
+public extension AntiLine {
+    public Line right_anti_dual() {
+        return Line(
+            /* e415, e425, e435 */
+            this.group0.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            this.group1.xyz * float3(-1.0)
         );
     }
 }
-extension AntiMotor {
-    // Fancy infix trick
-    func operator/(_rhs: RightAntiDualPrefixOrPostfix) -> Motor {
+public extension AntiMotor {
+    // Fancy postfix trick
+    public Motor operator /(RightAntiDualPrefixOrPostfix rhs)  {
         return this.right_anti_dual();
     }
 }
-extension AntiMotor: RightAntiDual {
-    associatedtype Output = Motor;
-    func right_anti_dual() -> Output {
-        return Motor.from_groups(
+public extension RightAntiDualPrefixOrPostfix {
+    // Fancy prefix trick
+    public Motor operator /(AntiMotor rhs) {
+        return rhs.right_anti_dual();
+    }
+}
+public extension AntiMotor {
+    public Motor right_anti_dual() {
+        return Motor(
             /* e415, e425, e435, e12345 */
             this.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e5 */
@@ -119,67 +156,87 @@ extension AntiMotor: RightAntiDual {
         );
     }
 }
-extension AntiPlane {
-    // Fancy infix trick
-    func operator/(_rhs: RightAntiDualPrefixOrPostfix) -> Plane {
+public extension AntiPlane {
+    // Fancy postfix trick
+    public Plane operator /(RightAntiDualPrefixOrPostfix rhs)  {
         return this.right_anti_dual();
     }
 }
-extension AntiPlane: RightAntiDual {
-    associatedtype Output = Plane;
-    func right_anti_dual() -> Output {
-        return Plane.from_groups(
+public extension RightAntiDualPrefixOrPostfix {
+    // Fancy prefix trick
+    public Plane operator /(AntiPlane rhs) {
+        return rhs.right_anti_dual();
+    }
+}
+public extension AntiPlane {
+    public Plane right_anti_dual() {
+        return Plane(
             /* e4235, e4315, e4125, e3215 */
             this.group0 * float4(1.0, 1.0, 1.0, -1.0)
         );
     }
 }
-extension AntiScalar {
-    // Fancy infix trick
-    func operator/(_rhs: RightAntiDualPrefixOrPostfix) -> Scalar {
+public extension AntiScalar {
+    // Fancy postfix trick
+    public Scalar operator /(RightAntiDualPrefixOrPostfix rhs)  {
         return this.right_anti_dual();
     }
 }
-extension AntiScalar: RightAntiDual {
-    associatedtype Output = Scalar;
-    func right_anti_dual() -> Output {
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(this.e12345 * -1.0, 0.0, 0.0, 0.0)
+public extension RightAntiDualPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(AntiScalar rhs) {
+        return rhs.right_anti_dual();
+    }
+}
+public extension AntiScalar {
+    public Scalar right_anti_dual() {
+        return Scalar(
+            /* scalar */
+            this.e12345 * -1.0
         );
     }
 }
-extension Circle {
-    // Fancy infix trick
-    func operator/(_rhs: RightAntiDualPrefixOrPostfix) -> Dipole {
+public extension Circle {
+    // Fancy postfix trick
+    public Dipole operator /(RightAntiDualPrefixOrPostfix rhs)  {
         return this.right_anti_dual();
     }
 }
-extension Circle: RightAntiDual {
-    associatedtype Output = Dipole;
-    func right_anti_dual() -> Output {
-        return Dipole.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(this.group0.xyz, 0.0), 
+public extension RightAntiDualPrefixOrPostfix {
+    // Fancy prefix trick
+    public Dipole operator /(Circle rhs) {
+        return rhs.right_anti_dual();
+    }
+}
+public extension Circle {
+    public Dipole right_anti_dual() {
+        return Dipole(
+            /* e41, e42, e43 */
+            this.group0.xyz, 
             /* e23, e31, e12, e45 */
             this.group1 * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e15, e25, e35, 0 */
-            float4(this.group2.xyz, 0.0)
+            /* e15, e25, e35 */
+            this.group2.xyz
         );
     }
 }
-extension CircleRotor {
-    // Fancy infix trick
-    func operator/(_rhs: RightAntiDualPrefixOrPostfix) -> AntiCircleRotor {
+public extension CircleRotor {
+    // Fancy postfix trick
+    public AntiCircleRotor operator /(RightAntiDualPrefixOrPostfix rhs)  {
         return this.right_anti_dual();
     }
 }
-extension CircleRotor: RightAntiDual {
-    associatedtype Output = AntiCircleRotor;
-    func right_anti_dual() -> Output {
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(this.group0.xyz, 0.0), 
+public extension RightAntiDualPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiCircleRotor operator /(CircleRotor rhs) {
+        return rhs.right_anti_dual();
+    }
+}
+public extension CircleRotor {
+    public AntiCircleRotor right_anti_dual() {
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            this.group0.xyz, 
             /* e23, e31, e12, e45 */
             this.group1 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, scalar */
@@ -187,37 +244,47 @@ extension CircleRotor: RightAntiDual {
         );
     }
 }
-extension Dipole {
-    // Fancy infix trick
-    func operator/(_rhs: RightAntiDualPrefixOrPostfix) -> Circle {
+public extension Dipole {
+    // Fancy postfix trick
+    public Circle operator /(RightAntiDualPrefixOrPostfix rhs)  {
         return this.right_anti_dual();
     }
 }
-extension Dipole: RightAntiDual {
-    associatedtype Output = Circle;
-    func right_anti_dual() -> Output {
-        return Circle.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz * float3(-1.0), 0.0), 
+public extension RightAntiDualPrefixOrPostfix {
+    // Fancy prefix trick
+    public Circle operator /(Dipole rhs) {
+        return rhs.right_anti_dual();
+    }
+}
+public extension Dipole {
+    public Circle right_anti_dual() {
+        return Circle(
+            /* e423, e431, e412 */
+            this.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             this.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group2.xyz * float3(-1.0), 0.0)
+            /* e235, e315, e125 */
+            this.group2.xyz * float3(-1.0)
         );
     }
 }
-extension DipoleInversion {
-    // Fancy infix trick
-    func operator/(_rhs: RightAntiDualPrefixOrPostfix) -> AntiDipoleInversion {
+public extension DipoleInversion {
+    // Fancy postfix trick
+    public AntiDipoleInversion operator /(RightAntiDualPrefixOrPostfix rhs)  {
         return this.right_anti_dual();
     }
 }
-extension DipoleInversion: RightAntiDual {
-    associatedtype Output = AntiDipoleInversion;
-    func right_anti_dual() -> Output {
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz * float3(-1.0), 0.0), 
+public extension RightAntiDualPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiDipoleInversion operator /(DipoleInversion rhs) {
+        return rhs.right_anti_dual();
+    }
+}
+public extension DipoleInversion {
+    public AntiDipoleInversion right_anti_dual() {
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            this.group0.xyz * float3(-1.0), 
             /* e415, e425, e435, e321 */
             this.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e4 */
@@ -227,46 +294,61 @@ extension DipoleInversion: RightAntiDual {
         );
     }
 }
-extension DualNum {
-    // Fancy infix trick
-    func operator/(_rhs: RightAntiDualPrefixOrPostfix) -> AntiDualNum {
+public extension DualNum {
+    // Fancy postfix trick
+    public AntiDualNum operator /(RightAntiDualPrefixOrPostfix rhs)  {
         return this.right_anti_dual();
     }
 }
-extension DualNum: RightAntiDual {
-    associatedtype Output = AntiDualNum;
-    func right_anti_dual() -> Output {
-        return AntiDualNum.from_groups(
-            /* e3215, scalar, 0, 0 */
-            float4(this.group0.xy * float2(-1.0), 0.0, 0.0)
+public extension RightAntiDualPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiDualNum operator /(DualNum rhs) {
+        return rhs.right_anti_dual();
+    }
+}
+public extension DualNum {
+    public AntiDualNum right_anti_dual() {
+        return AntiDualNum(
+            /* e3215, scalar */
+            this.group0.xy * float2(-1.0)
         );
     }
 }
-extension FlatPoint {
-    // Fancy infix trick
-    func operator/(_rhs: RightAntiDualPrefixOrPostfix) -> AntiFlatPoint {
+public extension FlatPoint {
+    // Fancy postfix trick
+    public AntiFlatPoint operator /(RightAntiDualPrefixOrPostfix rhs)  {
         return this.right_anti_dual();
     }
 }
-extension FlatPoint: RightAntiDual {
-    associatedtype Output = AntiFlatPoint;
-    func right_anti_dual() -> Output {
-        return AntiFlatPoint.from_groups(
+public extension RightAntiDualPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiFlatPoint operator /(FlatPoint rhs) {
+        return rhs.right_anti_dual();
+    }
+}
+public extension FlatPoint {
+    public AntiFlatPoint right_anti_dual() {
+        return AntiFlatPoint(
             /* e235, e315, e125, e321 */
             this.group0 * float4(-1.0, -1.0, -1.0, 1.0)
         );
     }
 }
-extension Flector {
-    // Fancy infix trick
-    func operator/(_rhs: RightAntiDualPrefixOrPostfix) -> AntiFlector {
+public extension Flector {
+    // Fancy postfix trick
+    public AntiFlector operator /(RightAntiDualPrefixOrPostfix rhs)  {
         return this.right_anti_dual();
     }
 }
-extension Flector: RightAntiDual {
-    associatedtype Output = AntiFlector;
-    func right_anti_dual() -> Output {
-        return AntiFlector.from_groups(
+public extension RightAntiDualPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiFlector operator /(Flector rhs) {
+        return rhs.right_anti_dual();
+    }
+}
+public extension Flector {
+    public AntiFlector right_anti_dual() {
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             this.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e1, e2, e3, e5 */
@@ -274,33 +356,43 @@ extension Flector: RightAntiDual {
         );
     }
 }
-extension Line {
-    // Fancy infix trick
-    func operator/(_rhs: RightAntiDualPrefixOrPostfix) -> AntiLine {
+public extension Line {
+    // Fancy postfix trick
+    public AntiLine operator /(RightAntiDualPrefixOrPostfix rhs)  {
         return this.right_anti_dual();
     }
 }
-extension Line: RightAntiDual {
-    associatedtype Output = AntiLine;
-    func right_anti_dual() -> Output {
-        return AntiLine.from_groups(
-            /* e23, e31, e12, 0 */
-            float4(this.group0.xyz, 0.0), 
-            /* e15, e25, e35, 0 */
-            float4(this.group1.xyz, 0.0)
+public extension RightAntiDualPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiLine operator /(Line rhs) {
+        return rhs.right_anti_dual();
+    }
+}
+public extension Line {
+    public AntiLine right_anti_dual() {
+        return AntiLine(
+            /* e23, e31, e12 */
+            this.group0.xyz, 
+            /* e15, e25, e35 */
+            this.group1.xyz
         );
     }
 }
-extension Motor {
-    // Fancy infix trick
-    func operator/(_rhs: RightAntiDualPrefixOrPostfix) -> AntiMotor {
+public extension Motor {
+    // Fancy postfix trick
+    public AntiMotor operator /(RightAntiDualPrefixOrPostfix rhs)  {
         return this.right_anti_dual();
     }
 }
-extension Motor: RightAntiDual {
-    associatedtype Output = AntiMotor;
-    func right_anti_dual() -> Output {
-        return AntiMotor.from_groups(
+public extension RightAntiDualPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiMotor operator /(Motor rhs) {
+        return rhs.right_anti_dual();
+    }
+}
+public extension Motor {
+    public AntiMotor right_anti_dual() {
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             this.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, e3215 */
@@ -308,119 +400,145 @@ extension Motor: RightAntiDual {
         );
     }
 }
-extension MultiVector {
-    // Fancy infix trick
-    func operator/(_rhs: RightAntiDualPrefixOrPostfix) -> MultiVector {
+public extension MultiVector {
+    // Fancy postfix trick
+    public MultiVector operator /(RightAntiDualPrefixOrPostfix rhs)  {
         return this.right_anti_dual();
     }
-    func operator/=(const RightAntiDualPrefixOrPostfix& _rhs) -> MultiVector& {
-        this = this.right_anti_dual();
-        return *this;
+}
+public extension RightAntiDualPrefixOrPostfix {
+    // Fancy prefix trick
+    public MultiVector operator /(MultiVector rhs) {
+        return rhs.right_anti_dual();
     }
 }
-extension MultiVector: RightAntiDual {
-    associatedtype Output = MultiVector;
-    func right_anti_dual() -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(this.group0.xy.yx * float2(-1.0, 1.0), 0.0, 0.0), 
+public extension MultiVector {
+    public MultiVector right_anti_dual() {
+        return MultiVector(
+            /* scalar, e12345 */
+            this.group0.xy.yx * float2(-1.0, 1.0), 
             /* e1, e2, e3, e4 */
             float4(this.group9.xyz, this.e1234) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e5, 0, 0, 0 */
-            float4(this.e3215, 0.0, 0.0, 0.0), 
+            /* e5 */
+            this.e3215, 
             /* e15, e25, e35, e45 */
             float4(this.group8.xyz, this.e321 * -1.0), 
-            /* e41, e42, e43, 0 */
-            float4(this.group7.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(this.group6.xyz, 0.0), 
+            /* e41, e42, e43 */
+            this.group7.xyz, 
+            /* e23, e31, e12 */
+            this.group6.xyz, 
             /* e415, e425, e435, e321 */
             float4(this.group5.xyz, this.e45) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e423, e431, e412, 0 */
-            float4(this.group4.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group3.xyz * float3(-1.0), 0.0), 
+            /* e423, e431, e412 */
+            this.group4.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            this.group3.xyz * float3(-1.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(this.group1.xyz, this.e5) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(this.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            this.e4 * -1.0
         );
     }
 }
-extension Plane {
-    // Fancy infix trick
-    func operator/(_rhs: RightAntiDualPrefixOrPostfix) -> AntiPlane {
+public extension Plane {
+    // Fancy postfix trick
+    public AntiPlane operator /(RightAntiDualPrefixOrPostfix rhs)  {
         return this.right_anti_dual();
     }
 }
-extension Plane: RightAntiDual {
-    associatedtype Output = AntiPlane;
-    func right_anti_dual() -> Output {
-        return AntiPlane.from_groups(
+public extension RightAntiDualPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiPlane operator /(Plane rhs) {
+        return rhs.right_anti_dual();
+    }
+}
+public extension Plane {
+    public AntiPlane right_anti_dual() {
+        return AntiPlane(
             /* e1, e2, e3, e5 */
             this.group0 * float4(-1.0, -1.0, -1.0, 1.0)
         );
     }
 }
-extension RoundPoint {
-    // Fancy infix trick
-    func operator/(_rhs: RightAntiDualPrefixOrPostfix) -> Sphere {
+public extension RoundPoint {
+    // Fancy postfix trick
+    public Sphere operator /(RightAntiDualPrefixOrPostfix rhs)  {
         return this.right_anti_dual();
     }
 }
-extension RoundPoint: RightAntiDual {
-    associatedtype Output = Sphere;
-    func right_anti_dual() -> Output {
-        return Sphere.from_groups(
+public extension RightAntiDualPrefixOrPostfix {
+    // Fancy prefix trick
+    public Sphere operator /(RoundPoint rhs) {
+        return rhs.right_anti_dual();
+    }
+}
+public extension RoundPoint {
+    public Sphere right_anti_dual() {
+        return Sphere(
             /* e4235, e4315, e4125, e3215 */
             float4(this.group0.xyz, this.e5) * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(this.e4 * -1.0, 0.0, 0.0, 0.0)
+            /* e1234 */
+            this.e4 * -1.0
         );
     }
 }
-extension Scalar {
-    // Fancy infix trick
-    func operator/(_rhs: RightAntiDualPrefixOrPostfix) -> AntiScalar {
+public extension Scalar {
+    // Fancy postfix trick
+    public AntiScalar operator /(RightAntiDualPrefixOrPostfix rhs)  {
         return this.right_anti_dual();
     }
 }
-extension Scalar: RightAntiDual {
-    associatedtype Output = AntiScalar;
-    func right_anti_dual() -> Output {
-        return AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(this.scalar, 0.0, 0.0, 0.0)
+public extension RightAntiDualPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiScalar operator /(Scalar rhs) {
+        return rhs.right_anti_dual();
+    }
+}
+public extension Scalar {
+    public AntiScalar right_anti_dual() {
+        return AntiScalar(
+            /* e12345 */
+            this.scalar
         );
     }
 }
-extension Sphere {
-    // Fancy infix trick
-    func operator/(_rhs: RightAntiDualPrefixOrPostfix) -> RoundPoint {
+public extension Sphere {
+    // Fancy postfix trick
+    public RoundPoint operator /(RightAntiDualPrefixOrPostfix rhs)  {
         return this.right_anti_dual();
     }
 }
-extension Sphere: RightAntiDual {
-    associatedtype Output = RoundPoint;
-    func right_anti_dual() -> Output {
-        return RoundPoint.from_groups(
+public extension RightAntiDualPrefixOrPostfix {
+    // Fancy prefix trick
+    public RoundPoint operator /(Sphere rhs) {
+        return rhs.right_anti_dual();
+    }
+}
+public extension Sphere {
+    public RoundPoint right_anti_dual() {
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4(this.group0.xyz, this.e1234) * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e5, 0, 0, 0 */
-            float4(this.e3215, 0.0, 0.0, 0.0)
+            /* e5 */
+            this.e3215
         );
     }
 }
-extension VersorEven {
-    // Fancy infix trick
-    func operator/(_rhs: RightAntiDualPrefixOrPostfix) -> VersorOdd {
+public extension VersorEven {
+    // Fancy postfix trick
+    public VersorOdd operator /(RightAntiDualPrefixOrPostfix rhs)  {
         return this.right_anti_dual();
     }
 }
-extension VersorEven: RightAntiDual {
-    associatedtype Output = VersorOdd;
-    func right_anti_dual() -> Output {
-        return VersorOdd.from_groups(
+public extension RightAntiDualPrefixOrPostfix {
+    // Fancy prefix trick
+    public VersorOdd operator /(VersorEven rhs) {
+        return rhs.right_anti_dual();
+    }
+}
+public extension VersorEven {
+    public VersorOdd right_anti_dual() {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             this.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e23, e31, e12, e45 */
@@ -432,16 +550,21 @@ extension VersorEven: RightAntiDual {
         );
     }
 }
-extension VersorOdd {
-    // Fancy infix trick
-    func operator/(_rhs: RightAntiDualPrefixOrPostfix) -> VersorEven {
+public extension VersorOdd {
+    // Fancy postfix trick
+    public VersorEven operator /(RightAntiDualPrefixOrPostfix rhs)  {
         return this.right_anti_dual();
     }
 }
-extension VersorOdd: RightAntiDual {
-    associatedtype Output = VersorEven;
-    func right_anti_dual() -> Output {
-        return VersorEven.from_groups(
+public extension RightAntiDualPrefixOrPostfix {
+    // Fancy prefix trick
+    public VersorEven operator /(VersorOdd rhs) {
+        return rhs.right_anti_dual();
+    }
+}
+public extension VersorOdd {
+    public VersorEven right_anti_dual() {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             this.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e415, e425, e435, e321 */

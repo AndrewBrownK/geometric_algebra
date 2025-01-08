@@ -1,164 +1,174 @@
-extension AntiFlatPoint {
-    // Fancy infix trick
-    func operator/(_rhs: AntiFixPrefixOrPostfix) -> AntiFlatPoint {
+implementing cga3d;
+using traits;
+public extension AntiFlatPoint {
+    // Fancy postfix trick
+    public AntiFlatPoint operator /(AntiFixPrefixOrPostfix rhs)  {
         return this.anti_fix();
     }
-    func operator/=(const AntiFixPrefixOrPostfix& _rhs) -> AntiFlatPoint& {
-        this = this.anti_fix();
-        return *this;
+}
+public extension AntiFixPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiFlatPoint operator /(AntiFlatPoint rhs) {
+        return rhs.anti_fix();
     }
 }
-extension AntiFlatPoint: AntiFix {
-    associatedtype Output = AntiFlatPoint;
-    func anti_fix() -> Output {
-        return AntiFlatPoint.from_groups(
+public extension AntiFlatPoint {
+    public AntiFlatPoint anti_fix() {
+        return AntiFlatPoint(
             /* e235, e315, e125, e321 */
-            float4(powf((this.group0 * float4(-1.0))[3], -0.5) * powf(this.e321, -0.5)) * this.group0
+            float4(pow((this.group0 * float4(-1.0))[3], -0.5) * pow(this.e321, -0.5)) * this.group0
         );
     }
 }
-extension AntiPlane {
-    // Fancy infix trick
-    func operator/(_rhs: AntiFixPrefixOrPostfix) -> AntiPlane {
+public extension AntiPlane {
+    // Fancy postfix trick
+    public AntiPlane operator /(AntiFixPrefixOrPostfix rhs)  {
         return this.anti_fix();
     }
-    func operator/=(const AntiFixPrefixOrPostfix& _rhs) -> AntiPlane& {
-        this = this.anti_fix();
-        return *this;
+}
+public extension AntiFixPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiPlane operator /(AntiPlane rhs) {
+        return rhs.anti_fix();
     }
 }
-extension AntiPlane: AntiFix {
-    associatedtype Output = AntiPlane;
-    func anti_fix() -> Output {
-        return AntiPlane.from_groups(
+public extension AntiPlane {
+    public AntiPlane anti_fix() {
+        return AntiPlane(
             /* e1, e2, e3, e5 */
-            float4(-powi(this.e1, 2) - powi(this.e2, 2) - powi(this.e3, 2)) * this.group0
+            float4(-pow(this.e1, 2) - pow(this.e2, 2) - pow(this.e3, 2)) * this.group0
         );
     }
 }
-extension AntiScalar {
-    // Fancy infix trick
-    func operator/(_rhs: AntiFixPrefixOrPostfix) -> AntiScalar {
+public extension AntiScalar {
+    // Fancy postfix trick
+    public AntiScalar operator /(AntiFixPrefixOrPostfix rhs)  {
         return this.anti_fix();
     }
-    func operator/=(const AntiFixPrefixOrPostfix& _rhs) -> AntiScalar& {
-        this = this.anti_fix();
-        return *this;
+}
+public extension AntiFixPrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiScalar operator /(AntiScalar rhs) {
+        return rhs.anti_fix();
     }
 }
-extension AntiScalar: AntiFix {
-    associatedtype Output = AntiScalar;
-    func anti_fix() -> Output {
-        return AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(1.0, 0.0, 0.0, 0.0)
+public extension AntiScalar {
+    public AntiScalar anti_fix() {
+        return AntiScalar(
+            /* e12345 */
+            1.0
         );
     }
 }
-extension FlatPoint {
-    // Fancy infix trick
-    func operator/(_rhs: AntiFixPrefixOrPostfix) -> FlatPoint {
+public extension FlatPoint {
+    // Fancy postfix trick
+    public FlatPoint operator /(AntiFixPrefixOrPostfix rhs)  {
         return this.anti_fix();
     }
-    func operator/=(const AntiFixPrefixOrPostfix& _rhs) -> FlatPoint& {
-        this = this.anti_fix();
-        return *this;
+}
+public extension AntiFixPrefixOrPostfix {
+    // Fancy prefix trick
+    public FlatPoint operator /(FlatPoint rhs) {
+        return rhs.anti_fix();
     }
 }
-extension FlatPoint: AntiFix {
-    associatedtype Output = FlatPoint;
-    func anti_fix() -> Output {
-        return FlatPoint.from_groups(
+public extension FlatPoint {
+    public FlatPoint anti_fix() {
+        return FlatPoint(
             /* e15, e25, e35, e45 */
-            float4(powf((this.group0 * float4(-1.0))[3], -0.5) * powf(this.e45, -0.5) * -1.0) * this.group0
+            float4(pow((this.group0 * float4(-1.0))[3], -0.5) * pow(this.e45, -0.5) * -1.0) * this.group0
         );
     }
 }
-extension Plane {
-    // Fancy infix trick
-    func operator/(_rhs: AntiFixPrefixOrPostfix) -> Plane {
+public extension Plane {
+    // Fancy postfix trick
+    public Plane operator /(AntiFixPrefixOrPostfix rhs)  {
         return this.anti_fix();
     }
-    func operator/=(const AntiFixPrefixOrPostfix& _rhs) -> Plane& {
-        this = this.anti_fix();
-        return *this;
+}
+public extension AntiFixPrefixOrPostfix {
+    // Fancy prefix trick
+    public Plane operator /(Plane rhs) {
+        return rhs.anti_fix();
     }
 }
-extension Plane: AntiFix {
-    associatedtype Output = Plane;
-    func anti_fix() -> Output {
-        return Plane.from_groups(
+public extension Plane {
+    public Plane anti_fix() {
+        return Plane(
             /* e4235, e4315, e4125, e3215 */
-            float4(powi(this.e4235, 2) + powi(this.e4315, 2) + powi(this.e4125, 2)) * this.group0
+            float4(pow(this.e4235, 2) + pow(this.e4315, 2) + pow(this.e4125, 2)) * this.group0
         );
     }
 }
-extension RoundPoint {
-    // Fancy infix trick
-    func operator/(_rhs: AntiFixPrefixOrPostfix) -> RoundPoint {
+public extension RoundPoint {
+    // Fancy postfix trick
+    public RoundPoint operator /(AntiFixPrefixOrPostfix rhs)  {
         return this.anti_fix();
     }
-    func operator/=(const AntiFixPrefixOrPostfix& _rhs) -> RoundPoint& {
-        this = this.anti_fix();
-        return *this;
+}
+public extension AntiFixPrefixOrPostfix {
+    // Fancy prefix trick
+    public RoundPoint operator /(RoundPoint rhs) {
+        return rhs.anti_fix();
     }
 }
-extension RoundPoint: AntiFix {
-    associatedtype Output = RoundPoint;
-    func anti_fix() -> Output {
-        AntiScalar geometric_anti_product_2 = AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(2.0*(this.e4 * this.e5) - powi(this.e1, 2) - powi(this.e2, 2) - powi(this.e3, 2), 0.0, 0.0, 0.0)
+public extension RoundPoint {
+    public RoundPoint anti_fix() {
+        AntiScalar geometric_anti_product_2 = AntiScalar(
+            /* e12345 */
+            2.0*(this.e4 * this.e5) - pow(this.e1, 2) - pow(this.e2, 2) - pow(this.e3, 2)
         );
-        return RoundPoint.from_groups(
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4(geometric_anti_product_2.e12345) * this.group0, 
-            /* e5, 0, 0, 0 */
-            float4(geometric_anti_product_2.e12345 * this.e5, 0.0, 0.0, 0.0)
+            /* e5 */
+            geometric_anti_product_2.e12345 * this.e5
         );
     }
 }
-extension Scalar {
-    // Fancy infix trick
-    func operator/(_rhs: AntiFixPrefixOrPostfix) -> Scalar {
+public extension Scalar {
+    // Fancy postfix trick
+    public Scalar operator /(AntiFixPrefixOrPostfix rhs)  {
         return this.anti_fix();
     }
-    func operator/=(const AntiFixPrefixOrPostfix& _rhs) -> Scalar& {
-        this = this.anti_fix();
-        return *this;
+}
+public extension AntiFixPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(Scalar rhs) {
+        return rhs.anti_fix();
     }
 }
-extension Scalar: AntiFix {
-    associatedtype Output = Scalar;
-    func anti_fix() -> Output {
-        return Scalar.from_groups(
-            /* scalar, 0, 0, 0 */
-            float4(-1.0, 0.0, 0.0, 0.0)
+public extension Scalar {
+    public Scalar anti_fix() {
+        return Scalar(
+            /* scalar */
+            -1.0
         );
     }
 }
-extension Sphere {
-    // Fancy infix trick
-    func operator/(_rhs: AntiFixPrefixOrPostfix) -> Sphere {
+public extension Sphere {
+    // Fancy postfix trick
+    public Sphere operator /(AntiFixPrefixOrPostfix rhs)  {
         return this.anti_fix();
     }
-    func operator/=(const AntiFixPrefixOrPostfix& _rhs) -> Sphere& {
-        this = this.anti_fix();
-        return *this;
+}
+public extension AntiFixPrefixOrPostfix {
+    // Fancy prefix trick
+    public Sphere operator /(Sphere rhs) {
+        return rhs.anti_fix();
     }
 }
-extension Sphere: AntiFix {
-    associatedtype Output = Sphere;
-    func anti_fix() -> Output {
-        AntiScalar geometric_anti_product_2 = AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(powi(this.e4235, 2) + powi(this.e4315, 2) + powi(this.e4125, 2) - 2.0 * (this.e3215 * this.e1234), 0.0, 0.0, 0.0)
+public extension Sphere {
+    public Sphere anti_fix() {
+        AntiScalar geometric_anti_product_2 = AntiScalar(
+            /* e12345 */
+            pow(this.e4235, 2) + pow(this.e4315, 2) + pow(this.e4125, 2) - 2.0 * (this.e3215 * this.e1234)
         );
-        return Sphere.from_groups(
+        return Sphere(
             /* e4235, e4315, e4125, e3215 */
             float4(geometric_anti_product_2.e12345) * this.group0, 
-            /* e1234, 0, 0, 0 */
-            float4(geometric_anti_product_2.e12345 * this.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            geometric_anti_product_2.e12345 * this.e1234
         );
     }
 }

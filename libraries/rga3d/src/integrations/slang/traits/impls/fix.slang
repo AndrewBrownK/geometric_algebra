@@ -14,7 +14,7 @@ public extension FixPrefixOrPostfix {
 }
 public extension Horizon {
     public Horizon fix() {
-        return Horizon.from_groups(
+        return Horizon(
             /* e321 */
             1.0
         );
@@ -34,7 +34,7 @@ public extension FixPrefixOrPostfix {
 }
 public extension Plane {
     public Plane fix() {
-        return Plane.from_groups(
+        return Plane(
             /* e423, e431, e412, e321 */
             float4(pow((this.group0 * float4(-1.0))[3], -0.5) * pow(this.e321, -0.5) * -1.0) * this.group0
         );
@@ -54,7 +54,7 @@ public extension FixPrefixOrPostfix {
 }
 public extension Point {
     public Point fix() {
-        return Point.from_groups(
+        return Point(
             /* e1, e2, e3, e4 */
             float4(pow(this.e1, 2) + pow(this.e2, 2) + pow(this.e3, 2)) * this.group0
         );
@@ -74,7 +74,7 @@ public extension FixPrefixOrPostfix {
 }
 public extension Scalar {
     public Scalar fix() {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             1.0
         );

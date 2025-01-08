@@ -7,6 +7,19 @@ public struct Flector {
     internal float4 group0;
     // e423, e431, e412, e321
     internal float4 group1;
+
+    __init(
+        float e1, float e2, float e3, float e4, float e423, float e431, float e412, float e321
+    ) {
+        group0 = float4(e1, e2, e3, e4);
+        group1 = float4(e423, e431, e412, e321);
+    }
+    internal __init(
+        float4 g0, float4 g1
+    ) {
+        group0 = g0;
+        group1 = g1;
+    }
 }
 public extension Flector {
     public property e1: float {
@@ -40,16 +53,6 @@ public extension Flector {
     public property e321: float {
         get { return group1[3]; }
         set { group1[3] = newValue; }
-    }
-    public static Flector from_elements(
-        float e1, float e2, float e3, float e4, float e423, float e431, float e412, float e321
-    ) {
-        return Flector(float4(e1, e2, e3, e4), float4(e423, e431, e412, e321));
-    }
-    internal static Flector from_groups(
-        float4 g0, float4 g1
-    ) {
-        return Flector(g0, g1);
     }
 }
 public extension Flector: IComparable {

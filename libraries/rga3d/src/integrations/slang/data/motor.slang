@@ -7,6 +7,19 @@ public struct Motor {
     internal float4 group0;
     // e23, e31, e12, scalar
     internal float4 group1;
+
+    __init(
+        float e41, float e42, float e43, float e1234, float e23, float e31, float e12, float scalar
+    ) {
+        group0 = float4(e41, e42, e43, e1234);
+        group1 = float4(e23, e31, e12, scalar);
+    }
+    internal __init(
+        float4 g0, float4 g1
+    ) {
+        group0 = g0;
+        group1 = g1;
+    }
 }
 public extension Motor {
     public property e41: float {
@@ -40,16 +53,6 @@ public extension Motor {
     public property scalar: float {
         get { return group1[3]; }
         set { group1[3] = newValue; }
-    }
-    public static Motor from_elements(
-        float e41, float e42, float e43, float e1234, float e23, float e31, float e12, float scalar
-    ) {
-        return Motor(float4(e41, e42, e43, e1234), float4(e23, e31, e12, scalar));
-    }
-    internal static Motor from_groups(
-        float4 g0, float4 g1
-    ) {
-        return Motor(g0, g1);
     }
 }
 public extension Motor: IComparable {

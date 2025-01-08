@@ -1,19 +1,22 @@
-extension AntiCircleRotor {
-    // Fancy infix trick
-    func operator/(_rhs: ConformalConjugatePrefixOrPostfix) -> AntiCircleRotor {
+implementing cga3d;
+using traits;
+public extension AntiCircleRotor {
+    // Fancy postfix trick
+    public AntiCircleRotor operator /(ConformalConjugatePrefixOrPostfix rhs)  {
         return this.conformal_conjugate();
     }
-    func operator/=(const ConformalConjugatePrefixOrPostfix& _rhs) -> AntiCircleRotor& {
-        this = this.conformal_conjugate();
-        return *this;
+}
+public extension ConformalConjugatePrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiCircleRotor operator /(AntiCircleRotor rhs) {
+        return rhs.conformal_conjugate();
     }
 }
-extension AntiCircleRotor: ConformalConjugate {
-    associatedtype Output = AntiCircleRotor;
-    func conformal_conjugate() -> Output {
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(this.group0.xyz, 0.0), 
+public extension AntiCircleRotor {
+    public AntiCircleRotor conformal_conjugate() {
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            this.group0.xyz, 
             /* e23, e31, e12, e45 */
             this.group1 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, scalar */
@@ -21,22 +24,23 @@ extension AntiCircleRotor: ConformalConjugate {
         );
     }
 }
-extension AntiDipoleInversion {
-    // Fancy infix trick
-    func operator/(_rhs: ConformalConjugatePrefixOrPostfix) -> AntiDipoleInversion {
+public extension AntiDipoleInversion {
+    // Fancy postfix trick
+    public AntiDipoleInversion operator /(ConformalConjugatePrefixOrPostfix rhs)  {
         return this.conformal_conjugate();
     }
-    func operator/=(const ConformalConjugatePrefixOrPostfix& _rhs) -> AntiDipoleInversion& {
-        this = this.conformal_conjugate();
-        return *this;
+}
+public extension ConformalConjugatePrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiDipoleInversion operator /(AntiDipoleInversion rhs) {
+        return rhs.conformal_conjugate();
     }
 }
-extension AntiDipoleInversion: ConformalConjugate {
-    associatedtype Output = AntiDipoleInversion;
-    func conformal_conjugate() -> Output {
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz, 0.0), 
+public extension AntiDipoleInversion {
+    public AntiDipoleInversion conformal_conjugate() {
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            this.group0.xyz, 
             /* e415, e425, e435, e321 */
             this.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e4 */
@@ -46,58 +50,61 @@ extension AntiDipoleInversion: ConformalConjugate {
         );
     }
 }
-extension AntiDualNum {
-    // Fancy infix trick
-    func operator/(_rhs: ConformalConjugatePrefixOrPostfix) -> AntiDualNum {
+public extension AntiDualNum {
+    // Fancy postfix trick
+    public AntiDualNum operator /(ConformalConjugatePrefixOrPostfix rhs)  {
         return this.conformal_conjugate();
     }
-    func operator/=(const ConformalConjugatePrefixOrPostfix& _rhs) -> AntiDualNum& {
-        this = this.conformal_conjugate();
-        return *this;
+}
+public extension ConformalConjugatePrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiDualNum operator /(AntiDualNum rhs) {
+        return rhs.conformal_conjugate();
     }
 }
-extension AntiDualNum: ConformalConjugate {
-    associatedtype Output = AntiDualNum;
-    func conformal_conjugate() -> Output {
-        return AntiDualNum.from_groups(
-            /* e3215, scalar, 0, 0 */
-            float4(this.group0.xy * float2(-1.0, 1.0), 0.0, 0.0)
+public extension AntiDualNum {
+    public AntiDualNum conformal_conjugate() {
+        return AntiDualNum(
+            /* e3215, scalar */
+            this.group0.xy * float2(-1.0, 1.0)
         );
     }
 }
-extension AntiFlatPoint {
-    // Fancy infix trick
-    func operator/(_rhs: ConformalConjugatePrefixOrPostfix) -> AntiFlatPoint {
+public extension AntiFlatPoint {
+    // Fancy postfix trick
+    public AntiFlatPoint operator /(ConformalConjugatePrefixOrPostfix rhs)  {
         return this.conformal_conjugate();
     }
-    func operator/=(const ConformalConjugatePrefixOrPostfix& _rhs) -> AntiFlatPoint& {
-        this = this.conformal_conjugate();
-        return *this;
+}
+public extension ConformalConjugatePrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiFlatPoint operator /(AntiFlatPoint rhs) {
+        return rhs.conformal_conjugate();
     }
 }
-extension AntiFlatPoint: ConformalConjugate {
-    associatedtype Output = AntiFlatPoint;
-    func conformal_conjugate() -> Output {
-        return AntiFlatPoint.from_groups(
+public extension AntiFlatPoint {
+    public AntiFlatPoint conformal_conjugate() {
+        return AntiFlatPoint(
             /* e235, e315, e125, e321 */
             this.group0 * float4(-1.0, -1.0, -1.0, 1.0)
         );
     }
 }
-extension AntiFlector {
-    // Fancy infix trick
-    func operator/(_rhs: ConformalConjugatePrefixOrPostfix) -> AntiFlector {
+public extension AntiFlector {
+    // Fancy postfix trick
+    public AntiFlector operator /(ConformalConjugatePrefixOrPostfix rhs)  {
         return this.conformal_conjugate();
     }
-    func operator/=(const ConformalConjugatePrefixOrPostfix& _rhs) -> AntiFlector& {
-        this = this.conformal_conjugate();
-        return *this;
+}
+public extension ConformalConjugatePrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiFlector operator /(AntiFlector rhs) {
+        return rhs.conformal_conjugate();
     }
 }
-extension AntiFlector: ConformalConjugate {
-    associatedtype Output = AntiFlector;
-    func conformal_conjugate() -> Output {
-        return AntiFlector.from_groups(
+public extension AntiFlector {
+    public AntiFlector conformal_conjugate() {
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             this.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e1, e2, e3, e5 */
@@ -105,41 +112,43 @@ extension AntiFlector: ConformalConjugate {
         );
     }
 }
-extension AntiLine {
-    // Fancy infix trick
-    func operator/(_rhs: ConformalConjugatePrefixOrPostfix) -> AntiLine {
+public extension AntiLine {
+    // Fancy postfix trick
+    public AntiLine operator /(ConformalConjugatePrefixOrPostfix rhs)  {
         return this.conformal_conjugate();
     }
-    func operator/=(const ConformalConjugatePrefixOrPostfix& _rhs) -> AntiLine& {
-        this = this.conformal_conjugate();
-        return *this;
+}
+public extension ConformalConjugatePrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiLine operator /(AntiLine rhs) {
+        return rhs.conformal_conjugate();
     }
 }
-extension AntiLine: ConformalConjugate {
-    associatedtype Output = AntiLine;
-    func conformal_conjugate() -> Output {
-        return AntiLine.from_groups(
-            /* e23, e31, e12, 0 */
-            float4(this.group0.xyz, 0.0), 
-            /* e15, e25, e35, 0 */
-            float4(this.group1.xyz * float3(-1.0), 0.0)
+public extension AntiLine {
+    public AntiLine conformal_conjugate() {
+        return AntiLine(
+            /* e23, e31, e12 */
+            this.group0.xyz, 
+            /* e15, e25, e35 */
+            this.group1.xyz * float3(-1.0)
         );
     }
 }
-extension AntiMotor {
-    // Fancy infix trick
-    func operator/(_rhs: ConformalConjugatePrefixOrPostfix) -> AntiMotor {
+public extension AntiMotor {
+    // Fancy postfix trick
+    public AntiMotor operator /(ConformalConjugatePrefixOrPostfix rhs)  {
         return this.conformal_conjugate();
     }
-    func operator/=(const ConformalConjugatePrefixOrPostfix& _rhs) -> AntiMotor& {
-        this = this.conformal_conjugate();
-        return *this;
+}
+public extension ConformalConjugatePrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiMotor operator /(AntiMotor rhs) {
+        return rhs.conformal_conjugate();
     }
 }
-extension AntiMotor: ConformalConjugate {
-    associatedtype Output = AntiMotor;
-    func conformal_conjugate() -> Output {
-        return AntiMotor.from_groups(
+public extension AntiMotor {
+    public AntiMotor conformal_conjugate() {
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             this.group0, 
             /* e15, e25, e35, e3215 */
@@ -147,83 +156,87 @@ extension AntiMotor: ConformalConjugate {
         );
     }
 }
-extension AntiPlane {
-    // Fancy infix trick
-    func operator/(_rhs: ConformalConjugatePrefixOrPostfix) -> AntiPlane {
+public extension AntiPlane {
+    // Fancy postfix trick
+    public AntiPlane operator /(ConformalConjugatePrefixOrPostfix rhs)  {
         return this.conformal_conjugate();
     }
-    func operator/=(const ConformalConjugatePrefixOrPostfix& _rhs) -> AntiPlane& {
-        this = this.conformal_conjugate();
-        return *this;
+}
+public extension ConformalConjugatePrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiPlane operator /(AntiPlane rhs) {
+        return rhs.conformal_conjugate();
     }
 }
-extension AntiPlane: ConformalConjugate {
-    associatedtype Output = AntiPlane;
-    func conformal_conjugate() -> Output {
-        return AntiPlane.from_groups(
+public extension AntiPlane {
+    public AntiPlane conformal_conjugate() {
+        return AntiPlane(
             /* e1, e2, e3, e5 */
             this.group0 * float4(1.0, 1.0, 1.0, -1.0)
         );
     }
 }
-extension AntiScalar {
-    // Fancy infix trick
-    func operator/(_rhs: ConformalConjugatePrefixOrPostfix) -> AntiScalar {
+public extension AntiScalar {
+    // Fancy postfix trick
+    public AntiScalar operator /(ConformalConjugatePrefixOrPostfix rhs)  {
         return this.conformal_conjugate();
     }
-    func operator/=(const ConformalConjugatePrefixOrPostfix& _rhs) -> AntiScalar& {
-        this = this.conformal_conjugate();
-        return *this;
+}
+public extension ConformalConjugatePrefixOrPostfix {
+    // Fancy prefix trick
+    public AntiScalar operator /(AntiScalar rhs) {
+        return rhs.conformal_conjugate();
     }
 }
-extension AntiScalar: ConformalConjugate {
-    associatedtype Output = AntiScalar;
-    func conformal_conjugate() -> Output {
-        return AntiScalar.from_groups(
-            /* e12345, 0, 0, 0 */
-            float4(this.e12345 * -1.0, 0.0, 0.0, 0.0)
+public extension AntiScalar {
+    public AntiScalar conformal_conjugate() {
+        return AntiScalar(
+            /* e12345 */
+            this.e12345 * -1.0
         );
     }
 }
-extension Circle {
-    // Fancy infix trick
-    func operator/(_rhs: ConformalConjugatePrefixOrPostfix) -> Circle {
+public extension Circle {
+    // Fancy postfix trick
+    public Circle operator /(ConformalConjugatePrefixOrPostfix rhs)  {
         return this.conformal_conjugate();
     }
-    func operator/=(const ConformalConjugatePrefixOrPostfix& _rhs) -> Circle& {
-        this = this.conformal_conjugate();
-        return *this;
+}
+public extension ConformalConjugatePrefixOrPostfix {
+    // Fancy prefix trick
+    public Circle operator /(Circle rhs) {
+        return rhs.conformal_conjugate();
     }
 }
-extension Circle: ConformalConjugate {
-    associatedtype Output = Circle;
-    func conformal_conjugate() -> Output {
-        return Circle.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz, 0.0), 
+public extension Circle {
+    public Circle conformal_conjugate() {
+        return Circle(
+            /* e423, e431, e412 */
+            this.group0.xyz, 
             /* e415, e425, e435, e321 */
             this.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group2.xyz * float3(-1.0), 0.0)
+            /* e235, e315, e125 */
+            this.group2.xyz * float3(-1.0)
         );
     }
 }
-extension CircleRotor {
-    // Fancy infix trick
-    func operator/(_rhs: ConformalConjugatePrefixOrPostfix) -> CircleRotor {
+public extension CircleRotor {
+    // Fancy postfix trick
+    public CircleRotor operator /(ConformalConjugatePrefixOrPostfix rhs)  {
         return this.conformal_conjugate();
     }
-    func operator/=(const ConformalConjugatePrefixOrPostfix& _rhs) -> CircleRotor& {
-        this = this.conformal_conjugate();
-        return *this;
+}
+public extension ConformalConjugatePrefixOrPostfix {
+    // Fancy prefix trick
+    public CircleRotor operator /(CircleRotor rhs) {
+        return rhs.conformal_conjugate();
     }
 }
-extension CircleRotor: ConformalConjugate {
-    associatedtype Output = CircleRotor;
-    func conformal_conjugate() -> Output {
-        return CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(this.group0.xyz, 0.0), 
+public extension CircleRotor {
+    public CircleRotor conformal_conjugate() {
+        return CircleRotor(
+            /* e423, e431, e412 */
+            this.group0.xyz, 
             /* e415, e425, e435, e321 */
             this.group1 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e235, e315, e125, e12345 */
@@ -231,45 +244,47 @@ extension CircleRotor: ConformalConjugate {
         );
     }
 }
-extension Dipole {
-    // Fancy infix trick
-    func operator/(_rhs: ConformalConjugatePrefixOrPostfix) -> Dipole {
+public extension Dipole {
+    // Fancy postfix trick
+    public Dipole operator /(ConformalConjugatePrefixOrPostfix rhs)  {
         return this.conformal_conjugate();
     }
-    func operator/=(const ConformalConjugatePrefixOrPostfix& _rhs) -> Dipole& {
-        this = this.conformal_conjugate();
-        return *this;
+}
+public extension ConformalConjugatePrefixOrPostfix {
+    // Fancy prefix trick
+    public Dipole operator /(Dipole rhs) {
+        return rhs.conformal_conjugate();
     }
 }
-extension Dipole: ConformalConjugate {
-    associatedtype Output = Dipole;
-    func conformal_conjugate() -> Output {
-        return Dipole.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(this.group0.xyz, 0.0), 
+public extension Dipole {
+    public Dipole conformal_conjugate() {
+        return Dipole(
+            /* e41, e42, e43 */
+            this.group0.xyz, 
             /* e23, e31, e12, e45 */
             this.group1 * float4(1.0, 1.0, 1.0, -1.0), 
-            /* e15, e25, e35, 0 */
-            float4(this.group2.xyz * float3(-1.0), 0.0)
+            /* e15, e25, e35 */
+            this.group2.xyz * float3(-1.0)
         );
     }
 }
-extension DipoleInversion {
-    // Fancy infix trick
-    func operator/(_rhs: ConformalConjugatePrefixOrPostfix) -> DipoleInversion {
+public extension DipoleInversion {
+    // Fancy postfix trick
+    public DipoleInversion operator /(ConformalConjugatePrefixOrPostfix rhs)  {
         return this.conformal_conjugate();
     }
-    func operator/=(const ConformalConjugatePrefixOrPostfix& _rhs) -> DipoleInversion& {
-        this = this.conformal_conjugate();
-        return *this;
+}
+public extension ConformalConjugatePrefixOrPostfix {
+    // Fancy prefix trick
+    public DipoleInversion operator /(DipoleInversion rhs) {
+        return rhs.conformal_conjugate();
     }
 }
-extension DipoleInversion: ConformalConjugate {
-    associatedtype Output = DipoleInversion;
-    func conformal_conjugate() -> Output {
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(this.group0.xyz, 0.0), 
+public extension DipoleInversion {
+    public DipoleInversion conformal_conjugate() {
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            this.group0.xyz, 
             /* e23, e31, e12, e45 */
             this.group1 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e15, e25, e35, e1234 */
@@ -279,58 +294,61 @@ extension DipoleInversion: ConformalConjugate {
         );
     }
 }
-extension DualNum {
-    // Fancy infix trick
-    func operator/(_rhs: ConformalConjugatePrefixOrPostfix) -> DualNum {
+public extension DualNum {
+    // Fancy postfix trick
+    public DualNum operator /(ConformalConjugatePrefixOrPostfix rhs)  {
         return this.conformal_conjugate();
     }
-    func operator/=(const ConformalConjugatePrefixOrPostfix& _rhs) -> DualNum& {
-        this = this.conformal_conjugate();
-        return *this;
+}
+public extension ConformalConjugatePrefixOrPostfix {
+    // Fancy prefix trick
+    public DualNum operator /(DualNum rhs) {
+        return rhs.conformal_conjugate();
     }
 }
-extension DualNum: ConformalConjugate {
-    associatedtype Output = DualNum;
-    func conformal_conjugate() -> Output {
-        return DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(this.group0.xy * float2(-1.0), 0.0, 0.0)
+public extension DualNum {
+    public DualNum conformal_conjugate() {
+        return DualNum(
+            /* e5, e12345 */
+            this.group0.xy * float2(-1.0)
         );
     }
 }
-extension FlatPoint {
-    // Fancy infix trick
-    func operator/(_rhs: ConformalConjugatePrefixOrPostfix) -> FlatPoint {
+public extension FlatPoint {
+    // Fancy postfix trick
+    public FlatPoint operator /(ConformalConjugatePrefixOrPostfix rhs)  {
         return this.conformal_conjugate();
     }
-    func operator/=(const ConformalConjugatePrefixOrPostfix& _rhs) -> FlatPoint& {
-        this = this.conformal_conjugate();
-        return *this;
+}
+public extension ConformalConjugatePrefixOrPostfix {
+    // Fancy prefix trick
+    public FlatPoint operator /(FlatPoint rhs) {
+        return rhs.conformal_conjugate();
     }
 }
-extension FlatPoint: ConformalConjugate {
-    associatedtype Output = FlatPoint;
-    func conformal_conjugate() -> Output {
-        return FlatPoint.from_groups(
+public extension FlatPoint {
+    public FlatPoint conformal_conjugate() {
+        return FlatPoint(
             /* e15, e25, e35, e45 */
             this.group0 * float4(-1.0)
         );
     }
 }
-extension Flector {
-    // Fancy infix trick
-    func operator/(_rhs: ConformalConjugatePrefixOrPostfix) -> Flector {
+public extension Flector {
+    // Fancy postfix trick
+    public Flector operator /(ConformalConjugatePrefixOrPostfix rhs)  {
         return this.conformal_conjugate();
     }
-    func operator/=(const ConformalConjugatePrefixOrPostfix& _rhs) -> Flector& {
-        this = this.conformal_conjugate();
-        return *this;
+}
+public extension ConformalConjugatePrefixOrPostfix {
+    // Fancy prefix trick
+    public Flector operator /(Flector rhs) {
+        return rhs.conformal_conjugate();
     }
 }
-extension Flector: ConformalConjugate {
-    associatedtype Output = Flector;
-    func conformal_conjugate() -> Output {
-        return Flector.from_groups(
+public extension Flector {
+    public Flector conformal_conjugate() {
+        return Flector(
             /* e15, e25, e35, e45 */
             this.group0 * float4(-1.0), 
             /* e4235, e4315, e4125, e3215 */
@@ -338,41 +356,43 @@ extension Flector: ConformalConjugate {
         );
     }
 }
-extension Line {
-    // Fancy infix trick
-    func operator/(_rhs: ConformalConjugatePrefixOrPostfix) -> Line {
+public extension Line {
+    // Fancy postfix trick
+    public Line operator /(ConformalConjugatePrefixOrPostfix rhs)  {
         return this.conformal_conjugate();
     }
-    func operator/=(const ConformalConjugatePrefixOrPostfix& _rhs) -> Line& {
-        this = this.conformal_conjugate();
-        return *this;
+}
+public extension ConformalConjugatePrefixOrPostfix {
+    // Fancy prefix trick
+    public Line operator /(Line rhs) {
+        return rhs.conformal_conjugate();
     }
 }
-extension Line: ConformalConjugate {
-    associatedtype Output = Line;
-    func conformal_conjugate() -> Output {
-        return Line.from_groups(
-            /* e415, e425, e435, 0 */
-            float4(this.group0.xyz * float3(-1.0), 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group1.xyz * float3(-1.0), 0.0)
+public extension Line {
+    public Line conformal_conjugate() {
+        return Line(
+            /* e415, e425, e435 */
+            this.group0.xyz * float3(-1.0), 
+            /* e235, e315, e125 */
+            this.group1.xyz * float3(-1.0)
         );
     }
 }
-extension Motor {
-    // Fancy infix trick
-    func operator/(_rhs: ConformalConjugatePrefixOrPostfix) -> Motor {
+public extension Motor {
+    // Fancy postfix trick
+    public Motor operator /(ConformalConjugatePrefixOrPostfix rhs)  {
         return this.conformal_conjugate();
     }
-    func operator/=(const ConformalConjugatePrefixOrPostfix& _rhs) -> Motor& {
-        this = this.conformal_conjugate();
-        return *this;
+}
+public extension ConformalConjugatePrefixOrPostfix {
+    // Fancy prefix trick
+    public Motor operator /(Motor rhs) {
+        return rhs.conformal_conjugate();
     }
 }
-extension Motor: ConformalConjugate {
-    associatedtype Output = Motor;
-    func conformal_conjugate() -> Output {
-        return Motor.from_groups(
+public extension Motor {
+    public Motor conformal_conjugate() {
+        return Motor(
             /* e415, e425, e435, e12345 */
             this.group0 * float4(-1.0), 
             /* e235, e315, e125, e5 */
@@ -380,136 +400,142 @@ extension Motor: ConformalConjugate {
         );
     }
 }
-extension MultiVector {
-    // Fancy infix trick
-    func operator/(_rhs: ConformalConjugatePrefixOrPostfix) -> MultiVector {
+public extension MultiVector {
+    // Fancy postfix trick
+    public MultiVector operator /(ConformalConjugatePrefixOrPostfix rhs)  {
         return this.conformal_conjugate();
     }
-    func operator/=(const ConformalConjugatePrefixOrPostfix& _rhs) -> MultiVector& {
-        this = this.conformal_conjugate();
-        return *this;
+}
+public extension ConformalConjugatePrefixOrPostfix {
+    // Fancy prefix trick
+    public MultiVector operator /(MultiVector rhs) {
+        return rhs.conformal_conjugate();
     }
 }
-extension MultiVector: ConformalConjugate {
-    associatedtype Output = MultiVector;
-    func conformal_conjugate() -> Output {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(this.group0.xy * float2(1.0, -1.0), 0.0, 0.0), 
+public extension MultiVector {
+    public MultiVector conformal_conjugate() {
+        return MultiVector(
+            /* scalar, e12345 */
+            this.group0.xy * float2(1.0, -1.0), 
             /* e1, e2, e3, e4 */
             this.group1, 
-            /* e5, 0, 0, 0 */
-            float4(this.e5 * -1.0, 0.0, 0.0, 0.0), 
+            /* e5 */
+            this.e5 * -1.0, 
             /* e15, e25, e35, e45 */
             this.group3 * float4(-1.0), 
-            /* e41, e42, e43, 0 */
-            float4(this.group4.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(this.group5.xyz, 0.0), 
+            /* e41, e42, e43 */
+            this.group4.xyz, 
+            /* e23, e31, e12 */
+            this.group5.xyz, 
             /* e415, e425, e435, e321 */
             this.group6 * float4(-1.0, -1.0, -1.0, 1.0), 
-            /* e423, e431, e412, 0 */
-            float4(this.group7.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(this.group8.xyz * float3(-1.0), 0.0), 
+            /* e423, e431, e412 */
+            this.group7.xyz, 
+            /* e235, e315, e125 */
+            this.group8.xyz * float3(-1.0), 
             /* e4235, e4315, e4125, e3215 */
             this.group9 * float4(-1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(this.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            this.e1234
         );
     }
 }
-extension Plane {
-    // Fancy infix trick
-    func operator/(_rhs: ConformalConjugatePrefixOrPostfix) -> Plane {
+public extension Plane {
+    // Fancy postfix trick
+    public Plane operator /(ConformalConjugatePrefixOrPostfix rhs)  {
         return this.conformal_conjugate();
     }
-    func operator/=(const ConformalConjugatePrefixOrPostfix& _rhs) -> Plane& {
-        this = this.conformal_conjugate();
-        return *this;
+}
+public extension ConformalConjugatePrefixOrPostfix {
+    // Fancy prefix trick
+    public Plane operator /(Plane rhs) {
+        return rhs.conformal_conjugate();
     }
 }
-extension Plane: ConformalConjugate {
-    associatedtype Output = Plane;
-    func conformal_conjugate() -> Output {
-        return Plane.from_groups(
+public extension Plane {
+    public Plane conformal_conjugate() {
+        return Plane(
             /* e4235, e4315, e4125, e3215 */
             this.group0 * float4(-1.0)
         );
     }
 }
-extension RoundPoint {
-    // Fancy infix trick
-    func operator/(_rhs: ConformalConjugatePrefixOrPostfix) -> RoundPoint {
+public extension RoundPoint {
+    // Fancy postfix trick
+    public RoundPoint operator /(ConformalConjugatePrefixOrPostfix rhs)  {
         return this.conformal_conjugate();
     }
-    func operator/=(const ConformalConjugatePrefixOrPostfix& _rhs) -> RoundPoint& {
-        this = this.conformal_conjugate();
-        return *this;
+}
+public extension ConformalConjugatePrefixOrPostfix {
+    // Fancy prefix trick
+    public RoundPoint operator /(RoundPoint rhs) {
+        return rhs.conformal_conjugate();
     }
 }
-extension RoundPoint: ConformalConjugate {
-    associatedtype Output = RoundPoint;
-    func conformal_conjugate() -> Output {
-        return RoundPoint.from_groups(
+public extension RoundPoint {
+    public RoundPoint conformal_conjugate() {
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             this.group0, 
-            /* e5, 0, 0, 0 */
-            float4(this.e5 * -1.0, 0.0, 0.0, 0.0)
+            /* e5 */
+            this.e5 * -1.0
         );
     }
 }
-extension Scalar {
-    // Fancy infix trick
-    func operator/(_rhs: ConformalConjugatePrefixOrPostfix) -> Scalar {
+public extension Scalar {
+    // Fancy postfix trick
+    public Scalar operator /(ConformalConjugatePrefixOrPostfix rhs)  {
         return this.conformal_conjugate();
     }
-    func operator/=(const ConformalConjugatePrefixOrPostfix& _rhs) -> Scalar& {
-        this = this.conformal_conjugate();
-        return *this;
+}
+public extension ConformalConjugatePrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(Scalar rhs) {
+        return rhs.conformal_conjugate();
     }
 }
-extension Scalar: ConformalConjugate {
-    associatedtype Output = Scalar;
-    func conformal_conjugate() -> Output {
+public extension Scalar {
+    public Scalar conformal_conjugate() {
         return this;
     }
 }
-extension Sphere {
-    // Fancy infix trick
-    func operator/(_rhs: ConformalConjugatePrefixOrPostfix) -> Sphere {
+public extension Sphere {
+    // Fancy postfix trick
+    public Sphere operator /(ConformalConjugatePrefixOrPostfix rhs)  {
         return this.conformal_conjugate();
     }
-    func operator/=(const ConformalConjugatePrefixOrPostfix& _rhs) -> Sphere& {
-        this = this.conformal_conjugate();
-        return *this;
+}
+public extension ConformalConjugatePrefixOrPostfix {
+    // Fancy prefix trick
+    public Sphere operator /(Sphere rhs) {
+        return rhs.conformal_conjugate();
     }
 }
-extension Sphere: ConformalConjugate {
-    associatedtype Output = Sphere;
-    func conformal_conjugate() -> Output {
-        return Sphere.from_groups(
+public extension Sphere {
+    public Sphere conformal_conjugate() {
+        return Sphere(
             /* e4235, e4315, e4125, e3215 */
             this.group0 * float4(-1.0), 
-            /* e1234, 0, 0, 0 */
-            float4(this.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            this.e1234
         );
     }
 }
-extension VersorEven {
-    // Fancy infix trick
-    func operator/(_rhs: ConformalConjugatePrefixOrPostfix) -> VersorEven {
+public extension VersorEven {
+    // Fancy postfix trick
+    public VersorEven operator /(ConformalConjugatePrefixOrPostfix rhs)  {
         return this.conformal_conjugate();
     }
-    func operator/=(const ConformalConjugatePrefixOrPostfix& _rhs) -> VersorEven& {
-        this = this.conformal_conjugate();
-        return *this;
+}
+public extension ConformalConjugatePrefixOrPostfix {
+    // Fancy prefix trick
+    public VersorEven operator /(VersorEven rhs) {
+        return rhs.conformal_conjugate();
     }
 }
-extension VersorEven: ConformalConjugate {
-    associatedtype Output = VersorEven;
-    func conformal_conjugate() -> Output {
-        return VersorEven.from_groups(
+public extension VersorEven {
+    public VersorEven conformal_conjugate() {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             this.group0 * float4(1.0, 1.0, 1.0, -1.0), 
             /* e415, e425, e435, e321 */
@@ -521,20 +547,21 @@ extension VersorEven: ConformalConjugate {
         );
     }
 }
-extension VersorOdd {
-    // Fancy infix trick
-    func operator/(_rhs: ConformalConjugatePrefixOrPostfix) -> VersorOdd {
+public extension VersorOdd {
+    // Fancy postfix trick
+    public VersorOdd operator /(ConformalConjugatePrefixOrPostfix rhs)  {
         return this.conformal_conjugate();
     }
-    func operator/=(const ConformalConjugatePrefixOrPostfix& _rhs) -> VersorOdd& {
-        this = this.conformal_conjugate();
-        return *this;
+}
+public extension ConformalConjugatePrefixOrPostfix {
+    // Fancy prefix trick
+    public VersorOdd operator /(VersorOdd rhs) {
+        return rhs.conformal_conjugate();
     }
 }
-extension VersorOdd: ConformalConjugate {
-    associatedtype Output = VersorOdd;
-    func conformal_conjugate() -> Output {
-        return VersorOdd.from_groups(
+public extension VersorOdd {
+    public VersorOdd conformal_conjugate() {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             this.group0, 
             /* e23, e31, e12, e45 */

@@ -1358,7 +1358,7 @@ internal bool lessThanOrEqualsHelper<T: IComparable>(T a, T b) {{
             }
             MultiVectorVia::Construct(v) => {
                 let n = mv.name();
-                write!(w, "{n}.from_groups(")?;
+                write!(w, "{n}(")?;
                 let groups = mv.groups();
                 for (i, g) in v.iter().enumerate() {
                     if i > 0 {
@@ -1605,7 +1605,65 @@ internal bool lessThanOrEqualsHelper<T: IComparable>(T a, T b) {{
             // TODO consider modifying visibility of groups in rust implementation
             write!(w, "\n    internal float4 group{i};")?;
         }
-        writeln!(w, "\n}}")?;
+
+
+        writeln!(w, "\n\n    __init(")?;
+        for (i, el) in multi_vec.elements().into_iter().enumerate() {
+            if i > 0 {
+                write!(w, ", ")?;
+            } else {
+                write!(w, "        ")?;
+            }
+            write!(w, "float {el}")?;
+        }
+        writeln!(w, "\n    ) {{")?;
+
+
+        for (outer_idx, g) in multi_vec.groups().into_iter().enumerate() {
+            write!(w, "        group{outer_idx} = float4(")?;
+            let mut count = 0;
+            for (inner_idx, el) in g.into_iter().enumerate() {
+                if inner_idx > 0 {
+                    write!(w, ", ")?;
+                }
+                write!(w, "{el}")?;
+                count += 1;
+            }
+            while count < 4 {
+                write!(w, ", 0.0")?;
+                count += 1;
+            }
+            writeln!(w, ");")?;
+        }
+        writeln!(w, "    }}")?;
+
+
+        if !multi_vec.groups().into_iter().all(|it| it.simd_width() == 1) {
+            writeln!(w, "    internal __init(")?;
+            for (i, g) in multi_vec.groups().into_iter().enumerate() {
+                if i > 0 {
+                    write!(w, ", ")?;
+                } else {
+                    write!(w, "        ")?;
+                }
+                self.write_type(w, g.expr_type())?;
+                write!(w, " g{i}")?;
+            }
+            writeln!(w, "\n    ) {{")?;
+            for (i, g) in multi_vec.groups().into_iter().enumerate() {
+                match g.simd_width() {
+                    1 => writeln!(w, "        group{i} = float4(g{i}, 0.0, 0.0, 0.0);")?,
+                    2 => writeln!(w, "        group{i} = float4(g{i}, 0.0, 0.0);")?,
+                    3 => writeln!(w, "        group{i} = float4(g{i}, 0.0);")?,
+                    4 => writeln!(w, "        group{i} = g{i};")?,
+                    _ => {}
+                }
+            }
+            writeln!(w, "    }}")?;
+        }
+
+
+        writeln!(w, "}}")?;
 
 
 
@@ -1621,63 +1679,58 @@ internal bool lessThanOrEqualsHelper<T: IComparable>(T a, T b) {{
             }
         }
 
-        writeln!(w, "    public static {ucc} from_elements(")?;
-        for (i, el) in multi_vec.elements().into_iter().enumerate() {
-            if i > 0 {
-                write!(w, ", ")?;
-            } else {
-                write!(w, "        ")?;
-            }
-            write!(w, "float {el}")?;
-        }
-        writeln!(w, "\n    ) {{")?;
-        write!(w, "        return {ucc}(")?;
-        for (outer_idx, g) in multi_vec.groups().into_iter().enumerate() {
-            if outer_idx > 0 {
-                write!(w, ", ")?;
-            }
-            write!(w, "float4(")?;
-            let mut count = 0;
-            for (inner_idx, el) in g.into_iter().enumerate() {
-                if inner_idx > 0 {
-                    write!(w, ", ")?;
-                }
-                write!(w, "{el}")?;
-                count += 1;
-            }
-            while count < 4 {
-                write!(w, ", 0.0")?;
-                count += 1;
-            }
-            write!(w, ")")?;
-        }
-        writeln!(w, ");")?;
-        writeln!(w, "    }}")?;
-        writeln!(w, "    internal static {ucc} from_groups(")?;
-        for (i, g) in multi_vec.groups().into_iter().enumerate() {
-            if i > 0 {
-                write!(w, ", ")?;
-            } else {
-                write!(w, "        ")?;
-            }
-            self.write_type(w, g.expr_type())?;
-            write!(w, " g{i}")?;
-        }
-        writeln!(w, "\n    ) {{")?;
-        write!(w, "        return {ucc}(")?;
-        for (i, g) in multi_vec.groups().into_iter().enumerate() {
-            if i > 0 {
-                write!(w, ", ")?;
-            }
-            match g.simd_width() {
-                1 => write!(w, "float4(g{i}, 0.0, 0.0, 0.0)")?,
-                2 => write!(w, "float4(g{i}, 0.0, 0.0)")?,
-                3 => write!(w, "float4(g{i}, 0.0)")?,
-                4 => write!(w, "g{i}")?,
-                _ => unreachable!("Simd widths can only be 1-4")
-            }
-        }
-        writeln!(w, ");\n    }}\n}}")?;
+        // writeln!(w, "    public static {ucc} from_elements(")?;
+        // for (i, el) in multi_vec.elements().into_iter().enumerate() {
+        //     if i > 0 {
+        //         write!(w, ", ")?;
+        //     } else {
+        //         write!(w, "        ")?;
+        //     }
+        //     write!(w, "float {el}")?;
+        // }
+        // writeln!(w, "\n    ) {{")?;
+        // write!(w, "        return {ucc}(")?;
+        // for (outer_idx, g) in multi_vec.groups().into_iter().enumerate() {
+        //     if outer_idx > 0 {
+        //         write!(w, ", ")?;
+        //     }
+        //     write!(w, "float4(")?;
+        //     let mut count = 0;
+        //     for (inner_idx, el) in g.into_iter().enumerate() {
+        //         if inner_idx > 0 {
+        //             write!(w, ", ")?;
+        //         }
+        //         write!(w, "{el}")?;
+        //         count += 1;
+        //     }
+        //     while count < 4 {
+        //         write!(w, ", 0.0")?;
+        //         count += 1;
+        //     }
+        //     write!(w, ")")?;
+        // }
+        // writeln!(w, ");")?;
+        // writeln!(w, "    }}")?;
+        // writeln!(w, "    internal static {ucc} from_groups(")?;
+        // for (i, g) in multi_vec.groups().into_iter().enumerate() {
+        //     if i > 0 {
+        //         write!(w, ", ")?;
+        //     } else {
+        //         write!(w, "        ")?;
+        //     }
+        //     self.write_type(w, g.expr_type())?;
+        //     write!(w, " g{i}")?;
+        // }
+        // writeln!(w, "\n    ) {{")?;
+        // write!(w, "        return {ucc}(")?;
+        // for (i, _g) in multi_vec.groups().into_iter().enumerate() {
+        //     if i > 0 {
+        //         write!(w, ", ")?;
+        //     }
+        //     write!(w, "g{i}")?;
+        // }
+        // writeln!(w, ");\n    }}")?;
+        writeln!(w, "}}")?;
 
 
         writeln!(w, "public extension {ucc}: IComparable {{")?;
@@ -1723,6 +1776,10 @@ internal bool lessThanOrEqualsHelper<T: IComparable>(T a, T b) {{
         let ucc = def.names.trait_key.as_upper_camel();
         let lsc = def.names.trait_key.as_lower_snake();
         self.emit_comment(w, true, &def.documentation)?;
+
+        // TODO we can re-introduce the interface when this issue is resolved
+        //  https://github.com/shader-slang/slang/issues/5954
+
         // todo alias documentation
         // write!(w, "public interface {ucc}")?;
         // if let TraitArity::Two = def.arity {

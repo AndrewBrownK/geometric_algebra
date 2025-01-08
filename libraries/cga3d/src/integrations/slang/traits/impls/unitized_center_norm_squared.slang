@@ -1,110 +1,155 @@
-using traits::CenterNormSquared;
-using traits::RoundWeightNormSquared;
-extension AntiCircleRotor {
-    // Fancy infix trick
-    func operator/(_rhs: UnitizedCenterNormSquaredPrefixOrPostfix) -> float {
+implementing cga3d;
+using traits;
+public extension AntiCircleRotor {
+    // Fancy postfix trick
+    public float operator /(UnitizedCenterNormSquaredPrefixOrPostfix rhs)  {
         return this.unitized_center_norm_squared();
     }
 }
-extension AntiCircleRotor: UnitizedCenterNormSquared {
-    associatedtype Output = float;
-    func unitized_center_norm_squared() -> Output {
+public extension UnitizedCenterNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public float operator /(AntiCircleRotor rhs) {
+        return rhs.unitized_center_norm_squared();
+    }
+}
+public extension AntiCircleRotor {
+    public float unitized_center_norm_squared() {
         return this.center_norm_squared().scalar / (this.round_weight_norm_squared().e12345);
     }
 }
-extension AntiDipoleInversion {
-    // Fancy infix trick
-    func operator/(_rhs: UnitizedCenterNormSquaredPrefixOrPostfix) -> float {
+public extension AntiDipoleInversion {
+    // Fancy postfix trick
+    public float operator /(UnitizedCenterNormSquaredPrefixOrPostfix rhs)  {
         return this.unitized_center_norm_squared();
     }
 }
-extension AntiDipoleInversion: UnitizedCenterNormSquared {
-    associatedtype Output = float;
-    func unitized_center_norm_squared() -> Output {
+public extension UnitizedCenterNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public float operator /(AntiDipoleInversion rhs) {
+        return rhs.unitized_center_norm_squared();
+    }
+}
+public extension AntiDipoleInversion {
+    public float unitized_center_norm_squared() {
         return this.center_norm_squared().scalar / (this.round_weight_norm_squared().e12345);
     }
 }
-extension Circle {
-    // Fancy infix trick
-    func operator/(_rhs: UnitizedCenterNormSquaredPrefixOrPostfix) -> float {
+public extension Circle {
+    // Fancy postfix trick
+    public float operator /(UnitizedCenterNormSquaredPrefixOrPostfix rhs)  {
         return this.unitized_center_norm_squared();
     }
 }
-extension Circle: UnitizedCenterNormSquared {
-    associatedtype Output = float;
-    func unitized_center_norm_squared() -> Output {
+public extension UnitizedCenterNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public float operator /(Circle rhs) {
+        return rhs.unitized_center_norm_squared();
+    }
+}
+public extension Circle {
+    public float unitized_center_norm_squared() {
         return this.center_norm_squared().scalar / (this.round_weight_norm_squared().e12345);
     }
 }
-extension CircleRotor {
-    // Fancy infix trick
-    func operator/(_rhs: UnitizedCenterNormSquaredPrefixOrPostfix) -> float {
+public extension CircleRotor {
+    // Fancy postfix trick
+    public float operator /(UnitizedCenterNormSquaredPrefixOrPostfix rhs)  {
         return this.unitized_center_norm_squared();
     }
 }
-extension CircleRotor: UnitizedCenterNormSquared {
-    associatedtype Output = float;
-    func unitized_center_norm_squared() -> Output {
+public extension UnitizedCenterNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public float operator /(CircleRotor rhs) {
+        return rhs.unitized_center_norm_squared();
+    }
+}
+public extension CircleRotor {
+    public float unitized_center_norm_squared() {
         return this.center_norm_squared().scalar / (this.round_weight_norm_squared().e12345);
     }
 }
-extension Dipole {
-    // Fancy infix trick
-    func operator/(_rhs: UnitizedCenterNormSquaredPrefixOrPostfix) -> float {
+public extension Dipole {
+    // Fancy postfix trick
+    public float operator /(UnitizedCenterNormSquaredPrefixOrPostfix rhs)  {
         return this.unitized_center_norm_squared();
     }
 }
-extension Dipole: UnitizedCenterNormSquared {
-    associatedtype Output = float;
-    func unitized_center_norm_squared() -> Output {
+public extension UnitizedCenterNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public float operator /(Dipole rhs) {
+        return rhs.unitized_center_norm_squared();
+    }
+}
+public extension Dipole {
+    public float unitized_center_norm_squared() {
         return this.center_norm_squared().scalar / (this.round_weight_norm_squared().e12345);
     }
 }
-extension DipoleInversion {
-    // Fancy infix trick
-    func operator/(_rhs: UnitizedCenterNormSquaredPrefixOrPostfix) -> float {
+public extension DipoleInversion {
+    // Fancy postfix trick
+    public float operator /(UnitizedCenterNormSquaredPrefixOrPostfix rhs)  {
         return this.unitized_center_norm_squared();
     }
 }
-extension DipoleInversion: UnitizedCenterNormSquared {
-    associatedtype Output = float;
-    func unitized_center_norm_squared() -> Output {
+public extension UnitizedCenterNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public float operator /(DipoleInversion rhs) {
+        return rhs.unitized_center_norm_squared();
+    }
+}
+public extension DipoleInversion {
+    public float unitized_center_norm_squared() {
         return this.center_norm_squared().scalar / (this.round_weight_norm_squared().e12345);
     }
 }
-extension MultiVector {
-    // Fancy infix trick
-    func operator/(_rhs: UnitizedCenterNormSquaredPrefixOrPostfix) -> float {
+public extension MultiVector {
+    // Fancy postfix trick
+    public float operator /(UnitizedCenterNormSquaredPrefixOrPostfix rhs)  {
         return this.unitized_center_norm_squared();
     }
 }
-extension MultiVector: UnitizedCenterNormSquared {
-    associatedtype Output = float;
-    func unitized_center_norm_squared() -> Output {
+public extension UnitizedCenterNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public float operator /(MultiVector rhs) {
+        return rhs.unitized_center_norm_squared();
+    }
+}
+public extension MultiVector {
+    public float unitized_center_norm_squared() {
         return this.center_norm_squared().scalar / (this.round_weight_norm_squared().e12345);
     }
 }
-extension VersorEven {
-    // Fancy infix trick
-    func operator/(_rhs: UnitizedCenterNormSquaredPrefixOrPostfix) -> float {
+public extension VersorEven {
+    // Fancy postfix trick
+    public float operator /(UnitizedCenterNormSquaredPrefixOrPostfix rhs)  {
         return this.unitized_center_norm_squared();
     }
 }
-extension VersorEven: UnitizedCenterNormSquared {
-    associatedtype Output = float;
-    func unitized_center_norm_squared() -> Output {
+public extension UnitizedCenterNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public float operator /(VersorEven rhs) {
+        return rhs.unitized_center_norm_squared();
+    }
+}
+public extension VersorEven {
+    public float unitized_center_norm_squared() {
         return this.center_norm_squared().scalar / (this.round_weight_norm_squared().e12345);
     }
 }
-extension VersorOdd {
-    // Fancy infix trick
-    func operator/(_rhs: UnitizedCenterNormSquaredPrefixOrPostfix) -> float {
+public extension VersorOdd {
+    // Fancy postfix trick
+    public float operator /(UnitizedCenterNormSquaredPrefixOrPostfix rhs)  {
         return this.unitized_center_norm_squared();
     }
 }
-extension VersorOdd: UnitizedCenterNormSquared {
-    associatedtype Output = float;
-    func unitized_center_norm_squared() -> Output {
+public extension UnitizedCenterNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public float operator /(VersorOdd rhs) {
+        return rhs.unitized_center_norm_squared();
+    }
+}
+public extension VersorOdd {
+    public float unitized_center_norm_squared() {
         return this.center_norm_squared().scalar / (this.round_weight_norm_squared().e12345);
     }
 }

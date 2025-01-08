@@ -1,41 +1,41 @@
-extension MultiVector: From<AntiCircleRotor> {
-    associatedtype Self = MultiVector:
-    static func from(from_anti_circle_rotor: AntiCircleRotor) -> Self {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(from_anti_circle_rotor.scalar, 0.0), 0.0, 0.0), 
+implementing cga3d;
+using traits;
+public extension MultiVector {
+    public static MultiVector from(AntiCircleRotor from_anti_circle_rotor) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(from_anti_circle_rotor.scalar, 0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(from_anti_circle_rotor.e15, from_anti_circle_rotor.e25, from_anti_circle_rotor.e35, from_anti_circle_rotor.e45), 
-            /* e41, e42, e43, 0 */
-            float4(from_anti_circle_rotor.group0.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(from_anti_circle_rotor.group1.xyz, 0.0), 
+            /* e41, e42, e43 */
+            from_anti_circle_rotor.group0.xyz, 
+            /* e23, e31, e12 */
+            from_anti_circle_rotor.group1.xyz, 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(0.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension AntiCircleRotor: Into<MultiVector> {
-    public func into() -> MultiVector {
+public extension AntiCircleRotor {
+    public MultiVector into_MultiVector() {
         return MultiVector.from(this);
     }
 }
-extension VersorOdd: From<AntiCircleRotor> {
-    associatedtype Self = VersorOdd:
-    static func from(from_anti_circle_rotor: AntiCircleRotor) -> Self {
-        return VersorOdd.from_groups(
+public extension VersorOdd {
+    public static VersorOdd from(AntiCircleRotor from_anti_circle_rotor) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(from_anti_circle_rotor.group0.xyz, from_anti_circle_rotor.scalar), 
             /* e23, e31, e12, e45 */
@@ -47,49 +47,47 @@ extension VersorOdd: From<AntiCircleRotor> {
         );
     }
 }
-extension AntiCircleRotor: Into<VersorOdd> {
-    public func into() -> VersorOdd {
+public extension AntiCircleRotor {
+    public VersorOdd into_VersorOdd() {
         return VersorOdd.from(this);
     }
 }
-extension MultiVector: From<AntiDipoleInversion> {
-    associatedtype Self = MultiVector:
-    static func from(from_anti_dipole_inversion: AntiDipoleInversion) -> Self {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(0.0), 
+public extension MultiVector {
+    public static MultiVector from(AntiDipoleInversion from_anti_dipole_inversion) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(0.0), 
             /* e1, e2, e3, e4 */
             float4(from_anti_dipole_inversion.e1, from_anti_dipole_inversion.e2, from_anti_dipole_inversion.e3, from_anti_dipole_inversion.e4), 
-            /* e5, 0, 0, 0 */
-            float4(from_anti_dipole_inversion.e5, 0.0, 0.0, 0.0), 
+            /* e5 */
+            from_anti_dipole_inversion.e5, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             from_anti_dipole_inversion.group1, 
-            /* e423, e431, e412, 0 */
-            float4(from_anti_dipole_inversion.group0.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(from_anti_dipole_inversion.group2.xyz, 0.0), 
+            /* e423, e431, e412 */
+            from_anti_dipole_inversion.group0.xyz, 
+            /* e235, e315, e125 */
+            from_anti_dipole_inversion.group2.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension AntiDipoleInversion: Into<MultiVector> {
-    public func into() -> MultiVector {
+public extension AntiDipoleInversion {
+    public MultiVector into_MultiVector() {
         return MultiVector.from(this);
     }
 }
-extension VersorEven: From<AntiDipoleInversion> {
-    associatedtype Self = VersorEven:
-    static func from(from_anti_dipole_inversion: AntiDipoleInversion) -> Self {
-        return VersorEven.from_groups(
+public extension VersorEven {
+    public static VersorEven from(AntiDipoleInversion from_anti_dipole_inversion) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(from_anti_dipole_inversion.group0.xyz, 0.0), 
             /* e415, e425, e435, e321 */
@@ -101,15 +99,14 @@ extension VersorEven: From<AntiDipoleInversion> {
         );
     }
 }
-extension AntiDipoleInversion: Into<VersorEven> {
-    public func into() -> VersorEven {
+public extension AntiDipoleInversion {
+    public VersorEven into_VersorEven() {
         return VersorEven.from(this);
     }
 }
-extension AntiMotor: From<AntiDualNum> {
-    associatedtype Self = AntiMotor:
-    static func from(from_anti_dual_num: AntiDualNum) -> Self {
-        return AntiMotor.from_groups(
+public extension AntiMotor {
+    public static AntiMotor from(AntiDualNum from_anti_dual_num) {
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(float3(0.0), from_anti_dual_num.scalar), 
             /* e15, e25, e35, e3215 */
@@ -117,49 +114,47 @@ extension AntiMotor: From<AntiDualNum> {
         );
     }
 }
-extension AntiDualNum: Into<AntiMotor> {
-    public func into() -> AntiMotor {
+public extension AntiDualNum {
+    public AntiMotor into_AntiMotor() {
         return AntiMotor.from(this);
     }
 }
-extension MultiVector: From<AntiDualNum> {
-    associatedtype Self = MultiVector:
-    static func from(from_anti_dual_num: AntiDualNum) -> Self {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(from_anti_dual_num.scalar, 0.0), 0.0, 0.0), 
+public extension MultiVector {
+    public static MultiVector from(AntiDualNum from_anti_dual_num) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(from_anti_dual_num.scalar, 0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(0.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(float3(0.0), from_anti_dual_num.e3215), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension AntiDualNum: Into<MultiVector> {
-    public func into() -> MultiVector {
+public extension AntiDualNum {
+    public MultiVector into_MultiVector() {
         return MultiVector.from(this);
     }
 }
-extension VersorOdd: From<AntiDualNum> {
-    associatedtype Self = VersorOdd:
-    static func from(from_anti_dual_num: AntiDualNum) -> Self {
-        return VersorOdd.from_groups(
+public extension VersorOdd {
+    public static VersorOdd from(AntiDualNum from_anti_dual_num) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(float3(0.0), from_anti_dual_num.scalar), 
             /* e23, e31, e12, e45 */
@@ -171,17 +166,16 @@ extension VersorOdd: From<AntiDualNum> {
         );
     }
 }
-extension AntiDualNum: Into<VersorOdd> {
-    public func into() -> VersorOdd {
+public extension AntiDualNum {
+    public VersorOdd into_VersorOdd() {
         return VersorOdd.from(this);
     }
 }
-extension AntiDipoleInversion: From<AntiFlatPoint> {
-    associatedtype Self = AntiDipoleInversion:
-    static func from(from_anti_flat_point: AntiFlatPoint) -> Self {
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
+public extension AntiDipoleInversion {
+    public static AntiDipoleInversion from(AntiFlatPoint from_anti_flat_point) {
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(float3(0.0), from_anti_flat_point.e321), 
             /* e235, e315, e125, e4 */
@@ -191,15 +185,14 @@ extension AntiDipoleInversion: From<AntiFlatPoint> {
         );
     }
 }
-extension AntiFlatPoint: Into<AntiDipoleInversion> {
-    public func into() -> AntiDipoleInversion {
+public extension AntiFlatPoint {
+    public AntiDipoleInversion into_AntiDipoleInversion() {
         return AntiDipoleInversion.from(this);
     }
 }
-extension AntiFlector: From<AntiFlatPoint> {
-    associatedtype Self = AntiFlector:
-    static func from(from_anti_flat_point: AntiFlatPoint) -> Self {
-        return AntiFlector.from_groups(
+public extension AntiFlector {
+    public static AntiFlector from(AntiFlatPoint from_anti_flat_point) {
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             from_anti_flat_point.group0, 
             /* e1, e2, e3, e5 */
@@ -207,35 +200,33 @@ extension AntiFlector: From<AntiFlatPoint> {
         );
     }
 }
-extension AntiFlatPoint: Into<AntiFlector> {
-    public func into() -> AntiFlector {
+public extension AntiFlatPoint {
+    public AntiFlector into_AntiFlector() {
         return AntiFlector.from(this);
     }
 }
-extension Circle: From<AntiFlatPoint> {
-    associatedtype Self = Circle:
-    static func from(from_anti_flat_point: AntiFlatPoint) -> Self {
-        return Circle.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
+public extension Circle {
+    public static Circle from(AntiFlatPoint from_anti_flat_point) {
+        return Circle(
+            /* e423, e431, e412 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(float3(0.0), from_anti_flat_point.e321), 
-            /* e235, e315, e125, 0 */
-            float4(from_anti_flat_point.group0.xyz, 0.0)
+            /* e235, e315, e125 */
+            from_anti_flat_point.group0.xyz
         );
     }
 }
-extension AntiFlatPoint: Into<Circle> {
-    public func into() -> Circle {
+public extension AntiFlatPoint {
+    public Circle into_Circle() {
         return Circle.from(this);
     }
 }
-extension CircleRotor: From<AntiFlatPoint> {
-    associatedtype Self = CircleRotor:
-    static func from(from_anti_flat_point: AntiFlatPoint) -> Self {
-        return CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
+public extension CircleRotor {
+    public static CircleRotor from(AntiFlatPoint from_anti_flat_point) {
+        return CircleRotor(
+            /* e423, e431, e412 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(float3(0.0), from_anti_flat_point.e321), 
             /* e235, e315, e125, e12345 */
@@ -243,49 +234,47 @@ extension CircleRotor: From<AntiFlatPoint> {
         );
     }
 }
-extension AntiFlatPoint: Into<CircleRotor> {
-    public func into() -> CircleRotor {
+public extension AntiFlatPoint {
+    public CircleRotor into_CircleRotor() {
         return CircleRotor.from(this);
     }
 }
-extension MultiVector: From<AntiFlatPoint> {
-    associatedtype Self = MultiVector:
-    static func from(from_anti_flat_point: AntiFlatPoint) -> Self {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(0.0), 
+public extension MultiVector {
+    public static MultiVector from(AntiFlatPoint from_anti_flat_point) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(float3(0.0), from_anti_flat_point.e321), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(from_anti_flat_point.group0.xyz, 0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            from_anti_flat_point.group0.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension AntiFlatPoint: Into<MultiVector> {
-    public func into() -> MultiVector {
+public extension AntiFlatPoint {
+    public MultiVector into_MultiVector() {
         return MultiVector.from(this);
     }
 }
-extension VersorEven: From<AntiFlatPoint> {
-    associatedtype Self = VersorEven:
-    static func from(from_anti_flat_point: AntiFlatPoint) -> Self {
-        return VersorEven.from_groups(
+public extension VersorEven {
+    public static VersorEven from(AntiFlatPoint from_anti_flat_point) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(0.0), 
             /* e415, e425, e435, e321 */
@@ -297,17 +286,16 @@ extension VersorEven: From<AntiFlatPoint> {
         );
     }
 }
-extension AntiFlatPoint: Into<VersorEven> {
-    public func into() -> VersorEven {
+public extension AntiFlatPoint {
+    public VersorEven into_VersorEven() {
         return VersorEven.from(this);
     }
 }
-extension AntiDipoleInversion: From<AntiFlector> {
-    associatedtype Self = AntiDipoleInversion:
-    static func from(from_anti_flector: AntiFlector) -> Self {
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
+public extension AntiDipoleInversion {
+    public static AntiDipoleInversion from(AntiFlector from_anti_flector) {
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(float3(0.0), from_anti_flector.e321), 
             /* e235, e315, e125, e4 */
@@ -317,49 +305,47 @@ extension AntiDipoleInversion: From<AntiFlector> {
         );
     }
 }
-extension AntiFlector: Into<AntiDipoleInversion> {
-    public func into() -> AntiDipoleInversion {
+public extension AntiFlector {
+    public AntiDipoleInversion into_AntiDipoleInversion() {
         return AntiDipoleInversion.from(this);
     }
 }
-extension MultiVector: From<AntiFlector> {
-    associatedtype Self = MultiVector:
-    static func from(from_anti_flector: AntiFlector) -> Self {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(0.0), 
+public extension MultiVector {
+    public static MultiVector from(AntiFlector from_anti_flector) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(0.0), 
             /* e1, e2, e3, e4 */
             float4(from_anti_flector.group1.xyz, 0.0), 
-            /* e5, 0, 0, 0 */
-            float4(from_anti_flector.e5, 0.0, 0.0, 0.0), 
+            /* e5 */
+            from_anti_flector.e5, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(float3(0.0), from_anti_flector.e321), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(from_anti_flector.group0.xyz, 0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            from_anti_flector.group0.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension AntiFlector: Into<MultiVector> {
-    public func into() -> MultiVector {
+public extension AntiFlector {
+    public MultiVector into_MultiVector() {
         return MultiVector.from(this);
     }
 }
-extension VersorEven: From<AntiFlector> {
-    associatedtype Self = VersorEven:
-    static func from(from_anti_flector: AntiFlector) -> Self {
-        return VersorEven.from_groups(
+public extension VersorEven {
+    public static VersorEven from(AntiFlector from_anti_flector) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(0.0), 
             /* e415, e425, e435, e321 */
@@ -371,17 +357,16 @@ extension VersorEven: From<AntiFlector> {
         );
     }
 }
-extension AntiFlector: Into<VersorEven> {
-    public func into() -> VersorEven {
+public extension AntiFlector {
+    public VersorEven into_VersorEven() {
         return VersorEven.from(this);
     }
 }
-extension AntiCircleRotor: From<AntiLine> {
-    associatedtype Self = AntiCircleRotor:
-    static func from(from_anti_line: AntiLine) -> Self {
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
+public extension AntiCircleRotor {
+    public static AntiCircleRotor from(AntiLine from_anti_line) {
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            float3(0.0), 
             /* e23, e31, e12, e45 */
             float4(from_anti_line.group0.xyz, 0.0), 
             /* e15, e25, e35, scalar */
@@ -389,15 +374,14 @@ extension AntiCircleRotor: From<AntiLine> {
         );
     }
 }
-extension AntiLine: Into<AntiCircleRotor> {
-    public func into() -> AntiCircleRotor {
+public extension AntiLine {
+    public AntiCircleRotor into_AntiCircleRotor() {
         return AntiCircleRotor.from(this);
     }
 }
-extension AntiMotor: From<AntiLine> {
-    associatedtype Self = AntiMotor:
-    static func from(from_anti_line: AntiLine) -> Self {
-        return AntiMotor.from_groups(
+public extension AntiMotor {
+    public static AntiMotor from(AntiLine from_anti_line) {
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(from_anti_line.group0.xyz, 0.0), 
             /* e15, e25, e35, e3215 */
@@ -405,35 +389,33 @@ extension AntiMotor: From<AntiLine> {
         );
     }
 }
-extension AntiLine: Into<AntiMotor> {
-    public func into() -> AntiMotor {
+public extension AntiLine {
+    public AntiMotor into_AntiMotor() {
         return AntiMotor.from(this);
     }
 }
-extension Dipole: From<AntiLine> {
-    associatedtype Self = Dipole:
-    static func from(from_anti_line: AntiLine) -> Self {
-        return Dipole.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
+public extension Dipole {
+    public static Dipole from(AntiLine from_anti_line) {
+        return Dipole(
+            /* e41, e42, e43 */
+            float3(0.0), 
             /* e23, e31, e12, e45 */
             float4(from_anti_line.group0.xyz, 0.0), 
-            /* e15, e25, e35, 0 */
-            float4(from_anti_line.group1.xyz, 0.0)
+            /* e15, e25, e35 */
+            from_anti_line.group1.xyz
         );
     }
 }
-extension AntiLine: Into<Dipole> {
-    public func into() -> Dipole {
+public extension AntiLine {
+    public Dipole into_Dipole() {
         return Dipole.from(this);
     }
 }
-extension DipoleInversion: From<AntiLine> {
-    associatedtype Self = DipoleInversion:
-    static func from(from_anti_line: AntiLine) -> Self {
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
+public extension DipoleInversion {
+    public static DipoleInversion from(AntiLine from_anti_line) {
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            float3(0.0), 
             /* e23, e31, e12, e45 */
             float4(from_anti_line.group0.xyz, 0.0), 
             /* e15, e25, e35, e1234 */
@@ -443,49 +425,47 @@ extension DipoleInversion: From<AntiLine> {
         );
     }
 }
-extension AntiLine: Into<DipoleInversion> {
-    public func into() -> DipoleInversion {
+public extension AntiLine {
+    public DipoleInversion into_DipoleInversion() {
         return DipoleInversion.from(this);
     }
 }
-extension MultiVector: From<AntiLine> {
-    associatedtype Self = MultiVector:
-    static func from(from_anti_line: AntiLine) -> Self {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(0.0), 
+public extension MultiVector {
+    public static MultiVector from(AntiLine from_anti_line) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(from_anti_line.group1.xyz, 0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(from_anti_line.group0.xyz, 0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            from_anti_line.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(0.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension AntiLine: Into<MultiVector> {
-    public func into() -> MultiVector {
+public extension AntiLine {
+    public MultiVector into_MultiVector() {
         return MultiVector.from(this);
     }
 }
-extension VersorOdd: From<AntiLine> {
-    associatedtype Self = VersorOdd:
-    static func from(from_anti_line: AntiLine) -> Self {
-        return VersorOdd.from_groups(
+public extension VersorOdd {
+    public static VersorOdd from(AntiLine from_anti_line) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(0.0), 
             /* e23, e31, e12, e45 */
@@ -497,49 +477,47 @@ extension VersorOdd: From<AntiLine> {
         );
     }
 }
-extension AntiLine: Into<VersorOdd> {
-    public func into() -> VersorOdd {
+public extension AntiLine {
+    public VersorOdd into_VersorOdd() {
         return VersorOdd.from(this);
     }
 }
-extension MultiVector: From<AntiMotor> {
-    associatedtype Self = MultiVector:
-    static func from(from_anti_motor: AntiMotor) -> Self {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(from_anti_motor.scalar, 0.0), 0.0, 0.0), 
+public extension MultiVector {
+    public static MultiVector from(AntiMotor from_anti_motor) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(from_anti_motor.scalar, 0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(from_anti_motor.group1.xyz, 0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(from_anti_motor.group0.xyz, 0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            from_anti_motor.group0.xyz, 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(0.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(float3(0.0), from_anti_motor.e3215), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension AntiMotor: Into<MultiVector> {
-    public func into() -> MultiVector {
+public extension AntiMotor {
+    public MultiVector into_MultiVector() {
         return MultiVector.from(this);
     }
 }
-extension VersorOdd: From<AntiMotor> {
-    associatedtype Self = VersorOdd:
-    static func from(from_anti_motor: AntiMotor) -> Self {
-        return VersorOdd.from_groups(
+public extension VersorOdd {
+    public static VersorOdd from(AntiMotor from_anti_motor) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(float3(0.0), from_anti_motor.scalar), 
             /* e23, e31, e12, e45 */
@@ -551,17 +529,16 @@ extension VersorOdd: From<AntiMotor> {
         );
     }
 }
-extension AntiMotor: Into<VersorOdd> {
-    public func into() -> VersorOdd {
+public extension AntiMotor {
+    public VersorOdd into_VersorOdd() {
         return VersorOdd.from(this);
     }
 }
-extension AntiDipoleInversion: From<AntiPlane> {
-    associatedtype Self = AntiDipoleInversion:
-    static func from(from_anti_plane: AntiPlane) -> Self {
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
+public extension AntiDipoleInversion {
+    public static AntiDipoleInversion from(AntiPlane from_anti_plane) {
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(0.0), 
             /* e235, e315, e125, e4 */
@@ -571,15 +548,14 @@ extension AntiDipoleInversion: From<AntiPlane> {
         );
     }
 }
-extension AntiPlane: Into<AntiDipoleInversion> {
-    public func into() -> AntiDipoleInversion {
+public extension AntiPlane {
+    public AntiDipoleInversion into_AntiDipoleInversion() {
         return AntiDipoleInversion.from(this);
     }
 }
-extension AntiFlector: From<AntiPlane> {
-    associatedtype Self = AntiFlector:
-    static func from(from_anti_plane: AntiPlane) -> Self {
-        return AntiFlector.from_groups(
+public extension AntiFlector {
+    public static AntiFlector from(AntiPlane from_anti_plane) {
+        return AntiFlector(
             /* e235, e315, e125, e321 */
             float4(0.0), 
             /* e1, e2, e3, e5 */
@@ -587,65 +563,62 @@ extension AntiFlector: From<AntiPlane> {
         );
     }
 }
-extension AntiPlane: Into<AntiFlector> {
-    public func into() -> AntiFlector {
+public extension AntiPlane {
+    public AntiFlector into_AntiFlector() {
         return AntiFlector.from(this);
     }
 }
-extension MultiVector: From<AntiPlane> {
-    associatedtype Self = MultiVector:
-    static func from(from_anti_plane: AntiPlane) -> Self {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(0.0), 
+public extension MultiVector {
+    public static MultiVector from(AntiPlane from_anti_plane) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(0.0), 
             /* e1, e2, e3, e4 */
             float4(from_anti_plane.group0.xyz, 0.0), 
-            /* e5, 0, 0, 0 */
-            float4(from_anti_plane.e5, 0.0, 0.0, 0.0), 
+            /* e5 */
+            from_anti_plane.e5, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(0.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension AntiPlane: Into<MultiVector> {
-    public func into() -> MultiVector {
+public extension AntiPlane {
+    public MultiVector into_MultiVector() {
         return MultiVector.from(this);
     }
 }
-extension RoundPoint: From<AntiPlane> {
-    associatedtype Self = RoundPoint:
-    static func from(from_anti_plane: AntiPlane) -> Self {
-        return RoundPoint.from_groups(
+public extension RoundPoint {
+    public static RoundPoint from(AntiPlane from_anti_plane) {
+        return RoundPoint(
             /* e1, e2, e3, e4 */
             float4(from_anti_plane.group0.xyz, 0.0), 
-            /* e5, 0, 0, 0 */
-            float4(from_anti_plane.e5, 0.0, 0.0, 0.0)
+            /* e5 */
+            from_anti_plane.e5
         );
     }
 }
-extension AntiPlane: Into<RoundPoint> {
-    public func into() -> RoundPoint {
+public extension AntiPlane {
+    public RoundPoint into_RoundPoint() {
         return RoundPoint.from(this);
     }
 }
-extension VersorEven: From<AntiPlane> {
-    associatedtype Self = VersorEven:
-    static func from(from_anti_plane: AntiPlane) -> Self {
-        return VersorEven.from_groups(
+public extension VersorEven {
+    public static VersorEven from(AntiPlane from_anti_plane) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(0.0), 
             /* e415, e425, e435, e321 */
@@ -657,17 +630,16 @@ extension VersorEven: From<AntiPlane> {
         );
     }
 }
-extension AntiPlane: Into<VersorEven> {
-    public func into() -> VersorEven {
+public extension AntiPlane {
+    public VersorEven into_VersorEven() {
         return VersorEven.from(this);
     }
 }
-extension CircleRotor: From<AntiScalar> {
-    associatedtype Self = CircleRotor:
-    static func from(from_anti_scalar: AntiScalar) -> Self {
-        return CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
+public extension CircleRotor {
+    public static CircleRotor from(AntiScalar from_anti_scalar) {
+        return CircleRotor(
+            /* e423, e431, e412 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(0.0), 
             /* e235, e315, e125, e12345 */
@@ -675,29 +647,27 @@ extension CircleRotor: From<AntiScalar> {
         );
     }
 }
-extension AntiScalar: Into<CircleRotor> {
-    public func into() -> CircleRotor {
+public extension AntiScalar {
+    public CircleRotor into_CircleRotor() {
         return CircleRotor.from(this);
     }
 }
-extension DualNum: From<AntiScalar> {
-    associatedtype Self = DualNum:
-    static func from(from_anti_scalar: AntiScalar) -> Self {
-        return DualNum.from_groups(
-            /* e5, e12345, 0, 0 */
-            float4(float2(0.0, from_anti_scalar.e12345), 0.0, 0.0)
+public extension DualNum {
+    public static DualNum from(AntiScalar from_anti_scalar) {
+        return DualNum(
+            /* e5, e12345 */
+            float2(0.0, from_anti_scalar.e12345)
         );
     }
 }
-extension AntiScalar: Into<DualNum> {
-    public func into() -> DualNum {
+public extension AntiScalar {
+    public DualNum into_DualNum() {
         return DualNum.from(this);
     }
 }
-extension Motor: From<AntiScalar> {
-    associatedtype Self = Motor:
-    static func from(from_anti_scalar: AntiScalar) -> Self {
-        return Motor.from_groups(
+public extension Motor {
+    public static Motor from(AntiScalar from_anti_scalar) {
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4(float3(0.0), from_anti_scalar.e12345), 
             /* e235, e315, e125, e5 */
@@ -705,49 +675,47 @@ extension Motor: From<AntiScalar> {
         );
     }
 }
-extension AntiScalar: Into<Motor> {
-    public func into() -> Motor {
+public extension AntiScalar {
+    public Motor into_Motor() {
         return Motor.from(this);
     }
 }
-extension MultiVector: From<AntiScalar> {
-    associatedtype Self = MultiVector:
-    static func from(from_anti_scalar: AntiScalar) -> Self {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(0.0, from_anti_scalar.e12345), 0.0, 0.0), 
+public extension MultiVector {
+    public static MultiVector from(AntiScalar from_anti_scalar) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(0.0, from_anti_scalar.e12345), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(0.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension AntiScalar: Into<MultiVector> {
-    public func into() -> MultiVector {
+public extension AntiScalar {
+    public MultiVector into_MultiVector() {
         return MultiVector.from(this);
     }
 }
-extension VersorEven: From<AntiScalar> {
-    associatedtype Self = VersorEven:
-    static func from(from_anti_scalar: AntiScalar) -> Self {
-        return VersorEven.from_groups(
+public extension VersorEven {
+    public static VersorEven from(AntiScalar from_anti_scalar) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(float3(0.0), from_anti_scalar.e12345), 
             /* e415, e425, e435, e321 */
@@ -759,17 +727,16 @@ extension VersorEven: From<AntiScalar> {
         );
     }
 }
-extension AntiScalar: Into<VersorEven> {
-    public func into() -> VersorEven {
+public extension AntiScalar {
+    public VersorEven into_VersorEven() {
         return VersorEven.from(this);
     }
 }
-extension AntiDipoleInversion: From<Circle> {
-    associatedtype Self = AntiDipoleInversion:
-    static func from(from_circle: Circle) -> Self {
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(from_circle.group0.xyz, 0.0), 
+public extension AntiDipoleInversion {
+    public static AntiDipoleInversion from(Circle from_circle) {
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            from_circle.group0.xyz, 
             /* e415, e425, e435, e321 */
             from_circle.group1, 
             /* e235, e315, e125, e4 */
@@ -779,17 +746,16 @@ extension AntiDipoleInversion: From<Circle> {
         );
     }
 }
-extension Circle: Into<AntiDipoleInversion> {
-    public func into() -> AntiDipoleInversion {
+public extension Circle {
+    public AntiDipoleInversion into_AntiDipoleInversion() {
         return AntiDipoleInversion.from(this);
     }
 }
-extension CircleRotor: From<Circle> {
-    associatedtype Self = CircleRotor:
-    static func from(from_circle: Circle) -> Self {
-        return CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(from_circle.group0.xyz, 0.0), 
+public extension CircleRotor {
+    public static CircleRotor from(Circle from_circle) {
+        return CircleRotor(
+            /* e423, e431, e412 */
+            from_circle.group0.xyz, 
             /* e415, e425, e435, e321 */
             from_circle.group1, 
             /* e235, e315, e125, e12345 */
@@ -797,49 +763,47 @@ extension CircleRotor: From<Circle> {
         );
     }
 }
-extension Circle: Into<CircleRotor> {
-    public func into() -> CircleRotor {
+public extension Circle {
+    public CircleRotor into_CircleRotor() {
         return CircleRotor.from(this);
     }
 }
-extension MultiVector: From<Circle> {
-    associatedtype Self = MultiVector:
-    static func from(from_circle: Circle) -> Self {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(0.0), 
+public extension MultiVector {
+    public static MultiVector from(Circle from_circle) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             from_circle.group1, 
-            /* e423, e431, e412, 0 */
-            float4(from_circle.group0.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(from_circle.group2.xyz, 0.0), 
+            /* e423, e431, e412 */
+            from_circle.group0.xyz, 
+            /* e235, e315, e125 */
+            from_circle.group2.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension Circle: Into<MultiVector> {
-    public func into() -> MultiVector {
+public extension Circle {
+    public MultiVector into_MultiVector() {
         return MultiVector.from(this);
     }
 }
-extension VersorEven: From<Circle> {
-    associatedtype Self = VersorEven:
-    static func from(from_circle: Circle) -> Self {
-        return VersorEven.from_groups(
+public extension VersorEven {
+    public static VersorEven from(Circle from_circle) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(from_circle.group0.xyz, 0.0), 
             /* e415, e425, e435, e321 */
@@ -851,49 +815,47 @@ extension VersorEven: From<Circle> {
         );
     }
 }
-extension Circle: Into<VersorEven> {
-    public func into() -> VersorEven {
+public extension Circle {
+    public VersorEven into_VersorEven() {
         return VersorEven.from(this);
     }
 }
-extension MultiVector: From<CircleRotor> {
-    associatedtype Self = MultiVector:
-    static func from(from_circle_rotor: CircleRotor) -> Self {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(0.0, from_circle_rotor.e12345), 0.0, 0.0), 
+public extension MultiVector {
+    public static MultiVector from(CircleRotor from_circle_rotor) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(0.0, from_circle_rotor.e12345), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             from_circle_rotor.group1, 
-            /* e423, e431, e412, 0 */
-            float4(from_circle_rotor.group0.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(from_circle_rotor.group2.xyz, 0.0), 
+            /* e423, e431, e412 */
+            from_circle_rotor.group0.xyz, 
+            /* e235, e315, e125 */
+            from_circle_rotor.group2.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension CircleRotor: Into<MultiVector> {
-    public func into() -> MultiVector {
+public extension CircleRotor {
+    public MultiVector into_MultiVector() {
         return MultiVector.from(this);
     }
 }
-extension VersorEven: From<CircleRotor> {
-    associatedtype Self = VersorEven:
-    static func from(from_circle_rotor: CircleRotor) -> Self {
-        return VersorEven.from_groups(
+public extension VersorEven {
+    public static VersorEven from(CircleRotor from_circle_rotor) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(from_circle_rotor.group0.xyz, from_circle_rotor.e12345), 
             /* e415, e425, e435, e321 */
@@ -905,17 +867,16 @@ extension VersorEven: From<CircleRotor> {
         );
     }
 }
-extension CircleRotor: Into<VersorEven> {
-    public func into() -> VersorEven {
+public extension CircleRotor {
+    public VersorEven into_VersorEven() {
         return VersorEven.from(this);
     }
 }
-extension AntiCircleRotor: From<Dipole> {
-    associatedtype Self = AntiCircleRotor:
-    static func from(from_dipole: Dipole) -> Self {
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(from_dipole.group0.xyz, 0.0), 
+public extension AntiCircleRotor {
+    public static AntiCircleRotor from(Dipole from_dipole) {
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            from_dipole.group0.xyz, 
             /* e23, e31, e12, e45 */
             from_dipole.group1, 
             /* e15, e25, e35, scalar */
@@ -923,17 +884,16 @@ extension AntiCircleRotor: From<Dipole> {
         );
     }
 }
-extension Dipole: Into<AntiCircleRotor> {
-    public func into() -> AntiCircleRotor {
+public extension Dipole {
+    public AntiCircleRotor into_AntiCircleRotor() {
         return AntiCircleRotor.from(this);
     }
 }
-extension DipoleInversion: From<Dipole> {
-    associatedtype Self = DipoleInversion:
-    static func from(from_dipole: Dipole) -> Self {
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(from_dipole.group0.xyz, 0.0), 
+public extension DipoleInversion {
+    public static DipoleInversion from(Dipole from_dipole) {
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            from_dipole.group0.xyz, 
             /* e23, e31, e12, e45 */
             from_dipole.group1, 
             /* e15, e25, e35, e1234 */
@@ -943,49 +903,47 @@ extension DipoleInversion: From<Dipole> {
         );
     }
 }
-extension Dipole: Into<DipoleInversion> {
-    public func into() -> DipoleInversion {
+public extension Dipole {
+    public DipoleInversion into_DipoleInversion() {
         return DipoleInversion.from(this);
     }
 }
-extension MultiVector: From<Dipole> {
-    associatedtype Self = MultiVector:
-    static func from(from_dipole: Dipole) -> Self {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(0.0), 
+public extension MultiVector {
+    public static MultiVector from(Dipole from_dipole) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(from_dipole.group2.xyz, from_dipole.e45), 
-            /* e41, e42, e43, 0 */
-            float4(from_dipole.group0.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(from_dipole.group1.xyz, 0.0), 
+            /* e41, e42, e43 */
+            from_dipole.group0.xyz, 
+            /* e23, e31, e12 */
+            from_dipole.group1.xyz, 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(0.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension Dipole: Into<MultiVector> {
-    public func into() -> MultiVector {
+public extension Dipole {
+    public MultiVector into_MultiVector() {
         return MultiVector.from(this);
     }
 }
-extension VersorOdd: From<Dipole> {
-    associatedtype Self = VersorOdd:
-    static func from(from_dipole: Dipole) -> Self {
-        return VersorOdd.from_groups(
+public extension VersorOdd {
+    public static VersorOdd from(Dipole from_dipole) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(from_dipole.group0.xyz, 0.0), 
             /* e23, e31, e12, e45 */
@@ -997,49 +955,47 @@ extension VersorOdd: From<Dipole> {
         );
     }
 }
-extension Dipole: Into<VersorOdd> {
-    public func into() -> VersorOdd {
+public extension Dipole {
+    public VersorOdd into_VersorOdd() {
         return VersorOdd.from(this);
     }
 }
-extension MultiVector: From<DipoleInversion> {
-    associatedtype Self = MultiVector:
-    static func from(from_dipole_inversion: DipoleInversion) -> Self {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(0.0), 
+public extension MultiVector {
+    public static MultiVector from(DipoleInversion from_dipole_inversion) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(from_dipole_inversion.e15, from_dipole_inversion.e25, from_dipole_inversion.e35, from_dipole_inversion.e45), 
-            /* e41, e42, e43, 0 */
-            float4(from_dipole_inversion.group0.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(from_dipole_inversion.group1.xyz, 0.0), 
+            /* e41, e42, e43 */
+            from_dipole_inversion.group0.xyz, 
+            /* e23, e31, e12 */
+            from_dipole_inversion.group1.xyz, 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(0.0), 
             /* e4235, e4315, e4125, e3215 */
             from_dipole_inversion.group3, 
-            /* e1234, 0, 0, 0 */
-            float4(from_dipole_inversion.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            from_dipole_inversion.e1234
         );
     }
 }
-extension DipoleInversion: Into<MultiVector> {
-    public func into() -> MultiVector {
+public extension DipoleInversion {
+    public MultiVector into_MultiVector() {
         return MultiVector.from(this);
     }
 }
-extension VersorOdd: From<DipoleInversion> {
-    associatedtype Self = VersorOdd:
-    static func from(from_dipole_inversion: DipoleInversion) -> Self {
-        return VersorOdd.from_groups(
+public extension VersorOdd {
+    public static VersorOdd from(DipoleInversion from_dipole_inversion) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(from_dipole_inversion.group0.xyz, 0.0), 
             /* e23, e31, e12, e45 */
@@ -1051,15 +1007,14 @@ extension VersorOdd: From<DipoleInversion> {
         );
     }
 }
-extension DipoleInversion: Into<VersorOdd> {
-    public func into() -> VersorOdd {
+public extension DipoleInversion {
+    public VersorOdd into_VersorOdd() {
         return VersorOdd.from(this);
     }
 }
-extension Motor: From<DualNum> {
-    associatedtype Self = Motor:
-    static func from(from_dual_num: DualNum) -> Self {
-        return Motor.from_groups(
+public extension Motor {
+    public static Motor from(DualNum from_dual_num) {
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4(float3(0.0), from_dual_num.e12345), 
             /* e235, e315, e125, e5 */
@@ -1067,49 +1022,47 @@ extension Motor: From<DualNum> {
         );
     }
 }
-extension DualNum: Into<Motor> {
-    public func into() -> Motor {
+public extension DualNum {
+    public Motor into_Motor() {
         return Motor.from(this);
     }
 }
-extension MultiVector: From<DualNum> {
-    associatedtype Self = MultiVector:
-    static func from(from_dual_num: DualNum) -> Self {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(0.0, from_dual_num.e12345), 0.0, 0.0), 
+public extension MultiVector {
+    public static MultiVector from(DualNum from_dual_num) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(0.0, from_dual_num.e12345), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(from_dual_num.e5, 0.0, 0.0, 0.0), 
+            /* e5 */
+            from_dual_num.e5, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(0.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension DualNum: Into<MultiVector> {
-    public func into() -> MultiVector {
+public extension DualNum {
+    public MultiVector into_MultiVector() {
         return MultiVector.from(this);
     }
 }
-extension VersorEven: From<DualNum> {
-    associatedtype Self = VersorEven:
-    static func from(from_dual_num: DualNum) -> Self {
-        return VersorEven.from_groups(
+public extension VersorEven {
+    public static VersorEven from(DualNum from_dual_num) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(float3(0.0), from_dual_num.e12345), 
             /* e415, e425, e435, e321 */
@@ -1121,17 +1074,16 @@ extension VersorEven: From<DualNum> {
         );
     }
 }
-extension DualNum: Into<VersorEven> {
-    public func into() -> VersorEven {
+public extension DualNum {
+    public VersorEven into_VersorEven() {
         return VersorEven.from(this);
     }
 }
-extension AntiCircleRotor: From<FlatPoint> {
-    associatedtype Self = AntiCircleRotor:
-    static func from(from_flat_point: FlatPoint) -> Self {
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
+public extension AntiCircleRotor {
+    public static AntiCircleRotor from(FlatPoint from_flat_point) {
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            float3(0.0), 
             /* e23, e31, e12, e45 */
             float4(float3(0.0), from_flat_point.e45), 
             /* e15, e25, e35, scalar */
@@ -1139,35 +1091,33 @@ extension AntiCircleRotor: From<FlatPoint> {
         );
     }
 }
-extension FlatPoint: Into<AntiCircleRotor> {
-    public func into() -> AntiCircleRotor {
+public extension FlatPoint {
+    public AntiCircleRotor into_AntiCircleRotor() {
         return AntiCircleRotor.from(this);
     }
 }
-extension Dipole: From<FlatPoint> {
-    associatedtype Self = Dipole:
-    static func from(from_flat_point: FlatPoint) -> Self {
-        return Dipole.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
+public extension Dipole {
+    public static Dipole from(FlatPoint from_flat_point) {
+        return Dipole(
+            /* e41, e42, e43 */
+            float3(0.0), 
             /* e23, e31, e12, e45 */
             float4(float3(0.0), from_flat_point.e45), 
-            /* e15, e25, e35, 0 */
-            float4(from_flat_point.group0.xyz, 0.0)
+            /* e15, e25, e35 */
+            from_flat_point.group0.xyz
         );
     }
 }
-extension FlatPoint: Into<Dipole> {
-    public func into() -> Dipole {
+public extension FlatPoint {
+    public Dipole into_Dipole() {
         return Dipole.from(this);
     }
 }
-extension DipoleInversion: From<FlatPoint> {
-    associatedtype Self = DipoleInversion:
-    static func from(from_flat_point: FlatPoint) -> Self {
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
+public extension DipoleInversion {
+    public static DipoleInversion from(FlatPoint from_flat_point) {
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            float3(0.0), 
             /* e23, e31, e12, e45 */
             float4(float3(0.0), from_flat_point.e45), 
             /* e15, e25, e35, e1234 */
@@ -1177,15 +1127,14 @@ extension DipoleInversion: From<FlatPoint> {
         );
     }
 }
-extension FlatPoint: Into<DipoleInversion> {
-    public func into() -> DipoleInversion {
+public extension FlatPoint {
+    public DipoleInversion into_DipoleInversion() {
         return DipoleInversion.from(this);
     }
 }
-extension Flector: From<FlatPoint> {
-    associatedtype Self = Flector:
-    static func from(from_flat_point: FlatPoint) -> Self {
-        return Flector.from_groups(
+public extension Flector {
+    public static Flector from(FlatPoint from_flat_point) {
+        return Flector(
             /* e15, e25, e35, e45 */
             from_flat_point.group0, 
             /* e4235, e4315, e4125, e3215 */
@@ -1193,49 +1142,47 @@ extension Flector: From<FlatPoint> {
         );
     }
 }
-extension FlatPoint: Into<Flector> {
-    public func into() -> Flector {
+public extension FlatPoint {
+    public Flector into_Flector() {
         return Flector.from(this);
     }
 }
-extension MultiVector: From<FlatPoint> {
-    associatedtype Self = MultiVector:
-    static func from(from_flat_point: FlatPoint) -> Self {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(0.0), 
+public extension MultiVector {
+    public static MultiVector from(FlatPoint from_flat_point) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             from_flat_point.group0, 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(0.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension FlatPoint: Into<MultiVector> {
-    public func into() -> MultiVector {
+public extension FlatPoint {
+    public MultiVector into_MultiVector() {
         return MultiVector.from(this);
     }
 }
-extension VersorOdd: From<FlatPoint> {
-    associatedtype Self = VersorOdd:
-    static func from(from_flat_point: FlatPoint) -> Self {
-        return VersorOdd.from_groups(
+public extension VersorOdd {
+    public static VersorOdd from(FlatPoint from_flat_point) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(0.0), 
             /* e23, e31, e12, e45 */
@@ -1247,17 +1194,16 @@ extension VersorOdd: From<FlatPoint> {
         );
     }
 }
-extension FlatPoint: Into<VersorOdd> {
-    public func into() -> VersorOdd {
+public extension FlatPoint {
+    public VersorOdd into_VersorOdd() {
         return VersorOdd.from(this);
     }
 }
-extension DipoleInversion: From<Flector> {
-    associatedtype Self = DipoleInversion:
-    static func from(from_flector: Flector) -> Self {
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
+public extension DipoleInversion {
+    public static DipoleInversion from(Flector from_flector) {
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            float3(0.0), 
             /* e23, e31, e12, e45 */
             float4(float3(0.0), from_flector.e45), 
             /* e15, e25, e35, e1234 */
@@ -1267,49 +1213,47 @@ extension DipoleInversion: From<Flector> {
         );
     }
 }
-extension Flector: Into<DipoleInversion> {
-    public func into() -> DipoleInversion {
+public extension Flector {
+    public DipoleInversion into_DipoleInversion() {
         return DipoleInversion.from(this);
     }
 }
-extension MultiVector: From<Flector> {
-    associatedtype Self = MultiVector:
-    static func from(from_flector: Flector) -> Self {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(0.0), 
+public extension MultiVector {
+    public static MultiVector from(Flector from_flector) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             from_flector.group0, 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(0.0), 
             /* e4235, e4315, e4125, e3215 */
             from_flector.group1, 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension Flector: Into<MultiVector> {
-    public func into() -> MultiVector {
+public extension Flector {
+    public MultiVector into_MultiVector() {
         return MultiVector.from(this);
     }
 }
-extension VersorOdd: From<Flector> {
-    associatedtype Self = VersorOdd:
-    static func from(from_flector: Flector) -> Self {
-        return VersorOdd.from_groups(
+public extension VersorOdd {
+    public static VersorOdd from(Flector from_flector) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(0.0), 
             /* e23, e31, e12, e45 */
@@ -1321,17 +1265,16 @@ extension VersorOdd: From<Flector> {
         );
     }
 }
-extension Flector: Into<VersorOdd> {
-    public func into() -> VersorOdd {
+public extension Flector {
+    public VersorOdd into_VersorOdd() {
         return VersorOdd.from(this);
     }
 }
-extension AntiDipoleInversion: From<Line> {
-    associatedtype Self = AntiDipoleInversion:
-    static func from(from_line: Line) -> Self {
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
+public extension AntiDipoleInversion {
+    public static AntiDipoleInversion from(Line from_line) {
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(from_line.group0.xyz, 0.0), 
             /* e235, e315, e125, e4 */
@@ -1341,35 +1284,33 @@ extension AntiDipoleInversion: From<Line> {
         );
     }
 }
-extension Line: Into<AntiDipoleInversion> {
-    public func into() -> AntiDipoleInversion {
+public extension Line {
+    public AntiDipoleInversion into_AntiDipoleInversion() {
         return AntiDipoleInversion.from(this);
     }
 }
-extension Circle: From<Line> {
-    associatedtype Self = Circle:
-    static func from(from_line: Line) -> Self {
-        return Circle.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
+public extension Circle {
+    public static Circle from(Line from_line) {
+        return Circle(
+            /* e423, e431, e412 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(from_line.group0.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(from_line.group1.xyz, 0.0)
+            /* e235, e315, e125 */
+            from_line.group1.xyz
         );
     }
 }
-extension Line: Into<Circle> {
-    public func into() -> Circle {
+public extension Line {
+    public Circle into_Circle() {
         return Circle.from(this);
     }
 }
-extension CircleRotor: From<Line> {
-    associatedtype Self = CircleRotor:
-    static func from(from_line: Line) -> Self {
-        return CircleRotor.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
+public extension CircleRotor {
+    public static CircleRotor from(Line from_line) {
+        return CircleRotor(
+            /* e423, e431, e412 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(from_line.group0.xyz, 0.0), 
             /* e235, e315, e125, e12345 */
@@ -1377,15 +1318,14 @@ extension CircleRotor: From<Line> {
         );
     }
 }
-extension Line: Into<CircleRotor> {
-    public func into() -> CircleRotor {
+public extension Line {
+    public CircleRotor into_CircleRotor() {
         return CircleRotor.from(this);
     }
 }
-extension Motor: From<Line> {
-    associatedtype Self = Motor:
-    static func from(from_line: Line) -> Self {
-        return Motor.from_groups(
+public extension Motor {
+    public static Motor from(Line from_line) {
+        return Motor(
             /* e415, e425, e435, e12345 */
             float4(from_line.group0.xyz, 0.0), 
             /* e235, e315, e125, e5 */
@@ -1393,49 +1333,47 @@ extension Motor: From<Line> {
         );
     }
 }
-extension Line: Into<Motor> {
-    public func into() -> Motor {
+public extension Line {
+    public Motor into_Motor() {
         return Motor.from(this);
     }
 }
-extension MultiVector: From<Line> {
-    associatedtype Self = MultiVector:
-    static func from(from_line: Line) -> Self {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(0.0), 
+public extension MultiVector {
+    public static MultiVector from(Line from_line) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(from_line.group0.xyz, 0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(from_line.group1.xyz, 0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            from_line.group1.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension Line: Into<MultiVector> {
-    public func into() -> MultiVector {
+public extension Line {
+    public MultiVector into_MultiVector() {
         return MultiVector.from(this);
     }
 }
-extension VersorEven: From<Line> {
-    associatedtype Self = VersorEven:
-    static func from(from_line: Line) -> Self {
-        return VersorEven.from_groups(
+public extension VersorEven {
+    public static VersorEven from(Line from_line) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(0.0), 
             /* e415, e425, e435, e321 */
@@ -1447,49 +1385,47 @@ extension VersorEven: From<Line> {
         );
     }
 }
-extension Line: Into<VersorEven> {
-    public func into() -> VersorEven {
+public extension Line {
+    public VersorEven into_VersorEven() {
         return VersorEven.from(this);
     }
 }
-extension MultiVector: From<Motor> {
-    associatedtype Self = MultiVector:
-    static func from(from_motor: Motor) -> Self {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(0.0, from_motor.e12345), 0.0, 0.0), 
+public extension MultiVector {
+    public static MultiVector from(Motor from_motor) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(0.0, from_motor.e12345), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(from_motor.e5, 0.0, 0.0, 0.0), 
+            /* e5 */
+            from_motor.e5, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(from_motor.group0.xyz, 0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(from_motor.group1.xyz, 0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            from_motor.group1.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension Motor: Into<MultiVector> {
-    public func into() -> MultiVector {
+public extension Motor {
+    public MultiVector into_MultiVector() {
         return MultiVector.from(this);
     }
 }
-extension VersorEven: From<Motor> {
-    associatedtype Self = VersorEven:
-    static func from(from_motor: Motor) -> Self {
-        return VersorEven.from_groups(
+public extension VersorEven {
+    public static VersorEven from(Motor from_motor) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(float3(0.0), from_motor.e12345), 
             /* e415, e425, e435, e321 */
@@ -1501,17 +1437,16 @@ extension VersorEven: From<Motor> {
         );
     }
 }
-extension Motor: Into<VersorEven> {
-    public func into() -> VersorEven {
+public extension Motor {
+    public VersorEven into_VersorEven() {
         return VersorEven.from(this);
     }
 }
-extension DipoleInversion: From<Plane> {
-    associatedtype Self = DipoleInversion:
-    static func from(from_plane: Plane) -> Self {
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
+public extension DipoleInversion {
+    public static DipoleInversion from(Plane from_plane) {
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            float3(0.0), 
             /* e23, e31, e12, e45 */
             float4(0.0), 
             /* e15, e25, e35, e1234 */
@@ -1521,15 +1456,14 @@ extension DipoleInversion: From<Plane> {
         );
     }
 }
-extension Plane: Into<DipoleInversion> {
-    public func into() -> DipoleInversion {
+public extension Plane {
+    public DipoleInversion into_DipoleInversion() {
         return DipoleInversion.from(this);
     }
 }
-extension Flector: From<Plane> {
-    associatedtype Self = Flector:
-    static func from(from_plane: Plane) -> Self {
-        return Flector.from_groups(
+public extension Flector {
+    public static Flector from(Plane from_plane) {
+        return Flector(
             /* e15, e25, e35, e45 */
             float4(0.0), 
             /* e4235, e4315, e4125, e3215 */
@@ -1537,65 +1471,62 @@ extension Flector: From<Plane> {
         );
     }
 }
-extension Plane: Into<Flector> {
-    public func into() -> Flector {
+public extension Plane {
+    public Flector into_Flector() {
         return Flector.from(this);
     }
 }
-extension MultiVector: From<Plane> {
-    associatedtype Self = MultiVector:
-    static func from(from_plane: Plane) -> Self {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(0.0), 
+public extension MultiVector {
+    public static MultiVector from(Plane from_plane) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(0.0), 
             /* e4235, e4315, e4125, e3215 */
             from_plane.group0, 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension Plane: Into<MultiVector> {
-    public func into() -> MultiVector {
+public extension Plane {
+    public MultiVector into_MultiVector() {
         return MultiVector.from(this);
     }
 }
-extension Sphere: From<Plane> {
-    associatedtype Self = Sphere:
-    static func from(from_plane: Plane) -> Self {
-        return Sphere.from_groups(
+public extension Sphere {
+    public static Sphere from(Plane from_plane) {
+        return Sphere(
             /* e4235, e4315, e4125, e3215 */
             from_plane.group0, 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension Plane: Into<Sphere> {
-    public func into() -> Sphere {
+public extension Plane {
+    public Sphere into_Sphere() {
         return Sphere.from(this);
     }
 }
-extension VersorOdd: From<Plane> {
-    associatedtype Self = VersorOdd:
-    static func from(from_plane: Plane) -> Self {
-        return VersorOdd.from_groups(
+public extension VersorOdd {
+    public static VersorOdd from(Plane from_plane) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(0.0), 
             /* e23, e31, e12, e45 */
@@ -1607,17 +1538,16 @@ extension VersorOdd: From<Plane> {
         );
     }
 }
-extension Plane: Into<VersorOdd> {
-    public func into() -> VersorOdd {
+public extension Plane {
+    public VersorOdd into_VersorOdd() {
         return VersorOdd.from(this);
     }
 }
-extension AntiDipoleInversion: From<RoundPoint> {
-    associatedtype Self = AntiDipoleInversion:
-    static func from(from_round_point: RoundPoint) -> Self {
-        return AntiDipoleInversion.from_groups(
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
+public extension AntiDipoleInversion {
+    public static AntiDipoleInversion from(RoundPoint from_round_point) {
+        return AntiDipoleInversion(
+            /* e423, e431, e412 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(0.0), 
             /* e235, e315, e125, e4 */
@@ -1627,49 +1557,47 @@ extension AntiDipoleInversion: From<RoundPoint> {
         );
     }
 }
-extension RoundPoint: Into<AntiDipoleInversion> {
-    public func into() -> AntiDipoleInversion {
+public extension RoundPoint {
+    public AntiDipoleInversion into_AntiDipoleInversion() {
         return AntiDipoleInversion.from(this);
     }
 }
-extension MultiVector: From<RoundPoint> {
-    associatedtype Self = MultiVector:
-    static func from(from_round_point: RoundPoint) -> Self {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(0.0), 
+public extension MultiVector {
+    public static MultiVector from(RoundPoint from_round_point) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(0.0), 
             /* e1, e2, e3, e4 */
             from_round_point.group0, 
-            /* e5, 0, 0, 0 */
-            float4(from_round_point.e5, 0.0, 0.0, 0.0), 
+            /* e5 */
+            from_round_point.e5, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(0.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension RoundPoint: Into<MultiVector> {
-    public func into() -> MultiVector {
+public extension RoundPoint {
+    public MultiVector into_MultiVector() {
         return MultiVector.from(this);
     }
 }
-extension VersorEven: From<RoundPoint> {
-    associatedtype Self = VersorEven:
-    static func from(from_round_point: RoundPoint) -> Self {
-        return VersorEven.from_groups(
+public extension VersorEven {
+    public static VersorEven from(RoundPoint from_round_point) {
+        return VersorEven(
             /* e423, e431, e412, e12345 */
             float4(0.0), 
             /* e415, e425, e435, e321 */
@@ -1681,17 +1609,16 @@ extension VersorEven: From<RoundPoint> {
         );
     }
 }
-extension RoundPoint: Into<VersorEven> {
-    public func into() -> VersorEven {
+public extension RoundPoint {
+    public VersorEven into_VersorEven() {
         return VersorEven.from(this);
     }
 }
-extension AntiCircleRotor: From<Scalar> {
-    associatedtype Self = AntiCircleRotor:
-    static func from(from_scalar: Scalar) -> Self {
-        return AntiCircleRotor.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
+public extension AntiCircleRotor {
+    public static AntiCircleRotor from(Scalar from_scalar) {
+        return AntiCircleRotor(
+            /* e41, e42, e43 */
+            float3(0.0), 
             /* e23, e31, e12, e45 */
             float4(0.0), 
             /* e15, e25, e35, scalar */
@@ -1699,29 +1626,27 @@ extension AntiCircleRotor: From<Scalar> {
         );
     }
 }
-extension Scalar: Into<AntiCircleRotor> {
-    public func into() -> AntiCircleRotor {
+public extension Scalar {
+    public AntiCircleRotor into_AntiCircleRotor() {
         return AntiCircleRotor.from(this);
     }
 }
-extension AntiDualNum: From<Scalar> {
-    associatedtype Self = AntiDualNum:
-    static func from(from_scalar: Scalar) -> Self {
-        return AntiDualNum.from_groups(
-            /* e3215, scalar, 0, 0 */
-            float4(float2(0.0, from_scalar.scalar), 0.0, 0.0)
+public extension AntiDualNum {
+    public static AntiDualNum from(Scalar from_scalar) {
+        return AntiDualNum(
+            /* e3215, scalar */
+            float2(0.0, from_scalar.scalar)
         );
     }
 }
-extension Scalar: Into<AntiDualNum> {
-    public func into() -> AntiDualNum {
+public extension Scalar {
+    public AntiDualNum into_AntiDualNum() {
         return AntiDualNum.from(this);
     }
 }
-extension AntiMotor: From<Scalar> {
-    associatedtype Self = AntiMotor:
-    static func from(from_scalar: Scalar) -> Self {
-        return AntiMotor.from_groups(
+public extension AntiMotor {
+    public static AntiMotor from(Scalar from_scalar) {
+        return AntiMotor(
             /* e23, e31, e12, scalar */
             float4(float3(0.0), from_scalar.scalar), 
             /* e15, e25, e35, e3215 */
@@ -1729,49 +1654,47 @@ extension AntiMotor: From<Scalar> {
         );
     }
 }
-extension Scalar: Into<AntiMotor> {
-    public func into() -> AntiMotor {
+public extension Scalar {
+    public AntiMotor into_AntiMotor() {
         return AntiMotor.from(this);
     }
 }
-extension MultiVector: From<Scalar> {
-    associatedtype Self = MultiVector:
-    static func from(from_scalar: Scalar) -> Self {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(from_scalar.scalar, 0.0), 0.0, 0.0), 
+public extension MultiVector {
+    public static MultiVector from(Scalar from_scalar) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(from_scalar.scalar, 0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(0.0), 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension Scalar: Into<MultiVector> {
-    public func into() -> MultiVector {
+public extension Scalar {
+    public MultiVector into_MultiVector() {
         return MultiVector.from(this);
     }
 }
-extension VersorOdd: From<Scalar> {
-    associatedtype Self = VersorOdd:
-    static func from(from_scalar: Scalar) -> Self {
-        return VersorOdd.from_groups(
+public extension VersorOdd {
+    public static VersorOdd from(Scalar from_scalar) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(float3(0.0), from_scalar.scalar), 
             /* e23, e31, e12, e45 */
@@ -1783,17 +1706,16 @@ extension VersorOdd: From<Scalar> {
         );
     }
 }
-extension Scalar: Into<VersorOdd> {
-    public func into() -> VersorOdd {
+public extension Scalar {
+    public VersorOdd into_VersorOdd() {
         return VersorOdd.from(this);
     }
 }
-extension DipoleInversion: From<Sphere> {
-    associatedtype Self = DipoleInversion:
-    static func from(from_sphere: Sphere) -> Self {
-        return DipoleInversion.from_groups(
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
+public extension DipoleInversion {
+    public static DipoleInversion from(Sphere from_sphere) {
+        return DipoleInversion(
+            /* e41, e42, e43 */
+            float3(0.0), 
             /* e23, e31, e12, e45 */
             float4(0.0), 
             /* e15, e25, e35, e1234 */
@@ -1803,49 +1725,47 @@ extension DipoleInversion: From<Sphere> {
         );
     }
 }
-extension Sphere: Into<DipoleInversion> {
-    public func into() -> DipoleInversion {
+public extension Sphere {
+    public DipoleInversion into_DipoleInversion() {
         return DipoleInversion.from(this);
     }
 }
-extension MultiVector: From<Sphere> {
-    associatedtype Self = MultiVector:
-    static func from(from_sphere: Sphere) -> Self {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(0.0), 
+public extension MultiVector {
+    public static MultiVector from(Sphere from_sphere) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(0.0), 
             /* e4235, e4315, e4125, e3215 */
             from_sphere.group0, 
-            /* e1234, 0, 0, 0 */
-            float4(from_sphere.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            from_sphere.e1234
         );
     }
 }
-extension Sphere: Into<MultiVector> {
-    public func into() -> MultiVector {
+public extension Sphere {
+    public MultiVector into_MultiVector() {
         return MultiVector.from(this);
     }
 }
-extension VersorOdd: From<Sphere> {
-    associatedtype Self = VersorOdd:
-    static func from(from_sphere: Sphere) -> Self {
-        return VersorOdd.from_groups(
+public extension VersorOdd {
+    public static VersorOdd from(Sphere from_sphere) {
+        return VersorOdd(
             /* e41, e42, e43, scalar */
             float4(0.0), 
             /* e23, e31, e12, e45 */
@@ -1857,76 +1777,74 @@ extension VersorOdd: From<Sphere> {
         );
     }
 }
-extension Sphere: Into<VersorOdd> {
-    public func into() -> VersorOdd {
+public extension Sphere {
+    public VersorOdd into_VersorOdd() {
         return VersorOdd.from(this);
     }
 }
-extension MultiVector: From<VersorEven> {
-    associatedtype Self = MultiVector:
-    static func from(from_versor_even: VersorEven) -> Self {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(0.0, from_versor_even.e12345), 0.0, 0.0), 
+public extension MultiVector {
+    public static MultiVector from(VersorEven from_versor_even) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(0.0, from_versor_even.e12345), 
             /* e1, e2, e3, e4 */
             from_versor_even.group3, 
-            /* e5, 0, 0, 0 */
-            float4(from_versor_even.e5, 0.0, 0.0, 0.0), 
+            /* e5 */
+            from_versor_even.e5, 
             /* e15, e25, e35, e45 */
             float4(0.0), 
-            /* e41, e42, e43, 0 */
-            float4(0.0), 
-            /* e23, e31, e12, 0 */
-            float4(0.0), 
+            /* e41, e42, e43 */
+            float3(0.0), 
+            /* e23, e31, e12 */
+            float3(0.0), 
             /* e415, e425, e435, e321 */
             from_versor_even.group1, 
-            /* e423, e431, e412, 0 */
-            float4(from_versor_even.group0.xyz, 0.0), 
-            /* e235, e315, e125, 0 */
-            float4(from_versor_even.group2.xyz, 0.0), 
+            /* e423, e431, e412 */
+            from_versor_even.group0.xyz, 
+            /* e235, e315, e125 */
+            from_versor_even.group2.xyz, 
             /* e4235, e4315, e4125, e3215 */
             float4(0.0), 
-            /* e1234, 0, 0, 0 */
-            float4(0.0)
+            /* e1234 */
+            0.0
         );
     }
 }
-extension VersorEven: Into<MultiVector> {
-    public func into() -> MultiVector {
+public extension VersorEven {
+    public MultiVector into_MultiVector() {
         return MultiVector.from(this);
     }
 }
-extension MultiVector: From<VersorOdd> {
-    associatedtype Self = MultiVector:
-    static func from(from_versor_odd: VersorOdd) -> Self {
-        return MultiVector.from_groups(
-            /* scalar, e12345, 0, 0 */
-            float4(float2(from_versor_odd.scalar, 0.0), 0.0, 0.0), 
+public extension MultiVector {
+    public static MultiVector from(VersorOdd from_versor_odd) {
+        return MultiVector(
+            /* scalar, e12345 */
+            float2(from_versor_odd.scalar, 0.0), 
             /* e1, e2, e3, e4 */
             float4(0.0), 
-            /* e5, 0, 0, 0 */
-            float4(0.0), 
+            /* e5 */
+            0.0, 
             /* e15, e25, e35, e45 */
             float4(from_versor_odd.e15, from_versor_odd.e25, from_versor_odd.e35, from_versor_odd.e45), 
-            /* e41, e42, e43, 0 */
-            float4(from_versor_odd.group0.xyz, 0.0), 
-            /* e23, e31, e12, 0 */
-            float4(from_versor_odd.group1.xyz, 0.0), 
+            /* e41, e42, e43 */
+            from_versor_odd.group0.xyz, 
+            /* e23, e31, e12 */
+            from_versor_odd.group1.xyz, 
             /* e415, e425, e435, e321 */
             float4(0.0), 
-            /* e423, e431, e412, 0 */
-            float4(0.0), 
-            /* e235, e315, e125, 0 */
-            float4(0.0), 
+            /* e423, e431, e412 */
+            float3(0.0), 
+            /* e235, e315, e125 */
+            float3(0.0), 
             /* e4235, e4315, e4125, e3215 */
             from_versor_odd.group3, 
-            /* e1234, 0, 0, 0 */
-            float4(from_versor_odd.e1234, 0.0, 0.0, 0.0)
+            /* e1234 */
+            from_versor_odd.e1234
         );
     }
 }
-extension VersorOdd: Into<MultiVector> {
-    public func into() -> MultiVector {
+public extension VersorOdd {
+    public MultiVector into_MultiVector() {
         return MultiVector.from(this);
     }
 }

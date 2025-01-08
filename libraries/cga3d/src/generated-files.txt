@@ -49,8 +49,7 @@
 ./libraries/cga3d/src/data/sphere.rs
 ./libraries/cga3d/src/data/versor_even.rs
 ./libraries/cga3d/src/data/versor_odd.rs
-./libraries/cga3d/src/integrations/glsl.rs
-./libraries/cga3d/src/integrations/wgsl.rs
+./libraries/cga3d/src/integrations.rs
 ./libraries/cga3d/src/lib.rs
 ./libraries/cga3d/src/simd.rs
 ./libraries/cga3d/src/traits.rs

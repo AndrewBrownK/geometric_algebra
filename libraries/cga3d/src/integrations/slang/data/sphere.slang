@@ -1,14 +1,27 @@
 implementing cga3d;
-using data::*;
+using data;
 
 /// Sphere
 public struct Sphere {
     // e4235, e4315, e4125, e3215
-    internal group0: float4,
+    internal float4 group0;
     // e1234, 0, 0, 0
-    internal group1: float4
+    internal float4 group1;
+
+    __init(
+        float e4235, float e4315, float e4125, float e3215, float e1234
+    ) {
+        group0 = float4(e4235, e4315, e4125, e3215);
+        group1 = float4(e1234, 0.0, 0.0, 0.0);
+    }
+    internal __init(
+        float4 g0, float g1
+    ) {
+        group0 = g0;
+        group1 = float4(g1, 0.0, 0.0, 0.0);
+    }
 }
-extension Sphere {
+public extension Sphere {
     public property e4235: float {
         get { return group0[0]; }
         set { group0[0] = newValue; }
@@ -29,29 +42,20 @@ extension Sphere {
         get { return group1[0]; }
         set { group1[0] = newValue; }
     }
-    public static func from_elements(
-        e4235: float, e4315: float, e4125: float, e3215: float, e1234: float
-    ) -> Sphere {
-        return Sphere { float4(e4235, e4315, e4125, e3215), float4(e1234, 0.0, 0.0, 0.0) };
-    }
-    internal static func from_groups(
-        g0: float4, g1: float
-    ) -> Sphere {
-        return Sphere {
-            group0: g0, group1: g1
-        };
-    }
 }
-extension Sphere: IComparable {
-    bool lessThan(IComparable another) {
-        Sphere other = (Sphere)another;
-        if (this.group0 != other.group0)
-            return this.group0.lessThan(other.group0);
-        return this.group1.lessThan(other.group1);
+public extension Sphere: IComparable {
+    public bool equals(Sphere other) {
+        return equalsHelper(this.group0, other.group0) && equalsHelper(this.group1, other.group1);
     }
-    bool equals(IComparable another) {
-        Sphere other = (Sphere)another;
-        return this.group0.equals(other.group0) && this.group1.equals(other.group1);
+    public bool lessThan(Sphere other) {
+        if (!equalsHelper(this.group0, other.group0))
+            return lessThanHelper(this.group0, other.group0);
+        return lessThanHelper(this.group1, other.group1);
+    }
+    public bool lessThanOrEquals(Sphere other) {
+        if (!equalsHelper(this.group0, other.group0))
+            return lessThanOrEqualsHelper(this.group0, other.group0);
+        return lessThanOrEqualsHelper(this.group1, other.group1);
     }
 }
 __include "impls/sphere";

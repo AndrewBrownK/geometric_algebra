@@ -27,12 +27,12 @@ use naga::valid::{{Capabilities, ValidationFlags, Validator}};
 /// runtime. (Hint: Enable this feature in [build-dependencies], but not [dependencies].)
 /// Despite this recommendation, you can still include this in your app binary if you really want
 /// or need to recompile shaders at app runtime for some reason.
-pub const {upper_snake_case_name}_{upper_extension}_SRC: &str = include_str!("{algebra_name}.{lower_extension}");
+pub const {upper_snake_case_name}_{upper_extension}_SRC: &str = include_str!("integrations/{lower_extension}/{algebra_name}.{lower_extension}");
 
 pub fn {lower_extension}_composable_module_descriptor() -> naga_oil::compose::ComposableModuleDescriptor<'static> {{
     naga_oil::compose::ComposableModuleDescriptor {{
         source: {upper_snake_case_name}_{upper_extension}_SRC,
-        file_path: "{algebra_name}/src/integrations/{algebra_name}.{lower_extension}",
+        file_path: "{algebra_name}/src/integrations/{lower_extension}/{algebra_name}.{lower_extension}",
         language: naga_oil::compose::ShaderLanguage::{camel_extension},
         ..Default::default()
     }}
@@ -95,5 +95,82 @@ pub fn {lower_extension}_compose_validate_and_spirv<P: AsRef<Path>, S: Into<Stri
     Ok(())
 }}
 "#)?;
+    Ok(())
+}
+
+pub fn emit_slang_support<W: Write>(w: &mut W, algebra_name: &str) -> anyhow::Result<()> {
+    let upper_algebra_name = algebra_name.to_uppercase();
+    write!(w, r#"
+    use std::path::Path;
+    use std::process::Command;
+
+    pub const {upper_algebra_name}_SLANG: &'static str = concat!(env!("CARGO_MANIFEST_DIR"), "/src/integrations/slang/{algebra_name}.slang");
+
+    /// This requires slangc to be installed and added to your path
+    /// Warning, this can be an extremely slow operation. Give it time.
+    pub fn compile_binary_slang_module<P: AsRef<Path>>(output_dir: P) {{
+        let mut cmd = Command::new("slangc");
+        cmd.arg({upper_algebra_name}_SLANG);
+        cmd.arg("-o");
+        let output_dir = output_dir.as_ref().to_string_lossy();
+        cmd.arg(format!("{{output_dir}}/{algebra_name}.slang-module"));
+        // TODO better error handling and propagation
+        cmd.spawn().expect("failed to run slangc");
+    }}
+
+    pub enum Target {{
+        Spirv,
+        Wgsl,
+        Glsl,
+        SlangIR
+    }}
+
+    pub enum Stage {{
+
+    }}
+
+    pub struct Output<P, S> {{
+        output_file: P,
+        target: Target,
+        entry: Option<S>,
+    }}
+
+    // https://github.com/shader-slang/slang/blob/master/docs/command-line-slangc-reference.md#-o
+    pub enum OutputScheme<'a, P, S> {{
+        // If no -target or -stage is specified, one may be inferred from file extension
+        InferStage(Target, P),
+
+        // If multiple -target options and a single -entry are present, each -o associates
+        // with the first -target to its left.
+        OneEntryManyTargets {{
+            entry: S,
+            targets: &'a [(Target, P)],
+        }},
+
+        // Otherwise, if multiple -entry options are present, each -o associates with the first
+        // -entry to its left, and with the -target that matches the one inferred from <path>.
+        TargetsPerEntries {{
+            entries: &'a [(S, &'a [(Target, P)])],
+        }},
+    }}
+
+    /// Use slangc to compile an application shader that depends on {algebra_name}.slang and no
+    /// other slang dependencies. If you need to compile with other dependencies, you can
+    /// use slangc normally in the command line instead of using this function.
+    pub fn compile_application_shader<'a, P1: AsRef<Path>, P2: AsRef<Path>, S: Into<String>>(
+        app_src_file: P1,
+        output_scheme: OutputScheme<'a, P2, S>,
+    ) {{
+        let mut cmd = Command::new("slangc");
+        cmd.arg({upper_algebra_name}_SLANG);
+        cmd.arg("-o");
+        // TODO actual code for this function, not just the copy paste of other function
+        let output_dir = app_src_file.as_ref().to_string_lossy();
+        cmd.arg(format!("{{output_dir}}/{algebra_name}.slang-module"));
+        // TODO better error handling and propagation
+        cmd.spawn().expect("failed to run slangc");
+    }}
+
+    "#)?;
     Ok(())
 }

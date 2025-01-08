@@ -14,7 +14,7 @@ public extension GeometricAntiQuotientInfixPartial<AntiScalar> {
 }
 public extension AntiScalar {
     public AntiScalar geometric_anti_quotient(AntiScalar other) {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             this.e1234 / (other.e1234)
         );
@@ -22,11 +22,11 @@ public extension AntiScalar {
 }
 public extension AntiScalar {
     public DualNum geometric_anti_quotient(DualNum other) {
-        AntiScalar other_2 = AntiScalar.from_groups(
+        AntiScalar other_2 = AntiScalar(
             /* e1234 */
             pow(other.e1234, -2)
         );
-        return DualNum.from_groups(
+        return DualNum(
             /* scalar, e1234 */
             float2(this.e1234) * float2(other_2.e1234 * other.scalar, other_2.e1234 * other.e1234)
         );
@@ -34,23 +34,23 @@ public extension AntiScalar {
 }
 public extension AntiScalar {
     public Flector geometric_anti_quotient(Flector other) {
-        Flector anti_reverse = Flector.from_groups(
+        Flector anti_reverse = Flector(
             /* e1, e2, e3, e4 */
             other.group0 * float4(-1.0), 
             /* e423, e431, e412, e321 */
             other.group1
         );
-        AntiScalar other_2 = AntiScalar.from_groups(
+        AntiScalar other_2 = AntiScalar(
             /* e1234 */
             pow(other.e4, 2) + pow(other.e423, 2) + pow(other.e431, 2) + pow(other.e412, 2)
         );
-        Flector geometric_anti_product = Flector.from_groups(
+        Flector geometric_anti_product = Flector(
             /* e1, e2, e3, e4 */
             float4(other_2.e1234) * anti_reverse.group0, 
             /* e423, e431, e412, e321 */
             float4(other_2.e1234) * anti_reverse.group1
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4(this.e1234) * geometric_anti_product.group0, 
             /* e423, e431, e412, e321 */
@@ -60,23 +60,23 @@ public extension AntiScalar {
 }
 public extension AntiScalar {
     public Line geometric_anti_quotient(Line other) {
-        Line anti_reverse = Line.from_groups(
+        Line anti_reverse = Line(
             /* e41, e42, e43 */
             other.group0.xyz * float3(-1.0), 
             /* e23, e31, e12 */
             other.group1.xyz * float3(-1.0)
         );
-        AntiScalar other_2 = AntiScalar.from_groups(
+        AntiScalar other_2 = AntiScalar(
             /* e1234 */
             pow(other.e41, 2) + pow(other.e42, 2) + pow(other.e43, 2)
         );
-        Line geometric_anti_product = Line.from_groups(
+        Line geometric_anti_product = Line(
             /* e41, e42, e43 */
             float3(other_2.e1234) * anti_reverse.group0.xyz, 
             /* e23, e31, e12 */
             float3(other_2.e1234) * anti_reverse.group1.xyz
         );
-        return Line.from_groups(
+        return Line(
             /* e41, e42, e43 */
             float3(this.e1234) * geometric_anti_product.group0.xyz, 
             /* e23, e31, e12 */
@@ -86,23 +86,23 @@ public extension AntiScalar {
 }
 public extension AntiScalar {
     public Motor geometric_anti_quotient(Motor other) {
-        Motor anti_reverse = Motor.from_groups(
+        Motor anti_reverse = Motor(
             /* e41, e42, e43, e1234 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, scalar */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        AntiScalar other_2 = AntiScalar.from_groups(
+        AntiScalar other_2 = AntiScalar(
             /* e1234 */
             pow(other.e41, 2) + pow(other.e42, 2) + pow(other.e43, 2) + pow(other.e1234, 2)
         );
-        Motor geometric_anti_product = Motor.from_groups(
+        Motor geometric_anti_product = Motor(
             /* e41, e42, e43, e1234 */
             float4(other_2.e1234) * anti_reverse.group0, 
             /* e23, e31, e12, scalar */
             float4(other_2.e1234) * anti_reverse.group1
         );
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(this.e1234) * geometric_anti_product.group0, 
             /* e23, e31, e12, scalar */
@@ -112,7 +112,7 @@ public extension AntiScalar {
 }
 public extension AntiScalar {
     public MultiVector geometric_anti_quotient(MultiVector other) {
-        MultiVector anti_reverse = MultiVector.from_groups(
+        MultiVector anti_reverse = MultiVector(
             /* scalar, e1234 */
             other.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -124,11 +124,11 @@ public extension AntiScalar {
             /* e423, e431, e412, e321 */
             other.group4
         );
-        AntiScalar other_2 = AntiScalar.from_groups(
+        AntiScalar other_2 = AntiScalar(
             /* e1234 */
             pow(other.e1234, 2) + pow(other.e4, 2) + pow(other.e41, 2) + pow(other.e42, 2) + pow(other.e43, 2) + pow(other.e423, 2) + pow(other.e431, 2) + pow(other.e412, 2)
         );
-        MultiVector geometric_anti_product = MultiVector.from_groups(
+        MultiVector geometric_anti_product = MultiVector(
             /* scalar, e1234 */
             float2(other_2.e1234) * anti_reverse.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -140,7 +140,7 @@ public extension AntiScalar {
             /* e423, e431, e412, e321 */
             float4(other_2.e1234) * anti_reverse.group4
         );
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(this.e1234) * geometric_anti_product.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -156,7 +156,7 @@ public extension AntiScalar {
 }
 public extension AntiScalar {
     public Origin geometric_anti_quotient(Origin other) {
-        return Origin.from_groups(
+        return Origin(
             /* e4 */
             this.e1234 / (other.e4) * -1.0
         );
@@ -164,11 +164,11 @@ public extension AntiScalar {
 }
 public extension AntiScalar {
     public Plane geometric_anti_quotient(Plane other) {
-        AntiScalar other_2 = AntiScalar.from_groups(
+        AntiScalar other_2 = AntiScalar(
             /* e1234 */
             pow(other.e423, 2) + pow(other.e431, 2) + pow(other.e412, 2)
         );
-        return Plane.from_groups(
+        return Plane(
             /* e423, e431, e412, e321 */
             float4(this.e1234) * float4(other_2.e1234 * other.e423, other_2.e1234 * other.e431, other_2.e1234 * other.e412, other_2.e1234 * other.e321)
         );
@@ -176,15 +176,15 @@ public extension AntiScalar {
 }
 public extension AntiScalar {
     public Point geometric_anti_quotient(Point other) {
-        Point anti_reverse = Point.from_groups(
+        Point anti_reverse = Point(
             /* e1, e2, e3, e4 */
             other.group0 * float4(-1.0)
         );
-        AntiScalar other_2 = AntiScalar.from_groups(
+        AntiScalar other_2 = AntiScalar(
             /* e1234 */
             pow(other.e4, -2)
         );
-        return Point.from_groups(
+        return Point(
             /* e1, e2, e3, e4 */
             float4(this.e1234) * float4(other_2.e1234 * anti_reverse.e1, other_2.e1234 * anti_reverse.e2, other_2.e1234 * anti_reverse.e3, other_2.e1234 * anti_reverse.e4)
         );
@@ -204,7 +204,7 @@ public extension GeometricAntiQuotientInfixPartial<DualNum> {
 }
 public extension DualNum {
     public DualNum geometric_anti_quotient(AntiScalar other) {
-        return DualNum.from_groups(
+        return DualNum(
             /* scalar, e1234 */
             float2(1.0/other.e1234) * this.group0.xy
         );
@@ -212,11 +212,11 @@ public extension DualNum {
 }
 public extension DualNum {
     public DualNum geometric_anti_quotient(DualNum other) {
-        DualNum geometric_anti_product = DualNum.from_groups(
+        DualNum geometric_anti_product = DualNum(
             /* scalar, e1234 */
             float2(pow(other.e1234, -2)) * other.group0.xy
         );
-        return DualNum.from_groups(
+        return DualNum(
             /* scalar, e1234 */
             float2((geometric_anti_product.scalar * this.e1234) + (geometric_anti_product.e1234 * this.scalar), geometric_anti_product.e1234 * this.e1234)
         );
@@ -224,23 +224,23 @@ public extension DualNum {
 }
 public extension DualNum {
     public Flector geometric_anti_quotient(Flector other) {
-        Flector anti_reverse = Flector.from_groups(
+        Flector anti_reverse = Flector(
             /* e1, e2, e3, e4 */
             other.group0 * float4(-1.0), 
             /* e423, e431, e412, e321 */
             other.group1
         );
-        AntiScalar other_2 = AntiScalar.from_groups(
+        AntiScalar other_2 = AntiScalar(
             /* e1234 */
             pow(other.e4, 2) + pow(other.e423, 2) + pow(other.e431, 2) + pow(other.e412, 2)
         );
-        Flector geometric_anti_product = Flector.from_groups(
+        Flector geometric_anti_product = Flector(
             /* e1, e2, e3, e4 */
             float4(other_2.e1234) * anti_reverse.group0, 
             /* e423, e431, e412, e321 */
             float4(other_2.e1234) * anti_reverse.group1
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4(((float3(this.scalar) * geometric_anti_product.group1.xyz) + (float3(this.e1234) * geometric_anti_product.group0.xyz)), this.e1234 * geometric_anti_product.e4), 
             /* e423, e431, e412, e321 */
@@ -250,23 +250,23 @@ public extension DualNum {
 }
 public extension DualNum {
     public Line geometric_anti_quotient(Line other) {
-        Line anti_reverse = Line.from_groups(
+        Line anti_reverse = Line(
             /* e41, e42, e43 */
             other.group0.xyz * float3(-1.0), 
             /* e23, e31, e12 */
             other.group1.xyz * float3(-1.0)
         );
-        AntiScalar other_2 = AntiScalar.from_groups(
+        AntiScalar other_2 = AntiScalar(
             /* e1234 */
             pow(other.e41, 2) + pow(other.e42, 2) + pow(other.e43, 2)
         );
-        Line geometric_anti_product = Line.from_groups(
+        Line geometric_anti_product = Line(
             /* e41, e42, e43 */
             float3(other_2.e1234) * anti_reverse.group0.xyz, 
             /* e23, e31, e12 */
             float3(other_2.e1234) * anti_reverse.group1.xyz
         );
-        return Line.from_groups(
+        return Line(
             /* e41, e42, e43 */
             float3(this.e1234) * geometric_anti_product.group0.xyz, 
             /* e23, e31, e12 */
@@ -276,23 +276,23 @@ public extension DualNum {
 }
 public extension DualNum {
     public Motor geometric_anti_quotient(Motor other) {
-        Motor anti_reverse = Motor.from_groups(
+        Motor anti_reverse = Motor(
             /* e41, e42, e43, e1234 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, scalar */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        AntiScalar other_2 = AntiScalar.from_groups(
+        AntiScalar other_2 = AntiScalar(
             /* e1234 */
             pow(other.e41, 2) + pow(other.e42, 2) + pow(other.e43, 2) + pow(other.e1234, 2)
         );
-        Motor geometric_anti_product = Motor.from_groups(
+        Motor geometric_anti_product = Motor(
             /* e41, e42, e43, e1234 */
             float4(other_2.e1234) * anti_reverse.group0, 
             /* e23, e31, e12, scalar */
             float4(other_2.e1234) * anti_reverse.group1
         );
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(this.e1234) * geometric_anti_product.group0, 
             /* e23, e31, e12, scalar */
@@ -302,7 +302,7 @@ public extension DualNum {
 }
 public extension DualNum {
     public MultiVector geometric_anti_quotient(MultiVector other) {
-        MultiVector anti_reverse = MultiVector.from_groups(
+        MultiVector anti_reverse = MultiVector(
             /* scalar, e1234 */
             other.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -314,11 +314,11 @@ public extension DualNum {
             /* e423, e431, e412, e321 */
             other.group4
         );
-        AntiScalar other_2 = AntiScalar.from_groups(
+        AntiScalar other_2 = AntiScalar(
             /* e1234 */
             pow(other.e1234, 2) + pow(other.e4, 2) + pow(other.e41, 2) + pow(other.e42, 2) + pow(other.e43, 2) + pow(other.e423, 2) + pow(other.e431, 2) + pow(other.e412, 2)
         );
-        MultiVector geometric_anti_product = MultiVector.from_groups(
+        MultiVector geometric_anti_product = MultiVector(
             /* scalar, e1234 */
             float2(other_2.e1234) * anti_reverse.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -330,7 +330,7 @@ public extension DualNum {
             /* e423, e431, e412, e321 */
             float4(other_2.e1234) * anti_reverse.group4
         );
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2((this.scalar * geometric_anti_product.e1234) + (this.e1234 * geometric_anti_product.scalar), this.e1234 * geometric_anti_product.e1234), 
             /* e1, e2, e3, e4 */
@@ -346,11 +346,11 @@ public extension DualNum {
 }
 public extension DualNum {
     public Flector geometric_anti_quotient(Origin other) {
-        Origin geometric_anti_product = Origin.from_groups(
+        Origin geometric_anti_product = Origin(
             /* e4 */
             1.0/other.e4 * -1.0
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), this.e1234 * geometric_anti_product.e4), 
             /* e423, e431, e412, e321 */
@@ -360,11 +360,11 @@ public extension DualNum {
 }
 public extension DualNum {
     public Flector geometric_anti_quotient(Plane other) {
-        Plane geometric_anti_product = Plane.from_groups(
+        Plane geometric_anti_product = Plane(
             /* e423, e431, e412, e321 */
             float4(pow(other.e423, 2) + pow(other.e431, 2) + pow(other.e412, 2)) * other.group0
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4(this.group0.xy.xx, this.scalar, 0.0) * float4(float3(1.0), 0.0) * float4(geometric_anti_product.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0), 
             /* e423, e431, e412, e321 */
@@ -374,11 +374,11 @@ public extension DualNum {
 }
 public extension DualNum {
     public Flector geometric_anti_quotient(Point other) {
-        Point geometric_anti_product = Point.from_groups(
+        Point geometric_anti_product = Point(
             /* e1, e2, e3, e4 */
             float4(pow(other.e4, -2)) * float4(other.e1 * -1.0, other.e2 * -1.0, other.e3 * -1.0, other.e4 * -1.0)
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4(this.e1234) * geometric_anti_product.group0, 
             /* e423, e431, e412, e321 */
@@ -400,11 +400,11 @@ public extension GeometricAntiQuotientInfixPartial<Flector> {
 }
 public extension Flector {
     public Flector geometric_anti_quotient(AntiScalar other) {
-        AntiScalar geometric_anti_product = AntiScalar.from_groups(
+        AntiScalar geometric_anti_product = AntiScalar(
             /* e1234 */
             1.0/other.e1234
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4(geometric_anti_product.e1234) * this.group0, 
             /* e423, e431, e412, e321 */
@@ -414,11 +414,11 @@ public extension Flector {
 }
 public extension Flector {
     public Flector geometric_anti_quotient(DualNum other) {
-        DualNum geometric_anti_product = DualNum.from_groups(
+        DualNum geometric_anti_product = DualNum(
             /* scalar, e1234 */
             float2(pow(other.e1234, -2)) * other.group0.xy
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4(((float3(geometric_anti_product.e1234) * this.group0.xyz) - (float3(geometric_anti_product.scalar) * this.group1.xyz)), geometric_anti_product.e1234 * this.e4), 
             /* e423, e431, e412, e321 */
@@ -428,23 +428,23 @@ public extension Flector {
 }
 public extension Flector {
     public Motor geometric_anti_quotient(Flector other) {
-        Flector anti_reverse = Flector.from_groups(
+        Flector anti_reverse = Flector(
             /* e1, e2, e3, e4 */
             other.group0 * float4(-1.0), 
             /* e423, e431, e412, e321 */
             other.group1
         );
-        AntiScalar other_2 = AntiScalar.from_groups(
+        AntiScalar other_2 = AntiScalar(
             /* e1234 */
             pow(other.e4, 2) + pow(other.e423, 2) + pow(other.e431, 2) + pow(other.e412, 2)
         );
-        Flector geometric_anti_product = Flector.from_groups(
+        Flector geometric_anti_product = Flector(
             /* e1, e2, e3, e4 */
             float4(other_2.e1234) * anti_reverse.group0, 
             /* e423, e431, e412, e321 */
             float4(other_2.e1234) * anti_reverse.group1
         );
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(-(geometric_anti_product.e423 * this.e4) - (geometric_anti_product.e412 * this.e431), -(geometric_anti_product.e423 * this.e412) - (geometric_anti_product.e431 * this.e4), -(geometric_anti_product.e431 * this.e423) - (geometric_anti_product.e412 * this.e4), (geometric_anti_product.e431 * this.e431) + (geometric_anti_product.e412 * this.e412)) + (geometric_anti_product.group1.yzxx * this.group1.zxyx) - (float4(geometric_anti_product.e4) * float4(this.group1.xyz, this.e4)), 
             /* e23, e31, e12, scalar */
@@ -454,23 +454,23 @@ public extension Flector {
 }
 public extension Flector {
     public Flector geometric_anti_quotient(Line other) {
-        Line anti_reverse = Line.from_groups(
+        Line anti_reverse = Line(
             /* e41, e42, e43 */
             other.group0.xyz * float3(-1.0), 
             /* e23, e31, e12 */
             other.group1.xyz * float3(-1.0)
         );
-        AntiScalar other_2 = AntiScalar.from_groups(
+        AntiScalar other_2 = AntiScalar(
             /* e1234 */
             pow(other.e41, 2) + pow(other.e42, 2) + pow(other.e43, 2)
         );
-        Line geometric_anti_product = Line.from_groups(
+        Line geometric_anti_product = Line(
             /* e41, e42, e43 */
             float3(other_2.e1234) * anti_reverse.group0.xyz, 
             /* e23, e31, e12 */
             float3(other_2.e1234) * anti_reverse.group1.xyz
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4((this.e2 * geometric_anti_product.e43) + (this.e412 * geometric_anti_product.e31) + (this.e321 * geometric_anti_product.e41), (this.e3 * geometric_anti_product.e41) + (this.e423 * geometric_anti_product.e12) + (this.e321 * geometric_anti_product.e42), (this.e1 * geometric_anti_product.e42) + (this.e431 * geometric_anti_product.e23) + (this.e321 * geometric_anti_product.e43), 0.0) - (float4(this.e4, this.e412, this.e423, this.e431) * float4(geometric_anti_product.group1.xyz.xxy, geometric_anti_product.e42)) - (float4(this.e431, this.e4, this.e4, this.e412) * float4(geometric_anti_product.group1.xyz.zyz, geometric_anti_product.e43)) - float4((geometric_anti_product.group0.xyz.yzx * this.group0.zxy), this.e423 * geometric_anti_product.e41), 
             /* e423, e431, e412, e321 */
@@ -480,23 +480,23 @@ public extension Flector {
 }
 public extension Flector {
     public Flector geometric_anti_quotient(Motor other) {
-        Motor anti_reverse = Motor.from_groups(
+        Motor anti_reverse = Motor(
             /* e41, e42, e43, e1234 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, scalar */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        AntiScalar other_2 = AntiScalar.from_groups(
+        AntiScalar other_2 = AntiScalar(
             /* e1234 */
             pow(other.e41, 2) + pow(other.e42, 2) + pow(other.e43, 2) + pow(other.e1234, 2)
         );
-        Motor geometric_anti_product = Motor.from_groups(
+        Motor geometric_anti_product = Motor(
             /* e41, e42, e43, e1234 */
             float4(other_2.e1234) * anti_reverse.group0, 
             /* e23, e31, e12, scalar */
             float4(other_2.e1234) * anti_reverse.group1
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4((this.e2 * geometric_anti_product.e43) + (this.e412 * geometric_anti_product.e31) + (this.e321 * geometric_anti_product.e41) - (this.e431 * geometric_anti_product.e12), (this.e3 * geometric_anti_product.e41) + (this.e423 * geometric_anti_product.e12) + (this.e321 * geometric_anti_product.e42) - (this.e412 * geometric_anti_product.e23), (this.e3 * geometric_anti_product.e1234) + (this.e431 * geometric_anti_product.e23) + (this.e321 * geometric_anti_product.e43) - (this.e412 * geometric_anti_product.scalar), 0.0) + (this.group0.xyxw * geometric_anti_product.group0.wwyw) - (this.group1.xyxz * float4(geometric_anti_product.group1.wwy, geometric_anti_product.e43)) - (geometric_anti_product.group0.yzxx * float4(this.group0.zxy, this.e423)) - float4((this.group0.www * geometric_anti_product.group1.xyz), this.e431 * geometric_anti_product.e42), 
             /* e423, e431, e412, e321 */
@@ -506,7 +506,7 @@ public extension Flector {
 }
 public extension Flector {
     public MultiVector geometric_anti_quotient(MultiVector other) {
-        MultiVector anti_reverse = MultiVector.from_groups(
+        MultiVector anti_reverse = MultiVector(
             /* scalar, e1234 */
             other.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -518,11 +518,11 @@ public extension Flector {
             /* e423, e431, e412, e321 */
             other.group4
         );
-        AntiScalar other_2 = AntiScalar.from_groups(
+        AntiScalar other_2 = AntiScalar(
             /* e1234 */
             pow(other.e1234, 2) + pow(other.e4, 2) + pow(other.e41, 2) + pow(other.e42, 2) + pow(other.e43, 2) + pow(other.e423, 2) + pow(other.e431, 2) + pow(other.e412, 2)
         );
-        MultiVector geometric_anti_product = MultiVector.from_groups(
+        MultiVector geometric_anti_product = MultiVector(
             /* scalar, e1234 */
             float2(other_2.e1234) * anti_reverse.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -534,7 +534,7 @@ public extension Flector {
             /* e423, e431, e412, e321 */
             float4(other_2.e1234) * anti_reverse.group4
         );
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2((this.e4 * geometric_anti_product.e321) - (this.e431 * geometric_anti_product.e2) - (this.e412 * geometric_anti_product.e3) - (this.e321 * geometric_anti_product.e4), 0.0) + (float2(geometric_anti_product.e423) * float2(this.e1, this.e423)) + (float2(geometric_anti_product.e431) * float2(this.e2, this.e431)) + (float2(geometric_anti_product.e412) * float2(this.e3, this.e412)) - (float2(this.e423, this.e4) * geometric_anti_product.group1.xw), 
             /* e1, e2, e3, e4 */
@@ -550,11 +550,11 @@ public extension Flector {
 }
 public extension Flector {
     public Motor geometric_anti_quotient(Origin other) {
-        Origin geometric_anti_product = Origin.from_groups(
+        Origin geometric_anti_product = Origin(
             /* e4 */
             1.0/other.e4 * -1.0
         );
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(geometric_anti_product.e4) * float4(this.group1.xyz, this.e4) * float4(-1.0), 
             /* e23, e31, e12, scalar */
@@ -564,11 +564,11 @@ public extension Flector {
 }
 public extension Flector {
     public Motor geometric_anti_quotient(Plane other) {
-        Plane geometric_anti_product = Plane.from_groups(
+        Plane geometric_anti_product = Plane(
             /* e423, e431, e412, e321 */
             float4(pow(other.e423, 2) + pow(other.e431, 2) + pow(other.e412, 2)) * other.group0
         );
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(-(this.e4 * geometric_anti_product.e423) - (this.e431 * geometric_anti_product.e412), -(this.e4 * geometric_anti_product.e431) - (this.e412 * geometric_anti_product.e423), -(this.e4 * geometric_anti_product.e412) - (this.e423 * geometric_anti_product.e431), (this.e431 * geometric_anti_product.e431) + (this.e412 * geometric_anti_product.e412)) + (this.group1.zxyx * geometric_anti_product.group0.yzxx), 
             /* e23, e31, e12, scalar */
@@ -578,11 +578,11 @@ public extension Flector {
 }
 public extension Flector {
     public Motor geometric_anti_quotient(Point other) {
-        Point geometric_anti_product = Point.from_groups(
+        Point geometric_anti_product = Point(
             /* e1, e2, e3, e4 */
             float4(pow(other.e4, -2)) * float4(other.e1 * -1.0, other.e2 * -1.0, other.e3 * -1.0, other.e4 * -1.0)
         );
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(geometric_anti_product.e4) * float4(this.group1.xyz, this.e4) * float4(-1.0), 
             /* e23, e31, e12, scalar */
@@ -604,7 +604,7 @@ public extension GeometricAntiQuotientInfixPartial<Horizon> {
 }
 public extension Horizon {
     public Horizon geometric_anti_quotient(AntiScalar other) {
-        return Horizon.from_groups(
+        return Horizon(
             /* e321 */
             this.e321 / (other.e1234)
         );
@@ -612,7 +612,7 @@ public extension Horizon {
 }
 public extension Horizon {
     public Horizon geometric_anti_quotient(DualNum other) {
-        return Horizon.from_groups(
+        return Horizon(
             /* e321 */
             this.e321 / (other.e1234)
         );
@@ -620,23 +620,23 @@ public extension Horizon {
 }
 public extension Horizon {
     public Motor geometric_anti_quotient(Flector other) {
-        Flector anti_reverse = Flector.from_groups(
+        Flector anti_reverse = Flector(
             /* e1, e2, e3, e4 */
             other.group0 * float4(-1.0), 
             /* e423, e431, e412, e321 */
             other.group1
         );
-        AntiScalar other_2 = AntiScalar.from_groups(
+        AntiScalar other_2 = AntiScalar(
             /* e1234 */
             pow(other.e4, 2) + pow(other.e423, 2) + pow(other.e431, 2) + pow(other.e412, 2)
         );
-        Flector geometric_anti_product = Flector.from_groups(
+        Flector geometric_anti_product = Flector(
             /* e1, e2, e3, e4 */
             float4(other_2.e1234) * anti_reverse.group0, 
             /* e423, e431, e412, e321 */
             float4(other_2.e1234) * anti_reverse.group1
         );
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(0.0), 
             /* e23, e31, e12, scalar */
@@ -646,17 +646,17 @@ public extension Horizon {
 }
 public extension Horizon {
     public Point geometric_anti_quotient(Line other) {
-        Line anti_reverse = Line.from_groups(
+        Line anti_reverse = Line(
             /* e41, e42, e43 */
             other.group0.xyz * float3(-1.0), 
             /* e23, e31, e12 */
             other.group1.xyz * float3(-1.0)
         );
-        AntiScalar other_2 = AntiScalar.from_groups(
+        AntiScalar other_2 = AntiScalar(
             /* e1234 */
             pow(other.e41, 2) + pow(other.e42, 2) + pow(other.e43, 2)
         );
-        return Point.from_groups(
+        return Point(
             /* e1, e2, e3, e4 */
             float4((float3(this.e321) * float3(other_2.e1234 * anti_reverse.e41, other_2.e1234 * anti_reverse.e42, other_2.e1234 * anti_reverse.e43)), 0.0)
         );
@@ -664,23 +664,23 @@ public extension Horizon {
 }
 public extension Horizon {
     public Flector geometric_anti_quotient(Motor other) {
-        Motor anti_reverse = Motor.from_groups(
+        Motor anti_reverse = Motor(
             /* e41, e42, e43, e1234 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, scalar */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        AntiScalar other_2 = AntiScalar.from_groups(
+        AntiScalar other_2 = AntiScalar(
             /* e1234 */
             pow(other.e41, 2) + pow(other.e42, 2) + pow(other.e43, 2) + pow(other.e1234, 2)
         );
-        Motor geometric_anti_product = Motor.from_groups(
+        Motor geometric_anti_product = Motor(
             /* e41, e42, e43, e1234 */
             float4(other_2.e1234) * anti_reverse.group0, 
             /* e23, e31, e12, scalar */
             float4(other_2.e1234) * anti_reverse.group1
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4((float3(this.e321) * geometric_anti_product.group0.xyz), 0.0), 
             /* e423, e431, e412, e321 */
@@ -690,7 +690,7 @@ public extension Horizon {
 }
 public extension Horizon {
     public MultiVector geometric_anti_quotient(MultiVector other) {
-        MultiVector anti_reverse = MultiVector.from_groups(
+        MultiVector anti_reverse = MultiVector(
             /* scalar, e1234 */
             other.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -702,11 +702,11 @@ public extension Horizon {
             /* e423, e431, e412, e321 */
             other.group4
         );
-        AntiScalar other_2 = AntiScalar.from_groups(
+        AntiScalar other_2 = AntiScalar(
             /* e1234 */
             pow(other.e1234, 2) + pow(other.e4, 2) + pow(other.e41, 2) + pow(other.e42, 2) + pow(other.e43, 2) + pow(other.e423, 2) + pow(other.e431, 2) + pow(other.e412, 2)
         );
-        MultiVector geometric_anti_product = MultiVector.from_groups(
+        MultiVector geometric_anti_product = MultiVector(
             /* scalar, e1234 */
             float2(other_2.e1234) * anti_reverse.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -718,7 +718,7 @@ public extension Horizon {
             /* e423, e431, e412, e321 */
             float4(other_2.e1234) * anti_reverse.group4
         );
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(this.e321 * geometric_anti_product.e4, 1.0) * float2(-1.0, 0.0), 
             /* e1, e2, e3, e4 */
@@ -734,7 +734,7 @@ public extension Horizon {
 }
 public extension Horizon {
     public Scalar geometric_anti_quotient(Origin other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             this.e321 / (other.e4)
         );
@@ -742,11 +742,11 @@ public extension Horizon {
 }
 public extension Horizon {
     public Line geometric_anti_quotient(Plane other) {
-        AntiScalar other_2 = AntiScalar.from_groups(
+        AntiScalar other_2 = AntiScalar(
             /* e1234 */
             pow(other.e423, 2) + pow(other.e431, 2) + pow(other.e412, 2)
         );
-        return Line.from_groups(
+        return Line(
             /* e41, e42, e43 */
             float3(0.0), 
             /* e23, e31, e12 */
@@ -756,7 +756,7 @@ public extension Horizon {
 }
 public extension Horizon {
     public Scalar geometric_anti_quotient(Point other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             this.e321 / (other.e4)
         );
@@ -776,11 +776,11 @@ public extension GeometricAntiQuotientInfixPartial<Line> {
 }
 public extension Line {
     public Line geometric_anti_quotient(AntiScalar other) {
-        AntiScalar geometric_anti_product = AntiScalar.from_groups(
+        AntiScalar geometric_anti_product = AntiScalar(
             /* e1234 */
             1.0/other.e1234
         );
-        return Line.from_groups(
+        return Line(
             /* e41, e42, e43 */
             float3(geometric_anti_product.e1234) * this.group0.xyz, 
             /* e23, e31, e12 */
@@ -790,11 +790,11 @@ public extension Line {
 }
 public extension Line {
     public Line geometric_anti_quotient(DualNum other) {
-        DualNum geometric_anti_product = DualNum.from_groups(
+        DualNum geometric_anti_product = DualNum(
             /* scalar, e1234 */
             float2(pow(other.e1234, -2)) * other.group0.xy
         );
-        return Line.from_groups(
+        return Line(
             /* e41, e42, e43 */
             float3(geometric_anti_product.e1234) * this.group0.xyz, 
             /* e23, e31, e12 */
@@ -804,23 +804,23 @@ public extension Line {
 }
 public extension Line {
     public Flector geometric_anti_quotient(Flector other) {
-        Flector anti_reverse = Flector.from_groups(
+        Flector anti_reverse = Flector(
             /* e1, e2, e3, e4 */
             other.group0 * float4(-1.0), 
             /* e423, e431, e412, e321 */
             other.group1
         );
-        AntiScalar other_2 = AntiScalar.from_groups(
+        AntiScalar other_2 = AntiScalar(
             /* e1234 */
             pow(other.e4, 2) + pow(other.e423, 2) + pow(other.e431, 2) + pow(other.e412, 2)
         );
-        Flector geometric_anti_product = Flector.from_groups(
+        Flector geometric_anti_product = Flector(
             /* e1, e2, e3, e4 */
             float4(other_2.e1234) * anti_reverse.group0, 
             /* e423, e431, e412, e321 */
             float4(other_2.e1234) * anti_reverse.group1
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4((geometric_anti_product.e3 * this.e42) + (geometric_anti_product.e4 * this.e23) + (geometric_anti_product.e412 * this.e31) + (geometric_anti_product.e321 * this.e41), (geometric_anti_product.e1 * this.e43) + (geometric_anti_product.e4 * this.e31) + (geometric_anti_product.e423 * this.e12) + (geometric_anti_product.e321 * this.e42), (geometric_anti_product.e2 * this.e41) + (geometric_anti_product.e4 * this.e12) + (geometric_anti_product.e431 * this.e23) + (geometric_anti_product.e321 * this.e43), geometric_anti_product.e412 * this.e43 * -1.0) - (geometric_anti_product.group1.yzxy * float4(this.group1.xyz.zxy, this.e42)) - float4((this.group0.xyz.zxy * geometric_anti_product.group0.yzx), geometric_anti_product.e423 * this.e41), 
             /* e423, e431, e412, e321 */
@@ -830,23 +830,23 @@ public extension Line {
 }
 public extension Line {
     public Motor geometric_anti_quotient(Line other) {
-        Line anti_reverse = Line.from_groups(
+        Line anti_reverse = Line(
             /* e41, e42, e43 */
             other.group0.xyz * float3(-1.0), 
             /* e23, e31, e12 */
             other.group1.xyz * float3(-1.0)
         );
-        AntiScalar other_2 = AntiScalar.from_groups(
+        AntiScalar other_2 = AntiScalar(
             /* e1234 */
             pow(other.e41, 2) + pow(other.e42, 2) + pow(other.e43, 2)
         );
-        Line geometric_anti_product = Line.from_groups(
+        Line geometric_anti_product = Line(
             /* e41, e42, e43 */
             float3(other_2.e1234) * anti_reverse.group0.xyz, 
             /* e23, e31, e12 */
             float3(other_2.e1234) * anti_reverse.group1.xyz
         );
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(geometric_anti_product.e43 * this.e42, geometric_anti_product.e41 * this.e43, geometric_anti_product.e42 * this.e41, -(geometric_anti_product.e42 * this.e42) - (geometric_anti_product.e43 * this.e43)) - float4((geometric_anti_product.group0.xyz.yzx * this.group0.xyz.zxy), geometric_anti_product.e41 * this.e41), 
             /* e23, e31, e12, scalar */
@@ -856,23 +856,23 @@ public extension Line {
 }
 public extension Line {
     public Motor geometric_anti_quotient(Motor other) {
-        Motor anti_reverse = Motor.from_groups(
+        Motor anti_reverse = Motor(
             /* e41, e42, e43, e1234 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, scalar */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        AntiScalar other_2 = AntiScalar.from_groups(
+        AntiScalar other_2 = AntiScalar(
             /* e1234 */
             pow(other.e41, 2) + pow(other.e42, 2) + pow(other.e43, 2) + pow(other.e1234, 2)
         );
-        Motor geometric_anti_product = Motor.from_groups(
+        Motor geometric_anti_product = Motor(
             /* e41, e42, e43, e1234 */
             float4(other_2.e1234) * anti_reverse.group0, 
             /* e23, e31, e12, scalar */
             float4(other_2.e1234) * anti_reverse.group1
         );
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4((this.e41 * geometric_anti_product.e1234) + (this.e42 * geometric_anti_product.e43), (this.e42 * geometric_anti_product.e1234) + (this.e43 * geometric_anti_product.e41), (this.e41 * geometric_anti_product.e42) + (this.e43 * geometric_anti_product.e1234), -(this.e42 * geometric_anti_product.e42) - (this.e43 * geometric_anti_product.e43)) - (geometric_anti_product.group0.yzxx * float4(this.group0.xyz.zxy, this.e41)), 
             /* e23, e31, e12, scalar */
@@ -882,7 +882,7 @@ public extension Line {
 }
 public extension Line {
     public MultiVector geometric_anti_quotient(MultiVector other) {
-        MultiVector anti_reverse = MultiVector.from_groups(
+        MultiVector anti_reverse = MultiVector(
             /* scalar, e1234 */
             other.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -894,11 +894,11 @@ public extension Line {
             /* e423, e431, e412, e321 */
             other.group4
         );
-        AntiScalar other_2 = AntiScalar.from_groups(
+        AntiScalar other_2 = AntiScalar(
             /* e1234 */
             pow(other.e1234, 2) + pow(other.e4, 2) + pow(other.e41, 2) + pow(other.e42, 2) + pow(other.e43, 2) + pow(other.e423, 2) + pow(other.e431, 2) + pow(other.e412, 2)
         );
-        MultiVector geometric_anti_product = MultiVector.from_groups(
+        MultiVector geometric_anti_product = MultiVector(
             /* scalar, e1234 */
             float2(other_2.e1234) * anti_reverse.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -910,7 +910,7 @@ public extension Line {
             /* e423, e431, e412, e321 */
             float4(other_2.e1234) * anti_reverse.group4
         );
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(-(this.e23 * geometric_anti_product.e41) - (this.e31 * geometric_anti_product.e42) - (this.e12 * geometric_anti_product.e43), 0.0) - (float2(this.e41) * float2(geometric_anti_product.e23, geometric_anti_product.e41)) - (float2(this.e42) * float2(geometric_anti_product.e31, geometric_anti_product.e42)) - (float2(this.e43) * float2(geometric_anti_product.e12, geometric_anti_product.e43)), 
             /* e1, e2, e3, e4 */
@@ -926,11 +926,11 @@ public extension Line {
 }
 public extension Line {
     public Flector geometric_anti_quotient(Origin other) {
-        Origin geometric_anti_product = Origin.from_groups(
+        Origin geometric_anti_product = Origin(
             /* e4 */
             1.0/other.e4 * -1.0
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4((float3(geometric_anti_product.e4) * this.group1.xyz), 0.0), 
             /* e423, e431, e412, e321 */
@@ -940,11 +940,11 @@ public extension Line {
 }
 public extension Line {
     public Flector geometric_anti_quotient(Plane other) {
-        Plane geometric_anti_product = Plane.from_groups(
+        Plane geometric_anti_product = Plane(
             /* e423, e431, e412, e321 */
             float4(pow(other.e423, 2) + pow(other.e431, 2) + pow(other.e412, 2)) * other.group0
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4((this.e41 * geometric_anti_product.e321) + (this.e31 * geometric_anti_product.e412), (this.e42 * geometric_anti_product.e321) + (this.e12 * geometric_anti_product.e423), (this.e43 * geometric_anti_product.e321) + (this.e23 * geometric_anti_product.e431), -(this.e42 * geometric_anti_product.e431) - (this.e43 * geometric_anti_product.e412)) - (geometric_anti_product.group0.yzxx * float4(this.group1.xyz.zxy, this.e41)), 
             /* e423, e431, e412, e321 */
@@ -954,11 +954,11 @@ public extension Line {
 }
 public extension Line {
     public Flector geometric_anti_quotient(Point other) {
-        Point geometric_anti_product = Point.from_groups(
+        Point geometric_anti_product = Point(
             /* e1, e2, e3, e4 */
             float4(pow(other.e4, -2)) * float4(other.e1 * -1.0, other.e2 * -1.0, other.e3 * -1.0, other.e4 * -1.0)
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4((float3(geometric_anti_product.e4) * this.group1.xyz), 0.0) + float4((this.group0.xyz.yzx * geometric_anti_product.group0.zxy), 0.0) - float4((this.group0.xyz.zxy * geometric_anti_product.group0.yzx), 0.0), 
             /* e423, e431, e412, e321 */
@@ -980,11 +980,11 @@ public extension GeometricAntiQuotientInfixPartial<Motor> {
 }
 public extension Motor {
     public Motor geometric_anti_quotient(AntiScalar other) {
-        AntiScalar geometric_anti_product = AntiScalar.from_groups(
+        AntiScalar geometric_anti_product = AntiScalar(
             /* e1234 */
             1.0/other.e1234
         );
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(geometric_anti_product.e1234) * this.group0, 
             /* e23, e31, e12, scalar */
@@ -994,11 +994,11 @@ public extension Motor {
 }
 public extension Motor {
     public Motor geometric_anti_quotient(DualNum other) {
-        DualNum geometric_anti_product = DualNum.from_groups(
+        DualNum geometric_anti_product = DualNum(
             /* scalar, e1234 */
             float2(pow(other.e1234, -2)) * other.group0.xy
         );
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(geometric_anti_product.e1234) * this.group0, 
             /* e23, e31, e12, scalar */
@@ -1008,23 +1008,23 @@ public extension Motor {
 }
 public extension Motor {
     public Flector geometric_anti_quotient(Flector other) {
-        Flector anti_reverse = Flector.from_groups(
+        Flector anti_reverse = Flector(
             /* e1, e2, e3, e4 */
             other.group0 * float4(-1.0), 
             /* e423, e431, e412, e321 */
             other.group1
         );
-        AntiScalar other_2 = AntiScalar.from_groups(
+        AntiScalar other_2 = AntiScalar(
             /* e1234 */
             pow(other.e4, 2) + pow(other.e423, 2) + pow(other.e431, 2) + pow(other.e412, 2)
         );
-        Flector geometric_anti_product = Flector.from_groups(
+        Flector geometric_anti_product = Flector(
             /* e1, e2, e3, e4 */
             float4(other_2.e1234) * anti_reverse.group0, 
             /* e423, e431, e412, e321 */
             float4(other_2.e1234) * anti_reverse.group1
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4((geometric_anti_product.e3 * this.e42) + (geometric_anti_product.e4 * this.e23) + (geometric_anti_product.e423 * this.scalar) + (geometric_anti_product.e412 * this.e31) + (geometric_anti_product.e321 * this.e41), (geometric_anti_product.e2 * this.e1234) + (geometric_anti_product.e4 * this.e31) + (geometric_anti_product.e423 * this.e12) + (geometric_anti_product.e431 * this.scalar) + (geometric_anti_product.e321 * this.e42), (geometric_anti_product.e3 * this.e1234) + (geometric_anti_product.e4 * this.e12) + (geometric_anti_product.e431 * this.e23) + (geometric_anti_product.e412 * this.scalar) + (geometric_anti_product.e321 * this.e43), geometric_anti_product.e412 * this.e43 * -1.0) + (geometric_anti_product.group0.xxyw * this.group0.wzxw) - (geometric_anti_product.group1.yzxy * float4(this.group1.zxy, this.e42)) - (this.group0.zxyx * float4(geometric_anti_product.group0.yzx, geometric_anti_product.e423)), 
             /* e423, e431, e412, e321 */
@@ -1034,23 +1034,23 @@ public extension Motor {
 }
 public extension Motor {
     public Motor geometric_anti_quotient(Line other) {
-        Line anti_reverse = Line.from_groups(
+        Line anti_reverse = Line(
             /* e41, e42, e43 */
             other.group0.xyz * float3(-1.0), 
             /* e23, e31, e12 */
             other.group1.xyz * float3(-1.0)
         );
-        AntiScalar other_2 = AntiScalar.from_groups(
+        AntiScalar other_2 = AntiScalar(
             /* e1234 */
             pow(other.e41, 2) + pow(other.e42, 2) + pow(other.e43, 2)
         );
-        Line geometric_anti_product = Line.from_groups(
+        Line geometric_anti_product = Line(
             /* e41, e42, e43 */
             float3(other_2.e1234) * anti_reverse.group0.xyz, 
             /* e23, e31, e12 */
             float3(other_2.e1234) * anti_reverse.group1.xyz
         );
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4((geometric_anti_product.e41 * this.e1234) + (geometric_anti_product.e43 * this.e42), (geometric_anti_product.e41 * this.e43) + (geometric_anti_product.e42 * this.e1234), (geometric_anti_product.e42 * this.e41) + (geometric_anti_product.e43 * this.e1234), -(geometric_anti_product.e42 * this.e42) - (geometric_anti_product.e43 * this.e43)) - (this.group0.zxyx * float4(geometric_anti_product.group0.xyz.yzx, geometric_anti_product.e41)), 
             /* e23, e31, e12, scalar */
@@ -1060,23 +1060,23 @@ public extension Motor {
 }
 public extension Motor {
     public Motor geometric_anti_quotient(Motor other) {
-        Motor anti_reverse = Motor.from_groups(
+        Motor anti_reverse = Motor(
             /* e41, e42, e43, e1234 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, scalar */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        AntiScalar other_2 = AntiScalar.from_groups(
+        AntiScalar other_2 = AntiScalar(
             /* e1234 */
             pow(other.e41, 2) + pow(other.e42, 2) + pow(other.e43, 2) + pow(other.e1234, 2)
         );
-        Motor geometric_anti_product = Motor.from_groups(
+        Motor geometric_anti_product = Motor(
             /* e41, e42, e43, e1234 */
             float4(other_2.e1234) * anti_reverse.group0, 
             /* e23, e31, e12, scalar */
             float4(other_2.e1234) * anti_reverse.group1
         );
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4((geometric_anti_product.e43 * this.e42) + (geometric_anti_product.e1234 * this.e41), (geometric_anti_product.e42 * this.e1234) + (geometric_anti_product.e1234 * this.e42), (geometric_anti_product.e43 * this.e1234) + (geometric_anti_product.e1234 * this.e43), -(geometric_anti_product.e42 * this.e42) - (geometric_anti_product.e43 * this.e43)) + (geometric_anti_product.group0.xxyw * this.group0.wzxw) - (geometric_anti_product.group0.yzxx * this.group0.zxyx), 
             /* e23, e31, e12, scalar */
@@ -1086,7 +1086,7 @@ public extension Motor {
 }
 public extension Motor {
     public MultiVector geometric_anti_quotient(MultiVector other) {
-        MultiVector anti_reverse = MultiVector.from_groups(
+        MultiVector anti_reverse = MultiVector(
             /* scalar, e1234 */
             other.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -1098,11 +1098,11 @@ public extension Motor {
             /* e423, e431, e412, e321 */
             other.group4
         );
-        AntiScalar other_2 = AntiScalar.from_groups(
+        AntiScalar other_2 = AntiScalar(
             /* e1234 */
             pow(other.e1234, 2) + pow(other.e4, 2) + pow(other.e41, 2) + pow(other.e42, 2) + pow(other.e43, 2) + pow(other.e423, 2) + pow(other.e431, 2) + pow(other.e412, 2)
         );
-        MultiVector geometric_anti_product = MultiVector.from_groups(
+        MultiVector geometric_anti_product = MultiVector(
             /* scalar, e1234 */
             float2(other_2.e1234) * anti_reverse.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -1114,7 +1114,7 @@ public extension Motor {
             /* e423, e431, e412, e321 */
             float4(other_2.e1234) * anti_reverse.group4
         );
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2((this.scalar * geometric_anti_product.e1234) - (this.e41 * geometric_anti_product.e23) - (this.e42 * geometric_anti_product.e31) - (this.e43 * geometric_anti_product.e12), 0.0) + (float2(this.e1234) * geometric_anti_product.group0.xy) - (float2(geometric_anti_product.e41) * float2(this.e23, this.e41)) - (float2(geometric_anti_product.e42) * float2(this.e31, this.e42)) - (float2(geometric_anti_product.e43) * float2(this.e12, this.e43)), 
             /* e1, e2, e3, e4 */
@@ -1130,11 +1130,11 @@ public extension Motor {
 }
 public extension Motor {
     public Flector geometric_anti_quotient(Origin other) {
-        Origin geometric_anti_product = Origin.from_groups(
+        Origin geometric_anti_product = Origin(
             /* e4 */
             1.0/other.e4 * -1.0
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4(geometric_anti_product.e4) * float4(this.group1.xyz, this.e1234), 
             /* e423, e431, e412, e321 */
@@ -1144,11 +1144,11 @@ public extension Motor {
 }
 public extension Motor {
     public Flector geometric_anti_quotient(Plane other) {
-        Plane geometric_anti_product = Plane.from_groups(
+        Plane geometric_anti_product = Plane(
             /* e423, e431, e412, e321 */
             float4(pow(other.e423, 2) + pow(other.e431, 2) + pow(other.e412, 2)) * other.group0
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4((this.e41 * geometric_anti_product.e321) + (this.e31 * geometric_anti_product.e412) + (this.scalar * geometric_anti_product.e423), (this.e42 * geometric_anti_product.e321) + (this.e12 * geometric_anti_product.e423) + (this.scalar * geometric_anti_product.e431), (this.e43 * geometric_anti_product.e321) + (this.e23 * geometric_anti_product.e431) + (this.scalar * geometric_anti_product.e412), -(this.e42 * geometric_anti_product.e431) - (this.e43 * geometric_anti_product.e412)) - (geometric_anti_product.group0.yzxx * float4(this.group1.zxy, this.e41)), 
             /* e423, e431, e412, e321 */
@@ -1158,11 +1158,11 @@ public extension Motor {
 }
 public extension Motor {
     public Flector geometric_anti_quotient(Point other) {
-        Point geometric_anti_product = Point.from_groups(
+        Point geometric_anti_product = Point(
             /* e1, e2, e3, e4 */
             float4(pow(other.e4, -2)) * float4(other.e1 * -1.0, other.e2 * -1.0, other.e3 * -1.0, other.e4 * -1.0)
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4(((float3(this.e1234) * geometric_anti_product.group0.xyz) + (float3(geometric_anti_product.e4) * this.group1.xyz) + (this.group0.yzx * geometric_anti_product.group0.zxy) - (this.group0.zxy * geometric_anti_product.group0.yzx)), this.e1234 * geometric_anti_product.e4), 
             /* e423, e431, e412, e321 */
@@ -1184,11 +1184,11 @@ public extension GeometricAntiQuotientInfixPartial<MultiVector> {
 }
 public extension MultiVector {
     public MultiVector geometric_anti_quotient(AntiScalar other) {
-        AntiScalar geometric_anti_product = AntiScalar.from_groups(
+        AntiScalar geometric_anti_product = AntiScalar(
             /* e1234 */
             1.0/other.e1234
         );
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(geometric_anti_product.e1234) * this.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -1204,11 +1204,11 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public MultiVector geometric_anti_quotient(DualNum other) {
-        DualNum geometric_anti_product = DualNum.from_groups(
+        DualNum geometric_anti_product = DualNum(
             /* scalar, e1234 */
             float2(pow(other.e1234, -2)) * other.group0.xy
         );
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2((geometric_anti_product.scalar * this.e1234) + (geometric_anti_product.e1234 * this.scalar), geometric_anti_product.e1234 * this.e1234), 
             /* e1, e2, e3, e4 */
@@ -1224,23 +1224,23 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public MultiVector geometric_anti_quotient(Flector other) {
-        Flector anti_reverse = Flector.from_groups(
+        Flector anti_reverse = Flector(
             /* e1, e2, e3, e4 */
             other.group0 * float4(-1.0), 
             /* e423, e431, e412, e321 */
             other.group1
         );
-        AntiScalar other_2 = AntiScalar.from_groups(
+        AntiScalar other_2 = AntiScalar(
             /* e1234 */
             pow(other.e4, 2) + pow(other.e423, 2) + pow(other.e431, 2) + pow(other.e412, 2)
         );
-        Flector geometric_anti_product = Flector.from_groups(
+        Flector geometric_anti_product = Flector(
             /* e1, e2, e3, e4 */
             float4(other_2.e1234) * anti_reverse.group0, 
             /* e423, e431, e412, e321 */
             float4(other_2.e1234) * anti_reverse.group1
         );
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2((geometric_anti_product.e321 * this.e4) - (geometric_anti_product.e2 * this.e431) - (geometric_anti_product.e3 * this.e412) - (geometric_anti_product.e4 * this.e321), 0.0) + (float2(geometric_anti_product.e423) * float2(this.e1, this.e423)) + (float2(geometric_anti_product.e431) * float2(this.e2, this.e431)) + (float2(geometric_anti_product.e412) * float2(this.e3, this.e412)) - (float2(this.e423, this.e4) * geometric_anti_product.group0.xw), 
             /* e1, e2, e3, e4 */
@@ -1256,23 +1256,23 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public MultiVector geometric_anti_quotient(Line other) {
-        Line anti_reverse = Line.from_groups(
+        Line anti_reverse = Line(
             /* e41, e42, e43 */
             other.group0.xyz * float3(-1.0), 
             /* e23, e31, e12 */
             other.group1.xyz * float3(-1.0)
         );
-        AntiScalar other_2 = AntiScalar.from_groups(
+        AntiScalar other_2 = AntiScalar(
             /* e1234 */
             pow(other.e41, 2) + pow(other.e42, 2) + pow(other.e43, 2)
         );
-        Line geometric_anti_product = Line.from_groups(
+        Line geometric_anti_product = Line(
             /* e41, e42, e43 */
             float3(other_2.e1234) * anti_reverse.group0.xyz, 
             /* e23, e31, e12 */
             float3(other_2.e1234) * anti_reverse.group1.xyz
         );
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(-(geometric_anti_product.e23 * this.e41) - (geometric_anti_product.e31 * this.e42) - (geometric_anti_product.e12 * this.e43), 0.0) - (float2(geometric_anti_product.e41) * float2(this.e23, this.e41)) - (float2(geometric_anti_product.e42) * float2(this.e31, this.e42)) - (float2(geometric_anti_product.e43) * float2(this.e12, this.e43)), 
             /* e1, e2, e3, e4 */
@@ -1288,23 +1288,23 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public MultiVector geometric_anti_quotient(Motor other) {
-        Motor anti_reverse = Motor.from_groups(
+        Motor anti_reverse = Motor(
             /* e41, e42, e43, e1234 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, scalar */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        AntiScalar other_2 = AntiScalar.from_groups(
+        AntiScalar other_2 = AntiScalar(
             /* e1234 */
             pow(other.e41, 2) + pow(other.e42, 2) + pow(other.e43, 2) + pow(other.e1234, 2)
         );
-        Motor geometric_anti_product = Motor.from_groups(
+        Motor geometric_anti_product = Motor(
             /* e41, e42, e43, e1234 */
             float4(other_2.e1234) * anti_reverse.group0, 
             /* e23, e31, e12, scalar */
             float4(other_2.e1234) * anti_reverse.group1
         );
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2((geometric_anti_product.scalar * this.e1234) - (geometric_anti_product.e41 * this.e23) - (geometric_anti_product.e42 * this.e31) - (geometric_anti_product.e43 * this.e12), 0.0) + (float2(geometric_anti_product.e1234) * this.group0.xy) - (float2(this.e41) * float2(geometric_anti_product.e23, geometric_anti_product.e41)) - (float2(this.e42) * float2(geometric_anti_product.e31, geometric_anti_product.e42)) - (float2(this.e43) * float2(geometric_anti_product.e12, geometric_anti_product.e43)), 
             /* e1, e2, e3, e4 */
@@ -1320,7 +1320,7 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public MultiVector geometric_anti_quotient(MultiVector other) {
-        MultiVector anti_reverse = MultiVector.from_groups(
+        MultiVector anti_reverse = MultiVector(
             /* scalar, e1234 */
             other.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -1332,11 +1332,11 @@ public extension MultiVector {
             /* e423, e431, e412, e321 */
             other.group4
         );
-        AntiScalar other_2 = AntiScalar.from_groups(
+        AntiScalar other_2 = AntiScalar(
             /* e1234 */
             pow(other.e1234, 2) + pow(other.e4, 2) + pow(other.e41, 2) + pow(other.e42, 2) + pow(other.e43, 2) + pow(other.e423, 2) + pow(other.e431, 2) + pow(other.e412, 2)
         );
-        MultiVector geometric_anti_product = MultiVector.from_groups(
+        MultiVector geometric_anti_product = MultiVector(
             /* scalar, e1234 */
             float2(other_2.e1234) * anti_reverse.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -1348,7 +1348,7 @@ public extension MultiVector {
             /* e423, e431, e412, e321 */
             float4(other_2.e1234) * anti_reverse.group4
         );
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2((geometric_anti_product.e1234 * this.scalar) + (geometric_anti_product.e321 * this.e4) - (geometric_anti_product.e2 * this.e431) - (geometric_anti_product.e3 * this.e412) - (geometric_anti_product.e4 * this.e321) - (geometric_anti_product.e23 * this.e41) - (geometric_anti_product.e31 * this.e42) - (geometric_anti_product.e12 * this.e43), 0.0) + (float2(geometric_anti_product.e423) * float2(this.e1, this.e423)) + (float2(geometric_anti_product.e431) * float2(this.e2, this.e431)) + (float2(geometric_anti_product.e412) * float2(this.e3, this.e412)) + (float2(this.e1234) * geometric_anti_product.group0.xy) - (float2(geometric_anti_product.e41) * float2(this.e23, this.e41)) - (float2(geometric_anti_product.e42) * float2(this.e31, this.e42)) - (float2(geometric_anti_product.e43) * float2(this.e12, this.e43)) - (float2(this.e423, this.e4) * geometric_anti_product.group1.xw), 
             /* e1, e2, e3, e4 */
@@ -1364,11 +1364,11 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public MultiVector geometric_anti_quotient(Origin other) {
-        Origin geometric_anti_product = Origin.from_groups(
+        Origin geometric_anti_product = Origin(
             /* e4 */
             1.0/other.e4 * -1.0
         );
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(geometric_anti_product.e4) * float2(this.e321, this.e4) * float2(-1.0), 
             /* e1, e2, e3, e4 */
@@ -1384,11 +1384,11 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public MultiVector geometric_anti_quotient(Plane other) {
-        Plane geometric_anti_product = Plane.from_groups(
+        Plane geometric_anti_product = Plane(
             /* e423, e431, e412, e321 */
             float4(pow(other.e423, 2) + pow(other.e431, 2) + pow(other.e412, 2)) * other.group0
         );
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(this.e4 * geometric_anti_product.e321, 0.0) + (float2(geometric_anti_product.e423) * float2(this.e1, this.e423)) + (float2(geometric_anti_product.e431) * float2(this.e2, this.e431)) + (float2(geometric_anti_product.e412) * float2(this.e3, this.e412)), 
             /* e1, e2, e3, e4 */
@@ -1404,11 +1404,11 @@ public extension MultiVector {
 }
 public extension MultiVector {
     public MultiVector geometric_anti_quotient(Point other) {
-        Point geometric_anti_product = Point.from_groups(
+        Point geometric_anti_product = Point(
             /* e1, e2, e3, e4 */
             float4(pow(other.e4, -2)) * float4(other.e1 * -1.0, other.e2 * -1.0, other.e3 * -1.0, other.e4 * -1.0)
         );
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(-(this.e423 * geometric_anti_product.e1) - (this.e431 * geometric_anti_product.e2) - (this.e412 * geometric_anti_product.e3) - (this.e321 * geometric_anti_product.e4), this.e4 * geometric_anti_product.e4) * float2(1.0, -1.0), 
             /* e1, e2, e3, e4 */
@@ -1436,7 +1436,7 @@ public extension GeometricAntiQuotientInfixPartial<Origin> {
 }
 public extension Origin {
     public Origin geometric_anti_quotient(AntiScalar other) {
-        return Origin.from_groups(
+        return Origin(
             /* e4 */
             this.e4 / (other.e1234)
         );
@@ -1444,11 +1444,11 @@ public extension Origin {
 }
 public extension Origin {
     public Flector geometric_anti_quotient(DualNum other) {
-        DualNum geometric_anti_product = DualNum.from_groups(
+        DualNum geometric_anti_product = DualNum(
             /* scalar, e1234 */
             float2(pow(other.e1234, -2)) * other.group0.xy
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4(float3(0.0), geometric_anti_product.e1234 * this.e4), 
             /* e423, e431, e412, e321 */
@@ -1458,23 +1458,23 @@ public extension Origin {
 }
 public extension Origin {
     public Motor geometric_anti_quotient(Flector other) {
-        Flector anti_reverse = Flector.from_groups(
+        Flector anti_reverse = Flector(
             /* e1, e2, e3, e4 */
             other.group0 * float4(-1.0), 
             /* e423, e431, e412, e321 */
             other.group1
         );
-        AntiScalar other_2 = AntiScalar.from_groups(
+        AntiScalar other_2 = AntiScalar(
             /* e1234 */
             pow(other.e4, 2) + pow(other.e423, 2) + pow(other.e431, 2) + pow(other.e412, 2)
         );
-        Flector geometric_anti_product = Flector.from_groups(
+        Flector geometric_anti_product = Flector(
             /* e1, e2, e3, e4 */
             float4(other_2.e1234) * anti_reverse.group0, 
             /* e423, e431, e412, e321 */
             float4(other_2.e1234) * anti_reverse.group1
         );
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(this.e4) * float4(geometric_anti_product.group1.xyz, geometric_anti_product.e4) * float4(-1.0), 
             /* e23, e31, e12, scalar */
@@ -1484,23 +1484,23 @@ public extension Origin {
 }
 public extension Origin {
     public Flector geometric_anti_quotient(Line other) {
-        Line anti_reverse = Line.from_groups(
+        Line anti_reverse = Line(
             /* e41, e42, e43 */
             other.group0.xyz * float3(-1.0), 
             /* e23, e31, e12 */
             other.group1.xyz * float3(-1.0)
         );
-        AntiScalar other_2 = AntiScalar.from_groups(
+        AntiScalar other_2 = AntiScalar(
             /* e1234 */
             pow(other.e41, 2) + pow(other.e42, 2) + pow(other.e43, 2)
         );
-        Line geometric_anti_product = Line.from_groups(
+        Line geometric_anti_product = Line(
             /* e41, e42, e43 */
             float3(other_2.e1234) * anti_reverse.group0.xyz, 
             /* e23, e31, e12 */
             float3(other_2.e1234) * anti_reverse.group1.xyz
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4((float3(this.e4) * geometric_anti_product.group1.xyz * float3(-1.0)), 0.0), 
             /* e423, e431, e412, e321 */
@@ -1510,23 +1510,23 @@ public extension Origin {
 }
 public extension Origin {
     public Flector geometric_anti_quotient(Motor other) {
-        Motor anti_reverse = Motor.from_groups(
+        Motor anti_reverse = Motor(
             /* e41, e42, e43, e1234 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, scalar */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        AntiScalar other_2 = AntiScalar.from_groups(
+        AntiScalar other_2 = AntiScalar(
             /* e1234 */
             pow(other.e41, 2) + pow(other.e42, 2) + pow(other.e43, 2) + pow(other.e1234, 2)
         );
-        Motor geometric_anti_product = Motor.from_groups(
+        Motor geometric_anti_product = Motor(
             /* e41, e42, e43, e1234 */
             float4(other_2.e1234) * anti_reverse.group0, 
             /* e23, e31, e12, scalar */
             float4(other_2.e1234) * anti_reverse.group1
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4(this.e4) * float4(geometric_anti_product.group1.xyz, geometric_anti_product.e1234) * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e423, e431, e412, e321 */
@@ -1536,7 +1536,7 @@ public extension Origin {
 }
 public extension Origin {
     public MultiVector geometric_anti_quotient(MultiVector other) {
-        MultiVector anti_reverse = MultiVector.from_groups(
+        MultiVector anti_reverse = MultiVector(
             /* scalar, e1234 */
             other.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -1548,11 +1548,11 @@ public extension Origin {
             /* e423, e431, e412, e321 */
             other.group4
         );
-        AntiScalar other_2 = AntiScalar.from_groups(
+        AntiScalar other_2 = AntiScalar(
             /* e1234 */
             pow(other.e1234, 2) + pow(other.e4, 2) + pow(other.e41, 2) + pow(other.e42, 2) + pow(other.e43, 2) + pow(other.e423, 2) + pow(other.e431, 2) + pow(other.e412, 2)
         );
-        MultiVector geometric_anti_product = MultiVector.from_groups(
+        MultiVector geometric_anti_product = MultiVector(
             /* scalar, e1234 */
             float2(other_2.e1234) * anti_reverse.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -1564,7 +1564,7 @@ public extension Origin {
             /* e423, e431, e412, e321 */
             float4(other_2.e1234) * anti_reverse.group4
         );
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(this.e4) * float2(geometric_anti_product.e321, geometric_anti_product.e4) * float2(1.0, -1.0), 
             /* e1, e2, e3, e4 */
@@ -1580,7 +1580,7 @@ public extension Origin {
 }
 public extension Origin {
     public AntiScalar geometric_anti_quotient(Origin other) {
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             this.e4 / (other.e4)
         );
@@ -1588,11 +1588,11 @@ public extension Origin {
 }
 public extension Origin {
     public Motor geometric_anti_quotient(Plane other) {
-        Plane geometric_anti_product = Plane.from_groups(
+        Plane geometric_anti_product = Plane(
             /* e423, e431, e412, e321 */
             float4(pow(other.e423, 2) + pow(other.e431, 2) + pow(other.e412, 2)) * other.group0
         );
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4((float3(this.e4) * geometric_anti_product.group0.xyz * float3(-1.0)), 0.0), 
             /* e23, e31, e12, scalar */
@@ -1602,11 +1602,11 @@ public extension Origin {
 }
 public extension Origin {
     public Motor geometric_anti_quotient(Point other) {
-        Point geometric_anti_product = Point.from_groups(
+        Point geometric_anti_product = Point(
             /* e1, e2, e3, e4 */
             float4(pow(other.e4, -2)) * float4(other.e1 * -1.0, other.e2 * -1.0, other.e3 * -1.0, other.e4 * -1.0)
         );
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(float3(0.0), this.e4 * geometric_anti_product.e4 * -1.0), 
             /* e23, e31, e12, scalar */
@@ -1628,7 +1628,7 @@ public extension GeometricAntiQuotientInfixPartial<Plane> {
 }
 public extension Plane {
     public Plane geometric_anti_quotient(AntiScalar other) {
-        return Plane.from_groups(
+        return Plane(
             /* e423, e431, e412, e321 */
             float4(1.0/other.e1234) * this.group0
         );
@@ -1636,11 +1636,11 @@ public extension Plane {
 }
 public extension Plane {
     public Flector geometric_anti_quotient(DualNum other) {
-        DualNum geometric_anti_product = DualNum.from_groups(
+        DualNum geometric_anti_product = DualNum(
             /* scalar, e1234 */
             float2(pow(other.e1234, -2)) * other.group0.xy
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4(geometric_anti_product.group0.xy.xx, geometric_anti_product.scalar, 0.0) * float4(float3(1.0), 0.0) * float4(this.group0.xyz, 0.0) * float4(-1.0, -1.0, -1.0, 0.0), 
             /* e423, e431, e412, e321 */
@@ -1650,23 +1650,23 @@ public extension Plane {
 }
 public extension Plane {
     public Motor geometric_anti_quotient(Flector other) {
-        Flector anti_reverse = Flector.from_groups(
+        Flector anti_reverse = Flector(
             /* e1, e2, e3, e4 */
             other.group0 * float4(-1.0), 
             /* e423, e431, e412, e321 */
             other.group1
         );
-        AntiScalar other_2 = AntiScalar.from_groups(
+        AntiScalar other_2 = AntiScalar(
             /* e1234 */
             pow(other.e4, 2) + pow(other.e423, 2) + pow(other.e431, 2) + pow(other.e412, 2)
         );
-        Flector geometric_anti_product = Flector.from_groups(
+        Flector geometric_anti_product = Flector(
             /* e1, e2, e3, e4 */
             float4(other_2.e1234) * anti_reverse.group0, 
             /* e423, e431, e412, e321 */
             float4(other_2.e1234) * anti_reverse.group1
         );
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(-(geometric_anti_product.e4 * this.e423) - (geometric_anti_product.e412 * this.e431), -(geometric_anti_product.e4 * this.e431) - (geometric_anti_product.e423 * this.e412), -(geometric_anti_product.e4 * this.e412) - (geometric_anti_product.e431 * this.e423), (geometric_anti_product.e431 * this.e431) + (geometric_anti_product.e412 * this.e412)) + (geometric_anti_product.group1.yzxx * this.group0.zxyx), 
             /* e23, e31, e12, scalar */
@@ -1676,23 +1676,23 @@ public extension Plane {
 }
 public extension Plane {
     public Flector geometric_anti_quotient(Line other) {
-        Line anti_reverse = Line.from_groups(
+        Line anti_reverse = Line(
             /* e41, e42, e43 */
             other.group0.xyz * float3(-1.0), 
             /* e23, e31, e12 */
             other.group1.xyz * float3(-1.0)
         );
-        AntiScalar other_2 = AntiScalar.from_groups(
+        AntiScalar other_2 = AntiScalar(
             /* e1234 */
             pow(other.e41, 2) + pow(other.e42, 2) + pow(other.e43, 2)
         );
-        Line geometric_anti_product = Line.from_groups(
+        Line geometric_anti_product = Line(
             /* e41, e42, e43 */
             float3(other_2.e1234) * anti_reverse.group0.xyz, 
             /* e23, e31, e12 */
             float3(other_2.e1234) * anti_reverse.group1.xyz
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4((geometric_anti_product.e41 * this.e321) + (geometric_anti_product.e31 * this.e412), (geometric_anti_product.e42 * this.e321) + (geometric_anti_product.e12 * this.e423), (geometric_anti_product.e43 * this.e321) + (geometric_anti_product.e23 * this.e431), -(geometric_anti_product.e42 * this.e431) - (geometric_anti_product.e43 * this.e412)) - (this.group0.yzxx * float4(geometric_anti_product.group1.xyz.zxy, geometric_anti_product.e41)), 
             /* e423, e431, e412, e321 */
@@ -1702,23 +1702,23 @@ public extension Plane {
 }
 public extension Plane {
     public Flector geometric_anti_quotient(Motor other) {
-        Motor anti_reverse = Motor.from_groups(
+        Motor anti_reverse = Motor(
             /* e41, e42, e43, e1234 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, scalar */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        AntiScalar other_2 = AntiScalar.from_groups(
+        AntiScalar other_2 = AntiScalar(
             /* e1234 */
             pow(other.e41, 2) + pow(other.e42, 2) + pow(other.e43, 2) + pow(other.e1234, 2)
         );
-        Motor geometric_anti_product = Motor.from_groups(
+        Motor geometric_anti_product = Motor(
             /* e41, e42, e43, e1234 */
             float4(other_2.e1234) * anti_reverse.group0, 
             /* e23, e31, e12, scalar */
             float4(other_2.e1234) * anti_reverse.group1
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4((geometric_anti_product.e41 * this.e321) + (geometric_anti_product.e31 * this.e412), (geometric_anti_product.e42 * this.e321) + (geometric_anti_product.e12 * this.e423), (geometric_anti_product.e43 * this.e321) + (geometric_anti_product.e23 * this.e431), geometric_anti_product.e43 * this.e412 * -1.0) - (this.group0.xyzy * float4(geometric_anti_product.group1.www, geometric_anti_product.e42)) - (this.group0.yzxx * float4(geometric_anti_product.group1.zxy, geometric_anti_product.e41)), 
             /* e423, e431, e412, e321 */
@@ -1728,7 +1728,7 @@ public extension Plane {
 }
 public extension Plane {
     public MultiVector geometric_anti_quotient(MultiVector other) {
-        MultiVector anti_reverse = MultiVector.from_groups(
+        MultiVector anti_reverse = MultiVector(
             /* scalar, e1234 */
             other.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -1740,11 +1740,11 @@ public extension Plane {
             /* e423, e431, e412, e321 */
             other.group4
         );
-        AntiScalar other_2 = AntiScalar.from_groups(
+        AntiScalar other_2 = AntiScalar(
             /* e1234 */
             pow(other.e1234, 2) + pow(other.e4, 2) + pow(other.e41, 2) + pow(other.e42, 2) + pow(other.e43, 2) + pow(other.e423, 2) + pow(other.e431, 2) + pow(other.e412, 2)
         );
-        MultiVector geometric_anti_product = MultiVector.from_groups(
+        MultiVector geometric_anti_product = MultiVector(
             /* scalar, e1234 */
             float2(other_2.e1234) * anti_reverse.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -1756,7 +1756,7 @@ public extension Plane {
             /* e423, e431, e412, e321 */
             float4(other_2.e1234) * anti_reverse.group4
         );
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(-(geometric_anti_product.e1 * this.e423) - (geometric_anti_product.e2 * this.e431) - (geometric_anti_product.e3 * this.e412) - (geometric_anti_product.e4 * this.e321), (geometric_anti_product.e423 * this.e423) + (geometric_anti_product.e431 * this.e431) + (geometric_anti_product.e412 * this.e412)), 
             /* e1, e2, e3, e4 */
@@ -1772,11 +1772,11 @@ public extension Plane {
 }
 public extension Plane {
     public Motor geometric_anti_quotient(Origin other) {
-        Origin geometric_anti_product = Origin.from_groups(
+        Origin geometric_anti_product = Origin(
             /* e4 */
             1.0/other.e4 * -1.0
         );
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4((float3(geometric_anti_product.e4) * this.group0.xyz * float3(-1.0)), 0.0), 
             /* e23, e31, e12, scalar */
@@ -1786,11 +1786,11 @@ public extension Plane {
 }
 public extension Plane {
     public Motor geometric_anti_quotient(Plane other) {
-        Plane geometric_anti_product = Plane.from_groups(
+        Plane geometric_anti_product = Plane(
             /* e423, e431, e412, e321 */
             float4(pow(other.e423, 2) + pow(other.e431, 2) + pow(other.e412, 2)) * other.group0
         );
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(geometric_anti_product.e412 * this.e431 * -1.0, geometric_anti_product.e423 * this.e412 * -1.0, geometric_anti_product.e431 * this.e423 * -1.0, (geometric_anti_product.e431 * this.e431) + (geometric_anti_product.e412 * this.e412)) + (geometric_anti_product.group0.yzxx * this.group0.zxyx), 
             /* e23, e31, e12, scalar */
@@ -1800,11 +1800,11 @@ public extension Plane {
 }
 public extension Plane {
     public Motor geometric_anti_quotient(Point other) {
-        Point geometric_anti_product = Point.from_groups(
+        Point geometric_anti_product = Point(
             /* e1, e2, e3, e4 */
             float4(pow(other.e4, -2)) * float4(other.e1 * -1.0, other.e2 * -1.0, other.e3 * -1.0, other.e4 * -1.0)
         );
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(float3(1.0), 0.0) * float4(geometric_anti_product.group0.www, 0.0) * float4(this.group0.xyz, 0.0) * float4(-1.0, -1.0, -1.0, 0.0), 
             /* e23, e31, e12, scalar */
@@ -1826,7 +1826,7 @@ public extension GeometricAntiQuotientInfixPartial<Point> {
 }
 public extension Point {
     public Point geometric_anti_quotient(AntiScalar other) {
-        return Point.from_groups(
+        return Point(
             /* e1, e2, e3, e4 */
             float4(1.0/other.e1234) * this.group0
         );
@@ -1834,11 +1834,11 @@ public extension Point {
 }
 public extension Point {
     public Flector geometric_anti_quotient(DualNum other) {
-        DualNum geometric_anti_product = DualNum.from_groups(
+        DualNum geometric_anti_product = DualNum(
             /* scalar, e1234 */
             float2(pow(other.e1234, -2)) * other.group0.xy
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4(geometric_anti_product.e1234) * this.group0, 
             /* e423, e431, e412, e321 */
@@ -1848,23 +1848,23 @@ public extension Point {
 }
 public extension Point {
     public Motor geometric_anti_quotient(Flector other) {
-        Flector anti_reverse = Flector.from_groups(
+        Flector anti_reverse = Flector(
             /* e1, e2, e3, e4 */
             other.group0 * float4(-1.0), 
             /* e423, e431, e412, e321 */
             other.group1
         );
-        AntiScalar other_2 = AntiScalar.from_groups(
+        AntiScalar other_2 = AntiScalar(
             /* e1234 */
             pow(other.e4, 2) + pow(other.e423, 2) + pow(other.e431, 2) + pow(other.e412, 2)
         );
-        Flector geometric_anti_product = Flector.from_groups(
+        Flector geometric_anti_product = Flector(
             /* e1, e2, e3, e4 */
             float4(other_2.e1234) * anti_reverse.group0, 
             /* e423, e431, e412, e321 */
             float4(other_2.e1234) * anti_reverse.group1
         );
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(this.e4) * float4(geometric_anti_product.group1.xyz, geometric_anti_product.e4) * float4(-1.0), 
             /* e23, e31, e12, scalar */
@@ -1874,23 +1874,23 @@ public extension Point {
 }
 public extension Point {
     public Flector geometric_anti_quotient(Line other) {
-        Line anti_reverse = Line.from_groups(
+        Line anti_reverse = Line(
             /* e41, e42, e43 */
             other.group0.xyz * float3(-1.0), 
             /* e23, e31, e12 */
             other.group1.xyz * float3(-1.0)
         );
-        AntiScalar other_2 = AntiScalar.from_groups(
+        AntiScalar other_2 = AntiScalar(
             /* e1234 */
             pow(other.e41, 2) + pow(other.e42, 2) + pow(other.e43, 2)
         );
-        Line geometric_anti_product = Line.from_groups(
+        Line geometric_anti_product = Line(
             /* e41, e42, e43 */
             float3(other_2.e1234) * anti_reverse.group0.xyz, 
             /* e23, e31, e12 */
             float3(other_2.e1234) * anti_reverse.group1.xyz
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4((geometric_anti_product.group0.xyz.zxy * this.group0.yzx), 0.0) - float4((float3(this.e4) * geometric_anti_product.group1.xyz), 0.0) - float4((geometric_anti_product.group0.xyz.yzx * this.group0.zxy), 0.0), 
             /* e423, e431, e412, e321 */
@@ -1900,23 +1900,23 @@ public extension Point {
 }
 public extension Point {
     public Flector geometric_anti_quotient(Motor other) {
-        Motor anti_reverse = Motor.from_groups(
+        Motor anti_reverse = Motor(
             /* e41, e42, e43, e1234 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, scalar */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        AntiScalar other_2 = AntiScalar.from_groups(
+        AntiScalar other_2 = AntiScalar(
             /* e1234 */
             pow(other.e41, 2) + pow(other.e42, 2) + pow(other.e43, 2) + pow(other.e1234, 2)
         );
-        Motor geometric_anti_product = Motor.from_groups(
+        Motor geometric_anti_product = Motor(
             /* e41, e42, e43, e1234 */
             float4(other_2.e1234) * anti_reverse.group0, 
             /* e23, e31, e12, scalar */
             float4(other_2.e1234) * anti_reverse.group1
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4(((float3(geometric_anti_product.e1234) * this.group0.xyz) + (geometric_anti_product.group0.zxy * this.group0.yzx) - (float3(this.e4) * geometric_anti_product.group1.xyz) - (geometric_anti_product.group0.yzx * this.group0.zxy)), geometric_anti_product.e1234 * this.e4), 
             /* e423, e431, e412, e321 */
@@ -1926,7 +1926,7 @@ public extension Point {
 }
 public extension Point {
     public MultiVector geometric_anti_quotient(MultiVector other) {
-        MultiVector anti_reverse = MultiVector.from_groups(
+        MultiVector anti_reverse = MultiVector(
             /* scalar, e1234 */
             other.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -1938,11 +1938,11 @@ public extension Point {
             /* e423, e431, e412, e321 */
             other.group4
         );
-        AntiScalar other_2 = AntiScalar.from_groups(
+        AntiScalar other_2 = AntiScalar(
             /* e1234 */
             pow(other.e1234, 2) + pow(other.e4, 2) + pow(other.e41, 2) + pow(other.e42, 2) + pow(other.e43, 2) + pow(other.e423, 2) + pow(other.e431, 2) + pow(other.e412, 2)
         );
-        MultiVector geometric_anti_product = MultiVector.from_groups(
+        MultiVector geometric_anti_product = MultiVector(
             /* scalar, e1234 */
             float2(other_2.e1234) * anti_reverse.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -1954,7 +1954,7 @@ public extension Point {
             /* e423, e431, e412, e321 */
             float4(other_2.e1234) * anti_reverse.group4
         );
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2((geometric_anti_product.e423 * this.e1) + (geometric_anti_product.e431 * this.e2) + (geometric_anti_product.e412 * this.e3) + (geometric_anti_product.e321 * this.e4), geometric_anti_product.e4 * this.e4) * float2(1.0, -1.0), 
             /* e1, e2, e3, e4 */
@@ -1970,11 +1970,11 @@ public extension Point {
 }
 public extension Point {
     public Motor geometric_anti_quotient(Origin other) {
-        Origin geometric_anti_product = Origin.from_groups(
+        Origin geometric_anti_product = Origin(
             /* e4 */
             1.0/other.e4 * -1.0
         );
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(float3(0.0), geometric_anti_product.e4 * this.e4 * -1.0), 
             /* e23, e31, e12, scalar */
@@ -1984,11 +1984,11 @@ public extension Point {
 }
 public extension Point {
     public Motor geometric_anti_quotient(Plane other) {
-        Plane geometric_anti_product = Plane.from_groups(
+        Plane geometric_anti_product = Plane(
             /* e423, e431, e412, e321 */
             float4(pow(other.e423, 2) + pow(other.e431, 2) + pow(other.e412, 2)) * other.group0
         );
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(float3(1.0), 0.0) * float4(this.group0.www, 0.0) * float4(geometric_anti_product.group0.xyz, 0.0) * float4(-1.0, -1.0, -1.0, 0.0), 
             /* e23, e31, e12, scalar */
@@ -1998,11 +1998,11 @@ public extension Point {
 }
 public extension Point {
     public Motor geometric_anti_quotient(Point other) {
-        Point geometric_anti_product = Point.from_groups(
+        Point geometric_anti_product = Point(
             /* e1, e2, e3, e4 */
             float4(pow(other.e4, -2)) * float4(other.e1 * -1.0, other.e2 * -1.0, other.e3 * -1.0, other.e4 * -1.0)
         );
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(float3(0.0), geometric_anti_product.e4 * this.e4 * -1.0), 
             /* e23, e31, e12, scalar */
@@ -2024,7 +2024,7 @@ public extension GeometricAntiQuotientInfixPartial<Scalar> {
 }
 public extension Scalar {
     public Scalar geometric_anti_quotient(AntiScalar other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             this.scalar / (other.e1234)
         );
@@ -2032,7 +2032,7 @@ public extension Scalar {
 }
 public extension Scalar {
     public Scalar geometric_anti_quotient(DualNum other) {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             this.scalar / (other.e1234)
         );
@@ -2040,23 +2040,23 @@ public extension Scalar {
 }
 public extension Scalar {
     public Flector geometric_anti_quotient(Flector other) {
-        Flector anti_reverse = Flector.from_groups(
+        Flector anti_reverse = Flector(
             /* e1, e2, e3, e4 */
             other.group0 * float4(-1.0), 
             /* e423, e431, e412, e321 */
             other.group1
         );
-        AntiScalar other_2 = AntiScalar.from_groups(
+        AntiScalar other_2 = AntiScalar(
             /* e1234 */
             pow(other.e4, 2) + pow(other.e423, 2) + pow(other.e431, 2) + pow(other.e412, 2)
         );
-        Flector geometric_anti_product = Flector.from_groups(
+        Flector geometric_anti_product = Flector(
             /* e1, e2, e3, e4 */
             float4(other_2.e1234) * anti_reverse.group0, 
             /* e423, e431, e412, e321 */
             float4(other_2.e1234) * anti_reverse.group1
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4((float3(this.scalar) * geometric_anti_product.group1.xyz), 0.0), 
             /* e423, e431, e412, e321 */
@@ -2066,17 +2066,17 @@ public extension Scalar {
 }
 public extension Scalar {
     public Line geometric_anti_quotient(Line other) {
-        Line anti_reverse = Line.from_groups(
+        Line anti_reverse = Line(
             /* e41, e42, e43 */
             other.group0.xyz * float3(-1.0), 
             /* e23, e31, e12 */
             other.group1.xyz * float3(-1.0)
         );
-        AntiScalar other_2 = AntiScalar.from_groups(
+        AntiScalar other_2 = AntiScalar(
             /* e1234 */
             pow(other.e41, 2) + pow(other.e42, 2) + pow(other.e43, 2)
         );
-        return Line.from_groups(
+        return Line(
             /* e41, e42, e43 */
             float3(0.0), 
             /* e23, e31, e12 */
@@ -2086,17 +2086,17 @@ public extension Scalar {
 }
 public extension Scalar {
     public Motor geometric_anti_quotient(Motor other) {
-        Motor anti_reverse = Motor.from_groups(
+        Motor anti_reverse = Motor(
             /* e41, e42, e43, e1234 */
             other.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, scalar */
             other.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        AntiScalar other_2 = AntiScalar.from_groups(
+        AntiScalar other_2 = AntiScalar(
             /* e1234 */
             pow(other.e41, 2) + pow(other.e42, 2) + pow(other.e43, 2) + pow(other.e1234, 2)
         );
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(0.0), 
             /* e23, e31, e12, scalar */
@@ -2106,7 +2106,7 @@ public extension Scalar {
 }
 public extension Scalar {
     public MultiVector geometric_anti_quotient(MultiVector other) {
-        MultiVector anti_reverse = MultiVector.from_groups(
+        MultiVector anti_reverse = MultiVector(
             /* scalar, e1234 */
             other.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -2118,11 +2118,11 @@ public extension Scalar {
             /* e423, e431, e412, e321 */
             other.group4
         );
-        AntiScalar other_2 = AntiScalar.from_groups(
+        AntiScalar other_2 = AntiScalar(
             /* e1234 */
             pow(other.e1234, 2) + pow(other.e4, 2) + pow(other.e41, 2) + pow(other.e42, 2) + pow(other.e43, 2) + pow(other.e423, 2) + pow(other.e431, 2) + pow(other.e412, 2)
         );
-        MultiVector geometric_anti_product = MultiVector.from_groups(
+        MultiVector geometric_anti_product = MultiVector(
             /* scalar, e1234 */
             float2(other_2.e1234) * anti_reverse.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -2134,7 +2134,7 @@ public extension Scalar {
             /* e423, e431, e412, e321 */
             float4(other_2.e1234) * anti_reverse.group4
         );
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(geometric_anti_product.e1234 * this.scalar, 1.0) * float2(1.0, 0.0), 
             /* e1, e2, e3, e4 */
@@ -2150,7 +2150,7 @@ public extension Scalar {
 }
 public extension Scalar {
     public Horizon geometric_anti_quotient(Origin other) {
-        return Horizon.from_groups(
+        return Horizon(
             /* e321 */
             this.scalar / (other.e4) * -1.0
         );
@@ -2158,11 +2158,11 @@ public extension Scalar {
 }
 public extension Scalar {
     public Point geometric_anti_quotient(Plane other) {
-        AntiScalar other_2 = AntiScalar.from_groups(
+        AntiScalar other_2 = AntiScalar(
             /* e1234 */
             pow(other.e423, 2) + pow(other.e431, 2) + pow(other.e412, 2)
         );
-        return Point.from_groups(
+        return Point(
             /* e1, e2, e3, e4 */
             float4((float3(this.scalar) * float4(other_2.e1234 * other.e423, other_2.e1234 * other.e431, other_2.e1234 * other.e412, other_2.e1234 * other.e321).xyz), 0.0)
         );
@@ -2170,7 +2170,7 @@ public extension Scalar {
 }
 public extension Scalar {
     public Horizon geometric_anti_quotient(Point other) {
-        return Horizon.from_groups(
+        return Horizon(
             /* e321 */
             this.scalar / (other.e4) * -1.0
         );

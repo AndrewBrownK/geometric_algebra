@@ -14,7 +14,7 @@ public extension InversePrefixOrPostfix {
 }
 public extension DualNum {
     public DualNum inverse() {
-        return DualNum.from_groups(
+        return DualNum(
             /* scalar, e1234 */
             float2(pow(this.scalar, -2)) * this.group0.xy
         );
@@ -34,17 +34,17 @@ public extension InversePrefixOrPostfix {
 }
 public extension Flector {
     public Flector inverse() {
-        Flector reverse = Flector.from_groups(
+        Flector reverse = Flector(
             /* e1, e2, e3, e4 */
             this.group0, 
             /* e423, e431, e412, e321 */
             this.group1 * float4(-1.0)
         );
-        Scalar other = Scalar.from_groups(
+        Scalar other = Scalar(
             /* scalar */
             pow(this.e1, 2) + pow(this.e2, 2) + pow(this.e3, 2) + pow(this.e321, 2)
         );
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             float4(other.scalar) * reverse.group0, 
             /* e423, e431, e412, e321 */
@@ -66,7 +66,7 @@ public extension InversePrefixOrPostfix {
 }
 public extension Horizon {
     public Horizon inverse() {
-        return Horizon.from_groups(
+        return Horizon(
             /* e321 */
             1.0/this.e321 * -1.0
         );
@@ -86,17 +86,17 @@ public extension InversePrefixOrPostfix {
 }
 public extension Line {
     public Line inverse() {
-        Line reverse = Line.from_groups(
+        Line reverse = Line(
             /* e41, e42, e43 */
             this.group0.xyz * float3(-1.0), 
             /* e23, e31, e12 */
             this.group1.xyz * float3(-1.0)
         );
-        Scalar other = Scalar.from_groups(
+        Scalar other = Scalar(
             /* scalar */
             pow(this.e23, 2) + pow(this.e31, 2) + pow(this.e12, 2)
         );
-        return Line.from_groups(
+        return Line(
             /* e41, e42, e43 */
             float3(other.scalar) * reverse.group0.xyz, 
             /* e23, e31, e12 */
@@ -118,17 +118,17 @@ public extension InversePrefixOrPostfix {
 }
 public extension Motor {
     public Motor inverse() {
-        Motor reverse = Motor.from_groups(
+        Motor reverse = Motor(
             /* e41, e42, e43, e1234 */
             this.group0 * float4(-1.0, -1.0, -1.0, 1.0), 
             /* e23, e31, e12, scalar */
             this.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
-        Scalar other = Scalar.from_groups(
+        Scalar other = Scalar(
             /* scalar */
             pow(this.e23, 2) + pow(this.e31, 2) + pow(this.e12, 2) + pow(this.scalar, 2)
         );
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(other.scalar) * reverse.group0, 
             /* e23, e31, e12, scalar */
@@ -150,7 +150,7 @@ public extension InversePrefixOrPostfix {
 }
 public extension MultiVector {
     public MultiVector inverse() {
-        MultiVector reverse = MultiVector.from_groups(
+        MultiVector reverse = MultiVector(
             /* scalar, e1234 */
             this.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -162,11 +162,11 @@ public extension MultiVector {
             /* e423, e431, e412, e321 */
             this.group4 * float4(-1.0)
         );
-        Scalar other = Scalar.from_groups(
+        Scalar other = Scalar(
             /* scalar */
             pow(this.scalar, 2) + pow(this.e1, 2) + pow(this.e2, 2) + pow(this.e3, 2) + pow(this.e23, 2) + pow(this.e31, 2) + pow(this.e12, 2) + pow(this.e321, 2)
         );
-        return MultiVector.from_groups(
+        return MultiVector(
             /* scalar, e1234 */
             float2(other.scalar) * reverse.group0.xy, 
             /* e1, e2, e3, e4 */
@@ -194,7 +194,7 @@ public extension InversePrefixOrPostfix {
 }
 public extension Plane {
     public Plane inverse() {
-        return Plane.from_groups(
+        return Plane(
             /* e423, e431, e412, e321 */
             float4(pow(this.e321, -2)) * float4(this.e423 * -1.0, this.e431 * -1.0, this.e412 * -1.0, this.e321 * -1.0)
         );
@@ -214,7 +214,7 @@ public extension InversePrefixOrPostfix {
 }
 public extension Point {
     public Point inverse() {
-        return Point.from_groups(
+        return Point(
             /* e1, e2, e3, e4 */
             float4(pow(this.e1, 2) + pow(this.e2, 2) + pow(this.e3, 2)) * this.group0
         );
@@ -234,7 +234,7 @@ public extension InversePrefixOrPostfix {
 }
 public extension Scalar {
     public Scalar inverse() {
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             1.0/this.scalar
         );

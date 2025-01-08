@@ -7,7 +7,7 @@ public extension AntiScalar {
         if (disallowed_scalar != 0.0) {
             return none;
         }
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             dual_num.e1234
         );
@@ -25,7 +25,7 @@ public extension Scalar {
         if (disallowed_e1234 != 0.0) {
             return none;
         }
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             dual_num.scalar
         );
@@ -67,7 +67,7 @@ public extension Horizon {
         if (disallowed_e412 != 0.0) {
             return none;
         }
-        return Horizon.from_groups(
+        return Horizon(
             /* e321 */
             flector.e321
         );
@@ -109,7 +109,7 @@ public extension Origin {
         if (disallowed_e321 != 0.0) {
             return none;
         }
-        return Origin.from_groups(
+        return Origin(
             /* e4 */
             flector.e4
         );
@@ -139,7 +139,7 @@ public extension Plane {
         if (disallowed_e4 != 0.0) {
             return none;
         }
-        return Plane.from_groups(
+        return Plane(
             /* e423, e431, e412, e321 */
             flector.group1
         );
@@ -169,7 +169,7 @@ public extension Point {
         if (disallowed_e321 != 0.0) {
             return none;
         }
-        return Point.from_groups(
+        return Point(
             /* e1, e2, e3, e4 */
             flector.group0
         );
@@ -211,7 +211,7 @@ public extension AntiScalar {
         if (disallowed_scalar != 0.0) {
             return none;
         }
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             motor.e1234
         );
@@ -249,7 +249,7 @@ public extension DualNum {
         if (disallowed_e12 != 0.0) {
             return none;
         }
-        return DualNum.from_groups(
+        return DualNum(
             /* scalar, e1234 */
             float2(motor.scalar, motor.e1234)
         );
@@ -271,7 +271,7 @@ public extension Line {
         if (disallowed_scalar != 0.0) {
             return none;
         }
-        return Line.from_groups(
+        return Line(
             /* e41, e42, e43 */
             motor.group0.xyz, 
             /* e23, e31, e12 */
@@ -315,7 +315,7 @@ public extension Scalar {
         if (disallowed_e12 != 0.0) {
             return none;
         }
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             motor.scalar
         );
@@ -389,7 +389,7 @@ public extension AntiScalar {
         if (disallowed_e321 != 0.0) {
             return none;
         }
-        return AntiScalar.from_groups(
+        return AntiScalar(
             /* e1234 */
             multi_vector.e1234
         );
@@ -459,7 +459,7 @@ public extension DualNum {
         if (disallowed_e321 != 0.0) {
             return none;
         }
-        return DualNum.from_groups(
+        return DualNum(
             /* scalar, e1234 */
             multi_vector.group0.xy
         );
@@ -505,7 +505,7 @@ public extension Flector {
         if (disallowed_e12 != 0.0) {
             return none;
         }
-        return Flector.from_groups(
+        return Flector(
             /* e1, e2, e3, e4 */
             multi_vector.group1, 
             /* e423, e431, e412, e321 */
@@ -581,7 +581,7 @@ public extension Horizon {
         if (disallowed_e412 != 0.0) {
             return none;
         }
-        return Horizon.from_groups(
+        return Horizon(
             /* e321 */
             multi_vector.e321
         );
@@ -635,7 +635,7 @@ public extension Line {
         if (disallowed_e321 != 0.0) {
             return none;
         }
-        return Line.from_groups(
+        return Line(
             /* e41, e42, e43 */
             multi_vector.group2.xyz, 
             /* e23, e31, e12 */
@@ -683,7 +683,7 @@ public extension Motor {
         if (disallowed_e321 != 0.0) {
             return none;
         }
-        return Motor.from_groups(
+        return Motor(
             /* e41, e42, e43, e1234 */
             float4(multi_vector.group2.xyz, multi_vector.e1234), 
             /* e23, e31, e12, scalar */
@@ -759,7 +759,7 @@ public extension Origin {
         if (disallowed_e321 != 0.0) {
             return none;
         }
-        return Origin.from_groups(
+        return Origin(
             /* e4 */
             multi_vector.e4
         );
@@ -821,7 +821,7 @@ public extension Plane {
         if (disallowed_e12 != 0.0) {
             return none;
         }
-        return Plane.from_groups(
+        return Plane(
             /* e423, e431, e412, e321 */
             multi_vector.group4
         );
@@ -883,7 +883,7 @@ public extension Point {
         if (disallowed_e321 != 0.0) {
             return none;
         }
-        return Point.from_groups(
+        return Point(
             /* e1, e2, e3, e4 */
             multi_vector.group1
         );
@@ -957,7 +957,7 @@ public extension Scalar {
         if (disallowed_e321 != 0.0) {
             return none;
         }
-        return Scalar.from_groups(
+        return Scalar(
             /* scalar */
             multi_vector.scalar
         );
@@ -983,7 +983,7 @@ public extension Horizon {
         if (disallowed_e412 != 0.0) {
             return none;
         }
-        return Horizon.from_groups(
+        return Horizon(
             /* e321 */
             plane.e321
         );
@@ -1009,7 +1009,7 @@ public extension Origin {
         if (disallowed_e3 != 0.0) {
             return none;
         }
-        return Origin.from_groups(
+        return Origin(
             /* e4 */
             point.e4
         );

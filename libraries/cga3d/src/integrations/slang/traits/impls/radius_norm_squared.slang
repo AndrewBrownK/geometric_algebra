@@ -1,306 +1,427 @@
-using traits::AntiDotProduct;
-using traits::RightAntiDual;
-extension AntiCircleRotor {
-    // Fancy infix trick
-    func operator/(_rhs: RadiusNormSquaredPrefixOrPostfix) -> Scalar {
+implementing cga3d;
+using traits;
+public extension AntiCircleRotor {
+    // Fancy postfix trick
+    public Scalar operator /(RadiusNormSquaredPrefixOrPostfix rhs)  {
         return this.radius_norm_squared();
     }
 }
-extension AntiCircleRotor: RadiusNormSquared {
-    associatedtype Output = Scalar;
-    func radius_norm_squared() -> Output {
+public extension RadiusNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(AntiCircleRotor rhs) {
+        return rhs.radius_norm_squared();
+    }
+}
+public extension AntiCircleRotor {
+    public Scalar radius_norm_squared() {
         return this.anti_dot_product(this).right_anti_dual();
     }
 }
-extension AntiDipoleInversion {
-    // Fancy infix trick
-    func operator/(_rhs: RadiusNormSquaredPrefixOrPostfix) -> Scalar {
+public extension AntiDipoleInversion {
+    // Fancy postfix trick
+    public Scalar operator /(RadiusNormSquaredPrefixOrPostfix rhs)  {
         return this.radius_norm_squared();
     }
 }
-extension AntiDipoleInversion: RadiusNormSquared {
-    associatedtype Output = Scalar;
-    func radius_norm_squared() -> Output {
+public extension RadiusNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(AntiDipoleInversion rhs) {
+        return rhs.radius_norm_squared();
+    }
+}
+public extension AntiDipoleInversion {
+    public Scalar radius_norm_squared() {
         return this.anti_dot_product(this).right_anti_dual();
     }
 }
-extension AntiDualNum {
-    // Fancy infix trick
-    func operator/(_rhs: RadiusNormSquaredPrefixOrPostfix) -> Scalar {
+public extension AntiDualNum {
+    // Fancy postfix trick
+    public Scalar operator /(RadiusNormSquaredPrefixOrPostfix rhs)  {
         return this.radius_norm_squared();
     }
 }
-extension AntiDualNum: RadiusNormSquared {
-    associatedtype Output = Scalar;
-    func radius_norm_squared() -> Output {
+public extension RadiusNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(AntiDualNum rhs) {
+        return rhs.radius_norm_squared();
+    }
+}
+public extension AntiDualNum {
+    public Scalar radius_norm_squared() {
         return this.anti_dot_product(this).right_anti_dual();
     }
 }
-extension AntiFlatPoint {
-    // Fancy infix trick
-    func operator/(_rhs: RadiusNormSquaredPrefixOrPostfix) -> Scalar {
+public extension AntiFlatPoint {
+    // Fancy postfix trick
+    public Scalar operator /(RadiusNormSquaredPrefixOrPostfix rhs)  {
         return this.radius_norm_squared();
     }
 }
-extension AntiFlatPoint: RadiusNormSquared {
-    associatedtype Output = Scalar;
-    func radius_norm_squared() -> Output {
+public extension RadiusNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(AntiFlatPoint rhs) {
+        return rhs.radius_norm_squared();
+    }
+}
+public extension AntiFlatPoint {
+    public Scalar radius_norm_squared() {
         return this.anti_dot_product(this).right_anti_dual();
     }
 }
-extension AntiFlector {
-    // Fancy infix trick
-    func operator/(_rhs: RadiusNormSquaredPrefixOrPostfix) -> Scalar {
+public extension AntiFlector {
+    // Fancy postfix trick
+    public Scalar operator /(RadiusNormSquaredPrefixOrPostfix rhs)  {
         return this.radius_norm_squared();
     }
 }
-extension AntiFlector: RadiusNormSquared {
-    associatedtype Output = Scalar;
-    func radius_norm_squared() -> Output {
+public extension RadiusNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(AntiFlector rhs) {
+        return rhs.radius_norm_squared();
+    }
+}
+public extension AntiFlector {
+    public Scalar radius_norm_squared() {
         return this.anti_dot_product(this).right_anti_dual();
     }
 }
-extension AntiLine {
-    // Fancy infix trick
-    func operator/(_rhs: RadiusNormSquaredPrefixOrPostfix) -> Scalar {
+public extension AntiLine {
+    // Fancy postfix trick
+    public Scalar operator /(RadiusNormSquaredPrefixOrPostfix rhs)  {
         return this.radius_norm_squared();
     }
 }
-extension AntiLine: RadiusNormSquared {
-    associatedtype Output = Scalar;
-    func radius_norm_squared() -> Output {
+public extension RadiusNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(AntiLine rhs) {
+        return rhs.radius_norm_squared();
+    }
+}
+public extension AntiLine {
+    public Scalar radius_norm_squared() {
         return this.anti_dot_product(this).right_anti_dual();
     }
 }
-extension AntiMotor {
-    // Fancy infix trick
-    func operator/(_rhs: RadiusNormSquaredPrefixOrPostfix) -> Scalar {
+public extension AntiMotor {
+    // Fancy postfix trick
+    public Scalar operator /(RadiusNormSquaredPrefixOrPostfix rhs)  {
         return this.radius_norm_squared();
     }
 }
-extension AntiMotor: RadiusNormSquared {
-    associatedtype Output = Scalar;
-    func radius_norm_squared() -> Output {
+public extension RadiusNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(AntiMotor rhs) {
+        return rhs.radius_norm_squared();
+    }
+}
+public extension AntiMotor {
+    public Scalar radius_norm_squared() {
         return this.anti_dot_product(this).right_anti_dual();
     }
 }
-extension AntiPlane {
-    // Fancy infix trick
-    func operator/(_rhs: RadiusNormSquaredPrefixOrPostfix) -> Scalar {
+public extension AntiPlane {
+    // Fancy postfix trick
+    public Scalar operator /(RadiusNormSquaredPrefixOrPostfix rhs)  {
         return this.radius_norm_squared();
     }
 }
-extension AntiPlane: RadiusNormSquared {
-    associatedtype Output = Scalar;
-    func radius_norm_squared() -> Output {
+public extension RadiusNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(AntiPlane rhs) {
+        return rhs.radius_norm_squared();
+    }
+}
+public extension AntiPlane {
+    public Scalar radius_norm_squared() {
         return this.anti_dot_product(this).right_anti_dual();
     }
 }
-extension AntiScalar {
-    // Fancy infix trick
-    func operator/(_rhs: RadiusNormSquaredPrefixOrPostfix) -> Scalar {
+public extension AntiScalar {
+    // Fancy postfix trick
+    public Scalar operator /(RadiusNormSquaredPrefixOrPostfix rhs)  {
         return this.radius_norm_squared();
     }
 }
-extension AntiScalar: RadiusNormSquared {
-    associatedtype Output = Scalar;
-    func radius_norm_squared() -> Output {
+public extension RadiusNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(AntiScalar rhs) {
+        return rhs.radius_norm_squared();
+    }
+}
+public extension AntiScalar {
+    public Scalar radius_norm_squared() {
         return this.anti_dot_product(this).right_anti_dual();
     }
 }
-extension Circle {
-    // Fancy infix trick
-    func operator/(_rhs: RadiusNormSquaredPrefixOrPostfix) -> Scalar {
+public extension Circle {
+    // Fancy postfix trick
+    public Scalar operator /(RadiusNormSquaredPrefixOrPostfix rhs)  {
         return this.radius_norm_squared();
     }
 }
-extension Circle: RadiusNormSquared {
-    associatedtype Output = Scalar;
-    func radius_norm_squared() -> Output {
+public extension RadiusNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(Circle rhs) {
+        return rhs.radius_norm_squared();
+    }
+}
+public extension Circle {
+    public Scalar radius_norm_squared() {
         return this.anti_dot_product(this).right_anti_dual();
     }
 }
-extension CircleRotor {
-    // Fancy infix trick
-    func operator/(_rhs: RadiusNormSquaredPrefixOrPostfix) -> Scalar {
+public extension CircleRotor {
+    // Fancy postfix trick
+    public Scalar operator /(RadiusNormSquaredPrefixOrPostfix rhs)  {
         return this.radius_norm_squared();
     }
 }
-extension CircleRotor: RadiusNormSquared {
-    associatedtype Output = Scalar;
-    func radius_norm_squared() -> Output {
+public extension RadiusNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(CircleRotor rhs) {
+        return rhs.radius_norm_squared();
+    }
+}
+public extension CircleRotor {
+    public Scalar radius_norm_squared() {
         return this.anti_dot_product(this).right_anti_dual();
     }
 }
-extension Dipole {
-    // Fancy infix trick
-    func operator/(_rhs: RadiusNormSquaredPrefixOrPostfix) -> Scalar {
+public extension Dipole {
+    // Fancy postfix trick
+    public Scalar operator /(RadiusNormSquaredPrefixOrPostfix rhs)  {
         return this.radius_norm_squared();
     }
 }
-extension Dipole: RadiusNormSquared {
-    associatedtype Output = Scalar;
-    func radius_norm_squared() -> Output {
+public extension RadiusNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(Dipole rhs) {
+        return rhs.radius_norm_squared();
+    }
+}
+public extension Dipole {
+    public Scalar radius_norm_squared() {
         return this.anti_dot_product(this).right_anti_dual();
     }
 }
-extension DipoleInversion {
-    // Fancy infix trick
-    func operator/(_rhs: RadiusNormSquaredPrefixOrPostfix) -> Scalar {
+public extension DipoleInversion {
+    // Fancy postfix trick
+    public Scalar operator /(RadiusNormSquaredPrefixOrPostfix rhs)  {
         return this.radius_norm_squared();
     }
 }
-extension DipoleInversion: RadiusNormSquared {
-    associatedtype Output = Scalar;
-    func radius_norm_squared() -> Output {
+public extension RadiusNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(DipoleInversion rhs) {
+        return rhs.radius_norm_squared();
+    }
+}
+public extension DipoleInversion {
+    public Scalar radius_norm_squared() {
         return this.anti_dot_product(this).right_anti_dual();
     }
 }
-extension DualNum {
-    // Fancy infix trick
-    func operator/(_rhs: RadiusNormSquaredPrefixOrPostfix) -> Scalar {
+public extension DualNum {
+    // Fancy postfix trick
+    public Scalar operator /(RadiusNormSquaredPrefixOrPostfix rhs)  {
         return this.radius_norm_squared();
     }
 }
-extension DualNum: RadiusNormSquared {
-    associatedtype Output = Scalar;
-    func radius_norm_squared() -> Output {
+public extension RadiusNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(DualNum rhs) {
+        return rhs.radius_norm_squared();
+    }
+}
+public extension DualNum {
+    public Scalar radius_norm_squared() {
         return this.anti_dot_product(this).right_anti_dual();
     }
 }
-extension FlatPoint {
-    // Fancy infix trick
-    func operator/(_rhs: RadiusNormSquaredPrefixOrPostfix) -> Scalar {
+public extension FlatPoint {
+    // Fancy postfix trick
+    public Scalar operator /(RadiusNormSquaredPrefixOrPostfix rhs)  {
         return this.radius_norm_squared();
     }
 }
-extension FlatPoint: RadiusNormSquared {
-    associatedtype Output = Scalar;
-    func radius_norm_squared() -> Output {
+public extension RadiusNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(FlatPoint rhs) {
+        return rhs.radius_norm_squared();
+    }
+}
+public extension FlatPoint {
+    public Scalar radius_norm_squared() {
         return this.anti_dot_product(this).right_anti_dual();
     }
 }
-extension Flector {
-    // Fancy infix trick
-    func operator/(_rhs: RadiusNormSquaredPrefixOrPostfix) -> Scalar {
+public extension Flector {
+    // Fancy postfix trick
+    public Scalar operator /(RadiusNormSquaredPrefixOrPostfix rhs)  {
         return this.radius_norm_squared();
     }
 }
-extension Flector: RadiusNormSquared {
-    associatedtype Output = Scalar;
-    func radius_norm_squared() -> Output {
+public extension RadiusNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(Flector rhs) {
+        return rhs.radius_norm_squared();
+    }
+}
+public extension Flector {
+    public Scalar radius_norm_squared() {
         return this.anti_dot_product(this).right_anti_dual();
     }
 }
-extension Line {
-    // Fancy infix trick
-    func operator/(_rhs: RadiusNormSquaredPrefixOrPostfix) -> Scalar {
+public extension Line {
+    // Fancy postfix trick
+    public Scalar operator /(RadiusNormSquaredPrefixOrPostfix rhs)  {
         return this.radius_norm_squared();
     }
 }
-extension Line: RadiusNormSquared {
-    associatedtype Output = Scalar;
-    func radius_norm_squared() -> Output {
+public extension RadiusNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(Line rhs) {
+        return rhs.radius_norm_squared();
+    }
+}
+public extension Line {
+    public Scalar radius_norm_squared() {
         return this.anti_dot_product(this).right_anti_dual();
     }
 }
-extension Motor {
-    // Fancy infix trick
-    func operator/(_rhs: RadiusNormSquaredPrefixOrPostfix) -> Scalar {
+public extension Motor {
+    // Fancy postfix trick
+    public Scalar operator /(RadiusNormSquaredPrefixOrPostfix rhs)  {
         return this.radius_norm_squared();
     }
 }
-extension Motor: RadiusNormSquared {
-    associatedtype Output = Scalar;
-    func radius_norm_squared() -> Output {
+public extension RadiusNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(Motor rhs) {
+        return rhs.radius_norm_squared();
+    }
+}
+public extension Motor {
+    public Scalar radius_norm_squared() {
         return this.anti_dot_product(this).right_anti_dual();
     }
 }
-extension MultiVector {
-    // Fancy infix trick
-    func operator/(_rhs: RadiusNormSquaredPrefixOrPostfix) -> Scalar {
+public extension MultiVector {
+    // Fancy postfix trick
+    public Scalar operator /(RadiusNormSquaredPrefixOrPostfix rhs)  {
         return this.radius_norm_squared();
     }
 }
-extension MultiVector: RadiusNormSquared {
-    associatedtype Output = Scalar;
-    func radius_norm_squared() -> Output {
+public extension RadiusNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(MultiVector rhs) {
+        return rhs.radius_norm_squared();
+    }
+}
+public extension MultiVector {
+    public Scalar radius_norm_squared() {
         return this.anti_dot_product(this).right_anti_dual();
     }
 }
-extension Plane {
-    // Fancy infix trick
-    func operator/(_rhs: RadiusNormSquaredPrefixOrPostfix) -> Scalar {
+public extension Plane {
+    // Fancy postfix trick
+    public Scalar operator /(RadiusNormSquaredPrefixOrPostfix rhs)  {
         return this.radius_norm_squared();
     }
 }
-extension Plane: RadiusNormSquared {
-    associatedtype Output = Scalar;
-    func radius_norm_squared() -> Output {
+public extension RadiusNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(Plane rhs) {
+        return rhs.radius_norm_squared();
+    }
+}
+public extension Plane {
+    public Scalar radius_norm_squared() {
         return this.anti_dot_product(this).right_anti_dual();
     }
 }
-extension RoundPoint {
-    // Fancy infix trick
-    func operator/(_rhs: RadiusNormSquaredPrefixOrPostfix) -> Scalar {
+public extension RoundPoint {
+    // Fancy postfix trick
+    public Scalar operator /(RadiusNormSquaredPrefixOrPostfix rhs)  {
         return this.radius_norm_squared();
     }
 }
-extension RoundPoint: RadiusNormSquared {
-    associatedtype Output = Scalar;
-    func radius_norm_squared() -> Output {
+public extension RadiusNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(RoundPoint rhs) {
+        return rhs.radius_norm_squared();
+    }
+}
+public extension RoundPoint {
+    public Scalar radius_norm_squared() {
         return this.anti_dot_product(this).right_anti_dual();
     }
 }
-extension Scalar {
-    // Fancy infix trick
-    func operator/(_rhs: RadiusNormSquaredPrefixOrPostfix) -> Scalar {
+public extension Scalar {
+    // Fancy postfix trick
+    public Scalar operator /(RadiusNormSquaredPrefixOrPostfix rhs)  {
         return this.radius_norm_squared();
     }
-    func operator/=(const RadiusNormSquaredPrefixOrPostfix& _rhs) -> Scalar& {
-        this = this.radius_norm_squared();
-        return *this;
+}
+public extension RadiusNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(Scalar rhs) {
+        return rhs.radius_norm_squared();
     }
 }
-extension Scalar: RadiusNormSquared {
-    associatedtype Output = Scalar;
-    func radius_norm_squared() -> Output {
+public extension Scalar {
+    public Scalar radius_norm_squared() {
         return this.anti_dot_product(this).right_anti_dual();
     }
 }
-extension Sphere {
-    // Fancy infix trick
-    func operator/(_rhs: RadiusNormSquaredPrefixOrPostfix) -> Scalar {
+public extension Sphere {
+    // Fancy postfix trick
+    public Scalar operator /(RadiusNormSquaredPrefixOrPostfix rhs)  {
         return this.radius_norm_squared();
     }
 }
-extension Sphere: RadiusNormSquared {
-    associatedtype Output = Scalar;
-    func radius_norm_squared() -> Output {
+public extension RadiusNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(Sphere rhs) {
+        return rhs.radius_norm_squared();
+    }
+}
+public extension Sphere {
+    public Scalar radius_norm_squared() {
         return this.anti_dot_product(this).right_anti_dual();
     }
 }
-extension VersorEven {
-    // Fancy infix trick
-    func operator/(_rhs: RadiusNormSquaredPrefixOrPostfix) -> Scalar {
+public extension VersorEven {
+    // Fancy postfix trick
+    public Scalar operator /(RadiusNormSquaredPrefixOrPostfix rhs)  {
         return this.radius_norm_squared();
     }
 }
-extension VersorEven: RadiusNormSquared {
-    associatedtype Output = Scalar;
-    func radius_norm_squared() -> Output {
+public extension RadiusNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(VersorEven rhs) {
+        return rhs.radius_norm_squared();
+    }
+}
+public extension VersorEven {
+    public Scalar radius_norm_squared() {
         return this.anti_dot_product(this).right_anti_dual();
     }
 }
-extension VersorOdd {
-    // Fancy infix trick
-    func operator/(_rhs: RadiusNormSquaredPrefixOrPostfix) -> Scalar {
+public extension VersorOdd {
+    // Fancy postfix trick
+    public Scalar operator /(RadiusNormSquaredPrefixOrPostfix rhs)  {
         return this.radius_norm_squared();
     }
 }
-extension VersorOdd: RadiusNormSquared {
-    associatedtype Output = Scalar;
-    func radius_norm_squared() -> Output {
+public extension RadiusNormSquaredPrefixOrPostfix {
+    // Fancy prefix trick
+    public Scalar operator /(VersorOdd rhs) {
+        return rhs.radius_norm_squared();
+    }
+}
+public extension VersorOdd {
+    public Scalar radius_norm_squared() {
         return this.anti_dot_product(this).right_anti_dual();
     }
 }
