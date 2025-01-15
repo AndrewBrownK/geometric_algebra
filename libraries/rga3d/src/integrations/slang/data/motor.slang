@@ -8,7 +8,7 @@ public struct Motor {
     // e23, e31, e12, scalar
     internal float4 group1;
 
-    __init(
+    public __init(
         float e41, float e42, float e43, float e1234, float e23, float e31, float e12, float scalar
     ) {
         group0 = float4(e41, e42, e43, e1234);

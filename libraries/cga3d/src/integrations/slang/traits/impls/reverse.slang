@@ -1,16 +1,12 @@
 implementing cga3d;
 using traits;
-public extension AntiCircleRotor {
-    // Fancy postfix trick
-    public AntiCircleRotor operator /(ReversePrefixOrPostfix rhs)  {
-        return this.reverse();
+// Fancy postfix trick
+public AntiCircleRotor operator /(AntiCircleRotor lhs, ReversePrefixOrPostfix rhs)  {
+    return lhs.reverse();
     }
-}
-public extension ReversePrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiCircleRotor operator /(AntiCircleRotor rhs) {
-        return rhs.reverse();
-    }
+// Fancy prefix trick
+public AntiCircleRotor operator /(ReversePrefixOrPostfix lhs, AntiCircleRotor rhs) {
+    return rhs.reverse();
 }
 public extension AntiCircleRotor {
     public AntiCircleRotor reverse() {
@@ -24,17 +20,13 @@ public extension AntiCircleRotor {
         );
     }
 }
-public extension AntiDipoleInversion {
-    // Fancy postfix trick
-    public AntiDipoleInversion operator /(ReversePrefixOrPostfix rhs)  {
-        return this.reverse();
+// Fancy postfix trick
+public AntiDipoleInversion operator /(AntiDipoleInversion lhs, ReversePrefixOrPostfix rhs)  {
+    return lhs.reverse();
     }
-}
-public extension ReversePrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiDipoleInversion operator /(AntiDipoleInversion rhs) {
-        return rhs.reverse();
-    }
+// Fancy prefix trick
+public AntiDipoleInversion operator /(ReversePrefixOrPostfix lhs, AntiDipoleInversion rhs) {
+    return rhs.reverse();
 }
 public extension AntiDipoleInversion {
     public AntiDipoleInversion reverse() {
@@ -50,34 +42,26 @@ public extension AntiDipoleInversion {
         );
     }
 }
-public extension AntiDualNum {
-    // Fancy postfix trick
-    public AntiDualNum operator /(ReversePrefixOrPostfix rhs)  {
-        return this.reverse();
+// Fancy postfix trick
+public AntiDualNum operator /(AntiDualNum lhs, ReversePrefixOrPostfix rhs)  {
+    return lhs.reverse();
     }
-}
-public extension ReversePrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiDualNum operator /(AntiDualNum rhs) {
-        return rhs.reverse();
-    }
+// Fancy prefix trick
+public AntiDualNum operator /(ReversePrefixOrPostfix lhs, AntiDualNum rhs) {
+    return rhs.reverse();
 }
 public extension AntiDualNum {
     public AntiDualNum reverse() {
         return this;
     }
 }
-public extension AntiFlatPoint {
-    // Fancy postfix trick
-    public AntiFlatPoint operator /(ReversePrefixOrPostfix rhs)  {
-        return this.reverse();
+// Fancy postfix trick
+public AntiFlatPoint operator /(AntiFlatPoint lhs, ReversePrefixOrPostfix rhs)  {
+    return lhs.reverse();
     }
-}
-public extension ReversePrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiFlatPoint operator /(AntiFlatPoint rhs) {
-        return rhs.reverse();
-    }
+// Fancy prefix trick
+public AntiFlatPoint operator /(ReversePrefixOrPostfix lhs, AntiFlatPoint rhs) {
+    return rhs.reverse();
 }
 public extension AntiFlatPoint {
     public AntiFlatPoint reverse() {
@@ -87,17 +71,13 @@ public extension AntiFlatPoint {
         );
     }
 }
-public extension AntiFlector {
-    // Fancy postfix trick
-    public AntiFlector operator /(ReversePrefixOrPostfix rhs)  {
-        return this.reverse();
+// Fancy postfix trick
+public AntiFlector operator /(AntiFlector lhs, ReversePrefixOrPostfix rhs)  {
+    return lhs.reverse();
     }
-}
-public extension ReversePrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiFlector operator /(AntiFlector rhs) {
-        return rhs.reverse();
-    }
+// Fancy prefix trick
+public AntiFlector operator /(ReversePrefixOrPostfix lhs, AntiFlector rhs) {
+    return rhs.reverse();
 }
 public extension AntiFlector {
     public AntiFlector reverse() {
@@ -109,17 +89,13 @@ public extension AntiFlector {
         );
     }
 }
-public extension AntiLine {
-    // Fancy postfix trick
-    public AntiLine operator /(ReversePrefixOrPostfix rhs)  {
-        return this.reverse();
+// Fancy postfix trick
+public AntiLine operator /(AntiLine lhs, ReversePrefixOrPostfix rhs)  {
+    return lhs.reverse();
     }
-}
-public extension ReversePrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiLine operator /(AntiLine rhs) {
-        return rhs.reverse();
-    }
+// Fancy prefix trick
+public AntiLine operator /(ReversePrefixOrPostfix lhs, AntiLine rhs) {
+    return rhs.reverse();
 }
 public extension AntiLine {
     public AntiLine reverse() {
@@ -131,17 +107,13 @@ public extension AntiLine {
         );
     }
 }
-public extension AntiMotor {
-    // Fancy postfix trick
-    public AntiMotor operator /(ReversePrefixOrPostfix rhs)  {
-        return this.reverse();
+// Fancy postfix trick
+public AntiMotor operator /(AntiMotor lhs, ReversePrefixOrPostfix rhs)  {
+    return lhs.reverse();
     }
-}
-public extension ReversePrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiMotor operator /(AntiMotor rhs) {
-        return rhs.reverse();
-    }
+// Fancy prefix trick
+public AntiMotor operator /(ReversePrefixOrPostfix lhs, AntiMotor rhs) {
+    return rhs.reverse();
 }
 public extension AntiMotor {
     public AntiMotor reverse() {
@@ -153,51 +125,39 @@ public extension AntiMotor {
         );
     }
 }
-public extension AntiPlane {
-    // Fancy postfix trick
-    public AntiPlane operator /(ReversePrefixOrPostfix rhs)  {
-        return this.reverse();
+// Fancy postfix trick
+public AntiPlane operator /(AntiPlane lhs, ReversePrefixOrPostfix rhs)  {
+    return lhs.reverse();
     }
-}
-public extension ReversePrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiPlane operator /(AntiPlane rhs) {
-        return rhs.reverse();
-    }
+// Fancy prefix trick
+public AntiPlane operator /(ReversePrefixOrPostfix lhs, AntiPlane rhs) {
+    return rhs.reverse();
 }
 public extension AntiPlane {
     public AntiPlane reverse() {
         return this;
     }
 }
-public extension AntiScalar {
-    // Fancy postfix trick
-    public AntiScalar operator /(ReversePrefixOrPostfix rhs)  {
-        return this.reverse();
+// Fancy postfix trick
+public AntiScalar operator /(AntiScalar lhs, ReversePrefixOrPostfix rhs)  {
+    return lhs.reverse();
     }
-}
-public extension ReversePrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiScalar operator /(AntiScalar rhs) {
-        return rhs.reverse();
-    }
+// Fancy prefix trick
+public AntiScalar operator /(ReversePrefixOrPostfix lhs, AntiScalar rhs) {
+    return rhs.reverse();
 }
 public extension AntiScalar {
     public AntiScalar reverse() {
         return this;
     }
 }
-public extension Circle {
-    // Fancy postfix trick
-    public Circle operator /(ReversePrefixOrPostfix rhs)  {
-        return this.reverse();
+// Fancy postfix trick
+public Circle operator /(Circle lhs, ReversePrefixOrPostfix rhs)  {
+    return lhs.reverse();
     }
-}
-public extension ReversePrefixOrPostfix {
-    // Fancy prefix trick
-    public Circle operator /(Circle rhs) {
-        return rhs.reverse();
-    }
+// Fancy prefix trick
+public Circle operator /(ReversePrefixOrPostfix lhs, Circle rhs) {
+    return rhs.reverse();
 }
 public extension Circle {
     public Circle reverse() {
@@ -211,17 +171,13 @@ public extension Circle {
         );
     }
 }
-public extension CircleRotor {
-    // Fancy postfix trick
-    public CircleRotor operator /(ReversePrefixOrPostfix rhs)  {
-        return this.reverse();
+// Fancy postfix trick
+public CircleRotor operator /(CircleRotor lhs, ReversePrefixOrPostfix rhs)  {
+    return lhs.reverse();
     }
-}
-public extension ReversePrefixOrPostfix {
-    // Fancy prefix trick
-    public CircleRotor operator /(CircleRotor rhs) {
-        return rhs.reverse();
-    }
+// Fancy prefix trick
+public CircleRotor operator /(ReversePrefixOrPostfix lhs, CircleRotor rhs) {
+    return rhs.reverse();
 }
 public extension CircleRotor {
     public CircleRotor reverse() {
@@ -235,17 +191,13 @@ public extension CircleRotor {
         );
     }
 }
-public extension Dipole {
-    // Fancy postfix trick
-    public Dipole operator /(ReversePrefixOrPostfix rhs)  {
-        return this.reverse();
+// Fancy postfix trick
+public Dipole operator /(Dipole lhs, ReversePrefixOrPostfix rhs)  {
+    return lhs.reverse();
     }
-}
-public extension ReversePrefixOrPostfix {
-    // Fancy prefix trick
-    public Dipole operator /(Dipole rhs) {
-        return rhs.reverse();
-    }
+// Fancy prefix trick
+public Dipole operator /(ReversePrefixOrPostfix lhs, Dipole rhs) {
+    return rhs.reverse();
 }
 public extension Dipole {
     public Dipole reverse() {
@@ -259,17 +211,13 @@ public extension Dipole {
         );
     }
 }
-public extension DipoleInversion {
-    // Fancy postfix trick
-    public DipoleInversion operator /(ReversePrefixOrPostfix rhs)  {
-        return this.reverse();
+// Fancy postfix trick
+public DipoleInversion operator /(DipoleInversion lhs, ReversePrefixOrPostfix rhs)  {
+    return lhs.reverse();
     }
-}
-public extension ReversePrefixOrPostfix {
-    // Fancy prefix trick
-    public DipoleInversion operator /(DipoleInversion rhs) {
-        return rhs.reverse();
-    }
+// Fancy prefix trick
+public DipoleInversion operator /(ReversePrefixOrPostfix lhs, DipoleInversion rhs) {
+    return rhs.reverse();
 }
 public extension DipoleInversion {
     public DipoleInversion reverse() {
@@ -285,34 +233,26 @@ public extension DipoleInversion {
         );
     }
 }
-public extension DualNum {
-    // Fancy postfix trick
-    public DualNum operator /(ReversePrefixOrPostfix rhs)  {
-        return this.reverse();
+// Fancy postfix trick
+public DualNum operator /(DualNum lhs, ReversePrefixOrPostfix rhs)  {
+    return lhs.reverse();
     }
-}
-public extension ReversePrefixOrPostfix {
-    // Fancy prefix trick
-    public DualNum operator /(DualNum rhs) {
-        return rhs.reverse();
-    }
+// Fancy prefix trick
+public DualNum operator /(ReversePrefixOrPostfix lhs, DualNum rhs) {
+    return rhs.reverse();
 }
 public extension DualNum {
     public DualNum reverse() {
         return this;
     }
 }
-public extension FlatPoint {
-    // Fancy postfix trick
-    public FlatPoint operator /(ReversePrefixOrPostfix rhs)  {
-        return this.reverse();
+// Fancy postfix trick
+public FlatPoint operator /(FlatPoint lhs, ReversePrefixOrPostfix rhs)  {
+    return lhs.reverse();
     }
-}
-public extension ReversePrefixOrPostfix {
-    // Fancy prefix trick
-    public FlatPoint operator /(FlatPoint rhs) {
-        return rhs.reverse();
-    }
+// Fancy prefix trick
+public FlatPoint operator /(ReversePrefixOrPostfix lhs, FlatPoint rhs) {
+    return rhs.reverse();
 }
 public extension FlatPoint {
     public FlatPoint reverse() {
@@ -322,17 +262,13 @@ public extension FlatPoint {
         );
     }
 }
-public extension Flector {
-    // Fancy postfix trick
-    public Flector operator /(ReversePrefixOrPostfix rhs)  {
-        return this.reverse();
+// Fancy postfix trick
+public Flector operator /(Flector lhs, ReversePrefixOrPostfix rhs)  {
+    return lhs.reverse();
     }
-}
-public extension ReversePrefixOrPostfix {
-    // Fancy prefix trick
-    public Flector operator /(Flector rhs) {
-        return rhs.reverse();
-    }
+// Fancy prefix trick
+public Flector operator /(ReversePrefixOrPostfix lhs, Flector rhs) {
+    return rhs.reverse();
 }
 public extension Flector {
     public Flector reverse() {
@@ -344,17 +280,13 @@ public extension Flector {
         );
     }
 }
-public extension Line {
-    // Fancy postfix trick
-    public Line operator /(ReversePrefixOrPostfix rhs)  {
-        return this.reverse();
+// Fancy postfix trick
+public Line operator /(Line lhs, ReversePrefixOrPostfix rhs)  {
+    return lhs.reverse();
     }
-}
-public extension ReversePrefixOrPostfix {
-    // Fancy prefix trick
-    public Line operator /(Line rhs) {
-        return rhs.reverse();
-    }
+// Fancy prefix trick
+public Line operator /(ReversePrefixOrPostfix lhs, Line rhs) {
+    return rhs.reverse();
 }
 public extension Line {
     public Line reverse() {
@@ -366,17 +298,13 @@ public extension Line {
         );
     }
 }
-public extension Motor {
-    // Fancy postfix trick
-    public Motor operator /(ReversePrefixOrPostfix rhs)  {
-        return this.reverse();
+// Fancy postfix trick
+public Motor operator /(Motor lhs, ReversePrefixOrPostfix rhs)  {
+    return lhs.reverse();
     }
-}
-public extension ReversePrefixOrPostfix {
-    // Fancy prefix trick
-    public Motor operator /(Motor rhs) {
-        return rhs.reverse();
-    }
+// Fancy prefix trick
+public Motor operator /(ReversePrefixOrPostfix lhs, Motor rhs) {
+    return rhs.reverse();
 }
 public extension Motor {
     public Motor reverse() {
@@ -388,17 +316,13 @@ public extension Motor {
         );
     }
 }
-public extension MultiVector {
-    // Fancy postfix trick
-    public MultiVector operator /(ReversePrefixOrPostfix rhs)  {
-        return this.reverse();
+// Fancy postfix trick
+public MultiVector operator /(MultiVector lhs, ReversePrefixOrPostfix rhs)  {
+    return lhs.reverse();
     }
-}
-public extension ReversePrefixOrPostfix {
-    // Fancy prefix trick
-    public MultiVector operator /(MultiVector rhs) {
-        return rhs.reverse();
-    }
+// Fancy prefix trick
+public MultiVector operator /(ReversePrefixOrPostfix lhs, MultiVector rhs) {
+    return rhs.reverse();
 }
 public extension MultiVector {
     public MultiVector reverse() {
@@ -428,85 +352,65 @@ public extension MultiVector {
         );
     }
 }
-public extension Plane {
-    // Fancy postfix trick
-    public Plane operator /(ReversePrefixOrPostfix rhs)  {
-        return this.reverse();
+// Fancy postfix trick
+public Plane operator /(Plane lhs, ReversePrefixOrPostfix rhs)  {
+    return lhs.reverse();
     }
-}
-public extension ReversePrefixOrPostfix {
-    // Fancy prefix trick
-    public Plane operator /(Plane rhs) {
-        return rhs.reverse();
-    }
+// Fancy prefix trick
+public Plane operator /(ReversePrefixOrPostfix lhs, Plane rhs) {
+    return rhs.reverse();
 }
 public extension Plane {
     public Plane reverse() {
         return this;
     }
 }
-public extension RoundPoint {
-    // Fancy postfix trick
-    public RoundPoint operator /(ReversePrefixOrPostfix rhs)  {
-        return this.reverse();
+// Fancy postfix trick
+public RoundPoint operator /(RoundPoint lhs, ReversePrefixOrPostfix rhs)  {
+    return lhs.reverse();
     }
-}
-public extension ReversePrefixOrPostfix {
-    // Fancy prefix trick
-    public RoundPoint operator /(RoundPoint rhs) {
-        return rhs.reverse();
-    }
+// Fancy prefix trick
+public RoundPoint operator /(ReversePrefixOrPostfix lhs, RoundPoint rhs) {
+    return rhs.reverse();
 }
 public extension RoundPoint {
     public RoundPoint reverse() {
         return this;
     }
 }
-public extension Scalar {
-    // Fancy postfix trick
-    public Scalar operator /(ReversePrefixOrPostfix rhs)  {
-        return this.reverse();
+// Fancy postfix trick
+public Scalar operator /(Scalar lhs, ReversePrefixOrPostfix rhs)  {
+    return lhs.reverse();
     }
-}
-public extension ReversePrefixOrPostfix {
-    // Fancy prefix trick
-    public Scalar operator /(Scalar rhs) {
-        return rhs.reverse();
-    }
+// Fancy prefix trick
+public Scalar operator /(ReversePrefixOrPostfix lhs, Scalar rhs) {
+    return rhs.reverse();
 }
 public extension Scalar {
     public Scalar reverse() {
         return this;
     }
 }
-public extension Sphere {
-    // Fancy postfix trick
-    public Sphere operator /(ReversePrefixOrPostfix rhs)  {
-        return this.reverse();
+// Fancy postfix trick
+public Sphere operator /(Sphere lhs, ReversePrefixOrPostfix rhs)  {
+    return lhs.reverse();
     }
-}
-public extension ReversePrefixOrPostfix {
-    // Fancy prefix trick
-    public Sphere operator /(Sphere rhs) {
-        return rhs.reverse();
-    }
+// Fancy prefix trick
+public Sphere operator /(ReversePrefixOrPostfix lhs, Sphere rhs) {
+    return rhs.reverse();
 }
 public extension Sphere {
     public Sphere reverse() {
         return this;
     }
 }
-public extension VersorEven {
-    // Fancy postfix trick
-    public VersorEven operator /(ReversePrefixOrPostfix rhs)  {
-        return this.reverse();
+// Fancy postfix trick
+public VersorEven operator /(VersorEven lhs, ReversePrefixOrPostfix rhs)  {
+    return lhs.reverse();
     }
-}
-public extension ReversePrefixOrPostfix {
-    // Fancy prefix trick
-    public VersorEven operator /(VersorEven rhs) {
-        return rhs.reverse();
-    }
+// Fancy prefix trick
+public VersorEven operator /(ReversePrefixOrPostfix lhs, VersorEven rhs) {
+    return rhs.reverse();
 }
 public extension VersorEven {
     public VersorEven reverse() {
@@ -522,17 +426,13 @@ public extension VersorEven {
         );
     }
 }
-public extension VersorOdd {
-    // Fancy postfix trick
-    public VersorOdd operator /(ReversePrefixOrPostfix rhs)  {
-        return this.reverse();
+// Fancy postfix trick
+public VersorOdd operator /(VersorOdd lhs, ReversePrefixOrPostfix rhs)  {
+    return lhs.reverse();
     }
-}
-public extension ReversePrefixOrPostfix {
-    // Fancy prefix trick
-    public VersorOdd operator /(VersorOdd rhs) {
-        return rhs.reverse();
-    }
+// Fancy prefix trick
+public VersorOdd operator /(ReversePrefixOrPostfix lhs, VersorOdd rhs) {
+    return rhs.reverse();
 }
 public extension VersorOdd {
     public VersorOdd reverse() {

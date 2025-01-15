@@ -8,7 +8,7 @@ public struct AntiLine {
     // e15, e25, e35, 0
     internal float4 group1;
 
-    __init(
+    public __init(
         float e23, float e31, float e12, float e15, float e25, float e35
     ) {
         group0 = float4(e23, e31, e12, 0.0);

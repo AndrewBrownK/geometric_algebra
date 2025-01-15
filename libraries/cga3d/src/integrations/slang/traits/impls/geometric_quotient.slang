@@ -1,16 +1,12 @@
 implementing cga3d;
 using traits;
-public extension AntiCircleRotor {
-    // Fancy infix trick (first half)
-    public GeometricQuotientInfixPartial<AntiCircleRotor> operator /(GeometricQuotientInfix rhs) {
-        return GeometricQuotientInfixPartial<AntiCircleRotor>(this);
-    }
+// Fancy infix trick (first half)
+public GeometricQuotientInfixPartial<AntiCircleRotor> operator /(AntiCircleRotor lhs, GeometricQuotientInfix rhs) {
+    return GeometricQuotientInfixPartial<AntiCircleRotor>(lhs);
 }
-public extension GeometricQuotientInfixPartial<AntiCircleRotor> {
-    // Fancy infix trick (second half)
-    public VersorOdd operator /(AntiCircleRotor rhs) {
-        return this.a.geometric_quotient(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<AntiCircleRotor> lhs, AntiCircleRotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiCircleRotor {
     public VersorOdd geometric_quotient(AntiCircleRotor other) {
@@ -45,6 +41,10 @@ public extension AntiCircleRotor {
             float4((geometric_product.e42 * this.e35) + (geometric_product.e23 * this.e45) + (geometric_product.e45 * this.e23) + (geometric_product.e35 * this.e42), (geometric_product.e43 * this.e15) + (geometric_product.e31 * this.e45) + (geometric_product.e45 * this.e31) + (geometric_product.e15 * this.e43), (geometric_product.e41 * this.e25) + (geometric_product.e12 * this.e45) + (geometric_product.e45 * this.e12) + (geometric_product.e25 * this.e41), -(geometric_product.e12 * this.e35) - (geometric_product.e15 * this.e23) - (geometric_product.e25 * this.e31) - (geometric_product.e35 * this.e12)) - (this.group2.yzxx * float4(geometric_product.group0.xyz.zxy, geometric_product.e23)) - float4((this.group0.xyz.zxy * geometric_product.group2.yzx), geometric_product.e31 * this.e25)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<AntiCircleRotor> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiCircleRotor {
     public VersorEven geometric_quotient(AntiDipoleInversion other) {
@@ -84,6 +84,10 @@ public extension AntiCircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<AntiCircleRotor> lhs, AntiDualNum rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiCircleRotor {
     public VersorOdd geometric_quotient(AntiDualNum other) {
         AntiDualNum geometric_product = AntiDualNum(
@@ -102,6 +106,10 @@ public extension AntiCircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<AntiCircleRotor> lhs, AntiFlatPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiCircleRotor {
     public VersorEven geometric_quotient(AntiFlatPoint other) {
         AntiFlatPoint geometric_product = AntiFlatPoint(
@@ -119,6 +127,10 @@ public extension AntiCircleRotor {
             float4((float3(geometric_product.e321) * this.group1.xyz), 0.0) + float4((this.group0.xyz.zxy * geometric_product.group0.yzx), 0.0) - float4((this.group0.xyz.yzx * geometric_product.group0.zxy), 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<AntiCircleRotor> lhs, AntiFlector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiCircleRotor {
     public VersorEven geometric_quotient(AntiFlector other) {
@@ -150,6 +162,10 @@ public extension AntiCircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<AntiCircleRotor> lhs, AntiLine rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiCircleRotor {
     public VersorOdd geometric_quotient(AntiLine other) {
         AntiLine reverse = AntiLine(
@@ -179,6 +195,10 @@ public extension AntiCircleRotor {
             float4((this.e42 * geometric_product.e35) + (this.e45 * geometric_product.e23), (this.e43 * geometric_product.e15) + (this.e45 * geometric_product.e31), (this.e41 * geometric_product.e25) + (this.e45 * geometric_product.e12), -(this.e23 * geometric_product.e15) - (this.e31 * geometric_product.e25) - (this.e12 * geometric_product.e35) - (this.e25 * geometric_product.e31) - (this.e35 * geometric_product.e12)) - float4((this.group0.xyz.zxy * geometric_product.group1.xyz.yzx), this.e15 * geometric_product.e23)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<AntiCircleRotor> lhs, AntiMotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiCircleRotor {
     public VersorOdd geometric_quotient(AntiMotor other) {
@@ -210,6 +230,10 @@ public extension AntiCircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(GeometricQuotientInfixPartial<AntiCircleRotor> lhs, AntiPlane rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiCircleRotor {
     public AntiDipoleInversion geometric_quotient(AntiPlane other) {
         AntiPlane geometric_product = AntiPlane(
@@ -228,6 +252,10 @@ public extension AntiCircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public CircleRotor operator /(GeometricQuotientInfixPartial<AntiCircleRotor> lhs, AntiScalar rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiCircleRotor {
     public CircleRotor geometric_quotient(AntiScalar other) {
         AntiScalar geometric_product = AntiScalar(
@@ -243,6 +271,10 @@ public extension AntiCircleRotor {
             float4(geometric_product.e12345) * this.group2
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<AntiCircleRotor> lhs, Circle rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiCircleRotor {
     public VersorEven geometric_quotient(Circle other) {
@@ -278,6 +310,10 @@ public extension AntiCircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<AntiCircleRotor> lhs, CircleRotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiCircleRotor {
     public VersorEven geometric_quotient(CircleRotor other) {
         CircleRotor reverse = CircleRotor(
@@ -312,6 +348,10 @@ public extension AntiCircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<AntiCircleRotor> lhs, Dipole rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiCircleRotor {
     public VersorOdd geometric_quotient(Dipole other) {
         Dipole reverse = Dipole(
@@ -345,6 +385,10 @@ public extension AntiCircleRotor {
             float4((this.e42 * geometric_product.e35) + (this.e23 * geometric_product.e45) + (this.e45 * geometric_product.e23) + (this.e35 * geometric_product.e42), (this.e43 * geometric_product.e15) + (this.e31 * geometric_product.e45) + (this.e45 * geometric_product.e31) + (this.e15 * geometric_product.e43), (this.e41 * geometric_product.e25) + (this.e12 * geometric_product.e45) + (this.e45 * geometric_product.e12) + (this.e25 * geometric_product.e41), -(this.e12 * geometric_product.e35) - (this.e15 * geometric_product.e23) - (this.e25 * geometric_product.e31) - (this.e35 * geometric_product.e12)) - float4((this.group0.xyz.zxy * geometric_product.group2.xyz.yzx), this.e23 * geometric_product.e15) - float4((geometric_product.group0.xyz.zxy * this.group2.yzx), this.e31 * geometric_product.e25)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<AntiCircleRotor> lhs, DipoleInversion rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiCircleRotor {
     public VersorOdd geometric_quotient(DipoleInversion other) {
@@ -384,6 +428,10 @@ public extension AntiCircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<AntiCircleRotor> lhs, DualNum rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiCircleRotor {
     public VersorEven geometric_quotient(DualNum other) {
         DualNum geometric_product = DualNum(
@@ -402,6 +450,10 @@ public extension AntiCircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<AntiCircleRotor> lhs, FlatPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiCircleRotor {
     public VersorOdd geometric_quotient(FlatPoint other) {
         FlatPoint geometric_product = FlatPoint(
@@ -419,6 +471,10 @@ public extension AntiCircleRotor {
             float4((this.e42 * geometric_product.e35) + (this.e23 * geometric_product.e45), (this.e43 * geometric_product.e15) + (this.e31 * geometric_product.e45), (this.e41 * geometric_product.e25) + (this.e12 * geometric_product.e45), -(this.e31 * geometric_product.e25) - (this.e12 * geometric_product.e35)) - (geometric_product.group0.yzxx * float4(this.group0.xyz.zxy, this.e23))
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<AntiCircleRotor> lhs, Flector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiCircleRotor {
     public VersorOdd geometric_quotient(Flector other) {
@@ -450,6 +506,10 @@ public extension AntiCircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<AntiCircleRotor> lhs, Line rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiCircleRotor {
     public VersorEven geometric_quotient(Line other) {
         Line reverse = Line(
@@ -480,6 +540,10 @@ public extension AntiCircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<AntiCircleRotor> lhs, Motor rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiCircleRotor {
     public VersorEven geometric_quotient(Motor other) {
         Motor reverse = Motor(
@@ -509,6 +573,10 @@ public extension AntiCircleRotor {
             float4((this.e41 * geometric_product.e5) + (this.e43 * geometric_product.e315), (this.e41 * geometric_product.e125) + (this.e42 * geometric_product.e5), (this.e42 * geometric_product.e235) + (this.e43 * geometric_product.e5), this.e43 * geometric_product.e435 * -1.0) - (geometric_product.group0.xyzy * float4(this.group1.www, this.e42)) - float4((this.group0.xyz.yzx * geometric_product.group1.zxy), this.e41 * geometric_product.e415)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricQuotientInfixPartial<AntiCircleRotor> lhs, MultiVector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiCircleRotor {
     public MultiVector geometric_quotient(MultiVector other) {
@@ -590,6 +658,10 @@ public extension AntiCircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public DipoleInversion operator /(GeometricQuotientInfixPartial<AntiCircleRotor> lhs, Plane rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiCircleRotor {
     public DipoleInversion geometric_quotient(Plane other) {
         Plane geometric_product = Plane(
@@ -607,6 +679,10 @@ public extension AntiCircleRotor {
             float4(-(this.e41 * geometric_product.e3215) - (this.e31 * geometric_product.e4125), -(this.e42 * geometric_product.e3215) - (this.e12 * geometric_product.e4235), -(this.e43 * geometric_product.e3215) - (this.e23 * geometric_product.e4315), (this.e25 * geometric_product.e4315) + (this.e35 * geometric_product.e4125) + (this.scalar * geometric_product.e3215)) + (this.group1.zxyw * geometric_product.group0.yzxw) + (this.group2.wwwx * geometric_product.group0.xyzx)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(GeometricQuotientInfixPartial<AntiCircleRotor> lhs, RoundPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiCircleRotor {
     public AntiDipoleInversion geometric_quotient(RoundPoint other) {
@@ -632,6 +708,10 @@ public extension AntiCircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(GeometricQuotientInfixPartial<AntiCircleRotor> lhs, Scalar rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiCircleRotor {
     public AntiCircleRotor geometric_quotient(Scalar other) {
         Scalar geometric_product = Scalar(
@@ -647,6 +727,10 @@ public extension AntiCircleRotor {
             float4(geometric_product.scalar) * this.group2
         );
     }
+}
+// Fancy infix trick (second half)
+public DipoleInversion operator /(GeometricQuotientInfixPartial<AntiCircleRotor> lhs, Sphere rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiCircleRotor {
     public DipoleInversion geometric_quotient(Sphere other) {
@@ -671,6 +755,10 @@ public extension AntiCircleRotor {
             float4(-(this.e41 * geometric_product.e3215) - (this.e31 * geometric_product.e4125), -(this.e42 * geometric_product.e3215) - (this.e12 * geometric_product.e4235), -(this.e43 * geometric_product.e3215) - (this.e23 * geometric_product.e4315), (this.e35 * geometric_product.e4125) + (this.scalar * geometric_product.e3215)) + (this.group1.zxyw * geometric_product.group0.yzxw) + (this.group2.xyzx * float4(float3(geometric_product.e1234), geometric_product.e4235)) + (this.group2.wwwy * geometric_product.group0.xyzy)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<AntiCircleRotor> lhs, VersorEven rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiCircleRotor {
     public VersorEven geometric_quotient(VersorEven other) {
@@ -710,6 +798,10 @@ public extension AntiCircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<AntiCircleRotor> lhs, VersorOdd rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiCircleRotor {
     public VersorOdd geometric_quotient(VersorOdd other) {
         VersorOdd reverse = VersorOdd(
@@ -748,17 +840,13 @@ public extension AntiCircleRotor {
         );
     }
 }
-public extension AntiDipoleInversion {
-    // Fancy infix trick (first half)
-    public GeometricQuotientInfixPartial<AntiDipoleInversion> operator /(GeometricQuotientInfix rhs) {
-        return GeometricQuotientInfixPartial<AntiDipoleInversion>(this);
-    }
+// Fancy infix trick (first half)
+public GeometricQuotientInfixPartial<AntiDipoleInversion> operator /(AntiDipoleInversion lhs, GeometricQuotientInfix rhs) {
+    return GeometricQuotientInfixPartial<AntiDipoleInversion>(lhs);
 }
-public extension GeometricQuotientInfixPartial<AntiDipoleInversion> {
-    // Fancy infix trick (second half)
-    public VersorEven operator /(AntiCircleRotor rhs) {
-        return this.a.geometric_quotient(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<AntiDipoleInversion> lhs, AntiCircleRotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiDipoleInversion {
     public VersorEven geometric_quotient(AntiCircleRotor other) {
@@ -793,6 +881,10 @@ public extension AntiDipoleInversion {
             float4((geometric_product.e23 * this.e321) + (geometric_product.e31 * this.e3) + (geometric_product.e15 * this.e4) + (geometric_product.scalar * this.e1), (geometric_product.e31 * this.e321) + (geometric_product.e12 * this.e1) + (geometric_product.e25 * this.e4) + (geometric_product.scalar * this.e2), (geometric_product.e23 * this.e2) + (geometric_product.e12 * this.e321) + (geometric_product.e35 * this.e4) + (geometric_product.scalar * this.e3), -(geometric_product.e43 * this.e3) - (geometric_product.e23 * this.e423) - (geometric_product.e31 * this.e431) - (geometric_product.e12 * this.e412)) + (this.group2.yzxw * float4(geometric_product.group0.xyz.zxy, geometric_product.e45)) + float4((this.group0.xyz.zxy * geometric_product.group2.yzx), geometric_product.scalar * this.e4) - (this.group1.xyzz * float4(geometric_product.group1.www, geometric_product.e43)) - (this.group3.yzxy * float4(geometric_product.group1.zxy, geometric_product.e42)) - (float4(this.group2.zx, this.e5, this.e1) * float4(geometric_product.group0.xyz.yzz, geometric_product.e41)) - (float4(this.group3.ww, this.e315, this.e415) * float4(geometric_product.group0.xyz.xyx, geometric_product.e41)) - float4((this.group0.xyz.yzx * geometric_product.group2.zxy), geometric_product.e42 * this.e425)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<AntiDipoleInversion> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiDipoleInversion {
     public VersorOdd geometric_quotient(AntiDipoleInversion other) {
@@ -832,6 +924,10 @@ public extension AntiDipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<AntiDipoleInversion> lhs, AntiDualNum rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiDipoleInversion {
     public VersorEven geometric_quotient(AntiDualNum other) {
         AntiDualNum geometric_product = AntiDualNum(
@@ -850,6 +946,10 @@ public extension AntiDipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<AntiDipoleInversion> lhs, AntiFlatPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiDipoleInversion {
     public VersorOdd geometric_quotient(AntiFlatPoint other) {
         AntiFlatPoint geometric_product = AntiFlatPoint(
@@ -867,6 +967,10 @@ public extension AntiDipoleInversion {
             (this.group1.xyzy * geometric_product.group0.wwwy) + (geometric_product.group0.xyzz * float4(this.group2.www, this.e435)) + (geometric_product.group0.yzxx * float4(this.group0.xyz.zxy, this.e415)) + float4(float3(0.0), -(this.e2 * geometric_product.e315) - (this.e3 * geometric_product.e125) - (this.e5 * geometric_product.e321)) - (geometric_product.group0.zxyx * float4(this.group0.xyz.yzx, this.e1))
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<AntiDipoleInversion> lhs, AntiFlector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiDipoleInversion {
     public VersorOdd geometric_quotient(AntiFlector other) {
@@ -898,6 +1002,10 @@ public extension AntiDipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<AntiDipoleInversion> lhs, AntiLine rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiDipoleInversion {
     public VersorEven geometric_quotient(AntiLine other) {
         AntiLine reverse = AntiLine(
@@ -927,6 +1035,10 @@ public extension AntiDipoleInversion {
             float4((this.e412 * geometric_product.e25) + (this.e321 * geometric_product.e23) + (this.e4 * geometric_product.e15) + (this.e3 * geometric_product.e31), (this.e423 * geometric_product.e35) + (this.e321 * geometric_product.e31) + (this.e4 * geometric_product.e25) + (this.e1 * geometric_product.e12), (this.e431 * geometric_product.e15) + (this.e321 * geometric_product.e12) + (this.e4 * geometric_product.e35) + (this.e2 * geometric_product.e23), this.e412 * geometric_product.e12 * -1.0) - float4((this.group0.xyz.yzx * geometric_product.group1.xyz.zxy), this.e423 * geometric_product.e23) - float4((geometric_product.group0.xyz.zxy * this.group3.yzx), this.e431 * geometric_product.e31)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<AntiDipoleInversion> lhs, AntiMotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiDipoleInversion {
     public VersorEven geometric_quotient(AntiMotor other) {
@@ -958,6 +1070,10 @@ public extension AntiDipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<AntiDipoleInversion> lhs, AntiPlane rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiDipoleInversion {
     public VersorOdd geometric_quotient(AntiPlane other) {
         AntiPlane geometric_product = AntiPlane(
@@ -976,6 +1092,10 @@ public extension AntiDipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public DipoleInversion operator /(GeometricQuotientInfixPartial<AntiDipoleInversion> lhs, AntiScalar rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiDipoleInversion {
     public DipoleInversion geometric_quotient(AntiScalar other) {
         AntiScalar geometric_product = AntiScalar(
@@ -993,6 +1113,10 @@ public extension AntiDipoleInversion {
             float4(geometric_product.e12345) * this.group3 * float4(1.0, 1.0, 1.0, -1.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<AntiDipoleInversion> lhs, Circle rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiDipoleInversion {
     public VersorOdd geometric_quotient(Circle other) {
@@ -1028,6 +1152,10 @@ public extension AntiDipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<AntiDipoleInversion> lhs, CircleRotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiDipoleInversion {
     public VersorOdd geometric_quotient(CircleRotor other) {
         CircleRotor reverse = CircleRotor(
@@ -1062,6 +1190,10 @@ public extension AntiDipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<AntiDipoleInversion> lhs, Dipole rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiDipoleInversion {
     public VersorEven geometric_quotient(Dipole other) {
         Dipole reverse = Dipole(
@@ -1095,6 +1227,10 @@ public extension AntiDipoleInversion {
             float4((this.e321 * geometric_product.e23) + (this.e315 * geometric_product.e43) + (this.e4 * geometric_product.e15) + (this.e3 * geometric_product.e31), (this.e321 * geometric_product.e31) + (this.e125 * geometric_product.e41) + (this.e4 * geometric_product.e25) + (this.e1 * geometric_product.e12), (this.e321 * geometric_product.e12) + (this.e235 * geometric_product.e42) + (this.e4 * geometric_product.e35) + (this.e2 * geometric_product.e23), -(this.e425 * geometric_product.e42) - (this.e435 * geometric_product.e43) - (this.e2 * geometric_product.e42) - (this.e3 * geometric_product.e43)) + float4((this.group0.xyz.zxy * geometric_product.group2.xyz.yzx), this.e4 * geometric_product.e45) - (float4(this.group2.zx, this.e5, geometric_product.e12) * float4(geometric_product.group0.xyz.yzz, this.e412)) - (float4(this.group3.ww, this.e315, geometric_product.e31) * float4(geometric_product.group0.xyz.xyx, this.e431)) - float4((this.group0.xyz.yzx * geometric_product.group2.xyz.zxy), this.e423 * geometric_product.e23) - float4((this.group3.yzx * geometric_product.group1.zxy), this.e1 * geometric_product.e41) - float4((geometric_product.group1.www * this.group1.xyz), this.e415 * geometric_product.e41)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<AntiDipoleInversion> lhs, DipoleInversion rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiDipoleInversion {
     public VersorEven geometric_quotient(DipoleInversion other) {
@@ -1134,6 +1270,10 @@ public extension AntiDipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<AntiDipoleInversion> lhs, DualNum rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiDipoleInversion {
     public VersorOdd geometric_quotient(DualNum other) {
         DualNum geometric_product = DualNum(
@@ -1152,6 +1292,10 @@ public extension AntiDipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<AntiDipoleInversion> lhs, FlatPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiDipoleInversion {
     public VersorEven geometric_quotient(FlatPoint other) {
         FlatPoint geometric_product = FlatPoint(
@@ -1169,6 +1313,10 @@ public extension AntiDipoleInversion {
             float4(((float3(this.e4) * geometric_product.group0.xyz) + (this.group0.xyz.zxy * geometric_product.group0.yzx) - (float3(geometric_product.e45) * this.group1.xyz) - (this.group0.xyz.yzx * geometric_product.group0.zxy)), this.e4 * geometric_product.e45)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<AntiDipoleInversion> lhs, Flector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiDipoleInversion {
     public VersorEven geometric_quotient(Flector other) {
@@ -1200,6 +1348,10 @@ public extension AntiDipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<AntiDipoleInversion> lhs, Line rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiDipoleInversion {
     public VersorOdd geometric_quotient(Line other) {
         Line reverse = Line(
@@ -1230,6 +1382,10 @@ public extension AntiDipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<AntiDipoleInversion> lhs, Motor rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiDipoleInversion {
     public VersorOdd geometric_quotient(Motor other) {
         Motor reverse = Motor(
@@ -1259,6 +1415,10 @@ public extension AntiDipoleInversion {
             (geometric_product.group1 * float4(this.group2.www, this.e321)) + (this.group1.wwwz * float4(geometric_product.group0.xyz, geometric_product.e125)) + (geometric_product.group0.ywwy * float4(this.group3.zyz, this.e315)) + (geometric_product.group0.wzxx * float4(this.group3.xxy, this.e235)) + (geometric_product.group1.ywwy * float4(this.group0.xyz.zyz, this.e425)) + (geometric_product.group1.wzxx * float4(this.group0.xyz.xxy, this.e415)) + float4(float3(0.0), (this.e125 * geometric_product.e435) - (this.e3 * geometric_product.e125) - (this.e5 * geometric_product.e12345)) - (this.group3.yzxy * float4(geometric_product.group0.zxy, geometric_product.e315)) - (geometric_product.group1.zxyx * float4(this.group0.xyz.yzx, this.e1))
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricQuotientInfixPartial<AntiDipoleInversion> lhs, MultiVector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiDipoleInversion {
     public MultiVector geometric_quotient(MultiVector other) {
@@ -1340,6 +1500,10 @@ public extension AntiDipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<AntiDipoleInversion> lhs, Plane rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiDipoleInversion {
     public VersorEven geometric_quotient(Plane other) {
         Plane geometric_product = Plane(
@@ -1357,6 +1521,10 @@ public extension AntiDipoleInversion {
             float4((this.e423 * geometric_product.e3215) + (this.e425 * geometric_product.e4125), (this.e431 * geometric_product.e3215) + (this.e435 * geometric_product.e4235), (this.e412 * geometric_product.e3215) + (this.e415 * geometric_product.e4315), -(this.e431 * geometric_product.e4315) - (this.e412 * geometric_product.e4125)) - (geometric_product.group0.yzxx * float4(this.group1.zxy, this.e423))
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<AntiDipoleInversion> lhs, RoundPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiDipoleInversion {
     public VersorOdd geometric_quotient(RoundPoint other) {
@@ -1382,6 +1550,10 @@ public extension AntiDipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(GeometricQuotientInfixPartial<AntiDipoleInversion> lhs, Scalar rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiDipoleInversion {
     public AntiDipoleInversion geometric_quotient(Scalar other) {
         Scalar geometric_product = Scalar(
@@ -1399,6 +1571,10 @@ public extension AntiDipoleInversion {
             float4(geometric_product.scalar) * this.group3
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<AntiDipoleInversion> lhs, Sphere rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiDipoleInversion {
     public VersorEven geometric_quotient(Sphere other) {
@@ -1423,6 +1599,10 @@ public extension AntiDipoleInversion {
             float4(this.e425 * geometric_product.e4125, this.e435 * geometric_product.e4235, this.e415 * geometric_product.e4315, this.e412 * geometric_product.e4125 * -1.0) + float4((this.group0.xyz * geometric_product.group0.www), this.e321 * geometric_product.e1234) - (geometric_product.group0.yzxx * float4(this.group1.zxy, this.e423)) - float4((float3(geometric_product.e1234) * this.group2.xyz), this.e431 * geometric_product.e4315)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<AntiDipoleInversion> lhs, VersorEven rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiDipoleInversion {
     public VersorOdd geometric_quotient(VersorEven other) {
@@ -1462,6 +1642,10 @@ public extension AntiDipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<AntiDipoleInversion> lhs, VersorOdd rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiDipoleInversion {
     public VersorEven geometric_quotient(VersorOdd other) {
         VersorOdd reverse = VersorOdd(
@@ -1500,17 +1684,13 @@ public extension AntiDipoleInversion {
         );
     }
 }
-public extension AntiDualNum {
-    // Fancy infix trick (first half)
-    public GeometricQuotientInfixPartial<AntiDualNum> operator /(GeometricQuotientInfix rhs) {
-        return GeometricQuotientInfixPartial<AntiDualNum>(this);
-    }
+// Fancy infix trick (first half)
+public GeometricQuotientInfixPartial<AntiDualNum> operator /(AntiDualNum lhs, GeometricQuotientInfix rhs) {
+    return GeometricQuotientInfixPartial<AntiDualNum>(lhs);
 }
-public extension GeometricQuotientInfixPartial<AntiDualNum> {
-    // Fancy infix trick (second half)
-    public VersorOdd operator /(AntiCircleRotor rhs) {
-        return this.a.geometric_quotient(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<AntiDualNum> lhs, AntiCircleRotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiDualNum {
     public VersorOdd geometric_quotient(AntiCircleRotor other) {
@@ -1545,6 +1725,10 @@ public extension AntiDualNum {
             float4(this.group0.xy.xx, this.e3215, (geometric_product.scalar * this.e3215) - (geometric_product.e45 * this.e3215)) * float4(geometric_product.group0.xyz, 1.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<AntiDualNum> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiDualNum {
     public VersorEven geometric_quotient(AntiDipoleInversion other) {
@@ -1584,6 +1768,10 @@ public extension AntiDualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDualNum operator /(GeometricQuotientInfixPartial<AntiDualNum> lhs, AntiDualNum rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiDualNum {
     public AntiDualNum geometric_quotient(AntiDualNum other) {
         AntiDualNum geometric_product = AntiDualNum(
@@ -1595,6 +1783,10 @@ public extension AntiDualNum {
             float2((geometric_product.e3215 * this.scalar) + (geometric_product.scalar * this.e3215), geometric_product.scalar * this.scalar)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(GeometricQuotientInfixPartial<AntiDualNum> lhs, AntiFlatPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiDualNum {
     public AntiFlector geometric_quotient(AntiFlatPoint other) {
@@ -1609,6 +1801,10 @@ public extension AntiDualNum {
             float4(float3(0.0), this.e3215 * geometric_product.e321)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(GeometricQuotientInfixPartial<AntiDualNum> lhs, AntiFlector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiDualNum {
     public AntiFlector geometric_quotient(AntiFlector other) {
@@ -1636,6 +1832,10 @@ public extension AntiDualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiLine operator /(GeometricQuotientInfixPartial<AntiDualNum> lhs, AntiLine rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiDualNum {
     public AntiLine geometric_quotient(AntiLine other) {
         AntiLine reverse = AntiLine(
@@ -1661,6 +1861,10 @@ public extension AntiDualNum {
             (float3(this.e3215) * geometric_product.group0.xyz) + (float3(this.scalar) * geometric_product.group1.xyz)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(GeometricQuotientInfixPartial<AntiDualNum> lhs, AntiMotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiDualNum {
     public AntiMotor geometric_quotient(AntiMotor other) {
@@ -1688,6 +1892,10 @@ public extension AntiDualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(GeometricQuotientInfixPartial<AntiDualNum> lhs, AntiPlane rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiDualNum {
     public AntiFlector geometric_quotient(AntiPlane other) {
         AntiPlane geometric_product = AntiPlane(
@@ -1702,6 +1910,10 @@ public extension AntiDualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public DualNum operator /(GeometricQuotientInfixPartial<AntiDualNum> lhs, AntiScalar rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiDualNum {
     public DualNum geometric_quotient(AntiScalar other) {
         return DualNum(
@@ -1709,6 +1921,10 @@ public extension AntiDualNum {
             float2(1.0/other.e12345 * -1.0) * this.group0.xy
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(GeometricQuotientInfixPartial<AntiDualNum> lhs, Circle rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiDualNum {
     public AntiDipoleInversion geometric_quotient(Circle other) {
@@ -1744,6 +1960,10 @@ public extension AntiDualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<AntiDualNum> lhs, CircleRotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiDualNum {
     public VersorEven geometric_quotient(CircleRotor other) {
         CircleRotor reverse = CircleRotor(
@@ -1778,6 +1998,10 @@ public extension AntiDualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public DipoleInversion operator /(GeometricQuotientInfixPartial<AntiDualNum> lhs, Dipole rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiDualNum {
     public DipoleInversion geometric_quotient(Dipole other) {
         Dipole reverse = Dipole(
@@ -1811,6 +2035,10 @@ public extension AntiDualNum {
             float4(this.e3215) * float4(geometric_product.group0.xyz, geometric_product.e45) * float4(1.0, 1.0, 1.0, -1.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<AntiDualNum> lhs, DipoleInversion rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiDualNum {
     public VersorOdd geometric_quotient(DipoleInversion other) {
@@ -1850,6 +2078,10 @@ public extension AntiDualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public DualNum operator /(GeometricQuotientInfixPartial<AntiDualNum> lhs, DualNum rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiDualNum {
     public DualNum geometric_quotient(DualNum other) {
         DualNum geometric_product = DualNum(
@@ -1861,6 +2093,10 @@ public extension AntiDualNum {
             float2((this.e3215 * geometric_product.e12345) + (this.scalar * geometric_product.e5), this.scalar * geometric_product.e12345)
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(GeometricQuotientInfixPartial<AntiDualNum> lhs, FlatPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiDualNum {
     public Flector geometric_quotient(FlatPoint other) {
@@ -1875,6 +2111,10 @@ public extension AntiDualNum {
             float4(float3(0.0), this.e3215 * geometric_product.e45 * -1.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(GeometricQuotientInfixPartial<AntiDualNum> lhs, Flector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiDualNum {
     public Flector geometric_quotient(Flector other) {
@@ -1902,6 +2142,10 @@ public extension AntiDualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public Line operator /(GeometricQuotientInfixPartial<AntiDualNum> lhs, Line rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiDualNum {
     public Line geometric_quotient(Line other) {
         Line reverse = Line(
@@ -1928,6 +2172,10 @@ public extension AntiDualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(GeometricQuotientInfixPartial<AntiDualNum> lhs, Motor rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiDualNum {
     public Motor geometric_quotient(Motor other) {
         Motor reverse = Motor(
@@ -1953,6 +2201,10 @@ public extension AntiDualNum {
             (float4(this.e3215) * geometric_product.group0) + (float4(this.scalar) * geometric_product.group1)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricQuotientInfixPartial<AntiDualNum> lhs, MultiVector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiDualNum {
     public MultiVector geometric_quotient(MultiVector other) {
@@ -2034,6 +2286,10 @@ public extension AntiDualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(GeometricQuotientInfixPartial<AntiDualNum> lhs, Plane rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiDualNum {
     public Flector geometric_quotient(Plane other) {
         Plane geometric_product = Plane(
@@ -2047,6 +2303,10 @@ public extension AntiDualNum {
             float4(this.scalar) * geometric_product.group0
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<AntiDualNum> lhs, RoundPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiDualNum {
     public VersorEven geometric_quotient(RoundPoint other) {
@@ -2072,6 +2332,10 @@ public extension AntiDualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDualNum operator /(GeometricQuotientInfixPartial<AntiDualNum> lhs, Scalar rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiDualNum {
     public AntiDualNum geometric_quotient(Scalar other) {
         return AntiDualNum(
@@ -2079,6 +2343,10 @@ public extension AntiDualNum {
             float2(1.0/other.scalar) * this.group0.xy
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<AntiDualNum> lhs, Sphere rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiDualNum {
     public VersorOdd geometric_quotient(Sphere other) {
@@ -2103,6 +2371,10 @@ public extension AntiDualNum {
             float4(this.scalar) * geometric_product.group0
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<AntiDualNum> lhs, VersorEven rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiDualNum {
     public VersorEven geometric_quotient(VersorEven other) {
@@ -2142,6 +2414,10 @@ public extension AntiDualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<AntiDualNum> lhs, VersorOdd rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiDualNum {
     public VersorOdd geometric_quotient(VersorOdd other) {
         VersorOdd reverse = VersorOdd(
@@ -2180,17 +2456,13 @@ public extension AntiDualNum {
         );
     }
 }
-public extension AntiFlatPoint {
-    // Fancy infix trick (first half)
-    public GeometricQuotientInfixPartial<AntiFlatPoint> operator /(GeometricQuotientInfix rhs) {
-        return GeometricQuotientInfixPartial<AntiFlatPoint>(this);
-    }
+// Fancy infix trick (first half)
+public GeometricQuotientInfixPartial<AntiFlatPoint> operator /(AntiFlatPoint lhs, GeometricQuotientInfix rhs) {
+    return GeometricQuotientInfixPartial<AntiFlatPoint>(lhs);
 }
-public extension GeometricQuotientInfixPartial<AntiFlatPoint> {
-    // Fancy infix trick (second half)
-    public VersorEven operator /(AntiCircleRotor rhs) {
-        return this.a.geometric_quotient(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<AntiFlatPoint> lhs, AntiCircleRotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiFlatPoint {
     public VersorEven geometric_quotient(AntiCircleRotor other) {
@@ -2225,6 +2497,10 @@ public extension AntiFlatPoint {
             float4((float3(this.e321) * geometric_product.group1.xyz), 0.0) + float4((geometric_product.group0.xyz.zxy * this.group0.yzx), 0.0) - float4((geometric_product.group0.xyz.yzx * this.group0.zxy), 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<AntiFlatPoint> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiFlatPoint {
     public VersorOdd geometric_quotient(AntiDipoleInversion other) {
@@ -2264,6 +2540,10 @@ public extension AntiFlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(GeometricQuotientInfixPartial<AntiFlatPoint> lhs, AntiDualNum rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiFlatPoint {
     public AntiFlector geometric_quotient(AntiDualNum other) {
         AntiDualNum geometric_product = AntiDualNum(
@@ -2278,6 +2558,10 @@ public extension AntiFlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(GeometricQuotientInfixPartial<AntiFlatPoint> lhs, AntiFlatPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiFlatPoint {
     public AntiMotor geometric_quotient(AntiFlatPoint other) {
         AntiFlatPoint geometric_product = AntiFlatPoint(
@@ -2291,6 +2575,10 @@ public extension AntiFlatPoint {
             float4(((float3(this.e321) * geometric_product.group0.xyz) - (float3(geometric_product.e321) * this.group0.xyz)), 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(GeometricQuotientInfixPartial<AntiFlatPoint> lhs, AntiFlector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiFlatPoint {
     public AntiMotor geometric_quotient(AntiFlector other) {
@@ -2318,6 +2606,10 @@ public extension AntiFlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(GeometricQuotientInfixPartial<AntiFlatPoint> lhs, AntiLine rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiFlatPoint {
     public AntiFlector geometric_quotient(AntiLine other) {
         AntiLine reverse = AntiLine(
@@ -2343,6 +2635,10 @@ public extension AntiFlatPoint {
             float4((float3(this.e321) * geometric_product.group0.xyz), -(this.e235 * geometric_product.e23) - (this.e315 * geometric_product.e31) - (this.e125 * geometric_product.e12))
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(GeometricQuotientInfixPartial<AntiFlatPoint> lhs, AntiMotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiFlatPoint {
     public AntiFlector geometric_quotient(AntiMotor other) {
@@ -2370,6 +2666,10 @@ public extension AntiFlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(GeometricQuotientInfixPartial<AntiFlatPoint> lhs, AntiPlane rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiFlatPoint {
     public AntiMotor geometric_quotient(AntiPlane other) {
         AntiPlane geometric_product = AntiPlane(
@@ -2384,6 +2684,10 @@ public extension AntiFlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public FlatPoint operator /(GeometricQuotientInfixPartial<AntiFlatPoint> lhs, AntiScalar rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiFlatPoint {
     public FlatPoint geometric_quotient(AntiScalar other) {
         return FlatPoint(
@@ -2391,6 +2695,10 @@ public extension AntiFlatPoint {
             float4(1.0/other.e12345 * -1.0) * this.group0 * float4(-1.0, -1.0, -1.0, 1.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<AntiFlatPoint> lhs, Circle rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiFlatPoint {
     public VersorOdd geometric_quotient(Circle other) {
@@ -2426,6 +2734,10 @@ public extension AntiFlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<AntiFlatPoint> lhs, CircleRotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiFlatPoint {
     public VersorOdd geometric_quotient(CircleRotor other) {
         CircleRotor reverse = CircleRotor(
@@ -2460,6 +2772,10 @@ public extension AntiFlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<AntiFlatPoint> lhs, Dipole rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiFlatPoint {
     public VersorEven geometric_quotient(Dipole other) {
         Dipole reverse = Dipole(
@@ -2493,6 +2809,10 @@ public extension AntiFlatPoint {
             float4((float3(this.e321) * geometric_product.group1.xyz), 0.0) + float4((geometric_product.group0.xyz.zxy * this.group0.yzx), 0.0) - float4((geometric_product.group0.xyz.yzx * this.group0.zxy), 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<AntiFlatPoint> lhs, DipoleInversion rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiFlatPoint {
     public VersorEven geometric_quotient(DipoleInversion other) {
@@ -2532,6 +2852,10 @@ public extension AntiFlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(GeometricQuotientInfixPartial<AntiFlatPoint> lhs, DualNum rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiFlatPoint {
     public Flector geometric_quotient(DualNum other) {
         DualNum geometric_product = DualNum(
@@ -2546,6 +2870,10 @@ public extension AntiFlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(GeometricQuotientInfixPartial<AntiFlatPoint> lhs, FlatPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiFlatPoint {
     public Motor geometric_quotient(FlatPoint other) {
         FlatPoint geometric_product = FlatPoint(
@@ -2559,6 +2887,10 @@ public extension AntiFlatPoint {
             float4((-(float3(this.e321) * geometric_product.group0.xyz) - (float3(geometric_product.e45) * this.group0.xyz)), 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(GeometricQuotientInfixPartial<AntiFlatPoint> lhs, Flector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiFlatPoint {
     public Motor geometric_quotient(Flector other) {
@@ -2586,6 +2918,10 @@ public extension AntiFlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(GeometricQuotientInfixPartial<AntiFlatPoint> lhs, Line rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiFlatPoint {
     public Flector geometric_quotient(Line other) {
         Line reverse = Line(
@@ -2612,6 +2948,10 @@ public extension AntiFlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(GeometricQuotientInfixPartial<AntiFlatPoint> lhs, Motor rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiFlatPoint {
     public Flector geometric_quotient(Motor other) {
         Motor reverse = Motor(
@@ -2637,6 +2977,10 @@ public extension AntiFlatPoint {
             float4((this.group0.www * geometric_product.group0.xyz), (this.e235 * geometric_product.e415) + (this.e315 * geometric_product.e425) + (this.e125 * geometric_product.e435) + (this.e321 * geometric_product.e5))
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricQuotientInfixPartial<AntiFlatPoint> lhs, MultiVector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiFlatPoint {
     public MultiVector geometric_quotient(MultiVector other) {
@@ -2718,6 +3062,10 @@ public extension AntiFlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(GeometricQuotientInfixPartial<AntiFlatPoint> lhs, Plane rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiFlatPoint {
     public Motor geometric_quotient(Plane other) {
         Plane geometric_product = Plane(
@@ -2731,6 +3079,10 @@ public extension AntiFlatPoint {
             (this.group0.yzxx * geometric_product.group0.zxyx) + float4(float3(0.0), (this.e315 * geometric_product.e4315) + (this.e125 * geometric_product.e4125)) - (this.group0.zxyw * geometric_product.group0.yzxw)
         );
     }
+}
+// Fancy infix trick (second half)
+public DipoleInversion operator /(GeometricQuotientInfixPartial<AntiFlatPoint> lhs, RoundPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiFlatPoint {
     public DipoleInversion geometric_quotient(RoundPoint other) {
@@ -2756,6 +3108,10 @@ public extension AntiFlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlatPoint operator /(GeometricQuotientInfixPartial<AntiFlatPoint> lhs, Scalar rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiFlatPoint {
     public AntiFlatPoint geometric_quotient(Scalar other) {
         return AntiFlatPoint(
@@ -2763,6 +3119,10 @@ public extension AntiFlatPoint {
             float4(1.0/other.scalar) * this.group0
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(GeometricQuotientInfixPartial<AntiFlatPoint> lhs, Sphere rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiFlatPoint {
     public AntiDipoleInversion geometric_quotient(Sphere other) {
@@ -2787,6 +3147,10 @@ public extension AntiFlatPoint {
             float4((float3(geometric_product.e1234) * this.group0.xyz * float3(-1.0)), (this.e235 * geometric_product.e4235) + (this.e315 * geometric_product.e4315) + (this.e125 * geometric_product.e4125) - (this.e321 * geometric_product.e3215))
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<AntiFlatPoint> lhs, VersorEven rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiFlatPoint {
     public VersorOdd geometric_quotient(VersorEven other) {
@@ -2826,6 +3190,10 @@ public extension AntiFlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<AntiFlatPoint> lhs, VersorOdd rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiFlatPoint {
     public VersorEven geometric_quotient(VersorOdd other) {
         VersorOdd reverse = VersorOdd(
@@ -2864,17 +3232,13 @@ public extension AntiFlatPoint {
         );
     }
 }
-public extension AntiFlector {
-    // Fancy infix trick (first half)
-    public GeometricQuotientInfixPartial<AntiFlector> operator /(GeometricQuotientInfix rhs) {
-        return GeometricQuotientInfixPartial<AntiFlector>(this);
-    }
+// Fancy infix trick (first half)
+public GeometricQuotientInfixPartial<AntiFlector> operator /(AntiFlector lhs, GeometricQuotientInfix rhs) {
+    return GeometricQuotientInfixPartial<AntiFlector>(lhs);
 }
-public extension GeometricQuotientInfixPartial<AntiFlector> {
-    // Fancy infix trick (second half)
-    public VersorEven operator /(AntiCircleRotor rhs) {
-        return this.a.geometric_quotient(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<AntiFlector> lhs, AntiCircleRotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiFlector {
     public VersorEven geometric_quotient(AntiCircleRotor other) {
@@ -2909,6 +3273,10 @@ public extension AntiFlector {
             float4((geometric_product.e43 * this.e315) + (geometric_product.e23 * this.e321) + (geometric_product.e31 * this.e3) + (geometric_product.scalar * this.e1), (geometric_product.e41 * this.e125) + (geometric_product.e31 * this.e321) + (geometric_product.e12 * this.e1) + (geometric_product.scalar * this.e2), (geometric_product.e42 * this.e235) + (geometric_product.e23 * this.e2) + (geometric_product.e12 * this.e321) + (geometric_product.scalar * this.e3), 0.0) - (this.group1.yzxz * float4(geometric_product.group1.zxy, geometric_product.e43)) - (float4(this.group0.zx, this.e5, this.e2) * float4(geometric_product.group0.xyz.yzz, geometric_product.e42)) - (float4(this.group1.ww, this.e315, this.e1) * float4(geometric_product.group0.xyz.xyx, geometric_product.e41))
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<AntiFlector> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiFlector {
     public VersorOdd geometric_quotient(AntiDipoleInversion other) {
@@ -2948,6 +3316,10 @@ public extension AntiFlector {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(GeometricQuotientInfixPartial<AntiFlector> lhs, AntiDualNum rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiFlector {
     public AntiFlector geometric_quotient(AntiDualNum other) {
         AntiDualNum geometric_product = AntiDualNum(
@@ -2962,6 +3334,10 @@ public extension AntiFlector {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(GeometricQuotientInfixPartial<AntiFlector> lhs, AntiFlatPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiFlector {
     public AntiMotor geometric_quotient(AntiFlatPoint other) {
         AntiFlatPoint geometric_product = AntiFlatPoint(
@@ -2975,6 +3351,10 @@ public extension AntiFlector {
             float4((geometric_product.e235 * this.e321) + (geometric_product.e315 * this.e3), (geometric_product.e315 * this.e321) + (geometric_product.e125 * this.e1), (geometric_product.e235 * this.e2) + (geometric_product.e125 * this.e321), -(geometric_product.e125 * this.e3) - (geometric_product.e321 * this.e5)) - (geometric_product.group0.zxyx * this.group1.yzxx) - (geometric_product.group0.wwwy * float4(this.group0.xyz, this.e2))
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(GeometricQuotientInfixPartial<AntiFlector> lhs, AntiFlector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiFlector {
     public AntiMotor geometric_quotient(AntiFlector other) {
@@ -3002,6 +3382,10 @@ public extension AntiFlector {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(GeometricQuotientInfixPartial<AntiFlector> lhs, AntiLine rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiFlector {
     public AntiFlector geometric_quotient(AntiLine other) {
         AntiLine reverse = AntiLine(
@@ -3027,6 +3411,10 @@ public extension AntiFlector {
             (float4(this.group0.ww, this.e2, this.e1) * float4(geometric_product.group0.xyz.xyx, geometric_product.e15)) + (float4(this.group1.zx, this.e321, this.e2) * float4(geometric_product.group0.xyz.yzz, geometric_product.e25)) + float4(float3(0.0), (this.e3 * geometric_product.e35) - (this.e315 * geometric_product.e31) - (this.e125 * geometric_product.e12)) - float4((geometric_product.group0.xyz.zxy * this.group1.yzx), this.e235 * geometric_product.e23)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(GeometricQuotientInfixPartial<AntiFlector> lhs, AntiMotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiFlector {
     public AntiFlector geometric_quotient(AntiMotor other) {
@@ -3054,6 +3442,10 @@ public extension AntiFlector {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(GeometricQuotientInfixPartial<AntiFlector> lhs, AntiPlane rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiFlector {
     public AntiMotor geometric_quotient(AntiPlane other) {
         AntiPlane geometric_product = AntiPlane(
@@ -3068,6 +3460,10 @@ public extension AntiFlector {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(GeometricQuotientInfixPartial<AntiFlector> lhs, AntiScalar rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiFlector {
     public Flector geometric_quotient(AntiScalar other) {
         AntiScalar geometric_product = AntiScalar(
@@ -3081,6 +3477,10 @@ public extension AntiFlector {
             float4(geometric_product.e12345) * this.group1 * float4(1.0, 1.0, 1.0, -1.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<AntiFlector> lhs, Circle rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiFlector {
     public VersorOdd geometric_quotient(Circle other) {
@@ -3116,6 +3516,10 @@ public extension AntiFlector {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<AntiFlector> lhs, CircleRotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiFlector {
     public VersorOdd geometric_quotient(CircleRotor other) {
         CircleRotor reverse = CircleRotor(
@@ -3150,6 +3554,10 @@ public extension AntiFlector {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<AntiFlector> lhs, Dipole rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiFlector {
     public VersorEven geometric_quotient(Dipole other) {
         Dipole reverse = Dipole(
@@ -3183,6 +3591,10 @@ public extension AntiFlector {
             float4((this.e315 * geometric_product.e43) + (this.e321 * geometric_product.e23) + (this.e3 * geometric_product.e31), (this.e125 * geometric_product.e41) + (this.e321 * geometric_product.e31) + (this.e1 * geometric_product.e12), (this.e235 * geometric_product.e42) + (this.e321 * geometric_product.e12) + (this.e2 * geometric_product.e23), 0.0) - (float4(this.group0.zx, this.e5, this.e2) * float4(geometric_product.group0.xyz.yzz, geometric_product.e42)) - (float4(this.group1.ww, this.e315, this.e1) * float4(geometric_product.group0.xyz.xyx, geometric_product.e41)) - float4((this.group1.yzx * geometric_product.group1.zxy), this.e3 * geometric_product.e43)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<AntiFlector> lhs, DipoleInversion rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiFlector {
     public VersorEven geometric_quotient(DipoleInversion other) {
@@ -3222,6 +3634,10 @@ public extension AntiFlector {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(GeometricQuotientInfixPartial<AntiFlector> lhs, DualNum rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiFlector {
     public Flector geometric_quotient(DualNum other) {
         DualNum geometric_product = DualNum(
@@ -3236,6 +3652,10 @@ public extension AntiFlector {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(GeometricQuotientInfixPartial<AntiFlector> lhs, FlatPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiFlector {
     public Motor geometric_quotient(FlatPoint other) {
         FlatPoint geometric_product = FlatPoint(
@@ -3249,6 +3669,10 @@ public extension AntiFlector {
             float4(-(this.e321 * geometric_product.e15) - (this.e3 * geometric_product.e25), -(this.e321 * geometric_product.e25) - (this.e1 * geometric_product.e35), -(this.e321 * geometric_product.e35) - (this.e2 * geometric_product.e15), (this.e2 * geometric_product.e25) + (this.e3 * geometric_product.e35)) + (this.group1.yzxx * geometric_product.group0.zxyx) - (float4(geometric_product.e45) * float4(this.group0.xyz, this.e5))
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(GeometricQuotientInfixPartial<AntiFlector> lhs, Flector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiFlector {
     public Motor geometric_quotient(Flector other) {
@@ -3276,6 +3700,10 @@ public extension AntiFlector {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(GeometricQuotientInfixPartial<AntiFlector> lhs, Line rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiFlector {
     public Flector geometric_quotient(Line other) {
         Line reverse = Line(
@@ -3302,6 +3730,10 @@ public extension AntiFlector {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(GeometricQuotientInfixPartial<AntiFlector> lhs, Motor rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiFlector {
     public Flector geometric_quotient(Motor other) {
         Motor reverse = Motor(
@@ -3327,6 +3759,10 @@ public extension AntiFlector {
             (this.group0.wwwx * geometric_product.group0.xyzx) + (geometric_product.group0.ywwz * float4(this.group1.zyz, this.e125)) + (geometric_product.group0.wzxy * float4(this.group1.xxy, this.e315)) + float4(float3(0.0), (this.e321 * geometric_product.e5) - (this.e2 * geometric_product.e315) - (this.e3 * geometric_product.e125) - (this.e5 * geometric_product.e12345)) - (this.group1.yzxx * float4(geometric_product.group0.zxy, geometric_product.e235))
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricQuotientInfixPartial<AntiFlector> lhs, MultiVector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiFlector {
     public MultiVector geometric_quotient(MultiVector other) {
@@ -3408,6 +3844,10 @@ public extension AntiFlector {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(GeometricQuotientInfixPartial<AntiFlector> lhs, Plane rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiFlector {
     public Motor geometric_quotient(Plane other) {
         Plane geometric_product = Plane(
@@ -3421,6 +3861,10 @@ public extension AntiFlector {
             float4(-(this.e1 * geometric_product.e3215) - (this.e5 * geometric_product.e4235), -(this.e2 * geometric_product.e3215) - (this.e5 * geometric_product.e4315), -(this.e3 * geometric_product.e3215) - (this.e5 * geometric_product.e4125), (this.e315 * geometric_product.e4315) + (this.e125 * geometric_product.e4125)) + (this.group0.yzxx * geometric_product.group0.zxyx) - (this.group0.zxyw * geometric_product.group0.yzxw)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<AntiFlector> lhs, RoundPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiFlector {
     public VersorOdd geometric_quotient(RoundPoint other) {
@@ -3446,6 +3890,10 @@ public extension AntiFlector {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(GeometricQuotientInfixPartial<AntiFlector> lhs, Scalar rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiFlector {
     public AntiFlector geometric_quotient(Scalar other) {
         Scalar geometric_product = Scalar(
@@ -3459,6 +3907,10 @@ public extension AntiFlector {
             float4(geometric_product.scalar) * this.group1
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<AntiFlector> lhs, Sphere rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiFlector {
     public VersorEven geometric_quotient(Sphere other) {
@@ -3483,6 +3935,10 @@ public extension AntiFlector {
             float4(geometric_product.e1234) * this.group0 * float4(-1.0, -1.0, -1.0, 1.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<AntiFlector> lhs, VersorEven rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiFlector {
     public VersorOdd geometric_quotient(VersorEven other) {
@@ -3522,6 +3978,10 @@ public extension AntiFlector {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<AntiFlector> lhs, VersorOdd rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiFlector {
     public VersorEven geometric_quotient(VersorOdd other) {
         VersorOdd reverse = VersorOdd(
@@ -3560,17 +4020,13 @@ public extension AntiFlector {
         );
     }
 }
-public extension AntiLine {
-    // Fancy infix trick (first half)
-    public GeometricQuotientInfixPartial<AntiLine> operator /(GeometricQuotientInfix rhs) {
-        return GeometricQuotientInfixPartial<AntiLine>(this);
-    }
+// Fancy infix trick (first half)
+public GeometricQuotientInfixPartial<AntiLine> operator /(AntiLine lhs, GeometricQuotientInfix rhs) {
+    return GeometricQuotientInfixPartial<AntiLine>(lhs);
 }
-public extension GeometricQuotientInfixPartial<AntiLine> {
-    // Fancy infix trick (second half)
-    public VersorOdd operator /(AntiCircleRotor rhs) {
-        return this.a.geometric_quotient(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<AntiLine> lhs, AntiCircleRotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiLine {
     public VersorOdd geometric_quotient(AntiCircleRotor other) {
@@ -3605,6 +4061,10 @@ public extension AntiLine {
             float4((geometric_product.e42 * this.e35) + (geometric_product.e45 * this.e23), (geometric_product.e43 * this.e15) + (geometric_product.e45 * this.e31), (geometric_product.e41 * this.e25) + (geometric_product.e45 * this.e12), -(geometric_product.e23 * this.e15) - (geometric_product.e31 * this.e25) - (geometric_product.e12 * this.e35) - (geometric_product.e25 * this.e31) - (geometric_product.e35 * this.e12)) - float4((geometric_product.group0.xyz.zxy * this.group1.xyz.yzx), geometric_product.e15 * this.e23)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<AntiLine> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiLine {
     public VersorEven geometric_quotient(AntiDipoleInversion other) {
@@ -3644,6 +4104,10 @@ public extension AntiLine {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiLine operator /(GeometricQuotientInfixPartial<AntiLine> lhs, AntiDualNum rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiLine {
     public AntiLine geometric_quotient(AntiDualNum other) {
         AntiDualNum geometric_product = AntiDualNum(
@@ -3658,6 +4122,10 @@ public extension AntiLine {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(GeometricQuotientInfixPartial<AntiLine> lhs, AntiFlatPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiLine {
     public AntiFlector geometric_quotient(AntiFlatPoint other) {
         AntiFlatPoint geometric_product = AntiFlatPoint(
@@ -3671,6 +4139,10 @@ public extension AntiLine {
             float4((float3(geometric_product.e321) * this.group0.xyz), -(geometric_product.e235 * this.e23) - (geometric_product.e315 * this.e31) - (geometric_product.e125 * this.e12))
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(GeometricQuotientInfixPartial<AntiLine> lhs, AntiFlector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiLine {
     public AntiFlector geometric_quotient(AntiFlector other) {
@@ -3698,6 +4170,10 @@ public extension AntiLine {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(GeometricQuotientInfixPartial<AntiLine> lhs, AntiLine rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiLine {
     public AntiMotor geometric_quotient(AntiLine other) {
         AntiLine reverse = AntiLine(
@@ -3723,6 +4199,10 @@ public extension AntiLine {
             float4((geometric_product.e31 * this.e35) + (geometric_product.e25 * this.e12), (geometric_product.e12 * this.e15) + (geometric_product.e35 * this.e23), (geometric_product.e23 * this.e25) + (geometric_product.e15 * this.e31), -(geometric_product.e12 * this.e35) - (geometric_product.e15 * this.e23) - (geometric_product.e25 * this.e31) - (geometric_product.e35 * this.e12)) - float4((geometric_product.group0.xyz.zxy * this.group1.xyz.yzx), geometric_product.e23 * this.e15) - float4((geometric_product.group1.xyz.zxy * this.group0.xyz.yzx), geometric_product.e31 * this.e25)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(GeometricQuotientInfixPartial<AntiLine> lhs, AntiMotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiLine {
     public AntiMotor geometric_quotient(AntiMotor other) {
@@ -3750,6 +4230,10 @@ public extension AntiLine {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(GeometricQuotientInfixPartial<AntiLine> lhs, AntiPlane rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiLine {
     public AntiFlector geometric_quotient(AntiPlane other) {
         AntiPlane geometric_product = AntiPlane(
@@ -3764,6 +4248,10 @@ public extension AntiLine {
         );
     }
 }
+// Fancy infix trick (second half)
+public Line operator /(GeometricQuotientInfixPartial<AntiLine> lhs, AntiScalar rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiLine {
     public Line geometric_quotient(AntiScalar other) {
         AntiScalar geometric_product = AntiScalar(
@@ -3777,6 +4265,10 @@ public extension AntiLine {
             float3(geometric_product.e12345) * this.group1.xyz
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<AntiLine> lhs, Circle rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiLine {
     public VersorEven geometric_quotient(Circle other) {
@@ -3812,6 +4304,10 @@ public extension AntiLine {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<AntiLine> lhs, CircleRotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiLine {
     public VersorEven geometric_quotient(CircleRotor other) {
         CircleRotor reverse = CircleRotor(
@@ -3846,6 +4342,10 @@ public extension AntiLine {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<AntiLine> lhs, Dipole rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiLine {
     public VersorOdd geometric_quotient(Dipole other) {
         Dipole reverse = Dipole(
@@ -3879,6 +4379,10 @@ public extension AntiLine {
             float4((this.e23 * geometric_product.e45) + (this.e35 * geometric_product.e42), (this.e31 * geometric_product.e45) + (this.e15 * geometric_product.e43), (this.e12 * geometric_product.e45) + (this.e25 * geometric_product.e41), -(this.e31 * geometric_product.e25) - (this.e12 * geometric_product.e35) - (this.e15 * geometric_product.e23) - (this.e25 * geometric_product.e31) - (this.e35 * geometric_product.e12)) - float4((this.group1.xyz.yzx * geometric_product.group0.xyz.zxy), this.e23 * geometric_product.e15)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<AntiLine> lhs, DipoleInversion rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiLine {
     public VersorOdd geometric_quotient(DipoleInversion other) {
@@ -3918,6 +4422,10 @@ public extension AntiLine {
         );
     }
 }
+// Fancy infix trick (second half)
+public Line operator /(GeometricQuotientInfixPartial<AntiLine> lhs, DualNum rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiLine {
     public Line geometric_quotient(DualNum other) {
         DualNum geometric_product = DualNum(
@@ -3932,6 +4440,10 @@ public extension AntiLine {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(GeometricQuotientInfixPartial<AntiLine> lhs, FlatPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiLine {
     public Flector geometric_quotient(FlatPoint other) {
         FlatPoint geometric_product = FlatPoint(
@@ -3945,6 +4457,10 @@ public extension AntiLine {
             float4((float3(geometric_product.e45) * this.group0.xyz), -(this.e23 * geometric_product.e15) - (this.e31 * geometric_product.e25) - (this.e12 * geometric_product.e35))
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(GeometricQuotientInfixPartial<AntiLine> lhs, Flector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiLine {
     public Flector geometric_quotient(Flector other) {
@@ -3972,6 +4488,10 @@ public extension AntiLine {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(GeometricQuotientInfixPartial<AntiLine> lhs, Line rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiLine {
     public Motor geometric_quotient(Line other) {
         Line reverse = Line(
@@ -3998,6 +4518,10 @@ public extension AntiLine {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(GeometricQuotientInfixPartial<AntiLine> lhs, Motor rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiLine {
     public Motor geometric_quotient(Motor other) {
         Motor reverse = Motor(
@@ -4023,6 +4547,10 @@ public extension AntiLine {
             float4((this.e23 * geometric_product.e5) + (this.e12 * geometric_product.e315) + (this.e15 * geometric_product.e12345) + (this.e35 * geometric_product.e425), (this.e23 * geometric_product.e125) + (this.e31 * geometric_product.e5) + (this.e15 * geometric_product.e435) + (this.e25 * geometric_product.e12345), (this.e31 * geometric_product.e235) + (this.e12 * geometric_product.e5) + (this.e25 * geometric_product.e415) + (this.e35 * geometric_product.e12345), -(this.e12 * geometric_product.e125) - (this.e15 * geometric_product.e415) - (this.e25 * geometric_product.e425) - (this.e35 * geometric_product.e435)) - (geometric_product.group1.zxyx * float4(this.group0.xyz.yzx, this.e23)) - float4((this.group1.xyz.yzx * geometric_product.group0.zxy), this.e31 * geometric_product.e315)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricQuotientInfixPartial<AntiLine> lhs, MultiVector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiLine {
     public MultiVector geometric_quotient(MultiVector other) {
@@ -4104,6 +4632,10 @@ public extension AntiLine {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(GeometricQuotientInfixPartial<AntiLine> lhs, Plane rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiLine {
     public Flector geometric_quotient(Plane other) {
         Plane geometric_product = Plane(
@@ -4117,6 +4649,10 @@ public extension AntiLine {
             float4(this.e31 * geometric_product.e4125 * -1.0, this.e12 * geometric_product.e4235 * -1.0, this.e23 * geometric_product.e4315 * -1.0, (this.e25 * geometric_product.e4315) + (this.e35 * geometric_product.e4125)) + (geometric_product.group0.yzxx * float4(this.group0.xyz.zxy, this.e15))
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(GeometricQuotientInfixPartial<AntiLine> lhs, RoundPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiLine {
     public AntiDipoleInversion geometric_quotient(RoundPoint other) {
@@ -4142,6 +4678,10 @@ public extension AntiLine {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiLine operator /(GeometricQuotientInfixPartial<AntiLine> lhs, Scalar rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiLine {
     public AntiLine geometric_quotient(Scalar other) {
         Scalar geometric_product = Scalar(
@@ -4155,6 +4695,10 @@ public extension AntiLine {
             float3(geometric_product.scalar) * this.group1.xyz
         );
     }
+}
+// Fancy infix trick (second half)
+public DipoleInversion operator /(GeometricQuotientInfixPartial<AntiLine> lhs, Sphere rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiLine {
     public DipoleInversion geometric_quotient(Sphere other) {
@@ -4179,6 +4723,10 @@ public extension AntiLine {
             float4(this.e31 * geometric_product.e4125 * -1.0, this.e12 * geometric_product.e4235 * -1.0, this.e23 * geometric_product.e4315 * -1.0, this.e35 * geometric_product.e4125) + (geometric_product.group0.yzxx * float4(this.group0.xyz.zxy, this.e15)) + float4((float3(geometric_product.e1234) * this.group1.xyz), this.e25 * geometric_product.e4315)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<AntiLine> lhs, VersorEven rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiLine {
     public VersorEven geometric_quotient(VersorEven other) {
@@ -4218,6 +4766,10 @@ public extension AntiLine {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<AntiLine> lhs, VersorOdd rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiLine {
     public VersorOdd geometric_quotient(VersorOdd other) {
         VersorOdd reverse = VersorOdd(
@@ -4256,17 +4808,13 @@ public extension AntiLine {
         );
     }
 }
-public extension AntiMotor {
-    // Fancy infix trick (first half)
-    public GeometricQuotientInfixPartial<AntiMotor> operator /(GeometricQuotientInfix rhs) {
-        return GeometricQuotientInfixPartial<AntiMotor>(this);
-    }
+// Fancy infix trick (first half)
+public GeometricQuotientInfixPartial<AntiMotor> operator /(AntiMotor lhs, GeometricQuotientInfix rhs) {
+    return GeometricQuotientInfixPartial<AntiMotor>(lhs);
 }
-public extension GeometricQuotientInfixPartial<AntiMotor> {
-    // Fancy infix trick (second half)
-    public VersorOdd operator /(AntiCircleRotor rhs) {
-        return this.a.geometric_quotient(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<AntiMotor> lhs, AntiCircleRotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiMotor {
     public VersorOdd geometric_quotient(AntiCircleRotor other) {
@@ -4301,6 +4849,10 @@ public extension AntiMotor {
             float4((geometric_product.e42 * this.e35) + (geometric_product.e45 * this.e23), (geometric_product.e43 * this.e15) + (geometric_product.e45 * this.e31), (geometric_product.e43 * this.e3215) + (geometric_product.e45 * this.e12), -(geometric_product.e31 * this.e25) - (geometric_product.e12 * this.e35) - (geometric_product.e45 * this.e3215) - (geometric_product.e15 * this.e23) - (geometric_product.e25 * this.e31) - (geometric_product.e35 * this.e12)) + (this.group1.wwyw * float4(geometric_product.group0.xyz.xyx, geometric_product.scalar)) - (this.group1.yzxx * float4(geometric_product.group0.xyz.zxy, geometric_product.e23))
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<AntiMotor> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiMotor {
     public VersorEven geometric_quotient(AntiDipoleInversion other) {
@@ -4340,6 +4892,10 @@ public extension AntiMotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(GeometricQuotientInfixPartial<AntiMotor> lhs, AntiDualNum rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiMotor {
     public AntiMotor geometric_quotient(AntiDualNum other) {
         AntiDualNum geometric_product = AntiDualNum(
@@ -4354,6 +4910,10 @@ public extension AntiMotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(GeometricQuotientInfixPartial<AntiMotor> lhs, AntiFlatPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiMotor {
     public AntiFlector geometric_quotient(AntiFlatPoint other) {
         AntiFlatPoint geometric_product = AntiFlatPoint(
@@ -4367,6 +4927,10 @@ public extension AntiMotor {
             float4((geometric_product.group0.www * this.group0.xyz), (geometric_product.e321 * this.e3215) - (geometric_product.e235 * this.e23) - (geometric_product.e315 * this.e31) - (geometric_product.e125 * this.e12))
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(GeometricQuotientInfixPartial<AntiMotor> lhs, AntiFlector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiMotor {
     public AntiFlector geometric_quotient(AntiFlector other) {
@@ -4394,6 +4958,10 @@ public extension AntiMotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(GeometricQuotientInfixPartial<AntiMotor> lhs, AntiLine rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiMotor {
     public AntiMotor geometric_quotient(AntiLine other) {
         AntiLine reverse = AntiLine(
@@ -4419,6 +4987,10 @@ public extension AntiMotor {
             float4((geometric_product.e23 * this.e3215) + (geometric_product.e31 * this.e35) + (geometric_product.e15 * this.scalar) + (geometric_product.e25 * this.e12), (geometric_product.e31 * this.e3215) + (geometric_product.e12 * this.e15) + (geometric_product.e25 * this.scalar) + (geometric_product.e35 * this.e23), (geometric_product.e23 * this.e25) + (geometric_product.e12 * this.e3215) + (geometric_product.e15 * this.e31) + (geometric_product.e35 * this.scalar), -(geometric_product.e12 * this.e35) - (geometric_product.e15 * this.e23) - (geometric_product.e25 * this.e31) - (geometric_product.e35 * this.e12)) - (this.group1.yzxx * float4(geometric_product.group0.xyz.zxy, geometric_product.e23)) - float4((geometric_product.group1.xyz.zxy * this.group0.yzx), geometric_product.e31 * this.e25)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(GeometricQuotientInfixPartial<AntiMotor> lhs, AntiMotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiMotor {
     public AntiMotor geometric_quotient(AntiMotor other) {
@@ -4446,6 +5018,10 @@ public extension AntiMotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(GeometricQuotientInfixPartial<AntiMotor> lhs, AntiPlane rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiMotor {
     public AntiFlector geometric_quotient(AntiPlane other) {
         AntiPlane geometric_product = AntiPlane(
@@ -4460,6 +5036,10 @@ public extension AntiMotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(GeometricQuotientInfixPartial<AntiMotor> lhs, AntiScalar rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiMotor {
     public Motor geometric_quotient(AntiScalar other) {
         AntiScalar geometric_product = AntiScalar(
@@ -4473,6 +5053,10 @@ public extension AntiMotor {
             float4(geometric_product.e12345) * this.group1
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<AntiMotor> lhs, Circle rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiMotor {
     public VersorEven geometric_quotient(Circle other) {
@@ -4508,6 +5092,10 @@ public extension AntiMotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<AntiMotor> lhs, CircleRotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiMotor {
     public VersorEven geometric_quotient(CircleRotor other) {
         CircleRotor reverse = CircleRotor(
@@ -4542,6 +5130,10 @@ public extension AntiMotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<AntiMotor> lhs, Dipole rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiMotor {
     public VersorOdd geometric_quotient(Dipole other) {
         Dipole reverse = Dipole(
@@ -4575,6 +5167,10 @@ public extension AntiMotor {
             float4((this.e23 * geometric_product.e45) + (this.e35 * geometric_product.e42) + (this.e3215 * geometric_product.e41), (this.e31 * geometric_product.e45) + (this.e15 * geometric_product.e43) + (this.e3215 * geometric_product.e42), (this.e12 * geometric_product.e45) + (this.e25 * geometric_product.e41) + (this.e3215 * geometric_product.e43), -(this.e31 * geometric_product.e25) - (this.e12 * geometric_product.e35) - (this.e15 * geometric_product.e23) - (this.e25 * geometric_product.e31) - (this.e35 * geometric_product.e12) - (this.e3215 * geometric_product.e45)) - float4((geometric_product.group0.xyz.zxy * this.group1.yzx), this.e23 * geometric_product.e15)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<AntiMotor> lhs, DipoleInversion rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiMotor {
     public VersorOdd geometric_quotient(DipoleInversion other) {
@@ -4614,6 +5210,10 @@ public extension AntiMotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(GeometricQuotientInfixPartial<AntiMotor> lhs, DualNum rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiMotor {
     public Motor geometric_quotient(DualNum other) {
         DualNum geometric_product = DualNum(
@@ -4628,6 +5228,10 @@ public extension AntiMotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(GeometricQuotientInfixPartial<AntiMotor> lhs, FlatPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiMotor {
     public Flector geometric_quotient(FlatPoint other) {
         FlatPoint geometric_product = FlatPoint(
@@ -4641,6 +5245,10 @@ public extension AntiMotor {
             float4((float3(geometric_product.e45) * this.group0.xyz), -(this.e23 * geometric_product.e15) - (this.e31 * geometric_product.e25) - (this.e12 * geometric_product.e35) - (this.e3215 * geometric_product.e45))
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(GeometricQuotientInfixPartial<AntiMotor> lhs, Flector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiMotor {
     public Flector geometric_quotient(Flector other) {
@@ -4668,6 +5276,10 @@ public extension AntiMotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(GeometricQuotientInfixPartial<AntiMotor> lhs, Line rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiMotor {
     public Motor geometric_quotient(Line other) {
         Line reverse = Line(
@@ -4694,6 +5306,10 @@ public extension AntiMotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(GeometricQuotientInfixPartial<AntiMotor> lhs, Motor rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiMotor {
     public Motor geometric_quotient(Motor other) {
         Motor reverse = Motor(
@@ -4719,6 +5335,10 @@ public extension AntiMotor {
             float4((this.scalar * geometric_product.e235) + (this.e15 * geometric_product.e12345) + (this.e35 * geometric_product.e425) + (this.e3215 * geometric_product.e415), (this.scalar * geometric_product.e315) + (this.e15 * geometric_product.e435) + (this.e25 * geometric_product.e12345) + (this.e3215 * geometric_product.e425), (this.scalar * geometric_product.e125) + (this.e25 * geometric_product.e415) + (this.e35 * geometric_product.e12345) + (this.e3215 * geometric_product.e435), -(this.e12 * geometric_product.e125) - (this.e15 * geometric_product.e415) - (this.e25 * geometric_product.e425) - (this.e35 * geometric_product.e435)) + (this.group0.xxyw * geometric_product.group1.wzxw) + float4((this.group0.zyz * geometric_product.group1.yww), this.e3215 * geometric_product.e12345) - (this.group0.yzxx * geometric_product.group1.zxyx) - float4((this.group1.yzx * geometric_product.group0.zxy), this.e31 * geometric_product.e315)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricQuotientInfixPartial<AntiMotor> lhs, MultiVector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiMotor {
     public MultiVector geometric_quotient(MultiVector other) {
@@ -4800,6 +5420,10 @@ public extension AntiMotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(GeometricQuotientInfixPartial<AntiMotor> lhs, Plane rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiMotor {
     public Flector geometric_quotient(Plane other) {
         Plane geometric_product = Plane(
@@ -4813,6 +5437,10 @@ public extension AntiMotor {
             float4(this.e31 * geometric_product.e4125 * -1.0, this.e12 * geometric_product.e4235 * -1.0, this.e23 * geometric_product.e4315 * -1.0, (this.e25 * geometric_product.e4315) + (this.e35 * geometric_product.e4125)) + (this.group0.zxyw * geometric_product.group0.yzxw) + (geometric_product.group0.xyzx * float4(this.group0.www, this.e15))
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<AntiMotor> lhs, RoundPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiMotor {
     public VersorEven geometric_quotient(RoundPoint other) {
@@ -4838,6 +5466,10 @@ public extension AntiMotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(GeometricQuotientInfixPartial<AntiMotor> lhs, Scalar rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiMotor {
     public AntiMotor geometric_quotient(Scalar other) {
         Scalar geometric_product = Scalar(
@@ -4851,6 +5483,10 @@ public extension AntiMotor {
             float4(geometric_product.scalar) * this.group1
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<AntiMotor> lhs, Sphere rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiMotor {
     public VersorOdd geometric_quotient(Sphere other) {
@@ -4875,6 +5511,10 @@ public extension AntiMotor {
             float4(this.e31 * geometric_product.e4125 * -1.0, this.e12 * geometric_product.e4235 * -1.0, this.e23 * geometric_product.e4315 * -1.0, this.e35 * geometric_product.e4125) + (this.group0.zxyw * geometric_product.group0.yzxw) + (this.group1.xyzy * float4(float3(geometric_product.e1234), geometric_product.e4315)) + (geometric_product.group0.xyzx * float4(this.group0.www, this.e15))
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<AntiMotor> lhs, VersorEven rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiMotor {
     public VersorEven geometric_quotient(VersorEven other) {
@@ -4914,6 +5554,10 @@ public extension AntiMotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<AntiMotor> lhs, VersorOdd rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiMotor {
     public VersorOdd geometric_quotient(VersorOdd other) {
         VersorOdd reverse = VersorOdd(
@@ -4952,17 +5596,13 @@ public extension AntiMotor {
         );
     }
 }
-public extension AntiPlane {
-    // Fancy infix trick (first half)
-    public GeometricQuotientInfixPartial<AntiPlane> operator /(GeometricQuotientInfix rhs) {
-        return GeometricQuotientInfixPartial<AntiPlane>(this);
-    }
+// Fancy infix trick (first half)
+public GeometricQuotientInfixPartial<AntiPlane> operator /(AntiPlane lhs, GeometricQuotientInfix rhs) {
+    return GeometricQuotientInfixPartial<AntiPlane>(lhs);
 }
-public extension GeometricQuotientInfixPartial<AntiPlane> {
-    // Fancy infix trick (second half)
-    public AntiDipoleInversion operator /(AntiCircleRotor rhs) {
-        return this.a.geometric_quotient(rhs);
-    }
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(GeometricQuotientInfixPartial<AntiPlane> lhs, AntiCircleRotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiPlane {
     public AntiDipoleInversion geometric_quotient(AntiCircleRotor other) {
@@ -4997,6 +5637,10 @@ public extension AntiPlane {
             float4(geometric_product.e12 * this.e2 * -1.0, geometric_product.e23 * this.e3 * -1.0, geometric_product.e31 * this.e1 * -1.0, (geometric_product.e35 * this.e3) + (geometric_product.scalar * this.e5)) + (geometric_product.group2.wwwy * this.group0.xyzy) + (this.group0.zxyx * float4(geometric_product.group1.yzx, geometric_product.e15)) - (float4(this.e5) * float4(geometric_product.group0.xyz, geometric_product.e45))
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<AntiPlane> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiPlane {
     public VersorOdd geometric_quotient(AntiDipoleInversion other) {
@@ -5036,6 +5680,10 @@ public extension AntiPlane {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(GeometricQuotientInfixPartial<AntiPlane> lhs, AntiDualNum rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiPlane {
     public AntiFlector geometric_quotient(AntiDualNum other) {
         AntiDualNum geometric_product = AntiDualNum(
@@ -5050,6 +5698,10 @@ public extension AntiPlane {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(GeometricQuotientInfixPartial<AntiPlane> lhs, AntiFlatPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiPlane {
     public AntiMotor geometric_quotient(AntiFlatPoint other) {
         AntiFlatPoint geometric_product = AntiFlatPoint(
@@ -5063,6 +5715,10 @@ public extension AntiPlane {
             float4(geometric_product.e315 * this.e3, geometric_product.e125 * this.e1, geometric_product.e235 * this.e2, -(geometric_product.e315 * this.e2) - (geometric_product.e125 * this.e3) - (geometric_product.e321 * this.e5)) - (geometric_product.group0.zxyx * this.group0.yzxx)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(GeometricQuotientInfixPartial<AntiPlane> lhs, AntiFlector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiPlane {
     public AntiMotor geometric_quotient(AntiFlector other) {
@@ -5090,6 +5746,10 @@ public extension AntiPlane {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(GeometricQuotientInfixPartial<AntiPlane> lhs, AntiLine rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiPlane {
     public AntiFlector geometric_quotient(AntiLine other) {
         AntiLine reverse = AntiLine(
@@ -5115,6 +5775,10 @@ public extension AntiPlane {
             float4(geometric_product.e12 * this.e2 * -1.0, geometric_product.e23 * this.e3 * -1.0, geometric_product.e31 * this.e1 * -1.0, (geometric_product.e25 * this.e2) + (geometric_product.e35 * this.e3)) + (this.group0.zxyx * float4(geometric_product.group0.xyz.yzx, geometric_product.e15))
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(GeometricQuotientInfixPartial<AntiPlane> lhs, AntiMotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiPlane {
     public AntiFlector geometric_quotient(AntiMotor other) {
@@ -5142,6 +5806,10 @@ public extension AntiPlane {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(GeometricQuotientInfixPartial<AntiPlane> lhs, AntiPlane rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiPlane {
     public AntiMotor geometric_quotient(AntiPlane other) {
         AntiPlane geometric_product = AntiPlane(
@@ -5156,6 +5824,10 @@ public extension AntiPlane {
         );
     }
 }
+// Fancy infix trick (second half)
+public Plane operator /(GeometricQuotientInfixPartial<AntiPlane> lhs, AntiScalar rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiPlane {
     public Plane geometric_quotient(AntiScalar other) {
         return Plane(
@@ -5163,6 +5835,10 @@ public extension AntiPlane {
             float4(1.0/other.e12345 * -1.0) * this.group0 * float4(1.0, 1.0, 1.0, -1.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public DipoleInversion operator /(GeometricQuotientInfixPartial<AntiPlane> lhs, Circle rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiPlane {
     public DipoleInversion geometric_quotient(Circle other) {
@@ -5198,6 +5874,10 @@ public extension AntiPlane {
         );
     }
 }
+// Fancy infix trick (second half)
+public DipoleInversion operator /(GeometricQuotientInfixPartial<AntiPlane> lhs, CircleRotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiPlane {
     public DipoleInversion geometric_quotient(CircleRotor other) {
         CircleRotor reverse = CircleRotor(
@@ -5232,6 +5912,10 @@ public extension AntiPlane {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(GeometricQuotientInfixPartial<AntiPlane> lhs, Dipole rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiPlane {
     public AntiDipoleInversion geometric_quotient(Dipole other) {
         Dipole reverse = Dipole(
@@ -5265,6 +5949,10 @@ public extension AntiPlane {
             float4(this.e2 * geometric_product.e12 * -1.0, this.e3 * geometric_product.e23 * -1.0, this.e1 * geometric_product.e31 * -1.0, (this.e2 * geometric_product.e25) + (this.e3 * geometric_product.e35)) + float4((this.group0.zxy * geometric_product.group1.yzx), this.e1 * geometric_product.e15) - float4((geometric_product.group0.xyz * this.group0.www), this.e5 * geometric_product.e45)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<AntiPlane> lhs, DipoleInversion rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiPlane {
     public VersorEven geometric_quotient(DipoleInversion other) {
@@ -5304,6 +5992,10 @@ public extension AntiPlane {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(GeometricQuotientInfixPartial<AntiPlane> lhs, DualNum rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiPlane {
     public Flector geometric_quotient(DualNum other) {
         DualNum geometric_product = DualNum(
@@ -5318,6 +6010,10 @@ public extension AntiPlane {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(GeometricQuotientInfixPartial<AntiPlane> lhs, FlatPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiPlane {
     public Motor geometric_quotient(FlatPoint other) {
         FlatPoint geometric_product = FlatPoint(
@@ -5331,6 +6027,10 @@ public extension AntiPlane {
             (this.group0.yzxx * geometric_product.group0.zxyx) + float4(float3(0.0), (this.e2 * geometric_product.e25) + (this.e3 * geometric_product.e35)) - (this.group0.zxyw * geometric_product.group0.yzxw)
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(GeometricQuotientInfixPartial<AntiPlane> lhs, Flector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiPlane {
     public Motor geometric_quotient(Flector other) {
@@ -5358,6 +6058,10 @@ public extension AntiPlane {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(GeometricQuotientInfixPartial<AntiPlane> lhs, Line rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiPlane {
     public Flector geometric_quotient(Line other) {
         Line reverse = Line(
@@ -5384,6 +6088,10 @@ public extension AntiPlane {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(GeometricQuotientInfixPartial<AntiPlane> lhs, Motor rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiPlane {
     public Flector geometric_quotient(Motor other) {
         Motor reverse = Motor(
@@ -5409,6 +6117,10 @@ public extension AntiPlane {
             float4((this.e1 * geometric_product.e12345) + (this.e3 * geometric_product.e425), (this.e1 * geometric_product.e435) + (this.e2 * geometric_product.e12345), (this.e2 * geometric_product.e415) + (this.e3 * geometric_product.e12345), -(this.e2 * geometric_product.e315) - (this.e3 * geometric_product.e125) - (this.e5 * geometric_product.e12345)) - (this.group0.yzxx * float4(geometric_product.group0.zxy, geometric_product.e235))
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricQuotientInfixPartial<AntiPlane> lhs, MultiVector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiPlane {
     public MultiVector geometric_quotient(MultiVector other) {
@@ -5490,6 +6202,10 @@ public extension AntiPlane {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(GeometricQuotientInfixPartial<AntiPlane> lhs, Plane rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiPlane {
     public Motor geometric_quotient(Plane other) {
         Plane geometric_product = Plane(
@@ -5503,6 +6219,10 @@ public extension AntiPlane {
             float4((-(float3(this.e5) * geometric_product.group0.xyz) - (float3(geometric_product.e3215) * this.group0.xyz)), 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(GeometricQuotientInfixPartial<AntiPlane> lhs, RoundPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiPlane {
     public AntiCircleRotor geometric_quotient(RoundPoint other) {
@@ -5526,6 +6246,10 @@ public extension AntiPlane {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(GeometricQuotientInfixPartial<AntiPlane> lhs, Scalar rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiPlane {
     public AntiPlane geometric_quotient(Scalar other) {
         return AntiPlane(
@@ -5533,6 +6257,10 @@ public extension AntiPlane {
             float4(1.0/other.scalar) * this.group0
         );
     }
+}
+// Fancy infix trick (second half)
+public CircleRotor operator /(GeometricQuotientInfixPartial<AntiPlane> lhs, Sphere rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiPlane {
     public CircleRotor geometric_quotient(Sphere other) {
@@ -5555,6 +6283,10 @@ public extension AntiPlane {
             float4(-(this.e1 * geometric_product.e3215) - (this.e5 * geometric_product.e4235), -(this.e2 * geometric_product.e3215) - (this.e5 * geometric_product.e4315), -(this.e3 * geometric_product.e3215) - (this.e5 * geometric_product.e4125), (this.e1 * geometric_product.e4235) + (this.e2 * geometric_product.e4315) + (this.e3 * geometric_product.e4125) + (this.e5 * geometric_product.e1234))
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<AntiPlane> lhs, VersorEven rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiPlane {
     public VersorOdd geometric_quotient(VersorEven other) {
@@ -5594,6 +6326,10 @@ public extension AntiPlane {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<AntiPlane> lhs, VersorOdd rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiPlane {
     public VersorEven geometric_quotient(VersorOdd other) {
         VersorOdd reverse = VersorOdd(
@@ -5632,17 +6368,13 @@ public extension AntiPlane {
         );
     }
 }
-public extension AntiScalar {
-    // Fancy infix trick (first half)
-    public GeometricQuotientInfixPartial<AntiScalar> operator /(GeometricQuotientInfix rhs) {
-        return GeometricQuotientInfixPartial<AntiScalar>(this);
-    }
+// Fancy infix trick (first half)
+public GeometricQuotientInfixPartial<AntiScalar> operator /(AntiScalar lhs, GeometricQuotientInfix rhs) {
+    return GeometricQuotientInfixPartial<AntiScalar>(lhs);
 }
-public extension GeometricQuotientInfixPartial<AntiScalar> {
-    // Fancy infix trick (second half)
-    public CircleRotor operator /(AntiCircleRotor rhs) {
-        return this.a.geometric_quotient(rhs);
-    }
+// Fancy infix trick (second half)
+public CircleRotor operator /(GeometricQuotientInfixPartial<AntiScalar> lhs, AntiCircleRotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiScalar {
     public CircleRotor geometric_quotient(AntiCircleRotor other) {
@@ -5675,6 +6407,10 @@ public extension AntiScalar {
             float4(this.e12345) * geometric_product.group2
         );
     }
+}
+// Fancy infix trick (second half)
+public DipoleInversion operator /(GeometricQuotientInfixPartial<AntiScalar> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiScalar {
     public DipoleInversion geometric_quotient(AntiDipoleInversion other) {
@@ -5714,6 +6450,10 @@ public extension AntiScalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public DualNum operator /(GeometricQuotientInfixPartial<AntiScalar> lhs, AntiDualNum rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiScalar {
     public DualNum geometric_quotient(AntiDualNum other) {
         Scalar other_2 = Scalar(
@@ -5725,6 +6465,10 @@ public extension AntiScalar {
             float2(this.e12345) * float2(other.e3215 * other_2.scalar, other.scalar * other_2.scalar)
         );
     }
+}
+// Fancy infix trick (second half)
+public FlatPoint operator /(GeometricQuotientInfixPartial<AntiScalar> lhs, AntiFlatPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiScalar {
     public FlatPoint geometric_quotient(AntiFlatPoint other) {
@@ -5741,6 +6485,10 @@ public extension AntiScalar {
             float4(this.e12345) * float4(reverse.e235 * other_2.scalar, reverse.e315 * other_2.scalar, reverse.e125 * other_2.scalar, reverse.e321 * other_2.scalar) * float4(-1.0, -1.0, -1.0, 1.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(GeometricQuotientInfixPartial<AntiScalar> lhs, AntiFlector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiScalar {
     public Flector geometric_quotient(AntiFlector other) {
@@ -5768,6 +6516,10 @@ public extension AntiScalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public Line operator /(GeometricQuotientInfixPartial<AntiScalar> lhs, AntiLine rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiScalar {
     public Line geometric_quotient(AntiLine other) {
         AntiLine reverse = AntiLine(
@@ -5793,6 +6545,10 @@ public extension AntiScalar {
             float3(this.e12345) * geometric_product.group1.xyz
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(GeometricQuotientInfixPartial<AntiScalar> lhs, AntiMotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiScalar {
     public Motor geometric_quotient(AntiMotor other) {
@@ -5820,6 +6576,10 @@ public extension AntiScalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public Plane operator /(GeometricQuotientInfixPartial<AntiScalar> lhs, AntiPlane rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiScalar {
     public Plane geometric_quotient(AntiPlane other) {
         Scalar other_2 = Scalar(
@@ -5832,6 +6592,10 @@ public extension AntiScalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(GeometricQuotientInfixPartial<AntiScalar> lhs, AntiScalar rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiScalar {
     public Scalar geometric_quotient(AntiScalar other) {
         return Scalar(
@@ -5839,6 +6603,10 @@ public extension AntiScalar {
             this.e12345 / (other.e12345)
         );
     }
+}
+// Fancy infix trick (second half)
+public Dipole operator /(GeometricQuotientInfixPartial<AntiScalar> lhs, Circle rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiScalar {
     public Dipole geometric_quotient(Circle other) {
@@ -5872,6 +6640,10 @@ public extension AntiScalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(GeometricQuotientInfixPartial<AntiScalar> lhs, CircleRotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiScalar {
     public AntiCircleRotor geometric_quotient(CircleRotor other) {
         CircleRotor reverse = CircleRotor(
@@ -5904,6 +6676,10 @@ public extension AntiScalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public Circle operator /(GeometricQuotientInfixPartial<AntiScalar> lhs, Dipole rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiScalar {
     public Circle geometric_quotient(Dipole other) {
         Dipole reverse = Dipole(
@@ -5935,6 +6711,10 @@ public extension AntiScalar {
             float3(this.e12345) * geometric_product.group2.xyz
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(GeometricQuotientInfixPartial<AntiScalar> lhs, DipoleInversion rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiScalar {
     public AntiDipoleInversion geometric_quotient(DipoleInversion other) {
@@ -5974,6 +6754,10 @@ public extension AntiScalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDualNum operator /(GeometricQuotientInfixPartial<AntiScalar> lhs, DualNum rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiScalar {
     public AntiDualNum geometric_quotient(DualNum other) {
         Scalar other_2 = Scalar(
@@ -5985,6 +6769,10 @@ public extension AntiScalar {
             float2(this.e12345) * float2(other.e5 * other_2.scalar, other.e12345 * other_2.scalar) * float2(-1.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlatPoint operator /(GeometricQuotientInfixPartial<AntiScalar> lhs, FlatPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiScalar {
     public AntiFlatPoint geometric_quotient(FlatPoint other) {
@@ -6001,6 +6789,10 @@ public extension AntiScalar {
             float4(this.e12345) * float4(reverse.e15 * other_2.scalar, reverse.e25 * other_2.scalar, reverse.e35 * other_2.scalar, reverse.e45 * other_2.scalar) * float4(1.0, 1.0, 1.0, -1.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(GeometricQuotientInfixPartial<AntiScalar> lhs, Flector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiScalar {
     public AntiFlector geometric_quotient(Flector other) {
@@ -6028,6 +6820,10 @@ public extension AntiScalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiLine operator /(GeometricQuotientInfixPartial<AntiScalar> lhs, Line rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiScalar {
     public AntiLine geometric_quotient(Line other) {
         Line reverse = Line(
@@ -6054,6 +6850,10 @@ public extension AntiScalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(GeometricQuotientInfixPartial<AntiScalar> lhs, Motor rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiScalar {
     public AntiMotor geometric_quotient(Motor other) {
         Motor reverse = Motor(
@@ -6079,6 +6879,10 @@ public extension AntiScalar {
             float4(this.e12345) * geometric_product.group1 * float4(-1.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricQuotientInfixPartial<AntiScalar> lhs, MultiVector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiScalar {
     public MultiVector geometric_quotient(MultiVector other) {
@@ -6160,6 +6964,10 @@ public extension AntiScalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(GeometricQuotientInfixPartial<AntiScalar> lhs, Plane rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiScalar {
     public AntiPlane geometric_quotient(Plane other) {
         Scalar other_2 = Scalar(
@@ -6171,6 +6979,10 @@ public extension AntiScalar {
             float4(this.e12345) * float4(other.e4235 * other_2.scalar, other.e4315 * other_2.scalar, other.e4125 * other_2.scalar, other.e3215 * other_2.scalar) * float4(-1.0, -1.0, -1.0, 1.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public Sphere operator /(GeometricQuotientInfixPartial<AntiScalar> lhs, RoundPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiScalar {
     public Sphere geometric_quotient(RoundPoint other) {
@@ -6192,6 +7004,10 @@ public extension AntiScalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(GeometricQuotientInfixPartial<AntiScalar> lhs, Scalar rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiScalar {
     public AntiScalar geometric_quotient(Scalar other) {
         return AntiScalar(
@@ -6199,6 +7015,10 @@ public extension AntiScalar {
             this.e12345 / (other.scalar)
         );
     }
+}
+// Fancy infix trick (second half)
+public RoundPoint operator /(GeometricQuotientInfixPartial<AntiScalar> lhs, Sphere rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiScalar {
     public RoundPoint geometric_quotient(Sphere other) {
@@ -6219,6 +7039,10 @@ public extension AntiScalar {
             this.e12345 * geometric_product.e3215
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<AntiScalar> lhs, VersorEven rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension AntiScalar {
     public VersorOdd geometric_quotient(VersorEven other) {
@@ -6258,6 +7082,10 @@ public extension AntiScalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<AntiScalar> lhs, VersorOdd rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension AntiScalar {
     public VersorEven geometric_quotient(VersorOdd other) {
         VersorOdd reverse = VersorOdd(
@@ -6296,17 +7124,13 @@ public extension AntiScalar {
         );
     }
 }
-public extension Circle {
-    // Fancy infix trick (first half)
-    public GeometricQuotientInfixPartial<Circle> operator /(GeometricQuotientInfix rhs) {
-        return GeometricQuotientInfixPartial<Circle>(this);
-    }
+// Fancy infix trick (first half)
+public GeometricQuotientInfixPartial<Circle> operator /(Circle lhs, GeometricQuotientInfix rhs) {
+    return GeometricQuotientInfixPartial<Circle>(lhs);
 }
-public extension GeometricQuotientInfixPartial<Circle> {
-    // Fancy infix trick (second half)
-    public VersorEven operator /(AntiCircleRotor rhs) {
-        return this.a.geometric_quotient(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<Circle> lhs, AntiCircleRotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Circle {
     public VersorEven geometric_quotient(AntiCircleRotor other) {
@@ -6341,6 +7165,10 @@ public extension Circle {
             float4((geometric_product.e43 * this.e315) + (geometric_product.e23 * this.e321) + (geometric_product.e25 * this.e412), (geometric_product.e41 * this.e125) + (geometric_product.e31 * this.e321) + (geometric_product.e35 * this.e423), (geometric_product.e42 * this.e235) + (geometric_product.e12 * this.e321) + (geometric_product.e15 * this.e431), -(geometric_product.e23 * this.e423) - (geometric_product.e31 * this.e431) - (geometric_product.e12 * this.e412)) - (this.group1.xyzz * float4(geometric_product.group1.www, geometric_product.e43)) - float4((geometric_product.group0.xyz.yzx * this.group2.xyz.zxy), geometric_product.e41 * this.e415) - float4((this.group0.xyz.yzx * geometric_product.group2.zxy), geometric_product.e42 * this.e425)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<Circle> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Circle {
     public VersorOdd geometric_quotient(AntiDipoleInversion other) {
@@ -6380,6 +7208,10 @@ public extension Circle {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(GeometricQuotientInfixPartial<Circle> lhs, AntiDualNum rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Circle {
     public AntiDipoleInversion geometric_quotient(AntiDualNum other) {
         AntiDualNum geometric_product = AntiDualNum(
@@ -6398,6 +7230,10 @@ public extension Circle {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<Circle> lhs, AntiFlatPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Circle {
     public VersorOdd geometric_quotient(AntiFlatPoint other) {
         AntiFlatPoint geometric_product = AntiFlatPoint(
@@ -6415,6 +7251,10 @@ public extension Circle {
             float4(geometric_product.e125 * this.e431 * -1.0, geometric_product.e235 * this.e412 * -1.0, geometric_product.e315 * this.e423 * -1.0, geometric_product.e125 * this.e435) + (geometric_product.group0.wwwy * this.group1.xyzy) + float4((this.group0.xyz.zxy * geometric_product.group0.yzx), geometric_product.e235 * this.e415)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<Circle> lhs, AntiFlector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Circle {
     public VersorOdd geometric_quotient(AntiFlector other) {
@@ -6446,6 +7286,10 @@ public extension Circle {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<Circle> lhs, AntiLine rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Circle {
     public VersorEven geometric_quotient(AntiLine other) {
         AntiLine reverse = AntiLine(
@@ -6475,6 +7319,10 @@ public extension Circle {
             float4((geometric_product.e23 * this.e321) + (geometric_product.e25 * this.e412), (geometric_product.e31 * this.e321) + (geometric_product.e35 * this.e423), (geometric_product.e12 * this.e321) + (geometric_product.e15 * this.e431), -(geometric_product.e31 * this.e431) - (geometric_product.e12 * this.e412)) - float4((geometric_product.group1.xyz.zxy * this.group0.xyz.yzx), geometric_product.e23 * this.e423)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<Circle> lhs, AntiMotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Circle {
     public VersorEven geometric_quotient(AntiMotor other) {
@@ -6506,6 +7354,10 @@ public extension Circle {
         );
     }
 }
+// Fancy infix trick (second half)
+public DipoleInversion operator /(GeometricQuotientInfixPartial<Circle> lhs, AntiPlane rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Circle {
     public DipoleInversion geometric_quotient(AntiPlane other) {
         AntiPlane geometric_product = AntiPlane(
@@ -6524,6 +7376,10 @@ public extension Circle {
         );
     }
 }
+// Fancy infix trick (second half)
+public Dipole operator /(GeometricQuotientInfixPartial<Circle> lhs, AntiScalar rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Circle {
     public Dipole geometric_quotient(AntiScalar other) {
         AntiScalar geometric_product = AntiScalar(
@@ -6539,6 +7395,10 @@ public extension Circle {
             float3(geometric_product.e12345) * this.group2.xyz * float3(-1.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<Circle> lhs, Circle rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Circle {
     public VersorOdd geometric_quotient(Circle other) {
@@ -6574,6 +7434,10 @@ public extension Circle {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<Circle> lhs, CircleRotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Circle {
     public VersorOdd geometric_quotient(CircleRotor other) {
         CircleRotor reverse = CircleRotor(
@@ -6608,6 +7472,10 @@ public extension Circle {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<Circle> lhs, Dipole rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Circle {
     public VersorEven geometric_quotient(Dipole other) {
         Dipole reverse = Dipole(
@@ -6641,6 +7509,10 @@ public extension Circle {
             float4((this.e412 * geometric_product.e25) + (this.e321 * geometric_product.e23) + (this.e315 * geometric_product.e43), (this.e423 * geometric_product.e35) + (this.e321 * geometric_product.e31) + (this.e125 * geometric_product.e41), (this.e431 * geometric_product.e15) + (this.e321 * geometric_product.e12) + (this.e235 * geometric_product.e42), -(this.e415 * geometric_product.e41) - (this.e425 * geometric_product.e42) - (this.e435 * geometric_product.e43)) - (geometric_product.group1.wwwz * float4(this.group1.xyz, this.e412)) - float4((this.group0.xyz.yzx * geometric_product.group2.xyz.zxy), this.e423 * geometric_product.e23) - float4((this.group2.xyz.zxy * geometric_product.group0.xyz.yzx), this.e431 * geometric_product.e31)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<Circle> lhs, DipoleInversion rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Circle {
     public VersorEven geometric_quotient(DipoleInversion other) {
@@ -6680,6 +7552,10 @@ public extension Circle {
         );
     }
 }
+// Fancy infix trick (second half)
+public DipoleInversion operator /(GeometricQuotientInfixPartial<Circle> lhs, DualNum rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Circle {
     public DipoleInversion geometric_quotient(DualNum other) {
         DualNum geometric_product = DualNum(
@@ -6698,6 +7574,10 @@ public extension Circle {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<Circle> lhs, FlatPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Circle {
     public VersorEven geometric_quotient(FlatPoint other) {
         FlatPoint geometric_product = FlatPoint(
@@ -6715,6 +7595,10 @@ public extension Circle {
             float4((this.group0.xyz.zxy * geometric_product.group0.yzx), 0.0) - float4((float3(geometric_product.e45) * this.group1.xyz), 0.0) - float4((this.group0.xyz.yzx * geometric_product.group0.zxy), 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<Circle> lhs, Flector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Circle {
     public VersorEven geometric_quotient(Flector other) {
@@ -6746,6 +7630,10 @@ public extension Circle {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<Circle> lhs, Line rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Circle {
     public VersorOdd geometric_quotient(Line other) {
         Line reverse = Line(
@@ -6776,6 +7664,10 @@ public extension Circle {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<Circle> lhs, Motor rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Circle {
     public VersorOdd geometric_quotient(Motor other) {
         Motor reverse = Motor(
@@ -6805,6 +7697,10 @@ public extension Circle {
             float4(this.e431 * geometric_product.e125 * -1.0, this.e412 * geometric_product.e235 * -1.0, this.e423 * geometric_product.e315 * -1.0, (this.e415 * geometric_product.e235) + (this.e425 * geometric_product.e315) + (this.e435 * geometric_product.e125) + (this.e321 * geometric_product.e5)) + (geometric_product.group0.xyzz * float4(this.group1.www, this.e125)) + float4((this.group0.xyz.xxy * geometric_product.group1.wzx), this.e235 * geometric_product.e415) + float4((this.group0.xyz.zyz * geometric_product.group1.yww), this.e315 * geometric_product.e425)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricQuotientInfixPartial<Circle> lhs, MultiVector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Circle {
     public MultiVector geometric_quotient(MultiVector other) {
@@ -6886,6 +7782,10 @@ public extension Circle {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(GeometricQuotientInfixPartial<Circle> lhs, Plane rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Circle {
     public AntiDipoleInversion geometric_quotient(Plane other) {
         Plane geometric_product = Plane(
@@ -6903,6 +7803,10 @@ public extension Circle {
             (geometric_product.group0.zxyy * float4(this.group1.yzx, this.e315)) + (geometric_product.group0.wwwx * float4(this.group0.xyz, this.e235)) + float4(float3(0.0), this.e125 * geometric_product.e4125) - (this.group1.zxyw * geometric_product.group0.yzxw)
         );
     }
+}
+// Fancy infix trick (second half)
+public DipoleInversion operator /(GeometricQuotientInfixPartial<Circle> lhs, RoundPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Circle {
     public DipoleInversion geometric_quotient(RoundPoint other) {
@@ -6928,6 +7832,10 @@ public extension Circle {
         );
     }
 }
+// Fancy infix trick (second half)
+public Circle operator /(GeometricQuotientInfixPartial<Circle> lhs, Scalar rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Circle {
     public Circle geometric_quotient(Scalar other) {
         Scalar geometric_product = Scalar(
@@ -6943,6 +7851,10 @@ public extension Circle {
             float3(geometric_product.scalar) * this.group2.xyz
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(GeometricQuotientInfixPartial<Circle> lhs, Sphere rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Circle {
     public AntiDipoleInversion geometric_quotient(Sphere other) {
@@ -6967,6 +7879,10 @@ public extension Circle {
             float4(this.e435 * geometric_product.e4315 * -1.0, this.e415 * geometric_product.e4125 * -1.0, this.e425 * geometric_product.e4235 * -1.0, this.e125 * geometric_product.e4125) + (geometric_product.group0.zxyy * float4(this.group1.yzx, this.e315)) + (geometric_product.group0.wwwx * float4(this.group0.xyz, this.e235)) - float4((float3(geometric_product.e1234) * this.group2.xyz), this.e321 * geometric_product.e3215)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<Circle> lhs, VersorEven rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Circle {
     public VersorOdd geometric_quotient(VersorEven other) {
@@ -7006,6 +7922,10 @@ public extension Circle {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<Circle> lhs, VersorOdd rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Circle {
     public VersorEven geometric_quotient(VersorOdd other) {
         VersorOdd reverse = VersorOdd(
@@ -7044,17 +7964,13 @@ public extension Circle {
         );
     }
 }
-public extension CircleRotor {
-    // Fancy infix trick (first half)
-    public GeometricQuotientInfixPartial<CircleRotor> operator /(GeometricQuotientInfix rhs) {
-        return GeometricQuotientInfixPartial<CircleRotor>(this);
-    }
+// Fancy infix trick (first half)
+public GeometricQuotientInfixPartial<CircleRotor> operator /(CircleRotor lhs, GeometricQuotientInfix rhs) {
+    return GeometricQuotientInfixPartial<CircleRotor>(lhs);
 }
-public extension GeometricQuotientInfixPartial<CircleRotor> {
-    // Fancy infix trick (second half)
-    public VersorEven operator /(AntiCircleRotor rhs) {
-        return this.a.geometric_quotient(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<CircleRotor> lhs, AntiCircleRotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension CircleRotor {
     public VersorEven geometric_quotient(AntiCircleRotor other) {
@@ -7089,6 +8005,10 @@ public extension CircleRotor {
             float4((geometric_product.e43 * this.e315) + (geometric_product.e23 * this.e321) + (geometric_product.e25 * this.e412), (geometric_product.e41 * this.e125) + (geometric_product.e31 * this.e321) + (geometric_product.e35 * this.e423), (geometric_product.e42 * this.e235) + (geometric_product.e12 * this.e321) + (geometric_product.e15 * this.e431), -(geometric_product.e23 * this.e423) - (geometric_product.e31 * this.e431) - (geometric_product.e12 * this.e412)) - (this.group1.xyzz * float4(geometric_product.group1.www, geometric_product.e43)) - float4((geometric_product.group0.xyz.yzx * this.group2.zxy), geometric_product.e41 * this.e415) - float4((this.group0.xyz.yzx * geometric_product.group2.zxy), geometric_product.e42 * this.e425)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<CircleRotor> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension CircleRotor {
     public VersorOdd geometric_quotient(AntiDipoleInversion other) {
@@ -7128,6 +8048,10 @@ public extension CircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<CircleRotor> lhs, AntiDualNum rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension CircleRotor {
     public VersorEven geometric_quotient(AntiDualNum other) {
         AntiDualNum geometric_product = AntiDualNum(
@@ -7146,6 +8070,10 @@ public extension CircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<CircleRotor> lhs, AntiFlatPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension CircleRotor {
     public VersorOdd geometric_quotient(AntiFlatPoint other) {
         AntiFlatPoint geometric_product = AntiFlatPoint(
@@ -7163,6 +8091,10 @@ public extension CircleRotor {
             float4(geometric_product.e125 * this.e431 * -1.0, geometric_product.e235 * this.e412 * -1.0, geometric_product.e315 * this.e423 * -1.0, geometric_product.e125 * this.e435) + (geometric_product.group0.wwwy * this.group1.xyzy) + float4((this.group0.xyz.zxy * geometric_product.group0.yzx), geometric_product.e235 * this.e415)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<CircleRotor> lhs, AntiFlector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension CircleRotor {
     public VersorOdd geometric_quotient(AntiFlector other) {
@@ -7194,6 +8126,10 @@ public extension CircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<CircleRotor> lhs, AntiLine rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension CircleRotor {
     public VersorEven geometric_quotient(AntiLine other) {
         AntiLine reverse = AntiLine(
@@ -7223,6 +8159,10 @@ public extension CircleRotor {
             float4((geometric_product.e23 * this.e321) + (geometric_product.e25 * this.e412), (geometric_product.e31 * this.e321) + (geometric_product.e35 * this.e423), (geometric_product.e12 * this.e321) + (geometric_product.e15 * this.e431), -(geometric_product.e31 * this.e431) - (geometric_product.e12 * this.e412)) - float4((geometric_product.group1.xyz.zxy * this.group0.xyz.yzx), geometric_product.e23 * this.e423)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<CircleRotor> lhs, AntiMotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension CircleRotor {
     public VersorEven geometric_quotient(AntiMotor other) {
@@ -7254,6 +8194,10 @@ public extension CircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public DipoleInversion operator /(GeometricQuotientInfixPartial<CircleRotor> lhs, AntiPlane rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension CircleRotor {
     public DipoleInversion geometric_quotient(AntiPlane other) {
         AntiPlane geometric_product = AntiPlane(
@@ -7272,6 +8216,10 @@ public extension CircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(GeometricQuotientInfixPartial<CircleRotor> lhs, AntiScalar rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension CircleRotor {
     public AntiCircleRotor geometric_quotient(AntiScalar other) {
         AntiScalar geometric_product = AntiScalar(
@@ -7287,6 +8235,10 @@ public extension CircleRotor {
             float4(geometric_product.e12345) * this.group2 * float4(-1.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<CircleRotor> lhs, Circle rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension CircleRotor {
     public VersorOdd geometric_quotient(Circle other) {
@@ -7322,6 +8274,10 @@ public extension CircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<CircleRotor> lhs, CircleRotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension CircleRotor {
     public VersorOdd geometric_quotient(CircleRotor other) {
         CircleRotor reverse = CircleRotor(
@@ -7356,6 +8312,10 @@ public extension CircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<CircleRotor> lhs, Dipole rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension CircleRotor {
     public VersorEven geometric_quotient(Dipole other) {
         Dipole reverse = Dipole(
@@ -7389,6 +8349,10 @@ public extension CircleRotor {
             float4((this.e412 * geometric_product.e25) + (this.e321 * geometric_product.e23) + (this.e315 * geometric_product.e43), (this.e423 * geometric_product.e35) + (this.e321 * geometric_product.e31) + (this.e125 * geometric_product.e41), (this.e431 * geometric_product.e15) + (this.e321 * geometric_product.e12) + (this.e235 * geometric_product.e42), -(this.e415 * geometric_product.e41) - (this.e425 * geometric_product.e42) - (this.e435 * geometric_product.e43)) - (geometric_product.group1.wwwz * float4(this.group1.xyz, this.e412)) - float4((this.group0.xyz.yzx * geometric_product.group2.xyz.zxy), this.e423 * geometric_product.e23) - float4((geometric_product.group0.xyz.yzx * this.group2.zxy), this.e431 * geometric_product.e31)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<CircleRotor> lhs, DipoleInversion rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension CircleRotor {
     public VersorEven geometric_quotient(DipoleInversion other) {
@@ -7428,6 +8392,10 @@ public extension CircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<CircleRotor> lhs, DualNum rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension CircleRotor {
     public VersorOdd geometric_quotient(DualNum other) {
         DualNum geometric_product = DualNum(
@@ -7446,6 +8414,10 @@ public extension CircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<CircleRotor> lhs, FlatPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension CircleRotor {
     public VersorEven geometric_quotient(FlatPoint other) {
         FlatPoint geometric_product = FlatPoint(
@@ -7463,6 +8435,10 @@ public extension CircleRotor {
             float4((this.group0.xyz.zxy * geometric_product.group0.yzx), 0.0) - float4((float3(geometric_product.e45) * this.group1.xyz), 0.0) - float4((this.group0.xyz.yzx * geometric_product.group0.zxy), 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<CircleRotor> lhs, Flector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension CircleRotor {
     public VersorEven geometric_quotient(Flector other) {
@@ -7494,6 +8470,10 @@ public extension CircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<CircleRotor> lhs, Line rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension CircleRotor {
     public VersorOdd geometric_quotient(Line other) {
         Line reverse = Line(
@@ -7524,6 +8504,10 @@ public extension CircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<CircleRotor> lhs, Motor rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension CircleRotor {
     public VersorOdd geometric_quotient(Motor other) {
         Motor reverse = Motor(
@@ -7553,6 +8537,10 @@ public extension CircleRotor {
             (this.group1.wwwz * float4(geometric_product.group0.xyz, geometric_product.e125)) + (geometric_product.group1.ywwy * float4(this.group0.xyz.zyz, this.e425)) + (geometric_product.group1.wzxx * float4(this.group0.xyz.xxy, this.e415)) + float4(float3(0.0), (this.e321 * geometric_product.e5) + (this.e235 * geometric_product.e415) + (this.e315 * geometric_product.e425) + (this.e125 * geometric_product.e435)) - (geometric_product.group1.zxyw * float4(this.group0.xyz.yzx, this.e12345))
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricQuotientInfixPartial<CircleRotor> lhs, MultiVector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension CircleRotor {
     public MultiVector geometric_quotient(MultiVector other) {
@@ -7634,6 +8622,10 @@ public extension CircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(GeometricQuotientInfixPartial<CircleRotor> lhs, Plane rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension CircleRotor {
     public AntiDipoleInversion geometric_quotient(Plane other) {
         Plane geometric_product = Plane(
@@ -7651,6 +8643,10 @@ public extension CircleRotor {
             float4(this.e12345 * geometric_product.e4235 * -1.0, this.e12345 * geometric_product.e4315 * -1.0, this.e12345 * geometric_product.e4125 * -1.0, (this.e125 * geometric_product.e4125) + (this.e12345 * geometric_product.e3215)) + (geometric_product.group0.zxyy * float4(this.group1.yzx, this.e315)) + (geometric_product.group0.wwwx * float4(this.group0.xyz, this.e235)) - (this.group1.zxyw * geometric_product.group0.yzxw)
         );
     }
+}
+// Fancy infix trick (second half)
+public DipoleInversion operator /(GeometricQuotientInfixPartial<CircleRotor> lhs, RoundPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension CircleRotor {
     public DipoleInversion geometric_quotient(RoundPoint other) {
@@ -7676,6 +8672,10 @@ public extension CircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public CircleRotor operator /(GeometricQuotientInfixPartial<CircleRotor> lhs, Scalar rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension CircleRotor {
     public CircleRotor geometric_quotient(Scalar other) {
         Scalar geometric_product = Scalar(
@@ -7691,6 +8691,10 @@ public extension CircleRotor {
             float4(geometric_product.scalar) * this.group2
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(GeometricQuotientInfixPartial<CircleRotor> lhs, Sphere rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension CircleRotor {
     public AntiDipoleInversion geometric_quotient(Sphere other) {
@@ -7715,6 +8719,10 @@ public extension CircleRotor {
             float4(-(this.e235 * geometric_product.e1234) - (this.e12345 * geometric_product.e4235), -(this.e315 * geometric_product.e1234) - (this.e12345 * geometric_product.e4315), -(this.e125 * geometric_product.e1234) - (this.e12345 * geometric_product.e4125), (this.e125 * geometric_product.e4125) + (this.e12345 * geometric_product.e3215)) + (geometric_product.group0.zxyy * float4(this.group1.yzx, this.e315)) + (geometric_product.group0.wwwx * float4(this.group0.xyz, this.e235)) - (this.group1.zxyw * geometric_product.group0.yzxw)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<CircleRotor> lhs, VersorEven rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension CircleRotor {
     public VersorOdd geometric_quotient(VersorEven other) {
@@ -7754,6 +8762,10 @@ public extension CircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<CircleRotor> lhs, VersorOdd rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension CircleRotor {
     public VersorEven geometric_quotient(VersorOdd other) {
         VersorOdd reverse = VersorOdd(
@@ -7792,17 +8804,13 @@ public extension CircleRotor {
         );
     }
 }
-public extension Dipole {
-    // Fancy infix trick (first half)
-    public GeometricQuotientInfixPartial<Dipole> operator /(GeometricQuotientInfix rhs) {
-        return GeometricQuotientInfixPartial<Dipole>(this);
-    }
+// Fancy infix trick (first half)
+public GeometricQuotientInfixPartial<Dipole> operator /(Dipole lhs, GeometricQuotientInfix rhs) {
+    return GeometricQuotientInfixPartial<Dipole>(lhs);
 }
-public extension GeometricQuotientInfixPartial<Dipole> {
-    // Fancy infix trick (second half)
-    public VersorOdd operator /(AntiCircleRotor rhs) {
-        return this.a.geometric_quotient(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<Dipole> lhs, AntiCircleRotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Dipole {
     public VersorOdd geometric_quotient(AntiCircleRotor other) {
@@ -7837,6 +8845,10 @@ public extension Dipole {
             float4((geometric_product.e42 * this.e35) + (geometric_product.e23 * this.e45) + (geometric_product.e45 * this.e23) + (geometric_product.e35 * this.e42), (geometric_product.e43 * this.e15) + (geometric_product.e31 * this.e45) + (geometric_product.e45 * this.e31) + (geometric_product.e15 * this.e43), (geometric_product.e41 * this.e25) + (geometric_product.e12 * this.e45) + (geometric_product.e45 * this.e12) + (geometric_product.e25 * this.e41), -(geometric_product.e12 * this.e35) - (geometric_product.e15 * this.e23) - (geometric_product.e25 * this.e31) - (geometric_product.e35 * this.e12)) - float4((geometric_product.group0.xyz.zxy * this.group2.xyz.yzx), geometric_product.e23 * this.e15) - float4((this.group0.xyz.zxy * geometric_product.group2.yzx), geometric_product.e31 * this.e25)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<Dipole> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Dipole {
     public VersorEven geometric_quotient(AntiDipoleInversion other) {
@@ -7876,6 +8888,10 @@ public extension Dipole {
         );
     }
 }
+// Fancy infix trick (second half)
+public DipoleInversion operator /(GeometricQuotientInfixPartial<Dipole> lhs, AntiDualNum rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Dipole {
     public DipoleInversion geometric_quotient(AntiDualNum other) {
         AntiDualNum geometric_product = AntiDualNum(
@@ -7894,6 +8910,10 @@ public extension Dipole {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<Dipole> lhs, AntiFlatPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Dipole {
     public VersorEven geometric_quotient(AntiFlatPoint other) {
         AntiFlatPoint geometric_product = AntiFlatPoint(
@@ -7911,6 +8931,10 @@ public extension Dipole {
             float4((float3(geometric_product.e321) * this.group1.xyz), 0.0) + float4((this.group0.xyz.zxy * geometric_product.group0.yzx), 0.0) - float4((this.group0.xyz.yzx * geometric_product.group0.zxy), 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<Dipole> lhs, AntiFlector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Dipole {
     public VersorEven geometric_quotient(AntiFlector other) {
@@ -7942,6 +8966,10 @@ public extension Dipole {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<Dipole> lhs, AntiLine rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Dipole {
     public VersorOdd geometric_quotient(AntiLine other) {
         AntiLine reverse = AntiLine(
@@ -7971,6 +8999,10 @@ public extension Dipole {
             float4((geometric_product.e23 * this.e45) + (geometric_product.e35 * this.e42), (geometric_product.e31 * this.e45) + (geometric_product.e15 * this.e43), (geometric_product.e12 * this.e45) + (geometric_product.e25 * this.e41), -(geometric_product.e31 * this.e25) - (geometric_product.e12 * this.e35) - (geometric_product.e15 * this.e23) - (geometric_product.e25 * this.e31) - (geometric_product.e35 * this.e12)) - float4((geometric_product.group1.xyz.yzx * this.group0.xyz.zxy), geometric_product.e23 * this.e15)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<Dipole> lhs, AntiMotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Dipole {
     public VersorOdd geometric_quotient(AntiMotor other) {
@@ -8002,6 +9034,10 @@ public extension Dipole {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(GeometricQuotientInfixPartial<Dipole> lhs, AntiPlane rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Dipole {
     public AntiDipoleInversion geometric_quotient(AntiPlane other) {
         AntiPlane geometric_product = AntiPlane(
@@ -8020,6 +9056,10 @@ public extension Dipole {
         );
     }
 }
+// Fancy infix trick (second half)
+public Circle operator /(GeometricQuotientInfixPartial<Dipole> lhs, AntiScalar rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Dipole {
     public Circle geometric_quotient(AntiScalar other) {
         AntiScalar geometric_product = AntiScalar(
@@ -8035,6 +9075,10 @@ public extension Dipole {
             float3(geometric_product.e12345) * this.group2.xyz
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<Dipole> lhs, Circle rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Dipole {
     public VersorEven geometric_quotient(Circle other) {
@@ -8070,6 +9114,10 @@ public extension Dipole {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<Dipole> lhs, CircleRotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Dipole {
     public VersorEven geometric_quotient(CircleRotor other) {
         CircleRotor reverse = CircleRotor(
@@ -8104,6 +9152,10 @@ public extension Dipole {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<Dipole> lhs, Dipole rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Dipole {
     public VersorOdd geometric_quotient(Dipole other) {
         Dipole reverse = Dipole(
@@ -8137,6 +9189,10 @@ public extension Dipole {
             float4((geometric_product.e42 * this.e35) + (geometric_product.e23 * this.e45) + (geometric_product.e45 * this.e23) + (geometric_product.e35 * this.e42), (geometric_product.e43 * this.e15) + (geometric_product.e31 * this.e45) + (geometric_product.e45 * this.e31) + (geometric_product.e15 * this.e43), (geometric_product.e41 * this.e25) + (geometric_product.e12 * this.e45) + (geometric_product.e45 * this.e12) + (geometric_product.e25 * this.e41), -(geometric_product.e23 * this.e15) - (geometric_product.e31 * this.e25) - (geometric_product.e12 * this.e35) - (geometric_product.e35 * this.e12)) - float4((geometric_product.group0.xyz.zxy * this.group2.xyz.yzx), geometric_product.e15 * this.e23) - float4((geometric_product.group2.xyz.yzx * this.group0.xyz.zxy), geometric_product.e25 * this.e31)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<Dipole> lhs, DipoleInversion rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Dipole {
     public VersorOdd geometric_quotient(DipoleInversion other) {
@@ -8176,6 +9232,10 @@ public extension Dipole {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(GeometricQuotientInfixPartial<Dipole> lhs, DualNum rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Dipole {
     public AntiDipoleInversion geometric_quotient(DualNum other) {
         DualNum geometric_product = DualNum(
@@ -8194,6 +9254,10 @@ public extension Dipole {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<Dipole> lhs, FlatPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Dipole {
     public VersorOdd geometric_quotient(FlatPoint other) {
         FlatPoint geometric_product = FlatPoint(
@@ -8211,6 +9275,10 @@ public extension Dipole {
             float4((this.e42 * geometric_product.e35) + (this.e23 * geometric_product.e45), (this.e43 * geometric_product.e15) + (this.e31 * geometric_product.e45), (this.e41 * geometric_product.e25) + (this.e12 * geometric_product.e45), -(this.e31 * geometric_product.e25) - (this.e12 * geometric_product.e35)) - (geometric_product.group0.yzxx * float4(this.group0.xyz.zxy, this.e23))
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<Dipole> lhs, Flector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Dipole {
     public VersorOdd geometric_quotient(Flector other) {
@@ -8242,6 +9310,10 @@ public extension Dipole {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<Dipole> lhs, Line rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Dipole {
     public VersorEven geometric_quotient(Line other) {
         Line reverse = Line(
@@ -8272,6 +9344,10 @@ public extension Dipole {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<Dipole> lhs, Motor rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Dipole {
     public VersorEven geometric_quotient(Motor other) {
         Motor reverse = Motor(
@@ -8301,6 +9377,10 @@ public extension Dipole {
             float4((this.e41 * geometric_product.e5) + (this.e43 * geometric_product.e315), (this.e41 * geometric_product.e125) + (this.e42 * geometric_product.e5), (this.e42 * geometric_product.e235) + (this.e43 * geometric_product.e5), this.e43 * geometric_product.e435 * -1.0) - (geometric_product.group0.xyzy * float4(this.group1.www, this.e42)) - float4((this.group0.xyz.yzx * geometric_product.group1.zxy), this.e41 * geometric_product.e415)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricQuotientInfixPartial<Dipole> lhs, MultiVector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Dipole {
     public MultiVector geometric_quotient(MultiVector other) {
@@ -8382,6 +9462,10 @@ public extension Dipole {
         );
     }
 }
+// Fancy infix trick (second half)
+public DipoleInversion operator /(GeometricQuotientInfixPartial<Dipole> lhs, Plane rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Dipole {
     public DipoleInversion geometric_quotient(Plane other) {
         Plane geometric_product = Plane(
@@ -8399,6 +9483,10 @@ public extension Dipole {
             float4(-(this.e41 * geometric_product.e3215) - (this.e31 * geometric_product.e4125), -(this.e42 * geometric_product.e3215) - (this.e12 * geometric_product.e4235), -(this.e43 * geometric_product.e3215) - (this.e23 * geometric_product.e4315), (this.e45 * geometric_product.e3215) + (this.e25 * geometric_product.e4315) + (this.e35 * geometric_product.e4125)) + (geometric_product.group0.yzxx * float4(this.group1.zxy, this.e15))
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(GeometricQuotientInfixPartial<Dipole> lhs, RoundPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Dipole {
     public AntiDipoleInversion geometric_quotient(RoundPoint other) {
@@ -8424,6 +9512,10 @@ public extension Dipole {
         );
     }
 }
+// Fancy infix trick (second half)
+public Dipole operator /(GeometricQuotientInfixPartial<Dipole> lhs, Scalar rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Dipole {
     public Dipole geometric_quotient(Scalar other) {
         Scalar geometric_product = Scalar(
@@ -8439,6 +9531,10 @@ public extension Dipole {
             float3(geometric_product.scalar) * this.group2.xyz
         );
     }
+}
+// Fancy infix trick (second half)
+public DipoleInversion operator /(GeometricQuotientInfixPartial<Dipole> lhs, Sphere rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Dipole {
     public DipoleInversion geometric_quotient(Sphere other) {
@@ -8463,6 +9559,10 @@ public extension Dipole {
             float4(-(this.e41 * geometric_product.e3215) - (this.e31 * geometric_product.e4125), -(this.e42 * geometric_product.e3215) - (this.e12 * geometric_product.e4235), -(this.e43 * geometric_product.e3215) - (this.e23 * geometric_product.e4315), (this.e45 * geometric_product.e3215) + (this.e35 * geometric_product.e4125)) + (geometric_product.group0.yzxy * float4(this.group1.zxy, this.e25)) + float4((float3(geometric_product.e1234) * this.group2.xyz), this.e15 * geometric_product.e4235)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<Dipole> lhs, VersorEven rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Dipole {
     public VersorEven geometric_quotient(VersorEven other) {
@@ -8502,6 +9602,10 @@ public extension Dipole {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<Dipole> lhs, VersorOdd rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Dipole {
     public VersorOdd geometric_quotient(VersorOdd other) {
         VersorOdd reverse = VersorOdd(
@@ -8540,17 +9644,13 @@ public extension Dipole {
         );
     }
 }
-public extension DipoleInversion {
-    // Fancy infix trick (first half)
-    public GeometricQuotientInfixPartial<DipoleInversion> operator /(GeometricQuotientInfix rhs) {
-        return GeometricQuotientInfixPartial<DipoleInversion>(this);
-    }
+// Fancy infix trick (first half)
+public GeometricQuotientInfixPartial<DipoleInversion> operator /(DipoleInversion lhs, GeometricQuotientInfix rhs) {
+    return GeometricQuotientInfixPartial<DipoleInversion>(lhs);
 }
-public extension GeometricQuotientInfixPartial<DipoleInversion> {
-    // Fancy infix trick (second half)
-    public VersorOdd operator /(AntiCircleRotor rhs) {
-        return this.a.geometric_quotient(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<DipoleInversion> lhs, AntiCircleRotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension DipoleInversion {
     public VersorOdd geometric_quotient(AntiCircleRotor other) {
@@ -8585,6 +9685,10 @@ public extension DipoleInversion {
             float4((geometric_product.e42 * this.e35) + (geometric_product.e23 * this.e45) + (geometric_product.e31 * this.e4125) + (geometric_product.e45 * this.e23) + (geometric_product.e35 * this.e42) + (geometric_product.scalar * this.e4235), (geometric_product.e43 * this.e15) + (geometric_product.e31 * this.e45) + (geometric_product.e12 * this.e4235) + (geometric_product.e45 * this.e31) + (geometric_product.e15 * this.e43) + (geometric_product.scalar * this.e4315), (geometric_product.e43 * this.e3215) + (geometric_product.e23 * this.e4315) + (geometric_product.e12 * this.e45) + (geometric_product.e45 * this.e12) + (geometric_product.e25 * this.e41) + (geometric_product.scalar * this.e4125), -(geometric_product.e15 * this.e23) - (geometric_product.e15 * this.e4235) - (geometric_product.e25 * this.e31) - (geometric_product.e25 * this.e4315) - (geometric_product.e35 * this.e12) - (geometric_product.e35 * this.e4125)) + (float4(this.group3.ww, this.e25, this.e3215) * float4(geometric_product.group0.xyz.xyx, geometric_product.scalar)) - (geometric_product.group1.zxyz * float4(this.group3.yzx, this.e35)) - (this.group2.yzxx * float4(geometric_product.group0.xyz.zxy, geometric_product.e23)) - float4((this.group0.xyz.zxy * geometric_product.group2.yzx), geometric_product.e31 * this.e25) - float4((this.group2.www * geometric_product.group2.xyz), geometric_product.e45 * this.e3215)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<DipoleInversion> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension DipoleInversion {
     public VersorEven geometric_quotient(AntiDipoleInversion other) {
@@ -8624,6 +9728,10 @@ public extension DipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<DipoleInversion> lhs, AntiDualNum rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension DipoleInversion {
     public VersorOdd geometric_quotient(AntiDualNum other) {
         AntiDualNum geometric_product = AntiDualNum(
@@ -8642,6 +9750,10 @@ public extension DipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<DipoleInversion> lhs, AntiFlatPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension DipoleInversion {
     public VersorEven geometric_quotient(AntiFlatPoint other) {
         AntiFlatPoint geometric_product = AntiFlatPoint(
@@ -8659,6 +9771,10 @@ public extension DipoleInversion {
             float4(((float3(geometric_product.e321) * this.group1.xyz) + (float3(this.e1234) * geometric_product.group0.xyz) + (this.group0.xyz.zxy * geometric_product.group0.yzx) - (this.group0.xyz.yzx * geometric_product.group0.zxy)), geometric_product.e321 * this.e1234 * -1.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<DipoleInversion> lhs, AntiFlector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension DipoleInversion {
     public VersorEven geometric_quotient(AntiFlector other) {
@@ -8690,6 +9806,10 @@ public extension DipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<DipoleInversion> lhs, AntiLine rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension DipoleInversion {
     public VersorOdd geometric_quotient(AntiLine other) {
         AntiLine reverse = AntiLine(
@@ -8719,6 +9839,10 @@ public extension DipoleInversion {
             float4((geometric_product.e23 * this.e45) + (geometric_product.e31 * this.e4125) + (geometric_product.e35 * this.e42), (geometric_product.e31 * this.e45) + (geometric_product.e12 * this.e4235) + (geometric_product.e15 * this.e43), (geometric_product.e23 * this.e4315) + (geometric_product.e12 * this.e45) + (geometric_product.e25 * this.e41), -(geometric_product.e15 * this.e23) - (geometric_product.e15 * this.e4235) - (geometric_product.e25 * this.e31) - (geometric_product.e25 * this.e4315) - (geometric_product.e35 * this.e12) - (geometric_product.e35 * this.e4125)) - (float4(this.group0.xyz.zx, this.e1234, this.e35) * float4(geometric_product.group1.xyz.yzz, geometric_product.e12)) - (float4(this.group2.ww, this.e42, this.e25) * float4(geometric_product.group1.xyz.xyx, geometric_product.e31)) - float4((geometric_product.group0.xyz.zxy * this.group3.yzx), geometric_product.e23 * this.e15)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<DipoleInversion> lhs, AntiMotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension DipoleInversion {
     public VersorOdd geometric_quotient(AntiMotor other) {
@@ -8750,6 +9874,10 @@ public extension DipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<DipoleInversion> lhs, AntiPlane rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension DipoleInversion {
     public VersorEven geometric_quotient(AntiPlane other) {
         AntiPlane geometric_product = AntiPlane(
@@ -8768,6 +9896,10 @@ public extension DipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(GeometricQuotientInfixPartial<DipoleInversion> lhs, AntiScalar rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension DipoleInversion {
     public AntiDipoleInversion geometric_quotient(AntiScalar other) {
         AntiScalar geometric_product = AntiScalar(
@@ -8785,6 +9917,10 @@ public extension DipoleInversion {
             float4(geometric_product.e12345) * this.group3 * float4(-1.0, -1.0, -1.0, 1.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<DipoleInversion> lhs, Circle rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension DipoleInversion {
     public VersorEven geometric_quotient(Circle other) {
@@ -8820,6 +9956,10 @@ public extension DipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<DipoleInversion> lhs, CircleRotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension DipoleInversion {
     public VersorEven geometric_quotient(CircleRotor other) {
         CircleRotor reverse = CircleRotor(
@@ -8854,6 +9994,10 @@ public extension DipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<DipoleInversion> lhs, Dipole rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension DipoleInversion {
     public VersorOdd geometric_quotient(Dipole other) {
         Dipole reverse = Dipole(
@@ -8887,6 +10031,10 @@ public extension DipoleInversion {
             float4((geometric_product.e41 * this.e3215) + (geometric_product.e42 * this.e35) + (geometric_product.e23 * this.e45) + (geometric_product.e31 * this.e4125) + (geometric_product.e45 * this.e23) + (geometric_product.e35 * this.e42), (geometric_product.e42 * this.e3215) + (geometric_product.e43 * this.e15) + (geometric_product.e31 * this.e45) + (geometric_product.e12 * this.e4235) + (geometric_product.e45 * this.e31) + (geometric_product.e15 * this.e43), (geometric_product.e41 * this.e25) + (geometric_product.e43 * this.e3215) + (geometric_product.e23 * this.e4315) + (geometric_product.e12 * this.e45) + (geometric_product.e45 * this.e12) + (geometric_product.e25 * this.e41), -(geometric_product.e23 * this.e15) - (geometric_product.e31 * this.e25) - (geometric_product.e12 * this.e35) - (geometric_product.e45 * this.e3215) - (geometric_product.e35 * this.e12) - (geometric_product.e35 * this.e4125)) - (this.group3.yzxy * float4(geometric_product.group1.zxy, geometric_product.e25)) - (float4(this.group0.xyz.zx, this.e1234, this.e31) * float4(geometric_product.group2.xyz.yzz, geometric_product.e25)) - (float4(this.group2.ww, this.e42, this.e4235) * float4(geometric_product.group2.xyz.xyx, geometric_product.e15)) - float4((geometric_product.group0.xyz.zxy * this.group2.yzx), geometric_product.e15 * this.e23)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<DipoleInversion> lhs, DipoleInversion rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension DipoleInversion {
     public VersorOdd geometric_quotient(DipoleInversion other) {
@@ -8926,6 +10074,10 @@ public extension DipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<DipoleInversion> lhs, DualNum rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension DipoleInversion {
     public VersorEven geometric_quotient(DualNum other) {
         DualNum geometric_product = DualNum(
@@ -8944,6 +10096,10 @@ public extension DipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<DipoleInversion> lhs, FlatPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension DipoleInversion {
     public VersorOdd geometric_quotient(FlatPoint other) {
         FlatPoint geometric_product = FlatPoint(
@@ -8961,6 +10117,10 @@ public extension DipoleInversion {
             float4((this.e42 * geometric_product.e35) + (this.e23 * geometric_product.e45), (this.e43 * geometric_product.e15) + (this.e31 * geometric_product.e45), (this.e41 * geometric_product.e25) + (this.e12 * geometric_product.e45), -(this.e12 * geometric_product.e35) - (this.e4235 * geometric_product.e15) - (this.e4315 * geometric_product.e25) - (this.e4125 * geometric_product.e35) - (this.e3215 * geometric_product.e45)) - (geometric_product.group0.xyzy * float4(this.group2.www, this.e31)) - (geometric_product.group0.yzxx * float4(this.group0.xyz.zxy, this.e23))
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<DipoleInversion> lhs, Flector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension DipoleInversion {
     public VersorOdd geometric_quotient(Flector other) {
@@ -8992,6 +10152,10 @@ public extension DipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<DipoleInversion> lhs, Line rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension DipoleInversion {
     public VersorEven geometric_quotient(Line other) {
         Line reverse = Line(
@@ -9022,6 +10186,10 @@ public extension DipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<DipoleInversion> lhs, Motor rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension DipoleInversion {
     public VersorEven geometric_quotient(Motor other) {
         Motor reverse = Motor(
@@ -9051,6 +10219,10 @@ public extension DipoleInversion {
             float4((this.e43 * geometric_product.e315) + (this.e1234 * geometric_product.e235) + (this.e4315 * geometric_product.e435) - (this.e4125 * geometric_product.e425), (this.e42 * geometric_product.e5) + (this.e1234 * geometric_product.e315) + (this.e4125 * geometric_product.e415) - (this.e4315 * geometric_product.e12345), (this.e43 * geometric_product.e5) + (this.e1234 * geometric_product.e125) + (this.e4235 * geometric_product.e425) - (this.e4125 * geometric_product.e12345), 0.0) + float4((this.group0.xyz.xxy * geometric_product.group1.wzx), this.e1234 * geometric_product.e12345) - (geometric_product.group0.xyzy * float4(this.group1.www, this.e42)) - (geometric_product.group0.wzxz * float4(this.group3.xxy, this.e43)) - float4((this.group0.xyz.yzx * geometric_product.group1.zxy), this.e41 * geometric_product.e415)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricQuotientInfixPartial<DipoleInversion> lhs, MultiVector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension DipoleInversion {
     public MultiVector geometric_quotient(MultiVector other) {
@@ -9132,6 +10304,10 @@ public extension DipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<DipoleInversion> lhs, Plane rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension DipoleInversion {
     public VersorOdd geometric_quotient(Plane other) {
         Plane geometric_product = Plane(
@@ -9149,6 +10325,10 @@ public extension DipoleInversion {
             float4(-(this.e41 * geometric_product.e3215) - (this.e31 * geometric_product.e4125), -(this.e42 * geometric_product.e3215) - (this.e12 * geometric_product.e4235), -(this.e43 * geometric_product.e3215) - (this.e23 * geometric_product.e4315), (this.e15 * geometric_product.e4235) + (this.e25 * geometric_product.e4315) + (this.e35 * geometric_product.e4125)) + (this.group1.zxyw * geometric_product.group0.yzxw)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<DipoleInversion> lhs, RoundPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension DipoleInversion {
     public VersorEven geometric_quotient(RoundPoint other) {
@@ -9174,6 +10354,10 @@ public extension DipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public DipoleInversion operator /(GeometricQuotientInfixPartial<DipoleInversion> lhs, Scalar rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension DipoleInversion {
     public DipoleInversion geometric_quotient(Scalar other) {
         Scalar geometric_product = Scalar(
@@ -9191,6 +10375,10 @@ public extension DipoleInversion {
             float4(geometric_product.scalar) * this.group3
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<DipoleInversion> lhs, Sphere rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension DipoleInversion {
     public VersorOdd geometric_quotient(Sphere other) {
@@ -9215,6 +10403,10 @@ public extension DipoleInversion {
             float4(-(this.e41 * geometric_product.e3215) - (this.e31 * geometric_product.e4125), -(this.e42 * geometric_product.e3215) - (this.e12 * geometric_product.e4235), -(this.e43 * geometric_product.e3215) - (this.e23 * geometric_product.e4315), (this.e25 * geometric_product.e4315) + (this.e35 * geometric_product.e4125)) + (this.group1.zxyw * geometric_product.group0.yzxw) + (this.group2.xyzx * float4(float3(geometric_product.e1234), geometric_product.e4235))
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<DipoleInversion> lhs, VersorEven rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension DipoleInversion {
     public VersorEven geometric_quotient(VersorEven other) {
@@ -9254,6 +10446,10 @@ public extension DipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<DipoleInversion> lhs, VersorOdd rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension DipoleInversion {
     public VersorOdd geometric_quotient(VersorOdd other) {
         VersorOdd reverse = VersorOdd(
@@ -9292,17 +10488,13 @@ public extension DipoleInversion {
         );
     }
 }
-public extension DualNum {
-    // Fancy infix trick (first half)
-    public GeometricQuotientInfixPartial<DualNum> operator /(GeometricQuotientInfix rhs) {
-        return GeometricQuotientInfixPartial<DualNum>(this);
-    }
+// Fancy infix trick (first half)
+public GeometricQuotientInfixPartial<DualNum> operator /(DualNum lhs, GeometricQuotientInfix rhs) {
+    return GeometricQuotientInfixPartial<DualNum>(lhs);
 }
-public extension GeometricQuotientInfixPartial<DualNum> {
-    // Fancy infix trick (second half)
-    public VersorEven operator /(AntiCircleRotor rhs) {
-        return this.a.geometric_quotient(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<DualNum> lhs, AntiCircleRotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension DualNum {
     public VersorEven geometric_quotient(AntiCircleRotor other) {
@@ -9337,6 +10529,10 @@ public extension DualNum {
             float4(this.group0.xy.xx, this.e5, 0.0) * float4(float3(1.0), 0.0) * float4(geometric_product.group0.xyz, 0.0) * float4(-1.0, -1.0, -1.0, 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<DualNum> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension DualNum {
     public VersorOdd geometric_quotient(AntiDipoleInversion other) {
@@ -9376,6 +10572,10 @@ public extension DualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public DualNum operator /(GeometricQuotientInfixPartial<DualNum> lhs, AntiDualNum rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension DualNum {
     public DualNum geometric_quotient(AntiDualNum other) {
         AntiDualNum geometric_product = AntiDualNum(
@@ -9387,6 +10587,10 @@ public extension DualNum {
             float2((geometric_product.e3215 * this.e12345) + (geometric_product.scalar * this.e5), geometric_product.scalar * this.e12345)
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(GeometricQuotientInfixPartial<DualNum> lhs, AntiFlatPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension DualNum {
     public Flector geometric_quotient(AntiFlatPoint other) {
@@ -9401,6 +10605,10 @@ public extension DualNum {
             float4(float3(0.0), geometric_product.e321 * this.e5 * -1.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(GeometricQuotientInfixPartial<DualNum> lhs, AntiFlector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension DualNum {
     public Flector geometric_quotient(AntiFlector other) {
@@ -9428,6 +10636,10 @@ public extension DualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public Line operator /(GeometricQuotientInfixPartial<DualNum> lhs, AntiLine rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension DualNum {
     public Line geometric_quotient(AntiLine other) {
         AntiLine reverse = AntiLine(
@@ -9453,6 +10665,10 @@ public extension DualNum {
             (float3(this.e5) * geometric_product.group0.xyz) + (float3(this.e12345) * geometric_product.group1.xyz)
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(GeometricQuotientInfixPartial<DualNum> lhs, AntiMotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension DualNum {
     public Motor geometric_quotient(AntiMotor other) {
@@ -9480,6 +10696,10 @@ public extension DualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(GeometricQuotientInfixPartial<DualNum> lhs, AntiPlane rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension DualNum {
     public Flector geometric_quotient(AntiPlane other) {
         AntiPlane geometric_product = AntiPlane(
@@ -9494,6 +10714,10 @@ public extension DualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDualNum operator /(GeometricQuotientInfixPartial<DualNum> lhs, AntiScalar rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension DualNum {
     public AntiDualNum geometric_quotient(AntiScalar other) {
         return AntiDualNum(
@@ -9501,6 +10725,10 @@ public extension DualNum {
             float2(1.0/other.e12345 * -1.0) * this.group0.xy * float2(-1.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public DipoleInversion operator /(GeometricQuotientInfixPartial<DualNum> lhs, Circle rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension DualNum {
     public DipoleInversion geometric_quotient(Circle other) {
@@ -9536,6 +10764,10 @@ public extension DualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<DualNum> lhs, CircleRotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension DualNum {
     public VersorOdd geometric_quotient(CircleRotor other) {
         CircleRotor reverse = CircleRotor(
@@ -9570,6 +10802,10 @@ public extension DualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(GeometricQuotientInfixPartial<DualNum> lhs, Dipole rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension DualNum {
     public AntiDipoleInversion geometric_quotient(Dipole other) {
         Dipole reverse = Dipole(
@@ -9603,6 +10839,10 @@ public extension DualNum {
             float4(this.e5) * float4(geometric_product.group0.xyz, geometric_product.e45) * float4(-1.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<DualNum> lhs, DipoleInversion rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension DualNum {
     public VersorEven geometric_quotient(DipoleInversion other) {
@@ -9642,6 +10882,10 @@ public extension DualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDualNum operator /(GeometricQuotientInfixPartial<DualNum> lhs, DualNum rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension DualNum {
     public AntiDualNum geometric_quotient(DualNum other) {
         DualNum geometric_product = DualNum(
@@ -9653,6 +10897,10 @@ public extension DualNum {
             float2(-(geometric_product.e5 * this.e12345) - (geometric_product.e12345 * this.e5), geometric_product.e12345 * this.e12345) * float2(1.0, -1.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(GeometricQuotientInfixPartial<DualNum> lhs, FlatPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension DualNum {
     public AntiFlector geometric_quotient(FlatPoint other) {
@@ -9667,6 +10915,10 @@ public extension DualNum {
             float4(float3(0.0), this.e5 * geometric_product.e45 * -1.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(GeometricQuotientInfixPartial<DualNum> lhs, Flector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension DualNum {
     public AntiFlector geometric_quotient(Flector other) {
@@ -9694,6 +10946,10 @@ public extension DualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiLine operator /(GeometricQuotientInfixPartial<DualNum> lhs, Line rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension DualNum {
     public AntiLine geometric_quotient(Line other) {
         Line reverse = Line(
@@ -9720,6 +10976,10 @@ public extension DualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(GeometricQuotientInfixPartial<DualNum> lhs, Motor rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension DualNum {
     public AntiMotor geometric_quotient(Motor other) {
         Motor reverse = Motor(
@@ -9745,6 +11005,10 @@ public extension DualNum {
             -(float4(this.e5) * geometric_product.group0) - (float4(this.e12345) * geometric_product.group1)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricQuotientInfixPartial<DualNum> lhs, MultiVector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension DualNum {
     public MultiVector geometric_quotient(MultiVector other) {
@@ -9826,6 +11090,10 @@ public extension DualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(GeometricQuotientInfixPartial<DualNum> lhs, Plane rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension DualNum {
     public AntiFlector geometric_quotient(Plane other) {
         Plane geometric_product = Plane(
@@ -9839,6 +11107,10 @@ public extension DualNum {
             float4(this.e12345) * geometric_product.group0 * float4(-1.0, -1.0, -1.0, 1.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<DualNum> lhs, RoundPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension DualNum {
     public VersorOdd geometric_quotient(RoundPoint other) {
@@ -9864,6 +11136,10 @@ public extension DualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public DualNum operator /(GeometricQuotientInfixPartial<DualNum> lhs, Scalar rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension DualNum {
     public DualNum geometric_quotient(Scalar other) {
         return DualNum(
@@ -9871,6 +11147,10 @@ public extension DualNum {
             float2(1.0/other.scalar) * this.group0.xy
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<DualNum> lhs, Sphere rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension DualNum {
     public VersorEven geometric_quotient(Sphere other) {
@@ -9895,6 +11175,10 @@ public extension DualNum {
             float4(this.e12345) * float4(geometric_product.group0.xyz, geometric_product.e1234) * float4(-1.0, -1.0, -1.0, 1.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<DualNum> lhs, VersorEven rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension DualNum {
     public VersorOdd geometric_quotient(VersorEven other) {
@@ -9934,6 +11218,10 @@ public extension DualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<DualNum> lhs, VersorOdd rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension DualNum {
     public VersorEven geometric_quotient(VersorOdd other) {
         VersorOdd reverse = VersorOdd(
@@ -9972,17 +11260,13 @@ public extension DualNum {
         );
     }
 }
-public extension FlatPoint {
-    // Fancy infix trick (first half)
-    public GeometricQuotientInfixPartial<FlatPoint> operator /(GeometricQuotientInfix rhs) {
-        return GeometricQuotientInfixPartial<FlatPoint>(this);
-    }
+// Fancy infix trick (first half)
+public GeometricQuotientInfixPartial<FlatPoint> operator /(FlatPoint lhs, GeometricQuotientInfix rhs) {
+    return GeometricQuotientInfixPartial<FlatPoint>(lhs);
 }
-public extension GeometricQuotientInfixPartial<FlatPoint> {
-    // Fancy infix trick (second half)
-    public VersorOdd operator /(AntiCircleRotor rhs) {
-        return this.a.geometric_quotient(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<FlatPoint> lhs, AntiCircleRotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension FlatPoint {
     public VersorOdd geometric_quotient(AntiCircleRotor other) {
@@ -10017,6 +11301,10 @@ public extension FlatPoint {
             float4((geometric_product.e42 * this.e35) + (geometric_product.e23 * this.e45), (geometric_product.e43 * this.e15) + (geometric_product.e31 * this.e45), (geometric_product.e41 * this.e25) + (geometric_product.e12 * this.e45), -(geometric_product.e31 * this.e25) - (geometric_product.e12 * this.e35)) - (this.group0.yzxx * float4(geometric_product.group0.xyz.zxy, geometric_product.e23))
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<FlatPoint> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension FlatPoint {
     public VersorEven geometric_quotient(AntiDipoleInversion other) {
@@ -10056,6 +11344,10 @@ public extension FlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(GeometricQuotientInfixPartial<FlatPoint> lhs, AntiDualNum rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension FlatPoint {
     public Flector geometric_quotient(AntiDualNum other) {
         AntiDualNum geometric_product = AntiDualNum(
@@ -10070,6 +11362,10 @@ public extension FlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(GeometricQuotientInfixPartial<FlatPoint> lhs, AntiFlatPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension FlatPoint {
     public Motor geometric_quotient(AntiFlatPoint other) {
         AntiFlatPoint geometric_product = AntiFlatPoint(
@@ -10083,6 +11379,10 @@ public extension FlatPoint {
             float4(((float3(geometric_product.e321) * this.group0.xyz) + (float3(this.e45) * geometric_product.group0.xyz)), 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(GeometricQuotientInfixPartial<FlatPoint> lhs, AntiFlector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension FlatPoint {
     public Motor geometric_quotient(AntiFlector other) {
@@ -10110,6 +11410,10 @@ public extension FlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(GeometricQuotientInfixPartial<FlatPoint> lhs, AntiLine rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension FlatPoint {
     public Flector geometric_quotient(AntiLine other) {
         AntiLine reverse = AntiLine(
@@ -10135,6 +11439,10 @@ public extension FlatPoint {
             float4((float3(this.e45) * geometric_product.group0.xyz), -(geometric_product.e23 * this.e15) - (geometric_product.e31 * this.e25) - (geometric_product.e12 * this.e35))
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(GeometricQuotientInfixPartial<FlatPoint> lhs, AntiMotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension FlatPoint {
     public Flector geometric_quotient(AntiMotor other) {
@@ -10162,6 +11470,10 @@ public extension FlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(GeometricQuotientInfixPartial<FlatPoint> lhs, AntiPlane rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension FlatPoint {
     public Motor geometric_quotient(AntiPlane other) {
         AntiPlane geometric_product = AntiPlane(
@@ -10176,6 +11488,10 @@ public extension FlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlatPoint operator /(GeometricQuotientInfixPartial<FlatPoint> lhs, AntiScalar rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension FlatPoint {
     public AntiFlatPoint geometric_quotient(AntiScalar other) {
         return AntiFlatPoint(
@@ -10183,6 +11499,10 @@ public extension FlatPoint {
             float4(1.0/other.e12345 * -1.0) * this.group0 * float4(1.0, 1.0, 1.0, -1.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<FlatPoint> lhs, Circle rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension FlatPoint {
     public VersorEven geometric_quotient(Circle other) {
@@ -10218,6 +11538,10 @@ public extension FlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<FlatPoint> lhs, CircleRotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension FlatPoint {
     public VersorEven geometric_quotient(CircleRotor other) {
         CircleRotor reverse = CircleRotor(
@@ -10252,6 +11576,10 @@ public extension FlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<FlatPoint> lhs, Dipole rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension FlatPoint {
     public VersorOdd geometric_quotient(Dipole other) {
         Dipole reverse = Dipole(
@@ -10285,6 +11613,10 @@ public extension FlatPoint {
             float4((geometric_product.e42 * this.e35) + (geometric_product.e23 * this.e45), (geometric_product.e43 * this.e15) + (geometric_product.e31 * this.e45), (geometric_product.e41 * this.e25) + (geometric_product.e12 * this.e45), -(geometric_product.e31 * this.e25) - (geometric_product.e12 * this.e35)) - (this.group0.yzxx * float4(geometric_product.group0.xyz.zxy, geometric_product.e23))
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<FlatPoint> lhs, DipoleInversion rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension FlatPoint {
     public VersorOdd geometric_quotient(DipoleInversion other) {
@@ -10324,6 +11656,10 @@ public extension FlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(GeometricQuotientInfixPartial<FlatPoint> lhs, DualNum rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension FlatPoint {
     public AntiFlector geometric_quotient(DualNum other) {
         DualNum geometric_product = DualNum(
@@ -10338,6 +11674,10 @@ public extension FlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(GeometricQuotientInfixPartial<FlatPoint> lhs, FlatPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension FlatPoint {
     public AntiMotor geometric_quotient(FlatPoint other) {
         FlatPoint geometric_product = FlatPoint(
@@ -10351,6 +11691,10 @@ public extension FlatPoint {
             float4(((float3(this.e45) * geometric_product.group0.xyz) - (float3(geometric_product.e45) * this.group0.xyz)), 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(GeometricQuotientInfixPartial<FlatPoint> lhs, Flector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension FlatPoint {
     public AntiMotor geometric_quotient(Flector other) {
@@ -10378,6 +11722,10 @@ public extension FlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(GeometricQuotientInfixPartial<FlatPoint> lhs, Line rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension FlatPoint {
     public AntiFlector geometric_quotient(Line other) {
         Line reverse = Line(
@@ -10404,6 +11752,10 @@ public extension FlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(GeometricQuotientInfixPartial<FlatPoint> lhs, Motor rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension FlatPoint {
     public AntiFlector geometric_quotient(Motor other) {
         Motor reverse = Motor(
@@ -10429,6 +11781,10 @@ public extension FlatPoint {
             float4((this.group0.www * geometric_product.group0.xyz * float3(-1.0)), (this.e45 * geometric_product.e5) - (this.e15 * geometric_product.e415) - (this.e25 * geometric_product.e425) - (this.e35 * geometric_product.e435))
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricQuotientInfixPartial<FlatPoint> lhs, MultiVector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension FlatPoint {
     public MultiVector geometric_quotient(MultiVector other) {
@@ -10510,6 +11866,10 @@ public extension FlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(GeometricQuotientInfixPartial<FlatPoint> lhs, Plane rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension FlatPoint {
     public AntiMotor geometric_quotient(Plane other) {
         Plane geometric_product = Plane(
@@ -10523,6 +11883,10 @@ public extension FlatPoint {
             float4(this.e35 * geometric_product.e4315 * -1.0, this.e15 * geometric_product.e4125 * -1.0, this.e25 * geometric_product.e4235 * -1.0, (this.e25 * geometric_product.e4315) + (this.e35 * geometric_product.e4125) + (this.e45 * geometric_product.e3215)) + (this.group0.yzxx * geometric_product.group0.zxyx)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(GeometricQuotientInfixPartial<FlatPoint> lhs, RoundPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension FlatPoint {
     public AntiDipoleInversion geometric_quotient(RoundPoint other) {
@@ -10548,6 +11912,10 @@ public extension FlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public FlatPoint operator /(GeometricQuotientInfixPartial<FlatPoint> lhs, Scalar rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension FlatPoint {
     public FlatPoint geometric_quotient(Scalar other) {
         return FlatPoint(
@@ -10555,6 +11923,10 @@ public extension FlatPoint {
             float4(1.0/other.scalar) * this.group0
         );
     }
+}
+// Fancy infix trick (second half)
+public DipoleInversion operator /(GeometricQuotientInfixPartial<FlatPoint> lhs, Sphere rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension FlatPoint {
     public DipoleInversion geometric_quotient(Sphere other) {
@@ -10579,6 +11951,10 @@ public extension FlatPoint {
             float4((float3(geometric_product.e1234) * this.group0.xyz), (this.e15 * geometric_product.e4235) + (this.e25 * geometric_product.e4315) + (this.e35 * geometric_product.e4125) + (this.e45 * geometric_product.e3215))
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<FlatPoint> lhs, VersorEven rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension FlatPoint {
     public VersorEven geometric_quotient(VersorEven other) {
@@ -10618,6 +11994,10 @@ public extension FlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<FlatPoint> lhs, VersorOdd rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension FlatPoint {
     public VersorOdd geometric_quotient(VersorOdd other) {
         VersorOdd reverse = VersorOdd(
@@ -10656,17 +12036,13 @@ public extension FlatPoint {
         );
     }
 }
-public extension Flector {
-    // Fancy infix trick (first half)
-    public GeometricQuotientInfixPartial<Flector> operator /(GeometricQuotientInfix rhs) {
-        return GeometricQuotientInfixPartial<Flector>(this);
-    }
+// Fancy infix trick (first half)
+public GeometricQuotientInfixPartial<Flector> operator /(Flector lhs, GeometricQuotientInfix rhs) {
+    return GeometricQuotientInfixPartial<Flector>(lhs);
 }
-public extension GeometricQuotientInfixPartial<Flector> {
-    // Fancy infix trick (second half)
-    public VersorOdd operator /(AntiCircleRotor rhs) {
-        return this.a.geometric_quotient(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<Flector> lhs, AntiCircleRotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Flector {
     public VersorOdd geometric_quotient(AntiCircleRotor other) {
@@ -10701,6 +12077,10 @@ public extension Flector {
             float4((geometric_product.e42 * this.e35) + (geometric_product.e23 * this.e45) + (geometric_product.e31 * this.e4125) + (geometric_product.scalar * this.e4235), (geometric_product.e43 * this.e15) + (geometric_product.e31 * this.e45) + (geometric_product.e12 * this.e4235) + (geometric_product.scalar * this.e4315), (geometric_product.e43 * this.e3215) + (geometric_product.e23 * this.e4315) + (geometric_product.e12 * this.e45) + (geometric_product.scalar * this.e4125), -(geometric_product.e12 * this.e35) - (geometric_product.e45 * this.e3215) - (geometric_product.e15 * this.e4235) - (geometric_product.e25 * this.e4315) - (geometric_product.e35 * this.e4125)) + (float4(this.group1.ww, this.e25, this.e3215) * float4(geometric_product.group0.xyz.xyx, geometric_product.scalar)) - (geometric_product.group1.zxyy * float4(this.group1.yzx, this.e25)) - (this.group0.yzxx * float4(geometric_product.group0.xyz.zxy, geometric_product.e23))
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<Flector> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Flector {
     public VersorEven geometric_quotient(AntiDipoleInversion other) {
@@ -10740,6 +12120,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(GeometricQuotientInfixPartial<Flector> lhs, AntiDualNum rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Flector {
     public Flector geometric_quotient(AntiDualNum other) {
         AntiDualNum geometric_product = AntiDualNum(
@@ -10754,6 +12138,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(GeometricQuotientInfixPartial<Flector> lhs, AntiFlatPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Flector {
     public Motor geometric_quotient(AntiFlatPoint other) {
         AntiFlatPoint geometric_product = AntiFlatPoint(
@@ -10767,6 +12155,10 @@ public extension Flector {
             float4((geometric_product.e315 * this.e4125) + (geometric_product.e321 * this.e15), (geometric_product.e125 * this.e4235) + (geometric_product.e321 * this.e25), (geometric_product.e125 * this.e45) + (geometric_product.e321 * this.e35), -(geometric_product.e315 * this.e4315) - (geometric_product.e125 * this.e4125)) + (geometric_product.group0.xyxw * float4(this.group0.ww, this.e4315, this.e3215)) - (geometric_product.group0.zxyx * this.group1.yzxx)
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(GeometricQuotientInfixPartial<Flector> lhs, AntiFlector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Flector {
     public Motor geometric_quotient(AntiFlector other) {
@@ -10794,6 +12186,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(GeometricQuotientInfixPartial<Flector> lhs, AntiLine rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Flector {
     public Flector geometric_quotient(AntiLine other) {
         AntiLine reverse = AntiLine(
@@ -10819,6 +12215,10 @@ public extension Flector {
             float4((geometric_product.e23 * this.e45) + (geometric_product.e31 * this.e4125), (geometric_product.e31 * this.e45) + (geometric_product.e12 * this.e4235), (geometric_product.e23 * this.e4315) + (geometric_product.e12 * this.e45), -(geometric_product.e31 * this.e25) - (geometric_product.e12 * this.e35) - (geometric_product.e15 * this.e4235) - (geometric_product.e25 * this.e4315) - (geometric_product.e35 * this.e4125)) - float4((geometric_product.group0.xyz.zxy * this.group1.yzx), geometric_product.e23 * this.e15)
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(GeometricQuotientInfixPartial<Flector> lhs, AntiMotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Flector {
     public Flector geometric_quotient(AntiMotor other) {
@@ -10846,6 +12246,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(GeometricQuotientInfixPartial<Flector> lhs, AntiPlane rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Flector {
     public Motor geometric_quotient(AntiPlane other) {
         AntiPlane geometric_product = AntiPlane(
@@ -10860,6 +12264,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(GeometricQuotientInfixPartial<Flector> lhs, AntiScalar rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Flector {
     public AntiFlector geometric_quotient(AntiScalar other) {
         AntiScalar geometric_product = AntiScalar(
@@ -10873,6 +12281,10 @@ public extension Flector {
             float4(geometric_product.e12345) * this.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<Flector> lhs, Circle rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Flector {
     public VersorEven geometric_quotient(Circle other) {
@@ -10908,6 +12320,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<Flector> lhs, CircleRotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Flector {
     public VersorEven geometric_quotient(CircleRotor other) {
         CircleRotor reverse = CircleRotor(
@@ -10942,6 +12358,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<Flector> lhs, Dipole rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Flector {
     public VersorOdd geometric_quotient(Dipole other) {
         Dipole reverse = Dipole(
@@ -10975,6 +12395,10 @@ public extension Flector {
             float4((geometric_product.e41 * this.e3215) + (geometric_product.e42 * this.e35) + (geometric_product.e23 * this.e45) + (geometric_product.e31 * this.e4125), (geometric_product.e42 * this.e3215) + (geometric_product.e43 * this.e15) + (geometric_product.e31 * this.e45) + (geometric_product.e12 * this.e4235), (geometric_product.e41 * this.e25) + (geometric_product.e43 * this.e3215) + (geometric_product.e23 * this.e4315) + (geometric_product.e12 * this.e45), -(geometric_product.e23 * this.e15) - (geometric_product.e31 * this.e25) - (geometric_product.e12 * this.e35) - (geometric_product.e45 * this.e3215) - (geometric_product.e35 * this.e4125)) - (this.group1.yzxy * float4(geometric_product.group1.zxy, geometric_product.e25)) - float4((geometric_product.group0.xyz.zxy * this.group0.yzx), geometric_product.e15 * this.e4235)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<Flector> lhs, DipoleInversion rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Flector {
     public VersorOdd geometric_quotient(DipoleInversion other) {
@@ -11014,6 +12438,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(GeometricQuotientInfixPartial<Flector> lhs, DualNum rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Flector {
     public AntiFlector geometric_quotient(DualNum other) {
         DualNum geometric_product = DualNum(
@@ -11028,6 +12456,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(GeometricQuotientInfixPartial<Flector> lhs, FlatPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Flector {
     public AntiMotor geometric_quotient(FlatPoint other) {
         FlatPoint geometric_product = FlatPoint(
@@ -11041,6 +12473,10 @@ public extension Flector {
             float4((geometric_product.e15 * this.e45) + (geometric_product.e25 * this.e4125), (geometric_product.e25 * this.e45) + (geometric_product.e35 * this.e4235), (geometric_product.e15 * this.e4315) + (geometric_product.e35 * this.e45), -(geometric_product.e35 * this.e4125) - (geometric_product.e45 * this.e3215)) - (geometric_product.group0.zxyx * this.group1.yzxx) - (geometric_product.group0.wwwy * float4(this.group0.xyz, this.e4315))
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(GeometricQuotientInfixPartial<Flector> lhs, Flector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Flector {
     public AntiMotor geometric_quotient(Flector other) {
@@ -11068,6 +12504,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(GeometricQuotientInfixPartial<Flector> lhs, Line rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Flector {
     public AntiFlector geometric_quotient(Line other) {
         Line reverse = Line(
@@ -11094,6 +12534,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(GeometricQuotientInfixPartial<Flector> lhs, Motor rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Flector {
     public AntiFlector geometric_quotient(Motor other) {
         Motor reverse = Motor(
@@ -11119,6 +12563,10 @@ public extension Flector {
             float4(float3(0.0), (this.e3215 * geometric_product.e12345) - (this.e4235 * geometric_product.e235) - (this.e4315 * geometric_product.e315) - (this.e4125 * geometric_product.e125)) + float4((this.group1.yzx * geometric_product.group0.zxy), this.e45 * geometric_product.e5) - (this.group0.wwwx * geometric_product.group0.xyzx) - (geometric_product.group0.ywwz * float4(this.group1.zyz, this.e35)) - (geometric_product.group0.wzxy * float4(this.group1.xxy, this.e25))
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricQuotientInfixPartial<Flector> lhs, MultiVector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Flector {
     public MultiVector geometric_quotient(MultiVector other) {
@@ -11200,6 +12648,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(GeometricQuotientInfixPartial<Flector> lhs, Plane rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Flector {
     public AntiMotor geometric_quotient(Plane other) {
         Plane geometric_product = Plane(
@@ -11213,6 +12665,10 @@ public extension Flector {
             float4(-(this.e35 * geometric_product.e4315) - (this.e3215 * geometric_product.e4235), -(this.e15 * geometric_product.e4125) - (this.e3215 * geometric_product.e4315), -(this.e25 * geometric_product.e4235) - (this.e3215 * geometric_product.e4125), (this.e35 * geometric_product.e4125) + (this.e45 * geometric_product.e3215)) + (this.group0.yzxx * geometric_product.group0.zxyx) + (geometric_product.group0.wwwy * float4(this.group1.xyz, this.e25))
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<Flector> lhs, RoundPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Flector {
     public VersorEven geometric_quotient(RoundPoint other) {
@@ -11238,6 +12694,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(GeometricQuotientInfixPartial<Flector> lhs, Scalar rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Flector {
     public Flector geometric_quotient(Scalar other) {
         Scalar geometric_product = Scalar(
@@ -11251,6 +12711,10 @@ public extension Flector {
             float4(geometric_product.scalar) * this.group1
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<Flector> lhs, Sphere rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Flector {
     public VersorOdd geometric_quotient(Sphere other) {
@@ -11275,6 +12739,10 @@ public extension Flector {
             float4((float3(geometric_product.e1234) * this.group0.xyz), (this.e15 * geometric_product.e4235) + (this.e25 * geometric_product.e4315) + (this.e35 * geometric_product.e4125) + (this.e45 * geometric_product.e3215))
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<Flector> lhs, VersorEven rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Flector {
     public VersorEven geometric_quotient(VersorEven other) {
@@ -11314,6 +12782,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<Flector> lhs, VersorOdd rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Flector {
     public VersorOdd geometric_quotient(VersorOdd other) {
         VersorOdd reverse = VersorOdd(
@@ -11352,17 +12824,13 @@ public extension Flector {
         );
     }
 }
-public extension Line {
-    // Fancy infix trick (first half)
-    public GeometricQuotientInfixPartial<Line> operator /(GeometricQuotientInfix rhs) {
-        return GeometricQuotientInfixPartial<Line>(this);
-    }
+// Fancy infix trick (first half)
+public GeometricQuotientInfixPartial<Line> operator /(Line lhs, GeometricQuotientInfix rhs) {
+    return GeometricQuotientInfixPartial<Line>(lhs);
 }
-public extension GeometricQuotientInfixPartial<Line> {
-    // Fancy infix trick (second half)
-    public VersorEven operator /(AntiCircleRotor rhs) {
-        return this.a.geometric_quotient(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<Line> lhs, AntiCircleRotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Line {
     public VersorEven geometric_quotient(AntiCircleRotor other) {
@@ -11397,6 +12865,10 @@ public extension Line {
             float4(geometric_product.e43 * this.e315, geometric_product.e41 * this.e125, geometric_product.e42 * this.e235, geometric_product.e43 * this.e435 * -1.0) - float4((this.group0.xyz * geometric_product.group1.www), geometric_product.e42 * this.e425) - float4((geometric_product.group0.xyz.yzx * this.group1.xyz.zxy), geometric_product.e41 * this.e415)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<Line> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Line {
     public VersorOdd geometric_quotient(AntiDipoleInversion other) {
@@ -11436,6 +12908,10 @@ public extension Line {
         );
     }
 }
+// Fancy infix trick (second half)
+public Line operator /(GeometricQuotientInfixPartial<Line> lhs, AntiDualNum rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Line {
     public Line geometric_quotient(AntiDualNum other) {
         AntiDualNum geometric_product = AntiDualNum(
@@ -11450,6 +12926,10 @@ public extension Line {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(GeometricQuotientInfixPartial<Line> lhs, AntiFlatPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Line {
     public Flector geometric_quotient(AntiFlatPoint other) {
         AntiFlatPoint geometric_product = AntiFlatPoint(
@@ -11463,6 +12943,10 @@ public extension Line {
             float4((float3(geometric_product.e321) * this.group0.xyz), (geometric_product.e235 * this.e415) + (geometric_product.e315 * this.e425) + (geometric_product.e125 * this.e435))
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(GeometricQuotientInfixPartial<Line> lhs, AntiFlector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Line {
     public Flector geometric_quotient(AntiFlector other) {
@@ -11490,6 +12974,10 @@ public extension Line {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(GeometricQuotientInfixPartial<Line> lhs, AntiLine rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Line {
     public Motor geometric_quotient(AntiLine other) {
         AntiLine reverse = AntiLine(
@@ -11515,6 +13003,10 @@ public extension Line {
             float4((geometric_product.e31 * this.e125) + (geometric_product.e25 * this.e435), (geometric_product.e12 * this.e235) + (geometric_product.e35 * this.e415), (geometric_product.e23 * this.e315) + (geometric_product.e15 * this.e425), -(geometric_product.e12 * this.e125) - (geometric_product.e15 * this.e415) - (geometric_product.e25 * this.e425) - (geometric_product.e35 * this.e435)) - float4((geometric_product.group0.xyz.zxy * this.group1.xyz.yzx), geometric_product.e23 * this.e235) - float4((geometric_product.group1.xyz.zxy * this.group0.xyz.yzx), geometric_product.e31 * this.e315)
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(GeometricQuotientInfixPartial<Line> lhs, AntiMotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Line {
     public Motor geometric_quotient(AntiMotor other) {
@@ -11542,6 +13034,10 @@ public extension Line {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(GeometricQuotientInfixPartial<Line> lhs, AntiPlane rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Line {
     public Flector geometric_quotient(AntiPlane other) {
         AntiPlane geometric_product = AntiPlane(
@@ -11556,6 +13052,10 @@ public extension Line {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiLine operator /(GeometricQuotientInfixPartial<Line> lhs, AntiScalar rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Line {
     public AntiLine geometric_quotient(AntiScalar other) {
         AntiScalar geometric_product = AntiScalar(
@@ -11569,6 +13069,10 @@ public extension Line {
             float3(geometric_product.e12345) * this.group1.xyz * float3(-1.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<Line> lhs, Circle rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Line {
     public VersorOdd geometric_quotient(Circle other) {
@@ -11604,6 +13108,10 @@ public extension Line {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<Line> lhs, CircleRotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Line {
     public VersorOdd geometric_quotient(CircleRotor other) {
         CircleRotor reverse = CircleRotor(
@@ -11638,6 +13146,10 @@ public extension Line {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<Line> lhs, Dipole rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Line {
     public VersorEven geometric_quotient(Dipole other) {
         Dipole reverse = Dipole(
@@ -11671,6 +13183,10 @@ public extension Line {
             float4(geometric_product.e43 * this.e315, geometric_product.e41 * this.e125, geometric_product.e42 * this.e235, geometric_product.e43 * this.e435 * -1.0) - float4((this.group0.xyz * geometric_product.group1.www), geometric_product.e42 * this.e425) - float4((geometric_product.group0.xyz.yzx * this.group1.xyz.zxy), geometric_product.e41 * this.e415)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<Line> lhs, DipoleInversion rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Line {
     public VersorEven geometric_quotient(DipoleInversion other) {
@@ -11710,6 +13226,10 @@ public extension Line {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiLine operator /(GeometricQuotientInfixPartial<Line> lhs, DualNum rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Line {
     public AntiLine geometric_quotient(DualNum other) {
         DualNum geometric_product = DualNum(
@@ -11724,6 +13244,10 @@ public extension Line {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(GeometricQuotientInfixPartial<Line> lhs, FlatPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Line {
     public AntiFlector geometric_quotient(FlatPoint other) {
         FlatPoint geometric_product = FlatPoint(
@@ -11737,6 +13261,10 @@ public extension Line {
             float4((float3(geometric_product.e45) * this.group0.xyz * float3(-1.0)), -(geometric_product.e15 * this.e415) - (geometric_product.e25 * this.e425) - (geometric_product.e35 * this.e435))
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(GeometricQuotientInfixPartial<Line> lhs, Flector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Line {
     public AntiFlector geometric_quotient(Flector other) {
@@ -11764,6 +13292,10 @@ public extension Line {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(GeometricQuotientInfixPartial<Line> lhs, Line rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Line {
     public AntiMotor geometric_quotient(Line other) {
         Line reverse = Line(
@@ -11790,6 +13322,10 @@ public extension Line {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(GeometricQuotientInfixPartial<Line> lhs, Motor rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Line {
     public AntiMotor geometric_quotient(Motor other) {
         Motor reverse = Motor(
@@ -11815,6 +13351,10 @@ public extension Line {
             float4(-(this.e415 * geometric_product.e5) - (this.e435 * geometric_product.e315) - (this.e235 * geometric_product.e12345) - (this.e125 * geometric_product.e425), -(this.e415 * geometric_product.e125) - (this.e425 * geometric_product.e5) - (this.e235 * geometric_product.e435) - (this.e315 * geometric_product.e12345), -(this.e425 * geometric_product.e235) - (this.e435 * geometric_product.e5) - (this.e315 * geometric_product.e415) - (this.e125 * geometric_product.e12345), (this.e435 * geometric_product.e125) + (this.e235 * geometric_product.e415) + (this.e315 * geometric_product.e425) + (this.e125 * geometric_product.e435)) + (geometric_product.group1.zxyx * float4(this.group0.xyz.yzx, this.e415)) + float4((this.group1.xyz.yzx * geometric_product.group0.zxy), this.e425 * geometric_product.e315)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricQuotientInfixPartial<Line> lhs, MultiVector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Line {
     public MultiVector geometric_quotient(MultiVector other) {
@@ -11896,6 +13436,10 @@ public extension Line {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(GeometricQuotientInfixPartial<Line> lhs, Plane rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Line {
     public AntiFlector geometric_quotient(Plane other) {
         Plane geometric_product = Plane(
@@ -11909,6 +13453,10 @@ public extension Line {
             float4(this.e435 * geometric_product.e4315 * -1.0, this.e415 * geometric_product.e4125 * -1.0, this.e425 * geometric_product.e4235 * -1.0, (this.e315 * geometric_product.e4315) + (this.e125 * geometric_product.e4125)) + (geometric_product.group0.zxyx * float4(this.group0.xyz.yzx, this.e235))
         );
     }
+}
+// Fancy infix trick (second half)
+public DipoleInversion operator /(GeometricQuotientInfixPartial<Line> lhs, RoundPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Line {
     public DipoleInversion geometric_quotient(RoundPoint other) {
@@ -11934,6 +13482,10 @@ public extension Line {
         );
     }
 }
+// Fancy infix trick (second half)
+public Line operator /(GeometricQuotientInfixPartial<Line> lhs, Scalar rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Line {
     public Line geometric_quotient(Scalar other) {
         Scalar geometric_product = Scalar(
@@ -11947,6 +13499,10 @@ public extension Line {
             float3(geometric_product.scalar) * this.group1.xyz
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(GeometricQuotientInfixPartial<Line> lhs, Sphere rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Line {
     public AntiDipoleInversion geometric_quotient(Sphere other) {
@@ -11971,6 +13527,10 @@ public extension Line {
             float4(-(this.e435 * geometric_product.e4315) - (this.e235 * geometric_product.e1234), -(this.e415 * geometric_product.e4125) - (this.e315 * geometric_product.e1234), -(this.e425 * geometric_product.e4235) - (this.e125 * geometric_product.e1234), (this.e315 * geometric_product.e4315) + (this.e125 * geometric_product.e4125)) + (geometric_product.group0.zxyx * float4(this.group0.xyz.yzx, this.e235))
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<Line> lhs, VersorEven rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Line {
     public VersorOdd geometric_quotient(VersorEven other) {
@@ -12010,6 +13570,10 @@ public extension Line {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<Line> lhs, VersorOdd rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Line {
     public VersorEven geometric_quotient(VersorOdd other) {
         VersorOdd reverse = VersorOdd(
@@ -12048,17 +13612,13 @@ public extension Line {
         );
     }
 }
-public extension Motor {
-    // Fancy infix trick (first half)
-    public GeometricQuotientInfixPartial<Motor> operator /(GeometricQuotientInfix rhs) {
-        return GeometricQuotientInfixPartial<Motor>(this);
-    }
+// Fancy infix trick (first half)
+public GeometricQuotientInfixPartial<Motor> operator /(Motor lhs, GeometricQuotientInfix rhs) {
+    return GeometricQuotientInfixPartial<Motor>(lhs);
 }
-public extension GeometricQuotientInfixPartial<Motor> {
-    // Fancy infix trick (second half)
-    public VersorEven operator /(AntiCircleRotor rhs) {
-        return this.a.geometric_quotient(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<Motor> lhs, AntiCircleRotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Motor {
     public VersorEven geometric_quotient(AntiCircleRotor other) {
@@ -12093,6 +13653,10 @@ public extension Motor {
             float4(geometric_product.e43 * this.e315, geometric_product.e41 * this.e125, geometric_product.e42 * this.e235, 0.0) - (this.group0.xyzz * float4(geometric_product.group1.www, geometric_product.e43)) - float4((geometric_product.group0.xyz.xyx * this.group1.wwy), geometric_product.e41 * this.e415) - float4((geometric_product.group0.xyz.yzz * this.group1.zxw), geometric_product.e42 * this.e425)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<Motor> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Motor {
     public VersorOdd geometric_quotient(AntiDipoleInversion other) {
@@ -12132,6 +13696,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(GeometricQuotientInfixPartial<Motor> lhs, AntiDualNum rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Motor {
     public Motor geometric_quotient(AntiDualNum other) {
         AntiDualNum geometric_product = AntiDualNum(
@@ -12146,6 +13714,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(GeometricQuotientInfixPartial<Motor> lhs, AntiFlatPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Motor {
     public Flector geometric_quotient(AntiFlatPoint other) {
         AntiFlatPoint geometric_product = AntiFlatPoint(
@@ -12159,6 +13731,10 @@ public extension Motor {
             float4((geometric_product.group0.www * this.group0.xyz), (geometric_product.e235 * this.e415) + (geometric_product.e315 * this.e425) + (geometric_product.e125 * this.e435) - (geometric_product.e321 * this.e5))
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(GeometricQuotientInfixPartial<Motor> lhs, AntiFlector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Motor {
     public Flector geometric_quotient(AntiFlector other) {
@@ -12186,6 +13762,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(GeometricQuotientInfixPartial<Motor> lhs, AntiLine rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Motor {
     public Motor geometric_quotient(AntiLine other) {
         AntiLine reverse = AntiLine(
@@ -12211,6 +13791,10 @@ public extension Motor {
             float4((geometric_product.e23 * this.e5) + (geometric_product.e31 * this.e125) + (geometric_product.e15 * this.e12345) + (geometric_product.e25 * this.e435), (geometric_product.e31 * this.e5) + (geometric_product.e12 * this.e235) + (geometric_product.e25 * this.e12345) + (geometric_product.e35 * this.e415), (geometric_product.e23 * this.e315) + (geometric_product.e12 * this.e5) + (geometric_product.e15 * this.e425) + (geometric_product.e35 * this.e12345), -(geometric_product.e12 * this.e125) - (geometric_product.e15 * this.e415) - (geometric_product.e25 * this.e425) - (geometric_product.e35 * this.e435)) - (this.group1.yzxx * float4(geometric_product.group0.xyz.zxy, geometric_product.e23)) - float4((geometric_product.group1.xyz.zxy * this.group0.yzx), geometric_product.e31 * this.e315)
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(GeometricQuotientInfixPartial<Motor> lhs, AntiMotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Motor {
     public Motor geometric_quotient(AntiMotor other) {
@@ -12238,6 +13822,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(GeometricQuotientInfixPartial<Motor> lhs, AntiPlane rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Motor {
     public Flector geometric_quotient(AntiPlane other) {
         AntiPlane geometric_product = AntiPlane(
@@ -12252,6 +13840,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(GeometricQuotientInfixPartial<Motor> lhs, AntiScalar rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Motor {
     public AntiMotor geometric_quotient(AntiScalar other) {
         AntiScalar geometric_product = AntiScalar(
@@ -12265,6 +13857,10 @@ public extension Motor {
             float4(geometric_product.e12345) * this.group1 * float4(-1.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<Motor> lhs, Circle rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Motor {
     public VersorOdd geometric_quotient(Circle other) {
@@ -12300,6 +13896,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<Motor> lhs, CircleRotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Motor {
     public VersorOdd geometric_quotient(CircleRotor other) {
         CircleRotor reverse = CircleRotor(
@@ -12334,6 +13934,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<Motor> lhs, Dipole rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Motor {
     public VersorEven geometric_quotient(Dipole other) {
         Dipole reverse = Dipole(
@@ -12367,6 +13971,10 @@ public extension Motor {
             float4(geometric_product.e43 * this.e315, geometric_product.e41 * this.e125, geometric_product.e42 * this.e235, 0.0) - (this.group0.xyzz * float4(geometric_product.group1.www, geometric_product.e43)) - float4((geometric_product.group0.xyz.xyx * this.group1.wwy), geometric_product.e41 * this.e415) - float4((geometric_product.group0.xyz.yzz * this.group1.zxw), geometric_product.e42 * this.e425)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<Motor> lhs, DipoleInversion rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Motor {
     public VersorEven geometric_quotient(DipoleInversion other) {
@@ -12406,6 +14014,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(GeometricQuotientInfixPartial<Motor> lhs, DualNum rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Motor {
     public AntiMotor geometric_quotient(DualNum other) {
         DualNum geometric_product = DualNum(
@@ -12420,6 +14032,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(GeometricQuotientInfixPartial<Motor> lhs, FlatPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Motor {
     public AntiFlector geometric_quotient(FlatPoint other) {
         FlatPoint geometric_product = FlatPoint(
@@ -12433,6 +14049,10 @@ public extension Motor {
             float4((geometric_product.group0.www * this.group0.xyz * float3(-1.0)), -(geometric_product.e15 * this.e415) - (geometric_product.e25 * this.e425) - (geometric_product.e35 * this.e435) - (geometric_product.e45 * this.e5))
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(GeometricQuotientInfixPartial<Motor> lhs, Flector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Motor {
     public AntiFlector geometric_quotient(Flector other) {
@@ -12460,6 +14080,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(GeometricQuotientInfixPartial<Motor> lhs, Line rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Motor {
     public AntiMotor geometric_quotient(Line other) {
         Line reverse = Line(
@@ -12486,6 +14110,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(GeometricQuotientInfixPartial<Motor> lhs, Motor rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Motor {
     public AntiMotor geometric_quotient(Motor other) {
         Motor reverse = Motor(
@@ -12511,6 +14139,10 @@ public extension Motor {
             float4(-(geometric_product.e12345 * this.e235) - (geometric_product.e235 * this.e12345) - (geometric_product.e315 * this.e435) - (geometric_product.e5 * this.e415), -(geometric_product.e12345 * this.e315) - (geometric_product.e315 * this.e12345) - (geometric_product.e125 * this.e415) - (geometric_product.e5 * this.e425), -(geometric_product.e12345 * this.e125) - (geometric_product.e235 * this.e425) - (geometric_product.e125 * this.e12345) - (geometric_product.e5 * this.e435), (geometric_product.e435 * this.e125) + (geometric_product.e235 * this.e415) + (geometric_product.e315 * this.e425) + (geometric_product.e125 * this.e435)) + (geometric_product.group0.zxyx * this.group1.yzxx) + float4((geometric_product.group1.zxy * this.group0.yzx), geometric_product.e425 * this.e315) - (geometric_product.group0.xyxw * this.group1.wwyw) - float4((geometric_product.group0.yzz * this.group1.zxw), geometric_product.e5 * this.e12345)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricQuotientInfixPartial<Motor> lhs, MultiVector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Motor {
     public MultiVector geometric_quotient(MultiVector other) {
@@ -12592,6 +14224,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(GeometricQuotientInfixPartial<Motor> lhs, Plane rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Motor {
     public AntiFlector geometric_quotient(Plane other) {
         Plane geometric_product = Plane(
@@ -12605,6 +14241,10 @@ public extension Motor {
             float4(-(this.e435 * geometric_product.e4315) - (this.e12345 * geometric_product.e4235), -(this.e415 * geometric_product.e4125) - (this.e12345 * geometric_product.e4315), -(this.e425 * geometric_product.e4235) - (this.e12345 * geometric_product.e4125), (this.e235 * geometric_product.e4235) + (this.e315 * geometric_product.e4315) + (this.e125 * geometric_product.e4125)) + (this.group0.yzxw * geometric_product.group0.zxyw)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<Motor> lhs, RoundPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Motor {
     public VersorOdd geometric_quotient(RoundPoint other) {
@@ -12630,6 +14270,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(GeometricQuotientInfixPartial<Motor> lhs, Scalar rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Motor {
     public Motor geometric_quotient(Scalar other) {
         Scalar geometric_product = Scalar(
@@ -12643,6 +14287,10 @@ public extension Motor {
             float4(geometric_product.scalar) * this.group1
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<Motor> lhs, Sphere rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Motor {
     public VersorEven geometric_quotient(Sphere other) {
@@ -12667,6 +14315,10 @@ public extension Motor {
             float4(((this.group0.yzx * geometric_product.group0.zxy) - (float3(this.e12345) * geometric_product.group0.xyz) - (float3(geometric_product.e1234) * this.group1.xyz) - (this.group0.zxy * geometric_product.group0.yzx)), this.e12345 * geometric_product.e1234)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<Motor> lhs, VersorEven rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Motor {
     public VersorOdd geometric_quotient(VersorEven other) {
@@ -12706,6 +14358,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<Motor> lhs, VersorOdd rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Motor {
     public VersorEven geometric_quotient(VersorOdd other) {
         VersorOdd reverse = VersorOdd(
@@ -12744,17 +14400,13 @@ public extension Motor {
         );
     }
 }
-public extension MultiVector {
-    // Fancy infix trick (first half)
-    public GeometricQuotientInfixPartial<MultiVector> operator /(GeometricQuotientInfix rhs) {
-        return GeometricQuotientInfixPartial<MultiVector>(this);
-    }
+// Fancy infix trick (first half)
+public GeometricQuotientInfixPartial<MultiVector> operator /(MultiVector lhs, GeometricQuotientInfix rhs) {
+    return GeometricQuotientInfixPartial<MultiVector>(lhs);
 }
-public extension GeometricQuotientInfixPartial<MultiVector> {
-    // Fancy infix trick (second half)
-    public MultiVector operator /(AntiCircleRotor rhs) {
-        return this.a.geometric_quotient(rhs);
-    }
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricQuotientInfixPartial<MultiVector> lhs, AntiCircleRotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension MultiVector {
     public MultiVector geometric_quotient(AntiCircleRotor other) {
@@ -12803,6 +14455,10 @@ public extension MultiVector {
             (geometric_product.e41 * this.e4235) + (geometric_product.e42 * this.e4315) + (geometric_product.e43 * this.e4125) + (geometric_product.e45 * this.e1234) + (geometric_product.scalar * this.e1234) - (geometric_product.e41 * this.e23) - (geometric_product.e42 * this.e31) - (geometric_product.e43 * this.e12) - (geometric_product.e23 * this.e41) - (geometric_product.e31 * this.e42) - (geometric_product.e12 * this.e43)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricQuotientInfixPartial<MultiVector> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension MultiVector {
     public MultiVector geometric_quotient(AntiDipoleInversion other) {
@@ -12856,6 +14512,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricQuotientInfixPartial<MultiVector> lhs, AntiDualNum rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension MultiVector {
     public MultiVector geometric_quotient(AntiDualNum other) {
         AntiDualNum geometric_product = AntiDualNum(
@@ -12888,6 +14548,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricQuotientInfixPartial<MultiVector> lhs, AntiFlatPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension MultiVector {
     public MultiVector geometric_quotient(AntiFlatPoint other) {
         AntiFlatPoint geometric_product = AntiFlatPoint(
@@ -12919,6 +14583,10 @@ public extension MultiVector {
             geometric_product.e321 * this.e4
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricQuotientInfixPartial<MultiVector> lhs, AntiFlector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension MultiVector {
     public MultiVector geometric_quotient(AntiFlector other) {
@@ -12964,6 +14632,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricQuotientInfixPartial<MultiVector> lhs, AntiLine rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension MultiVector {
     public MultiVector geometric_quotient(AntiLine other) {
         AntiLine reverse = AntiLine(
@@ -13007,6 +14679,10 @@ public extension MultiVector {
             -(geometric_product.e23 * this.e41) - (geometric_product.e31 * this.e42) - (geometric_product.e12 * this.e43)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricQuotientInfixPartial<MultiVector> lhs, AntiMotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension MultiVector {
     public MultiVector geometric_quotient(AntiMotor other) {
@@ -13052,6 +14728,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricQuotientInfixPartial<MultiVector> lhs, AntiPlane rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension MultiVector {
     public MultiVector geometric_quotient(AntiPlane other) {
         AntiPlane geometric_product = AntiPlane(
@@ -13084,6 +14764,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricQuotientInfixPartial<MultiVector> lhs, AntiScalar rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension MultiVector {
     public MultiVector geometric_quotient(AntiScalar other) {
         AntiScalar geometric_product = AntiScalar(
@@ -13115,6 +14799,10 @@ public extension MultiVector {
             geometric_product.e12345 * this.e4 * -1.0
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricQuotientInfixPartial<MultiVector> lhs, Circle rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension MultiVector {
     public MultiVector geometric_quotient(Circle other) {
@@ -13164,6 +14852,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricQuotientInfixPartial<MultiVector> lhs, CircleRotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension MultiVector {
     public MultiVector geometric_quotient(CircleRotor other) {
         CircleRotor reverse = CircleRotor(
@@ -13212,6 +14904,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricQuotientInfixPartial<MultiVector> lhs, Dipole rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension MultiVector {
     public MultiVector geometric_quotient(Dipole other) {
         Dipole reverse = Dipole(
@@ -13259,6 +14955,10 @@ public extension MultiVector {
             (geometric_product.e41 * this.e4235) + (geometric_product.e42 * this.e4315) + (geometric_product.e43 * this.e4125) + (geometric_product.e45 * this.e1234) - (geometric_product.e41 * this.e23) - (geometric_product.e42 * this.e31) - (geometric_product.e43 * this.e12) - (geometric_product.e23 * this.e41) - (geometric_product.e31 * this.e42) - (geometric_product.e12 * this.e43)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricQuotientInfixPartial<MultiVector> lhs, DipoleInversion rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension MultiVector {
     public MultiVector geometric_quotient(DipoleInversion other) {
@@ -13312,6 +15012,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricQuotientInfixPartial<MultiVector> lhs, DualNum rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension MultiVector {
     public MultiVector geometric_quotient(DualNum other) {
         DualNum geometric_product = DualNum(
@@ -13344,6 +15048,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricQuotientInfixPartial<MultiVector> lhs, FlatPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension MultiVector {
     public MultiVector geometric_quotient(FlatPoint other) {
         FlatPoint geometric_product = FlatPoint(
@@ -13375,6 +15083,10 @@ public extension MultiVector {
             geometric_product.e45 * this.e1234
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricQuotientInfixPartial<MultiVector> lhs, Flector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension MultiVector {
     public MultiVector geometric_quotient(Flector other) {
@@ -13420,6 +15132,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricQuotientInfixPartial<MultiVector> lhs, Line rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension MultiVector {
     public MultiVector geometric_quotient(Line other) {
         Line reverse = Line(
@@ -13464,6 +15180,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricQuotientInfixPartial<MultiVector> lhs, Motor rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension MultiVector {
     public MultiVector geometric_quotient(Motor other) {
         Motor reverse = Motor(
@@ -13507,6 +15227,10 @@ public extension MultiVector {
             (geometric_product.e415 * this.e423) + (geometric_product.e425 * this.e431) + (geometric_product.e435 * this.e412) - (geometric_product.e12345 * this.e4)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricQuotientInfixPartial<MultiVector> lhs, MultiVector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension MultiVector {
     public MultiVector geometric_quotient(MultiVector other) {
@@ -13588,6 +15312,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricQuotientInfixPartial<MultiVector> lhs, Plane rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension MultiVector {
     public MultiVector geometric_quotient(Plane other) {
         Plane geometric_product = Plane(
@@ -13619,6 +15347,10 @@ public extension MultiVector {
             -(this.e41 * geometric_product.e4235) - (this.e42 * geometric_product.e4315) - (this.e43 * geometric_product.e4125)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricQuotientInfixPartial<MultiVector> lhs, RoundPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension MultiVector {
     public MultiVector geometric_quotient(RoundPoint other) {
@@ -13658,6 +15390,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricQuotientInfixPartial<MultiVector> lhs, Scalar rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension MultiVector {
     public MultiVector geometric_quotient(Scalar other) {
         Scalar geometric_product = Scalar(
@@ -13689,6 +15425,10 @@ public extension MultiVector {
             this.e1234 * geometric_product.scalar
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricQuotientInfixPartial<MultiVector> lhs, Sphere rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension MultiVector {
     public MultiVector geometric_quotient(Sphere other) {
@@ -13727,6 +15467,10 @@ public extension MultiVector {
             (this.scalar * geometric_product.e1234) - (this.e45 * geometric_product.e1234) - (this.e41 * geometric_product.e4235) - (this.e42 * geometric_product.e4315) - (this.e43 * geometric_product.e4125)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricQuotientInfixPartial<MultiVector> lhs, VersorEven rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension MultiVector {
     public MultiVector geometric_quotient(VersorEven other) {
@@ -13780,6 +15524,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricQuotientInfixPartial<MultiVector> lhs, VersorOdd rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension MultiVector {
     public MultiVector geometric_quotient(VersorOdd other) {
         VersorOdd reverse = VersorOdd(
@@ -13832,17 +15580,13 @@ public extension MultiVector {
         );
     }
 }
-public extension Plane {
-    // Fancy infix trick (first half)
-    public GeometricQuotientInfixPartial<Plane> operator /(GeometricQuotientInfix rhs) {
-        return GeometricQuotientInfixPartial<Plane>(this);
-    }
+// Fancy infix trick (first half)
+public GeometricQuotientInfixPartial<Plane> operator /(Plane lhs, GeometricQuotientInfix rhs) {
+    return GeometricQuotientInfixPartial<Plane>(lhs);
 }
-public extension GeometricQuotientInfixPartial<Plane> {
-    // Fancy infix trick (second half)
-    public DipoleInversion operator /(AntiCircleRotor rhs) {
-        return this.a.geometric_quotient(rhs);
-    }
+// Fancy infix trick (second half)
+public DipoleInversion operator /(GeometricQuotientInfixPartial<Plane> lhs, AntiCircleRotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Plane {
     public DipoleInversion geometric_quotient(AntiCircleRotor other) {
@@ -13877,6 +15621,10 @@ public extension Plane {
             float4((geometric_product.e31 * this.e4125) + (geometric_product.scalar * this.e4235), (geometric_product.e12 * this.e4235) + (geometric_product.scalar * this.e4315), (geometric_product.e23 * this.e4315) + (geometric_product.scalar * this.e4125), -(geometric_product.e15 * this.e4235) - (geometric_product.e25 * this.e4315) - (geometric_product.e35 * this.e4125)) + (float4(this.e3215) * float4(geometric_product.group0.xyz, geometric_product.scalar)) - (geometric_product.group1.zxyw * this.group0.yzxw)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<Plane> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Plane {
     public VersorEven geometric_quotient(AntiDipoleInversion other) {
@@ -13916,6 +15664,10 @@ public extension Plane {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(GeometricQuotientInfixPartial<Plane> lhs, AntiDualNum rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Plane {
     public Flector geometric_quotient(AntiDualNum other) {
         AntiDualNum geometric_product = AntiDualNum(
@@ -13930,6 +15682,10 @@ public extension Plane {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(GeometricQuotientInfixPartial<Plane> lhs, AntiFlatPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Plane {
     public Motor geometric_quotient(AntiFlatPoint other) {
         AntiFlatPoint geometric_product = AntiFlatPoint(
@@ -13943,6 +15699,10 @@ public extension Plane {
             (geometric_product.group0.yzxw * this.group0.zxyw) + float4(float3(0.0), -(geometric_product.e315 * this.e4315) - (geometric_product.e125 * this.e4125)) - (geometric_product.group0.zxyx * this.group0.yzxx)
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(GeometricQuotientInfixPartial<Plane> lhs, AntiFlector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Plane {
     public Motor geometric_quotient(AntiFlector other) {
@@ -13970,6 +15730,10 @@ public extension Plane {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(GeometricQuotientInfixPartial<Plane> lhs, AntiLine rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Plane {
     public Flector geometric_quotient(AntiLine other) {
         AntiLine reverse = AntiLine(
@@ -13995,6 +15759,10 @@ public extension Plane {
             float4(geometric_product.e31 * this.e4125, geometric_product.e12 * this.e4235, geometric_product.e23 * this.e4315, -(geometric_product.e25 * this.e4315) - (geometric_product.e35 * this.e4125)) - (this.group0.yzxx * float4(geometric_product.group0.xyz.zxy, geometric_product.e15))
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(GeometricQuotientInfixPartial<Plane> lhs, AntiMotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Plane {
     public Flector geometric_quotient(AntiMotor other) {
@@ -14022,6 +15790,10 @@ public extension Plane {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(GeometricQuotientInfixPartial<Plane> lhs, AntiPlane rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Plane {
     public Motor geometric_quotient(AntiPlane other) {
         AntiPlane geometric_product = AntiPlane(
@@ -14036,6 +15808,10 @@ public extension Plane {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(GeometricQuotientInfixPartial<Plane> lhs, AntiScalar rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Plane {
     public AntiPlane geometric_quotient(AntiScalar other) {
         return AntiPlane(
@@ -14043,6 +15819,10 @@ public extension Plane {
             float4(1.0/other.e12345 * -1.0) * this.group0 * float4(-1.0, -1.0, -1.0, 1.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(GeometricQuotientInfixPartial<Plane> lhs, Circle rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Plane {
     public AntiDipoleInversion geometric_quotient(Circle other) {
@@ -14078,6 +15858,10 @@ public extension Plane {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(GeometricQuotientInfixPartial<Plane> lhs, CircleRotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Plane {
     public AntiDipoleInversion geometric_quotient(CircleRotor other) {
         CircleRotor reverse = CircleRotor(
@@ -14112,6 +15896,10 @@ public extension Plane {
         );
     }
 }
+// Fancy infix trick (second half)
+public DipoleInversion operator /(GeometricQuotientInfixPartial<Plane> lhs, Dipole rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Plane {
     public DipoleInversion geometric_quotient(Dipole other) {
         Dipole reverse = Dipole(
@@ -14145,6 +15933,10 @@ public extension Plane {
             float4((geometric_product.e41 * this.e3215) + (geometric_product.e31 * this.e4125), (geometric_product.e42 * this.e3215) + (geometric_product.e12 * this.e4235), (geometric_product.e43 * this.e3215) + (geometric_product.e23 * this.e4315), -(geometric_product.e45 * this.e3215) - (geometric_product.e25 * this.e4315) - (geometric_product.e35 * this.e4125)) - (this.group0.yzxx * float4(geometric_product.group1.zxy, geometric_product.e15))
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<Plane> lhs, DipoleInversion rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Plane {
     public VersorOdd geometric_quotient(DipoleInversion other) {
@@ -14184,6 +15976,10 @@ public extension Plane {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(GeometricQuotientInfixPartial<Plane> lhs, DualNum rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Plane {
     public AntiFlector geometric_quotient(DualNum other) {
         DualNum geometric_product = DualNum(
@@ -14198,6 +15994,10 @@ public extension Plane {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(GeometricQuotientInfixPartial<Plane> lhs, FlatPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Plane {
     public AntiMotor geometric_quotient(FlatPoint other) {
         FlatPoint geometric_product = FlatPoint(
@@ -14211,6 +16011,10 @@ public extension Plane {
             float4(geometric_product.e25 * this.e4125, geometric_product.e35 * this.e4235, geometric_product.e15 * this.e4315, -(geometric_product.e25 * this.e4315) - (geometric_product.e35 * this.e4125) - (geometric_product.e45 * this.e3215)) - (geometric_product.group0.zxyx * this.group0.yzxx)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(GeometricQuotientInfixPartial<Plane> lhs, Flector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Plane {
     public AntiMotor geometric_quotient(Flector other) {
@@ -14238,6 +16042,10 @@ public extension Plane {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(GeometricQuotientInfixPartial<Plane> lhs, Line rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Plane {
     public AntiFlector geometric_quotient(Line other) {
         Line reverse = Line(
@@ -14264,6 +16072,10 @@ public extension Plane {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(GeometricQuotientInfixPartial<Plane> lhs, Motor rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Plane {
     public AntiFlector geometric_quotient(Motor other) {
         Motor reverse = Motor(
@@ -14289,6 +16101,10 @@ public extension Plane {
             (geometric_product.group0.zxyw * this.group0.yzxw) + float4(float3(0.0), geometric_product.e125 * this.e4125 * -1.0) - (this.group0.xyzy * float4(geometric_product.group0.www, geometric_product.e315)) - (this.group0.zxyx * float4(geometric_product.group0.yzx, geometric_product.e235))
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricQuotientInfixPartial<Plane> lhs, MultiVector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Plane {
     public MultiVector geometric_quotient(MultiVector other) {
@@ -14370,6 +16186,10 @@ public extension Plane {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(GeometricQuotientInfixPartial<Plane> lhs, Plane rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Plane {
     public AntiMotor geometric_quotient(Plane other) {
         Plane geometric_product = Plane(
@@ -14383,6 +16203,10 @@ public extension Plane {
             float4(((float3(geometric_product.e3215) * this.group0.xyz) - (float3(this.e3215) * geometric_product.group0.xyz)), 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public CircleRotor operator /(GeometricQuotientInfixPartial<Plane> lhs, RoundPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Plane {
     public CircleRotor geometric_quotient(RoundPoint other) {
@@ -14406,6 +16230,10 @@ public extension Plane {
         );
     }
 }
+// Fancy infix trick (second half)
+public Plane operator /(GeometricQuotientInfixPartial<Plane> lhs, Scalar rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Plane {
     public Plane geometric_quotient(Scalar other) {
         return Plane(
@@ -14413,6 +16241,10 @@ public extension Plane {
             float4(1.0/other.scalar) * this.group0
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(GeometricQuotientInfixPartial<Plane> lhs, Sphere rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Plane {
     public AntiCircleRotor geometric_quotient(Sphere other) {
@@ -14435,6 +16267,10 @@ public extension Plane {
             (this.group0 * float4(geometric_product.group0.www, geometric_product.e1234)) + float4(float3(0.0), -(this.e4315 * geometric_product.e4315) - (this.e4125 * geometric_product.e4125)) - (this.group0.wwwx * geometric_product.group0.xyzx)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<Plane> lhs, VersorEven rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Plane {
     public VersorEven geometric_quotient(VersorEven other) {
@@ -14474,6 +16310,10 @@ public extension Plane {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<Plane> lhs, VersorOdd rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Plane {
     public VersorOdd geometric_quotient(VersorOdd other) {
         VersorOdd reverse = VersorOdd(
@@ -14512,17 +16352,13 @@ public extension Plane {
         );
     }
 }
-public extension RoundPoint {
-    // Fancy infix trick (first half)
-    public GeometricQuotientInfixPartial<RoundPoint> operator /(GeometricQuotientInfix rhs) {
-        return GeometricQuotientInfixPartial<RoundPoint>(this);
-    }
+// Fancy infix trick (first half)
+public GeometricQuotientInfixPartial<RoundPoint> operator /(RoundPoint lhs, GeometricQuotientInfix rhs) {
+    return GeometricQuotientInfixPartial<RoundPoint>(lhs);
 }
-public extension GeometricQuotientInfixPartial<RoundPoint> {
-    // Fancy infix trick (second half)
-    public AntiDipoleInversion operator /(AntiCircleRotor rhs) {
-        return this.a.geometric_quotient(rhs);
-    }
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(GeometricQuotientInfixPartial<RoundPoint> lhs, AntiCircleRotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension RoundPoint {
     public AntiDipoleInversion geometric_quotient(AntiCircleRotor other) {
@@ -14557,6 +16393,10 @@ public extension RoundPoint {
             float4(geometric_product.e12 * this.e2 * -1.0, geometric_product.e23 * this.e3 * -1.0, geometric_product.e31 * this.e1 * -1.0, geometric_product.scalar * this.e5) + (geometric_product.group2.xyzy * this.group0.wwwy) + (geometric_product.group2.wwwz * this.group0.xyzz) + (this.group0.zxyx * float4(geometric_product.group1.yzx, geometric_product.e15)) - (float4(this.e5) * float4(geometric_product.group0.xyz, geometric_product.e45))
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<RoundPoint> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension RoundPoint {
     public VersorOdd geometric_quotient(AntiDipoleInversion other) {
@@ -14596,6 +16436,10 @@ public extension RoundPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<RoundPoint> lhs, AntiDualNum rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension RoundPoint {
     public VersorEven geometric_quotient(AntiDualNum other) {
         AntiDualNum geometric_product = AntiDualNum(
@@ -14614,6 +16458,10 @@ public extension RoundPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public DipoleInversion operator /(GeometricQuotientInfixPartial<RoundPoint> lhs, AntiFlatPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension RoundPoint {
     public DipoleInversion geometric_quotient(AntiFlatPoint other) {
         AntiFlatPoint geometric_product = AntiFlatPoint(
@@ -14631,6 +16479,10 @@ public extension RoundPoint {
             float4((float3(this.e4) * geometric_product.group0.xyz), -(geometric_product.e235 * this.e1) - (geometric_product.e315 * this.e2) - (geometric_product.e125 * this.e3) - (geometric_product.e321 * this.e5))
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<RoundPoint> lhs, AntiFlector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension RoundPoint {
     public VersorOdd geometric_quotient(AntiFlector other) {
@@ -14662,6 +16514,10 @@ public extension RoundPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(GeometricQuotientInfixPartial<RoundPoint> lhs, AntiLine rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension RoundPoint {
     public AntiDipoleInversion geometric_quotient(AntiLine other) {
         AntiLine reverse = AntiLine(
@@ -14691,6 +16547,10 @@ public extension RoundPoint {
             float4(geometric_product.e12 * this.e2 * -1.0, geometric_product.e23 * this.e3 * -1.0, geometric_product.e31 * this.e1 * -1.0, geometric_product.e35 * this.e3) + (this.group0.zxyx * float4(geometric_product.group0.xyz.yzx, geometric_product.e15)) + (this.group0.wwwy * float4(geometric_product.group1.xyz, geometric_product.e25))
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<RoundPoint> lhs, AntiMotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension RoundPoint {
     public VersorEven geometric_quotient(AntiMotor other) {
@@ -14722,6 +16582,10 @@ public extension RoundPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(GeometricQuotientInfixPartial<RoundPoint> lhs, AntiPlane rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension RoundPoint {
     public AntiCircleRotor geometric_quotient(AntiPlane other) {
         AntiPlane geometric_product = AntiPlane(
@@ -14738,6 +16602,10 @@ public extension RoundPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public Sphere operator /(GeometricQuotientInfixPartial<RoundPoint> lhs, AntiScalar rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension RoundPoint {
     public Sphere geometric_quotient(AntiScalar other) {
         AntiScalar geometric_product = AntiScalar(
@@ -14751,6 +16619,10 @@ public extension RoundPoint {
             geometric_product.e12345 * this.e4 * -1.0
         );
     }
+}
+// Fancy infix trick (second half)
+public DipoleInversion operator /(GeometricQuotientInfixPartial<RoundPoint> lhs, Circle rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension RoundPoint {
     public DipoleInversion geometric_quotient(Circle other) {
@@ -14786,6 +16658,10 @@ public extension RoundPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public DipoleInversion operator /(GeometricQuotientInfixPartial<RoundPoint> lhs, CircleRotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension RoundPoint {
     public DipoleInversion geometric_quotient(CircleRotor other) {
         CircleRotor reverse = CircleRotor(
@@ -14820,6 +16696,10 @@ public extension RoundPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(GeometricQuotientInfixPartial<RoundPoint> lhs, Dipole rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension RoundPoint {
     public AntiDipoleInversion geometric_quotient(Dipole other) {
         Dipole reverse = Dipole(
@@ -14853,6 +16733,10 @@ public extension RoundPoint {
             float4(geometric_product.e12 * this.e2 * -1.0, geometric_product.e23 * this.e3 * -1.0, geometric_product.e31 * this.e1 * -1.0, geometric_product.e35 * this.e3) + (this.group0.zxyy * float4(geometric_product.group1.yzx, geometric_product.e25)) + (this.group0.wwwx * float4(geometric_product.group2.xyz, geometric_product.e15)) - (float4(this.e5) * float4(geometric_product.group0.xyz, geometric_product.e45))
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<RoundPoint> lhs, DipoleInversion rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension RoundPoint {
     public VersorEven geometric_quotient(DipoleInversion other) {
@@ -14892,6 +16776,10 @@ public extension RoundPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<RoundPoint> lhs, DualNum rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension RoundPoint {
     public VersorOdd geometric_quotient(DualNum other) {
         DualNum geometric_product = DualNum(
@@ -14910,6 +16798,10 @@ public extension RoundPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(GeometricQuotientInfixPartial<RoundPoint> lhs, FlatPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension RoundPoint {
     public AntiDipoleInversion geometric_quotient(FlatPoint other) {
         FlatPoint geometric_product = FlatPoint(
@@ -14927,6 +16819,10 @@ public extension RoundPoint {
             float4((float3(this.e4) * geometric_product.group0.xyz), (geometric_product.e15 * this.e1) + (geometric_product.e25 * this.e2) + (geometric_product.e35 * this.e3) - (geometric_product.e45 * this.e5))
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<RoundPoint> lhs, Flector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension RoundPoint {
     public VersorEven geometric_quotient(Flector other) {
@@ -14958,6 +16854,10 @@ public extension RoundPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public DipoleInversion operator /(GeometricQuotientInfixPartial<RoundPoint> lhs, Line rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension RoundPoint {
     public DipoleInversion geometric_quotient(Line other) {
         Line reverse = Line(
@@ -14988,6 +16888,10 @@ public extension RoundPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<RoundPoint> lhs, Motor rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension RoundPoint {
     public VersorOdd geometric_quotient(Motor other) {
         Motor reverse = Motor(
@@ -15017,6 +16921,10 @@ public extension RoundPoint {
             float4((geometric_product.e425 * this.e3) + (geometric_product.e12345 * this.e1) + (geometric_product.e235 * this.e4), (geometric_product.e435 * this.e1) + (geometric_product.e12345 * this.e2) + (geometric_product.e315 * this.e4), (geometric_product.e415 * this.e2) + (geometric_product.e12345 * this.e3) + (geometric_product.e125 * this.e4), -(geometric_product.e235 * this.e1) - (geometric_product.e315 * this.e2) - (geometric_product.e125 * this.e3)) - (geometric_product.group0.zxyw * float4(this.group0.yzx, this.e5))
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricQuotientInfixPartial<RoundPoint> lhs, MultiVector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension RoundPoint {
     public MultiVector geometric_quotient(MultiVector other) {
@@ -15098,6 +17006,10 @@ public extension RoundPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public CircleRotor operator /(GeometricQuotientInfixPartial<RoundPoint> lhs, Plane rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension RoundPoint {
     public CircleRotor geometric_quotient(Plane other) {
         Plane geometric_product = Plane(
@@ -15113,6 +17025,10 @@ public extension RoundPoint {
             float4(-(geometric_product.e4235 * this.e5) - (geometric_product.e3215 * this.e1), -(geometric_product.e4315 * this.e5) - (geometric_product.e3215 * this.e2), -(geometric_product.e4125 * this.e5) - (geometric_product.e3215 * this.e3), (geometric_product.e4235 * this.e1) + (geometric_product.e4315 * this.e2) + (geometric_product.e4125 * this.e3) + (geometric_product.e3215 * this.e4))
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(GeometricQuotientInfixPartial<RoundPoint> lhs, RoundPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension RoundPoint {
     public AntiCircleRotor geometric_quotient(RoundPoint other) {
@@ -15136,6 +17052,10 @@ public extension RoundPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public RoundPoint operator /(GeometricQuotientInfixPartial<RoundPoint> lhs, Scalar rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension RoundPoint {
     public RoundPoint geometric_quotient(Scalar other) {
         Scalar geometric_product = Scalar(
@@ -15149,6 +17069,10 @@ public extension RoundPoint {
             this.e5 * geometric_product.scalar
         );
     }
+}
+// Fancy infix trick (second half)
+public CircleRotor operator /(GeometricQuotientInfixPartial<RoundPoint> lhs, Sphere rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension RoundPoint {
     public CircleRotor geometric_quotient(Sphere other) {
@@ -15171,6 +17095,10 @@ public extension RoundPoint {
             float4(-(this.e1 * geometric_product.e3215) - (this.e5 * geometric_product.e4235), -(this.e2 * geometric_product.e3215) - (this.e5 * geometric_product.e4315), -(this.e3 * geometric_product.e3215) - (this.e5 * geometric_product.e4125), (this.e1 * geometric_product.e4235) + (this.e2 * geometric_product.e4315) + (this.e3 * geometric_product.e4125) + (this.e4 * geometric_product.e3215) + (this.e5 * geometric_product.e1234))
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<RoundPoint> lhs, VersorEven rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension RoundPoint {
     public VersorOdd geometric_quotient(VersorEven other) {
@@ -15210,6 +17138,10 @@ public extension RoundPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<RoundPoint> lhs, VersorOdd rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension RoundPoint {
     public VersorEven geometric_quotient(VersorOdd other) {
         VersorOdd reverse = VersorOdd(
@@ -15248,17 +17180,13 @@ public extension RoundPoint {
         );
     }
 }
-public extension Scalar {
-    // Fancy infix trick (first half)
-    public GeometricQuotientInfixPartial<Scalar> operator /(GeometricQuotientInfix rhs) {
-        return GeometricQuotientInfixPartial<Scalar>(this);
-    }
+// Fancy infix trick (first half)
+public GeometricQuotientInfixPartial<Scalar> operator /(Scalar lhs, GeometricQuotientInfix rhs) {
+    return GeometricQuotientInfixPartial<Scalar>(lhs);
 }
-public extension GeometricQuotientInfixPartial<Scalar> {
-    // Fancy infix trick (second half)
-    public AntiCircleRotor operator /(AntiCircleRotor rhs) {
-        return this.a.geometric_quotient(rhs);
-    }
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(GeometricQuotientInfixPartial<Scalar> lhs, AntiCircleRotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Scalar {
     public AntiCircleRotor geometric_quotient(AntiCircleRotor other) {
@@ -15291,6 +17219,10 @@ public extension Scalar {
             float4(this.scalar) * geometric_product.group2
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(GeometricQuotientInfixPartial<Scalar> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Scalar {
     public AntiDipoleInversion geometric_quotient(AntiDipoleInversion other) {
@@ -15330,6 +17262,10 @@ public extension Scalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDualNum operator /(GeometricQuotientInfixPartial<Scalar> lhs, AntiDualNum rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Scalar {
     public AntiDualNum geometric_quotient(AntiDualNum other) {
         Scalar other_2 = Scalar(
@@ -15341,6 +17277,10 @@ public extension Scalar {
             float2(this.scalar) * float2(other.e3215 * other_2.scalar, other.scalar * other_2.scalar)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlatPoint operator /(GeometricQuotientInfixPartial<Scalar> lhs, AntiFlatPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Scalar {
     public AntiFlatPoint geometric_quotient(AntiFlatPoint other) {
@@ -15357,6 +17297,10 @@ public extension Scalar {
             float4(this.scalar) * float4(reverse.e235 * other_2.scalar, reverse.e315 * other_2.scalar, reverse.e125 * other_2.scalar, reverse.e321 * other_2.scalar)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(GeometricQuotientInfixPartial<Scalar> lhs, AntiFlector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Scalar {
     public AntiFlector geometric_quotient(AntiFlector other) {
@@ -15384,6 +17328,10 @@ public extension Scalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiLine operator /(GeometricQuotientInfixPartial<Scalar> lhs, AntiLine rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Scalar {
     public AntiLine geometric_quotient(AntiLine other) {
         AntiLine reverse = AntiLine(
@@ -15409,6 +17357,10 @@ public extension Scalar {
             float3(this.scalar) * geometric_product.group1.xyz
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(GeometricQuotientInfixPartial<Scalar> lhs, AntiMotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Scalar {
     public AntiMotor geometric_quotient(AntiMotor other) {
@@ -15436,6 +17388,10 @@ public extension Scalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(GeometricQuotientInfixPartial<Scalar> lhs, AntiPlane rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Scalar {
     public AntiPlane geometric_quotient(AntiPlane other) {
         Scalar other_2 = Scalar(
@@ -15448,6 +17404,10 @@ public extension Scalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(GeometricQuotientInfixPartial<Scalar> lhs, AntiScalar rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Scalar {
     public AntiScalar geometric_quotient(AntiScalar other) {
         return AntiScalar(
@@ -15455,6 +17415,10 @@ public extension Scalar {
             this.scalar / (other.e12345) * -1.0
         );
     }
+}
+// Fancy infix trick (second half)
+public Circle operator /(GeometricQuotientInfixPartial<Scalar> lhs, Circle rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Scalar {
     public Circle geometric_quotient(Circle other) {
@@ -15488,6 +17452,10 @@ public extension Scalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public CircleRotor operator /(GeometricQuotientInfixPartial<Scalar> lhs, CircleRotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Scalar {
     public CircleRotor geometric_quotient(CircleRotor other) {
         CircleRotor reverse = CircleRotor(
@@ -15520,6 +17488,10 @@ public extension Scalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public Dipole operator /(GeometricQuotientInfixPartial<Scalar> lhs, Dipole rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Scalar {
     public Dipole geometric_quotient(Dipole other) {
         Dipole reverse = Dipole(
@@ -15551,6 +17523,10 @@ public extension Scalar {
             float3(this.scalar) * geometric_product.group2.xyz
         );
     }
+}
+// Fancy infix trick (second half)
+public DipoleInversion operator /(GeometricQuotientInfixPartial<Scalar> lhs, DipoleInversion rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Scalar {
     public DipoleInversion geometric_quotient(DipoleInversion other) {
@@ -15590,6 +17566,10 @@ public extension Scalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public DualNum operator /(GeometricQuotientInfixPartial<Scalar> lhs, DualNum rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Scalar {
     public DualNum geometric_quotient(DualNum other) {
         Scalar other_2 = Scalar(
@@ -15601,6 +17581,10 @@ public extension Scalar {
             float2(this.scalar) * float2(other.e5 * other_2.scalar, other.e12345 * other_2.scalar)
         );
     }
+}
+// Fancy infix trick (second half)
+public FlatPoint operator /(GeometricQuotientInfixPartial<Scalar> lhs, FlatPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Scalar {
     public FlatPoint geometric_quotient(FlatPoint other) {
@@ -15617,6 +17601,10 @@ public extension Scalar {
             float4(this.scalar) * float4(reverse.e15 * other_2.scalar, reverse.e25 * other_2.scalar, reverse.e35 * other_2.scalar, reverse.e45 * other_2.scalar)
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(GeometricQuotientInfixPartial<Scalar> lhs, Flector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Scalar {
     public Flector geometric_quotient(Flector other) {
@@ -15644,6 +17632,10 @@ public extension Scalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public Line operator /(GeometricQuotientInfixPartial<Scalar> lhs, Line rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Scalar {
     public Line geometric_quotient(Line other) {
         Line reverse = Line(
@@ -15670,6 +17662,10 @@ public extension Scalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(GeometricQuotientInfixPartial<Scalar> lhs, Motor rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Scalar {
     public Motor geometric_quotient(Motor other) {
         Motor reverse = Motor(
@@ -15695,6 +17691,10 @@ public extension Scalar {
             float4(this.scalar) * geometric_product.group1
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricQuotientInfixPartial<Scalar> lhs, MultiVector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Scalar {
     public MultiVector geometric_quotient(MultiVector other) {
@@ -15776,6 +17776,10 @@ public extension Scalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public Plane operator /(GeometricQuotientInfixPartial<Scalar> lhs, Plane rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Scalar {
     public Plane geometric_quotient(Plane other) {
         Scalar other_2 = Scalar(
@@ -15787,6 +17791,10 @@ public extension Scalar {
             float4(this.scalar) * float4(other.e4235 * other_2.scalar, other.e4315 * other_2.scalar, other.e4125 * other_2.scalar, other.e3215 * other_2.scalar)
         );
     }
+}
+// Fancy infix trick (second half)
+public RoundPoint operator /(GeometricQuotientInfixPartial<Scalar> lhs, RoundPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Scalar {
     public RoundPoint geometric_quotient(RoundPoint other) {
@@ -15808,6 +17816,10 @@ public extension Scalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(GeometricQuotientInfixPartial<Scalar> lhs, Scalar rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Scalar {
     public Scalar geometric_quotient(Scalar other) {
         return Scalar(
@@ -15815,6 +17827,10 @@ public extension Scalar {
             this.scalar / (other.scalar)
         );
     }
+}
+// Fancy infix trick (second half)
+public Sphere operator /(GeometricQuotientInfixPartial<Scalar> lhs, Sphere rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Scalar {
     public Sphere geometric_quotient(Sphere other) {
@@ -15835,6 +17851,10 @@ public extension Scalar {
             this.scalar * geometric_product.e1234
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<Scalar> lhs, VersorEven rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Scalar {
     public VersorEven geometric_quotient(VersorEven other) {
@@ -15874,6 +17894,10 @@ public extension Scalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<Scalar> lhs, VersorOdd rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Scalar {
     public VersorOdd geometric_quotient(VersorOdd other) {
         VersorOdd reverse = VersorOdd(
@@ -15912,17 +17936,13 @@ public extension Scalar {
         );
     }
 }
-public extension Sphere {
-    // Fancy infix trick (first half)
-    public GeometricQuotientInfixPartial<Sphere> operator /(GeometricQuotientInfix rhs) {
-        return GeometricQuotientInfixPartial<Sphere>(this);
-    }
+// Fancy infix trick (first half)
+public GeometricQuotientInfixPartial<Sphere> operator /(Sphere lhs, GeometricQuotientInfix rhs) {
+    return GeometricQuotientInfixPartial<Sphere>(lhs);
 }
-public extension GeometricQuotientInfixPartial<Sphere> {
-    // Fancy infix trick (second half)
-    public DipoleInversion operator /(AntiCircleRotor rhs) {
-        return this.a.geometric_quotient(rhs);
-    }
+// Fancy infix trick (second half)
+public DipoleInversion operator /(GeometricQuotientInfixPartial<Sphere> lhs, AntiCircleRotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Sphere {
     public DipoleInversion geometric_quotient(AntiCircleRotor other) {
@@ -15957,6 +17977,10 @@ public extension Sphere {
             float4((geometric_product.e31 * this.e4125) + (geometric_product.scalar * this.e4235), (geometric_product.e12 * this.e4235) + (geometric_product.scalar * this.e4315), (geometric_product.e23 * this.e4315) + (geometric_product.scalar * this.e4125), -(geometric_product.e25 * this.e4315) - (geometric_product.e35 * this.e4125)) + (float4(this.e3215) * float4(geometric_product.group0.xyz, geometric_product.scalar)) - (geometric_product.group1.zxyw * this.group0.yzxw) - (geometric_product.group2.xyzx * float4(float3(this.e1234), this.e4235))
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<Sphere> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Sphere {
     public VersorEven geometric_quotient(AntiDipoleInversion other) {
@@ -15996,6 +18020,10 @@ public extension Sphere {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<Sphere> lhs, AntiDualNum rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Sphere {
     public VersorOdd geometric_quotient(AntiDualNum other) {
         AntiDualNum geometric_product = AntiDualNum(
@@ -16014,6 +18042,10 @@ public extension Sphere {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(GeometricQuotientInfixPartial<Sphere> lhs, AntiFlatPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Sphere {
     public AntiDipoleInversion geometric_quotient(AntiFlatPoint other) {
         AntiFlatPoint geometric_product = AntiFlatPoint(
@@ -16031,6 +18063,10 @@ public extension Sphere {
             float4((float3(this.e1234) * geometric_product.group0.xyz), (geometric_product.e321 * this.e3215) - (geometric_product.e235 * this.e4235) - (geometric_product.e315 * this.e4315) - (geometric_product.e125 * this.e4125))
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<Sphere> lhs, AntiFlector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Sphere {
     public VersorEven geometric_quotient(AntiFlector other) {
@@ -16062,6 +18098,10 @@ public extension Sphere {
         );
     }
 }
+// Fancy infix trick (second half)
+public DipoleInversion operator /(GeometricQuotientInfixPartial<Sphere> lhs, AntiLine rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Sphere {
     public DipoleInversion geometric_quotient(AntiLine other) {
         AntiLine reverse = AntiLine(
@@ -16091,6 +18131,10 @@ public extension Sphere {
             float4(geometric_product.e31 * this.e4125, geometric_product.e12 * this.e4235, geometric_product.e23 * this.e4315, geometric_product.e35 * this.e4125 * -1.0) - (this.group0.yzxx * float4(geometric_product.group0.xyz.zxy, geometric_product.e15)) - float4((float3(this.e1234) * geometric_product.group1.xyz), geometric_product.e25 * this.e4315)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<Sphere> lhs, AntiMotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Sphere {
     public VersorOdd geometric_quotient(AntiMotor other) {
@@ -16122,6 +18166,10 @@ public extension Sphere {
         );
     }
 }
+// Fancy infix trick (second half)
+public CircleRotor operator /(GeometricQuotientInfixPartial<Sphere> lhs, AntiPlane rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Sphere {
     public CircleRotor geometric_quotient(AntiPlane other) {
         AntiPlane geometric_product = AntiPlane(
@@ -16138,6 +18186,10 @@ public extension Sphere {
         );
     }
 }
+// Fancy infix trick (second half)
+public RoundPoint operator /(GeometricQuotientInfixPartial<Sphere> lhs, AntiScalar rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Sphere {
     public RoundPoint geometric_quotient(AntiScalar other) {
         AntiScalar geometric_product = AntiScalar(
@@ -16151,6 +18203,10 @@ public extension Sphere {
             geometric_product.e12345 * this.e3215
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(GeometricQuotientInfixPartial<Sphere> lhs, Circle rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Sphere {
     public AntiDipoleInversion geometric_quotient(Circle other) {
@@ -16186,6 +18242,10 @@ public extension Sphere {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(GeometricQuotientInfixPartial<Sphere> lhs, CircleRotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Sphere {
     public AntiDipoleInversion geometric_quotient(CircleRotor other) {
         CircleRotor reverse = CircleRotor(
@@ -16220,6 +18280,10 @@ public extension Sphere {
         );
     }
 }
+// Fancy infix trick (second half)
+public DipoleInversion operator /(GeometricQuotientInfixPartial<Sphere> lhs, Dipole rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Sphere {
     public DipoleInversion geometric_quotient(Dipole other) {
         Dipole reverse = Dipole(
@@ -16253,6 +18317,10 @@ public extension Sphere {
             float4((geometric_product.e41 * this.e3215) + (geometric_product.e31 * this.e4125), (geometric_product.e42 * this.e3215) + (geometric_product.e12 * this.e4235), (geometric_product.e43 * this.e3215) + (geometric_product.e23 * this.e4315), -(geometric_product.e45 * this.e3215) - (geometric_product.e35 * this.e4125)) - (this.group0.yzxy * float4(geometric_product.group1.zxy, geometric_product.e25)) - float4((float3(this.e1234) * geometric_product.group2.xyz), geometric_product.e15 * this.e4235)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<Sphere> lhs, DipoleInversion rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Sphere {
     public VersorOdd geometric_quotient(DipoleInversion other) {
@@ -16292,6 +18360,10 @@ public extension Sphere {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<Sphere> lhs, DualNum rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Sphere {
     public VersorEven geometric_quotient(DualNum other) {
         DualNum geometric_product = DualNum(
@@ -16310,6 +18382,10 @@ public extension Sphere {
         );
     }
 }
+// Fancy infix trick (second half)
+public DipoleInversion operator /(GeometricQuotientInfixPartial<Sphere> lhs, FlatPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Sphere {
     public DipoleInversion geometric_quotient(FlatPoint other) {
         FlatPoint geometric_product = FlatPoint(
@@ -16327,6 +18403,10 @@ public extension Sphere {
             float4((float3(this.e1234) * geometric_product.group0.xyz * float3(-1.0)), -(geometric_product.e15 * this.e4235) - (geometric_product.e25 * this.e4315) - (geometric_product.e35 * this.e4125) - (geometric_product.e45 * this.e3215))
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<Sphere> lhs, Flector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Sphere {
     public VersorOdd geometric_quotient(Flector other) {
@@ -16358,6 +18438,10 @@ public extension Sphere {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(GeometricQuotientInfixPartial<Sphere> lhs, Line rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Sphere {
     public AntiDipoleInversion geometric_quotient(Line other) {
         Line reverse = Line(
@@ -16388,6 +18472,10 @@ public extension Sphere {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<Sphere> lhs, Motor rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Sphere {
     public VersorEven geometric_quotient(Motor other) {
         Motor reverse = Motor(
@@ -16417,6 +18505,10 @@ public extension Sphere {
             float4(((float3(this.e1234) * geometric_product.group1.xyz) + (geometric_product.group0.zxy * this.group0.yzx) - (float3(geometric_product.e12345) * this.group0.xyz) - (geometric_product.group0.yzx * this.group0.zxy)), geometric_product.e12345 * this.e1234)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricQuotientInfixPartial<Sphere> lhs, MultiVector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Sphere {
     public MultiVector geometric_quotient(MultiVector other) {
@@ -16498,6 +18590,10 @@ public extension Sphere {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(GeometricQuotientInfixPartial<Sphere> lhs, Plane rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Sphere {
     public AntiCircleRotor geometric_quotient(Plane other) {
         Plane geometric_product = Plane(
@@ -16513,6 +18609,10 @@ public extension Sphere {
             (float4(geometric_product.e3215) * float4(this.group0.xyz, this.e1234)) + float4(float3(0.0), -(geometric_product.e4315 * this.e4315) - (geometric_product.e4125 * this.e4125)) - (geometric_product.group0.xyzx * this.group0.wwwx)
         );
     }
+}
+// Fancy infix trick (second half)
+public CircleRotor operator /(GeometricQuotientInfixPartial<Sphere> lhs, RoundPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Sphere {
     public CircleRotor geometric_quotient(RoundPoint other) {
@@ -16536,6 +18636,10 @@ public extension Sphere {
         );
     }
 }
+// Fancy infix trick (second half)
+public Sphere operator /(GeometricQuotientInfixPartial<Sphere> lhs, Scalar rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Sphere {
     public Sphere geometric_quotient(Scalar other) {
         Scalar geometric_product = Scalar(
@@ -16549,6 +18653,10 @@ public extension Sphere {
             geometric_product.scalar * this.e1234
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(GeometricQuotientInfixPartial<Sphere> lhs, Sphere rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Sphere {
     public AntiCircleRotor geometric_quotient(Sphere other) {
@@ -16571,6 +18679,10 @@ public extension Sphere {
             (float4(geometric_product.e3215) * float4(this.group0.xyz, this.e1234)) + float4(float3(0.0), (geometric_product.e1234 * this.e3215) - (geometric_product.e4315 * this.e4315) - (geometric_product.e4125 * this.e4125)) - (geometric_product.group0.xyzx * this.group0.wwwx)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<Sphere> lhs, VersorEven rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension Sphere {
     public VersorEven geometric_quotient(VersorEven other) {
@@ -16610,6 +18722,10 @@ public extension Sphere {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<Sphere> lhs, VersorOdd rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension Sphere {
     public VersorOdd geometric_quotient(VersorOdd other) {
         VersorOdd reverse = VersorOdd(
@@ -16648,17 +18764,13 @@ public extension Sphere {
         );
     }
 }
-public extension VersorEven {
-    // Fancy infix trick (first half)
-    public GeometricQuotientInfixPartial<VersorEven> operator /(GeometricQuotientInfix rhs) {
-        return GeometricQuotientInfixPartial<VersorEven>(this);
-    }
+// Fancy infix trick (first half)
+public GeometricQuotientInfixPartial<VersorEven> operator /(VersorEven lhs, GeometricQuotientInfix rhs) {
+    return GeometricQuotientInfixPartial<VersorEven>(lhs);
 }
-public extension GeometricQuotientInfixPartial<VersorEven> {
-    // Fancy infix trick (second half)
-    public VersorEven operator /(AntiCircleRotor rhs) {
-        return this.a.geometric_quotient(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<VersorEven> lhs, AntiCircleRotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension VersorEven {
     public VersorEven geometric_quotient(AntiCircleRotor other) {
@@ -16693,6 +18805,10 @@ public extension VersorEven {
             float4((geometric_product.e31 * this.e3) + (geometric_product.e15 * this.e4) + (geometric_product.e25 * this.e412) + (geometric_product.scalar * this.e1), (geometric_product.e12 * this.e1) + (geometric_product.e25 * this.e4) + (geometric_product.e35 * this.e423) + (geometric_product.scalar * this.e2), (geometric_product.e12 * this.e321) + (geometric_product.e15 * this.e431) + (geometric_product.e35 * this.e4) + (geometric_product.scalar * this.e3), -(geometric_product.e43 * this.e3) - (geometric_product.e23 * this.e423) - (geometric_product.e31 * this.e431) - (geometric_product.e12 * this.e412)) + (float4(this.group1.ww, this.e2, this.e4) * float4(geometric_product.group1.xyx, geometric_product.scalar)) + float4((geometric_product.group0.xyz.zxy * this.group2.yzx), geometric_product.e45 * this.e4) - float4((geometric_product.group0.xyz.xyx * this.group2.wwy), geometric_product.e41 * this.e415) - float4((geometric_product.group0.xyz.yzz * this.group2.zxw), geometric_product.e41 * this.e1) - float4((geometric_product.group1.zxy * this.group3.yzx), geometric_product.e42 * this.e425) - float4((geometric_product.group1.www * this.group1.xyz), geometric_product.e42 * this.e2) - float4((geometric_product.group2.zxy * this.group0.yzx), geometric_product.e43 * this.e435)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<VersorEven> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension VersorEven {
     public VersorOdd geometric_quotient(AntiDipoleInversion other) {
@@ -16732,6 +18848,10 @@ public extension VersorEven {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<VersorEven> lhs, AntiDualNum rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension VersorEven {
     public VersorEven geometric_quotient(AntiDualNum other) {
         AntiDualNum geometric_product = AntiDualNum(
@@ -16750,6 +18870,10 @@ public extension VersorEven {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<VersorEven> lhs, AntiFlatPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension VersorEven {
     public VersorOdd geometric_quotient(AntiFlatPoint other) {
         AntiFlatPoint geometric_product = AntiFlatPoint(
@@ -16767,6 +18891,10 @@ public extension VersorEven {
             (geometric_product.group0.xyxx * float4(this.group3.ww, this.e431, this.e415)) + (geometric_product.group0.yzzy * float4(this.group0.zx, this.e4, this.e425)) + (geometric_product.group0.wwwz * this.group1.xyzz) + float4(float3(0.0), -(geometric_product.e315 * this.e2) - (geometric_product.e125 * this.e3) - (geometric_product.e321 * this.e5)) - (geometric_product.group0.zxyx * float4(this.group0.yzx, this.e1))
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<VersorEven> lhs, AntiFlector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension VersorEven {
     public VersorOdd geometric_quotient(AntiFlector other) {
@@ -16798,6 +18926,10 @@ public extension VersorEven {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<VersorEven> lhs, AntiLine rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension VersorEven {
     public VersorEven geometric_quotient(AntiLine other) {
         AntiLine reverse = AntiLine(
@@ -16827,6 +18959,10 @@ public extension VersorEven {
             float4((geometric_product.e23 * this.e321) + (geometric_product.e31 * this.e3) + (geometric_product.e15 * this.e4) + (geometric_product.e25 * this.e412), (geometric_product.e31 * this.e321) + (geometric_product.e12 * this.e1) + (geometric_product.e25 * this.e4) + (geometric_product.e35 * this.e423), (geometric_product.e23 * this.e2) + (geometric_product.e12 * this.e321) + (geometric_product.e15 * this.e431) + (geometric_product.e35 * this.e4), geometric_product.e12 * this.e412 * -1.0) - (this.group0.yzxy * float4(geometric_product.group1.xyz.zxy, geometric_product.e31)) - float4((geometric_product.group0.xyz.zxy * this.group3.yzx), geometric_product.e23 * this.e423)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<VersorEven> lhs, AntiMotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension VersorEven {
     public VersorEven geometric_quotient(AntiMotor other) {
@@ -16858,6 +18994,10 @@ public extension VersorEven {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<VersorEven> lhs, AntiPlane rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension VersorEven {
     public VersorOdd geometric_quotient(AntiPlane other) {
         AntiPlane geometric_product = AntiPlane(
@@ -16876,6 +19016,10 @@ public extension VersorEven {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<VersorEven> lhs, AntiScalar rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension VersorEven {
     public VersorOdd geometric_quotient(AntiScalar other) {
         AntiScalar geometric_product = AntiScalar(
@@ -16893,6 +19037,10 @@ public extension VersorEven {
             float4(geometric_product.e12345) * float4(this.group3.xyz, this.e5) * float4(1.0, 1.0, 1.0, -1.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<VersorEven> lhs, Circle rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension VersorEven {
     public VersorOdd geometric_quotient(Circle other) {
@@ -16928,6 +19076,10 @@ public extension VersorEven {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<VersorEven> lhs, CircleRotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension VersorEven {
     public VersorOdd geometric_quotient(CircleRotor other) {
         CircleRotor reverse = CircleRotor(
@@ -16962,6 +19114,10 @@ public extension VersorEven {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<VersorEven> lhs, Dipole rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension VersorEven {
     public VersorEven geometric_quotient(Dipole other) {
         Dipole reverse = Dipole(
@@ -16995,6 +19151,10 @@ public extension VersorEven {
             float4((geometric_product.e23 * this.e321) + (geometric_product.e31 * this.e3) + (geometric_product.e15 * this.e4) + (geometric_product.e25 * this.e412), (geometric_product.e31 * this.e321) + (geometric_product.e12 * this.e1) + (geometric_product.e25 * this.e4) + (geometric_product.e35 * this.e423), (geometric_product.e23 * this.e2) + (geometric_product.e12 * this.e321) + (geometric_product.e15 * this.e431) + (geometric_product.e35 * this.e4), -(geometric_product.e43 * this.e3) - (geometric_product.e23 * this.e423) - (geometric_product.e31 * this.e431) - (geometric_product.e12 * this.e412)) + float4((geometric_product.group0.xyz.zxy * this.group2.yzx), geometric_product.e45 * this.e4) - (this.group1.xyzz * float4(geometric_product.group1.www, geometric_product.e43)) - (this.group3.yzxy * float4(geometric_product.group1.zxy, geometric_product.e42)) - float4((geometric_product.group0.xyz.xyx * this.group2.wwy), geometric_product.e41 * this.e415) - float4((geometric_product.group0.xyz.yzz * this.group2.zxw), geometric_product.e41 * this.e1) - float4((geometric_product.group2.xyz.zxy * this.group0.yzx), geometric_product.e42 * this.e425)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<VersorEven> lhs, DipoleInversion rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension VersorEven {
     public VersorEven geometric_quotient(DipoleInversion other) {
@@ -17034,6 +19194,10 @@ public extension VersorEven {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<VersorEven> lhs, DualNum rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension VersorEven {
     public VersorOdd geometric_quotient(DualNum other) {
         DualNum geometric_product = DualNum(
@@ -17052,6 +19216,10 @@ public extension VersorEven {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<VersorEven> lhs, FlatPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension VersorEven {
     public VersorEven geometric_quotient(FlatPoint other) {
         FlatPoint geometric_product = FlatPoint(
@@ -17069,6 +19237,10 @@ public extension VersorEven {
             float4(((float3(this.e412, this.e423, this.e4) * geometric_product.group0.yzz) + (float3(this.e4, this.e4, this.e431) * geometric_product.group0.xyx) - (float3(geometric_product.e45) * this.group1.xyz) - (geometric_product.group0.zxy * this.group0.yzx)), geometric_product.e45 * this.e4)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<VersorEven> lhs, Flector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension VersorEven {
     public VersorEven geometric_quotient(Flector other) {
@@ -17100,6 +19272,10 @@ public extension VersorEven {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<VersorEven> lhs, Line rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension VersorEven {
     public VersorOdd geometric_quotient(Line other) {
         Line reverse = Line(
@@ -17130,6 +19306,10 @@ public extension VersorEven {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<VersorEven> lhs, Motor rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension VersorEven {
     public VersorOdd geometric_quotient(Motor other) {
         Motor reverse = Motor(
@@ -17159,6 +19339,10 @@ public extension VersorEven {
             (geometric_product.group0.xyxx * float4(this.group1.ww, this.e2, this.e235)) + (geometric_product.group0.yzzy * float4(this.group3.zx, this.e321, this.e315)) + (geometric_product.group0.wwwz * float4(this.group3.xyz, this.e125)) + (geometric_product.group1.xyxx * float4(this.group3.ww, this.e431, this.e415)) + (geometric_product.group1.yzzy * float4(this.group0.zx, this.e4, this.e425)) + (geometric_product.group1.wwwz * float4(this.group0.xyz, this.e435)) + float4(float3(0.0), (geometric_product.e5 * this.e321) - (geometric_product.e315 * this.e2) - (geometric_product.e125 * this.e3) - (geometric_product.e5 * this.e12345)) - (geometric_product.group0.zxyw * float4(this.group3.yzx, this.e5)) - (geometric_product.group1.zxyx * float4(this.group0.yzx, this.e1))
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricQuotientInfixPartial<VersorEven> lhs, MultiVector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension VersorEven {
     public MultiVector geometric_quotient(MultiVector other) {
@@ -17240,6 +19424,10 @@ public extension VersorEven {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<VersorEven> lhs, Plane rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension VersorEven {
     public VersorEven geometric_quotient(Plane other) {
         Plane geometric_product = Plane(
@@ -17257,6 +19445,10 @@ public extension VersorEven {
             float4((geometric_product.e4125 * this.e425) + (geometric_product.e3215 * this.e423), (geometric_product.e4235 * this.e435) + (geometric_product.e3215 * this.e431), (geometric_product.e4315 * this.e415) + (geometric_product.e3215 * this.e412), geometric_product.e4125 * this.e412 * -1.0) - (geometric_product.group0.xyxx * float4(this.group0.ww, this.e425, this.e423)) - (geometric_product.group0.yzzy * float4(this.group1.zx, this.e12345, this.e431))
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<VersorEven> lhs, RoundPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension VersorEven {
     public VersorOdd geometric_quotient(RoundPoint other) {
@@ -17282,6 +19474,10 @@ public extension VersorEven {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<VersorEven> lhs, Scalar rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension VersorEven {
     public VersorEven geometric_quotient(Scalar other) {
         Scalar geometric_product = Scalar(
@@ -17299,6 +19495,10 @@ public extension VersorEven {
             float4(geometric_product.scalar) * this.group3
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<VersorEven> lhs, Sphere rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension VersorEven {
     public VersorEven geometric_quotient(Sphere other) {
@@ -17323,6 +19523,10 @@ public extension VersorEven {
             float4((geometric_product.group0.zxy * this.group1.yzx), geometric_product.e1234 * this.e12345) + float4((geometric_product.group0.www * this.group0.xyz), geometric_product.e1234 * this.e321) - (geometric_product.group0.xyxx * float4(this.group0.ww, this.e425, this.e423)) - (geometric_product.group0.yzzy * float4(this.group1.zx, this.e12345, this.e431)) - float4((float3(geometric_product.e1234) * this.group2.xyz), geometric_product.e4125 * this.e412)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<VersorEven> lhs, VersorEven rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension VersorEven {
     public VersorOdd geometric_quotient(VersorEven other) {
@@ -17362,6 +19566,10 @@ public extension VersorEven {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<VersorEven> lhs, VersorOdd rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension VersorEven {
     public VersorEven geometric_quotient(VersorOdd other) {
         VersorOdd reverse = VersorOdd(
@@ -17400,17 +19608,13 @@ public extension VersorEven {
         );
     }
 }
-public extension VersorOdd {
-    // Fancy infix trick (first half)
-    public GeometricQuotientInfixPartial<VersorOdd> operator /(GeometricQuotientInfix rhs) {
-        return GeometricQuotientInfixPartial<VersorOdd>(this);
-    }
+// Fancy infix trick (first half)
+public GeometricQuotientInfixPartial<VersorOdd> operator /(VersorOdd lhs, GeometricQuotientInfix rhs) {
+    return GeometricQuotientInfixPartial<VersorOdd>(lhs);
 }
-public extension GeometricQuotientInfixPartial<VersorOdd> {
-    // Fancy infix trick (second half)
-    public VersorOdd operator /(AntiCircleRotor rhs) {
-        return this.a.geometric_quotient(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<VersorOdd> lhs, AntiCircleRotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension VersorOdd {
     public VersorOdd geometric_quotient(AntiCircleRotor other) {
@@ -17445,6 +19649,10 @@ public extension VersorOdd {
             float4((geometric_product.e42 * this.e35) + (geometric_product.e23 * this.e45) + (geometric_product.e31 * this.e4125) + (geometric_product.e45 * this.e23) + (geometric_product.e35 * this.e42) + (geometric_product.scalar * this.e4235), (geometric_product.e43 * this.e15) + (geometric_product.e31 * this.e45) + (geometric_product.e12 * this.e4235) + (geometric_product.e45 * this.e31) + (geometric_product.e15 * this.e43) + (geometric_product.scalar * this.e4315), (geometric_product.e43 * this.e3215) + (geometric_product.e23 * this.e4315) + (geometric_product.e12 * this.e45) + (geometric_product.e45 * this.e12) + (geometric_product.e25 * this.e41) + (geometric_product.scalar * this.e4125), -(geometric_product.e15 * this.e23) - (geometric_product.e15 * this.e4235) - (geometric_product.e25 * this.e31) - (geometric_product.e25 * this.e4315) - (geometric_product.e35 * this.e12) - (geometric_product.e35 * this.e4125)) + (float4(this.group3.ww, this.e25, this.e3215) * float4(geometric_product.group0.xyz.xyx, geometric_product.scalar)) - (geometric_product.group1.zxyy * float4(this.group3.yzx, this.e25)) - (this.group2.yzxx * float4(geometric_product.group0.xyz.zxy, geometric_product.e23)) - (float4(this.group0.zx, this.e1234, this.e3215) * float4(geometric_product.group2.yzz, geometric_product.e45)) - (float4(this.group2.ww, this.e42, this.e35) * float4(geometric_product.group2.xyx, geometric_product.e12))
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<VersorOdd> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension VersorOdd {
     public VersorEven geometric_quotient(AntiDipoleInversion other) {
@@ -17484,6 +19692,10 @@ public extension VersorOdd {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<VersorOdd> lhs, AntiDualNum rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension VersorOdd {
     public VersorOdd geometric_quotient(AntiDualNum other) {
         AntiDualNum geometric_product = AntiDualNum(
@@ -17502,6 +19714,10 @@ public extension VersorOdd {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<VersorOdd> lhs, AntiFlatPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension VersorOdd {
     public VersorEven geometric_quotient(AntiFlatPoint other) {
         AntiFlatPoint geometric_product = AntiFlatPoint(
@@ -17519,6 +19735,10 @@ public extension VersorOdd {
             float4(((float3(geometric_product.e321) * this.group1.xyz) + (float3(this.e43, this.e41, this.e1234) * geometric_product.group0.yzz) + (float3(this.e1234, this.e1234, this.e42) * geometric_product.group0.xyx) - (geometric_product.group0.zxy * this.group0.yzx)), geometric_product.e321 * this.e1234 * -1.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<VersorOdd> lhs, AntiFlector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension VersorOdd {
     public VersorEven geometric_quotient(AntiFlector other) {
@@ -17550,6 +19770,10 @@ public extension VersorOdd {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<VersorOdd> lhs, AntiLine rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension VersorOdd {
     public VersorOdd geometric_quotient(AntiLine other) {
         AntiLine reverse = AntiLine(
@@ -17579,6 +19803,10 @@ public extension VersorOdd {
             float4((geometric_product.e23 * this.e45) + (geometric_product.e31 * this.e4125) + (geometric_product.e35 * this.e42), (geometric_product.e31 * this.e45) + (geometric_product.e12 * this.e4235) + (geometric_product.e15 * this.e43), (geometric_product.e23 * this.e4315) + (geometric_product.e12 * this.e45) + (geometric_product.e25 * this.e41), -(geometric_product.e15 * this.e23) - (geometric_product.e15 * this.e4235) - (geometric_product.e25 * this.e31) - (geometric_product.e25 * this.e4315) - (geometric_product.e35 * this.e12) - (geometric_product.e35 * this.e4125)) - (float4(this.group0.zx, this.e1234, this.e35) * float4(geometric_product.group1.xyz.yzz, geometric_product.e12)) - (float4(this.group2.ww, this.e42, this.e25) * float4(geometric_product.group1.xyz.xyx, geometric_product.e31)) - float4((geometric_product.group0.xyz.zxy * this.group3.yzx), geometric_product.e23 * this.e15)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<VersorOdd> lhs, AntiMotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension VersorOdd {
     public VersorOdd geometric_quotient(AntiMotor other) {
@@ -17610,6 +19838,10 @@ public extension VersorOdd {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<VersorOdd> lhs, AntiPlane rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension VersorOdd {
     public VersorEven geometric_quotient(AntiPlane other) {
         AntiPlane geometric_product = AntiPlane(
@@ -17628,6 +19860,10 @@ public extension VersorOdd {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<VersorOdd> lhs, AntiScalar rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension VersorOdd {
     public VersorEven geometric_quotient(AntiScalar other) {
         AntiScalar geometric_product = AntiScalar(
@@ -17645,6 +19881,10 @@ public extension VersorOdd {
             float4(geometric_product.e12345) * float4(this.group3.xyz, this.e1234) * float4(-1.0, -1.0, -1.0, 1.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<VersorOdd> lhs, Circle rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension VersorOdd {
     public VersorEven geometric_quotient(Circle other) {
@@ -17680,6 +19920,10 @@ public extension VersorOdd {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<VersorOdd> lhs, CircleRotor rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension VersorOdd {
     public VersorEven geometric_quotient(CircleRotor other) {
         CircleRotor reverse = CircleRotor(
@@ -17714,6 +19958,10 @@ public extension VersorOdd {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<VersorOdd> lhs, Dipole rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension VersorOdd {
     public VersorOdd geometric_quotient(Dipole other) {
         Dipole reverse = Dipole(
@@ -17747,6 +19995,10 @@ public extension VersorOdd {
             float4((geometric_product.e41 * this.e3215) + (geometric_product.e42 * this.e35) + (geometric_product.e23 * this.e45) + (geometric_product.e31 * this.e4125) + (geometric_product.e45 * this.e23) + (geometric_product.e35 * this.e42), (geometric_product.e42 * this.e3215) + (geometric_product.e43 * this.e15) + (geometric_product.e31 * this.e45) + (geometric_product.e12 * this.e4235) + (geometric_product.e45 * this.e31) + (geometric_product.e15 * this.e43), (geometric_product.e41 * this.e25) + (geometric_product.e43 * this.e3215) + (geometric_product.e23 * this.e4315) + (geometric_product.e12 * this.e45) + (geometric_product.e45 * this.e12) + (geometric_product.e25 * this.e41), -(geometric_product.e23 * this.e15) - (geometric_product.e31 * this.e25) - (geometric_product.e12 * this.e35) - (geometric_product.e45 * this.e3215) - (geometric_product.e35 * this.e12) - (geometric_product.e35 * this.e4125)) - (this.group3.yzxy * float4(geometric_product.group1.zxy, geometric_product.e25)) - (float4(this.group0.zx, this.e1234, this.e31) * float4(geometric_product.group2.xyz.yzz, geometric_product.e25)) - (float4(this.group2.ww, this.e42, this.e4235) * float4(geometric_product.group2.xyz.xyx, geometric_product.e15)) - float4((geometric_product.group0.xyz.zxy * this.group2.yzx), geometric_product.e15 * this.e23)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<VersorOdd> lhs, DipoleInversion rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension VersorOdd {
     public VersorOdd geometric_quotient(DipoleInversion other) {
@@ -17786,6 +20038,10 @@ public extension VersorOdd {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<VersorOdd> lhs, DualNum rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension VersorOdd {
     public VersorEven geometric_quotient(DualNum other) {
         DualNum geometric_product = DualNum(
@@ -17804,6 +20060,10 @@ public extension VersorOdd {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<VersorOdd> lhs, FlatPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension VersorOdd {
     public VersorOdd geometric_quotient(FlatPoint other) {
         FlatPoint geometric_product = FlatPoint(
@@ -17821,6 +20081,10 @@ public extension VersorOdd {
             float4((geometric_product.e35 * this.e42) + (geometric_product.e45 * this.e23), (geometric_product.e15 * this.e43) + (geometric_product.e45 * this.e31), (geometric_product.e25 * this.e41) + (geometric_product.e45 * this.e12), -(geometric_product.e25 * this.e31) - (geometric_product.e25 * this.e4315) - (geometric_product.e35 * this.e12) - (geometric_product.e35 * this.e4125) - (geometric_product.e45 * this.e3215)) - (geometric_product.group0.xyxx * float4(this.group2.ww, this.e42, this.e23)) - (geometric_product.group0.yzzx * float4(this.group0.zx, this.e1234, this.e4235))
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<VersorOdd> lhs, Flector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension VersorOdd {
     public VersorOdd geometric_quotient(Flector other) {
@@ -17852,6 +20116,10 @@ public extension VersorOdd {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<VersorOdd> lhs, Line rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension VersorOdd {
     public VersorEven geometric_quotient(Line other) {
         Line reverse = Line(
@@ -17882,6 +20150,10 @@ public extension VersorOdd {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<VersorOdd> lhs, Motor rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension VersorOdd {
     public VersorEven geometric_quotient(Motor other) {
         Motor reverse = Motor(
@@ -17911,6 +20183,10 @@ public extension VersorOdd {
             float4((geometric_product.e235 * this.e1234) + (geometric_product.e315 * this.e43) + (geometric_product.e5 * this.e41) - (geometric_product.e125 * this.e42), (geometric_product.e315 * this.e1234) + (geometric_product.e125 * this.e41) + (geometric_product.e5 * this.e42) - (geometric_product.e235 * this.e43), (geometric_product.e235 * this.e42) + (geometric_product.e125 * this.e1234) + (geometric_product.e5 * this.e43) - (geometric_product.e315 * this.e41), 0.0) + (geometric_product.group0.zxyw * float4(this.group3.yzx, this.e1234)) - (geometric_product.group0.xyxx * float4(this.group1.ww, this.e4315, this.e41)) - (geometric_product.group0.yzzy * float4(this.group3.zx, this.e45, this.e42)) - (geometric_product.group0.wwwz * float4(this.group3.xyz, this.e43))
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricQuotientInfixPartial<VersorOdd> lhs, MultiVector rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension VersorOdd {
     public MultiVector geometric_quotient(MultiVector other) {
@@ -17992,6 +20268,10 @@ public extension VersorOdd {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<VersorOdd> lhs, Plane rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension VersorOdd {
     public VersorOdd geometric_quotient(Plane other) {
         Plane geometric_product = Plane(
@@ -18009,6 +20289,10 @@ public extension VersorOdd {
             float4(-(geometric_product.e4125 * this.e31) - (geometric_product.e3215 * this.e41), -(geometric_product.e4235 * this.e12) - (geometric_product.e3215 * this.e42), -(geometric_product.e4315 * this.e23) - (geometric_product.e3215 * this.e43), (geometric_product.e4125 * this.e35) + (geometric_product.e3215 * this.scalar) + (geometric_product.e3215 * this.e45)) + (geometric_product.group0.xyxx * float4(this.group0.ww, this.e31, this.e15)) + (geometric_product.group0.yzzy * float4(this.group1.zx, this.scalar, this.e25))
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<VersorOdd> lhs, RoundPoint rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension VersorOdd {
     public VersorEven geometric_quotient(RoundPoint other) {
@@ -18034,6 +20318,10 @@ public extension VersorOdd {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<VersorOdd> lhs, Scalar rhs) {
+    return lhs.a.geometric_quotient(rhs);
+}
 public extension VersorOdd {
     public VersorOdd geometric_quotient(Scalar other) {
         Scalar geometric_product = Scalar(
@@ -18051,6 +20339,10 @@ public extension VersorOdd {
             float4(geometric_product.scalar) * this.group3
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<VersorOdd> lhs, Sphere rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension VersorOdd {
     public VersorOdd geometric_quotient(Sphere other) {
@@ -18075,6 +20367,10 @@ public extension VersorOdd {
             float4(-(geometric_product.e4125 * this.e31) - (geometric_product.e3215 * this.e41), -(geometric_product.e4235 * this.e12) - (geometric_product.e3215 * this.e42), -(geometric_product.e4315 * this.e23) - (geometric_product.e3215 * this.e43), (geometric_product.e3215 * this.scalar) + (geometric_product.e3215 * this.e45)) + (geometric_product.group0.xyxx * float4(this.group0.ww, this.e31, this.e15)) + (geometric_product.group0.yzzy * float4(this.group1.zx, this.scalar, this.e25)) + float4((float3(geometric_product.e1234) * this.group2.xyz), geometric_product.e4125 * this.e35)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(GeometricQuotientInfixPartial<VersorOdd> lhs, VersorEven rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension VersorOdd {
     public VersorEven geometric_quotient(VersorEven other) {
@@ -18113,6 +20409,10 @@ public extension VersorOdd {
             (geometric_product.group0.zxyx * float4(this.group2.yzx, this.e4235)) + (geometric_product.group3.xyxz * float4(this.group0.ww, this.e31, this.e43)) + (geometric_product.group3.yzzw * float4(this.group1.zx, this.scalar, this.scalar)) + (this.group0.xyzy * float4(geometric_product.group2.www, geometric_product.e2)) + (this.group3.yzxy * float4(geometric_product.group1.zxy, geometric_product.e431)) + (float4(this.group0.zx, this.e1234, this.e41) * float4(geometric_product.group2.yzz, geometric_product.e1)) + (float4(this.group2.ww, this.e42, this.e1234) * float4(geometric_product.group2.xyx, geometric_product.e12345)) + float4((geometric_product.group1.www * this.group1.xyz), geometric_product.e412 * this.e4125) - (float4(geometric_product.e4) * float4(this.group2.xyz, this.e45)) - (geometric_product.group0.xyxx * float4(this.group3.ww, this.e25, this.e23)) - (geometric_product.group0.yzzy * float4(this.group2.zx, this.e3215, this.e31)) - (geometric_product.group0.wwwz * float4(this.group3.xyz, this.e12)) - (geometric_product.group1.xyxx * float4(this.group1.ww, this.e4315, this.e41)) - (geometric_product.group1.yzzy * float4(this.group3.zx, this.e45, this.e42)) - (this.group0.yzxz * float4(geometric_product.group2.zxy, geometric_product.e435)) - float4((geometric_product.group3.zxy * this.group1.yzx), geometric_product.e321 * this.e1234)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(GeometricQuotientInfixPartial<VersorOdd> lhs, VersorOdd rhs) {
+    return lhs.a.geometric_quotient(rhs);
 }
 public extension VersorOdd {
     public VersorOdd geometric_quotient(VersorOdd other) {

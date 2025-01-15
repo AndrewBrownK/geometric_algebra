@@ -1,16 +1,12 @@
 implementing rga3d;
 using traits;
-public extension AntiScalar {
-    // Fancy infix trick (first half)
-    public GeometricAntiQuotientInfixPartial<AntiScalar> operator /(GeometricAntiQuotientInfix rhs) {
-        return GeometricAntiQuotientInfixPartial<AntiScalar>(this);
-    }
+// Fancy infix trick (first half)
+public GeometricAntiQuotientInfixPartial<AntiScalar> operator /(AntiScalar lhs, GeometricAntiQuotientInfix rhs) {
+    return GeometricAntiQuotientInfixPartial<AntiScalar>(lhs);
 }
-public extension GeometricAntiQuotientInfixPartial<AntiScalar> {
-    // Fancy infix trick (second half)
-    public AntiScalar operator /(AntiScalar rhs) {
-        return this.a.geometric_anti_quotient(rhs);
-    }
+// Fancy infix trick (second half)
+public AntiScalar operator /(GeometricAntiQuotientInfixPartial<AntiScalar> lhs, AntiScalar rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
 }
 public extension AntiScalar {
     public AntiScalar geometric_anti_quotient(AntiScalar other) {
@@ -19,6 +15,10 @@ public extension AntiScalar {
             this.e1234 / (other.e1234)
         );
     }
+}
+// Fancy infix trick (second half)
+public DualNum operator /(GeometricAntiQuotientInfixPartial<AntiScalar> lhs, DualNum rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
 }
 public extension AntiScalar {
     public DualNum geometric_anti_quotient(DualNum other) {
@@ -31,6 +31,10 @@ public extension AntiScalar {
             float2(this.e1234) * float2(other_2.e1234 * other.scalar, other_2.e1234 * other.e1234)
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(GeometricAntiQuotientInfixPartial<AntiScalar> lhs, Flector rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
 }
 public extension AntiScalar {
     public Flector geometric_anti_quotient(Flector other) {
@@ -58,6 +62,10 @@ public extension AntiScalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public Line operator /(GeometricAntiQuotientInfixPartial<AntiScalar> lhs, Line rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
+}
 public extension AntiScalar {
     public Line geometric_anti_quotient(Line other) {
         Line anti_reverse = Line(
@@ -84,6 +92,10 @@ public extension AntiScalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(GeometricAntiQuotientInfixPartial<AntiScalar> lhs, Motor rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
+}
 public extension AntiScalar {
     public Motor geometric_anti_quotient(Motor other) {
         Motor anti_reverse = Motor(
@@ -109,6 +121,10 @@ public extension AntiScalar {
             float4(this.e1234) * geometric_anti_product.group1
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricAntiQuotientInfixPartial<AntiScalar> lhs, MultiVector rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
 }
 public extension AntiScalar {
     public MultiVector geometric_anti_quotient(MultiVector other) {
@@ -154,6 +170,10 @@ public extension AntiScalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public Origin operator /(GeometricAntiQuotientInfixPartial<AntiScalar> lhs, Origin rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
+}
 public extension AntiScalar {
     public Origin geometric_anti_quotient(Origin other) {
         return Origin(
@@ -161,6 +181,10 @@ public extension AntiScalar {
             this.e1234 / (other.e4) * -1.0
         );
     }
+}
+// Fancy infix trick (second half)
+public Plane operator /(GeometricAntiQuotientInfixPartial<AntiScalar> lhs, Plane rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
 }
 public extension AntiScalar {
     public Plane geometric_anti_quotient(Plane other) {
@@ -173,6 +197,10 @@ public extension AntiScalar {
             float4(this.e1234) * float4(other_2.e1234 * other.e423, other_2.e1234 * other.e431, other_2.e1234 * other.e412, other_2.e1234 * other.e321)
         );
     }
+}
+// Fancy infix trick (second half)
+public Point operator /(GeometricAntiQuotientInfixPartial<AntiScalar> lhs, Point rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
 }
 public extension AntiScalar {
     public Point geometric_anti_quotient(Point other) {
@@ -190,17 +218,13 @@ public extension AntiScalar {
         );
     }
 }
-public extension DualNum {
-    // Fancy infix trick (first half)
-    public GeometricAntiQuotientInfixPartial<DualNum> operator /(GeometricAntiQuotientInfix rhs) {
-        return GeometricAntiQuotientInfixPartial<DualNum>(this);
-    }
+// Fancy infix trick (first half)
+public GeometricAntiQuotientInfixPartial<DualNum> operator /(DualNum lhs, GeometricAntiQuotientInfix rhs) {
+    return GeometricAntiQuotientInfixPartial<DualNum>(lhs);
 }
-public extension GeometricAntiQuotientInfixPartial<DualNum> {
-    // Fancy infix trick (second half)
-    public DualNum operator /(AntiScalar rhs) {
-        return this.a.geometric_anti_quotient(rhs);
-    }
+// Fancy infix trick (second half)
+public DualNum operator /(GeometricAntiQuotientInfixPartial<DualNum> lhs, AntiScalar rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
 }
 public extension DualNum {
     public DualNum geometric_anti_quotient(AntiScalar other) {
@@ -209,6 +233,10 @@ public extension DualNum {
             float2(1.0/other.e1234) * this.group0.xy
         );
     }
+}
+// Fancy infix trick (second half)
+public DualNum operator /(GeometricAntiQuotientInfixPartial<DualNum> lhs, DualNum rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
 }
 public extension DualNum {
     public DualNum geometric_anti_quotient(DualNum other) {
@@ -221,6 +249,10 @@ public extension DualNum {
             float2((geometric_anti_product.scalar * this.e1234) + (geometric_anti_product.e1234 * this.scalar), geometric_anti_product.e1234 * this.e1234)
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(GeometricAntiQuotientInfixPartial<DualNum> lhs, Flector rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
 }
 public extension DualNum {
     public Flector geometric_anti_quotient(Flector other) {
@@ -248,6 +280,10 @@ public extension DualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public Line operator /(GeometricAntiQuotientInfixPartial<DualNum> lhs, Line rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
+}
 public extension DualNum {
     public Line geometric_anti_quotient(Line other) {
         Line anti_reverse = Line(
@@ -274,6 +310,10 @@ public extension DualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(GeometricAntiQuotientInfixPartial<DualNum> lhs, Motor rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
+}
 public extension DualNum {
     public Motor geometric_anti_quotient(Motor other) {
         Motor anti_reverse = Motor(
@@ -299,6 +339,10 @@ public extension DualNum {
             (float4(this.scalar) * geometric_anti_product.group0) + (float4(this.e1234) * geometric_anti_product.group1)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricAntiQuotientInfixPartial<DualNum> lhs, MultiVector rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
 }
 public extension DualNum {
     public MultiVector geometric_anti_quotient(MultiVector other) {
@@ -344,6 +388,10 @@ public extension DualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(GeometricAntiQuotientInfixPartial<DualNum> lhs, Origin rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
+}
 public extension DualNum {
     public Flector geometric_anti_quotient(Origin other) {
         Origin geometric_anti_product = Origin(
@@ -357,6 +405,10 @@ public extension DualNum {
             float4(float3(0.0), this.scalar * geometric_anti_product.e4)
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(GeometricAntiQuotientInfixPartial<DualNum> lhs, Plane rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
 }
 public extension DualNum {
     public Flector geometric_anti_quotient(Plane other) {
@@ -372,6 +424,10 @@ public extension DualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(GeometricAntiQuotientInfixPartial<DualNum> lhs, Point rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
+}
 public extension DualNum {
     public Flector geometric_anti_quotient(Point other) {
         Point geometric_anti_product = Point(
@@ -386,17 +442,13 @@ public extension DualNum {
         );
     }
 }
-public extension Flector {
-    // Fancy infix trick (first half)
-    public GeometricAntiQuotientInfixPartial<Flector> operator /(GeometricAntiQuotientInfix rhs) {
-        return GeometricAntiQuotientInfixPartial<Flector>(this);
-    }
+// Fancy infix trick (first half)
+public GeometricAntiQuotientInfixPartial<Flector> operator /(Flector lhs, GeometricAntiQuotientInfix rhs) {
+    return GeometricAntiQuotientInfixPartial<Flector>(lhs);
 }
-public extension GeometricAntiQuotientInfixPartial<Flector> {
-    // Fancy infix trick (second half)
-    public Flector operator /(AntiScalar rhs) {
-        return this.a.geometric_anti_quotient(rhs);
-    }
+// Fancy infix trick (second half)
+public Flector operator /(GeometricAntiQuotientInfixPartial<Flector> lhs, AntiScalar rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
 }
 public extension Flector {
     public Flector geometric_anti_quotient(AntiScalar other) {
@@ -412,6 +464,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(GeometricAntiQuotientInfixPartial<Flector> lhs, DualNum rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
+}
 public extension Flector {
     public Flector geometric_anti_quotient(DualNum other) {
         DualNum geometric_anti_product = DualNum(
@@ -425,6 +481,10 @@ public extension Flector {
             float4(geometric_anti_product.group0.xy.yy, geometric_anti_product.e1234, (geometric_anti_product.e1234 * this.e321) - (geometric_anti_product.scalar * this.e4)) * float4(this.group1.xyz, 1.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(GeometricAntiQuotientInfixPartial<Flector> lhs, Flector rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
 }
 public extension Flector {
     public Motor geometric_anti_quotient(Flector other) {
@@ -452,6 +512,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(GeometricAntiQuotientInfixPartial<Flector> lhs, Line rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
+}
 public extension Flector {
     public Flector geometric_anti_quotient(Line other) {
         Line anti_reverse = Line(
@@ -478,6 +542,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(GeometricAntiQuotientInfixPartial<Flector> lhs, Motor rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
+}
 public extension Flector {
     public Flector geometric_anti_quotient(Motor other) {
         Motor anti_reverse = Motor(
@@ -503,6 +571,10 @@ public extension Flector {
             (this.group1.xyxy * float4(geometric_anti_product.group0.wwy, geometric_anti_product.e31)) + (this.group1.yzzz * float4(geometric_anti_product.group0.zxw, geometric_anti_product.e12)) + float4(float3(0.0), (this.e321 * geometric_anti_product.e1234) - (this.e2 * geometric_anti_product.e42) - (this.e3 * geometric_anti_product.e43) - (this.e4 * geometric_anti_product.scalar)) + float4((this.group0.www * geometric_anti_product.group0.xyz), this.e423 * geometric_anti_product.e23) - (geometric_anti_product.group0.yzxx * float4(this.group1.zxy, this.e1))
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricAntiQuotientInfixPartial<Flector> lhs, MultiVector rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
 }
 public extension Flector {
     public MultiVector geometric_anti_quotient(MultiVector other) {
@@ -548,6 +620,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(GeometricAntiQuotientInfixPartial<Flector> lhs, Origin rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
+}
 public extension Flector {
     public Motor geometric_anti_quotient(Origin other) {
         Origin geometric_anti_product = Origin(
@@ -561,6 +637,10 @@ public extension Flector {
             float4(geometric_anti_product.e4) * float4(this.group0.xyz, this.e321) * float4(-1.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(GeometricAntiQuotientInfixPartial<Flector> lhs, Plane rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
 }
 public extension Flector {
     public Motor geometric_anti_quotient(Plane other) {
@@ -576,6 +656,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(GeometricAntiQuotientInfixPartial<Flector> lhs, Point rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
+}
 public extension Flector {
     public Motor geometric_anti_quotient(Point other) {
         Point geometric_anti_product = Point(
@@ -590,17 +674,13 @@ public extension Flector {
         );
     }
 }
-public extension Horizon {
-    // Fancy infix trick (first half)
-    public GeometricAntiQuotientInfixPartial<Horizon> operator /(GeometricAntiQuotientInfix rhs) {
-        return GeometricAntiQuotientInfixPartial<Horizon>(this);
-    }
+// Fancy infix trick (first half)
+public GeometricAntiQuotientInfixPartial<Horizon> operator /(Horizon lhs, GeometricAntiQuotientInfix rhs) {
+    return GeometricAntiQuotientInfixPartial<Horizon>(lhs);
 }
-public extension GeometricAntiQuotientInfixPartial<Horizon> {
-    // Fancy infix trick (second half)
-    public Horizon operator /(AntiScalar rhs) {
-        return this.a.geometric_anti_quotient(rhs);
-    }
+// Fancy infix trick (second half)
+public Horizon operator /(GeometricAntiQuotientInfixPartial<Horizon> lhs, AntiScalar rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
 }
 public extension Horizon {
     public Horizon geometric_anti_quotient(AntiScalar other) {
@@ -610,6 +690,10 @@ public extension Horizon {
         );
     }
 }
+// Fancy infix trick (second half)
+public Horizon operator /(GeometricAntiQuotientInfixPartial<Horizon> lhs, DualNum rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
+}
 public extension Horizon {
     public Horizon geometric_anti_quotient(DualNum other) {
         return Horizon(
@@ -617,6 +701,10 @@ public extension Horizon {
             this.e321 / (other.e1234)
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(GeometricAntiQuotientInfixPartial<Horizon> lhs, Flector rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
 }
 public extension Horizon {
     public Motor geometric_anti_quotient(Flector other) {
@@ -644,6 +732,10 @@ public extension Horizon {
         );
     }
 }
+// Fancy infix trick (second half)
+public Point operator /(GeometricAntiQuotientInfixPartial<Horizon> lhs, Line rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
+}
 public extension Horizon {
     public Point geometric_anti_quotient(Line other) {
         Line anti_reverse = Line(
@@ -661,6 +753,10 @@ public extension Horizon {
             float4((float3(this.e321) * float3(other_2.e1234 * anti_reverse.e41, other_2.e1234 * anti_reverse.e42, other_2.e1234 * anti_reverse.e43)), 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(GeometricAntiQuotientInfixPartial<Horizon> lhs, Motor rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
 }
 public extension Horizon {
     public Flector geometric_anti_quotient(Motor other) {
@@ -687,6 +783,10 @@ public extension Horizon {
             float4(float3(0.0), this.e321 * geometric_anti_product.e1234)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricAntiQuotientInfixPartial<Horizon> lhs, MultiVector rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
 }
 public extension Horizon {
     public MultiVector geometric_anti_quotient(MultiVector other) {
@@ -732,6 +832,10 @@ public extension Horizon {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(GeometricAntiQuotientInfixPartial<Horizon> lhs, Origin rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
+}
 public extension Horizon {
     public Scalar geometric_anti_quotient(Origin other) {
         return Scalar(
@@ -739,6 +843,10 @@ public extension Horizon {
             this.e321 / (other.e4)
         );
     }
+}
+// Fancy infix trick (second half)
+public Line operator /(GeometricAntiQuotientInfixPartial<Horizon> lhs, Plane rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
 }
 public extension Horizon {
     public Line geometric_anti_quotient(Plane other) {
@@ -754,6 +862,10 @@ public extension Horizon {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(GeometricAntiQuotientInfixPartial<Horizon> lhs, Point rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
+}
 public extension Horizon {
     public Scalar geometric_anti_quotient(Point other) {
         return Scalar(
@@ -762,17 +874,13 @@ public extension Horizon {
         );
     }
 }
-public extension Line {
-    // Fancy infix trick (first half)
-    public GeometricAntiQuotientInfixPartial<Line> operator /(GeometricAntiQuotientInfix rhs) {
-        return GeometricAntiQuotientInfixPartial<Line>(this);
-    }
+// Fancy infix trick (first half)
+public GeometricAntiQuotientInfixPartial<Line> operator /(Line lhs, GeometricAntiQuotientInfix rhs) {
+    return GeometricAntiQuotientInfixPartial<Line>(lhs);
 }
-public extension GeometricAntiQuotientInfixPartial<Line> {
-    // Fancy infix trick (second half)
-    public Line operator /(AntiScalar rhs) {
-        return this.a.geometric_anti_quotient(rhs);
-    }
+// Fancy infix trick (second half)
+public Line operator /(GeometricAntiQuotientInfixPartial<Line> lhs, AntiScalar rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
 }
 public extension Line {
     public Line geometric_anti_quotient(AntiScalar other) {
@@ -788,6 +896,10 @@ public extension Line {
         );
     }
 }
+// Fancy infix trick (second half)
+public Line operator /(GeometricAntiQuotientInfixPartial<Line> lhs, DualNum rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
+}
 public extension Line {
     public Line geometric_anti_quotient(DualNum other) {
         DualNum geometric_anti_product = DualNum(
@@ -801,6 +913,10 @@ public extension Line {
             (float3(geometric_anti_product.scalar) * this.group0.xyz) + (float3(geometric_anti_product.e1234) * this.group1.xyz)
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(GeometricAntiQuotientInfixPartial<Line> lhs, Flector rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
 }
 public extension Line {
     public Flector geometric_anti_quotient(Flector other) {
@@ -828,6 +944,10 @@ public extension Line {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(GeometricAntiQuotientInfixPartial<Line> lhs, Line rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
+}
 public extension Line {
     public Motor geometric_anti_quotient(Line other) {
         Line anti_reverse = Line(
@@ -854,6 +974,10 @@ public extension Line {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(GeometricAntiQuotientInfixPartial<Line> lhs, Motor rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
+}
 public extension Line {
     public Motor geometric_anti_quotient(Motor other) {
         Motor anti_reverse = Motor(
@@ -879,6 +1003,10 @@ public extension Line {
             float4((this.e41 * geometric_anti_product.scalar) + (this.e42 * geometric_anti_product.e12) + (this.e23 * geometric_anti_product.e1234) + (this.e31 * geometric_anti_product.e43), (this.e42 * geometric_anti_product.scalar) + (this.e43 * geometric_anti_product.e23) + (this.e31 * geometric_anti_product.e1234) + (this.e12 * geometric_anti_product.e41), (this.e41 * geometric_anti_product.e31) + (this.e43 * geometric_anti_product.scalar) + (this.e23 * geometric_anti_product.e42) + (this.e12 * geometric_anti_product.e1234), -(this.e43 * geometric_anti_product.e12) - (this.e23 * geometric_anti_product.e41) - (this.e31 * geometric_anti_product.e42) - (this.e12 * geometric_anti_product.e43)) - (geometric_anti_product.group1.yzxx * float4(this.group0.xyz.zxy, this.e41)) - float4((this.group1.xyz.zxy * geometric_anti_product.group0.yzx), this.e42 * geometric_anti_product.e31)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricAntiQuotientInfixPartial<Line> lhs, MultiVector rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
 }
 public extension Line {
     public MultiVector geometric_anti_quotient(MultiVector other) {
@@ -924,6 +1052,10 @@ public extension Line {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(GeometricAntiQuotientInfixPartial<Line> lhs, Origin rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
+}
 public extension Line {
     public Flector geometric_anti_quotient(Origin other) {
         Origin geometric_anti_product = Origin(
@@ -937,6 +1069,10 @@ public extension Line {
             float4((float3(geometric_anti_product.e4) * this.group0.xyz), 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(GeometricAntiQuotientInfixPartial<Line> lhs, Plane rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
 }
 public extension Line {
     public Flector geometric_anti_quotient(Plane other) {
@@ -952,6 +1088,10 @@ public extension Line {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(GeometricAntiQuotientInfixPartial<Line> lhs, Point rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
+}
 public extension Line {
     public Flector geometric_anti_quotient(Point other) {
         Point geometric_anti_product = Point(
@@ -966,17 +1106,13 @@ public extension Line {
         );
     }
 }
-public extension Motor {
-    // Fancy infix trick (first half)
-    public GeometricAntiQuotientInfixPartial<Motor> operator /(GeometricAntiQuotientInfix rhs) {
-        return GeometricAntiQuotientInfixPartial<Motor>(this);
-    }
+// Fancy infix trick (first half)
+public GeometricAntiQuotientInfixPartial<Motor> operator /(Motor lhs, GeometricAntiQuotientInfix rhs) {
+    return GeometricAntiQuotientInfixPartial<Motor>(lhs);
 }
-public extension GeometricAntiQuotientInfixPartial<Motor> {
-    // Fancy infix trick (second half)
-    public Motor operator /(AntiScalar rhs) {
-        return this.a.geometric_anti_quotient(rhs);
-    }
+// Fancy infix trick (second half)
+public Motor operator /(GeometricAntiQuotientInfixPartial<Motor> lhs, AntiScalar rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
 }
 public extension Motor {
     public Motor geometric_anti_quotient(AntiScalar other) {
@@ -992,6 +1128,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(GeometricAntiQuotientInfixPartial<Motor> lhs, DualNum rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
+}
 public extension Motor {
     public Motor geometric_anti_quotient(DualNum other) {
         DualNum geometric_anti_product = DualNum(
@@ -1005,6 +1145,10 @@ public extension Motor {
             (float4(geometric_anti_product.scalar) * this.group0) + (float4(geometric_anti_product.e1234) * this.group1)
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(GeometricAntiQuotientInfixPartial<Motor> lhs, Flector rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
 }
 public extension Motor {
     public Flector geometric_anti_quotient(Flector other) {
@@ -1032,6 +1176,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(GeometricAntiQuotientInfixPartial<Motor> lhs, Line rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
+}
 public extension Motor {
     public Motor geometric_anti_quotient(Line other) {
         Line anti_reverse = Line(
@@ -1058,6 +1206,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(GeometricAntiQuotientInfixPartial<Motor> lhs, Motor rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
+}
 public extension Motor {
     public Motor geometric_anti_quotient(Motor other) {
         Motor anti_reverse = Motor(
@@ -1083,6 +1235,10 @@ public extension Motor {
             float4((geometric_anti_product.e1234 * this.e23) + (geometric_anti_product.e23 * this.e1234) + (geometric_anti_product.e12 * this.e42) + (geometric_anti_product.scalar * this.e41), (geometric_anti_product.e1234 * this.e31) + (geometric_anti_product.e23 * this.e43) + (geometric_anti_product.e31 * this.e1234) + (geometric_anti_product.scalar * this.e42), (geometric_anti_product.e1234 * this.e12) + (geometric_anti_product.e31 * this.e41) + (geometric_anti_product.e12 * this.e1234) + (geometric_anti_product.scalar * this.e43), -(geometric_anti_product.e43 * this.e12) - (geometric_anti_product.e23 * this.e41) - (geometric_anti_product.e31 * this.e42) - (geometric_anti_product.e12 * this.e43)) + (geometric_anti_product.group0.xxyw * this.group1.wzxw) + float4((geometric_anti_product.group0.zyz * this.group1.yww), geometric_anti_product.scalar * this.e1234) - (geometric_anti_product.group0.yzxx * this.group1.zxyx) - float4((geometric_anti_product.group1.yzx * this.group0.zxy), geometric_anti_product.e42 * this.e31)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricAntiQuotientInfixPartial<Motor> lhs, MultiVector rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
 }
 public extension Motor {
     public MultiVector geometric_anti_quotient(MultiVector other) {
@@ -1128,6 +1284,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(GeometricAntiQuotientInfixPartial<Motor> lhs, Origin rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
+}
 public extension Motor {
     public Flector geometric_anti_quotient(Origin other) {
         Origin geometric_anti_product = Origin(
@@ -1141,6 +1301,10 @@ public extension Motor {
             float4(geometric_anti_product.e4) * float4(this.group0.xyz, this.scalar)
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(GeometricAntiQuotientInfixPartial<Motor> lhs, Plane rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
 }
 public extension Motor {
     public Flector geometric_anti_quotient(Plane other) {
@@ -1156,6 +1320,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(GeometricAntiQuotientInfixPartial<Motor> lhs, Point rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
+}
 public extension Motor {
     public Flector geometric_anti_quotient(Point other) {
         Point geometric_anti_product = Point(
@@ -1170,17 +1338,13 @@ public extension Motor {
         );
     }
 }
-public extension MultiVector {
-    // Fancy infix trick (first half)
-    public GeometricAntiQuotientInfixPartial<MultiVector> operator /(GeometricAntiQuotientInfix rhs) {
-        return GeometricAntiQuotientInfixPartial<MultiVector>(this);
-    }
+// Fancy infix trick (first half)
+public GeometricAntiQuotientInfixPartial<MultiVector> operator /(MultiVector lhs, GeometricAntiQuotientInfix rhs) {
+    return GeometricAntiQuotientInfixPartial<MultiVector>(lhs);
 }
-public extension GeometricAntiQuotientInfixPartial<MultiVector> {
-    // Fancy infix trick (second half)
-    public MultiVector operator /(AntiScalar rhs) {
-        return this.a.geometric_anti_quotient(rhs);
-    }
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricAntiQuotientInfixPartial<MultiVector> lhs, AntiScalar rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
 }
 public extension MultiVector {
     public MultiVector geometric_anti_quotient(AntiScalar other) {
@@ -1202,6 +1366,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricAntiQuotientInfixPartial<MultiVector> lhs, DualNum rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
+}
 public extension MultiVector {
     public MultiVector geometric_anti_quotient(DualNum other) {
         DualNum geometric_anti_product = DualNum(
@@ -1221,6 +1389,10 @@ public extension MultiVector {
             float4(geometric_anti_product.group0.xy.yy, geometric_anti_product.e1234, (geometric_anti_product.e1234 * this.e321) - (geometric_anti_product.scalar * this.e4)) * float4(this.group4.xyz, 1.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricAntiQuotientInfixPartial<MultiVector> lhs, Flector rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
 }
 public extension MultiVector {
     public MultiVector geometric_anti_quotient(Flector other) {
@@ -1254,6 +1426,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricAntiQuotientInfixPartial<MultiVector> lhs, Line rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
+}
 public extension MultiVector {
     public MultiVector geometric_anti_quotient(Line other) {
         Line anti_reverse = Line(
@@ -1286,6 +1462,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricAntiQuotientInfixPartial<MultiVector> lhs, Motor rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
+}
 public extension MultiVector {
     public MultiVector geometric_anti_quotient(Motor other) {
         Motor anti_reverse = Motor(
@@ -1317,6 +1497,10 @@ public extension MultiVector {
             (float4(this.e4, this.e412, this.e423, this.e321) * geometric_anti_product.group0.xxyw) + (float4(this.e431, this.e4, this.e4, this.e423) * float4(geometric_anti_product.group0.zyz, geometric_anti_product.e23)) + (this.group4.xyzy * float4(geometric_anti_product.group0.www, geometric_anti_product.e31)) + float4(float3(0.0), (geometric_anti_product.e12 * this.e412) - (geometric_anti_product.e42 * this.e2) - (geometric_anti_product.e43 * this.e3) - (geometric_anti_product.scalar * this.e4)) - (geometric_anti_product.group0.yzxx * float4(this.group4.zxy, this.e1))
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricAntiQuotientInfixPartial<MultiVector> lhs, MultiVector rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
 }
 public extension MultiVector {
     public MultiVector geometric_anti_quotient(MultiVector other) {
@@ -1362,6 +1546,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricAntiQuotientInfixPartial<MultiVector> lhs, Origin rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
+}
 public extension MultiVector {
     public MultiVector geometric_anti_quotient(Origin other) {
         Origin geometric_anti_product = Origin(
@@ -1381,6 +1569,10 @@ public extension MultiVector {
             float4(geometric_anti_product.e4) * float4(this.group2.xyz, this.scalar)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricAntiQuotientInfixPartial<MultiVector> lhs, Plane rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
 }
 public extension MultiVector {
     public MultiVector geometric_anti_quotient(Plane other) {
@@ -1402,6 +1594,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricAntiQuotientInfixPartial<MultiVector> lhs, Point rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
+}
 public extension MultiVector {
     public MultiVector geometric_anti_quotient(Point other) {
         Point geometric_anti_product = Point(
@@ -1422,17 +1618,13 @@ public extension MultiVector {
         );
     }
 }
-public extension Origin {
-    // Fancy infix trick (first half)
-    public GeometricAntiQuotientInfixPartial<Origin> operator /(GeometricAntiQuotientInfix rhs) {
-        return GeometricAntiQuotientInfixPartial<Origin>(this);
-    }
+// Fancy infix trick (first half)
+public GeometricAntiQuotientInfixPartial<Origin> operator /(Origin lhs, GeometricAntiQuotientInfix rhs) {
+    return GeometricAntiQuotientInfixPartial<Origin>(lhs);
 }
-public extension GeometricAntiQuotientInfixPartial<Origin> {
-    // Fancy infix trick (second half)
-    public Origin operator /(AntiScalar rhs) {
-        return this.a.geometric_anti_quotient(rhs);
-    }
+// Fancy infix trick (second half)
+public Origin operator /(GeometricAntiQuotientInfixPartial<Origin> lhs, AntiScalar rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
 }
 public extension Origin {
     public Origin geometric_anti_quotient(AntiScalar other) {
@@ -1441,6 +1633,10 @@ public extension Origin {
             this.e4 / (other.e1234)
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(GeometricAntiQuotientInfixPartial<Origin> lhs, DualNum rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
 }
 public extension Origin {
     public Flector geometric_anti_quotient(DualNum other) {
@@ -1455,6 +1651,10 @@ public extension Origin {
             float4(float3(0.0), geometric_anti_product.scalar * this.e4 * -1.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(GeometricAntiQuotientInfixPartial<Origin> lhs, Flector rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
 }
 public extension Origin {
     public Motor geometric_anti_quotient(Flector other) {
@@ -1482,6 +1682,10 @@ public extension Origin {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(GeometricAntiQuotientInfixPartial<Origin> lhs, Line rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
+}
 public extension Origin {
     public Flector geometric_anti_quotient(Line other) {
         Line anti_reverse = Line(
@@ -1508,6 +1712,10 @@ public extension Origin {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(GeometricAntiQuotientInfixPartial<Origin> lhs, Motor rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
+}
 public extension Origin {
     public Flector geometric_anti_quotient(Motor other) {
         Motor anti_reverse = Motor(
@@ -1533,6 +1741,10 @@ public extension Origin {
             float4(this.e4) * float4(geometric_anti_product.group0.xyz, geometric_anti_product.scalar) * float4(1.0, 1.0, 1.0, -1.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricAntiQuotientInfixPartial<Origin> lhs, MultiVector rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
 }
 public extension Origin {
     public MultiVector geometric_anti_quotient(MultiVector other) {
@@ -1578,6 +1790,10 @@ public extension Origin {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(GeometricAntiQuotientInfixPartial<Origin> lhs, Origin rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
+}
 public extension Origin {
     public AntiScalar geometric_anti_quotient(Origin other) {
         return AntiScalar(
@@ -1585,6 +1801,10 @@ public extension Origin {
             this.e4 / (other.e4)
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(GeometricAntiQuotientInfixPartial<Origin> lhs, Plane rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
 }
 public extension Origin {
     public Motor geometric_anti_quotient(Plane other) {
@@ -1600,6 +1820,10 @@ public extension Origin {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(GeometricAntiQuotientInfixPartial<Origin> lhs, Point rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
+}
 public extension Origin {
     public Motor geometric_anti_quotient(Point other) {
         Point geometric_anti_product = Point(
@@ -1614,17 +1838,13 @@ public extension Origin {
         );
     }
 }
-public extension Plane {
-    // Fancy infix trick (first half)
-    public GeometricAntiQuotientInfixPartial<Plane> operator /(GeometricAntiQuotientInfix rhs) {
-        return GeometricAntiQuotientInfixPartial<Plane>(this);
-    }
+// Fancy infix trick (first half)
+public GeometricAntiQuotientInfixPartial<Plane> operator /(Plane lhs, GeometricAntiQuotientInfix rhs) {
+    return GeometricAntiQuotientInfixPartial<Plane>(lhs);
 }
-public extension GeometricAntiQuotientInfixPartial<Plane> {
-    // Fancy infix trick (second half)
-    public Plane operator /(AntiScalar rhs) {
-        return this.a.geometric_anti_quotient(rhs);
-    }
+// Fancy infix trick (second half)
+public Plane operator /(GeometricAntiQuotientInfixPartial<Plane> lhs, AntiScalar rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
 }
 public extension Plane {
     public Plane geometric_anti_quotient(AntiScalar other) {
@@ -1633,6 +1853,10 @@ public extension Plane {
             float4(1.0/other.e1234) * this.group0
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(GeometricAntiQuotientInfixPartial<Plane> lhs, DualNum rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
 }
 public extension Plane {
     public Flector geometric_anti_quotient(DualNum other) {
@@ -1647,6 +1871,10 @@ public extension Plane {
             float4(geometric_anti_product.e1234) * this.group0
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(GeometricAntiQuotientInfixPartial<Plane> lhs, Flector rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
 }
 public extension Plane {
     public Motor geometric_anti_quotient(Flector other) {
@@ -1674,6 +1902,10 @@ public extension Plane {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(GeometricAntiQuotientInfixPartial<Plane> lhs, Line rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
+}
 public extension Plane {
     public Flector geometric_anti_quotient(Line other) {
         Line anti_reverse = Line(
@@ -1700,6 +1932,10 @@ public extension Plane {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(GeometricAntiQuotientInfixPartial<Plane> lhs, Motor rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
+}
 public extension Plane {
     public Flector geometric_anti_quotient(Motor other) {
         Motor anti_reverse = Motor(
@@ -1725,6 +1961,10 @@ public extension Plane {
             float4(geometric_anti_product.e42 * this.e412 * -1.0, geometric_anti_product.e43 * this.e423 * -1.0, geometric_anti_product.e41 * this.e431 * -1.0, (geometric_anti_product.e31 * this.e431) + (geometric_anti_product.e12 * this.e412)) + (geometric_anti_product.group0.zxyw * this.group0.yzxw) + (this.group0.xyzx * float4(geometric_anti_product.group0.www, geometric_anti_product.e23))
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricAntiQuotientInfixPartial<Plane> lhs, MultiVector rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
 }
 public extension Plane {
     public MultiVector geometric_anti_quotient(MultiVector other) {
@@ -1770,6 +2010,10 @@ public extension Plane {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(GeometricAntiQuotientInfixPartial<Plane> lhs, Origin rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
+}
 public extension Plane {
     public Motor geometric_anti_quotient(Origin other) {
         Origin geometric_anti_product = Origin(
@@ -1783,6 +2027,10 @@ public extension Plane {
             float4(float3(0.0), geometric_anti_product.e4 * this.e321 * -1.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(GeometricAntiQuotientInfixPartial<Plane> lhs, Plane rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
 }
 public extension Plane {
     public Motor geometric_anti_quotient(Plane other) {
@@ -1798,6 +2046,10 @@ public extension Plane {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(GeometricAntiQuotientInfixPartial<Plane> lhs, Point rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
+}
 public extension Plane {
     public Motor geometric_anti_quotient(Point other) {
         Point geometric_anti_product = Point(
@@ -1812,17 +2064,13 @@ public extension Plane {
         );
     }
 }
-public extension Point {
-    // Fancy infix trick (first half)
-    public GeometricAntiQuotientInfixPartial<Point> operator /(GeometricAntiQuotientInfix rhs) {
-        return GeometricAntiQuotientInfixPartial<Point>(this);
-    }
+// Fancy infix trick (first half)
+public GeometricAntiQuotientInfixPartial<Point> operator /(Point lhs, GeometricAntiQuotientInfix rhs) {
+    return GeometricAntiQuotientInfixPartial<Point>(lhs);
 }
-public extension GeometricAntiQuotientInfixPartial<Point> {
-    // Fancy infix trick (second half)
-    public Point operator /(AntiScalar rhs) {
-        return this.a.geometric_anti_quotient(rhs);
-    }
+// Fancy infix trick (second half)
+public Point operator /(GeometricAntiQuotientInfixPartial<Point> lhs, AntiScalar rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
 }
 public extension Point {
     public Point geometric_anti_quotient(AntiScalar other) {
@@ -1831,6 +2079,10 @@ public extension Point {
             float4(1.0/other.e1234) * this.group0
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(GeometricAntiQuotientInfixPartial<Point> lhs, DualNum rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
 }
 public extension Point {
     public Flector geometric_anti_quotient(DualNum other) {
@@ -1845,6 +2097,10 @@ public extension Point {
             float4(float3(0.0), geometric_anti_product.scalar * this.e4 * -1.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(GeometricAntiQuotientInfixPartial<Point> lhs, Flector rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
 }
 public extension Point {
     public Motor geometric_anti_quotient(Flector other) {
@@ -1872,6 +2128,10 @@ public extension Point {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(GeometricAntiQuotientInfixPartial<Point> lhs, Line rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
+}
 public extension Point {
     public Flector geometric_anti_quotient(Line other) {
         Line anti_reverse = Line(
@@ -1898,6 +2158,10 @@ public extension Point {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(GeometricAntiQuotientInfixPartial<Point> lhs, Motor rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
+}
 public extension Point {
     public Flector geometric_anti_quotient(Motor other) {
         Motor anti_reverse = Motor(
@@ -1923,6 +2187,10 @@ public extension Point {
             float4((float3(this.e4) * geometric_anti_product.group0.xyz), -(geometric_anti_product.e41 * this.e1) - (geometric_anti_product.e42 * this.e2) - (geometric_anti_product.e43 * this.e3) - (geometric_anti_product.scalar * this.e4))
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricAntiQuotientInfixPartial<Point> lhs, MultiVector rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
 }
 public extension Point {
     public MultiVector geometric_anti_quotient(MultiVector other) {
@@ -1968,6 +2236,10 @@ public extension Point {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(GeometricAntiQuotientInfixPartial<Point> lhs, Origin rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
+}
 public extension Point {
     public Motor geometric_anti_quotient(Origin other) {
         Origin geometric_anti_product = Origin(
@@ -1981,6 +2253,10 @@ public extension Point {
             float4((float3(geometric_anti_product.e4) * this.group0.xyz * float3(-1.0)), 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(GeometricAntiQuotientInfixPartial<Point> lhs, Plane rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
 }
 public extension Point {
     public Motor geometric_anti_quotient(Plane other) {
@@ -1996,6 +2272,10 @@ public extension Point {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(GeometricAntiQuotientInfixPartial<Point> lhs, Point rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
+}
 public extension Point {
     public Motor geometric_anti_quotient(Point other) {
         Point geometric_anti_product = Point(
@@ -2010,17 +2290,13 @@ public extension Point {
         );
     }
 }
-public extension Scalar {
-    // Fancy infix trick (first half)
-    public GeometricAntiQuotientInfixPartial<Scalar> operator /(GeometricAntiQuotientInfix rhs) {
-        return GeometricAntiQuotientInfixPartial<Scalar>(this);
-    }
+// Fancy infix trick (first half)
+public GeometricAntiQuotientInfixPartial<Scalar> operator /(Scalar lhs, GeometricAntiQuotientInfix rhs) {
+    return GeometricAntiQuotientInfixPartial<Scalar>(lhs);
 }
-public extension GeometricAntiQuotientInfixPartial<Scalar> {
-    // Fancy infix trick (second half)
-    public Scalar operator /(AntiScalar rhs) {
-        return this.a.geometric_anti_quotient(rhs);
-    }
+// Fancy infix trick (second half)
+public Scalar operator /(GeometricAntiQuotientInfixPartial<Scalar> lhs, AntiScalar rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
 }
 public extension Scalar {
     public Scalar geometric_anti_quotient(AntiScalar other) {
@@ -2030,6 +2306,10 @@ public extension Scalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(GeometricAntiQuotientInfixPartial<Scalar> lhs, DualNum rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
+}
 public extension Scalar {
     public Scalar geometric_anti_quotient(DualNum other) {
         return Scalar(
@@ -2037,6 +2317,10 @@ public extension Scalar {
             this.scalar / (other.e1234)
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(GeometricAntiQuotientInfixPartial<Scalar> lhs, Flector rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
 }
 public extension Scalar {
     public Flector geometric_anti_quotient(Flector other) {
@@ -2064,6 +2348,10 @@ public extension Scalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public Line operator /(GeometricAntiQuotientInfixPartial<Scalar> lhs, Line rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
+}
 public extension Scalar {
     public Line geometric_anti_quotient(Line other) {
         Line anti_reverse = Line(
@@ -2084,6 +2372,10 @@ public extension Scalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(GeometricAntiQuotientInfixPartial<Scalar> lhs, Motor rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
+}
 public extension Scalar {
     public Motor geometric_anti_quotient(Motor other) {
         Motor anti_reverse = Motor(
@@ -2103,6 +2395,10 @@ public extension Scalar {
             float4(this.scalar) * float4(other_2.e1234 * anti_reverse.e41, other_2.e1234 * anti_reverse.e42, other_2.e1234 * anti_reverse.e43, other_2.e1234 * anti_reverse.e1234)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(GeometricAntiQuotientInfixPartial<Scalar> lhs, MultiVector rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
 }
 public extension Scalar {
     public MultiVector geometric_anti_quotient(MultiVector other) {
@@ -2148,6 +2444,10 @@ public extension Scalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public Horizon operator /(GeometricAntiQuotientInfixPartial<Scalar> lhs, Origin rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
+}
 public extension Scalar {
     public Horizon geometric_anti_quotient(Origin other) {
         return Horizon(
@@ -2155,6 +2455,10 @@ public extension Scalar {
             this.scalar / (other.e4) * -1.0
         );
     }
+}
+// Fancy infix trick (second half)
+public Point operator /(GeometricAntiQuotientInfixPartial<Scalar> lhs, Plane rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
 }
 public extension Scalar {
     public Point geometric_anti_quotient(Plane other) {
@@ -2167,6 +2471,10 @@ public extension Scalar {
             float4((float3(this.scalar) * float4(other_2.e1234 * other.e423, other_2.e1234 * other.e431, other_2.e1234 * other.e412, other_2.e1234 * other.e321).xyz), 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public Horizon operator /(GeometricAntiQuotientInfixPartial<Scalar> lhs, Point rhs) {
+    return lhs.a.geometric_anti_quotient(rhs);
 }
 public extension Scalar {
     public Horizon geometric_anti_quotient(Point other) {

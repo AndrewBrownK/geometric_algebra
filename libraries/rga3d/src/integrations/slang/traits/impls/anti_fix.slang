@@ -1,16 +1,12 @@
 implementing rga3d;
 using traits;
-public extension AntiScalar {
-    // Fancy postfix trick
-    public AntiScalar operator /(AntiFixPrefixOrPostfix rhs)  {
-        return this.anti_fix();
+// Fancy postfix trick
+public AntiScalar operator /(AntiScalar lhs, AntiFixPrefixOrPostfix rhs)  {
+    return lhs.anti_fix();
     }
-}
-public extension AntiFixPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiScalar operator /(AntiScalar rhs) {
-        return rhs.anti_fix();
-    }
+// Fancy prefix trick
+public AntiScalar operator /(AntiFixPrefixOrPostfix lhs, AntiScalar rhs) {
+    return rhs.anti_fix();
 }
 public extension AntiScalar {
     public AntiScalar anti_fix() {
@@ -20,17 +16,13 @@ public extension AntiScalar {
         );
     }
 }
-public extension Origin {
-    // Fancy postfix trick
-    public Origin operator /(AntiFixPrefixOrPostfix rhs)  {
-        return this.anti_fix();
+// Fancy postfix trick
+public Origin operator /(Origin lhs, AntiFixPrefixOrPostfix rhs)  {
+    return lhs.anti_fix();
     }
-}
-public extension AntiFixPrefixOrPostfix {
-    // Fancy prefix trick
-    public Origin operator /(Origin rhs) {
-        return rhs.anti_fix();
-    }
+// Fancy prefix trick
+public Origin operator /(AntiFixPrefixOrPostfix lhs, Origin rhs) {
+    return rhs.anti_fix();
 }
 public extension Origin {
     public Origin anti_fix() {
@@ -40,17 +32,13 @@ public extension Origin {
         );
     }
 }
-public extension Plane {
-    // Fancy postfix trick
-    public Plane operator /(AntiFixPrefixOrPostfix rhs)  {
-        return this.anti_fix();
+// Fancy postfix trick
+public Plane operator /(Plane lhs, AntiFixPrefixOrPostfix rhs)  {
+    return lhs.anti_fix();
     }
-}
-public extension AntiFixPrefixOrPostfix {
-    // Fancy prefix trick
-    public Plane operator /(Plane rhs) {
-        return rhs.anti_fix();
-    }
+// Fancy prefix trick
+public Plane operator /(AntiFixPrefixOrPostfix lhs, Plane rhs) {
+    return rhs.anti_fix();
 }
 public extension Plane {
     public Plane anti_fix() {
@@ -60,17 +48,13 @@ public extension Plane {
         );
     }
 }
-public extension Point {
-    // Fancy postfix trick
-    public Point operator /(AntiFixPrefixOrPostfix rhs)  {
-        return this.anti_fix();
+// Fancy postfix trick
+public Point operator /(Point lhs, AntiFixPrefixOrPostfix rhs)  {
+    return lhs.anti_fix();
     }
-}
-public extension AntiFixPrefixOrPostfix {
-    // Fancy prefix trick
-    public Point operator /(Point rhs) {
-        return rhs.anti_fix();
-    }
+// Fancy prefix trick
+public Point operator /(AntiFixPrefixOrPostfix lhs, Point rhs) {
+    return rhs.anti_fix();
 }
 public extension Point {
     public Point anti_fix() {

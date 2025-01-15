@@ -1,16 +1,12 @@
 implementing rga3d;
 using traits;
-public extension Flector {
-    // Fancy postfix trick
-    public DualNum operator /(NormSquaredPrefixOrPostfix rhs)  {
-        return this.norm_squared();
+// Fancy postfix trick
+public DualNum operator /(Flector lhs, NormSquaredPrefixOrPostfix rhs)  {
+    return lhs.norm_squared();
     }
-}
-public extension NormSquaredPrefixOrPostfix {
-    // Fancy prefix trick
-    public DualNum operator /(Flector rhs) {
-        return rhs.norm_squared();
-    }
+// Fancy prefix trick
+public DualNum operator /(NormSquaredPrefixOrPostfix lhs, Flector rhs) {
+    return rhs.norm_squared();
 }
 public extension Flector {
     public DualNum norm_squared() {
@@ -20,17 +16,13 @@ public extension Flector {
         );
     }
 }
-public extension Line {
-    // Fancy postfix trick
-    public DualNum operator /(NormSquaredPrefixOrPostfix rhs)  {
-        return this.norm_squared();
+// Fancy postfix trick
+public DualNum operator /(Line lhs, NormSquaredPrefixOrPostfix rhs)  {
+    return lhs.norm_squared();
     }
-}
-public extension NormSquaredPrefixOrPostfix {
-    // Fancy prefix trick
-    public DualNum operator /(Line rhs) {
-        return rhs.norm_squared();
-    }
+// Fancy prefix trick
+public DualNum operator /(NormSquaredPrefixOrPostfix lhs, Line rhs) {
+    return rhs.norm_squared();
 }
 public extension Line {
     public DualNum norm_squared() {
@@ -40,17 +32,13 @@ public extension Line {
         );
     }
 }
-public extension Motor {
-    // Fancy postfix trick
-    public DualNum operator /(NormSquaredPrefixOrPostfix rhs)  {
-        return this.norm_squared();
+// Fancy postfix trick
+public DualNum operator /(Motor lhs, NormSquaredPrefixOrPostfix rhs)  {
+    return lhs.norm_squared();
     }
-}
-public extension NormSquaredPrefixOrPostfix {
-    // Fancy prefix trick
-    public DualNum operator /(Motor rhs) {
-        return rhs.norm_squared();
-    }
+// Fancy prefix trick
+public DualNum operator /(NormSquaredPrefixOrPostfix lhs, Motor rhs) {
+    return rhs.norm_squared();
 }
 public extension Motor {
     public DualNum norm_squared() {
@@ -60,17 +48,13 @@ public extension Motor {
         );
     }
 }
-public extension MultiVector {
-    // Fancy postfix trick
-    public DualNum operator /(NormSquaredPrefixOrPostfix rhs)  {
-        return this.norm_squared();
+// Fancy postfix trick
+public DualNum operator /(MultiVector lhs, NormSquaredPrefixOrPostfix rhs)  {
+    return lhs.norm_squared();
     }
-}
-public extension NormSquaredPrefixOrPostfix {
-    // Fancy prefix trick
-    public DualNum operator /(MultiVector rhs) {
-        return rhs.norm_squared();
-    }
+// Fancy prefix trick
+public DualNum operator /(NormSquaredPrefixOrPostfix lhs, MultiVector rhs) {
+    return rhs.norm_squared();
 }
 public extension MultiVector {
     public DualNum norm_squared() {
@@ -80,17 +64,13 @@ public extension MultiVector {
         );
     }
 }
-public extension Point {
-    // Fancy postfix trick
-    public DualNum operator /(NormSquaredPrefixOrPostfix rhs)  {
-        return this.norm_squared();
+// Fancy postfix trick
+public DualNum operator /(Point lhs, NormSquaredPrefixOrPostfix rhs)  {
+    return lhs.norm_squared();
     }
-}
-public extension NormSquaredPrefixOrPostfix {
-    // Fancy prefix trick
-    public DualNum operator /(Point rhs) {
-        return rhs.norm_squared();
-    }
+// Fancy prefix trick
+public DualNum operator /(NormSquaredPrefixOrPostfix lhs, Point rhs) {
+    return rhs.norm_squared();
 }
 public extension Point {
     public DualNum norm_squared() {

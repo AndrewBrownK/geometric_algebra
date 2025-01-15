@@ -1,16 +1,12 @@
 implementing rga3d;
 using traits;
-public extension DualNum {
-    // Fancy postfix trick
-    public Scalar operator /(BulkPrefixOrPostfix rhs)  {
-        return this.bulk();
+// Fancy postfix trick
+public Scalar operator /(DualNum lhs, BulkPrefixOrPostfix rhs)  {
+    return lhs.bulk();
     }
-}
-public extension BulkPrefixOrPostfix {
-    // Fancy prefix trick
-    public Scalar operator /(DualNum rhs) {
-        return rhs.bulk();
-    }
+// Fancy prefix trick
+public Scalar operator /(BulkPrefixOrPostfix lhs, DualNum rhs) {
+    return rhs.bulk();
 }
 public extension DualNum {
     public Scalar bulk() {
@@ -20,17 +16,13 @@ public extension DualNum {
         );
     }
 }
-public extension Flector {
-    // Fancy postfix trick
-    public Flector operator /(BulkPrefixOrPostfix rhs)  {
-        return this.bulk();
+// Fancy postfix trick
+public Flector operator /(Flector lhs, BulkPrefixOrPostfix rhs)  {
+    return lhs.bulk();
     }
-}
-public extension BulkPrefixOrPostfix {
-    // Fancy prefix trick
-    public Flector operator /(Flector rhs) {
-        return rhs.bulk();
-    }
+// Fancy prefix trick
+public Flector operator /(BulkPrefixOrPostfix lhs, Flector rhs) {
+    return rhs.bulk();
 }
 public extension Flector {
     public Flector bulk() {
@@ -42,34 +34,26 @@ public extension Flector {
         );
     }
 }
-public extension Horizon {
-    // Fancy postfix trick
-    public Horizon operator /(BulkPrefixOrPostfix rhs)  {
-        return this.bulk();
+// Fancy postfix trick
+public Horizon operator /(Horizon lhs, BulkPrefixOrPostfix rhs)  {
+    return lhs.bulk();
     }
-}
-public extension BulkPrefixOrPostfix {
-    // Fancy prefix trick
-    public Horizon operator /(Horizon rhs) {
-        return rhs.bulk();
-    }
+// Fancy prefix trick
+public Horizon operator /(BulkPrefixOrPostfix lhs, Horizon rhs) {
+    return rhs.bulk();
 }
 public extension Horizon {
     public Horizon bulk() {
         return this;
     }
 }
-public extension Line {
-    // Fancy postfix trick
-    public Line operator /(BulkPrefixOrPostfix rhs)  {
-        return this.bulk();
+// Fancy postfix trick
+public Line operator /(Line lhs, BulkPrefixOrPostfix rhs)  {
+    return lhs.bulk();
     }
-}
-public extension BulkPrefixOrPostfix {
-    // Fancy prefix trick
-    public Line operator /(Line rhs) {
-        return rhs.bulk();
-    }
+// Fancy prefix trick
+public Line operator /(BulkPrefixOrPostfix lhs, Line rhs) {
+    return rhs.bulk();
 }
 public extension Line {
     public Line bulk() {
@@ -81,17 +65,13 @@ public extension Line {
         );
     }
 }
-public extension Motor {
-    // Fancy postfix trick
-    public Motor operator /(BulkPrefixOrPostfix rhs)  {
-        return this.bulk();
+// Fancy postfix trick
+public Motor operator /(Motor lhs, BulkPrefixOrPostfix rhs)  {
+    return lhs.bulk();
     }
-}
-public extension BulkPrefixOrPostfix {
-    // Fancy prefix trick
-    public Motor operator /(Motor rhs) {
-        return rhs.bulk();
-    }
+// Fancy prefix trick
+public Motor operator /(BulkPrefixOrPostfix lhs, Motor rhs) {
+    return rhs.bulk();
 }
 public extension Motor {
     public Motor bulk() {
@@ -103,17 +83,13 @@ public extension Motor {
         );
     }
 }
-public extension MultiVector {
-    // Fancy postfix trick
-    public MultiVector operator /(BulkPrefixOrPostfix rhs)  {
-        return this.bulk();
+// Fancy postfix trick
+public MultiVector operator /(MultiVector lhs, BulkPrefixOrPostfix rhs)  {
+    return lhs.bulk();
     }
-}
-public extension BulkPrefixOrPostfix {
-    // Fancy prefix trick
-    public MultiVector operator /(MultiVector rhs) {
-        return rhs.bulk();
-    }
+// Fancy prefix trick
+public MultiVector operator /(BulkPrefixOrPostfix lhs, MultiVector rhs) {
+    return rhs.bulk();
 }
 public extension MultiVector {
     public MultiVector bulk() {
@@ -131,17 +107,13 @@ public extension MultiVector {
         );
     }
 }
-public extension Plane {
-    // Fancy postfix trick
-    public Horizon operator /(BulkPrefixOrPostfix rhs)  {
-        return this.bulk();
+// Fancy postfix trick
+public Horizon operator /(Plane lhs, BulkPrefixOrPostfix rhs)  {
+    return lhs.bulk();
     }
-}
-public extension BulkPrefixOrPostfix {
-    // Fancy prefix trick
-    public Horizon operator /(Plane rhs) {
-        return rhs.bulk();
-    }
+// Fancy prefix trick
+public Horizon operator /(BulkPrefixOrPostfix lhs, Plane rhs) {
+    return rhs.bulk();
 }
 public extension Plane {
     public Horizon bulk() {
@@ -151,17 +123,13 @@ public extension Plane {
         );
     }
 }
-public extension Point {
-    // Fancy postfix trick
-    public Point operator /(BulkPrefixOrPostfix rhs)  {
-        return this.bulk();
+// Fancy postfix trick
+public Point operator /(Point lhs, BulkPrefixOrPostfix rhs)  {
+    return lhs.bulk();
     }
-}
-public extension BulkPrefixOrPostfix {
-    // Fancy prefix trick
-    public Point operator /(Point rhs) {
-        return rhs.bulk();
-    }
+// Fancy prefix trick
+public Point operator /(BulkPrefixOrPostfix lhs, Point rhs) {
+    return rhs.bulk();
 }
 public extension Point {
     public Point bulk() {
@@ -171,17 +139,13 @@ public extension Point {
         );
     }
 }
-public extension Scalar {
-    // Fancy postfix trick
-    public Scalar operator /(BulkPrefixOrPostfix rhs)  {
-        return this.bulk();
+// Fancy postfix trick
+public Scalar operator /(Scalar lhs, BulkPrefixOrPostfix rhs)  {
+    return lhs.bulk();
     }
-}
-public extension BulkPrefixOrPostfix {
-    // Fancy prefix trick
-    public Scalar operator /(Scalar rhs) {
-        return rhs.bulk();
-    }
+// Fancy prefix trick
+public Scalar operator /(BulkPrefixOrPostfix lhs, Scalar rhs) {
+    return rhs.bulk();
 }
 public extension Scalar {
     public Scalar bulk() {

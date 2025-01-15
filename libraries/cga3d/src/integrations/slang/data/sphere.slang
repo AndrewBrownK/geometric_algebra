@@ -8,7 +8,7 @@ public struct Sphere {
     // e1234, 0, 0, 0
     internal float4 group1;
 
-    __init(
+    public __init(
         float e4235, float e4315, float e4125, float e3215, float e1234
     ) {
         group0 = float4(e4235, e4315, e4125, e3215);

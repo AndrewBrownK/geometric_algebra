@@ -20,8 +20,8 @@ pub mod slang {
 
     #[derive(Clone, Copy)]
     pub struct Target {
-        file_extension: &'static str,
-        target_argument: &'static str,
+        pub file_extension: &'static str,
+        pub target_argument: &'static str,
     }
     impl Target {
         const fn new(file_extension: &'static str, target_argument: &'static str) -> Self {
@@ -60,7 +60,7 @@ pub mod slang {
 
     #[derive(Clone, Copy)]
     pub struct Stage {
-        stage_argument: &'static str,
+        pub stage_argument: &'static str,
     }
     impl Stage {
         const fn new(stage_argument: &'static str) -> Self {
@@ -84,8 +84,8 @@ pub mod slang {
     }
 
     pub struct EntryPoint<S> {
-        name: S,
-        stage: Stage,
+        pub name: S,
+        pub stage: Stage,
     }
 
     // https://github.com/shader-slang/slang/blob/master/docs/command-line-slangc-reference.md#-o

@@ -12,7 +12,7 @@ public struct VersorOdd {
     // e4235, e4315, e4125, e3215
     internal float4 group3;
 
-    __init(
+    public __init(
         float e41, float e42, float e43, float scalar, float e23, float e31, float e12, float e45, float e15, float e25, float e35, float e1234, float e4235, float e4315, float e4125, float e3215
     ) {
         group0 = float4(e41, e42, e43, scalar);

@@ -1,16 +1,12 @@
 implementing cga3d;
 using traits;
-public extension AntiCircleRotor {
-    // Fancy postfix trick
-    public FlatPoint operator /(FlatWeightPrefixOrPostfix rhs)  {
-        return this.flat_weight();
+// Fancy postfix trick
+public FlatPoint operator /(AntiCircleRotor lhs, FlatWeightPrefixOrPostfix rhs)  {
+    return lhs.flat_weight();
     }
-}
-public extension FlatWeightPrefixOrPostfix {
-    // Fancy prefix trick
-    public FlatPoint operator /(AntiCircleRotor rhs) {
-        return rhs.flat_weight();
-    }
+// Fancy prefix trick
+public FlatPoint operator /(FlatWeightPrefixOrPostfix lhs, AntiCircleRotor rhs) {
+    return rhs.flat_weight();
 }
 public extension AntiCircleRotor {
     public FlatPoint flat_weight() {
@@ -20,17 +16,13 @@ public extension AntiCircleRotor {
         );
     }
 }
-public extension AntiDipoleInversion {
-    // Fancy postfix trick
-    public Line operator /(FlatWeightPrefixOrPostfix rhs)  {
-        return this.flat_weight();
+// Fancy postfix trick
+public Line operator /(AntiDipoleInversion lhs, FlatWeightPrefixOrPostfix rhs)  {
+    return lhs.flat_weight();
     }
-}
-public extension FlatWeightPrefixOrPostfix {
-    // Fancy prefix trick
-    public Line operator /(AntiDipoleInversion rhs) {
-        return rhs.flat_weight();
-    }
+// Fancy prefix trick
+public Line operator /(FlatWeightPrefixOrPostfix lhs, AntiDipoleInversion rhs) {
+    return rhs.flat_weight();
 }
 public extension AntiDipoleInversion {
     public Line flat_weight() {
@@ -42,34 +34,26 @@ public extension AntiDipoleInversion {
         );
     }
 }
-public extension AntiScalar {
-    // Fancy postfix trick
-    public AntiScalar operator /(FlatWeightPrefixOrPostfix rhs)  {
-        return this.flat_weight();
+// Fancy postfix trick
+public AntiScalar operator /(AntiScalar lhs, FlatWeightPrefixOrPostfix rhs)  {
+    return lhs.flat_weight();
     }
-}
-public extension FlatWeightPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiScalar operator /(AntiScalar rhs) {
-        return rhs.flat_weight();
-    }
+// Fancy prefix trick
+public AntiScalar operator /(FlatWeightPrefixOrPostfix lhs, AntiScalar rhs) {
+    return rhs.flat_weight();
 }
 public extension AntiScalar {
     public AntiScalar flat_weight() {
         return this;
     }
 }
-public extension Circle {
-    // Fancy postfix trick
-    public Line operator /(FlatWeightPrefixOrPostfix rhs)  {
-        return this.flat_weight();
+// Fancy postfix trick
+public Line operator /(Circle lhs, FlatWeightPrefixOrPostfix rhs)  {
+    return lhs.flat_weight();
     }
-}
-public extension FlatWeightPrefixOrPostfix {
-    // Fancy prefix trick
-    public Line operator /(Circle rhs) {
-        return rhs.flat_weight();
-    }
+// Fancy prefix trick
+public Line operator /(FlatWeightPrefixOrPostfix lhs, Circle rhs) {
+    return rhs.flat_weight();
 }
 public extension Circle {
     public Line flat_weight() {
@@ -81,17 +65,13 @@ public extension Circle {
         );
     }
 }
-public extension CircleRotor {
-    // Fancy postfix trick
-    public Motor operator /(FlatWeightPrefixOrPostfix rhs)  {
-        return this.flat_weight();
+// Fancy postfix trick
+public Motor operator /(CircleRotor lhs, FlatWeightPrefixOrPostfix rhs)  {
+    return lhs.flat_weight();
     }
-}
-public extension FlatWeightPrefixOrPostfix {
-    // Fancy prefix trick
-    public Motor operator /(CircleRotor rhs) {
-        return rhs.flat_weight();
-    }
+// Fancy prefix trick
+public Motor operator /(FlatWeightPrefixOrPostfix lhs, CircleRotor rhs) {
+    return rhs.flat_weight();
 }
 public extension CircleRotor {
     public Motor flat_weight() {
@@ -103,17 +83,13 @@ public extension CircleRotor {
         );
     }
 }
-public extension Dipole {
-    // Fancy postfix trick
-    public FlatPoint operator /(FlatWeightPrefixOrPostfix rhs)  {
-        return this.flat_weight();
+// Fancy postfix trick
+public FlatPoint operator /(Dipole lhs, FlatWeightPrefixOrPostfix rhs)  {
+    return lhs.flat_weight();
     }
-}
-public extension FlatWeightPrefixOrPostfix {
-    // Fancy prefix trick
-    public FlatPoint operator /(Dipole rhs) {
-        return rhs.flat_weight();
-    }
+// Fancy prefix trick
+public FlatPoint operator /(FlatWeightPrefixOrPostfix lhs, Dipole rhs) {
+    return rhs.flat_weight();
 }
 public extension Dipole {
     public FlatPoint flat_weight() {
@@ -123,17 +99,13 @@ public extension Dipole {
         );
     }
 }
-public extension DipoleInversion {
-    // Fancy postfix trick
-    public Flector operator /(FlatWeightPrefixOrPostfix rhs)  {
-        return this.flat_weight();
+// Fancy postfix trick
+public Flector operator /(DipoleInversion lhs, FlatWeightPrefixOrPostfix rhs)  {
+    return lhs.flat_weight();
     }
-}
-public extension FlatWeightPrefixOrPostfix {
-    // Fancy prefix trick
-    public Flector operator /(DipoleInversion rhs) {
-        return rhs.flat_weight();
-    }
+// Fancy prefix trick
+public Flector operator /(FlatWeightPrefixOrPostfix lhs, DipoleInversion rhs) {
+    return rhs.flat_weight();
 }
 public extension DipoleInversion {
     public Flector flat_weight() {
@@ -145,17 +117,13 @@ public extension DipoleInversion {
         );
     }
 }
-public extension DualNum {
-    // Fancy postfix trick
-    public AntiScalar operator /(FlatWeightPrefixOrPostfix rhs)  {
-        return this.flat_weight();
+// Fancy postfix trick
+public AntiScalar operator /(DualNum lhs, FlatWeightPrefixOrPostfix rhs)  {
+    return lhs.flat_weight();
     }
-}
-public extension FlatWeightPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiScalar operator /(DualNum rhs) {
-        return rhs.flat_weight();
-    }
+// Fancy prefix trick
+public AntiScalar operator /(FlatWeightPrefixOrPostfix lhs, DualNum rhs) {
+    return rhs.flat_weight();
 }
 public extension DualNum {
     public AntiScalar flat_weight() {
@@ -165,17 +133,13 @@ public extension DualNum {
         );
     }
 }
-public extension FlatPoint {
-    // Fancy postfix trick
-    public FlatPoint operator /(FlatWeightPrefixOrPostfix rhs)  {
-        return this.flat_weight();
+// Fancy postfix trick
+public FlatPoint operator /(FlatPoint lhs, FlatWeightPrefixOrPostfix rhs)  {
+    return lhs.flat_weight();
     }
-}
-public extension FlatWeightPrefixOrPostfix {
-    // Fancy prefix trick
-    public FlatPoint operator /(FlatPoint rhs) {
-        return rhs.flat_weight();
-    }
+// Fancy prefix trick
+public FlatPoint operator /(FlatWeightPrefixOrPostfix lhs, FlatPoint rhs) {
+    return rhs.flat_weight();
 }
 public extension FlatPoint {
     public FlatPoint flat_weight() {
@@ -185,17 +149,13 @@ public extension FlatPoint {
         );
     }
 }
-public extension Flector {
-    // Fancy postfix trick
-    public Flector operator /(FlatWeightPrefixOrPostfix rhs)  {
-        return this.flat_weight();
+// Fancy postfix trick
+public Flector operator /(Flector lhs, FlatWeightPrefixOrPostfix rhs)  {
+    return lhs.flat_weight();
     }
-}
-public extension FlatWeightPrefixOrPostfix {
-    // Fancy prefix trick
-    public Flector operator /(Flector rhs) {
-        return rhs.flat_weight();
-    }
+// Fancy prefix trick
+public Flector operator /(FlatWeightPrefixOrPostfix lhs, Flector rhs) {
+    return rhs.flat_weight();
 }
 public extension Flector {
     public Flector flat_weight() {
@@ -207,17 +167,13 @@ public extension Flector {
         );
     }
 }
-public extension Line {
-    // Fancy postfix trick
-    public Line operator /(FlatWeightPrefixOrPostfix rhs)  {
-        return this.flat_weight();
+// Fancy postfix trick
+public Line operator /(Line lhs, FlatWeightPrefixOrPostfix rhs)  {
+    return lhs.flat_weight();
     }
-}
-public extension FlatWeightPrefixOrPostfix {
-    // Fancy prefix trick
-    public Line operator /(Line rhs) {
-        return rhs.flat_weight();
-    }
+// Fancy prefix trick
+public Line operator /(FlatWeightPrefixOrPostfix lhs, Line rhs) {
+    return rhs.flat_weight();
 }
 public extension Line {
     public Line flat_weight() {
@@ -229,17 +185,13 @@ public extension Line {
         );
     }
 }
-public extension Motor {
-    // Fancy postfix trick
-    public Motor operator /(FlatWeightPrefixOrPostfix rhs)  {
-        return this.flat_weight();
+// Fancy postfix trick
+public Motor operator /(Motor lhs, FlatWeightPrefixOrPostfix rhs)  {
+    return lhs.flat_weight();
     }
-}
-public extension FlatWeightPrefixOrPostfix {
-    // Fancy prefix trick
-    public Motor operator /(Motor rhs) {
-        return rhs.flat_weight();
-    }
+// Fancy prefix trick
+public Motor operator /(FlatWeightPrefixOrPostfix lhs, Motor rhs) {
+    return rhs.flat_weight();
 }
 public extension Motor {
     public Motor flat_weight() {
@@ -251,17 +203,13 @@ public extension Motor {
         );
     }
 }
-public extension MultiVector {
-    // Fancy postfix trick
-    public MultiVector operator /(FlatWeightPrefixOrPostfix rhs)  {
-        return this.flat_weight();
+// Fancy postfix trick
+public MultiVector operator /(MultiVector lhs, FlatWeightPrefixOrPostfix rhs)  {
+    return lhs.flat_weight();
     }
-}
-public extension FlatWeightPrefixOrPostfix {
-    // Fancy prefix trick
-    public MultiVector operator /(MultiVector rhs) {
-        return rhs.flat_weight();
-    }
+// Fancy prefix trick
+public MultiVector operator /(FlatWeightPrefixOrPostfix lhs, MultiVector rhs) {
+    return rhs.flat_weight();
 }
 public extension MultiVector {
     public MultiVector flat_weight() {
@@ -291,17 +239,13 @@ public extension MultiVector {
         );
     }
 }
-public extension Plane {
-    // Fancy postfix trick
-    public Plane operator /(FlatWeightPrefixOrPostfix rhs)  {
-        return this.flat_weight();
+// Fancy postfix trick
+public Plane operator /(Plane lhs, FlatWeightPrefixOrPostfix rhs)  {
+    return lhs.flat_weight();
     }
-}
-public extension FlatWeightPrefixOrPostfix {
-    // Fancy prefix trick
-    public Plane operator /(Plane rhs) {
-        return rhs.flat_weight();
-    }
+// Fancy prefix trick
+public Plane operator /(FlatWeightPrefixOrPostfix lhs, Plane rhs) {
+    return rhs.flat_weight();
 }
 public extension Plane {
     public Plane flat_weight() {
@@ -311,17 +255,13 @@ public extension Plane {
         );
     }
 }
-public extension Sphere {
-    // Fancy postfix trick
-    public Plane operator /(FlatWeightPrefixOrPostfix rhs)  {
-        return this.flat_weight();
+// Fancy postfix trick
+public Plane operator /(Sphere lhs, FlatWeightPrefixOrPostfix rhs)  {
+    return lhs.flat_weight();
     }
-}
-public extension FlatWeightPrefixOrPostfix {
-    // Fancy prefix trick
-    public Plane operator /(Sphere rhs) {
-        return rhs.flat_weight();
-    }
+// Fancy prefix trick
+public Plane operator /(FlatWeightPrefixOrPostfix lhs, Sphere rhs) {
+    return rhs.flat_weight();
 }
 public extension Sphere {
     public Plane flat_weight() {
@@ -331,17 +271,13 @@ public extension Sphere {
         );
     }
 }
-public extension VersorEven {
-    // Fancy postfix trick
-    public Motor operator /(FlatWeightPrefixOrPostfix rhs)  {
-        return this.flat_weight();
+// Fancy postfix trick
+public Motor operator /(VersorEven lhs, FlatWeightPrefixOrPostfix rhs)  {
+    return lhs.flat_weight();
     }
-}
-public extension FlatWeightPrefixOrPostfix {
-    // Fancy prefix trick
-    public Motor operator /(VersorEven rhs) {
-        return rhs.flat_weight();
-    }
+// Fancy prefix trick
+public Motor operator /(FlatWeightPrefixOrPostfix lhs, VersorEven rhs) {
+    return rhs.flat_weight();
 }
 public extension VersorEven {
     public Motor flat_weight() {
@@ -353,17 +289,13 @@ public extension VersorEven {
         );
     }
 }
-public extension VersorOdd {
-    // Fancy postfix trick
-    public Flector operator /(FlatWeightPrefixOrPostfix rhs)  {
-        return this.flat_weight();
+// Fancy postfix trick
+public Flector operator /(VersorOdd lhs, FlatWeightPrefixOrPostfix rhs)  {
+    return lhs.flat_weight();
     }
-}
-public extension FlatWeightPrefixOrPostfix {
-    // Fancy prefix trick
-    public Flector operator /(VersorOdd rhs) {
-        return rhs.flat_weight();
-    }
+// Fancy prefix trick
+public Flector operator /(FlatWeightPrefixOrPostfix lhs, VersorOdd rhs) {
+    return rhs.flat_weight();
 }
 public extension VersorOdd {
     public Flector flat_weight() {

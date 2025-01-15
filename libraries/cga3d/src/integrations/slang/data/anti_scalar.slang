@@ -6,7 +6,7 @@ public struct AntiScalar {
     // e12345, 0, 0, 0
     internal float4 group0;
 
-    __init(
+    public __init(
         float e12345
     ) {
         group0 = float4(e12345, 0.0, 0.0, 0.0);

@@ -1,16 +1,12 @@
 implementing rga3d;
 using traits;
-public extension AntiScalar {
-    // Fancy infix trick (first half)
-    public AntiDotProductInfixPartial<AntiScalar> operator /(AntiDotProductInfix rhs) {
-        return AntiDotProductInfixPartial<AntiScalar>(this);
-    }
+// Fancy infix trick (first half)
+public AntiDotProductInfixPartial<AntiScalar> operator /(AntiScalar lhs, AntiDotProductInfix rhs) {
+    return AntiDotProductInfixPartial<AntiScalar>(lhs);
 }
-public extension AntiDotProductInfixPartial<AntiScalar> {
-    // Fancy infix trick (second half)
-    public AntiScalar operator /(AntiScalar rhs) {
-        return this.a.anti_dot_product(rhs);
-    }
+// Fancy infix trick (second half)
+public AntiScalar operator /(AntiDotProductInfixPartial<AntiScalar> lhs, AntiScalar rhs) {
+    return lhs.a.anti_dot_product(rhs);
 }
 public extension AntiScalar {
     public AntiScalar anti_dot_product(AntiScalar other) {
@@ -20,6 +16,10 @@ public extension AntiScalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(AntiDotProductInfixPartial<AntiScalar> lhs, DualNum rhs) {
+    return lhs.a.anti_dot_product(rhs);
+}
 public extension AntiScalar {
     public AntiScalar anti_dot_product(DualNum other) {
         return AntiScalar(
@@ -27,6 +27,10 @@ public extension AntiScalar {
             this.e1234 * other.e1234
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiScalar operator /(AntiDotProductInfixPartial<AntiScalar> lhs, Motor rhs) {
+    return lhs.a.anti_dot_product(rhs);
 }
 public extension AntiScalar {
     public AntiScalar anti_dot_product(Motor other) {
@@ -36,6 +40,10 @@ public extension AntiScalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(AntiDotProductInfixPartial<AntiScalar> lhs, MultiVector rhs) {
+    return lhs.a.anti_dot_product(rhs);
+}
 public extension AntiScalar {
     public AntiScalar anti_dot_product(MultiVector other) {
         return AntiScalar(
@@ -44,17 +52,13 @@ public extension AntiScalar {
         );
     }
 }
-public extension DualNum {
-    // Fancy infix trick (first half)
-    public AntiDotProductInfixPartial<DualNum> operator /(AntiDotProductInfix rhs) {
-        return AntiDotProductInfixPartial<DualNum>(this);
-    }
+// Fancy infix trick (first half)
+public AntiDotProductInfixPartial<DualNum> operator /(DualNum lhs, AntiDotProductInfix rhs) {
+    return AntiDotProductInfixPartial<DualNum>(lhs);
 }
-public extension AntiDotProductInfixPartial<DualNum> {
-    // Fancy infix trick (second half)
-    public AntiScalar operator /(AntiScalar rhs) {
-        return this.a.anti_dot_product(rhs);
-    }
+// Fancy infix trick (second half)
+public AntiScalar operator /(AntiDotProductInfixPartial<DualNum> lhs, AntiScalar rhs) {
+    return lhs.a.anti_dot_product(rhs);
 }
 public extension DualNum {
     public AntiScalar anti_dot_product(AntiScalar other) {
@@ -64,6 +68,10 @@ public extension DualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(AntiDotProductInfixPartial<DualNum> lhs, DualNum rhs) {
+    return lhs.a.anti_dot_product(rhs);
+}
 public extension DualNum {
     public AntiScalar anti_dot_product(DualNum other) {
         return AntiScalar(
@@ -71,6 +79,10 @@ public extension DualNum {
             other.e1234 * this.e1234
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiScalar operator /(AntiDotProductInfixPartial<DualNum> lhs, Motor rhs) {
+    return lhs.a.anti_dot_product(rhs);
 }
 public extension DualNum {
     public AntiScalar anti_dot_product(Motor other) {
@@ -80,6 +92,10 @@ public extension DualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(AntiDotProductInfixPartial<DualNum> lhs, MultiVector rhs) {
+    return lhs.a.anti_dot_product(rhs);
+}
 public extension DualNum {
     public AntiScalar anti_dot_product(MultiVector other) {
         return AntiScalar(
@@ -88,17 +104,13 @@ public extension DualNum {
         );
     }
 }
-public extension Flector {
-    // Fancy infix trick (first half)
-    public AntiDotProductInfixPartial<Flector> operator /(AntiDotProductInfix rhs) {
-        return AntiDotProductInfixPartial<Flector>(this);
-    }
+// Fancy infix trick (first half)
+public AntiDotProductInfixPartial<Flector> operator /(Flector lhs, AntiDotProductInfix rhs) {
+    return AntiDotProductInfixPartial<Flector>(lhs);
 }
-public extension AntiDotProductInfixPartial<Flector> {
-    // Fancy infix trick (second half)
-    public AntiScalar operator /(Flector rhs) {
-        return this.a.anti_dot_product(rhs);
-    }
+// Fancy infix trick (second half)
+public AntiScalar operator /(AntiDotProductInfixPartial<Flector> lhs, Flector rhs) {
+    return lhs.a.anti_dot_product(rhs);
 }
 public extension Flector {
     public AntiScalar anti_dot_product(Flector other) {
@@ -107,6 +119,10 @@ public extension Flector {
             (other.e4 * this.e4) + (other.e423 * this.e423) + (other.e431 * this.e431) + (other.e412 * this.e412)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiScalar operator /(AntiDotProductInfixPartial<Flector> lhs, MultiVector rhs) {
+    return lhs.a.anti_dot_product(rhs);
 }
 public extension Flector {
     public AntiScalar anti_dot_product(MultiVector other) {
@@ -116,6 +132,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(AntiDotProductInfixPartial<Flector> lhs, Origin rhs) {
+    return lhs.a.anti_dot_product(rhs);
+}
 public extension Flector {
     public AntiScalar anti_dot_product(Origin other) {
         return AntiScalar(
@@ -123,6 +143,10 @@ public extension Flector {
             this.e4 * other.e4
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiScalar operator /(AntiDotProductInfixPartial<Flector> lhs, Plane rhs) {
+    return lhs.a.anti_dot_product(rhs);
 }
 public extension Flector {
     public AntiScalar anti_dot_product(Plane other) {
@@ -132,6 +156,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(AntiDotProductInfixPartial<Flector> lhs, Point rhs) {
+    return lhs.a.anti_dot_product(rhs);
+}
 public extension Flector {
     public AntiScalar anti_dot_product(Point other) {
         return AntiScalar(
@@ -140,17 +168,13 @@ public extension Flector {
         );
     }
 }
-public extension Line {
-    // Fancy infix trick (first half)
-    public AntiDotProductInfixPartial<Line> operator /(AntiDotProductInfix rhs) {
-        return AntiDotProductInfixPartial<Line>(this);
-    }
+// Fancy infix trick (first half)
+public AntiDotProductInfixPartial<Line> operator /(Line lhs, AntiDotProductInfix rhs) {
+    return AntiDotProductInfixPartial<Line>(lhs);
 }
-public extension AntiDotProductInfixPartial<Line> {
-    // Fancy infix trick (second half)
-    public AntiScalar operator /(Line rhs) {
-        return this.a.anti_dot_product(rhs);
-    }
+// Fancy infix trick (second half)
+public AntiScalar operator /(AntiDotProductInfixPartial<Line> lhs, Line rhs) {
+    return lhs.a.anti_dot_product(rhs);
 }
 public extension Line {
     public AntiScalar anti_dot_product(Line other) {
@@ -160,6 +184,10 @@ public extension Line {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(AntiDotProductInfixPartial<Line> lhs, Motor rhs) {
+    return lhs.a.anti_dot_product(rhs);
+}
 public extension Line {
     public AntiScalar anti_dot_product(Motor other) {
         return AntiScalar(
@@ -167,6 +195,10 @@ public extension Line {
             (this.e41 * other.e41) + (this.e42 * other.e42) + (this.e43 * other.e43)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiScalar operator /(AntiDotProductInfixPartial<Line> lhs, MultiVector rhs) {
+    return lhs.a.anti_dot_product(rhs);
 }
 public extension Line {
     public AntiScalar anti_dot_product(MultiVector other) {
@@ -176,17 +208,13 @@ public extension Line {
         );
     }
 }
-public extension Motor {
-    // Fancy infix trick (first half)
-    public AntiDotProductInfixPartial<Motor> operator /(AntiDotProductInfix rhs) {
-        return AntiDotProductInfixPartial<Motor>(this);
-    }
+// Fancy infix trick (first half)
+public AntiDotProductInfixPartial<Motor> operator /(Motor lhs, AntiDotProductInfix rhs) {
+    return AntiDotProductInfixPartial<Motor>(lhs);
 }
-public extension AntiDotProductInfixPartial<Motor> {
-    // Fancy infix trick (second half)
-    public AntiScalar operator /(AntiScalar rhs) {
-        return this.a.anti_dot_product(rhs);
-    }
+// Fancy infix trick (second half)
+public AntiScalar operator /(AntiDotProductInfixPartial<Motor> lhs, AntiScalar rhs) {
+    return lhs.a.anti_dot_product(rhs);
 }
 public extension Motor {
     public AntiScalar anti_dot_product(AntiScalar other) {
@@ -196,6 +224,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(AntiDotProductInfixPartial<Motor> lhs, DualNum rhs) {
+    return lhs.a.anti_dot_product(rhs);
+}
 public extension Motor {
     public AntiScalar anti_dot_product(DualNum other) {
         return AntiScalar(
@@ -203,6 +235,10 @@ public extension Motor {
             other.e1234 * this.e1234
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiScalar operator /(AntiDotProductInfixPartial<Motor> lhs, Line rhs) {
+    return lhs.a.anti_dot_product(rhs);
 }
 public extension Motor {
     public AntiScalar anti_dot_product(Line other) {
@@ -212,6 +248,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(AntiDotProductInfixPartial<Motor> lhs, Motor rhs) {
+    return lhs.a.anti_dot_product(rhs);
+}
 public extension Motor {
     public AntiScalar anti_dot_product(Motor other) {
         return AntiScalar(
@@ -219,6 +259,10 @@ public extension Motor {
             (other.e41 * this.e41) + (other.e42 * this.e42) + (other.e43 * this.e43) + (other.e1234 * this.e1234)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiScalar operator /(AntiDotProductInfixPartial<Motor> lhs, MultiVector rhs) {
+    return lhs.a.anti_dot_product(rhs);
 }
 public extension Motor {
     public AntiScalar anti_dot_product(MultiVector other) {
@@ -228,17 +272,13 @@ public extension Motor {
         );
     }
 }
-public extension MultiVector {
-    // Fancy infix trick (first half)
-    public AntiDotProductInfixPartial<MultiVector> operator /(AntiDotProductInfix rhs) {
-        return AntiDotProductInfixPartial<MultiVector>(this);
-    }
+// Fancy infix trick (first half)
+public AntiDotProductInfixPartial<MultiVector> operator /(MultiVector lhs, AntiDotProductInfix rhs) {
+    return AntiDotProductInfixPartial<MultiVector>(lhs);
 }
-public extension AntiDotProductInfixPartial<MultiVector> {
-    // Fancy infix trick (second half)
-    public AntiScalar operator /(AntiScalar rhs) {
-        return this.a.anti_dot_product(rhs);
-    }
+// Fancy infix trick (second half)
+public AntiScalar operator /(AntiDotProductInfixPartial<MultiVector> lhs, AntiScalar rhs) {
+    return lhs.a.anti_dot_product(rhs);
 }
 public extension MultiVector {
     public AntiScalar anti_dot_product(AntiScalar other) {
@@ -248,6 +288,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(AntiDotProductInfixPartial<MultiVector> lhs, DualNum rhs) {
+    return lhs.a.anti_dot_product(rhs);
+}
 public extension MultiVector {
     public AntiScalar anti_dot_product(DualNum other) {
         return AntiScalar(
@@ -255,6 +299,10 @@ public extension MultiVector {
             other.e1234 * this.e1234
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiScalar operator /(AntiDotProductInfixPartial<MultiVector> lhs, Flector rhs) {
+    return lhs.a.anti_dot_product(rhs);
 }
 public extension MultiVector {
     public AntiScalar anti_dot_product(Flector other) {
@@ -264,6 +312,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(AntiDotProductInfixPartial<MultiVector> lhs, Line rhs) {
+    return lhs.a.anti_dot_product(rhs);
+}
 public extension MultiVector {
     public AntiScalar anti_dot_product(Line other) {
         return AntiScalar(
@@ -271,6 +323,10 @@ public extension MultiVector {
             (other.e41 * this.e41) + (other.e42 * this.e42) + (other.e43 * this.e43)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiScalar operator /(AntiDotProductInfixPartial<MultiVector> lhs, Motor rhs) {
+    return lhs.a.anti_dot_product(rhs);
 }
 public extension MultiVector {
     public AntiScalar anti_dot_product(Motor other) {
@@ -280,6 +336,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(AntiDotProductInfixPartial<MultiVector> lhs, MultiVector rhs) {
+    return lhs.a.anti_dot_product(rhs);
+}
 public extension MultiVector {
     public AntiScalar anti_dot_product(MultiVector other) {
         return AntiScalar(
@@ -288,6 +348,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(AntiDotProductInfixPartial<MultiVector> lhs, Origin rhs) {
+    return lhs.a.anti_dot_product(rhs);
+}
 public extension MultiVector {
     public AntiScalar anti_dot_product(Origin other) {
         return AntiScalar(
@@ -295,6 +359,10 @@ public extension MultiVector {
             this.e4 * other.e4
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiScalar operator /(AntiDotProductInfixPartial<MultiVector> lhs, Plane rhs) {
+    return lhs.a.anti_dot_product(rhs);
 }
 public extension MultiVector {
     public AntiScalar anti_dot_product(Plane other) {
@@ -304,6 +372,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(AntiDotProductInfixPartial<MultiVector> lhs, Point rhs) {
+    return lhs.a.anti_dot_product(rhs);
+}
 public extension MultiVector {
     public AntiScalar anti_dot_product(Point other) {
         return AntiScalar(
@@ -312,17 +384,13 @@ public extension MultiVector {
         );
     }
 }
-public extension Origin {
-    // Fancy infix trick (first half)
-    public AntiDotProductInfixPartial<Origin> operator /(AntiDotProductInfix rhs) {
-        return AntiDotProductInfixPartial<Origin>(this);
-    }
+// Fancy infix trick (first half)
+public AntiDotProductInfixPartial<Origin> operator /(Origin lhs, AntiDotProductInfix rhs) {
+    return AntiDotProductInfixPartial<Origin>(lhs);
 }
-public extension AntiDotProductInfixPartial<Origin> {
-    // Fancy infix trick (second half)
-    public AntiScalar operator /(Flector rhs) {
-        return this.a.anti_dot_product(rhs);
-    }
+// Fancy infix trick (second half)
+public AntiScalar operator /(AntiDotProductInfixPartial<Origin> lhs, Flector rhs) {
+    return lhs.a.anti_dot_product(rhs);
 }
 public extension Origin {
     public AntiScalar anti_dot_product(Flector other) {
@@ -332,6 +400,10 @@ public extension Origin {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(AntiDotProductInfixPartial<Origin> lhs, MultiVector rhs) {
+    return lhs.a.anti_dot_product(rhs);
+}
 public extension Origin {
     public AntiScalar anti_dot_product(MultiVector other) {
         return AntiScalar(
@@ -339,6 +411,10 @@ public extension Origin {
             other.e4 * this.e4
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiScalar operator /(AntiDotProductInfixPartial<Origin> lhs, Origin rhs) {
+    return lhs.a.anti_dot_product(rhs);
 }
 public extension Origin {
     public AntiScalar anti_dot_product(Origin other) {
@@ -348,6 +424,10 @@ public extension Origin {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(AntiDotProductInfixPartial<Origin> lhs, Point rhs) {
+    return lhs.a.anti_dot_product(rhs);
+}
 public extension Origin {
     public AntiScalar anti_dot_product(Point other) {
         return AntiScalar(
@@ -356,17 +436,13 @@ public extension Origin {
         );
     }
 }
-public extension Plane {
-    // Fancy infix trick (first half)
-    public AntiDotProductInfixPartial<Plane> operator /(AntiDotProductInfix rhs) {
-        return AntiDotProductInfixPartial<Plane>(this);
-    }
+// Fancy infix trick (first half)
+public AntiDotProductInfixPartial<Plane> operator /(Plane lhs, AntiDotProductInfix rhs) {
+    return AntiDotProductInfixPartial<Plane>(lhs);
 }
-public extension AntiDotProductInfixPartial<Plane> {
-    // Fancy infix trick (second half)
-    public AntiScalar operator /(Flector rhs) {
-        return this.a.anti_dot_product(rhs);
-    }
+// Fancy infix trick (second half)
+public AntiScalar operator /(AntiDotProductInfixPartial<Plane> lhs, Flector rhs) {
+    return lhs.a.anti_dot_product(rhs);
 }
 public extension Plane {
     public AntiScalar anti_dot_product(Flector other) {
@@ -376,6 +452,10 @@ public extension Plane {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(AntiDotProductInfixPartial<Plane> lhs, MultiVector rhs) {
+    return lhs.a.anti_dot_product(rhs);
+}
 public extension Plane {
     public AntiScalar anti_dot_product(MultiVector other) {
         return AntiScalar(
@@ -383,6 +463,10 @@ public extension Plane {
             (other.e423 * this.e423) + (other.e431 * this.e431) + (other.e412 * this.e412)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiScalar operator /(AntiDotProductInfixPartial<Plane> lhs, Plane rhs) {
+    return lhs.a.anti_dot_product(rhs);
 }
 public extension Plane {
     public AntiScalar anti_dot_product(Plane other) {
@@ -392,17 +476,13 @@ public extension Plane {
         );
     }
 }
-public extension Point {
-    // Fancy infix trick (first half)
-    public AntiDotProductInfixPartial<Point> operator /(AntiDotProductInfix rhs) {
-        return AntiDotProductInfixPartial<Point>(this);
-    }
+// Fancy infix trick (first half)
+public AntiDotProductInfixPartial<Point> operator /(Point lhs, AntiDotProductInfix rhs) {
+    return AntiDotProductInfixPartial<Point>(lhs);
 }
-public extension AntiDotProductInfixPartial<Point> {
-    // Fancy infix trick (second half)
-    public AntiScalar operator /(Flector rhs) {
-        return this.a.anti_dot_product(rhs);
-    }
+// Fancy infix trick (second half)
+public AntiScalar operator /(AntiDotProductInfixPartial<Point> lhs, Flector rhs) {
+    return lhs.a.anti_dot_product(rhs);
 }
 public extension Point {
     public AntiScalar anti_dot_product(Flector other) {
@@ -412,6 +492,10 @@ public extension Point {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(AntiDotProductInfixPartial<Point> lhs, MultiVector rhs) {
+    return lhs.a.anti_dot_product(rhs);
+}
 public extension Point {
     public AntiScalar anti_dot_product(MultiVector other) {
         return AntiScalar(
@@ -420,6 +504,10 @@ public extension Point {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(AntiDotProductInfixPartial<Point> lhs, Origin rhs) {
+    return lhs.a.anti_dot_product(rhs);
+}
 public extension Point {
     public AntiScalar anti_dot_product(Origin other) {
         return AntiScalar(
@@ -427,6 +515,10 @@ public extension Point {
             other.e4 * this.e4
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiScalar operator /(AntiDotProductInfixPartial<Point> lhs, Point rhs) {
+    return lhs.a.anti_dot_product(rhs);
 }
 public extension Point {
     public AntiScalar anti_dot_product(Point other) {

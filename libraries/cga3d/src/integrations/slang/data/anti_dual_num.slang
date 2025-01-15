@@ -6,7 +6,7 @@ public struct AntiDualNum {
     // e3215, scalar, 0, 0
     internal float4 group0;
 
-    __init(
+    public __init(
         float e3215, float scalar
     ) {
         group0 = float4(e3215, scalar, 0.0, 0.0);

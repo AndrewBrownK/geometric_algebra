@@ -1,16 +1,12 @@
 implementing rga3d;
 using traits;
-public extension DualNum {
-    // Fancy infix trick (first half)
-    public DotProductInfixPartial<DualNum> operator /(DotProductInfix rhs) {
-        return DotProductInfixPartial<DualNum>(this);
-    }
+// Fancy infix trick (first half)
+public DotProductInfixPartial<DualNum> operator /(DualNum lhs, DotProductInfix rhs) {
+    return DotProductInfixPartial<DualNum>(lhs);
 }
-public extension DotProductInfixPartial<DualNum> {
-    // Fancy infix trick (second half)
-    public Scalar operator /(DualNum rhs) {
-        return this.a.dot_product(rhs);
-    }
+// Fancy infix trick (second half)
+public Scalar operator /(DotProductInfixPartial<DualNum> lhs, DualNum rhs) {
+    return lhs.a.dot_product(rhs);
 }
 public extension DualNum {
     public Scalar dot_product(DualNum other) {
@@ -20,6 +16,10 @@ public extension DualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(DotProductInfixPartial<DualNum> lhs, Motor rhs) {
+    return lhs.a.dot_product(rhs);
+}
 public extension DualNum {
     public Scalar dot_product(Motor other) {
         return Scalar(
@@ -27,6 +27,10 @@ public extension DualNum {
             this.scalar * other.scalar
         );
     }
+}
+// Fancy infix trick (second half)
+public Scalar operator /(DotProductInfixPartial<DualNum> lhs, MultiVector rhs) {
+    return lhs.a.dot_product(rhs);
 }
 public extension DualNum {
     public Scalar dot_product(MultiVector other) {
@@ -36,6 +40,10 @@ public extension DualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(DotProductInfixPartial<DualNum> lhs, Scalar rhs) {
+    return lhs.a.dot_product(rhs);
+}
 public extension DualNum {
     public Scalar dot_product(Scalar other) {
         return Scalar(
@@ -44,17 +52,13 @@ public extension DualNum {
         );
     }
 }
-public extension Flector {
-    // Fancy infix trick (first half)
-    public DotProductInfixPartial<Flector> operator /(DotProductInfix rhs) {
-        return DotProductInfixPartial<Flector>(this);
-    }
+// Fancy infix trick (first half)
+public DotProductInfixPartial<Flector> operator /(Flector lhs, DotProductInfix rhs) {
+    return DotProductInfixPartial<Flector>(lhs);
 }
-public extension DotProductInfixPartial<Flector> {
-    // Fancy infix trick (second half)
-    public Scalar operator /(Flector rhs) {
-        return this.a.dot_product(rhs);
-    }
+// Fancy infix trick (second half)
+public Scalar operator /(DotProductInfixPartial<Flector> lhs, Flector rhs) {
+    return lhs.a.dot_product(rhs);
 }
 public extension Flector {
     public Scalar dot_product(Flector other) {
@@ -64,6 +68,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(DotProductInfixPartial<Flector> lhs, Horizon rhs) {
+    return lhs.a.dot_product(rhs);
+}
 public extension Flector {
     public Scalar dot_product(Horizon other) {
         return Scalar(
@@ -71,6 +79,10 @@ public extension Flector {
             this.e321 * other.e321
         );
     }
+}
+// Fancy infix trick (second half)
+public Scalar operator /(DotProductInfixPartial<Flector> lhs, MultiVector rhs) {
+    return lhs.a.dot_product(rhs);
 }
 public extension Flector {
     public Scalar dot_product(MultiVector other) {
@@ -80,6 +92,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(DotProductInfixPartial<Flector> lhs, Plane rhs) {
+    return lhs.a.dot_product(rhs);
+}
 public extension Flector {
     public Scalar dot_product(Plane other) {
         return Scalar(
@@ -87,6 +103,10 @@ public extension Flector {
             this.e321 * other.e321
         );
     }
+}
+// Fancy infix trick (second half)
+public Scalar operator /(DotProductInfixPartial<Flector> lhs, Point rhs) {
+    return lhs.a.dot_product(rhs);
 }
 public extension Flector {
     public Scalar dot_product(Point other) {
@@ -96,17 +116,13 @@ public extension Flector {
         );
     }
 }
-public extension Horizon {
-    // Fancy infix trick (first half)
-    public DotProductInfixPartial<Horizon> operator /(DotProductInfix rhs) {
-        return DotProductInfixPartial<Horizon>(this);
-    }
+// Fancy infix trick (first half)
+public DotProductInfixPartial<Horizon> operator /(Horizon lhs, DotProductInfix rhs) {
+    return DotProductInfixPartial<Horizon>(lhs);
 }
-public extension DotProductInfixPartial<Horizon> {
-    // Fancy infix trick (second half)
-    public Scalar operator /(Flector rhs) {
-        return this.a.dot_product(rhs);
-    }
+// Fancy infix trick (second half)
+public Scalar operator /(DotProductInfixPartial<Horizon> lhs, Flector rhs) {
+    return lhs.a.dot_product(rhs);
 }
 public extension Horizon {
     public Scalar dot_product(Flector other) {
@@ -116,6 +132,10 @@ public extension Horizon {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(DotProductInfixPartial<Horizon> lhs, Horizon rhs) {
+    return lhs.a.dot_product(rhs);
+}
 public extension Horizon {
     public Scalar dot_product(Horizon other) {
         return Scalar(
@@ -124,6 +144,10 @@ public extension Horizon {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(DotProductInfixPartial<Horizon> lhs, MultiVector rhs) {
+    return lhs.a.dot_product(rhs);
+}
 public extension Horizon {
     public Scalar dot_product(MultiVector other) {
         return Scalar(
@@ -131,6 +155,10 @@ public extension Horizon {
             this.e321 * other.e321
         );
     }
+}
+// Fancy infix trick (second half)
+public Scalar operator /(DotProductInfixPartial<Horizon> lhs, Plane rhs) {
+    return lhs.a.dot_product(rhs);
 }
 public extension Horizon {
     public Scalar dot_product(Plane other) {
@@ -140,17 +168,13 @@ public extension Horizon {
         );
     }
 }
-public extension Line {
-    // Fancy infix trick (first half)
-    public DotProductInfixPartial<Line> operator /(DotProductInfix rhs) {
-        return DotProductInfixPartial<Line>(this);
-    }
+// Fancy infix trick (first half)
+public DotProductInfixPartial<Line> operator /(Line lhs, DotProductInfix rhs) {
+    return DotProductInfixPartial<Line>(lhs);
 }
-public extension DotProductInfixPartial<Line> {
-    // Fancy infix trick (second half)
-    public Scalar operator /(Line rhs) {
-        return this.a.dot_product(rhs);
-    }
+// Fancy infix trick (second half)
+public Scalar operator /(DotProductInfixPartial<Line> lhs, Line rhs) {
+    return lhs.a.dot_product(rhs);
 }
 public extension Line {
     public Scalar dot_product(Line other) {
@@ -160,6 +184,10 @@ public extension Line {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(DotProductInfixPartial<Line> lhs, Motor rhs) {
+    return lhs.a.dot_product(rhs);
+}
 public extension Line {
     public Scalar dot_product(Motor other) {
         return Scalar(
@@ -167,6 +195,10 @@ public extension Line {
             (this.e23 * other.e23) + (this.e31 * other.e31) + (this.e12 * other.e12)
         );
     }
+}
+// Fancy infix trick (second half)
+public Scalar operator /(DotProductInfixPartial<Line> lhs, MultiVector rhs) {
+    return lhs.a.dot_product(rhs);
 }
 public extension Line {
     public Scalar dot_product(MultiVector other) {
@@ -176,17 +208,13 @@ public extension Line {
         );
     }
 }
-public extension Motor {
-    // Fancy infix trick (first half)
-    public DotProductInfixPartial<Motor> operator /(DotProductInfix rhs) {
-        return DotProductInfixPartial<Motor>(this);
-    }
+// Fancy infix trick (first half)
+public DotProductInfixPartial<Motor> operator /(Motor lhs, DotProductInfix rhs) {
+    return DotProductInfixPartial<Motor>(lhs);
 }
-public extension DotProductInfixPartial<Motor> {
-    // Fancy infix trick (second half)
-    public Scalar operator /(DualNum rhs) {
-        return this.a.dot_product(rhs);
-    }
+// Fancy infix trick (second half)
+public Scalar operator /(DotProductInfixPartial<Motor> lhs, DualNum rhs) {
+    return lhs.a.dot_product(rhs);
 }
 public extension Motor {
     public Scalar dot_product(DualNum other) {
@@ -196,6 +224,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(DotProductInfixPartial<Motor> lhs, Line rhs) {
+    return lhs.a.dot_product(rhs);
+}
 public extension Motor {
     public Scalar dot_product(Line other) {
         return Scalar(
@@ -204,6 +236,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(DotProductInfixPartial<Motor> lhs, Motor rhs) {
+    return lhs.a.dot_product(rhs);
+}
 public extension Motor {
     public Scalar dot_product(Motor other) {
         return Scalar(
@@ -211,6 +247,10 @@ public extension Motor {
             (other.e23 * this.e23) + (other.e31 * this.e31) + (other.e12 * this.e12) + (other.scalar * this.scalar)
         );
     }
+}
+// Fancy infix trick (second half)
+public Scalar operator /(DotProductInfixPartial<Motor> lhs, MultiVector rhs) {
+    return lhs.a.dot_product(rhs);
 }
 public extension Motor {
     public Scalar dot_product(MultiVector other) {
@@ -220,6 +260,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(DotProductInfixPartial<Motor> lhs, Scalar rhs) {
+    return lhs.a.dot_product(rhs);
+}
 public extension Motor {
     public Scalar dot_product(Scalar other) {
         return Scalar(
@@ -228,17 +272,13 @@ public extension Motor {
         );
     }
 }
-public extension MultiVector {
-    // Fancy infix trick (first half)
-    public DotProductInfixPartial<MultiVector> operator /(DotProductInfix rhs) {
-        return DotProductInfixPartial<MultiVector>(this);
-    }
+// Fancy infix trick (first half)
+public DotProductInfixPartial<MultiVector> operator /(MultiVector lhs, DotProductInfix rhs) {
+    return DotProductInfixPartial<MultiVector>(lhs);
 }
-public extension DotProductInfixPartial<MultiVector> {
-    // Fancy infix trick (second half)
-    public Scalar operator /(DualNum rhs) {
-        return this.a.dot_product(rhs);
-    }
+// Fancy infix trick (second half)
+public Scalar operator /(DotProductInfixPartial<MultiVector> lhs, DualNum rhs) {
+    return lhs.a.dot_product(rhs);
 }
 public extension MultiVector {
     public Scalar dot_product(DualNum other) {
@@ -247,6 +287,10 @@ public extension MultiVector {
             other.scalar * this.scalar
         );
     }
+}
+// Fancy infix trick (second half)
+public Scalar operator /(DotProductInfixPartial<MultiVector> lhs, Flector rhs) {
+    return lhs.a.dot_product(rhs);
 }
 public extension MultiVector {
     public Scalar dot_product(Flector other) {
@@ -256,6 +300,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(DotProductInfixPartial<MultiVector> lhs, Horizon rhs) {
+    return lhs.a.dot_product(rhs);
+}
 public extension MultiVector {
     public Scalar dot_product(Horizon other) {
         return Scalar(
@@ -263,6 +311,10 @@ public extension MultiVector {
             other.e321 * this.e321
         );
     }
+}
+// Fancy infix trick (second half)
+public Scalar operator /(DotProductInfixPartial<MultiVector> lhs, Line rhs) {
+    return lhs.a.dot_product(rhs);
 }
 public extension MultiVector {
     public Scalar dot_product(Line other) {
@@ -272,6 +324,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(DotProductInfixPartial<MultiVector> lhs, Motor rhs) {
+    return lhs.a.dot_product(rhs);
+}
 public extension MultiVector {
     public Scalar dot_product(Motor other) {
         return Scalar(
@@ -279,6 +335,10 @@ public extension MultiVector {
             (other.e23 * this.e23) + (other.e31 * this.e31) + (other.e12 * this.e12) + (other.scalar * this.scalar)
         );
     }
+}
+// Fancy infix trick (second half)
+public Scalar operator /(DotProductInfixPartial<MultiVector> lhs, MultiVector rhs) {
+    return lhs.a.dot_product(rhs);
 }
 public extension MultiVector {
     public Scalar dot_product(MultiVector other) {
@@ -288,6 +348,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(DotProductInfixPartial<MultiVector> lhs, Plane rhs) {
+    return lhs.a.dot_product(rhs);
+}
 public extension MultiVector {
     public Scalar dot_product(Plane other) {
         return Scalar(
@@ -295,6 +359,10 @@ public extension MultiVector {
             this.e321 * other.e321
         );
     }
+}
+// Fancy infix trick (second half)
+public Scalar operator /(DotProductInfixPartial<MultiVector> lhs, Point rhs) {
+    return lhs.a.dot_product(rhs);
 }
 public extension MultiVector {
     public Scalar dot_product(Point other) {
@@ -304,6 +372,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(DotProductInfixPartial<MultiVector> lhs, Scalar rhs) {
+    return lhs.a.dot_product(rhs);
+}
 public extension MultiVector {
     public Scalar dot_product(Scalar other) {
         return Scalar(
@@ -312,17 +384,13 @@ public extension MultiVector {
         );
     }
 }
-public extension Plane {
-    // Fancy infix trick (first half)
-    public DotProductInfixPartial<Plane> operator /(DotProductInfix rhs) {
-        return DotProductInfixPartial<Plane>(this);
-    }
+// Fancy infix trick (first half)
+public DotProductInfixPartial<Plane> operator /(Plane lhs, DotProductInfix rhs) {
+    return DotProductInfixPartial<Plane>(lhs);
 }
-public extension DotProductInfixPartial<Plane> {
-    // Fancy infix trick (second half)
-    public Scalar operator /(Flector rhs) {
-        return this.a.dot_product(rhs);
-    }
+// Fancy infix trick (second half)
+public Scalar operator /(DotProductInfixPartial<Plane> lhs, Flector rhs) {
+    return lhs.a.dot_product(rhs);
 }
 public extension Plane {
     public Scalar dot_product(Flector other) {
@@ -331,6 +399,10 @@ public extension Plane {
             other.e321 * this.e321
         );
     }
+}
+// Fancy infix trick (second half)
+public Scalar operator /(DotProductInfixPartial<Plane> lhs, Horizon rhs) {
+    return lhs.a.dot_product(rhs);
 }
 public extension Plane {
     public Scalar dot_product(Horizon other) {
@@ -340,6 +412,10 @@ public extension Plane {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(DotProductInfixPartial<Plane> lhs, MultiVector rhs) {
+    return lhs.a.dot_product(rhs);
+}
 public extension Plane {
     public Scalar dot_product(MultiVector other) {
         return Scalar(
@@ -347,6 +423,10 @@ public extension Plane {
             other.e321 * this.e321
         );
     }
+}
+// Fancy infix trick (second half)
+public Scalar operator /(DotProductInfixPartial<Plane> lhs, Plane rhs) {
+    return lhs.a.dot_product(rhs);
 }
 public extension Plane {
     public Scalar dot_product(Plane other) {
@@ -356,17 +436,13 @@ public extension Plane {
         );
     }
 }
-public extension Point {
-    // Fancy infix trick (first half)
-    public DotProductInfixPartial<Point> operator /(DotProductInfix rhs) {
-        return DotProductInfixPartial<Point>(this);
-    }
+// Fancy infix trick (first half)
+public DotProductInfixPartial<Point> operator /(Point lhs, DotProductInfix rhs) {
+    return DotProductInfixPartial<Point>(lhs);
 }
-public extension DotProductInfixPartial<Point> {
-    // Fancy infix trick (second half)
-    public Scalar operator /(Flector rhs) {
-        return this.a.dot_product(rhs);
-    }
+// Fancy infix trick (second half)
+public Scalar operator /(DotProductInfixPartial<Point> lhs, Flector rhs) {
+    return lhs.a.dot_product(rhs);
 }
 public extension Point {
     public Scalar dot_product(Flector other) {
@@ -376,6 +452,10 @@ public extension Point {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(DotProductInfixPartial<Point> lhs, MultiVector rhs) {
+    return lhs.a.dot_product(rhs);
+}
 public extension Point {
     public Scalar dot_product(MultiVector other) {
         return Scalar(
@@ -383,6 +463,10 @@ public extension Point {
             (other.e1 * this.e1) + (other.e2 * this.e2) + (other.e3 * this.e3)
         );
     }
+}
+// Fancy infix trick (second half)
+public Scalar operator /(DotProductInfixPartial<Point> lhs, Point rhs) {
+    return lhs.a.dot_product(rhs);
 }
 public extension Point {
     public Scalar dot_product(Point other) {
@@ -392,17 +476,13 @@ public extension Point {
         );
     }
 }
-public extension Scalar {
-    // Fancy infix trick (first half)
-    public DotProductInfixPartial<Scalar> operator /(DotProductInfix rhs) {
-        return DotProductInfixPartial<Scalar>(this);
-    }
+// Fancy infix trick (first half)
+public DotProductInfixPartial<Scalar> operator /(Scalar lhs, DotProductInfix rhs) {
+    return DotProductInfixPartial<Scalar>(lhs);
 }
-public extension DotProductInfixPartial<Scalar> {
-    // Fancy infix trick (second half)
-    public Scalar operator /(DualNum rhs) {
-        return this.a.dot_product(rhs);
-    }
+// Fancy infix trick (second half)
+public Scalar operator /(DotProductInfixPartial<Scalar> lhs, DualNum rhs) {
+    return lhs.a.dot_product(rhs);
 }
 public extension Scalar {
     public Scalar dot_product(DualNum other) {
@@ -412,6 +492,10 @@ public extension Scalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(DotProductInfixPartial<Scalar> lhs, Motor rhs) {
+    return lhs.a.dot_product(rhs);
+}
 public extension Scalar {
     public Scalar dot_product(Motor other) {
         return Scalar(
@@ -420,6 +504,10 @@ public extension Scalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(DotProductInfixPartial<Scalar> lhs, MultiVector rhs) {
+    return lhs.a.dot_product(rhs);
+}
 public extension Scalar {
     public Scalar dot_product(MultiVector other) {
         return Scalar(
@@ -427,6 +515,10 @@ public extension Scalar {
             other.scalar * this.scalar
         );
     }
+}
+// Fancy infix trick (second half)
+public Scalar operator /(DotProductInfixPartial<Scalar> lhs, Scalar rhs) {
+    return lhs.a.dot_product(rhs);
 }
 public extension Scalar {
     public Scalar dot_product(Scalar other) {

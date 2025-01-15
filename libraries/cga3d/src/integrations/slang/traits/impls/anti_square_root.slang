@@ -1,16 +1,12 @@
 implementing cga3d;
 using traits;
-public extension AntiScalar {
-    // Fancy postfix trick
-    public AntiScalar operator /(AntiSquareRootPrefixOrPostfix rhs)  {
-        return this.anti_square_root();
+// Fancy postfix trick
+public AntiScalar operator /(AntiScalar lhs, AntiSquareRootPrefixOrPostfix rhs)  {
+    return lhs.anti_square_root();
     }
-}
-public extension AntiSquareRootPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiScalar operator /(AntiScalar rhs) {
-        return rhs.anti_square_root();
-    }
+// Fancy prefix trick
+public AntiScalar operator /(AntiSquareRootPrefixOrPostfix lhs, AntiScalar rhs) {
+    return rhs.anti_square_root();
 }
 public extension AntiScalar {
     public AntiScalar anti_square_root() {

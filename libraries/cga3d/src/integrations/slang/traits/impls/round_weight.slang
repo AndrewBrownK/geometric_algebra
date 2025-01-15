@@ -1,16 +1,12 @@
 implementing cga3d;
 using traits;
-public extension AntiCircleRotor {
-    // Fancy postfix trick
-    public Dipole operator /(RoundWeightPrefixOrPostfix rhs)  {
-        return this.round_weight();
+// Fancy postfix trick
+public Dipole operator /(AntiCircleRotor lhs, RoundWeightPrefixOrPostfix rhs)  {
+    return lhs.round_weight();
     }
-}
-public extension RoundWeightPrefixOrPostfix {
-    // Fancy prefix trick
-    public Dipole operator /(AntiCircleRotor rhs) {
-        return rhs.round_weight();
-    }
+// Fancy prefix trick
+public Dipole operator /(RoundWeightPrefixOrPostfix lhs, AntiCircleRotor rhs) {
+    return rhs.round_weight();
 }
 public extension AntiCircleRotor {
     public Dipole round_weight() {
@@ -24,17 +20,13 @@ public extension AntiCircleRotor {
         );
     }
 }
-public extension AntiDipoleInversion {
-    // Fancy postfix trick
-    public AntiDipoleInversion operator /(RoundWeightPrefixOrPostfix rhs)  {
-        return this.round_weight();
+// Fancy postfix trick
+public AntiDipoleInversion operator /(AntiDipoleInversion lhs, RoundWeightPrefixOrPostfix rhs)  {
+    return lhs.round_weight();
     }
-}
-public extension RoundWeightPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiDipoleInversion operator /(AntiDipoleInversion rhs) {
-        return rhs.round_weight();
-    }
+// Fancy prefix trick
+public AntiDipoleInversion operator /(RoundWeightPrefixOrPostfix lhs, AntiDipoleInversion rhs) {
+    return rhs.round_weight();
 }
 public extension AntiDipoleInversion {
     public AntiDipoleInversion round_weight() {
@@ -50,17 +42,13 @@ public extension AntiDipoleInversion {
         );
     }
 }
-public extension Circle {
-    // Fancy postfix trick
-    public Circle operator /(RoundWeightPrefixOrPostfix rhs)  {
-        return this.round_weight();
+// Fancy postfix trick
+public Circle operator /(Circle lhs, RoundWeightPrefixOrPostfix rhs)  {
+    return lhs.round_weight();
     }
-}
-public extension RoundWeightPrefixOrPostfix {
-    // Fancy prefix trick
-    public Circle operator /(Circle rhs) {
-        return rhs.round_weight();
-    }
+// Fancy prefix trick
+public Circle operator /(RoundWeightPrefixOrPostfix lhs, Circle rhs) {
+    return rhs.round_weight();
 }
 public extension Circle {
     public Circle round_weight() {
@@ -74,17 +62,13 @@ public extension Circle {
         );
     }
 }
-public extension CircleRotor {
-    // Fancy postfix trick
-    public Circle operator /(RoundWeightPrefixOrPostfix rhs)  {
-        return this.round_weight();
+// Fancy postfix trick
+public Circle operator /(CircleRotor lhs, RoundWeightPrefixOrPostfix rhs)  {
+    return lhs.round_weight();
     }
-}
-public extension RoundWeightPrefixOrPostfix {
-    // Fancy prefix trick
-    public Circle operator /(CircleRotor rhs) {
-        return rhs.round_weight();
-    }
+// Fancy prefix trick
+public Circle operator /(RoundWeightPrefixOrPostfix lhs, CircleRotor rhs) {
+    return rhs.round_weight();
 }
 public extension CircleRotor {
     public Circle round_weight() {
@@ -98,17 +82,13 @@ public extension CircleRotor {
         );
     }
 }
-public extension Dipole {
-    // Fancy postfix trick
-    public Dipole operator /(RoundWeightPrefixOrPostfix rhs)  {
-        return this.round_weight();
+// Fancy postfix trick
+public Dipole operator /(Dipole lhs, RoundWeightPrefixOrPostfix rhs)  {
+    return lhs.round_weight();
     }
-}
-public extension RoundWeightPrefixOrPostfix {
-    // Fancy prefix trick
-    public Dipole operator /(Dipole rhs) {
-        return rhs.round_weight();
-    }
+// Fancy prefix trick
+public Dipole operator /(RoundWeightPrefixOrPostfix lhs, Dipole rhs) {
+    return rhs.round_weight();
 }
 public extension Dipole {
     public Dipole round_weight() {
@@ -122,17 +102,13 @@ public extension Dipole {
         );
     }
 }
-public extension DipoleInversion {
-    // Fancy postfix trick
-    public DipoleInversion operator /(RoundWeightPrefixOrPostfix rhs)  {
-        return this.round_weight();
+// Fancy postfix trick
+public DipoleInversion operator /(DipoleInversion lhs, RoundWeightPrefixOrPostfix rhs)  {
+    return lhs.round_weight();
     }
-}
-public extension RoundWeightPrefixOrPostfix {
-    // Fancy prefix trick
-    public DipoleInversion operator /(DipoleInversion rhs) {
-        return rhs.round_weight();
-    }
+// Fancy prefix trick
+public DipoleInversion operator /(RoundWeightPrefixOrPostfix lhs, DipoleInversion rhs) {
+    return rhs.round_weight();
 }
 public extension DipoleInversion {
     public DipoleInversion round_weight() {
@@ -148,17 +124,13 @@ public extension DipoleInversion {
         );
     }
 }
-public extension MultiVector {
-    // Fancy postfix trick
-    public MultiVector operator /(RoundWeightPrefixOrPostfix rhs)  {
-        return this.round_weight();
+// Fancy postfix trick
+public MultiVector operator /(MultiVector lhs, RoundWeightPrefixOrPostfix rhs)  {
+    return lhs.round_weight();
     }
-}
-public extension RoundWeightPrefixOrPostfix {
-    // Fancy prefix trick
-    public MultiVector operator /(MultiVector rhs) {
-        return rhs.round_weight();
-    }
+// Fancy prefix trick
+public MultiVector operator /(RoundWeightPrefixOrPostfix lhs, MultiVector rhs) {
+    return rhs.round_weight();
 }
 public extension MultiVector {
     public MultiVector round_weight() {
@@ -188,17 +160,13 @@ public extension MultiVector {
         );
     }
 }
-public extension RoundPoint {
-    // Fancy postfix trick
-    public RoundPoint operator /(RoundWeightPrefixOrPostfix rhs)  {
-        return this.round_weight();
+// Fancy postfix trick
+public RoundPoint operator /(RoundPoint lhs, RoundWeightPrefixOrPostfix rhs)  {
+    return lhs.round_weight();
     }
-}
-public extension RoundWeightPrefixOrPostfix {
-    // Fancy prefix trick
-    public RoundPoint operator /(RoundPoint rhs) {
-        return rhs.round_weight();
-    }
+// Fancy prefix trick
+public RoundPoint operator /(RoundWeightPrefixOrPostfix lhs, RoundPoint rhs) {
+    return rhs.round_weight();
 }
 public extension RoundPoint {
     public RoundPoint round_weight() {
@@ -210,17 +178,13 @@ public extension RoundPoint {
         );
     }
 }
-public extension Sphere {
-    // Fancy postfix trick
-    public Sphere operator /(RoundWeightPrefixOrPostfix rhs)  {
-        return this.round_weight();
+// Fancy postfix trick
+public Sphere operator /(Sphere lhs, RoundWeightPrefixOrPostfix rhs)  {
+    return lhs.round_weight();
     }
-}
-public extension RoundWeightPrefixOrPostfix {
-    // Fancy prefix trick
-    public Sphere operator /(Sphere rhs) {
-        return rhs.round_weight();
-    }
+// Fancy prefix trick
+public Sphere operator /(RoundWeightPrefixOrPostfix lhs, Sphere rhs) {
+    return rhs.round_weight();
 }
 public extension Sphere {
     public Sphere round_weight() {
@@ -232,17 +196,13 @@ public extension Sphere {
         );
     }
 }
-public extension VersorEven {
-    // Fancy postfix trick
-    public AntiDipoleInversion operator /(RoundWeightPrefixOrPostfix rhs)  {
-        return this.round_weight();
+// Fancy postfix trick
+public AntiDipoleInversion operator /(VersorEven lhs, RoundWeightPrefixOrPostfix rhs)  {
+    return lhs.round_weight();
     }
-}
-public extension RoundWeightPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiDipoleInversion operator /(VersorEven rhs) {
-        return rhs.round_weight();
-    }
+// Fancy prefix trick
+public AntiDipoleInversion operator /(RoundWeightPrefixOrPostfix lhs, VersorEven rhs) {
+    return rhs.round_weight();
 }
 public extension VersorEven {
     public AntiDipoleInversion round_weight() {
@@ -258,17 +218,13 @@ public extension VersorEven {
         );
     }
 }
-public extension VersorOdd {
-    // Fancy postfix trick
-    public DipoleInversion operator /(RoundWeightPrefixOrPostfix rhs)  {
-        return this.round_weight();
+// Fancy postfix trick
+public DipoleInversion operator /(VersorOdd lhs, RoundWeightPrefixOrPostfix rhs)  {
+    return lhs.round_weight();
     }
-}
-public extension RoundWeightPrefixOrPostfix {
-    // Fancy prefix trick
-    public DipoleInversion operator /(VersorOdd rhs) {
-        return rhs.round_weight();
-    }
+// Fancy prefix trick
+public DipoleInversion operator /(RoundWeightPrefixOrPostfix lhs, VersorOdd rhs) {
+    return rhs.round_weight();
 }
 public extension VersorOdd {
     public DipoleInversion round_weight() {

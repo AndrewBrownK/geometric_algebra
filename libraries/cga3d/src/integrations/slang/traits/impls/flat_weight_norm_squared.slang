@@ -1,16 +1,12 @@
 implementing cga3d;
 using traits;
-public extension AntiCircleRotor {
-    // Fancy postfix trick
-    public AntiScalar operator /(FlatWeightNormSquaredPrefixOrPostfix rhs)  {
-        return this.flat_weight_norm_squared();
+// Fancy postfix trick
+public AntiScalar operator /(AntiCircleRotor lhs, FlatWeightNormSquaredPrefixOrPostfix rhs)  {
+    return lhs.flat_weight_norm_squared();
     }
-}
-public extension FlatWeightNormSquaredPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiScalar operator /(AntiCircleRotor rhs) {
-        return rhs.flat_weight_norm_squared();
-    }
+// Fancy prefix trick
+public AntiScalar operator /(FlatWeightNormSquaredPrefixOrPostfix lhs, AntiCircleRotor rhs) {
+    return rhs.flat_weight_norm_squared();
 }
 public extension AntiCircleRotor {
     public AntiScalar flat_weight_norm_squared() {
@@ -18,17 +14,13 @@ public extension AntiCircleRotor {
         return flat_weight.anti_dot_product(flat_weight);
     }
 }
-public extension AntiDipoleInversion {
-    // Fancy postfix trick
-    public AntiScalar operator /(FlatWeightNormSquaredPrefixOrPostfix rhs)  {
-        return this.flat_weight_norm_squared();
+// Fancy postfix trick
+public AntiScalar operator /(AntiDipoleInversion lhs, FlatWeightNormSquaredPrefixOrPostfix rhs)  {
+    return lhs.flat_weight_norm_squared();
     }
-}
-public extension FlatWeightNormSquaredPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiScalar operator /(AntiDipoleInversion rhs) {
-        return rhs.flat_weight_norm_squared();
-    }
+// Fancy prefix trick
+public AntiScalar operator /(FlatWeightNormSquaredPrefixOrPostfix lhs, AntiDipoleInversion rhs) {
+    return rhs.flat_weight_norm_squared();
 }
 public extension AntiDipoleInversion {
     public AntiScalar flat_weight_norm_squared() {
@@ -36,17 +28,13 @@ public extension AntiDipoleInversion {
         return flat_weight.anti_dot_product(flat_weight);
     }
 }
-public extension AntiScalar {
-    // Fancy postfix trick
-    public AntiScalar operator /(FlatWeightNormSquaredPrefixOrPostfix rhs)  {
-        return this.flat_weight_norm_squared();
+// Fancy postfix trick
+public AntiScalar operator /(AntiScalar lhs, FlatWeightNormSquaredPrefixOrPostfix rhs)  {
+    return lhs.flat_weight_norm_squared();
     }
-}
-public extension FlatWeightNormSquaredPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiScalar operator /(AntiScalar rhs) {
-        return rhs.flat_weight_norm_squared();
-    }
+// Fancy prefix trick
+public AntiScalar operator /(FlatWeightNormSquaredPrefixOrPostfix lhs, AntiScalar rhs) {
+    return rhs.flat_weight_norm_squared();
 }
 public extension AntiScalar {
     public AntiScalar flat_weight_norm_squared() {
@@ -54,17 +42,13 @@ public extension AntiScalar {
         return flat_weight.anti_dot_product(flat_weight);
     }
 }
-public extension Circle {
-    // Fancy postfix trick
-    public AntiScalar operator /(FlatWeightNormSquaredPrefixOrPostfix rhs)  {
-        return this.flat_weight_norm_squared();
+// Fancy postfix trick
+public AntiScalar operator /(Circle lhs, FlatWeightNormSquaredPrefixOrPostfix rhs)  {
+    return lhs.flat_weight_norm_squared();
     }
-}
-public extension FlatWeightNormSquaredPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiScalar operator /(Circle rhs) {
-        return rhs.flat_weight_norm_squared();
-    }
+// Fancy prefix trick
+public AntiScalar operator /(FlatWeightNormSquaredPrefixOrPostfix lhs, Circle rhs) {
+    return rhs.flat_weight_norm_squared();
 }
 public extension Circle {
     public AntiScalar flat_weight_norm_squared() {
@@ -72,17 +56,13 @@ public extension Circle {
         return flat_weight.anti_dot_product(flat_weight);
     }
 }
-public extension CircleRotor {
-    // Fancy postfix trick
-    public AntiScalar operator /(FlatWeightNormSquaredPrefixOrPostfix rhs)  {
-        return this.flat_weight_norm_squared();
+// Fancy postfix trick
+public AntiScalar operator /(CircleRotor lhs, FlatWeightNormSquaredPrefixOrPostfix rhs)  {
+    return lhs.flat_weight_norm_squared();
     }
-}
-public extension FlatWeightNormSquaredPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiScalar operator /(CircleRotor rhs) {
-        return rhs.flat_weight_norm_squared();
-    }
+// Fancy prefix trick
+public AntiScalar operator /(FlatWeightNormSquaredPrefixOrPostfix lhs, CircleRotor rhs) {
+    return rhs.flat_weight_norm_squared();
 }
 public extension CircleRotor {
     public AntiScalar flat_weight_norm_squared() {
@@ -90,17 +70,13 @@ public extension CircleRotor {
         return flat_weight.anti_dot_product(flat_weight);
     }
 }
-public extension Dipole {
-    // Fancy postfix trick
-    public AntiScalar operator /(FlatWeightNormSquaredPrefixOrPostfix rhs)  {
-        return this.flat_weight_norm_squared();
+// Fancy postfix trick
+public AntiScalar operator /(Dipole lhs, FlatWeightNormSquaredPrefixOrPostfix rhs)  {
+    return lhs.flat_weight_norm_squared();
     }
-}
-public extension FlatWeightNormSquaredPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiScalar operator /(Dipole rhs) {
-        return rhs.flat_weight_norm_squared();
-    }
+// Fancy prefix trick
+public AntiScalar operator /(FlatWeightNormSquaredPrefixOrPostfix lhs, Dipole rhs) {
+    return rhs.flat_weight_norm_squared();
 }
 public extension Dipole {
     public AntiScalar flat_weight_norm_squared() {
@@ -108,17 +84,13 @@ public extension Dipole {
         return flat_weight.anti_dot_product(flat_weight);
     }
 }
-public extension DipoleInversion {
-    // Fancy postfix trick
-    public AntiScalar operator /(FlatWeightNormSquaredPrefixOrPostfix rhs)  {
-        return this.flat_weight_norm_squared();
+// Fancy postfix trick
+public AntiScalar operator /(DipoleInversion lhs, FlatWeightNormSquaredPrefixOrPostfix rhs)  {
+    return lhs.flat_weight_norm_squared();
     }
-}
-public extension FlatWeightNormSquaredPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiScalar operator /(DipoleInversion rhs) {
-        return rhs.flat_weight_norm_squared();
-    }
+// Fancy prefix trick
+public AntiScalar operator /(FlatWeightNormSquaredPrefixOrPostfix lhs, DipoleInversion rhs) {
+    return rhs.flat_weight_norm_squared();
 }
 public extension DipoleInversion {
     public AntiScalar flat_weight_norm_squared() {
@@ -126,17 +98,13 @@ public extension DipoleInversion {
         return flat_weight.anti_dot_product(flat_weight);
     }
 }
-public extension DualNum {
-    // Fancy postfix trick
-    public AntiScalar operator /(FlatWeightNormSquaredPrefixOrPostfix rhs)  {
-        return this.flat_weight_norm_squared();
+// Fancy postfix trick
+public AntiScalar operator /(DualNum lhs, FlatWeightNormSquaredPrefixOrPostfix rhs)  {
+    return lhs.flat_weight_norm_squared();
     }
-}
-public extension FlatWeightNormSquaredPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiScalar operator /(DualNum rhs) {
-        return rhs.flat_weight_norm_squared();
-    }
+// Fancy prefix trick
+public AntiScalar operator /(FlatWeightNormSquaredPrefixOrPostfix lhs, DualNum rhs) {
+    return rhs.flat_weight_norm_squared();
 }
 public extension DualNum {
     public AntiScalar flat_weight_norm_squared() {
@@ -144,17 +112,13 @@ public extension DualNum {
         return flat_weight.anti_dot_product(flat_weight);
     }
 }
-public extension FlatPoint {
-    // Fancy postfix trick
-    public AntiScalar operator /(FlatWeightNormSquaredPrefixOrPostfix rhs)  {
-        return this.flat_weight_norm_squared();
+// Fancy postfix trick
+public AntiScalar operator /(FlatPoint lhs, FlatWeightNormSquaredPrefixOrPostfix rhs)  {
+    return lhs.flat_weight_norm_squared();
     }
-}
-public extension FlatWeightNormSquaredPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiScalar operator /(FlatPoint rhs) {
-        return rhs.flat_weight_norm_squared();
-    }
+// Fancy prefix trick
+public AntiScalar operator /(FlatWeightNormSquaredPrefixOrPostfix lhs, FlatPoint rhs) {
+    return rhs.flat_weight_norm_squared();
 }
 public extension FlatPoint {
     public AntiScalar flat_weight_norm_squared() {
@@ -162,17 +126,13 @@ public extension FlatPoint {
         return flat_weight.anti_dot_product(flat_weight);
     }
 }
-public extension Flector {
-    // Fancy postfix trick
-    public AntiScalar operator /(FlatWeightNormSquaredPrefixOrPostfix rhs)  {
-        return this.flat_weight_norm_squared();
+// Fancy postfix trick
+public AntiScalar operator /(Flector lhs, FlatWeightNormSquaredPrefixOrPostfix rhs)  {
+    return lhs.flat_weight_norm_squared();
     }
-}
-public extension FlatWeightNormSquaredPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiScalar operator /(Flector rhs) {
-        return rhs.flat_weight_norm_squared();
-    }
+// Fancy prefix trick
+public AntiScalar operator /(FlatWeightNormSquaredPrefixOrPostfix lhs, Flector rhs) {
+    return rhs.flat_weight_norm_squared();
 }
 public extension Flector {
     public AntiScalar flat_weight_norm_squared() {
@@ -180,17 +140,13 @@ public extension Flector {
         return flat_weight.anti_dot_product(flat_weight);
     }
 }
-public extension Line {
-    // Fancy postfix trick
-    public AntiScalar operator /(FlatWeightNormSquaredPrefixOrPostfix rhs)  {
-        return this.flat_weight_norm_squared();
+// Fancy postfix trick
+public AntiScalar operator /(Line lhs, FlatWeightNormSquaredPrefixOrPostfix rhs)  {
+    return lhs.flat_weight_norm_squared();
     }
-}
-public extension FlatWeightNormSquaredPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiScalar operator /(Line rhs) {
-        return rhs.flat_weight_norm_squared();
-    }
+// Fancy prefix trick
+public AntiScalar operator /(FlatWeightNormSquaredPrefixOrPostfix lhs, Line rhs) {
+    return rhs.flat_weight_norm_squared();
 }
 public extension Line {
     public AntiScalar flat_weight_norm_squared() {
@@ -198,17 +154,13 @@ public extension Line {
         return flat_weight.anti_dot_product(flat_weight);
     }
 }
-public extension Motor {
-    // Fancy postfix trick
-    public AntiScalar operator /(FlatWeightNormSquaredPrefixOrPostfix rhs)  {
-        return this.flat_weight_norm_squared();
+// Fancy postfix trick
+public AntiScalar operator /(Motor lhs, FlatWeightNormSquaredPrefixOrPostfix rhs)  {
+    return lhs.flat_weight_norm_squared();
     }
-}
-public extension FlatWeightNormSquaredPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiScalar operator /(Motor rhs) {
-        return rhs.flat_weight_norm_squared();
-    }
+// Fancy prefix trick
+public AntiScalar operator /(FlatWeightNormSquaredPrefixOrPostfix lhs, Motor rhs) {
+    return rhs.flat_weight_norm_squared();
 }
 public extension Motor {
     public AntiScalar flat_weight_norm_squared() {
@@ -216,17 +168,13 @@ public extension Motor {
         return flat_weight.anti_dot_product(flat_weight);
     }
 }
-public extension MultiVector {
-    // Fancy postfix trick
-    public AntiScalar operator /(FlatWeightNormSquaredPrefixOrPostfix rhs)  {
-        return this.flat_weight_norm_squared();
+// Fancy postfix trick
+public AntiScalar operator /(MultiVector lhs, FlatWeightNormSquaredPrefixOrPostfix rhs)  {
+    return lhs.flat_weight_norm_squared();
     }
-}
-public extension FlatWeightNormSquaredPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiScalar operator /(MultiVector rhs) {
-        return rhs.flat_weight_norm_squared();
-    }
+// Fancy prefix trick
+public AntiScalar operator /(FlatWeightNormSquaredPrefixOrPostfix lhs, MultiVector rhs) {
+    return rhs.flat_weight_norm_squared();
 }
 public extension MultiVector {
     public AntiScalar flat_weight_norm_squared() {
@@ -234,17 +182,13 @@ public extension MultiVector {
         return flat_weight.anti_dot_product(flat_weight);
     }
 }
-public extension Plane {
-    // Fancy postfix trick
-    public AntiScalar operator /(FlatWeightNormSquaredPrefixOrPostfix rhs)  {
-        return this.flat_weight_norm_squared();
+// Fancy postfix trick
+public AntiScalar operator /(Plane lhs, FlatWeightNormSquaredPrefixOrPostfix rhs)  {
+    return lhs.flat_weight_norm_squared();
     }
-}
-public extension FlatWeightNormSquaredPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiScalar operator /(Plane rhs) {
-        return rhs.flat_weight_norm_squared();
-    }
+// Fancy prefix trick
+public AntiScalar operator /(FlatWeightNormSquaredPrefixOrPostfix lhs, Plane rhs) {
+    return rhs.flat_weight_norm_squared();
 }
 public extension Plane {
     public AntiScalar flat_weight_norm_squared() {
@@ -252,17 +196,13 @@ public extension Plane {
         return flat_weight.anti_dot_product(flat_weight);
     }
 }
-public extension Sphere {
-    // Fancy postfix trick
-    public AntiScalar operator /(FlatWeightNormSquaredPrefixOrPostfix rhs)  {
-        return this.flat_weight_norm_squared();
+// Fancy postfix trick
+public AntiScalar operator /(Sphere lhs, FlatWeightNormSquaredPrefixOrPostfix rhs)  {
+    return lhs.flat_weight_norm_squared();
     }
-}
-public extension FlatWeightNormSquaredPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiScalar operator /(Sphere rhs) {
-        return rhs.flat_weight_norm_squared();
-    }
+// Fancy prefix trick
+public AntiScalar operator /(FlatWeightNormSquaredPrefixOrPostfix lhs, Sphere rhs) {
+    return rhs.flat_weight_norm_squared();
 }
 public extension Sphere {
     public AntiScalar flat_weight_norm_squared() {
@@ -270,17 +210,13 @@ public extension Sphere {
         return flat_weight.anti_dot_product(flat_weight);
     }
 }
-public extension VersorEven {
-    // Fancy postfix trick
-    public AntiScalar operator /(FlatWeightNormSquaredPrefixOrPostfix rhs)  {
-        return this.flat_weight_norm_squared();
+// Fancy postfix trick
+public AntiScalar operator /(VersorEven lhs, FlatWeightNormSquaredPrefixOrPostfix rhs)  {
+    return lhs.flat_weight_norm_squared();
     }
-}
-public extension FlatWeightNormSquaredPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiScalar operator /(VersorEven rhs) {
-        return rhs.flat_weight_norm_squared();
-    }
+// Fancy prefix trick
+public AntiScalar operator /(FlatWeightNormSquaredPrefixOrPostfix lhs, VersorEven rhs) {
+    return rhs.flat_weight_norm_squared();
 }
 public extension VersorEven {
     public AntiScalar flat_weight_norm_squared() {
@@ -288,17 +224,13 @@ public extension VersorEven {
         return flat_weight.anti_dot_product(flat_weight);
     }
 }
-public extension VersorOdd {
-    // Fancy postfix trick
-    public AntiScalar operator /(FlatWeightNormSquaredPrefixOrPostfix rhs)  {
-        return this.flat_weight_norm_squared();
+// Fancy postfix trick
+public AntiScalar operator /(VersorOdd lhs, FlatWeightNormSquaredPrefixOrPostfix rhs)  {
+    return lhs.flat_weight_norm_squared();
     }
-}
-public extension FlatWeightNormSquaredPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiScalar operator /(VersorOdd rhs) {
-        return rhs.flat_weight_norm_squared();
-    }
+// Fancy prefix trick
+public AntiScalar operator /(FlatWeightNormSquaredPrefixOrPostfix lhs, VersorOdd rhs) {
+    return rhs.flat_weight_norm_squared();
 }
 public extension VersorOdd {
     public AntiScalar flat_weight_norm_squared() {

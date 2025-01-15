@@ -8,7 +8,7 @@ public struct RoundPoint {
     // e5, 0, 0, 0
     internal float4 group1;
 
-    __init(
+    public __init(
         float e1, float e2, float e3, float e4, float e5
     ) {
         group0 = float4(e1, e2, e3, e4);

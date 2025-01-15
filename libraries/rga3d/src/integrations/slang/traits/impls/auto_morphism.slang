@@ -1,50 +1,38 @@
 implementing rga3d;
 using traits;
-public extension AntiScalar {
-    // Fancy postfix trick
-    public AntiScalar operator /(AutoMorphismPrefixOrPostfix rhs)  {
-        return this.auto_morphism();
+// Fancy postfix trick
+public AntiScalar operator /(AntiScalar lhs, AutoMorphismPrefixOrPostfix rhs)  {
+    return lhs.auto_morphism();
     }
-}
-public extension AutoMorphismPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiScalar operator /(AntiScalar rhs) {
-        return rhs.auto_morphism();
-    }
+// Fancy prefix trick
+public AntiScalar operator /(AutoMorphismPrefixOrPostfix lhs, AntiScalar rhs) {
+    return rhs.auto_morphism();
 }
 public extension AntiScalar {
     public AntiScalar auto_morphism() {
         return this;
     }
 }
-public extension DualNum {
-    // Fancy postfix trick
-    public DualNum operator /(AutoMorphismPrefixOrPostfix rhs)  {
-        return this.auto_morphism();
+// Fancy postfix trick
+public DualNum operator /(DualNum lhs, AutoMorphismPrefixOrPostfix rhs)  {
+    return lhs.auto_morphism();
     }
-}
-public extension AutoMorphismPrefixOrPostfix {
-    // Fancy prefix trick
-    public DualNum operator /(DualNum rhs) {
-        return rhs.auto_morphism();
-    }
+// Fancy prefix trick
+public DualNum operator /(AutoMorphismPrefixOrPostfix lhs, DualNum rhs) {
+    return rhs.auto_morphism();
 }
 public extension DualNum {
     public DualNum auto_morphism() {
         return this;
     }
 }
-public extension Flector {
-    // Fancy postfix trick
-    public Flector operator /(AutoMorphismPrefixOrPostfix rhs)  {
-        return this.auto_morphism();
+// Fancy postfix trick
+public Flector operator /(Flector lhs, AutoMorphismPrefixOrPostfix rhs)  {
+    return lhs.auto_morphism();
     }
-}
-public extension AutoMorphismPrefixOrPostfix {
-    // Fancy prefix trick
-    public Flector operator /(Flector rhs) {
-        return rhs.auto_morphism();
-    }
+// Fancy prefix trick
+public Flector operator /(AutoMorphismPrefixOrPostfix lhs, Flector rhs) {
+    return rhs.auto_morphism();
 }
 public extension Flector {
     public Flector auto_morphism() {
@@ -56,17 +44,13 @@ public extension Flector {
         );
     }
 }
-public extension Horizon {
-    // Fancy postfix trick
-    public Horizon operator /(AutoMorphismPrefixOrPostfix rhs)  {
-        return this.auto_morphism();
+// Fancy postfix trick
+public Horizon operator /(Horizon lhs, AutoMorphismPrefixOrPostfix rhs)  {
+    return lhs.auto_morphism();
     }
-}
-public extension AutoMorphismPrefixOrPostfix {
-    // Fancy prefix trick
-    public Horizon operator /(Horizon rhs) {
-        return rhs.auto_morphism();
-    }
+// Fancy prefix trick
+public Horizon operator /(AutoMorphismPrefixOrPostfix lhs, Horizon rhs) {
+    return rhs.auto_morphism();
 }
 public extension Horizon {
     public Horizon auto_morphism() {
@@ -76,51 +60,39 @@ public extension Horizon {
         );
     }
 }
-public extension Line {
-    // Fancy postfix trick
-    public Line operator /(AutoMorphismPrefixOrPostfix rhs)  {
-        return this.auto_morphism();
+// Fancy postfix trick
+public Line operator /(Line lhs, AutoMorphismPrefixOrPostfix rhs)  {
+    return lhs.auto_morphism();
     }
-}
-public extension AutoMorphismPrefixOrPostfix {
-    // Fancy prefix trick
-    public Line operator /(Line rhs) {
-        return rhs.auto_morphism();
-    }
+// Fancy prefix trick
+public Line operator /(AutoMorphismPrefixOrPostfix lhs, Line rhs) {
+    return rhs.auto_morphism();
 }
 public extension Line {
     public Line auto_morphism() {
         return this;
     }
 }
-public extension Motor {
-    // Fancy postfix trick
-    public Motor operator /(AutoMorphismPrefixOrPostfix rhs)  {
-        return this.auto_morphism();
+// Fancy postfix trick
+public Motor operator /(Motor lhs, AutoMorphismPrefixOrPostfix rhs)  {
+    return lhs.auto_morphism();
     }
-}
-public extension AutoMorphismPrefixOrPostfix {
-    // Fancy prefix trick
-    public Motor operator /(Motor rhs) {
-        return rhs.auto_morphism();
-    }
+// Fancy prefix trick
+public Motor operator /(AutoMorphismPrefixOrPostfix lhs, Motor rhs) {
+    return rhs.auto_morphism();
 }
 public extension Motor {
     public Motor auto_morphism() {
         return this;
     }
 }
-public extension MultiVector {
-    // Fancy postfix trick
-    public MultiVector operator /(AutoMorphismPrefixOrPostfix rhs)  {
-        return this.auto_morphism();
+// Fancy postfix trick
+public MultiVector operator /(MultiVector lhs, AutoMorphismPrefixOrPostfix rhs)  {
+    return lhs.auto_morphism();
     }
-}
-public extension AutoMorphismPrefixOrPostfix {
-    // Fancy prefix trick
-    public MultiVector operator /(MultiVector rhs) {
-        return rhs.auto_morphism();
-    }
+// Fancy prefix trick
+public MultiVector operator /(AutoMorphismPrefixOrPostfix lhs, MultiVector rhs) {
+    return rhs.auto_morphism();
 }
 public extension MultiVector {
     public MultiVector auto_morphism() {
@@ -138,17 +110,13 @@ public extension MultiVector {
         );
     }
 }
-public extension Origin {
-    // Fancy postfix trick
-    public Origin operator /(AutoMorphismPrefixOrPostfix rhs)  {
-        return this.auto_morphism();
+// Fancy postfix trick
+public Origin operator /(Origin lhs, AutoMorphismPrefixOrPostfix rhs)  {
+    return lhs.auto_morphism();
     }
-}
-public extension AutoMorphismPrefixOrPostfix {
-    // Fancy prefix trick
-    public Origin operator /(Origin rhs) {
-        return rhs.auto_morphism();
-    }
+// Fancy prefix trick
+public Origin operator /(AutoMorphismPrefixOrPostfix lhs, Origin rhs) {
+    return rhs.auto_morphism();
 }
 public extension Origin {
     public Origin auto_morphism() {
@@ -158,17 +126,13 @@ public extension Origin {
         );
     }
 }
-public extension Plane {
-    // Fancy postfix trick
-    public Plane operator /(AutoMorphismPrefixOrPostfix rhs)  {
-        return this.auto_morphism();
+// Fancy postfix trick
+public Plane operator /(Plane lhs, AutoMorphismPrefixOrPostfix rhs)  {
+    return lhs.auto_morphism();
     }
-}
-public extension AutoMorphismPrefixOrPostfix {
-    // Fancy prefix trick
-    public Plane operator /(Plane rhs) {
-        return rhs.auto_morphism();
-    }
+// Fancy prefix trick
+public Plane operator /(AutoMorphismPrefixOrPostfix lhs, Plane rhs) {
+    return rhs.auto_morphism();
 }
 public extension Plane {
     public Plane auto_morphism() {
@@ -178,17 +142,13 @@ public extension Plane {
         );
     }
 }
-public extension Point {
-    // Fancy postfix trick
-    public Point operator /(AutoMorphismPrefixOrPostfix rhs)  {
-        return this.auto_morphism();
+// Fancy postfix trick
+public Point operator /(Point lhs, AutoMorphismPrefixOrPostfix rhs)  {
+    return lhs.auto_morphism();
     }
-}
-public extension AutoMorphismPrefixOrPostfix {
-    // Fancy prefix trick
-    public Point operator /(Point rhs) {
-        return rhs.auto_morphism();
-    }
+// Fancy prefix trick
+public Point operator /(AutoMorphismPrefixOrPostfix lhs, Point rhs) {
+    return rhs.auto_morphism();
 }
 public extension Point {
     public Point auto_morphism() {
@@ -198,17 +158,13 @@ public extension Point {
         );
     }
 }
-public extension Scalar {
-    // Fancy postfix trick
-    public Scalar operator /(AutoMorphismPrefixOrPostfix rhs)  {
-        return this.auto_morphism();
+// Fancy postfix trick
+public Scalar operator /(Scalar lhs, AutoMorphismPrefixOrPostfix rhs)  {
+    return lhs.auto_morphism();
     }
-}
-public extension AutoMorphismPrefixOrPostfix {
-    // Fancy prefix trick
-    public Scalar operator /(Scalar rhs) {
-        return rhs.auto_morphism();
-    }
+// Fancy prefix trick
+public Scalar operator /(AutoMorphismPrefixOrPostfix lhs, Scalar rhs) {
+    return rhs.auto_morphism();
 }
 public extension Scalar {
     public Scalar auto_morphism() {

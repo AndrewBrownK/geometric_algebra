@@ -1,16 +1,12 @@
 implementing cga3d;
 using traits;
-public extension AntiCircleRotor {
-    // Fancy postfix trick
-    public AntiMotor operator /(RoundBulkPrefixOrPostfix rhs)  {
-        return this.round_bulk();
+// Fancy postfix trick
+public AntiMotor operator /(AntiCircleRotor lhs, RoundBulkPrefixOrPostfix rhs)  {
+    return lhs.round_bulk();
     }
-}
-public extension RoundBulkPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiMotor operator /(AntiCircleRotor rhs) {
-        return rhs.round_bulk();
-    }
+// Fancy prefix trick
+public AntiMotor operator /(RoundBulkPrefixOrPostfix lhs, AntiCircleRotor rhs) {
+    return rhs.round_bulk();
 }
 public extension AntiCircleRotor {
     public AntiMotor round_bulk() {
@@ -22,17 +18,13 @@ public extension AntiCircleRotor {
         );
     }
 }
-public extension AntiDipoleInversion {
-    // Fancy postfix trick
-    public AntiFlector operator /(RoundBulkPrefixOrPostfix rhs)  {
-        return this.round_bulk();
+// Fancy postfix trick
+public AntiFlector operator /(AntiDipoleInversion lhs, RoundBulkPrefixOrPostfix rhs)  {
+    return lhs.round_bulk();
     }
-}
-public extension RoundBulkPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiFlector operator /(AntiDipoleInversion rhs) {
-        return rhs.round_bulk();
-    }
+// Fancy prefix trick
+public AntiFlector operator /(RoundBulkPrefixOrPostfix lhs, AntiDipoleInversion rhs) {
+    return rhs.round_bulk();
 }
 public extension AntiDipoleInversion {
     public AntiFlector round_bulk() {
@@ -44,17 +36,13 @@ public extension AntiDipoleInversion {
         );
     }
 }
-public extension AntiDualNum {
-    // Fancy postfix trick
-    public Scalar operator /(RoundBulkPrefixOrPostfix rhs)  {
-        return this.round_bulk();
+// Fancy postfix trick
+public Scalar operator /(AntiDualNum lhs, RoundBulkPrefixOrPostfix rhs)  {
+    return lhs.round_bulk();
     }
-}
-public extension RoundBulkPrefixOrPostfix {
-    // Fancy prefix trick
-    public Scalar operator /(AntiDualNum rhs) {
-        return rhs.round_bulk();
-    }
+// Fancy prefix trick
+public Scalar operator /(RoundBulkPrefixOrPostfix lhs, AntiDualNum rhs) {
+    return rhs.round_bulk();
 }
 public extension AntiDualNum {
     public Scalar round_bulk() {
@@ -64,17 +52,13 @@ public extension AntiDualNum {
         );
     }
 }
-public extension AntiFlatPoint {
-    // Fancy postfix trick
-    public AntiFlatPoint operator /(RoundBulkPrefixOrPostfix rhs)  {
-        return this.round_bulk();
+// Fancy postfix trick
+public AntiFlatPoint operator /(AntiFlatPoint lhs, RoundBulkPrefixOrPostfix rhs)  {
+    return lhs.round_bulk();
     }
-}
-public extension RoundBulkPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiFlatPoint operator /(AntiFlatPoint rhs) {
-        return rhs.round_bulk();
-    }
+// Fancy prefix trick
+public AntiFlatPoint operator /(RoundBulkPrefixOrPostfix lhs, AntiFlatPoint rhs) {
+    return rhs.round_bulk();
 }
 public extension AntiFlatPoint {
     public AntiFlatPoint round_bulk() {
@@ -84,17 +68,13 @@ public extension AntiFlatPoint {
         );
     }
 }
-public extension AntiFlector {
-    // Fancy postfix trick
-    public AntiFlector operator /(RoundBulkPrefixOrPostfix rhs)  {
-        return this.round_bulk();
+// Fancy postfix trick
+public AntiFlector operator /(AntiFlector lhs, RoundBulkPrefixOrPostfix rhs)  {
+    return lhs.round_bulk();
     }
-}
-public extension RoundBulkPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiFlector operator /(AntiFlector rhs) {
-        return rhs.round_bulk();
-    }
+// Fancy prefix trick
+public AntiFlector operator /(RoundBulkPrefixOrPostfix lhs, AntiFlector rhs) {
+    return rhs.round_bulk();
 }
 public extension AntiFlector {
     public AntiFlector round_bulk() {
@@ -106,17 +86,13 @@ public extension AntiFlector {
         );
     }
 }
-public extension AntiLine {
-    // Fancy postfix trick
-    public AntiLine operator /(RoundBulkPrefixOrPostfix rhs)  {
-        return this.round_bulk();
+// Fancy postfix trick
+public AntiLine operator /(AntiLine lhs, RoundBulkPrefixOrPostfix rhs)  {
+    return lhs.round_bulk();
     }
-}
-public extension RoundBulkPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiLine operator /(AntiLine rhs) {
-        return rhs.round_bulk();
-    }
+// Fancy prefix trick
+public AntiLine operator /(RoundBulkPrefixOrPostfix lhs, AntiLine rhs) {
+    return rhs.round_bulk();
 }
 public extension AntiLine {
     public AntiLine round_bulk() {
@@ -128,17 +104,13 @@ public extension AntiLine {
         );
     }
 }
-public extension AntiMotor {
-    // Fancy postfix trick
-    public AntiMotor operator /(RoundBulkPrefixOrPostfix rhs)  {
-        return this.round_bulk();
+// Fancy postfix trick
+public AntiMotor operator /(AntiMotor lhs, RoundBulkPrefixOrPostfix rhs)  {
+    return lhs.round_bulk();
     }
-}
-public extension RoundBulkPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiMotor operator /(AntiMotor rhs) {
-        return rhs.round_bulk();
-    }
+// Fancy prefix trick
+public AntiMotor operator /(RoundBulkPrefixOrPostfix lhs, AntiMotor rhs) {
+    return rhs.round_bulk();
 }
 public extension AntiMotor {
     public AntiMotor round_bulk() {
@@ -150,17 +122,13 @@ public extension AntiMotor {
         );
     }
 }
-public extension AntiPlane {
-    // Fancy postfix trick
-    public AntiPlane operator /(RoundBulkPrefixOrPostfix rhs)  {
-        return this.round_bulk();
+// Fancy postfix trick
+public AntiPlane operator /(AntiPlane lhs, RoundBulkPrefixOrPostfix rhs)  {
+    return lhs.round_bulk();
     }
-}
-public extension RoundBulkPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiPlane operator /(AntiPlane rhs) {
-        return rhs.round_bulk();
-    }
+// Fancy prefix trick
+public AntiPlane operator /(RoundBulkPrefixOrPostfix lhs, AntiPlane rhs) {
+    return rhs.round_bulk();
 }
 public extension AntiPlane {
     public AntiPlane round_bulk() {
@@ -170,17 +138,13 @@ public extension AntiPlane {
         );
     }
 }
-public extension Circle {
-    // Fancy postfix trick
-    public AntiFlatPoint operator /(RoundBulkPrefixOrPostfix rhs)  {
-        return this.round_bulk();
+// Fancy postfix trick
+public AntiFlatPoint operator /(Circle lhs, RoundBulkPrefixOrPostfix rhs)  {
+    return lhs.round_bulk();
     }
-}
-public extension RoundBulkPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiFlatPoint operator /(Circle rhs) {
-        return rhs.round_bulk();
-    }
+// Fancy prefix trick
+public AntiFlatPoint operator /(RoundBulkPrefixOrPostfix lhs, Circle rhs) {
+    return rhs.round_bulk();
 }
 public extension Circle {
     public AntiFlatPoint round_bulk() {
@@ -190,17 +154,13 @@ public extension Circle {
         );
     }
 }
-public extension CircleRotor {
-    // Fancy postfix trick
-    public AntiFlatPoint operator /(RoundBulkPrefixOrPostfix rhs)  {
-        return this.round_bulk();
+// Fancy postfix trick
+public AntiFlatPoint operator /(CircleRotor lhs, RoundBulkPrefixOrPostfix rhs)  {
+    return lhs.round_bulk();
     }
-}
-public extension RoundBulkPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiFlatPoint operator /(CircleRotor rhs) {
-        return rhs.round_bulk();
-    }
+// Fancy prefix trick
+public AntiFlatPoint operator /(RoundBulkPrefixOrPostfix lhs, CircleRotor rhs) {
+    return rhs.round_bulk();
 }
 public extension CircleRotor {
     public AntiFlatPoint round_bulk() {
@@ -210,17 +170,13 @@ public extension CircleRotor {
         );
     }
 }
-public extension Dipole {
-    // Fancy postfix trick
-    public AntiLine operator /(RoundBulkPrefixOrPostfix rhs)  {
-        return this.round_bulk();
+// Fancy postfix trick
+public AntiLine operator /(Dipole lhs, RoundBulkPrefixOrPostfix rhs)  {
+    return lhs.round_bulk();
     }
-}
-public extension RoundBulkPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiLine operator /(Dipole rhs) {
-        return rhs.round_bulk();
-    }
+// Fancy prefix trick
+public AntiLine operator /(RoundBulkPrefixOrPostfix lhs, Dipole rhs) {
+    return rhs.round_bulk();
 }
 public extension Dipole {
     public AntiLine round_bulk() {
@@ -232,17 +188,13 @@ public extension Dipole {
         );
     }
 }
-public extension DipoleInversion {
-    // Fancy postfix trick
-    public AntiLine operator /(RoundBulkPrefixOrPostfix rhs)  {
-        return this.round_bulk();
+// Fancy postfix trick
+public AntiLine operator /(DipoleInversion lhs, RoundBulkPrefixOrPostfix rhs)  {
+    return lhs.round_bulk();
     }
-}
-public extension RoundBulkPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiLine operator /(DipoleInversion rhs) {
-        return rhs.round_bulk();
-    }
+// Fancy prefix trick
+public AntiLine operator /(RoundBulkPrefixOrPostfix lhs, DipoleInversion rhs) {
+    return rhs.round_bulk();
 }
 public extension DipoleInversion {
     public AntiLine round_bulk() {
@@ -254,17 +206,13 @@ public extension DipoleInversion {
         );
     }
 }
-public extension MultiVector {
-    // Fancy postfix trick
-    public MultiVector operator /(RoundBulkPrefixOrPostfix rhs)  {
-        return this.round_bulk();
+// Fancy postfix trick
+public MultiVector operator /(MultiVector lhs, RoundBulkPrefixOrPostfix rhs)  {
+    return lhs.round_bulk();
     }
-}
-public extension RoundBulkPrefixOrPostfix {
-    // Fancy prefix trick
-    public MultiVector operator /(MultiVector rhs) {
-        return rhs.round_bulk();
-    }
+// Fancy prefix trick
+public MultiVector operator /(RoundBulkPrefixOrPostfix lhs, MultiVector rhs) {
+    return rhs.round_bulk();
 }
 public extension MultiVector {
     public MultiVector round_bulk() {
@@ -294,17 +242,13 @@ public extension MultiVector {
         );
     }
 }
-public extension RoundPoint {
-    // Fancy postfix trick
-    public AntiPlane operator /(RoundBulkPrefixOrPostfix rhs)  {
-        return this.round_bulk();
+// Fancy postfix trick
+public AntiPlane operator /(RoundPoint lhs, RoundBulkPrefixOrPostfix rhs)  {
+    return lhs.round_bulk();
     }
-}
-public extension RoundBulkPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiPlane operator /(RoundPoint rhs) {
-        return rhs.round_bulk();
-    }
+// Fancy prefix trick
+public AntiPlane operator /(RoundBulkPrefixOrPostfix lhs, RoundPoint rhs) {
+    return rhs.round_bulk();
 }
 public extension RoundPoint {
     public AntiPlane round_bulk() {
@@ -314,34 +258,26 @@ public extension RoundPoint {
         );
     }
 }
-public extension Scalar {
-    // Fancy postfix trick
-    public Scalar operator /(RoundBulkPrefixOrPostfix rhs)  {
-        return this.round_bulk();
+// Fancy postfix trick
+public Scalar operator /(Scalar lhs, RoundBulkPrefixOrPostfix rhs)  {
+    return lhs.round_bulk();
     }
-}
-public extension RoundBulkPrefixOrPostfix {
-    // Fancy prefix trick
-    public Scalar operator /(Scalar rhs) {
-        return rhs.round_bulk();
-    }
+// Fancy prefix trick
+public Scalar operator /(RoundBulkPrefixOrPostfix lhs, Scalar rhs) {
+    return rhs.round_bulk();
 }
 public extension Scalar {
     public Scalar round_bulk() {
         return this;
     }
 }
-public extension VersorEven {
-    // Fancy postfix trick
-    public AntiFlector operator /(RoundBulkPrefixOrPostfix rhs)  {
-        return this.round_bulk();
+// Fancy postfix trick
+public AntiFlector operator /(VersorEven lhs, RoundBulkPrefixOrPostfix rhs)  {
+    return lhs.round_bulk();
     }
-}
-public extension RoundBulkPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiFlector operator /(VersorEven rhs) {
-        return rhs.round_bulk();
-    }
+// Fancy prefix trick
+public AntiFlector operator /(RoundBulkPrefixOrPostfix lhs, VersorEven rhs) {
+    return rhs.round_bulk();
 }
 public extension VersorEven {
     public AntiFlector round_bulk() {
@@ -353,17 +289,13 @@ public extension VersorEven {
         );
     }
 }
-public extension VersorOdd {
-    // Fancy postfix trick
-    public AntiMotor operator /(RoundBulkPrefixOrPostfix rhs)  {
-        return this.round_bulk();
+// Fancy postfix trick
+public AntiMotor operator /(VersorOdd lhs, RoundBulkPrefixOrPostfix rhs)  {
+    return lhs.round_bulk();
     }
-}
-public extension RoundBulkPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiMotor operator /(VersorOdd rhs) {
-        return rhs.round_bulk();
-    }
+// Fancy prefix trick
+public AntiMotor operator /(RoundBulkPrefixOrPostfix lhs, VersorOdd rhs) {
+    return rhs.round_bulk();
 }
 public extension VersorOdd {
     public AntiMotor round_bulk() {

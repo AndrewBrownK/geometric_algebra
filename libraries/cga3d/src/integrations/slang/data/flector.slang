@@ -8,7 +8,7 @@ public struct Flector {
     // e4235, e4315, e4125, e3215
     internal float4 group1;
 
-    __init(
+    public __init(
         float e15, float e25, float e35, float e45, float e4235, float e4315, float e4125, float e3215
     ) {
         group0 = float4(e15, e25, e35, e45);

@@ -10,7 +10,7 @@ public struct Dipole {
     // e15, e25, e35, 0
     internal float4 group2;
 
-    __init(
+    public __init(
         float e41, float e42, float e43, float e23, float e31, float e12, float e45, float e15, float e25, float e35
     ) {
         group0 = float4(e41, e42, e43, 0.0);

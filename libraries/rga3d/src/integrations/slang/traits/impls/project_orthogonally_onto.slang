@@ -1,16 +1,12 @@
 implementing rga3d;
 using traits;
-public extension DualNum {
-    // Fancy infix trick (first half)
-    public ProjectOrthogonallyOntoInfixPartial<DualNum> operator /(ProjectOrthogonallyOntoInfix rhs) {
-        return ProjectOrthogonallyOntoInfixPartial<DualNum>(this);
-    }
+// Fancy infix trick (first half)
+public ProjectOrthogonallyOntoInfixPartial<DualNum> operator /(DualNum lhs, ProjectOrthogonallyOntoInfix rhs) {
+    return ProjectOrthogonallyOntoInfixPartial<DualNum>(lhs);
 }
-public extension ProjectOrthogonallyOntoInfixPartial<DualNum> {
-    // Fancy infix trick (second half)
-    public DualNum operator /(DualNum rhs) {
-        return this.a.project_orthogonally_onto(rhs);
-    }
+// Fancy infix trick (second half)
+public DualNum operator /(ProjectOrthogonallyOntoInfixPartial<DualNum> lhs, DualNum rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
 }
 public extension DualNum {
     public DualNum project_orthogonally_onto(DualNum other) {
@@ -19,6 +15,10 @@ public extension DualNum {
             float2(other.scalar * this.scalar) * other.group0.xy
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(ProjectOrthogonallyOntoInfixPartial<DualNum> lhs, Flector rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
 }
 public extension DualNum {
     public Motor project_orthogonally_onto(Flector other) {
@@ -42,6 +42,10 @@ public extension DualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(ProjectOrthogonallyOntoInfixPartial<DualNum> lhs, Horizon rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
+}
 public extension DualNum {
     public Scalar project_orthogonally_onto(Horizon other) {
         return Scalar(
@@ -49,6 +53,10 @@ public extension DualNum {
             pow(other.e321, 2) * this.scalar
         );
     }
+}
+// Fancy infix trick (second half)
+public Scalar operator /(ProjectOrthogonallyOntoInfixPartial<DualNum> lhs, Line rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
 }
 public extension DualNum {
     public Scalar project_orthogonally_onto(Line other) {
@@ -63,6 +71,10 @@ public extension DualNum {
             -(other.e41 * wedge.e23) - (other.e42 * wedge.e31) - (other.e43 * wedge.e12) - (other.e23 * wedge.e41) - (other.e31 * wedge.e42) - (other.e12 * wedge.e43)
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(ProjectOrthogonallyOntoInfixPartial<DualNum> lhs, Motor rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
 }
 public extension DualNum {
     public Motor project_orthogonally_onto(Motor other) {
@@ -85,6 +97,10 @@ public extension DualNum {
             (float4(other.e1234) * wedge.group1) + (float4(wedge.e1234) * other.group1) + float4(float3(0.0), -(other.e41 * wedge.e23) - (other.e42 * wedge.e31) - (other.e43 * wedge.e12) - (other.e23 * wedge.e41) - (other.e31 * wedge.e42) - (other.e12 * wedge.e43))
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(ProjectOrthogonallyOntoInfixPartial<DualNum> lhs, MultiVector rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
 }
 public extension DualNum {
     public MultiVector project_orthogonally_onto(MultiVector other) {
@@ -126,6 +142,10 @@ public extension DualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(ProjectOrthogonallyOntoInfixPartial<DualNum> lhs, Plane rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
+}
 public extension DualNum {
     public Scalar project_orthogonally_onto(Plane other) {
         return Scalar(
@@ -133,6 +153,10 @@ public extension DualNum {
             pow(other.e321, 2) * this.scalar
         );
     }
+}
+// Fancy infix trick (second half)
+public Scalar operator /(ProjectOrthogonallyOntoInfixPartial<DualNum> lhs, Point rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
 }
 public extension DualNum {
     public Scalar project_orthogonally_onto(Point other) {
@@ -146,6 +170,10 @@ public extension DualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(ProjectOrthogonallyOntoInfixPartial<DualNum> lhs, Scalar rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
+}
 public extension DualNum {
     public Scalar project_orthogonally_onto(Scalar other) {
         return Scalar(
@@ -154,17 +182,13 @@ public extension DualNum {
         );
     }
 }
-public extension Flector {
-    // Fancy infix trick (first half)
-    public ProjectOrthogonallyOntoInfixPartial<Flector> operator /(ProjectOrthogonallyOntoInfix rhs) {
-        return ProjectOrthogonallyOntoInfixPartial<Flector>(this);
-    }
+// Fancy infix trick (first half)
+public ProjectOrthogonallyOntoInfixPartial<Flector> operator /(Flector lhs, ProjectOrthogonallyOntoInfix rhs) {
+    return ProjectOrthogonallyOntoInfixPartial<Flector>(lhs);
 }
-public extension ProjectOrthogonallyOntoInfixPartial<Flector> {
-    // Fancy infix trick (second half)
-    public Flector operator /(Flector rhs) {
-        return this.a.project_orthogonally_onto(rhs);
-    }
+// Fancy infix trick (second half)
+public Flector operator /(ProjectOrthogonallyOntoInfixPartial<Flector> lhs, Flector rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
 }
 public extension Flector {
     public Flector project_orthogonally_onto(Flector other) {
@@ -188,6 +212,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(ProjectOrthogonallyOntoInfixPartial<Flector> lhs, Horizon rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
+}
 public extension Flector {
     public Flector project_orthogonally_onto(Horizon other) {
         Motor wedge = Motor(
@@ -203,6 +231,10 @@ public extension Flector {
             float4(float3(0.0), other.e321 * wedge.e1234)
         );
     }
+}
+// Fancy infix trick (second half)
+public Point operator /(ProjectOrthogonallyOntoInfixPartial<Flector> lhs, Line rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
 }
 public extension Flector {
     public Point project_orthogonally_onto(Line other) {
@@ -221,6 +253,10 @@ public extension Flector {
             float4((other.e41 * wedge.e321) + (other.e31 * wedge.e412), (other.e42 * wedge.e321) + (other.e12 * wedge.e423), (other.e43 * wedge.e321) + (other.e23 * wedge.e431), -(other.e42 * wedge.e431) - (other.e43 * wedge.e412)) - (wedge.group0.yzxx * float4(other.group1.xyz.zxy, other.e41))
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(ProjectOrthogonallyOntoInfixPartial<Flector> lhs, Motor rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
 }
 public extension Flector {
     public Flector project_orthogonally_onto(Motor other) {
@@ -241,6 +277,10 @@ public extension Flector {
             float4(float3(1.0), 0.0) * float4(other.group0.www, 0.0) * float4(wedge.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(ProjectOrthogonallyOntoInfixPartial<Flector> lhs, MultiVector rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
 }
 public extension Flector {
     public MultiVector project_orthogonally_onto(MultiVector other) {
@@ -282,6 +322,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(ProjectOrthogonallyOntoInfixPartial<Flector> lhs, Plane rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
+}
 public extension Flector {
     public Flector project_orthogonally_onto(Plane other) {
         Motor wedge = Motor(
@@ -298,6 +342,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public Point operator /(ProjectOrthogonallyOntoInfixPartial<Flector> lhs, Point rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
+}
 public extension Flector {
     public Point project_orthogonally_onto(Point other) {
         Plane right_anti_dual = Plane(
@@ -310,17 +358,13 @@ public extension Flector {
         );
     }
 }
-public extension Horizon {
-    // Fancy infix trick (first half)
-    public ProjectOrthogonallyOntoInfixPartial<Horizon> operator /(ProjectOrthogonallyOntoInfix rhs) {
-        return ProjectOrthogonallyOntoInfixPartial<Horizon>(this);
-    }
+// Fancy infix trick (first half)
+public ProjectOrthogonallyOntoInfixPartial<Horizon> operator /(Horizon lhs, ProjectOrthogonallyOntoInfix rhs) {
+    return ProjectOrthogonallyOntoInfixPartial<Horizon>(lhs);
 }
-public extension ProjectOrthogonallyOntoInfixPartial<Horizon> {
-    // Fancy infix trick (second half)
-    public Flector operator /(Flector rhs) {
-        return this.a.project_orthogonally_onto(rhs);
-    }
+// Fancy infix trick (second half)
+public Flector operator /(ProjectOrthogonallyOntoInfixPartial<Horizon> lhs, Flector rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
 }
 public extension Horizon {
     public Flector project_orthogonally_onto(Flector other) {
@@ -336,6 +380,10 @@ public extension Horizon {
         );
     }
 }
+// Fancy infix trick (second half)
+public Horizon operator /(ProjectOrthogonallyOntoInfixPartial<Horizon> lhs, Horizon rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
+}
 public extension Horizon {
     public Horizon project_orthogonally_onto(Horizon other) {
         return Horizon(
@@ -343,6 +391,10 @@ public extension Horizon {
             pow(other.e321, 2) * this.e321
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(ProjectOrthogonallyOntoInfixPartial<Horizon> lhs, MultiVector rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
 }
 public extension Horizon {
     public MultiVector project_orthogonally_onto(MultiVector other) {
@@ -364,6 +416,10 @@ public extension Horizon {
         );
     }
 }
+// Fancy infix trick (second half)
+public Plane operator /(ProjectOrthogonallyOntoInfixPartial<Horizon> lhs, Plane rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
+}
 public extension Horizon {
     public Plane project_orthogonally_onto(Plane other) {
         return Plane(
@@ -372,17 +428,13 @@ public extension Horizon {
         );
     }
 }
-public extension Line {
-    // Fancy infix trick (first half)
-    public ProjectOrthogonallyOntoInfixPartial<Line> operator /(ProjectOrthogonallyOntoInfix rhs) {
-        return ProjectOrthogonallyOntoInfixPartial<Line>(this);
-    }
+// Fancy infix trick (first half)
+public ProjectOrthogonallyOntoInfixPartial<Line> operator /(Line lhs, ProjectOrthogonallyOntoInfix rhs) {
+    return ProjectOrthogonallyOntoInfixPartial<Line>(lhs);
 }
-public extension ProjectOrthogonallyOntoInfixPartial<Line> {
-    // Fancy infix trick (second half)
-    public Motor operator /(Flector rhs) {
-        return this.a.project_orthogonally_onto(rhs);
-    }
+// Fancy infix trick (second half)
+public Motor operator /(ProjectOrthogonallyOntoInfixPartial<Line> lhs, Flector rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
 }
 public extension Line {
     public Motor project_orthogonally_onto(Flector other) {
@@ -404,6 +456,10 @@ public extension Line {
         );
     }
 }
+// Fancy infix trick (second half)
+public Line operator /(ProjectOrthogonallyOntoInfixPartial<Line> lhs, Horizon rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
+}
 public extension Line {
     public Line project_orthogonally_onto(Horizon other) {
         Origin right_anti_dual = Origin(
@@ -417,6 +473,10 @@ public extension Line {
             float3(other.e321) * float4(this.e23 * right_anti_dual.e4, this.e31 * right_anti_dual.e4, this.e12 * right_anti_dual.e4, 0.0).xyz * float3(-1.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public Line operator /(ProjectOrthogonallyOntoInfixPartial<Line> lhs, Line rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
 }
 public extension Line {
     public Line project_orthogonally_onto(Line other) {
@@ -438,6 +498,10 @@ public extension Line {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(ProjectOrthogonallyOntoInfixPartial<Line> lhs, Motor rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
+}
 public extension Line {
     public Motor project_orthogonally_onto(Motor other) {
         Motor right_anti_dual = Motor(
@@ -457,6 +521,10 @@ public extension Line {
             float4(wedge.e1234) * other.group1
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(ProjectOrthogonallyOntoInfixPartial<Line> lhs, MultiVector rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
 }
 public extension Line {
     public MultiVector project_orthogonally_onto(MultiVector other) {
@@ -498,6 +566,10 @@ public extension Line {
         );
     }
 }
+// Fancy infix trick (second half)
+public Line operator /(ProjectOrthogonallyOntoInfixPartial<Line> lhs, Plane rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
+}
 public extension Line {
     public Line project_orthogonally_onto(Plane other) {
         Plane wedge = Plane(
@@ -512,17 +584,13 @@ public extension Line {
         );
     }
 }
-public extension Motor {
-    // Fancy infix trick (first half)
-    public ProjectOrthogonallyOntoInfixPartial<Motor> operator /(ProjectOrthogonallyOntoInfix rhs) {
-        return ProjectOrthogonallyOntoInfixPartial<Motor>(this);
-    }
+// Fancy infix trick (first half)
+public ProjectOrthogonallyOntoInfixPartial<Motor> operator /(Motor lhs, ProjectOrthogonallyOntoInfix rhs) {
+    return ProjectOrthogonallyOntoInfixPartial<Motor>(lhs);
 }
-public extension ProjectOrthogonallyOntoInfixPartial<Motor> {
-    // Fancy infix trick (second half)
-    public DualNum operator /(DualNum rhs) {
-        return this.a.project_orthogonally_onto(rhs);
-    }
+// Fancy infix trick (second half)
+public DualNum operator /(ProjectOrthogonallyOntoInfixPartial<Motor> lhs, DualNum rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
 }
 public extension Motor {
     public DualNum project_orthogonally_onto(DualNum other) {
@@ -531,6 +599,10 @@ public extension Motor {
             float2(other.scalar * this.scalar) * other.group0.xy
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(ProjectOrthogonallyOntoInfixPartial<Motor> lhs, Flector rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
 }
 public extension Motor {
     public Motor project_orthogonally_onto(Flector other) {
@@ -554,6 +626,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(ProjectOrthogonallyOntoInfixPartial<Motor> lhs, Horizon rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
+}
 public extension Motor {
     public Motor project_orthogonally_onto(Horizon other) {
         Origin right_anti_dual = Origin(
@@ -573,6 +649,10 @@ public extension Motor {
             float4(other.e321) * float4(wedge.group1.xyz, wedge.e4) * float4(-1.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(ProjectOrthogonallyOntoInfixPartial<Motor> lhs, Line rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
 }
 public extension Motor {
     public Motor project_orthogonally_onto(Line other) {
@@ -596,6 +676,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(ProjectOrthogonallyOntoInfixPartial<Motor> lhs, Motor rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
+}
 public extension Motor {
     public Motor project_orthogonally_onto(Motor other) {
         Motor right_anti_dual = Motor(
@@ -617,6 +701,10 @@ public extension Motor {
             (float4(other.e1234) * wedge.group1) + (float4(wedge.e1234) * other.group1) + float4(float3(0.0), -(other.e41 * wedge.e23) - (other.e42 * wedge.e31) - (other.e43 * wedge.e12) - (other.e23 * wedge.e41) - (other.e31 * wedge.e42) - (other.e12 * wedge.e43))
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(ProjectOrthogonallyOntoInfixPartial<Motor> lhs, MultiVector rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
 }
 public extension Motor {
     public MultiVector project_orthogonally_onto(MultiVector other) {
@@ -658,6 +746,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(ProjectOrthogonallyOntoInfixPartial<Motor> lhs, Plane rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
+}
 public extension Motor {
     public Motor project_orthogonally_onto(Plane other) {
         Origin right_anti_dual = Origin(
@@ -678,6 +770,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(ProjectOrthogonallyOntoInfixPartial<Motor> lhs, Point rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
+}
 public extension Motor {
     public Scalar project_orthogonally_onto(Point other) {
         Plane wedge = Plane(
@@ -690,6 +786,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(ProjectOrthogonallyOntoInfixPartial<Motor> lhs, Scalar rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
+}
 public extension Motor {
     public Scalar project_orthogonally_onto(Scalar other) {
         return Scalar(
@@ -698,17 +798,13 @@ public extension Motor {
         );
     }
 }
-public extension MultiVector {
-    // Fancy infix trick (first half)
-    public ProjectOrthogonallyOntoInfixPartial<MultiVector> operator /(ProjectOrthogonallyOntoInfix rhs) {
-        return ProjectOrthogonallyOntoInfixPartial<MultiVector>(this);
-    }
+// Fancy infix trick (first half)
+public ProjectOrthogonallyOntoInfixPartial<MultiVector> operator /(MultiVector lhs, ProjectOrthogonallyOntoInfix rhs) {
+    return ProjectOrthogonallyOntoInfixPartial<MultiVector>(lhs);
 }
-public extension ProjectOrthogonallyOntoInfixPartial<MultiVector> {
-    // Fancy infix trick (second half)
-    public DualNum operator /(DualNum rhs) {
-        return this.a.project_orthogonally_onto(rhs);
-    }
+// Fancy infix trick (second half)
+public DualNum operator /(ProjectOrthogonallyOntoInfixPartial<MultiVector> lhs, DualNum rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
 }
 public extension MultiVector {
     public DualNum project_orthogonally_onto(DualNum other) {
@@ -717,6 +813,10 @@ public extension MultiVector {
             float2(other.scalar * this.scalar) * other.group0.xy
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(ProjectOrthogonallyOntoInfixPartial<MultiVector> lhs, Flector rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
 }
 public extension MultiVector {
     public MultiVector project_orthogonally_onto(Flector other) {
@@ -752,6 +852,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(ProjectOrthogonallyOntoInfixPartial<MultiVector> lhs, Horizon rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
+}
 public extension MultiVector {
     public MultiVector project_orthogonally_onto(Horizon other) {
         Origin right_anti_dual = Origin(
@@ -783,6 +887,10 @@ public extension MultiVector {
             float4(float3(0.0), other.e321 * wedge.e1234)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(ProjectOrthogonallyOntoInfixPartial<MultiVector> lhs, Line rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
 }
 public extension MultiVector {
     public MultiVector project_orthogonally_onto(Line other) {
@@ -818,6 +926,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(ProjectOrthogonallyOntoInfixPartial<MultiVector> lhs, Motor rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
+}
 public extension MultiVector {
     public MultiVector project_orthogonally_onto(Motor other) {
         Motor right_anti_dual = Motor(
@@ -851,6 +963,10 @@ public extension MultiVector {
             float4(float3(1.0), 0.0) * float4(other.group0.www, 0.0) * float4(wedge.group4.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(ProjectOrthogonallyOntoInfixPartial<MultiVector> lhs, MultiVector rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
 }
 public extension MultiVector {
     public MultiVector project_orthogonally_onto(MultiVector other) {
@@ -892,6 +1008,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(ProjectOrthogonallyOntoInfixPartial<MultiVector> lhs, Plane rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
+}
 public extension MultiVector {
     public MultiVector project_orthogonally_onto(Plane other) {
         Origin right_anti_dual = Origin(
@@ -923,6 +1043,10 @@ public extension MultiVector {
             float4(wedge.e1234) * other.group0
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(ProjectOrthogonallyOntoInfixPartial<MultiVector> lhs, Point rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
 }
 public extension MultiVector {
     public MultiVector project_orthogonally_onto(Point other) {
@@ -956,6 +1080,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(ProjectOrthogonallyOntoInfixPartial<MultiVector> lhs, Scalar rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
+}
 public extension MultiVector {
     public Scalar project_orthogonally_onto(Scalar other) {
         return Scalar(
@@ -964,17 +1092,13 @@ public extension MultiVector {
         );
     }
 }
-public extension Origin {
-    // Fancy infix trick (first half)
-    public ProjectOrthogonallyOntoInfixPartial<Origin> operator /(ProjectOrthogonallyOntoInfix rhs) {
-        return ProjectOrthogonallyOntoInfixPartial<Origin>(this);
-    }
+// Fancy infix trick (first half)
+public ProjectOrthogonallyOntoInfixPartial<Origin> operator /(Origin lhs, ProjectOrthogonallyOntoInfix rhs) {
+    return ProjectOrthogonallyOntoInfixPartial<Origin>(lhs);
 }
-public extension ProjectOrthogonallyOntoInfixPartial<Origin> {
-    // Fancy infix trick (second half)
-    public Point operator /(Flector rhs) {
-        return this.a.project_orthogonally_onto(rhs);
-    }
+// Fancy infix trick (second half)
+public Point operator /(ProjectOrthogonallyOntoInfixPartial<Origin> lhs, Flector rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
 }
 public extension Origin {
     public Point project_orthogonally_onto(Flector other) {
@@ -989,6 +1113,10 @@ public extension Origin {
             float4((other.e412 * wedge.e31) + (other.e321 * wedge.e41), (other.e423 * wedge.e12) + (other.e321 * wedge.e42), (other.e431 * wedge.e23) + (other.e321 * wedge.e43), -(other.e431 * wedge.e42) - (other.e412 * wedge.e43)) - (other.group1.yzxx * float4(wedge.group1.xyz.zxy, wedge.e41))
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(ProjectOrthogonallyOntoInfixPartial<Origin> lhs, MultiVector rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
 }
 public extension Origin {
     public MultiVector project_orthogonally_onto(MultiVector other) {
@@ -1012,17 +1140,13 @@ public extension Origin {
         );
     }
 }
-public extension Plane {
-    // Fancy infix trick (first half)
-    public ProjectOrthogonallyOntoInfixPartial<Plane> operator /(ProjectOrthogonallyOntoInfix rhs) {
-        return ProjectOrthogonallyOntoInfixPartial<Plane>(this);
-    }
+// Fancy infix trick (first half)
+public ProjectOrthogonallyOntoInfixPartial<Plane> operator /(Plane lhs, ProjectOrthogonallyOntoInfix rhs) {
+    return ProjectOrthogonallyOntoInfixPartial<Plane>(lhs);
 }
-public extension ProjectOrthogonallyOntoInfixPartial<Plane> {
-    // Fancy infix trick (second half)
-    public Flector operator /(Flector rhs) {
-        return this.a.project_orthogonally_onto(rhs);
-    }
+// Fancy infix trick (second half)
+public Flector operator /(ProjectOrthogonallyOntoInfixPartial<Plane> lhs, Flector rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
 }
 public extension Plane {
     public Flector project_orthogonally_onto(Flector other) {
@@ -1044,6 +1168,10 @@ public extension Plane {
         );
     }
 }
+// Fancy infix trick (second half)
+public Horizon operator /(ProjectOrthogonallyOntoInfixPartial<Plane> lhs, Horizon rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
+}
 public extension Plane {
     public Horizon project_orthogonally_onto(Horizon other) {
         return Horizon(
@@ -1051,6 +1179,10 @@ public extension Plane {
             pow(other.e321, 2) * this.e321
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(ProjectOrthogonallyOntoInfixPartial<Plane> lhs, MultiVector rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
 }
 public extension Plane {
     public MultiVector project_orthogonally_onto(MultiVector other) {
@@ -1084,6 +1216,10 @@ public extension Plane {
         );
     }
 }
+// Fancy infix trick (second half)
+public Plane operator /(ProjectOrthogonallyOntoInfixPartial<Plane> lhs, Plane rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
+}
 public extension Plane {
     public Plane project_orthogonally_onto(Plane other) {
         return Plane(
@@ -1092,17 +1228,13 @@ public extension Plane {
         );
     }
 }
-public extension Point {
-    // Fancy infix trick (first half)
-    public ProjectOrthogonallyOntoInfixPartial<Point> operator /(ProjectOrthogonallyOntoInfix rhs) {
-        return ProjectOrthogonallyOntoInfixPartial<Point>(this);
-    }
+// Fancy infix trick (first half)
+public ProjectOrthogonallyOntoInfixPartial<Point> operator /(Point lhs, ProjectOrthogonallyOntoInfix rhs) {
+    return ProjectOrthogonallyOntoInfixPartial<Point>(lhs);
 }
-public extension ProjectOrthogonallyOntoInfixPartial<Point> {
-    // Fancy infix trick (second half)
-    public Flector operator /(Flector rhs) {
-        return this.a.project_orthogonally_onto(rhs);
-    }
+// Fancy infix trick (second half)
+public Flector operator /(ProjectOrthogonallyOntoInfixPartial<Point> lhs, Flector rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
 }
 public extension Point {
     public Flector project_orthogonally_onto(Flector other) {
@@ -1126,6 +1258,10 @@ public extension Point {
         );
     }
 }
+// Fancy infix trick (second half)
+public Point operator /(ProjectOrthogonallyOntoInfixPartial<Point> lhs, Horizon rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
+}
 public extension Point {
     public Point project_orthogonally_onto(Horizon other) {
         Origin right_anti_dual = Origin(
@@ -1137,6 +1273,10 @@ public extension Point {
             float4((float3(other.e321) * float3(right_anti_dual.e4 * this.e1 * -1.0, right_anti_dual.e4 * this.e2 * -1.0, right_anti_dual.e4 * this.e3 * -1.0)), 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public Point operator /(ProjectOrthogonallyOntoInfixPartial<Point> lhs, Line rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
 }
 public extension Point {
     public Point project_orthogonally_onto(Line other) {
@@ -1155,6 +1295,10 @@ public extension Point {
             float4((other.e41 * wedge.e321) + (other.e31 * wedge.e412), (other.e42 * wedge.e321) + (other.e12 * wedge.e423), (other.e43 * wedge.e321) + (other.e23 * wedge.e431), -(other.e42 * wedge.e431) - (other.e43 * wedge.e412)) - (wedge.group0.yzxx * float4(other.group1.xyz.zxy, other.e41))
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(ProjectOrthogonallyOntoInfixPartial<Point> lhs, Motor rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
 }
 public extension Point {
     public Flector project_orthogonally_onto(Motor other) {
@@ -1175,6 +1319,10 @@ public extension Point {
             float4(float3(1.0), 0.0) * float4(other.group0.www, 0.0) * float4(wedge.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(ProjectOrthogonallyOntoInfixPartial<Point> lhs, MultiVector rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
 }
 public extension Point {
     public MultiVector project_orthogonally_onto(MultiVector other) {
@@ -1216,6 +1364,10 @@ public extension Point {
         );
     }
 }
+// Fancy infix trick (second half)
+public Point operator /(ProjectOrthogonallyOntoInfixPartial<Point> lhs, Plane rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
+}
 public extension Point {
     public Point project_orthogonally_onto(Plane other) {
         Line wedge = Line(
@@ -1230,6 +1382,10 @@ public extension Point {
         );
     }
 }
+// Fancy infix trick (second half)
+public Point operator /(ProjectOrthogonallyOntoInfixPartial<Point> lhs, Point rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
+}
 public extension Point {
     public Point project_orthogonally_onto(Point other) {
         Plane right_anti_dual = Plane(
@@ -1242,17 +1398,13 @@ public extension Point {
         );
     }
 }
-public extension Scalar {
-    // Fancy infix trick (first half)
-    public ProjectOrthogonallyOntoInfixPartial<Scalar> operator /(ProjectOrthogonallyOntoInfix rhs) {
-        return ProjectOrthogonallyOntoInfixPartial<Scalar>(this);
-    }
+// Fancy infix trick (first half)
+public ProjectOrthogonallyOntoInfixPartial<Scalar> operator /(Scalar lhs, ProjectOrthogonallyOntoInfix rhs) {
+    return ProjectOrthogonallyOntoInfixPartial<Scalar>(lhs);
 }
-public extension ProjectOrthogonallyOntoInfixPartial<Scalar> {
-    // Fancy infix trick (second half)
-    public DualNum operator /(DualNum rhs) {
-        return this.a.project_orthogonally_onto(rhs);
-    }
+// Fancy infix trick (second half)
+public DualNum operator /(ProjectOrthogonallyOntoInfixPartial<Scalar> lhs, DualNum rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
 }
 public extension Scalar {
     public DualNum project_orthogonally_onto(DualNum other) {
@@ -1261,6 +1413,10 @@ public extension Scalar {
             float2(other.scalar * this.scalar) * other.group0.xy
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(ProjectOrthogonallyOntoInfixPartial<Scalar> lhs, Flector rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
 }
 public extension Scalar {
     public Motor project_orthogonally_onto(Flector other) {
@@ -1284,6 +1440,10 @@ public extension Scalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(ProjectOrthogonallyOntoInfixPartial<Scalar> lhs, Horizon rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
+}
 public extension Scalar {
     public Scalar project_orthogonally_onto(Horizon other) {
         return Scalar(
@@ -1291,6 +1451,10 @@ public extension Scalar {
             pow(other.e321, 2) * this.scalar
         );
     }
+}
+// Fancy infix trick (second half)
+public Scalar operator /(ProjectOrthogonallyOntoInfixPartial<Scalar> lhs, Line rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
 }
 public extension Scalar {
     public Scalar project_orthogonally_onto(Line other) {
@@ -1305,6 +1469,10 @@ public extension Scalar {
             -(other.e41 * wedge.e23) - (other.e42 * wedge.e31) - (other.e43 * wedge.e12) - (other.e23 * wedge.e41) - (other.e31 * wedge.e42) - (other.e12 * wedge.e43)
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(ProjectOrthogonallyOntoInfixPartial<Scalar> lhs, Motor rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
 }
 public extension Scalar {
     public Motor project_orthogonally_onto(Motor other) {
@@ -1321,6 +1489,10 @@ public extension Scalar {
             (float4(other.e1234) * wedge.group1) + (float4(wedge.e1234) * other.group1) + float4(float3(0.0), -(other.e41 * wedge.e23) - (other.e42 * wedge.e31) - (other.e43 * wedge.e12) - (other.e23 * wedge.e41) - (other.e31 * wedge.e42) - (other.e12 * wedge.e43))
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(ProjectOrthogonallyOntoInfixPartial<Scalar> lhs, MultiVector rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
 }
 public extension Scalar {
     public MultiVector project_orthogonally_onto(MultiVector other) {
@@ -1362,6 +1534,10 @@ public extension Scalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(ProjectOrthogonallyOntoInfixPartial<Scalar> lhs, Plane rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
+}
 public extension Scalar {
     public Scalar project_orthogonally_onto(Plane other) {
         return Scalar(
@@ -1369,6 +1545,10 @@ public extension Scalar {
             pow(other.e321, 2) * this.scalar
         );
     }
+}
+// Fancy infix trick (second half)
+public Scalar operator /(ProjectOrthogonallyOntoInfixPartial<Scalar> lhs, Point rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
 }
 public extension Scalar {
     public Scalar project_orthogonally_onto(Point other) {
@@ -1381,6 +1561,10 @@ public extension Scalar {
             (wedge.e423 * other.e1) + (wedge.e431 * other.e2) + (wedge.e412 * other.e3) + (wedge.e321 * other.e4)
         );
     }
+}
+// Fancy infix trick (second half)
+public Scalar operator /(ProjectOrthogonallyOntoInfixPartial<Scalar> lhs, Scalar rhs) {
+    return lhs.a.project_orthogonally_onto(rhs);
 }
 public extension Scalar {
     public Scalar project_orthogonally_onto(Scalar other) {

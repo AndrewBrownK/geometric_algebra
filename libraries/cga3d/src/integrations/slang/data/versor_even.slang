@@ -12,7 +12,7 @@ public struct VersorEven {
     // e1, e2, e3, e4
     internal float4 group3;
 
-    __init(
+    public __init(
         float e423, float e431, float e412, float e12345, float e415, float e425, float e435, float e321, float e235, float e315, float e125, float e5, float e1, float e2, float e3, float e4
     ) {
         group0 = float4(e423, e431, e412, e12345);

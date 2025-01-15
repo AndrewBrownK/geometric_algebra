@@ -6,7 +6,7 @@ public struct FlatPoint {
     // e15, e25, e35, e45
     internal float4 group0;
 
-    __init(
+    public __init(
         float e15, float e25, float e35, float e45
     ) {
         group0 = float4(e15, e25, e35, e45);

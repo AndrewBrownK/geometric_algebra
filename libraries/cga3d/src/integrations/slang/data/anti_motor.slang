@@ -8,7 +8,7 @@ public struct AntiMotor {
     // e15, e25, e35, e3215
     internal float4 group1;
 
-    __init(
+    public __init(
         float e23, float e31, float e12, float scalar, float e15, float e25, float e35, float e3215
     ) {
         group0 = float4(e23, e31, e12, scalar);

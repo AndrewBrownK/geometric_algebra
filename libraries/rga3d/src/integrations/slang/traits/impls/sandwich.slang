@@ -1,16 +1,12 @@
 implementing rga3d;
 using traits;
-public extension AntiScalar {
-    // Fancy infix trick (first half)
-    public SandwichInfixPartial<AntiScalar> operator /(SandwichInfix rhs) {
-        return SandwichInfixPartial<AntiScalar>(this);
-    }
+// Fancy infix trick (first half)
+public SandwichInfixPartial<AntiScalar> operator /(AntiScalar lhs, SandwichInfix rhs) {
+    return SandwichInfixPartial<AntiScalar>(lhs);
 }
-public extension SandwichInfixPartial<AntiScalar> {
-    // Fancy infix trick (second half)
-    public Flector operator /(Flector rhs) {
-        return this.a.sandwich(rhs);
-    }
+// Fancy infix trick (second half)
+public Flector operator /(SandwichInfixPartial<AntiScalar> lhs, Flector rhs) {
+    return lhs.a.sandwich(rhs);
 }
 public extension AntiScalar {
     public Flector sandwich(Flector other) {
@@ -22,6 +18,10 @@ public extension AntiScalar {
         ).geometric_product(this.reverse());
     }
 }
+// Fancy infix trick (second half)
+public Line operator /(SandwichInfixPartial<AntiScalar> lhs, Line rhs) {
+    return lhs.a.sandwich(rhs);
+}
 public extension AntiScalar {
     public Line sandwich(Line other) {
         return Line(
@@ -32,6 +32,10 @@ public extension AntiScalar {
         ).geometric_product(this.reverse());
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(SandwichInfixPartial<AntiScalar> lhs, Motor rhs) {
+    return lhs.a.sandwich(rhs);
+}
 public extension AntiScalar {
     public Motor sandwich(Motor other) {
         return Motor(
@@ -41,6 +45,10 @@ public extension AntiScalar {
             float4(0.0)
         ).geometric_product(this.reverse());
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(SandwichInfixPartial<AntiScalar> lhs, MultiVector rhs) {
+    return lhs.a.sandwich(rhs);
 }
 public extension AntiScalar {
     public MultiVector sandwich(MultiVector other) {
@@ -58,6 +66,10 @@ public extension AntiScalar {
         ).geometric_product(this.reverse());
     }
 }
+// Fancy infix trick (second half)
+public Origin operator /(SandwichInfixPartial<AntiScalar> lhs, Point rhs) {
+    return lhs.a.sandwich(rhs);
+}
 public extension AntiScalar {
     public Origin sandwich(Point other) {
         return Plane(
@@ -66,17 +78,13 @@ public extension AntiScalar {
         ).geometric_product(this.reverse());
     }
 }
-public extension DualNum {
-    // Fancy infix trick (first half)
-    public SandwichInfixPartial<DualNum> operator /(SandwichInfix rhs) {
-        return SandwichInfixPartial<DualNum>(this);
-    }
+// Fancy infix trick (first half)
+public SandwichInfixPartial<DualNum> operator /(DualNum lhs, SandwichInfix rhs) {
+    return SandwichInfixPartial<DualNum>(lhs);
 }
-public extension SandwichInfixPartial<DualNum> {
-    // Fancy infix trick (second half)
-    public AntiScalar operator /(AntiScalar rhs) {
-        return this.a.sandwich(rhs);
-    }
+// Fancy infix trick (second half)
+public AntiScalar operator /(SandwichInfixPartial<DualNum> lhs, AntiScalar rhs) {
+    return lhs.a.sandwich(rhs);
 }
 public extension DualNum {
     public AntiScalar sandwich(AntiScalar other) {
@@ -86,6 +94,10 @@ public extension DualNum {
         ).geometric_product(this.reverse());
     }
 }
+// Fancy infix trick (second half)
+public DualNum operator /(SandwichInfixPartial<DualNum> lhs, DualNum rhs) {
+    return lhs.a.sandwich(rhs);
+}
 public extension DualNum {
     public DualNum sandwich(DualNum other) {
         return DualNum(
@@ -93,6 +105,10 @@ public extension DualNum {
             float2(other.scalar * this.scalar, (other.scalar * this.e1234) + (other.e1234 * this.scalar))
         ).geometric_product(this.reverse());
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(SandwichInfixPartial<DualNum> lhs, Flector rhs) {
+    return lhs.a.sandwich(rhs);
 }
 public extension DualNum {
     public Flector sandwich(Flector other) {
@@ -104,6 +120,10 @@ public extension DualNum {
         ).geometric_product(this.reverse());
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(SandwichInfixPartial<DualNum> lhs, Horizon rhs) {
+    return lhs.a.sandwich(rhs);
+}
 public extension DualNum {
     public Flector sandwich(Horizon other) {
         return Flector(
@@ -113,6 +133,10 @@ public extension DualNum {
             float4(float3(0.0), this.scalar * other.e321)
         ).geometric_product(this.reverse());
     }
+}
+// Fancy infix trick (second half)
+public Line operator /(SandwichInfixPartial<DualNum> lhs, Line rhs) {
+    return lhs.a.sandwich(rhs);
 }
 public extension DualNum {
     public Line sandwich(Line other) {
@@ -124,6 +148,10 @@ public extension DualNum {
         ).geometric_product(this.reverse());
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(SandwichInfixPartial<DualNum> lhs, Motor rhs) {
+    return lhs.a.sandwich(rhs);
+}
 public extension DualNum {
     public Motor sandwich(Motor other) {
         return Motor(
@@ -133,6 +161,10 @@ public extension DualNum {
             float4(this.scalar) * other.group1
         ).geometric_product(this.reverse());
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(SandwichInfixPartial<DualNum> lhs, MultiVector rhs) {
+    return lhs.a.sandwich(rhs);
 }
 public extension DualNum {
     public MultiVector sandwich(MultiVector other) {
@@ -150,6 +182,10 @@ public extension DualNum {
         ).geometric_product(this.reverse());
     }
 }
+// Fancy infix trick (second half)
+public Origin operator /(SandwichInfixPartial<DualNum> lhs, Origin rhs) {
+    return lhs.a.sandwich(rhs);
+}
 public extension DualNum {
     public Origin sandwich(Origin other) {
         return Origin(
@@ -157,6 +193,10 @@ public extension DualNum {
             this.scalar * other.e4
         ).geometric_product(this.reverse());
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(SandwichInfixPartial<DualNum> lhs, Plane rhs) {
+    return lhs.a.sandwich(rhs);
 }
 public extension DualNum {
     public Flector sandwich(Plane other) {
@@ -168,6 +208,10 @@ public extension DualNum {
         ).geometric_product(this.reverse());
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(SandwichInfixPartial<DualNum> lhs, Point rhs) {
+    return lhs.a.sandwich(rhs);
+}
 public extension DualNum {
     public Flector sandwich(Point other) {
         return Flector(
@@ -178,6 +222,10 @@ public extension DualNum {
         ).geometric_product(this.reverse());
     }
 }
+// Fancy infix trick (second half)
+public DualNum operator /(SandwichInfixPartial<DualNum> lhs, Scalar rhs) {
+    return lhs.a.sandwich(rhs);
+}
 public extension DualNum {
     public DualNum sandwich(Scalar other) {
         return DualNum(
@@ -186,17 +234,13 @@ public extension DualNum {
         ).geometric_product(this.reverse());
     }
 }
-public extension Flector {
-    // Fancy infix trick (first half)
-    public SandwichInfixPartial<Flector> operator /(SandwichInfix rhs) {
-        return SandwichInfixPartial<Flector>(this);
-    }
+// Fancy infix trick (first half)
+public SandwichInfixPartial<Flector> operator /(Flector lhs, SandwichInfix rhs) {
+    return SandwichInfixPartial<Flector>(lhs);
 }
-public extension SandwichInfixPartial<Flector> {
-    // Fancy infix trick (second half)
-    public Motor operator /(AntiScalar rhs) {
-        return this.a.sandwich(rhs);
-    }
+// Fancy infix trick (second half)
+public Motor operator /(SandwichInfixPartial<Flector> lhs, AntiScalar rhs) {
+    return lhs.a.sandwich(rhs);
 }
 public extension Flector {
     public Motor sandwich(AntiScalar other) {
@@ -208,6 +252,10 @@ public extension Flector {
         ).geometric_product(this.reverse());
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(SandwichInfixPartial<Flector> lhs, DualNum rhs) {
+    return lhs.a.sandwich(rhs);
+}
 public extension Flector {
     public Motor sandwich(DualNum other) {
         return Flector(
@@ -217,6 +265,10 @@ public extension Flector {
             float4(((float3(other.scalar) * this.group1.xyz) + (float3(other.e1234) * this.group0.xyz)), other.scalar * this.e321)
         ).geometric_product(this.reverse());
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(SandwichInfixPartial<Flector> lhs, Flector rhs) {
+    return lhs.a.sandwich(rhs);
 }
 public extension Flector {
     public Flector sandwich(Flector other) {
@@ -228,6 +280,10 @@ public extension Flector {
         ).geometric_product(this.reverse());
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(SandwichInfixPartial<Flector> lhs, Horizon rhs) {
+    return lhs.a.sandwich(rhs);
+}
 public extension Flector {
     public Flector sandwich(Horizon other) {
         return Motor(
@@ -237,6 +293,10 @@ public extension Flector {
             float4(other.e321) * float4(this.group0.xyz, this.e321) * float4(-1.0)
         ).geometric_product(this.reverse());
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(SandwichInfixPartial<Flector> lhs, Line rhs) {
+    return lhs.a.sandwich(rhs);
 }
 public extension Flector {
     public Motor sandwich(Line other) {
@@ -248,6 +308,10 @@ public extension Flector {
         ).geometric_product(this.reverse());
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(SandwichInfixPartial<Flector> lhs, Motor rhs) {
+    return lhs.a.sandwich(rhs);
+}
 public extension Flector {
     public Motor sandwich(Motor other) {
         return Flector(
@@ -257,6 +321,10 @@ public extension Flector {
             float4((this.e3 * other.e42) + (this.e4 * other.e23) + (this.e423 * other.scalar) + (this.e412 * other.e31) + (this.e321 * other.e41), (this.e2 * other.e1234) + (this.e4 * other.e31) + (this.e423 * other.e12) + (this.e431 * other.scalar) + (this.e321 * other.e42), (this.e3 * other.e1234) + (this.e4 * other.e12) + (this.e431 * other.e23) + (this.e412 * other.scalar) + (this.e321 * other.e43), this.e3 * other.e12 * -1.0) + float4((this.group0.xxy * other.group0.wzx), this.e321 * other.scalar) - (this.group0.yzxx * float4(other.group0.zxy, other.e23)) - (other.group1.zxyy * float4(this.group1.yzx, this.e2))
         ).geometric_product(this.reverse());
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(SandwichInfixPartial<Flector> lhs, MultiVector rhs) {
+    return lhs.a.sandwich(rhs);
 }
 public extension Flector {
     public MultiVector sandwich(MultiVector other) {
@@ -274,6 +342,10 @@ public extension Flector {
         ).geometric_product(this.reverse());
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(SandwichInfixPartial<Flector> lhs, Origin rhs) {
+    return lhs.a.sandwich(rhs);
+}
 public extension Flector {
     public Flector sandwich(Origin other) {
         return Motor(
@@ -283,6 +355,10 @@ public extension Flector {
             float4(0.0)
         ).geometric_product(this.reverse());
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(SandwichInfixPartial<Flector> lhs, Plane rhs) {
+    return lhs.a.sandwich(rhs);
 }
 public extension Flector {
     public Flector sandwich(Plane other) {
@@ -294,6 +370,10 @@ public extension Flector {
         ).geometric_product(this.reverse());
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(SandwichInfixPartial<Flector> lhs, Point rhs) {
+    return lhs.a.sandwich(rhs);
+}
 public extension Flector {
     public Flector sandwich(Point other) {
         return Motor(
@@ -303,6 +383,10 @@ public extension Flector {
             float4(-(this.e3 * other.e2) - (this.e321 * other.e1), -(this.e1 * other.e3) - (this.e321 * other.e2), -(this.e2 * other.e1) - (this.e321 * other.e3), (this.e2 * other.e2) + (this.e3 * other.e3)) + (this.group0.yzxx * other.group0.zxyx)
         ).geometric_product(this.reverse());
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(SandwichInfixPartial<Flector> lhs, Scalar rhs) {
+    return lhs.a.sandwich(rhs);
 }
 public extension Flector {
     public Motor sandwich(Scalar other) {
@@ -314,17 +398,13 @@ public extension Flector {
         ).geometric_product(this.reverse());
     }
 }
-public extension Horizon {
-    // Fancy infix trick (first half)
-    public SandwichInfixPartial<Horizon> operator /(SandwichInfix rhs) {
-        return SandwichInfixPartial<Horizon>(this);
-    }
+// Fancy infix trick (first half)
+public SandwichInfixPartial<Horizon> operator /(Horizon lhs, SandwichInfix rhs) {
+    return SandwichInfixPartial<Horizon>(lhs);
 }
-public extension SandwichInfixPartial<Horizon> {
-    // Fancy infix trick (second half)
-    public AntiScalar operator /(AntiScalar rhs) {
-        return this.a.sandwich(rhs);
-    }
+// Fancy infix trick (second half)
+public AntiScalar operator /(SandwichInfixPartial<Horizon> lhs, AntiScalar rhs) {
+    return lhs.a.sandwich(rhs);
 }
 public extension Horizon {
     public AntiScalar sandwich(AntiScalar other) {
@@ -333,6 +413,10 @@ public extension Horizon {
             other.e1234 * this.e321
         ).geometric_product(this.reverse());
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(SandwichInfixPartial<Horizon> lhs, DualNum rhs) {
+    return lhs.a.sandwich(rhs);
 }
 public extension Horizon {
     public Motor sandwich(DualNum other) {
@@ -344,6 +428,10 @@ public extension Horizon {
         ).geometric_product(this.reverse());
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(SandwichInfixPartial<Horizon> lhs, Flector rhs) {
+    return lhs.a.sandwich(rhs);
+}
 public extension Horizon {
     public Flector sandwich(Flector other) {
         return Motor(
@@ -354,6 +442,10 @@ public extension Horizon {
         ).geometric_product(this.reverse());
     }
 }
+// Fancy infix trick (second half)
+public Horizon operator /(SandwichInfixPartial<Horizon> lhs, Horizon rhs) {
+    return lhs.a.sandwich(rhs);
+}
 public extension Horizon {
     public Horizon sandwich(Horizon other) {
         return Scalar(
@@ -361,6 +453,10 @@ public extension Horizon {
             other.e321 * this.e321 * -1.0
         ).geometric_product(this.reverse());
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(SandwichInfixPartial<Horizon> lhs, Line rhs) {
+    return lhs.a.sandwich(rhs);
 }
 public extension Horizon {
     public Motor sandwich(Line other) {
@@ -372,6 +468,10 @@ public extension Horizon {
         ).geometric_product(this.reverse());
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(SandwichInfixPartial<Horizon> lhs, Motor rhs) {
+    return lhs.a.sandwich(rhs);
+}
 public extension Horizon {
     public Motor sandwich(Motor other) {
         return Flector(
@@ -381,6 +481,10 @@ public extension Horizon {
             float4(this.e321) * float4(other.group0.xyz, other.scalar)
         ).geometric_product(this.reverse());
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(SandwichInfixPartial<Horizon> lhs, MultiVector rhs) {
+    return lhs.a.sandwich(rhs);
 }
 public extension Horizon {
     public MultiVector sandwich(MultiVector other) {
@@ -398,6 +502,10 @@ public extension Horizon {
         ).geometric_product(this.reverse());
     }
 }
+// Fancy infix trick (second half)
+public Origin operator /(SandwichInfixPartial<Horizon> lhs, Origin rhs) {
+    return lhs.a.sandwich(rhs);
+}
 public extension Horizon {
     public Origin sandwich(Origin other) {
         return AntiScalar(
@@ -405,6 +513,10 @@ public extension Horizon {
             this.e321 * other.e4 * -1.0
         ).geometric_product(this.reverse());
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(SandwichInfixPartial<Horizon> lhs, Plane rhs) {
+    return lhs.a.sandwich(rhs);
 }
 public extension Horizon {
     public Flector sandwich(Plane other) {
@@ -416,6 +528,10 @@ public extension Horizon {
         ).geometric_product(this.reverse());
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(SandwichInfixPartial<Horizon> lhs, Point rhs) {
+    return lhs.a.sandwich(rhs);
+}
 public extension Horizon {
     public Flector sandwich(Point other) {
         return Motor(
@@ -426,6 +542,10 @@ public extension Horizon {
         ).geometric_product(this.reverse());
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(SandwichInfixPartial<Horizon> lhs, Scalar rhs) {
+    return lhs.a.sandwich(rhs);
+}
 public extension Horizon {
     public Scalar sandwich(Scalar other) {
         return Horizon(
@@ -434,17 +554,13 @@ public extension Horizon {
         ).geometric_product(this.reverse());
     }
 }
-public extension Line {
-    // Fancy infix trick (first half)
-    public SandwichInfixPartial<Line> operator /(SandwichInfix rhs) {
-        return SandwichInfixPartial<Line>(this);
-    }
+// Fancy infix trick (first half)
+public SandwichInfixPartial<Line> operator /(Line lhs, SandwichInfix rhs) {
+    return SandwichInfixPartial<Line>(lhs);
 }
-public extension SandwichInfixPartial<Line> {
-    // Fancy infix trick (second half)
-    public Motor operator /(AntiScalar rhs) {
-        return this.a.sandwich(rhs);
-    }
+// Fancy infix trick (second half)
+public Motor operator /(SandwichInfixPartial<Line> lhs, AntiScalar rhs) {
+    return lhs.a.sandwich(rhs);
 }
 public extension Line {
     public Motor sandwich(AntiScalar other) {
@@ -456,6 +572,10 @@ public extension Line {
         ).geometric_product(this.reverse());
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(SandwichInfixPartial<Line> lhs, DualNum rhs) {
+    return lhs.a.sandwich(rhs);
+}
 public extension Line {
     public Motor sandwich(DualNum other) {
         return Line(
@@ -465,6 +585,10 @@ public extension Line {
             float3(other.scalar) * this.group1.xyz
         ).geometric_product(this.reverse());
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(SandwichInfixPartial<Line> lhs, Flector rhs) {
+    return lhs.a.sandwich(rhs);
 }
 public extension Line {
     public Flector sandwich(Flector other) {
@@ -476,6 +600,10 @@ public extension Line {
         ).geometric_product(this.reverse());
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(SandwichInfixPartial<Line> lhs, Horizon rhs) {
+    return lhs.a.sandwich(rhs);
+}
 public extension Line {
     public Flector sandwich(Horizon other) {
         return Flector(
@@ -485,6 +613,10 @@ public extension Line {
             float4((float3(other.e321) * this.group0.xyz * float3(-1.0)), 0.0)
         ).geometric_product(this.reverse());
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(SandwichInfixPartial<Line> lhs, Line rhs) {
+    return lhs.a.sandwich(rhs);
 }
 public extension Line {
     public Motor sandwich(Line other) {
@@ -496,6 +628,10 @@ public extension Line {
         ).geometric_product(this.reverse());
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(SandwichInfixPartial<Line> lhs, Motor rhs) {
+    return lhs.a.sandwich(rhs);
+}
 public extension Line {
     public Motor sandwich(Motor other) {
         return Motor(
@@ -505,6 +641,10 @@ public extension Line {
             float4((this.e23 * other.scalar) + (this.e12 * other.e31), (this.e23 * other.e12) + (this.e31 * other.scalar), (this.e31 * other.e23) + (this.e12 * other.scalar), -(this.e31 * other.e31) - (this.e12 * other.e12)) - (other.group1.zxyx * float4(this.group1.xyz.yzx, this.e23))
         ).geometric_product(this.reverse());
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(SandwichInfixPartial<Line> lhs, MultiVector rhs) {
+    return lhs.a.sandwich(rhs);
 }
 public extension Line {
     public MultiVector sandwich(MultiVector other) {
@@ -522,6 +662,10 @@ public extension Line {
         ).geometric_product(this.reverse());
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(SandwichInfixPartial<Line> lhs, Origin rhs) {
+    return lhs.a.sandwich(rhs);
+}
 public extension Line {
     public Flector sandwich(Origin other) {
         return Plane(
@@ -529,6 +673,10 @@ public extension Line {
             float4((float3(other.e4) * this.group1.xyz), 0.0)
         ).geometric_product(this.reverse());
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(SandwichInfixPartial<Line> lhs, Plane rhs) {
+    return lhs.a.sandwich(rhs);
 }
 public extension Line {
     public Flector sandwich(Plane other) {
@@ -540,6 +688,10 @@ public extension Line {
         ).geometric_product(this.reverse());
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(SandwichInfixPartial<Line> lhs, Point rhs) {
+    return lhs.a.sandwich(rhs);
+}
 public extension Line {
     public Flector sandwich(Point other) {
         return Flector(
@@ -549,6 +701,10 @@ public extension Line {
             float4((this.e42 * other.e3) + (this.e23 * other.e4), (this.e43 * other.e1) + (this.e31 * other.e4), (this.e41 * other.e2) + (this.e12 * other.e4), -(this.e31 * other.e2) - (this.e12 * other.e3)) - (other.group0.yzxx * float4(this.group0.xyz.zxy, this.e23))
         ).geometric_product(this.reverse());
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(SandwichInfixPartial<Line> lhs, Scalar rhs) {
+    return lhs.a.sandwich(rhs);
 }
 public extension Line {
     public Motor sandwich(Scalar other) {
@@ -560,17 +716,13 @@ public extension Line {
         ).geometric_product(this.reverse());
     }
 }
-public extension Motor {
-    // Fancy infix trick (first half)
-    public SandwichInfixPartial<Motor> operator /(SandwichInfix rhs) {
-        return SandwichInfixPartial<Motor>(this);
-    }
+// Fancy infix trick (first half)
+public SandwichInfixPartial<Motor> operator /(Motor lhs, SandwichInfix rhs) {
+    return SandwichInfixPartial<Motor>(lhs);
 }
-public extension SandwichInfixPartial<Motor> {
-    // Fancy infix trick (second half)
-    public Motor operator /(AntiScalar rhs) {
-        return this.a.sandwich(rhs);
-    }
+// Fancy infix trick (second half)
+public Motor operator /(SandwichInfixPartial<Motor> lhs, AntiScalar rhs) {
+    return lhs.a.sandwich(rhs);
 }
 public extension Motor {
     public Motor sandwich(AntiScalar other) {
@@ -582,6 +734,10 @@ public extension Motor {
         ).geometric_product(this.reverse());
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(SandwichInfixPartial<Motor> lhs, DualNum rhs) {
+    return lhs.a.sandwich(rhs);
+}
 public extension Motor {
     public Motor sandwich(DualNum other) {
         return Motor(
@@ -591,6 +747,10 @@ public extension Motor {
             float4(other.scalar) * this.group1
         ).geometric_product(this.reverse());
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(SandwichInfixPartial<Motor> lhs, Flector rhs) {
+    return lhs.a.sandwich(rhs);
 }
 public extension Motor {
     public Flector sandwich(Flector other) {
@@ -602,6 +762,10 @@ public extension Motor {
         ).geometric_product(this.reverse());
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(SandwichInfixPartial<Motor> lhs, Horizon rhs) {
+    return lhs.a.sandwich(rhs);
+}
 public extension Motor {
     public Flector sandwich(Horizon other) {
         return Flector(
@@ -611,6 +775,10 @@ public extension Motor {
             float4(other.e321) * float4(this.group0.xyz, this.scalar) * float4(-1.0, -1.0, -1.0, 1.0)
         ).geometric_product(this.reverse());
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(SandwichInfixPartial<Motor> lhs, Line rhs) {
+    return lhs.a.sandwich(rhs);
 }
 public extension Motor {
     public Motor sandwich(Line other) {
@@ -622,6 +790,10 @@ public extension Motor {
         ).geometric_product(this.reverse());
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(SandwichInfixPartial<Motor> lhs, Motor rhs) {
+    return lhs.a.sandwich(rhs);
+}
 public extension Motor {
     public Motor sandwich(Motor other) {
         return Motor(
@@ -631,6 +803,10 @@ public extension Motor {
             float4((other.e31 * this.e12) + (other.scalar * this.e23), (other.e12 * this.e23) + (other.scalar * this.e31), (other.e12 * this.scalar) + (other.scalar * this.e12), -(other.e31 * this.e31) - (other.e12 * this.e12)) + (other.group1.xyxw * this.group1.wwyw) - (other.group1.zxyx * this.group1.yzxx)
         ).geometric_product(this.reverse());
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(SandwichInfixPartial<Motor> lhs, MultiVector rhs) {
+    return lhs.a.sandwich(rhs);
 }
 public extension Motor {
     public MultiVector sandwich(MultiVector other) {
@@ -648,6 +824,10 @@ public extension Motor {
         ).geometric_product(this.reverse());
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(SandwichInfixPartial<Motor> lhs, Origin rhs) {
+    return lhs.a.sandwich(rhs);
+}
 public extension Motor {
     public Flector sandwich(Origin other) {
         return Flector(
@@ -657,6 +837,10 @@ public extension Motor {
             float4((float3(other.e4) * this.group1.xyz), 0.0)
         ).geometric_product(this.reverse());
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(SandwichInfixPartial<Motor> lhs, Plane rhs) {
+    return lhs.a.sandwich(rhs);
 }
 public extension Motor {
     public Flector sandwich(Plane other) {
@@ -668,6 +852,10 @@ public extension Motor {
         ).geometric_product(this.reverse());
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(SandwichInfixPartial<Motor> lhs, Point rhs) {
+    return lhs.a.sandwich(rhs);
+}
 public extension Motor {
     public Flector sandwich(Point other) {
         return Flector(
@@ -677,6 +865,10 @@ public extension Motor {
             float4((this.e42 * other.e3) + (this.e23 * other.e4), (this.e43 * other.e1) + (this.e31 * other.e4), (this.e41 * other.e2) + (this.e12 * other.e4), this.e12 * other.e3 * -1.0) - (other.group0.xyzy * float4(this.group0.www, this.e31)) - (other.group0.yzxx * float4(this.group0.zxy, this.e23))
         ).geometric_product(this.reverse());
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(SandwichInfixPartial<Motor> lhs, Scalar rhs) {
+    return lhs.a.sandwich(rhs);
 }
 public extension Motor {
     public Motor sandwich(Scalar other) {
@@ -688,17 +880,13 @@ public extension Motor {
         ).geometric_product(this.reverse());
     }
 }
-public extension MultiVector {
-    // Fancy infix trick (first half)
-    public SandwichInfixPartial<MultiVector> operator /(SandwichInfix rhs) {
-        return SandwichInfixPartial<MultiVector>(this);
-    }
+// Fancy infix trick (first half)
+public SandwichInfixPartial<MultiVector> operator /(MultiVector lhs, SandwichInfix rhs) {
+    return SandwichInfixPartial<MultiVector>(lhs);
 }
-public extension SandwichInfixPartial<MultiVector> {
-    // Fancy infix trick (second half)
-    public MultiVector operator /(AntiScalar rhs) {
-        return this.a.sandwich(rhs);
-    }
+// Fancy infix trick (second half)
+public MultiVector operator /(SandwichInfixPartial<MultiVector> lhs, AntiScalar rhs) {
+    return lhs.a.sandwich(rhs);
 }
 public extension MultiVector {
     public MultiVector sandwich(AntiScalar other) {
@@ -716,6 +904,10 @@ public extension MultiVector {
         ).geometric_product(this.reverse());
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(SandwichInfixPartial<MultiVector> lhs, DualNum rhs) {
+    return lhs.a.sandwich(rhs);
+}
 public extension MultiVector {
     public MultiVector sandwich(DualNum other) {
         return MultiVector(
@@ -731,6 +923,10 @@ public extension MultiVector {
             float4(((float3(other.scalar) * this.group4.xyz) + (float3(other.e1234) * this.group1.xyz)), other.scalar * this.e321)
         ).geometric_product(this.reverse());
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(SandwichInfixPartial<MultiVector> lhs, Flector rhs) {
+    return lhs.a.sandwich(rhs);
 }
 public extension MultiVector {
     public MultiVector sandwich(Flector other) {
@@ -748,6 +944,10 @@ public extension MultiVector {
         ).geometric_product(this.reverse());
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(SandwichInfixPartial<MultiVector> lhs, Horizon rhs) {
+    return lhs.a.sandwich(rhs);
+}
 public extension MultiVector {
     public MultiVector sandwich(Horizon other) {
         return MultiVector(
@@ -763,6 +963,10 @@ public extension MultiVector {
             float4(other.e321) * float4(this.group2.xyz, this.scalar) * float4(-1.0, -1.0, -1.0, 1.0)
         ).geometric_product(this.reverse());
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(SandwichInfixPartial<MultiVector> lhs, Line rhs) {
+    return lhs.a.sandwich(rhs);
 }
 public extension MultiVector {
     public MultiVector sandwich(Line other) {
@@ -780,6 +984,10 @@ public extension MultiVector {
         ).geometric_product(this.reverse());
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(SandwichInfixPartial<MultiVector> lhs, Motor rhs) {
+    return lhs.a.sandwich(rhs);
+}
 public extension MultiVector {
     public MultiVector sandwich(Motor other) {
         return MultiVector(
@@ -795,6 +1003,10 @@ public extension MultiVector {
             float4((other.e42 * this.e3) + (other.e1234 * this.e1) + (other.e23 * this.e4) + (other.e31 * this.e412) + (other.scalar * this.e423), (other.e43 * this.e1) + (other.e1234 * this.e2) + (other.e31 * this.e4) + (other.e12 * this.e423) + (other.scalar * this.e431), (other.e43 * this.e321) + (other.e1234 * this.e3) + (other.e23 * this.e431) + (other.e12 * this.e4) + (other.scalar * this.e412), other.e12 * this.e3 * -1.0) + (float4(this.group4.ww, this.e2, this.e321) * float4(other.group0.xyx, other.scalar)) - (other.group1.zxyy * float4(this.group4.yzx, this.e2)) - (this.group1.yzxx * float4(other.group0.zxy, other.e23))
         ).geometric_product(this.reverse());
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(SandwichInfixPartial<MultiVector> lhs, MultiVector rhs) {
+    return lhs.a.sandwich(rhs);
 }
 public extension MultiVector {
     public MultiVector sandwich(MultiVector other) {
@@ -812,6 +1024,10 @@ public extension MultiVector {
         ).geometric_product(this.reverse());
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(SandwichInfixPartial<MultiVector> lhs, Origin rhs) {
+    return lhs.a.sandwich(rhs);
+}
 public extension MultiVector {
     public MultiVector sandwich(Origin other) {
         return MultiVector(
@@ -827,6 +1043,10 @@ public extension MultiVector {
             float4((float3(other.e4) * this.group3.xyz), 0.0)
         ).geometric_product(this.reverse());
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(SandwichInfixPartial<MultiVector> lhs, Plane rhs) {
+    return lhs.a.sandwich(rhs);
 }
 public extension MultiVector {
     public MultiVector sandwich(Plane other) {
@@ -844,6 +1064,10 @@ public extension MultiVector {
         ).geometric_product(this.reverse());
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(SandwichInfixPartial<MultiVector> lhs, Point rhs) {
+    return lhs.a.sandwich(rhs);
+}
 public extension MultiVector {
     public MultiVector sandwich(Point other) {
         return MultiVector(
@@ -859,6 +1083,10 @@ public extension MultiVector {
             float4((this.e42 * other.e3) + (this.e23 * other.e4), (this.e43 * other.e1) + (this.e31 * other.e4), (this.e41 * other.e2) + (this.e12 * other.e4), this.e12 * other.e3 * -1.0) - (other.group0.xyzx * float4(this.group0.xy.yy, this.e1234, this.e23)) - (other.group0.yzxy * float4(this.group2.xyz.zxy, this.e31))
         ).geometric_product(this.reverse());
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(SandwichInfixPartial<MultiVector> lhs, Scalar rhs) {
+    return lhs.a.sandwich(rhs);
 }
 public extension MultiVector {
     public MultiVector sandwich(Scalar other) {
@@ -876,17 +1104,13 @@ public extension MultiVector {
         ).geometric_product(this.reverse());
     }
 }
-public extension Origin {
-    // Fancy infix trick (first half)
-    public SandwichInfixPartial<Origin> operator /(SandwichInfix rhs) {
-        return SandwichInfixPartial<Origin>(this);
-    }
+// Fancy infix trick (first half)
+public SandwichInfixPartial<Origin> operator /(Origin lhs, SandwichInfix rhs) {
+    return SandwichInfixPartial<Origin>(lhs);
 }
-public extension SandwichInfixPartial<Origin> {
-    // Fancy infix trick (second half)
-    public Flector operator /(Flector rhs) {
-        return this.a.sandwich(rhs);
-    }
+// Fancy infix trick (second half)
+public Flector operator /(SandwichInfixPartial<Origin> lhs, Flector rhs) {
+    return lhs.a.sandwich(rhs);
 }
 public extension Origin {
     public Flector sandwich(Flector other) {
@@ -898,6 +1122,10 @@ public extension Origin {
         ).geometric_product(this.reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(SandwichInfixPartial<Origin> lhs, Line rhs) {
+    return lhs.a.sandwich(rhs);
+}
 public extension Origin {
     public AntiScalar sandwich(Line other) {
         return Plane(
@@ -905,6 +1133,10 @@ public extension Origin {
             float4((float3(this.e4) * other.group1.xyz), 0.0)
         ).geometric_product(this.reverse());
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(SandwichInfixPartial<Origin> lhs, Motor rhs) {
+    return lhs.a.sandwich(rhs);
 }
 public extension Origin {
     public Motor sandwich(Motor other) {
@@ -915,6 +1147,10 @@ public extension Origin {
             float4((float3(this.e4) * other.group1.xyz), 0.0)
         ).geometric_product(this.reverse());
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(SandwichInfixPartial<Origin> lhs, MultiVector rhs) {
+    return lhs.a.sandwich(rhs);
 }
 public extension Origin {
     public MultiVector sandwich(MultiVector other) {
@@ -932,6 +1168,10 @@ public extension Origin {
         ).geometric_product(this.reverse());
     }
 }
+// Fancy infix trick (second half)
+public Plane operator /(SandwichInfixPartial<Origin> lhs, Point rhs) {
+    return lhs.a.sandwich(rhs);
+}
 public extension Origin {
     public Plane sandwich(Point other) {
         return Line(
@@ -942,17 +1182,13 @@ public extension Origin {
         ).geometric_product(this.reverse());
     }
 }
-public extension Plane {
-    // Fancy infix trick (first half)
-    public SandwichInfixPartial<Plane> operator /(SandwichInfix rhs) {
-        return SandwichInfixPartial<Plane>(this);
-    }
+// Fancy infix trick (first half)
+public SandwichInfixPartial<Plane> operator /(Plane lhs, SandwichInfix rhs) {
+    return SandwichInfixPartial<Plane>(lhs);
 }
-public extension SandwichInfixPartial<Plane> {
-    // Fancy infix trick (second half)
-    public AntiScalar operator /(AntiScalar rhs) {
-        return this.a.sandwich(rhs);
-    }
+// Fancy infix trick (second half)
+public AntiScalar operator /(SandwichInfixPartial<Plane> lhs, AntiScalar rhs) {
+    return lhs.a.sandwich(rhs);
 }
 public extension Plane {
     public AntiScalar sandwich(AntiScalar other) {
@@ -961,6 +1197,10 @@ public extension Plane {
             other.e1234 * this.e321
         ).geometric_product(this.reverse());
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(SandwichInfixPartial<Plane> lhs, DualNum rhs) {
+    return lhs.a.sandwich(rhs);
 }
 public extension Plane {
     public Motor sandwich(DualNum other) {
@@ -972,6 +1212,10 @@ public extension Plane {
         ).geometric_product(this.reverse());
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(SandwichInfixPartial<Plane> lhs, Flector rhs) {
+    return lhs.a.sandwich(rhs);
+}
 public extension Plane {
     public Flector sandwich(Flector other) {
         return Motor(
@@ -981,6 +1225,10 @@ public extension Plane {
             float4(this.e321) * float4(other.group0.xyz, other.e321) * float4(-1.0)
         ).geometric_product(this.reverse());
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(SandwichInfixPartial<Plane> lhs, Horizon rhs) {
+    return lhs.a.sandwich(rhs);
 }
 public extension Plane {
     public Flector sandwich(Horizon other) {
@@ -992,6 +1240,10 @@ public extension Plane {
         ).geometric_product(this.reverse());
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(SandwichInfixPartial<Plane> lhs, Line rhs) {
+    return lhs.a.sandwich(rhs);
+}
 public extension Plane {
     public Motor sandwich(Line other) {
         return Flector(
@@ -1002,6 +1254,10 @@ public extension Plane {
         ).geometric_product(this.reverse());
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(SandwichInfixPartial<Plane> lhs, Motor rhs) {
+    return lhs.a.sandwich(rhs);
+}
 public extension Plane {
     public Motor sandwich(Motor other) {
         return Flector(
@@ -1011,6 +1267,10 @@ public extension Plane {
             float4(((float3(other.scalar) * this.group0.xyz) + (float3(this.e321) * other.group0.xyz) + (other.group1.yzx * this.group0.zxy) - (other.group1.zxy * this.group0.yzx)), other.scalar * this.e321)
         ).geometric_product(this.reverse());
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(SandwichInfixPartial<Plane> lhs, MultiVector rhs) {
+    return lhs.a.sandwich(rhs);
 }
 public extension Plane {
     public MultiVector sandwich(MultiVector other) {
@@ -1028,6 +1288,10 @@ public extension Plane {
         ).geometric_product(this.reverse());
     }
 }
+// Fancy infix trick (second half)
+public Origin operator /(SandwichInfixPartial<Plane> lhs, Origin rhs) {
+    return lhs.a.sandwich(rhs);
+}
 public extension Plane {
     public Origin sandwich(Origin other) {
         return AntiScalar(
@@ -1035,6 +1299,10 @@ public extension Plane {
             other.e4 * this.e321 * -1.0
         ).geometric_product(this.reverse());
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(SandwichInfixPartial<Plane> lhs, Plane rhs) {
+    return lhs.a.sandwich(rhs);
 }
 public extension Plane {
     public Flector sandwich(Plane other) {
@@ -1046,6 +1314,10 @@ public extension Plane {
         ).geometric_product(this.reverse());
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(SandwichInfixPartial<Plane> lhs, Point rhs) {
+    return lhs.a.sandwich(rhs);
+}
 public extension Plane {
     public Flector sandwich(Point other) {
         return Motor(
@@ -1056,6 +1328,10 @@ public extension Plane {
         ).geometric_product(this.reverse());
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(SandwichInfixPartial<Plane> lhs, Scalar rhs) {
+    return lhs.a.sandwich(rhs);
+}
 public extension Plane {
     public Motor sandwich(Scalar other) {
         return Plane(
@@ -1064,17 +1340,13 @@ public extension Plane {
         ).geometric_product(this.reverse());
     }
 }
-public extension Point {
-    // Fancy infix trick (first half)
-    public SandwichInfixPartial<Point> operator /(SandwichInfix rhs) {
-        return SandwichInfixPartial<Point>(this);
-    }
+// Fancy infix trick (first half)
+public SandwichInfixPartial<Point> operator /(Point lhs, SandwichInfix rhs) {
+    return SandwichInfixPartial<Point>(lhs);
 }
-public extension SandwichInfixPartial<Point> {
-    // Fancy infix trick (second half)
-    public Motor operator /(AntiScalar rhs) {
-        return this.a.sandwich(rhs);
-    }
+// Fancy infix trick (second half)
+public Motor operator /(SandwichInfixPartial<Point> lhs, AntiScalar rhs) {
+    return lhs.a.sandwich(rhs);
 }
 public extension Point {
     public Motor sandwich(AntiScalar other) {
@@ -1083,6 +1355,10 @@ public extension Point {
             float4((float3(other.e1234) * this.group0.xyz), 0.0)
         ).geometric_product(this.reverse());
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(SandwichInfixPartial<Point> lhs, DualNum rhs) {
+    return lhs.a.sandwich(rhs);
 }
 public extension Point {
     public Motor sandwich(DualNum other) {
@@ -1094,6 +1370,10 @@ public extension Point {
         ).geometric_product(this.reverse());
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(SandwichInfixPartial<Point> lhs, Flector rhs) {
+    return lhs.a.sandwich(rhs);
+}
 public extension Point {
     public Flector sandwich(Flector other) {
         return Motor(
@@ -1103,6 +1383,10 @@ public extension Point {
             float4(-(other.e2 * this.e3) - (other.e321 * this.e1), -(other.e3 * this.e1) - (other.e321 * this.e2), -(other.e1 * this.e2) - (other.e321 * this.e3), (other.e2 * this.e2) + (other.e3 * this.e3)) + (other.group0.zxyx * this.group0.yzxx)
         ).geometric_product(this.reverse());
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(SandwichInfixPartial<Point> lhs, Horizon rhs) {
+    return lhs.a.sandwich(rhs);
 }
 public extension Point {
     public Flector sandwich(Horizon other) {
@@ -1114,6 +1398,10 @@ public extension Point {
         ).geometric_product(this.reverse());
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(SandwichInfixPartial<Point> lhs, Line rhs) {
+    return lhs.a.sandwich(rhs);
+}
 public extension Point {
     public Motor sandwich(Line other) {
         return Flector(
@@ -1124,6 +1412,10 @@ public extension Point {
         ).geometric_product(this.reverse());
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(SandwichInfixPartial<Point> lhs, Motor rhs) {
+    return lhs.a.sandwich(rhs);
+}
 public extension Point {
     public Motor sandwich(Motor other) {
         return Flector(
@@ -1133,6 +1425,10 @@ public extension Point {
             float4((other.e42 * this.e3) + (other.e1234 * this.e1) + (other.e23 * this.e4), (other.e43 * this.e1) + (other.e1234 * this.e2) + (other.e31 * this.e4), (other.e41 * this.e2) + (other.e1234 * this.e3) + (other.e12 * this.e4), -(other.e31 * this.e2) - (other.e12 * this.e3)) - (this.group0.yzxx * float4(other.group0.zxy, other.e23))
         ).geometric_product(this.reverse());
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(SandwichInfixPartial<Point> lhs, MultiVector rhs) {
+    return lhs.a.sandwich(rhs);
 }
 public extension Point {
     public MultiVector sandwich(MultiVector other) {
@@ -1150,6 +1446,10 @@ public extension Point {
         ).geometric_product(this.reverse());
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(SandwichInfixPartial<Point> lhs, Origin rhs) {
+    return lhs.a.sandwich(rhs);
+}
 public extension Point {
     public Flector sandwich(Origin other) {
         return Line(
@@ -1159,6 +1459,10 @@ public extension Point {
             float3(0.0)
         ).geometric_product(this.reverse());
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(SandwichInfixPartial<Point> lhs, Plane rhs) {
+    return lhs.a.sandwich(rhs);
 }
 public extension Point {
     public Flector sandwich(Plane other) {
@@ -1170,6 +1474,10 @@ public extension Point {
         ).geometric_product(this.reverse());
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(SandwichInfixPartial<Point> lhs, Point rhs) {
+    return lhs.a.sandwich(rhs);
+}
 public extension Point {
     public Flector sandwich(Point other) {
         return Motor(
@@ -1180,6 +1488,10 @@ public extension Point {
         ).geometric_product(this.reverse());
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(SandwichInfixPartial<Point> lhs, Scalar rhs) {
+    return lhs.a.sandwich(rhs);
+}
 public extension Point {
     public Motor sandwich(Scalar other) {
         return Point(
@@ -1188,17 +1500,13 @@ public extension Point {
         ).geometric_product(this.reverse());
     }
 }
-public extension Scalar {
-    // Fancy infix trick (first half)
-    public SandwichInfixPartial<Scalar> operator /(SandwichInfix rhs) {
-        return SandwichInfixPartial<Scalar>(this);
-    }
+// Fancy infix trick (first half)
+public SandwichInfixPartial<Scalar> operator /(Scalar lhs, SandwichInfix rhs) {
+    return SandwichInfixPartial<Scalar>(lhs);
 }
-public extension SandwichInfixPartial<Scalar> {
-    // Fancy infix trick (second half)
-    public AntiScalar operator /(AntiScalar rhs) {
-        return this.a.sandwich(rhs);
-    }
+// Fancy infix trick (second half)
+public AntiScalar operator /(SandwichInfixPartial<Scalar> lhs, AntiScalar rhs) {
+    return lhs.a.sandwich(rhs);
 }
 public extension Scalar {
     public AntiScalar sandwich(AntiScalar other) {
@@ -1208,6 +1516,10 @@ public extension Scalar {
         ).geometric_product(this.reverse());
     }
 }
+// Fancy infix trick (second half)
+public DualNum operator /(SandwichInfixPartial<Scalar> lhs, DualNum rhs) {
+    return lhs.a.sandwich(rhs);
+}
 public extension Scalar {
     public DualNum sandwich(DualNum other) {
         return DualNum(
@@ -1215,6 +1527,10 @@ public extension Scalar {
             float2(this.scalar) * other.group0.xy
         ).geometric_product(this.reverse());
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(SandwichInfixPartial<Scalar> lhs, Flector rhs) {
+    return lhs.a.sandwich(rhs);
 }
 public extension Scalar {
     public Flector sandwich(Flector other) {
@@ -1226,6 +1542,10 @@ public extension Scalar {
         ).geometric_product(this.reverse());
     }
 }
+// Fancy infix trick (second half)
+public Horizon operator /(SandwichInfixPartial<Scalar> lhs, Horizon rhs) {
+    return lhs.a.sandwich(rhs);
+}
 public extension Scalar {
     public Horizon sandwich(Horizon other) {
         return Horizon(
@@ -1233,6 +1553,10 @@ public extension Scalar {
             other.e321 * this.scalar
         ).geometric_product(this.reverse());
     }
+}
+// Fancy infix trick (second half)
+public Line operator /(SandwichInfixPartial<Scalar> lhs, Line rhs) {
+    return lhs.a.sandwich(rhs);
 }
 public extension Scalar {
     public Line sandwich(Line other) {
@@ -1244,6 +1568,10 @@ public extension Scalar {
         ).geometric_product(this.reverse());
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(SandwichInfixPartial<Scalar> lhs, Motor rhs) {
+    return lhs.a.sandwich(rhs);
+}
 public extension Scalar {
     public Motor sandwich(Motor other) {
         return Motor(
@@ -1253,6 +1581,10 @@ public extension Scalar {
             float4(this.scalar) * other.group1
         ).geometric_product(this.reverse());
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(SandwichInfixPartial<Scalar> lhs, MultiVector rhs) {
+    return lhs.a.sandwich(rhs);
 }
 public extension Scalar {
     public MultiVector sandwich(MultiVector other) {
@@ -1270,6 +1602,10 @@ public extension Scalar {
         ).geometric_product(this.reverse());
     }
 }
+// Fancy infix trick (second half)
+public Origin operator /(SandwichInfixPartial<Scalar> lhs, Origin rhs) {
+    return lhs.a.sandwich(rhs);
+}
 public extension Scalar {
     public Origin sandwich(Origin other) {
         return Origin(
@@ -1277,6 +1613,10 @@ public extension Scalar {
             other.e4 * this.scalar
         ).geometric_product(this.reverse());
     }
+}
+// Fancy infix trick (second half)
+public Plane operator /(SandwichInfixPartial<Scalar> lhs, Plane rhs) {
+    return lhs.a.sandwich(rhs);
 }
 public extension Scalar {
     public Plane sandwich(Plane other) {
@@ -1286,6 +1626,10 @@ public extension Scalar {
         ).geometric_product(this.reverse());
     }
 }
+// Fancy infix trick (second half)
+public Point operator /(SandwichInfixPartial<Scalar> lhs, Point rhs) {
+    return lhs.a.sandwich(rhs);
+}
 public extension Scalar {
     public Point sandwich(Point other) {
         return Point(
@@ -1293,6 +1637,10 @@ public extension Scalar {
             float4(this.scalar) * other.group0
         ).geometric_product(this.reverse());
     }
+}
+// Fancy infix trick (second half)
+public Scalar operator /(SandwichInfixPartial<Scalar> lhs, Scalar rhs) {
+    return lhs.a.sandwich(rhs);
 }
 public extension Scalar {
     public Scalar sandwich(Scalar other) {

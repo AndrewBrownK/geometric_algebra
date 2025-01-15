@@ -6,7 +6,7 @@ public struct Scalar {
     // scalar, 0, 0, 0
     internal float4 group0;
 
-    __init(
+    public __init(
         float scalar
     ) {
         group0 = float4(scalar, 0.0, 0.0, 0.0);

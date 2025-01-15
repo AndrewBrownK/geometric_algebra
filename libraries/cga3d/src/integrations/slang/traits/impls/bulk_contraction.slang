@@ -1,16 +1,12 @@
 implementing cga3d;
 using traits;
-public extension AntiCircleRotor {
-    // Fancy infix trick (first half)
-    public BulkContractionInfixPartial<AntiCircleRotor> operator /(BulkContractionInfix rhs) {
-        return BulkContractionInfixPartial<AntiCircleRotor>(this);
-    }
+// Fancy infix trick (first half)
+public BulkContractionInfixPartial<AntiCircleRotor> operator /(AntiCircleRotor lhs, BulkContractionInfix rhs) {
+    return BulkContractionInfixPartial<AntiCircleRotor>(lhs);
 }
-public extension BulkContractionInfixPartial<AntiCircleRotor> {
-    // Fancy infix trick (second half)
-    public AntiCircleRotor operator /(AntiCircleRotor rhs) {
-        return this.a.bulk_contraction(rhs);
-    }
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(BulkContractionInfixPartial<AntiCircleRotor> lhs, AntiCircleRotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiCircleRotor {
     public AntiCircleRotor bulk_contraction(AntiCircleRotor other) {
@@ -32,6 +28,10 @@ public extension AntiCircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public RoundPoint operator /(BulkContractionInfixPartial<AntiCircleRotor> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiCircleRotor {
     public RoundPoint bulk_contraction(AntiDipoleInversion other) {
         DipoleInversion right_dual = DipoleInversion(
@@ -52,6 +52,10 @@ public extension AntiCircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(BulkContractionInfixPartial<AntiCircleRotor> lhs, AntiDualNum rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiCircleRotor {
     public AntiCircleRotor bulk_contraction(AntiDualNum other) {
         DualNum right_dual = DualNum(
@@ -67,6 +71,10 @@ public extension AntiCircleRotor {
             float4(right_dual.e12345) * this.group2
         );
     }
+}
+// Fancy infix trick (second half)
+public RoundPoint operator /(BulkContractionInfixPartial<AntiCircleRotor> lhs, AntiFlector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiCircleRotor {
     public RoundPoint bulk_contraction(AntiFlector other) {
@@ -84,6 +92,10 @@ public extension AntiCircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<AntiCircleRotor> lhs, AntiLine rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiCircleRotor {
     public Scalar bulk_contraction(AntiLine other) {
         Line right_dual = Line(
@@ -97,6 +109,10 @@ public extension AntiCircleRotor {
             -(this.e41 * right_dual.e235) - (this.e42 * right_dual.e315) - (this.e43 * right_dual.e125) - (this.e23 * right_dual.e415) - (this.e31 * right_dual.e425) - (this.e12 * right_dual.e435)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(BulkContractionInfixPartial<AntiCircleRotor> lhs, AntiMotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiCircleRotor {
     public AntiCircleRotor bulk_contraction(AntiMotor other) {
@@ -116,6 +132,10 @@ public extension AntiCircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public RoundPoint operator /(BulkContractionInfixPartial<AntiCircleRotor> lhs, AntiPlane rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiCircleRotor {
     public RoundPoint bulk_contraction(AntiPlane other) {
         Plane right_dual = Plane(
@@ -129,6 +149,10 @@ public extension AntiCircleRotor {
             (this.e45 * right_dual.e3215) + (this.e15 * right_dual.e4235) + (this.e25 * right_dual.e4315) + (this.e35 * right_dual.e4125)
         );
     }
+}
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<AntiCircleRotor> lhs, Dipole rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiCircleRotor {
     public Scalar bulk_contraction(Dipole other) {
@@ -145,6 +169,10 @@ public extension AntiCircleRotor {
             -(this.e41 * right_dual.e235) - (this.e42 * right_dual.e315) - (this.e43 * right_dual.e125) - (this.e23 * right_dual.e415) - (this.e31 * right_dual.e425) - (this.e12 * right_dual.e435) - (this.e45 * right_dual.e321) - (this.e15 * right_dual.e423) - (this.e25 * right_dual.e431) - (this.e35 * right_dual.e412)
         );
     }
+}
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<AntiCircleRotor> lhs, DipoleInversion rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiCircleRotor {
     public Scalar bulk_contraction(DipoleInversion other) {
@@ -164,6 +192,10 @@ public extension AntiCircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(BulkContractionInfixPartial<AntiCircleRotor> lhs, DualNum rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiCircleRotor {
     public AntiPlane bulk_contraction(DualNum other) {
         return AntiPlane(
@@ -171,6 +203,10 @@ public extension AntiCircleRotor {
             float4(other.e5 * -1.0) * float4(this.group0.xyz, this.e45)
         );
     }
+}
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<AntiCircleRotor> lhs, FlatPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiCircleRotor {
     public Scalar bulk_contraction(FlatPoint other) {
@@ -183,6 +219,10 @@ public extension AntiCircleRotor {
             -(this.e41 * right_dual.e235) - (this.e42 * right_dual.e315) - (this.e43 * right_dual.e125) - (this.e45 * right_dual.e321)
         );
     }
+}
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<AntiCircleRotor> lhs, Flector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiCircleRotor {
     public Scalar bulk_contraction(Flector other) {
@@ -198,6 +238,10 @@ public extension AntiCircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(BulkContractionInfixPartial<AntiCircleRotor> lhs, Motor rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiCircleRotor {
     public AntiPlane bulk_contraction(Motor other) {
         return AntiPlane(
@@ -205,6 +249,10 @@ public extension AntiCircleRotor {
             float4(float4(other.group1.xyz, other.e5 * -1.0)[3]) * float4(this.group0.xyz, this.e45)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(BulkContractionInfixPartial<AntiCircleRotor> lhs, MultiVector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiCircleRotor {
     public MultiVector bulk_contraction(MultiVector other) {
@@ -258,6 +306,10 @@ public extension AntiCircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public RoundPoint operator /(BulkContractionInfixPartial<AntiCircleRotor> lhs, RoundPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiCircleRotor {
     public RoundPoint bulk_contraction(RoundPoint other) {
         Sphere right_dual = Sphere(
@@ -274,6 +326,10 @@ public extension AntiCircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(BulkContractionInfixPartial<AntiCircleRotor> lhs, Scalar rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiCircleRotor {
     public AntiCircleRotor bulk_contraction(Scalar other) {
         AntiScalar right_dual = AntiScalar(
@@ -289,6 +345,10 @@ public extension AntiCircleRotor {
             float4(right_dual.e12345) * this.group2
         );
     }
+}
+// Fancy infix trick (second half)
+public RoundPoint operator /(BulkContractionInfixPartial<AntiCircleRotor> lhs, VersorEven rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiCircleRotor {
     public RoundPoint bulk_contraction(VersorEven other) {
@@ -309,6 +369,10 @@ public extension AntiCircleRotor {
             (this.e45 * right_dual.e3215) + (this.e15 * right_dual.e4235) + (this.e25 * right_dual.e4315) + (this.e35 * right_dual.e4125)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(BulkContractionInfixPartial<AntiCircleRotor> lhs, VersorOdd rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiCircleRotor {
     public AntiCircleRotor bulk_contraction(VersorOdd other) {
@@ -332,17 +396,13 @@ public extension AntiCircleRotor {
         );
     }
 }
-public extension AntiDipoleInversion {
-    // Fancy infix trick (first half)
-    public BulkContractionInfixPartial<AntiDipoleInversion> operator /(BulkContractionInfix rhs) {
-        return BulkContractionInfixPartial<AntiDipoleInversion>(this);
-    }
+// Fancy infix trick (first half)
+public BulkContractionInfixPartial<AntiDipoleInversion> operator /(AntiDipoleInversion lhs, BulkContractionInfix rhs) {
+    return BulkContractionInfixPartial<AntiDipoleInversion>(lhs);
 }
-public extension BulkContractionInfixPartial<AntiDipoleInversion> {
-    // Fancy infix trick (second half)
-    public AntiDipoleInversion operator /(AntiCircleRotor rhs) {
-        return this.a.bulk_contraction(rhs);
-    }
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(BulkContractionInfixPartial<AntiDipoleInversion> lhs, AntiCircleRotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiDipoleInversion {
     public AntiDipoleInversion bulk_contraction(AntiCircleRotor other) {
@@ -366,6 +426,10 @@ public extension AntiDipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(BulkContractionInfixPartial<AntiDipoleInversion> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiDipoleInversion {
     public AntiCircleRotor bulk_contraction(AntiDipoleInversion other) {
         DipoleInversion right_dual = DipoleInversion(
@@ -388,6 +452,10 @@ public extension AntiDipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(BulkContractionInfixPartial<AntiDipoleInversion> lhs, AntiDualNum rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiDipoleInversion {
     public AntiDipoleInversion bulk_contraction(AntiDualNum other) {
         DualNum right_dual = DualNum(
@@ -406,6 +474,10 @@ public extension AntiDipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<AntiDipoleInversion> lhs, AntiFlatPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiDipoleInversion {
     public Scalar bulk_contraction(AntiFlatPoint other) {
         FlatPoint right_dual = FlatPoint(
@@ -417,6 +489,10 @@ public extension AntiDipoleInversion {
             -(this.e423 * right_dual.e15) - (this.e431 * right_dual.e25) - (this.e412 * right_dual.e35) - (this.e321 * right_dual.e45)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(BulkContractionInfixPartial<AntiDipoleInversion> lhs, AntiFlector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiDipoleInversion {
     public AntiCircleRotor bulk_contraction(AntiFlector other) {
@@ -436,6 +512,10 @@ public extension AntiDipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public RoundPoint operator /(BulkContractionInfixPartial<AntiDipoleInversion> lhs, AntiLine rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiDipoleInversion {
     public RoundPoint bulk_contraction(AntiLine other) {
         Line right_dual = Line(
@@ -451,6 +531,10 @@ public extension AntiDipoleInversion {
             -(this.e415 * right_dual.e235) - (this.e425 * right_dual.e315) - (this.e435 * right_dual.e125) - (this.e235 * right_dual.e415) - (this.e315 * right_dual.e425) - (this.e125 * right_dual.e435)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(BulkContractionInfixPartial<AntiDipoleInversion> lhs, AntiMotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiDipoleInversion {
     public AntiDipoleInversion bulk_contraction(AntiMotor other) {
@@ -472,6 +556,10 @@ public extension AntiDipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(BulkContractionInfixPartial<AntiDipoleInversion> lhs, AntiPlane rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiDipoleInversion {
     public AntiCircleRotor bulk_contraction(AntiPlane other) {
         Plane right_dual = Plane(
@@ -487,6 +575,10 @@ public extension AntiDipoleInversion {
             float4(this.e125 * right_dual.e4315 * -1.0, this.e235 * right_dual.e4125 * -1.0, this.e315 * right_dual.e4235 * -1.0, (this.e2 * right_dual.e4315) + (this.e3 * right_dual.e4125)) + (float4(right_dual.e3215) * float4(this.group1.xyz, this.e4)) + (right_dual.group0.zxyx * float4(this.group2.yzx, this.e1))
         );
     }
+}
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<AntiDipoleInversion> lhs, Circle rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiDipoleInversion {
     public Scalar bulk_contraction(Circle other) {
@@ -504,6 +596,10 @@ public extension AntiDipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<AntiDipoleInversion> lhs, CircleRotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiDipoleInversion {
     public Scalar bulk_contraction(CircleRotor other) {
         AntiCircleRotor right_dual = AntiCircleRotor(
@@ -519,6 +615,10 @@ public extension AntiDipoleInversion {
             -(right_dual.e41 * this.e235) - (right_dual.e42 * this.e315) - (right_dual.e43 * this.e125) - (right_dual.e23 * this.e415) - (right_dual.e31 * this.e425) - (right_dual.e12 * this.e435) - (right_dual.e45 * this.e321) - (right_dual.e15 * this.e423) - (right_dual.e25 * this.e431) - (right_dual.e35 * this.e412)
         );
     }
+}
+// Fancy infix trick (second half)
+public RoundPoint operator /(BulkContractionInfixPartial<AntiDipoleInversion> lhs, Dipole rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiDipoleInversion {
     public RoundPoint bulk_contraction(Dipole other) {
@@ -537,6 +637,10 @@ public extension AntiDipoleInversion {
             -(this.e415 * right_dual.e235) - (this.e425 * right_dual.e315) - (this.e435 * right_dual.e125) - (this.e235 * right_dual.e415) - (this.e315 * right_dual.e425) - (this.e125 * right_dual.e435)
         );
     }
+}
+// Fancy infix trick (second half)
+public RoundPoint operator /(BulkContractionInfixPartial<AntiDipoleInversion> lhs, DipoleInversion rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiDipoleInversion {
     public RoundPoint bulk_contraction(DipoleInversion other) {
@@ -558,6 +662,10 @@ public extension AntiDipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(BulkContractionInfixPartial<AntiDipoleInversion> lhs, DualNum rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiDipoleInversion {
     public AntiMotor bulk_contraction(DualNum other) {
         AntiDualNum right_dual = AntiDualNum(
@@ -572,6 +680,10 @@ public extension AntiDipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(BulkContractionInfixPartial<AntiDipoleInversion> lhs, FlatPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiDipoleInversion {
     public AntiPlane bulk_contraction(FlatPoint other) {
         AntiFlatPoint right_dual = AntiFlatPoint(
@@ -583,6 +695,10 @@ public extension AntiDipoleInversion {
             float4((this.e412 * right_dual.e315) + (this.e415 * right_dual.e321), (this.e423 * right_dual.e125) + (this.e425 * right_dual.e321), (this.e431 * right_dual.e235) + (this.e435 * right_dual.e321), -(this.e425 * right_dual.e315) - (this.e435 * right_dual.e125)) - (right_dual.group0.zxyx * float4(this.group0.xyz.yzx, this.e415))
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiPlane operator /(BulkContractionInfixPartial<AntiDipoleInversion> lhs, Flector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiDipoleInversion {
     public AntiPlane bulk_contraction(Flector other) {
@@ -598,6 +714,10 @@ public extension AntiDipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<AntiDipoleInversion> lhs, Line rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiDipoleInversion {
     public Scalar bulk_contraction(Line other) {
         AntiLine right_dual = AntiLine(
@@ -611,6 +731,10 @@ public extension AntiDipoleInversion {
             -(this.e423 * right_dual.e15) - (this.e431 * right_dual.e25) - (this.e412 * right_dual.e35) - (this.e415 * right_dual.e23) - (this.e425 * right_dual.e31) - (this.e435 * right_dual.e12)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(BulkContractionInfixPartial<AntiDipoleInversion> lhs, Motor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiDipoleInversion {
     public AntiMotor bulk_contraction(Motor other) {
@@ -627,6 +751,10 @@ public extension AntiDipoleInversion {
             float4(float3(1.0), 0.0) * float4(right_dual.group1.www, 0.0) * float4(this.group1.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(BulkContractionInfixPartial<AntiDipoleInversion> lhs, MultiVector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiDipoleInversion {
     public MultiVector bulk_contraction(MultiVector other) {
@@ -680,6 +808,10 @@ public extension AntiDipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(BulkContractionInfixPartial<AntiDipoleInversion> lhs, RoundPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiDipoleInversion {
     public AntiCircleRotor bulk_contraction(RoundPoint other) {
         Sphere right_dual = Sphere(
@@ -698,6 +830,10 @@ public extension AntiDipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(BulkContractionInfixPartial<AntiDipoleInversion> lhs, Scalar rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiDipoleInversion {
     public AntiDipoleInversion bulk_contraction(Scalar other) {
         AntiScalar right_dual = AntiScalar(
@@ -715,6 +851,10 @@ public extension AntiDipoleInversion {
             float4(right_dual.e12345) * this.group3
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(BulkContractionInfixPartial<AntiDipoleInversion> lhs, VersorEven rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiDipoleInversion {
     public AntiCircleRotor bulk_contraction(VersorEven other) {
@@ -737,6 +877,10 @@ public extension AntiDipoleInversion {
             (float4(right_dual.e3215) * float4(this.group1.xyz, this.e4)) + (right_dual.group3.zxyx * float4(this.group2.yzx, this.e1)) + float4(float3(0.0), (this.e2 * right_dual.e4315) + (this.e3 * right_dual.e4125) + (this.e5 * right_dual.e1234) - (this.e431 * right_dual.e25) - (this.e412 * right_dual.e35) - (this.e415 * right_dual.e23) - (this.e425 * right_dual.e31) - (this.e435 * right_dual.e12) - (this.e321 * right_dual.e45) - (this.e235 * right_dual.e41) - (this.e315 * right_dual.e42) - (this.e125 * right_dual.e43)) - float4((this.group2.zxy * right_dual.group3.yzx), this.e423 * right_dual.e15)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(BulkContractionInfixPartial<AntiDipoleInversion> lhs, VersorOdd rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiDipoleInversion {
     public AntiDipoleInversion bulk_contraction(VersorOdd other) {
@@ -762,17 +906,13 @@ public extension AntiDipoleInversion {
         );
     }
 }
-public extension AntiDualNum {
-    // Fancy infix trick (first half)
-    public BulkContractionInfixPartial<AntiDualNum> operator /(BulkContractionInfix rhs) {
-        return BulkContractionInfixPartial<AntiDualNum>(this);
-    }
+// Fancy infix trick (first half)
+public BulkContractionInfixPartial<AntiDualNum> operator /(AntiDualNum lhs, BulkContractionInfix rhs) {
+    return BulkContractionInfixPartial<AntiDualNum>(lhs);
 }
-public extension BulkContractionInfixPartial<AntiDualNum> {
-    // Fancy infix trick (second half)
-    public AntiMotor operator /(AntiCircleRotor rhs) {
-        return this.a.bulk_contraction(rhs);
-    }
+// Fancy infix trick (second half)
+public AntiMotor operator /(BulkContractionInfixPartial<AntiDualNum> lhs, AntiCircleRotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiDualNum {
     public AntiMotor bulk_contraction(AntiCircleRotor other) {
@@ -791,6 +931,10 @@ public extension AntiDualNum {
             float4(this.e3215) * float4(right_dual.group1.xyz, right_dual.e12345)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(BulkContractionInfixPartial<AntiDualNum> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiDualNum {
     public AntiFlector bulk_contraction(AntiDipoleInversion other) {
@@ -812,6 +956,10 @@ public extension AntiDualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDualNum operator /(BulkContractionInfixPartial<AntiDualNum> lhs, AntiDualNum rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiDualNum {
     public AntiDualNum bulk_contraction(AntiDualNum other) {
         return AntiDualNum(
@@ -820,6 +968,10 @@ public extension AntiDualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public DualNum operator /(BulkContractionInfixPartial<AntiDualNum> lhs, AntiFlatPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiDualNum {
     public DualNum bulk_contraction(AntiFlatPoint other) {
         return DualNum(
@@ -827,6 +979,10 @@ public extension AntiDualNum {
             float2(float4(other.group0.xyz, other.e321 * -1.0)[3] * this.e3215, 1.0) * float2(-1.0, 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(BulkContractionInfixPartial<AntiDualNum> lhs, AntiFlector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiDualNum {
     public AntiFlector bulk_contraction(AntiFlector other) {
@@ -844,6 +1000,10 @@ public extension AntiDualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public FlatPoint operator /(BulkContractionInfixPartial<AntiDualNum> lhs, AntiLine rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiDualNum {
     public FlatPoint bulk_contraction(AntiLine other) {
         return FlatPoint(
@@ -851,6 +1011,10 @@ public extension AntiDualNum {
             float4(this.group0.xy.xx, this.e3215, 0.0) * float4(float3(1.0), 0.0) * float4(float3(other.e23 * -1.0, other.e31 * -1.0, other.e12 * -1.0), 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(BulkContractionInfixPartial<AntiDualNum> lhs, AntiMotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiDualNum {
     public AntiMotor bulk_contraction(AntiMotor other) {
@@ -868,6 +1032,10 @@ public extension AntiDualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlatPoint operator /(BulkContractionInfixPartial<AntiDualNum> lhs, AntiPlane rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiDualNum {
     public AntiFlatPoint bulk_contraction(AntiPlane other) {
         return AntiFlatPoint(
@@ -875,6 +1043,10 @@ public extension AntiDualNum {
             float4(this.group0.xy.xx, this.e3215, 0.0) * float4(float3(1.0), 0.0) * float4(other.group0.xyz, 0.0) * float4(-1.0, -1.0, -1.0, 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiPlane operator /(BulkContractionInfixPartial<AntiDualNum> lhs, Circle rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiDualNum {
     public AntiPlane bulk_contraction(Circle other) {
@@ -892,6 +1064,10 @@ public extension AntiDualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(BulkContractionInfixPartial<AntiDualNum> lhs, CircleRotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiDualNum {
     public AntiPlane bulk_contraction(CircleRotor other) {
         AntiCircleRotor right_dual = AntiCircleRotor(
@@ -907,6 +1083,10 @@ public extension AntiDualNum {
             float4(this.e3215) * float4(right_dual.group0.xyz, right_dual.e45) * float4(-1.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiLine operator /(BulkContractionInfixPartial<AntiDualNum> lhs, Dipole rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiDualNum {
     public AntiLine bulk_contraction(Dipole other) {
@@ -925,6 +1105,10 @@ public extension AntiDualNum {
             float3(this.e3215) * right_dual.group1.xyz
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(BulkContractionInfixPartial<AntiDualNum> lhs, DipoleInversion rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiDualNum {
     public AntiMotor bulk_contraction(DipoleInversion other) {
@@ -945,6 +1129,10 @@ public extension AntiDualNum {
             float4(this.group0.xy.xx, this.e3215, 0.0) * float4(float3(1.0), 0.0) * float4(right_dual.group1.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(BulkContractionInfixPartial<AntiDualNum> lhs, MultiVector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiDualNum {
     public MultiVector bulk_contraction(MultiVector other) {
@@ -998,6 +1186,10 @@ public extension AntiDualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlatPoint operator /(BulkContractionInfixPartial<AntiDualNum> lhs, RoundPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiDualNum {
     public AntiFlatPoint bulk_contraction(RoundPoint other) {
         Sphere right_dual = Sphere(
@@ -1012,6 +1204,10 @@ public extension AntiDualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDualNum operator /(BulkContractionInfixPartial<AntiDualNum> lhs, Scalar rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiDualNum {
     public AntiDualNum bulk_contraction(Scalar other) {
         return AntiDualNum(
@@ -1020,6 +1216,10 @@ public extension AntiDualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<AntiDualNum> lhs, Sphere rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiDualNum {
     public Scalar bulk_contraction(Sphere other) {
         return Scalar(
@@ -1027,6 +1227,10 @@ public extension AntiDualNum {
             this.e3215 * other.e1234
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(BulkContractionInfixPartial<AntiDualNum> lhs, VersorEven rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiDualNum {
     public AntiFlector bulk_contraction(VersorEven other) {
@@ -1048,6 +1252,10 @@ public extension AntiDualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(BulkContractionInfixPartial<AntiDualNum> lhs, VersorOdd rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiDualNum {
     public AntiMotor bulk_contraction(VersorOdd other) {
         VersorEven right_dual = VersorEven(
@@ -1068,17 +1276,13 @@ public extension AntiDualNum {
         );
     }
 }
-public extension AntiFlatPoint {
-    // Fancy infix trick (first half)
-    public BulkContractionInfixPartial<AntiFlatPoint> operator /(BulkContractionInfix rhs) {
-        return BulkContractionInfixPartial<AntiFlatPoint>(this);
-    }
+// Fancy infix trick (first half)
+public BulkContractionInfixPartial<AntiFlatPoint> operator /(AntiFlatPoint lhs, BulkContractionInfix rhs) {
+    return BulkContractionInfixPartial<AntiFlatPoint>(lhs);
 }
-public extension BulkContractionInfixPartial<AntiFlatPoint> {
-    // Fancy infix trick (second half)
-    public AntiFlector operator /(AntiCircleRotor rhs) {
-        return this.a.bulk_contraction(rhs);
-    }
+// Fancy infix trick (second half)
+public AntiFlector operator /(BulkContractionInfixPartial<AntiFlatPoint> lhs, AntiCircleRotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiFlatPoint {
     public AntiFlector bulk_contraction(AntiCircleRotor other) {
@@ -1097,6 +1301,10 @@ public extension AntiFlatPoint {
             float4((this.e315 * right_dual.e412) + (this.e321 * right_dual.e415), (this.e125 * right_dual.e423) + (this.e321 * right_dual.e425), (this.e235 * right_dual.e431) + (this.e321 * right_dual.e435), -(this.e315 * right_dual.e425) - (this.e125 * right_dual.e435)) - float4((right_dual.group0.xyz.yzx * this.group0.zxy), this.e235 * right_dual.e415)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(BulkContractionInfixPartial<AntiFlatPoint> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiFlatPoint {
     public AntiMotor bulk_contraction(AntiDipoleInversion other) {
@@ -1118,6 +1326,10 @@ public extension AntiFlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlatPoint operator /(BulkContractionInfixPartial<AntiFlatPoint> lhs, AntiDualNum rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiFlatPoint {
     public AntiFlatPoint bulk_contraction(AntiDualNum other) {
         return AntiFlatPoint(
@@ -1126,6 +1338,10 @@ public extension AntiFlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<AntiFlatPoint> lhs, AntiFlatPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiFlatPoint {
     public Scalar bulk_contraction(AntiFlatPoint other) {
         return Scalar(
@@ -1133,6 +1349,10 @@ public extension AntiFlatPoint {
             float4(other.group0.xyz, other.e321 * -1.0)[3] * this.e321 * -1.0
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(BulkContractionInfixPartial<AntiFlatPoint> lhs, AntiFlector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiFlatPoint {
     public AntiMotor bulk_contraction(AntiFlector other) {
@@ -1150,6 +1370,10 @@ public extension AntiFlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(BulkContractionInfixPartial<AntiFlatPoint> lhs, AntiLine rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiFlatPoint {
     public AntiPlane bulk_contraction(AntiLine other) {
         Line right_dual = Line(
@@ -1163,6 +1387,10 @@ public extension AntiFlatPoint {
             float4((float3(this.e321) * right_dual.group0.xyz), -(this.e235 * right_dual.e415) - (this.e315 * right_dual.e425) - (this.e125 * right_dual.e435))
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(BulkContractionInfixPartial<AntiFlatPoint> lhs, AntiMotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiFlatPoint {
     public AntiFlector bulk_contraction(AntiMotor other) {
@@ -1180,6 +1408,10 @@ public extension AntiFlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiLine operator /(BulkContractionInfixPartial<AntiFlatPoint> lhs, AntiPlane rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiFlatPoint {
     public AntiLine bulk_contraction(AntiPlane other) {
         Plane right_dual = Plane(
@@ -1193,6 +1425,10 @@ public extension AntiFlatPoint {
             (this.group0.yzx * right_dual.group0.zxy) - (this.group0.zxy * right_dual.group0.yzx)
         );
     }
+}
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<AntiFlatPoint> lhs, Circle rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiFlatPoint {
     public Scalar bulk_contraction(Circle other) {
@@ -1210,6 +1446,10 @@ public extension AntiFlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<AntiFlatPoint> lhs, CircleRotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiFlatPoint {
     public Scalar bulk_contraction(CircleRotor other) {
         AntiCircleRotor right_dual = AntiCircleRotor(
@@ -1226,6 +1466,10 @@ public extension AntiFlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(BulkContractionInfixPartial<AntiFlatPoint> lhs, Dipole rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiFlatPoint {
     public AntiPlane bulk_contraction(Dipole other) {
         Circle right_dual = Circle(
@@ -1241,6 +1485,10 @@ public extension AntiFlatPoint {
             float4((this.e315 * right_dual.e412) + (this.e321 * right_dual.e415), (this.e125 * right_dual.e423) + (this.e321 * right_dual.e425), (this.e235 * right_dual.e431) + (this.e321 * right_dual.e435), -(this.e315 * right_dual.e425) - (this.e125 * right_dual.e435)) - float4((right_dual.group0.xyz.yzx * this.group0.zxy), this.e235 * right_dual.e415)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiPlane operator /(BulkContractionInfixPartial<AntiFlatPoint> lhs, DipoleInversion rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiFlatPoint {
     public AntiPlane bulk_contraction(DipoleInversion other) {
@@ -1259,6 +1507,10 @@ public extension AntiFlatPoint {
             float4((right_dual.e412 * this.e315) + (right_dual.e415 * this.e321), (right_dual.e423 * this.e125) + (right_dual.e425 * this.e321), (right_dual.e431 * this.e235) + (right_dual.e435 * this.e321), -(right_dual.e425 * this.e315) - (right_dual.e435 * this.e125)) - (this.group0.zxyx * float4(right_dual.group0.xyz.yzx, right_dual.e415))
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(BulkContractionInfixPartial<AntiFlatPoint> lhs, MultiVector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiFlatPoint {
     public MultiVector bulk_contraction(MultiVector other) {
@@ -1312,6 +1564,10 @@ public extension AntiFlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiLine operator /(BulkContractionInfixPartial<AntiFlatPoint> lhs, RoundPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiFlatPoint {
     public AntiLine bulk_contraction(RoundPoint other) {
         Sphere right_dual = Sphere(
@@ -1328,6 +1584,10 @@ public extension AntiFlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlatPoint operator /(BulkContractionInfixPartial<AntiFlatPoint> lhs, Scalar rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiFlatPoint {
     public AntiFlatPoint bulk_contraction(Scalar other) {
         return AntiFlatPoint(
@@ -1335,6 +1595,10 @@ public extension AntiFlatPoint {
             float4(other.scalar) * this.group0
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(BulkContractionInfixPartial<AntiFlatPoint> lhs, VersorEven rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiFlatPoint {
     public AntiMotor bulk_contraction(VersorEven other) {
@@ -1356,6 +1620,10 @@ public extension AntiFlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(BulkContractionInfixPartial<AntiFlatPoint> lhs, VersorOdd rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiFlatPoint {
     public AntiFlector bulk_contraction(VersorOdd other) {
         VersorEven right_dual = VersorEven(
@@ -1376,17 +1644,13 @@ public extension AntiFlatPoint {
         );
     }
 }
-public extension AntiFlector {
-    // Fancy infix trick (first half)
-    public BulkContractionInfixPartial<AntiFlector> operator /(BulkContractionInfix rhs) {
-        return BulkContractionInfixPartial<AntiFlector>(this);
-    }
+// Fancy infix trick (first half)
+public BulkContractionInfixPartial<AntiFlector> operator /(AntiFlector lhs, BulkContractionInfix rhs) {
+    return BulkContractionInfixPartial<AntiFlector>(lhs);
 }
-public extension BulkContractionInfixPartial<AntiFlector> {
-    // Fancy infix trick (second half)
-    public AntiFlector operator /(AntiCircleRotor rhs) {
-        return this.a.bulk_contraction(rhs);
-    }
+// Fancy infix trick (second half)
+public AntiFlector operator /(BulkContractionInfixPartial<AntiFlector> lhs, AntiCircleRotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiFlector {
     public AntiFlector bulk_contraction(AntiCircleRotor other) {
@@ -1405,6 +1669,10 @@ public extension AntiFlector {
             float4((this.e321 * right_dual.e415) + (this.e1 * right_dual.e12345), (this.e321 * right_dual.e425) + (this.e2 * right_dual.e12345), (this.e321 * right_dual.e435) + (this.e3 * right_dual.e12345), -(this.e315 * right_dual.e425) - (this.e125 * right_dual.e435)) + float4((right_dual.group0.xyz.zxy * this.group0.yzx), this.e5 * right_dual.e12345) - float4((right_dual.group0.xyz.yzx * this.group0.zxy), this.e235 * right_dual.e415)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(BulkContractionInfixPartial<AntiFlector> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiFlector {
     public AntiMotor bulk_contraction(AntiDipoleInversion other) {
@@ -1426,6 +1694,10 @@ public extension AntiFlector {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(BulkContractionInfixPartial<AntiFlector> lhs, AntiDualNum rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiFlector {
     public AntiFlector bulk_contraction(AntiDualNum other) {
         DualNum right_dual = DualNum(
@@ -1440,6 +1712,10 @@ public extension AntiFlector {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<AntiFlector> lhs, AntiFlatPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiFlector {
     public Scalar bulk_contraction(AntiFlatPoint other) {
         return Scalar(
@@ -1447,6 +1723,10 @@ public extension AntiFlector {
             float4(other.group0.xyz, other.e321 * -1.0)[3] * this.e321 * -1.0
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(BulkContractionInfixPartial<AntiFlector> lhs, AntiFlector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiFlector {
     public AntiMotor bulk_contraction(AntiFlector other) {
@@ -1464,6 +1744,10 @@ public extension AntiFlector {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(BulkContractionInfixPartial<AntiFlector> lhs, AntiLine rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiFlector {
     public AntiPlane bulk_contraction(AntiLine other) {
         Line right_dual = Line(
@@ -1477,6 +1761,10 @@ public extension AntiFlector {
             float4((float3(this.e321) * right_dual.group0.xyz), -(this.e235 * right_dual.e415) - (this.e315 * right_dual.e425) - (this.e125 * right_dual.e435))
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(BulkContractionInfixPartial<AntiFlector> lhs, AntiMotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiFlector {
     public AntiFlector bulk_contraction(AntiMotor other) {
@@ -1494,6 +1782,10 @@ public extension AntiFlector {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(BulkContractionInfixPartial<AntiFlector> lhs, AntiPlane rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiFlector {
     public AntiMotor bulk_contraction(AntiPlane other) {
         Plane right_dual = Plane(
@@ -1507,6 +1799,10 @@ public extension AntiFlector {
             float4(((this.group0.yzx * right_dual.group0.zxy) - (this.group0.zxy * right_dual.group0.yzx)), 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<AntiFlector> lhs, Circle rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiFlector {
     public Scalar bulk_contraction(Circle other) {
@@ -1524,6 +1820,10 @@ public extension AntiFlector {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<AntiFlector> lhs, CircleRotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiFlector {
     public Scalar bulk_contraction(CircleRotor other) {
         AntiCircleRotor right_dual = AntiCircleRotor(
@@ -1540,6 +1840,10 @@ public extension AntiFlector {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(BulkContractionInfixPartial<AntiFlector> lhs, Dipole rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiFlector {
     public AntiPlane bulk_contraction(Dipole other) {
         Circle right_dual = Circle(
@@ -1555,6 +1859,10 @@ public extension AntiFlector {
             float4((this.e315 * right_dual.e412) + (this.e321 * right_dual.e415), (this.e125 * right_dual.e423) + (this.e321 * right_dual.e425), (this.e235 * right_dual.e431) + (this.e321 * right_dual.e435), -(this.e315 * right_dual.e425) - (this.e125 * right_dual.e435)) - float4((right_dual.group0.xyz.yzx * this.group0.zxy), this.e235 * right_dual.e415)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiPlane operator /(BulkContractionInfixPartial<AntiFlector> lhs, DipoleInversion rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiFlector {
     public AntiPlane bulk_contraction(DipoleInversion other) {
@@ -1573,6 +1881,10 @@ public extension AntiFlector {
             float4((right_dual.e412 * this.e315) + (right_dual.e415 * this.e321), (right_dual.e423 * this.e125) + (right_dual.e425 * this.e321), (right_dual.e431 * this.e235) + (right_dual.e435 * this.e321), -(right_dual.e425 * this.e315) - (right_dual.e435 * this.e125)) - (this.group0.zxyx * float4(right_dual.group0.xyz.yzx, right_dual.e415))
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(BulkContractionInfixPartial<AntiFlector> lhs, MultiVector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiFlector {
     public MultiVector bulk_contraction(MultiVector other) {
@@ -1626,6 +1938,10 @@ public extension AntiFlector {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(BulkContractionInfixPartial<AntiFlector> lhs, RoundPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiFlector {
     public AntiMotor bulk_contraction(RoundPoint other) {
         Sphere right_dual = Sphere(
@@ -1642,6 +1958,10 @@ public extension AntiFlector {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(BulkContractionInfixPartial<AntiFlector> lhs, Scalar rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiFlector {
     public AntiFlector bulk_contraction(Scalar other) {
         AntiScalar right_dual = AntiScalar(
@@ -1655,6 +1975,10 @@ public extension AntiFlector {
             float4(right_dual.e12345) * this.group1
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(BulkContractionInfixPartial<AntiFlector> lhs, VersorEven rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiFlector {
     public AntiMotor bulk_contraction(VersorEven other) {
@@ -1676,6 +2000,10 @@ public extension AntiFlector {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(BulkContractionInfixPartial<AntiFlector> lhs, VersorOdd rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiFlector {
     public AntiFlector bulk_contraction(VersorOdd other) {
         VersorEven right_dual = VersorEven(
@@ -1696,17 +2024,13 @@ public extension AntiFlector {
         );
     }
 }
-public extension AntiLine {
-    // Fancy infix trick (first half)
-    public BulkContractionInfixPartial<AntiLine> operator /(BulkContractionInfix rhs) {
-        return BulkContractionInfixPartial<AntiLine>(this);
-    }
+// Fancy infix trick (first half)
+public BulkContractionInfixPartial<AntiLine> operator /(AntiLine lhs, BulkContractionInfix rhs) {
+    return BulkContractionInfixPartial<AntiLine>(lhs);
 }
-public extension BulkContractionInfixPartial<AntiLine> {
-    // Fancy infix trick (second half)
-    public AntiMotor operator /(AntiCircleRotor rhs) {
-        return this.a.bulk_contraction(rhs);
-    }
+// Fancy infix trick (second half)
+public AntiMotor operator /(BulkContractionInfixPartial<AntiLine> lhs, AntiCircleRotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiLine {
     public AntiMotor bulk_contraction(AntiCircleRotor other) {
@@ -1726,6 +2050,10 @@ public extension AntiLine {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(BulkContractionInfixPartial<AntiLine> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiLine {
     public AntiPlane bulk_contraction(AntiDipoleInversion other) {
         DipoleInversion right_dual = DipoleInversion(
@@ -1744,6 +2072,10 @@ public extension AntiLine {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiLine operator /(BulkContractionInfixPartial<AntiLine> lhs, AntiDualNum rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiLine {
     public AntiLine bulk_contraction(AntiDualNum other) {
         DualNum right_dual = DualNum(
@@ -1757,6 +2089,10 @@ public extension AntiLine {
             float3(right_dual.e12345) * this.group1.xyz
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiPlane operator /(BulkContractionInfixPartial<AntiLine> lhs, AntiFlector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiLine {
     public AntiPlane bulk_contraction(AntiFlector other) {
@@ -1772,6 +2108,10 @@ public extension AntiLine {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<AntiLine> lhs, AntiLine rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiLine {
     public Scalar bulk_contraction(AntiLine other) {
         Line right_dual = Line(
@@ -1785,6 +2125,10 @@ public extension AntiLine {
             -(this.e23 * right_dual.e415) - (this.e31 * right_dual.e425) - (this.e12 * right_dual.e435)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(BulkContractionInfixPartial<AntiLine> lhs, AntiMotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiLine {
     public AntiMotor bulk_contraction(AntiMotor other) {
@@ -1802,6 +2146,10 @@ public extension AntiLine {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(BulkContractionInfixPartial<AntiLine> lhs, AntiPlane rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiLine {
     public AntiPlane bulk_contraction(AntiPlane other) {
         Plane right_dual = Plane(
@@ -1813,6 +2161,10 @@ public extension AntiLine {
             float4(this.e12 * right_dual.e4315 * -1.0, this.e23 * right_dual.e4125 * -1.0, this.e31 * right_dual.e4235 * -1.0, (this.e25 * right_dual.e4315) + (this.e35 * right_dual.e4125)) + (right_dual.group0.zxyx * float4(this.group0.xyz.yzx, this.e15))
         );
     }
+}
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<AntiLine> lhs, Dipole rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiLine {
     public Scalar bulk_contraction(Dipole other) {
@@ -1829,6 +2181,10 @@ public extension AntiLine {
             -(this.e23 * right_dual.e415) - (this.e31 * right_dual.e425) - (this.e12 * right_dual.e435) - (this.e15 * right_dual.e423) - (this.e25 * right_dual.e431) - (this.e35 * right_dual.e412)
         );
     }
+}
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<AntiLine> lhs, DipoleInversion rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiLine {
     public Scalar bulk_contraction(DipoleInversion other) {
@@ -1847,6 +2203,10 @@ public extension AntiLine {
             -(right_dual.e423 * this.e15) - (right_dual.e431 * this.e25) - (right_dual.e412 * this.e35) - (right_dual.e415 * this.e23) - (right_dual.e425 * this.e31) - (right_dual.e435 * this.e12)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(BulkContractionInfixPartial<AntiLine> lhs, MultiVector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiLine {
     public MultiVector bulk_contraction(MultiVector other) {
@@ -1900,6 +2260,10 @@ public extension AntiLine {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(BulkContractionInfixPartial<AntiLine> lhs, RoundPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiLine {
     public AntiPlane bulk_contraction(RoundPoint other) {
         Sphere right_dual = Sphere(
@@ -1914,6 +2278,10 @@ public extension AntiLine {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiLine operator /(BulkContractionInfixPartial<AntiLine> lhs, Scalar rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiLine {
     public AntiLine bulk_contraction(Scalar other) {
         AntiScalar right_dual = AntiScalar(
@@ -1927,6 +2295,10 @@ public extension AntiLine {
             float3(right_dual.e12345) * this.group1.xyz
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiPlane operator /(BulkContractionInfixPartial<AntiLine> lhs, VersorEven rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiLine {
     public AntiPlane bulk_contraction(VersorEven other) {
@@ -1945,6 +2317,10 @@ public extension AntiLine {
             float4(-(this.e12 * right_dual.e4315) - (this.e15 * right_dual.e1234), -(this.e23 * right_dual.e4125) - (this.e25 * right_dual.e1234), -(this.e31 * right_dual.e4235) - (this.e35 * right_dual.e1234), (this.e25 * right_dual.e4315) + (this.e35 * right_dual.e4125)) + (right_dual.group3.zxyx * float4(this.group0.xyz.yzx, this.e15))
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(BulkContractionInfixPartial<AntiLine> lhs, VersorOdd rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiLine {
     public AntiMotor bulk_contraction(VersorOdd other) {
@@ -1966,17 +2342,13 @@ public extension AntiLine {
         );
     }
 }
-public extension AntiMotor {
-    // Fancy infix trick (first half)
-    public BulkContractionInfixPartial<AntiMotor> operator /(BulkContractionInfix rhs) {
-        return BulkContractionInfixPartial<AntiMotor>(this);
-    }
+// Fancy infix trick (first half)
+public BulkContractionInfixPartial<AntiMotor> operator /(AntiMotor lhs, BulkContractionInfix rhs) {
+    return BulkContractionInfixPartial<AntiMotor>(lhs);
 }
-public extension BulkContractionInfixPartial<AntiMotor> {
-    // Fancy infix trick (second half)
-    public AntiMotor operator /(AntiCircleRotor rhs) {
-        return this.a.bulk_contraction(rhs);
-    }
+// Fancy infix trick (second half)
+public AntiMotor operator /(BulkContractionInfixPartial<AntiMotor> lhs, AntiCircleRotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiMotor {
     public AntiMotor bulk_contraction(AntiCircleRotor other) {
@@ -1995,6 +2367,10 @@ public extension AntiMotor {
             float4(((float3(this.e3215) * right_dual.group1.xyz) + (float3(right_dual.e12345) * this.group1.xyz)), this.e3215 * right_dual.e12345)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(BulkContractionInfixPartial<AntiMotor> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiMotor {
     public AntiFlector bulk_contraction(AntiDipoleInversion other) {
@@ -2016,6 +2392,10 @@ public extension AntiMotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(BulkContractionInfixPartial<AntiMotor> lhs, AntiDualNum rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiMotor {
     public AntiMotor bulk_contraction(AntiDualNum other) {
         DualNum right_dual = DualNum(
@@ -2030,6 +2410,10 @@ public extension AntiMotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public DualNum operator /(BulkContractionInfixPartial<AntiMotor> lhs, AntiFlatPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiMotor {
     public DualNum bulk_contraction(AntiFlatPoint other) {
         return DualNum(
@@ -2037,6 +2421,10 @@ public extension AntiMotor {
             float2(float4(other.group0.xyz, other.e321 * -1.0)[3] * this.e3215, 1.0) * float2(-1.0, 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(BulkContractionInfixPartial<AntiMotor> lhs, AntiFlector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiMotor {
     public AntiFlector bulk_contraction(AntiFlector other) {
@@ -2054,6 +2442,10 @@ public extension AntiMotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(BulkContractionInfixPartial<AntiMotor> lhs, AntiLine rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiMotor {
     public AntiMotor bulk_contraction(AntiLine other) {
         Line right_dual = Line(
@@ -2069,6 +2461,10 @@ public extension AntiMotor {
             float4(float3(1.0), 0.0) * float4(right_dual.group0.xyz, 0.0) * float4(this.group1.www, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(BulkContractionInfixPartial<AntiMotor> lhs, AntiMotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiMotor {
     public AntiMotor bulk_contraction(AntiMotor other) {
@@ -2086,6 +2482,10 @@ public extension AntiMotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(BulkContractionInfixPartial<AntiMotor> lhs, AntiPlane rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiMotor {
     public AntiFlector bulk_contraction(AntiPlane other) {
         Plane right_dual = Plane(
@@ -2099,6 +2499,10 @@ public extension AntiMotor {
             float4(this.e12 * right_dual.e4315 * -1.0, this.e23 * right_dual.e4125 * -1.0, this.e31 * right_dual.e4235 * -1.0, (this.e25 * right_dual.e4315) + (this.e35 * right_dual.e4125)) + (right_dual.group0.zxyx * float4(this.group0.yzx, this.e15))
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiPlane operator /(BulkContractionInfixPartial<AntiMotor> lhs, Circle rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiMotor {
     public AntiPlane bulk_contraction(Circle other) {
@@ -2116,6 +2520,10 @@ public extension AntiMotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(BulkContractionInfixPartial<AntiMotor> lhs, CircleRotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiMotor {
     public AntiPlane bulk_contraction(CircleRotor other) {
         AntiCircleRotor right_dual = AntiCircleRotor(
@@ -2131,6 +2539,10 @@ public extension AntiMotor {
             float4(this.e3215) * float4(right_dual.group0.xyz, right_dual.e45) * float4(-1.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(BulkContractionInfixPartial<AntiMotor> lhs, Dipole rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiMotor {
     public AntiMotor bulk_contraction(Dipole other) {
@@ -2149,6 +2561,10 @@ public extension AntiMotor {
             float4(float3(1.0), 0.0) * float4(this.group1.www, 0.0) * float4(right_dual.group1.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(BulkContractionInfixPartial<AntiMotor> lhs, DipoleInversion rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiMotor {
     public AntiMotor bulk_contraction(DipoleInversion other) {
@@ -2169,6 +2585,10 @@ public extension AntiMotor {
             float4(float3(1.0), 0.0) * float4(this.group1.www, 0.0) * float4(right_dual.group1.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(BulkContractionInfixPartial<AntiMotor> lhs, MultiVector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiMotor {
     public MultiVector bulk_contraction(MultiVector other) {
@@ -2222,6 +2642,10 @@ public extension AntiMotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(BulkContractionInfixPartial<AntiMotor> lhs, RoundPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiMotor {
     public AntiFlector bulk_contraction(RoundPoint other) {
         Sphere right_dual = Sphere(
@@ -2238,6 +2662,10 @@ public extension AntiMotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(BulkContractionInfixPartial<AntiMotor> lhs, Scalar rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiMotor {
     public AntiMotor bulk_contraction(Scalar other) {
         AntiScalar right_dual = AntiScalar(
@@ -2252,6 +2680,10 @@ public extension AntiMotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<AntiMotor> lhs, Sphere rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiMotor {
     public Scalar bulk_contraction(Sphere other) {
         return Scalar(
@@ -2259,6 +2691,10 @@ public extension AntiMotor {
             this.e3215 * other.e1234
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(BulkContractionInfixPartial<AntiMotor> lhs, VersorEven rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiMotor {
     public AntiFlector bulk_contraction(VersorEven other) {
@@ -2280,6 +2716,10 @@ public extension AntiMotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(BulkContractionInfixPartial<AntiMotor> lhs, VersorOdd rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiMotor {
     public AntiMotor bulk_contraction(VersorOdd other) {
         VersorEven right_dual = VersorEven(
@@ -2300,17 +2740,13 @@ public extension AntiMotor {
         );
     }
 }
-public extension AntiPlane {
-    // Fancy infix trick (first half)
-    public BulkContractionInfixPartial<AntiPlane> operator /(BulkContractionInfix rhs) {
-        return BulkContractionInfixPartial<AntiPlane>(this);
-    }
+// Fancy infix trick (first half)
+public BulkContractionInfixPartial<AntiPlane> operator /(AntiPlane lhs, BulkContractionInfix rhs) {
+    return BulkContractionInfixPartial<AntiPlane>(lhs);
 }
-public extension BulkContractionInfixPartial<AntiPlane> {
-    // Fancy infix trick (second half)
-    public AntiPlane operator /(AntiCircleRotor rhs) {
-        return this.a.bulk_contraction(rhs);
-    }
+// Fancy infix trick (second half)
+public AntiPlane operator /(BulkContractionInfixPartial<AntiPlane> lhs, AntiCircleRotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiPlane {
     public AntiPlane bulk_contraction(AntiCircleRotor other) {
@@ -2319,6 +2755,10 @@ public extension AntiPlane {
             float4(other.scalar) * this.group0
         );
     }
+}
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<AntiPlane> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiPlane {
     public Scalar bulk_contraction(AntiDipoleInversion other) {
@@ -2338,6 +2778,10 @@ public extension AntiPlane {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(BulkContractionInfixPartial<AntiPlane> lhs, AntiDualNum rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiPlane {
     public AntiPlane bulk_contraction(AntiDualNum other) {
         return AntiPlane(
@@ -2345,6 +2789,10 @@ public extension AntiPlane {
             float4(other.scalar) * this.group0
         );
     }
+}
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<AntiPlane> lhs, AntiFlector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiPlane {
     public Scalar bulk_contraction(AntiFlector other) {
@@ -2360,6 +2808,10 @@ public extension AntiPlane {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(BulkContractionInfixPartial<AntiPlane> lhs, AntiMotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiPlane {
     public AntiPlane bulk_contraction(AntiMotor other) {
         return AntiPlane(
@@ -2367,6 +2819,10 @@ public extension AntiPlane {
             float4(other.scalar) * this.group0
         );
     }
+}
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<AntiPlane> lhs, AntiPlane rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiPlane {
     public Scalar bulk_contraction(AntiPlane other) {
@@ -2379,6 +2835,10 @@ public extension AntiPlane {
             (this.e1 * right_dual.e4235) + (this.e2 * right_dual.e4315) + (this.e3 * right_dual.e4125)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(BulkContractionInfixPartial<AntiPlane> lhs, MultiVector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiPlane {
     public MultiVector bulk_contraction(MultiVector other) {
@@ -2432,6 +2892,10 @@ public extension AntiPlane {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<AntiPlane> lhs, RoundPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiPlane {
     public Scalar bulk_contraction(RoundPoint other) {
         Sphere right_dual = Sphere(
@@ -2446,6 +2910,10 @@ public extension AntiPlane {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(BulkContractionInfixPartial<AntiPlane> lhs, Scalar rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiPlane {
     public AntiPlane bulk_contraction(Scalar other) {
         return AntiPlane(
@@ -2453,6 +2921,10 @@ public extension AntiPlane {
             float4(other.scalar) * this.group0
         );
     }
+}
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<AntiPlane> lhs, VersorEven rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiPlane {
     public Scalar bulk_contraction(VersorEven other) {
@@ -2472,6 +2944,10 @@ public extension AntiPlane {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(BulkContractionInfixPartial<AntiPlane> lhs, VersorOdd rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiPlane {
     public AntiPlane bulk_contraction(VersorOdd other) {
         return AntiPlane(
@@ -2480,17 +2956,13 @@ public extension AntiPlane {
         );
     }
 }
-public extension AntiScalar {
-    // Fancy infix trick (first half)
-    public BulkContractionInfixPartial<AntiScalar> operator /(BulkContractionInfix rhs) {
-        return BulkContractionInfixPartial<AntiScalar>(this);
-    }
+// Fancy infix trick (first half)
+public BulkContractionInfixPartial<AntiScalar> operator /(AntiScalar lhs, BulkContractionInfix rhs) {
+    return BulkContractionInfixPartial<AntiScalar>(lhs);
 }
-public extension BulkContractionInfixPartial<AntiScalar> {
-    // Fancy infix trick (second half)
-    public CircleRotor operator /(AntiCircleRotor rhs) {
-        return this.a.bulk_contraction(rhs);
-    }
+// Fancy infix trick (second half)
+public CircleRotor operator /(BulkContractionInfixPartial<AntiScalar> lhs, AntiCircleRotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiScalar {
     public CircleRotor bulk_contraction(AntiCircleRotor other) {
@@ -2511,6 +2983,10 @@ public extension AntiScalar {
             float4(this.e12345) * right_dual.group2
         );
     }
+}
+// Fancy infix trick (second half)
+public DipoleInversion operator /(BulkContractionInfixPartial<AntiScalar> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiScalar {
     public DipoleInversion bulk_contraction(AntiDipoleInversion other) {
@@ -2536,6 +3012,10 @@ public extension AntiScalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public DualNum operator /(BulkContractionInfixPartial<AntiScalar> lhs, AntiDualNum rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiScalar {
     public DualNum bulk_contraction(AntiDualNum other) {
         return DualNum(
@@ -2544,6 +3024,10 @@ public extension AntiScalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public FlatPoint operator /(BulkContractionInfixPartial<AntiScalar> lhs, AntiFlatPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiScalar {
     public FlatPoint bulk_contraction(AntiFlatPoint other) {
         return FlatPoint(
@@ -2551,6 +3035,10 @@ public extension AntiScalar {
             float4(this.e12345) * float4(other.group0.xyz, other.e321 * -1.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(BulkContractionInfixPartial<AntiScalar> lhs, AntiFlector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiScalar {
     public Flector bulk_contraction(AntiFlector other) {
@@ -2568,6 +3056,10 @@ public extension AntiScalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public Line operator /(BulkContractionInfixPartial<AntiScalar> lhs, AntiLine rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiScalar {
     public Line bulk_contraction(AntiLine other) {
         Line right_dual = Line(
@@ -2583,6 +3075,10 @@ public extension AntiScalar {
             float3(this.e12345) * right_dual.group1.xyz
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(BulkContractionInfixPartial<AntiScalar> lhs, AntiMotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiScalar {
     public Motor bulk_contraction(AntiMotor other) {
@@ -2600,6 +3096,10 @@ public extension AntiScalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public Plane operator /(BulkContractionInfixPartial<AntiScalar> lhs, AntiPlane rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiScalar {
     public Plane bulk_contraction(AntiPlane other) {
         return Plane(
@@ -2608,6 +3108,10 @@ public extension AntiScalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<AntiScalar> lhs, AntiScalar rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiScalar {
     public Scalar bulk_contraction(AntiScalar other) {
         return Scalar(
@@ -2615,6 +3119,10 @@ public extension AntiScalar {
             other.e12345 * this.e12345 * -1.0
         );
     }
+}
+// Fancy infix trick (second half)
+public Dipole operator /(BulkContractionInfixPartial<AntiScalar> lhs, Circle rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiScalar {
     public Dipole bulk_contraction(Circle other) {
@@ -2636,6 +3144,10 @@ public extension AntiScalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(BulkContractionInfixPartial<AntiScalar> lhs, CircleRotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiScalar {
     public AntiCircleRotor bulk_contraction(CircleRotor other) {
         AntiCircleRotor right_dual = AntiCircleRotor(
@@ -2656,6 +3168,10 @@ public extension AntiScalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public Circle operator /(BulkContractionInfixPartial<AntiScalar> lhs, Dipole rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiScalar {
     public Circle bulk_contraction(Dipole other) {
         Circle right_dual = Circle(
@@ -2675,6 +3191,10 @@ public extension AntiScalar {
             float3(this.e12345) * right_dual.group2.xyz
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(BulkContractionInfixPartial<AntiScalar> lhs, DipoleInversion rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiScalar {
     public AntiDipoleInversion bulk_contraction(DipoleInversion other) {
@@ -2700,6 +3220,10 @@ public extension AntiScalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDualNum operator /(BulkContractionInfixPartial<AntiScalar> lhs, DualNum rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiScalar {
     public AntiDualNum bulk_contraction(DualNum other) {
         return AntiDualNum(
@@ -2708,6 +3232,10 @@ public extension AntiScalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlatPoint operator /(BulkContractionInfixPartial<AntiScalar> lhs, FlatPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiScalar {
     public AntiFlatPoint bulk_contraction(FlatPoint other) {
         return AntiFlatPoint(
@@ -2715,6 +3243,10 @@ public extension AntiScalar {
             float4(this.e12345) * float4(other.e15 * -1.0, other.e25 * -1.0, other.e35 * -1.0, other.e45)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(BulkContractionInfixPartial<AntiScalar> lhs, Flector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiScalar {
     public AntiFlector bulk_contraction(Flector other) {
@@ -2732,6 +3264,10 @@ public extension AntiScalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiLine operator /(BulkContractionInfixPartial<AntiScalar> lhs, Line rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiScalar {
     public AntiLine bulk_contraction(Line other) {
         AntiLine right_dual = AntiLine(
@@ -2748,6 +3284,10 @@ public extension AntiScalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(BulkContractionInfixPartial<AntiScalar> lhs, Motor rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiScalar {
     public AntiMotor bulk_contraction(Motor other) {
         AntiMotor right_dual = AntiMotor(
@@ -2763,6 +3303,10 @@ public extension AntiScalar {
             float4(this.e12345) * right_dual.group1
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(BulkContractionInfixPartial<AntiScalar> lhs, MultiVector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiScalar {
     public MultiVector bulk_contraction(MultiVector other) {
@@ -2816,6 +3360,10 @@ public extension AntiScalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(BulkContractionInfixPartial<AntiScalar> lhs, Plane rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiScalar {
     public AntiPlane bulk_contraction(Plane other) {
         return AntiPlane(
@@ -2823,6 +3371,10 @@ public extension AntiScalar {
             float4(this.e12345) * float4(other.e4235 * -1.0, other.e4315 * -1.0, other.e4125 * -1.0, other.e3215)
         );
     }
+}
+// Fancy infix trick (second half)
+public Sphere operator /(BulkContractionInfixPartial<AntiScalar> lhs, RoundPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiScalar {
     public Sphere bulk_contraction(RoundPoint other) {
@@ -2840,6 +3392,10 @@ public extension AntiScalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(BulkContractionInfixPartial<AntiScalar> lhs, Scalar rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiScalar {
     public AntiScalar bulk_contraction(Scalar other) {
         return AntiScalar(
@@ -2847,6 +3403,10 @@ public extension AntiScalar {
             this.e12345 * other.scalar
         );
     }
+}
+// Fancy infix trick (second half)
+public RoundPoint operator /(BulkContractionInfixPartial<AntiScalar> lhs, Sphere rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiScalar {
     public RoundPoint bulk_contraction(Sphere other) {
@@ -2863,6 +3423,10 @@ public extension AntiScalar {
             this.e12345 * right_dual.e5
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(BulkContractionInfixPartial<AntiScalar> lhs, VersorEven rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension AntiScalar {
     public VersorOdd bulk_contraction(VersorEven other) {
@@ -2888,6 +3452,10 @@ public extension AntiScalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(BulkContractionInfixPartial<AntiScalar> lhs, VersorOdd rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension AntiScalar {
     public VersorEven bulk_contraction(VersorOdd other) {
         VersorEven right_dual = VersorEven(
@@ -2912,17 +3480,13 @@ public extension AntiScalar {
         );
     }
 }
-public extension Circle {
-    // Fancy infix trick (first half)
-    public BulkContractionInfixPartial<Circle> operator /(BulkContractionInfix rhs) {
-        return BulkContractionInfixPartial<Circle>(this);
-    }
+// Fancy infix trick (first half)
+public BulkContractionInfixPartial<Circle> operator /(Circle lhs, BulkContractionInfix rhs) {
+    return BulkContractionInfixPartial<Circle>(lhs);
 }
-public extension BulkContractionInfixPartial<Circle> {
-    // Fancy infix trick (second half)
-    public AntiDipoleInversion operator /(AntiCircleRotor rhs) {
-        return this.a.bulk_contraction(rhs);
-    }
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(BulkContractionInfixPartial<Circle> lhs, AntiCircleRotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Circle {
     public AntiDipoleInversion bulk_contraction(AntiCircleRotor other) {
@@ -2946,6 +3510,10 @@ public extension Circle {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(BulkContractionInfixPartial<Circle> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Circle {
     public AntiCircleRotor bulk_contraction(AntiDipoleInversion other) {
         DipoleInversion right_dual = DipoleInversion(
@@ -2968,6 +3536,10 @@ public extension Circle {
         );
     }
 }
+// Fancy infix trick (second half)
+public Circle operator /(BulkContractionInfixPartial<Circle> lhs, AntiDualNum rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Circle {
     public Circle bulk_contraction(AntiDualNum other) {
         DualNum right_dual = DualNum(
@@ -2984,6 +3556,10 @@ public extension Circle {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<Circle> lhs, AntiFlatPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Circle {
     public Scalar bulk_contraction(AntiFlatPoint other) {
         FlatPoint right_dual = FlatPoint(
@@ -2995,6 +3571,10 @@ public extension Circle {
             -(this.e423 * right_dual.e15) - (this.e431 * right_dual.e25) - (this.e412 * right_dual.e35) - (this.e321 * right_dual.e45)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(BulkContractionInfixPartial<Circle> lhs, AntiFlector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Circle {
     public AntiCircleRotor bulk_contraction(AntiFlector other) {
@@ -3014,6 +3594,10 @@ public extension Circle {
         );
     }
 }
+// Fancy infix trick (second half)
+public RoundPoint operator /(BulkContractionInfixPartial<Circle> lhs, AntiLine rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Circle {
     public RoundPoint bulk_contraction(AntiLine other) {
         Line right_dual = Line(
@@ -3029,6 +3613,10 @@ public extension Circle {
             -(this.e415 * right_dual.e235) - (this.e425 * right_dual.e315) - (this.e435 * right_dual.e125) - (this.e235 * right_dual.e415) - (this.e315 * right_dual.e425) - (this.e125 * right_dual.e435)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(BulkContractionInfixPartial<Circle> lhs, AntiMotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Circle {
     public AntiDipoleInversion bulk_contraction(AntiMotor other) {
@@ -3050,6 +3638,10 @@ public extension Circle {
         );
     }
 }
+// Fancy infix trick (second half)
+public Dipole operator /(BulkContractionInfixPartial<Circle> lhs, AntiPlane rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Circle {
     public Dipole bulk_contraction(AntiPlane other) {
         Plane right_dual = Plane(
@@ -3065,6 +3657,10 @@ public extension Circle {
             (float3(right_dual.e3215) * this.group1.xyz) + (this.group2.xyz.yzx * right_dual.group0.zxy) - (this.group2.xyz.zxy * right_dual.group0.yzx)
         );
     }
+}
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<Circle> lhs, Circle rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Circle {
     public Scalar bulk_contraction(Circle other) {
@@ -3082,6 +3678,10 @@ public extension Circle {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<Circle> lhs, CircleRotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Circle {
     public Scalar bulk_contraction(CircleRotor other) {
         AntiCircleRotor right_dual = AntiCircleRotor(
@@ -3097,6 +3697,10 @@ public extension Circle {
             -(right_dual.e41 * this.e235) - (right_dual.e42 * this.e315) - (right_dual.e43 * this.e125) - (right_dual.e23 * this.e415) - (right_dual.e31 * this.e425) - (right_dual.e12 * this.e435) - (right_dual.e45 * this.e321) - (right_dual.e15 * this.e423) - (right_dual.e25 * this.e431) - (right_dual.e35 * this.e412)
         );
     }
+}
+// Fancy infix trick (second half)
+public RoundPoint operator /(BulkContractionInfixPartial<Circle> lhs, Dipole rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Circle {
     public RoundPoint bulk_contraction(Dipole other) {
@@ -3115,6 +3719,10 @@ public extension Circle {
             -(right_dual.e415 * this.e235) - (right_dual.e425 * this.e315) - (right_dual.e435 * this.e125) - (right_dual.e235 * this.e415) - (right_dual.e315 * this.e425) - (right_dual.e125 * this.e435)
         );
     }
+}
+// Fancy infix trick (second half)
+public RoundPoint operator /(BulkContractionInfixPartial<Circle> lhs, DipoleInversion rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Circle {
     public RoundPoint bulk_contraction(DipoleInversion other) {
@@ -3136,6 +3744,10 @@ public extension Circle {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiLine operator /(BulkContractionInfixPartial<Circle> lhs, DualNum rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Circle {
     public AntiLine bulk_contraction(DualNum other) {
         AntiDualNum right_dual = AntiDualNum(
@@ -3150,6 +3762,10 @@ public extension Circle {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(BulkContractionInfixPartial<Circle> lhs, FlatPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Circle {
     public AntiPlane bulk_contraction(FlatPoint other) {
         AntiFlatPoint right_dual = AntiFlatPoint(
@@ -3161,6 +3777,10 @@ public extension Circle {
             float4((right_dual.e315 * this.e412) + (right_dual.e321 * this.e415), (right_dual.e125 * this.e423) + (right_dual.e321 * this.e425), (right_dual.e235 * this.e431) + (right_dual.e321 * this.e435), -(right_dual.e315 * this.e425) - (right_dual.e125 * this.e435)) - float4((this.group0.xyz.yzx * right_dual.group0.zxy), right_dual.e235 * this.e415)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiPlane operator /(BulkContractionInfixPartial<Circle> lhs, Flector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Circle {
     public AntiPlane bulk_contraction(Flector other) {
@@ -3176,6 +3796,10 @@ public extension Circle {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<Circle> lhs, Line rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Circle {
     public Scalar bulk_contraction(Line other) {
         AntiLine right_dual = AntiLine(
@@ -3189,6 +3813,10 @@ public extension Circle {
             -(right_dual.e23 * this.e415) - (right_dual.e31 * this.e425) - (right_dual.e12 * this.e435) - (right_dual.e15 * this.e423) - (right_dual.e25 * this.e431) - (right_dual.e35 * this.e412)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(BulkContractionInfixPartial<Circle> lhs, Motor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Circle {
     public AntiMotor bulk_contraction(Motor other) {
@@ -3205,6 +3833,10 @@ public extension Circle {
             float4(float3(1.0), 0.0) * float4(right_dual.group1.www, 0.0) * float4(this.group1.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(BulkContractionInfixPartial<Circle> lhs, MultiVector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Circle {
     public MultiVector bulk_contraction(MultiVector other) {
@@ -3258,6 +3890,10 @@ public extension Circle {
         );
     }
 }
+// Fancy infix trick (second half)
+public Dipole operator /(BulkContractionInfixPartial<Circle> lhs, RoundPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Circle {
     public Dipole bulk_contraction(RoundPoint other) {
         Sphere right_dual = Sphere(
@@ -3276,6 +3912,10 @@ public extension Circle {
         );
     }
 }
+// Fancy infix trick (second half)
+public Circle operator /(BulkContractionInfixPartial<Circle> lhs, Scalar rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Circle {
     public Circle bulk_contraction(Scalar other) {
         AntiScalar right_dual = AntiScalar(
@@ -3291,6 +3931,10 @@ public extension Circle {
             float3(right_dual.e12345) * this.group2.xyz
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(BulkContractionInfixPartial<Circle> lhs, VersorEven rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Circle {
     public AntiCircleRotor bulk_contraction(VersorEven other) {
@@ -3313,6 +3957,10 @@ public extension Circle {
             float4((this.e415 * right_dual.e3215) + (this.e315 * right_dual.e4125), (this.e425 * right_dual.e3215) + (this.e125 * right_dual.e4235), (this.e435 * right_dual.e3215) + (this.e235 * right_dual.e4315), -(this.e431 * right_dual.e25) - (this.e412 * right_dual.e35) - (this.e415 * right_dual.e23) - (this.e425 * right_dual.e31) - (this.e435 * right_dual.e12) - (this.e321 * right_dual.e45) - (this.e235 * right_dual.e41) - (this.e315 * right_dual.e42) - (this.e125 * right_dual.e43)) - float4((this.group2.xyz.zxy * right_dual.group3.yzx), this.e423 * right_dual.e15)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(BulkContractionInfixPartial<Circle> lhs, VersorOdd rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Circle {
     public AntiDipoleInversion bulk_contraction(VersorOdd other) {
@@ -3338,17 +3986,13 @@ public extension Circle {
         );
     }
 }
-public extension CircleRotor {
-    // Fancy infix trick (first half)
-    public BulkContractionInfixPartial<CircleRotor> operator /(BulkContractionInfix rhs) {
-        return BulkContractionInfixPartial<CircleRotor>(this);
-    }
+// Fancy infix trick (first half)
+public BulkContractionInfixPartial<CircleRotor> operator /(CircleRotor lhs, BulkContractionInfix rhs) {
+    return BulkContractionInfixPartial<CircleRotor>(lhs);
 }
-public extension BulkContractionInfixPartial<CircleRotor> {
-    // Fancy infix trick (second half)
-    public VersorEven operator /(AntiCircleRotor rhs) {
-        return this.a.bulk_contraction(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorEven operator /(BulkContractionInfixPartial<CircleRotor> lhs, AntiCircleRotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension CircleRotor {
     public VersorEven bulk_contraction(AntiCircleRotor other) {
@@ -3371,6 +4015,10 @@ public extension CircleRotor {
             float4((right_dual.e412 * this.e315) + (right_dual.e415 * this.e321) + (right_dual.e321 * this.e415) + (right_dual.e315 * this.e412), (right_dual.e423 * this.e125) + (right_dual.e425 * this.e321) + (right_dual.e321 * this.e425) + (right_dual.e125 * this.e423), (right_dual.e431 * this.e235) + (right_dual.e435 * this.e321) + (right_dual.e321 * this.e435) + (right_dual.e235 * this.e431), -(right_dual.e412 * this.e435) - (right_dual.e415 * this.e423) - (right_dual.e425 * this.e431) - (right_dual.e435 * this.e412)) - float4((right_dual.group0.xyz.yzx * this.group2.zxy), right_dual.e423 * this.e415) - float4((this.group0.xyz.yzx * right_dual.group2.zxy), right_dual.e431 * this.e425)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(BulkContractionInfixPartial<CircleRotor> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension CircleRotor {
     public VersorOdd bulk_contraction(AntiDipoleInversion other) {
@@ -3396,6 +4044,10 @@ public extension CircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(BulkContractionInfixPartial<CircleRotor> lhs, AntiDualNum rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension CircleRotor {
     public VersorEven bulk_contraction(AntiDualNum other) {
         DualNum right_dual = DualNum(
@@ -3414,6 +4066,10 @@ public extension CircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(BulkContractionInfixPartial<CircleRotor> lhs, AntiFlatPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension CircleRotor {
     public AntiCircleRotor bulk_contraction(AntiFlatPoint other) {
         FlatPoint right_dual = FlatPoint(
@@ -3429,6 +4085,10 @@ public extension CircleRotor {
             float4((this.group2.www * right_dual.group0.xyz), -(this.e423 * right_dual.e15) - (this.e431 * right_dual.e25) - (this.e412 * right_dual.e35) - (this.e321 * right_dual.e45))
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(BulkContractionInfixPartial<CircleRotor> lhs, AntiFlector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension CircleRotor {
     public VersorOdd bulk_contraction(AntiFlector other) {
@@ -3450,6 +4110,10 @@ public extension CircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(BulkContractionInfixPartial<CircleRotor> lhs, AntiLine rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension CircleRotor {
     public AntiDipoleInversion bulk_contraction(AntiLine other) {
         Line right_dual = Line(
@@ -3469,6 +4133,10 @@ public extension CircleRotor {
             float4((this.e412 * right_dual.e315) + (this.e321 * right_dual.e415), (this.e423 * right_dual.e125) + (this.e321 * right_dual.e425), (this.e431 * right_dual.e235) + (this.e321 * right_dual.e435), -(this.e415 * right_dual.e235) - (this.e425 * right_dual.e315) - (this.e435 * right_dual.e125) - (this.e315 * right_dual.e425) - (this.e125 * right_dual.e435)) - float4((this.group0.xyz.yzx * right_dual.group1.xyz.zxy), this.e235 * right_dual.e415)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(BulkContractionInfixPartial<CircleRotor> lhs, AntiMotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension CircleRotor {
     public VersorEven bulk_contraction(AntiMotor other) {
@@ -3490,6 +4158,10 @@ public extension CircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public DipoleInversion operator /(BulkContractionInfixPartial<CircleRotor> lhs, AntiPlane rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension CircleRotor {
     public DipoleInversion bulk_contraction(AntiPlane other) {
         Plane right_dual = Plane(
@@ -3508,6 +4180,10 @@ public extension CircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<CircleRotor> lhs, AntiScalar rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension CircleRotor {
     public Scalar bulk_contraction(AntiScalar other) {
         return Scalar(
@@ -3515,6 +4191,10 @@ public extension CircleRotor {
             other.e12345 * this.e12345 * -1.0
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(BulkContractionInfixPartial<CircleRotor> lhs, Circle rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension CircleRotor {
     public AntiCircleRotor bulk_contraction(Circle other) {
@@ -3536,6 +4216,10 @@ public extension CircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(BulkContractionInfixPartial<CircleRotor> lhs, CircleRotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension CircleRotor {
     public AntiCircleRotor bulk_contraction(CircleRotor other) {
         AntiCircleRotor right_dual = AntiCircleRotor(
@@ -3555,6 +4239,10 @@ public extension CircleRotor {
             float4((float3(this.e12345) * right_dual.group2.xyz), (right_dual.scalar * this.e12345) - (right_dual.e41 * this.e235) - (right_dual.e42 * this.e315) - (right_dual.e43 * this.e125) - (right_dual.e23 * this.e415) - (right_dual.e31 * this.e425) - (right_dual.e12 * this.e435) - (right_dual.e45 * this.e321) - (right_dual.e15 * this.e423) - (right_dual.e25 * this.e431) - (right_dual.e35 * this.e412))
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(BulkContractionInfixPartial<CircleRotor> lhs, Dipole rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension CircleRotor {
     public AntiDipoleInversion bulk_contraction(Dipole other) {
@@ -3577,6 +4265,10 @@ public extension CircleRotor {
             float4((right_dual.e412 * this.e315) + (right_dual.e415 * this.e321) + (right_dual.e321 * this.e415) + (right_dual.e315 * this.e412), (right_dual.e423 * this.e125) + (right_dual.e425 * this.e321) + (right_dual.e321 * this.e425) + (right_dual.e125 * this.e423), (right_dual.e431 * this.e235) + (right_dual.e435 * this.e321) + (right_dual.e321 * this.e435) + (right_dual.e235 * this.e431), -(right_dual.e415 * this.e235) - (right_dual.e425 * this.e315) - (right_dual.e435 * this.e125) - (right_dual.e125 * this.e435)) - float4((right_dual.group0.xyz.yzx * this.group2.zxy), right_dual.e235 * this.e415) - float4((right_dual.group2.xyz.zxy * this.group0.xyz.yzx), right_dual.e315 * this.e425)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(BulkContractionInfixPartial<CircleRotor> lhs, DipoleInversion rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension CircleRotor {
     public AntiDipoleInversion bulk_contraction(DipoleInversion other) {
@@ -3602,6 +4294,10 @@ public extension CircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(BulkContractionInfixPartial<CircleRotor> lhs, DualNum rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension CircleRotor {
     public AntiMotor bulk_contraction(DualNum other) {
         AntiDualNum right_dual = AntiDualNum(
@@ -3616,6 +4312,10 @@ public extension CircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(BulkContractionInfixPartial<CircleRotor> lhs, FlatPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension CircleRotor {
     public AntiFlector bulk_contraction(FlatPoint other) {
         AntiFlatPoint right_dual = AntiFlatPoint(
@@ -3629,6 +4329,10 @@ public extension CircleRotor {
             float4((right_dual.e315 * this.e412) + (right_dual.e321 * this.e415), (right_dual.e125 * this.e423) + (right_dual.e321 * this.e425), (right_dual.e235 * this.e431) + (right_dual.e321 * this.e435), -(right_dual.e315 * this.e425) - (right_dual.e125 * this.e435)) - float4((this.group0.xyz.yzx * right_dual.group0.zxy), right_dual.e235 * this.e415)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(BulkContractionInfixPartial<CircleRotor> lhs, Flector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension CircleRotor {
     public AntiFlector bulk_contraction(Flector other) {
@@ -3646,6 +4350,10 @@ public extension CircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(BulkContractionInfixPartial<CircleRotor> lhs, Line rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension CircleRotor {
     public AntiMotor bulk_contraction(Line other) {
         AntiLine right_dual = AntiLine(
@@ -3662,6 +4370,10 @@ public extension CircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(BulkContractionInfixPartial<CircleRotor> lhs, Motor rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension CircleRotor {
     public AntiMotor bulk_contraction(Motor other) {
         AntiMotor right_dual = AntiMotor(
@@ -3677,6 +4389,10 @@ public extension CircleRotor {
             float4(((float3(right_dual.e3215) * this.group1.xyz) + (float3(this.e12345) * right_dual.group1.xyz)), right_dual.e3215 * this.e12345)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(BulkContractionInfixPartial<CircleRotor> lhs, MultiVector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension CircleRotor {
     public MultiVector bulk_contraction(MultiVector other) {
@@ -3730,6 +4446,10 @@ public extension CircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(BulkContractionInfixPartial<CircleRotor> lhs, Plane rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension CircleRotor {
     public AntiPlane bulk_contraction(Plane other) {
         return AntiPlane(
@@ -3737,6 +4457,10 @@ public extension CircleRotor {
             float4(this.e12345) * float4(other.e4235 * -1.0, other.e4315 * -1.0, other.e4125 * -1.0, other.e3215)
         );
     }
+}
+// Fancy infix trick (second half)
+public DipoleInversion operator /(BulkContractionInfixPartial<CircleRotor> lhs, RoundPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension CircleRotor {
     public DipoleInversion bulk_contraction(RoundPoint other) {
@@ -3758,6 +4482,10 @@ public extension CircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public CircleRotor operator /(BulkContractionInfixPartial<CircleRotor> lhs, Scalar rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension CircleRotor {
     public CircleRotor bulk_contraction(Scalar other) {
         AntiScalar right_dual = AntiScalar(
@@ -3774,6 +4502,10 @@ public extension CircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public RoundPoint operator /(BulkContractionInfixPartial<CircleRotor> lhs, Sphere rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension CircleRotor {
     public RoundPoint bulk_contraction(Sphere other) {
         RoundPoint right_dual = RoundPoint(
@@ -3789,6 +4521,10 @@ public extension CircleRotor {
             this.e12345 * right_dual.e5
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(BulkContractionInfixPartial<CircleRotor> lhs, VersorEven rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension CircleRotor {
     public VersorOdd bulk_contraction(VersorEven other) {
@@ -3814,6 +4550,10 @@ public extension CircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(BulkContractionInfixPartial<CircleRotor> lhs, VersorOdd rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension CircleRotor {
     public VersorEven bulk_contraction(VersorOdd other) {
         VersorEven right_dual = VersorEven(
@@ -3838,17 +4578,13 @@ public extension CircleRotor {
         );
     }
 }
-public extension Dipole {
-    // Fancy infix trick (first half)
-    public BulkContractionInfixPartial<Dipole> operator /(BulkContractionInfix rhs) {
-        return BulkContractionInfixPartial<Dipole>(this);
-    }
+// Fancy infix trick (first half)
+public BulkContractionInfixPartial<Dipole> operator /(Dipole lhs, BulkContractionInfix rhs) {
+    return BulkContractionInfixPartial<Dipole>(lhs);
 }
-public extension BulkContractionInfixPartial<Dipole> {
-    // Fancy infix trick (second half)
-    public AntiCircleRotor operator /(AntiCircleRotor rhs) {
-        return this.a.bulk_contraction(rhs);
-    }
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(BulkContractionInfixPartial<Dipole> lhs, AntiCircleRotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Dipole {
     public AntiCircleRotor bulk_contraction(AntiCircleRotor other) {
@@ -3870,6 +4606,10 @@ public extension Dipole {
         );
     }
 }
+// Fancy infix trick (second half)
+public RoundPoint operator /(BulkContractionInfixPartial<Dipole> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Dipole {
     public RoundPoint bulk_contraction(AntiDipoleInversion other) {
         DipoleInversion right_dual = DipoleInversion(
@@ -3890,6 +4630,10 @@ public extension Dipole {
         );
     }
 }
+// Fancy infix trick (second half)
+public Dipole operator /(BulkContractionInfixPartial<Dipole> lhs, AntiDualNum rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Dipole {
     public Dipole bulk_contraction(AntiDualNum other) {
         DualNum right_dual = DualNum(
@@ -3905,6 +4649,10 @@ public extension Dipole {
             float3(right_dual.e12345) * this.group2.xyz
         );
     }
+}
+// Fancy infix trick (second half)
+public RoundPoint operator /(BulkContractionInfixPartial<Dipole> lhs, AntiFlector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Dipole {
     public RoundPoint bulk_contraction(AntiFlector other) {
@@ -3922,6 +4670,10 @@ public extension Dipole {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<Dipole> lhs, AntiLine rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Dipole {
     public Scalar bulk_contraction(AntiLine other) {
         Line right_dual = Line(
@@ -3935,6 +4687,10 @@ public extension Dipole {
             -(this.e41 * right_dual.e235) - (this.e42 * right_dual.e315) - (this.e43 * right_dual.e125) - (this.e23 * right_dual.e415) - (this.e31 * right_dual.e425) - (this.e12 * right_dual.e435)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(BulkContractionInfixPartial<Dipole> lhs, AntiMotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Dipole {
     public AntiCircleRotor bulk_contraction(AntiMotor other) {
@@ -3954,6 +4710,10 @@ public extension Dipole {
         );
     }
 }
+// Fancy infix trick (second half)
+public RoundPoint operator /(BulkContractionInfixPartial<Dipole> lhs, AntiPlane rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Dipole {
     public RoundPoint bulk_contraction(AntiPlane other) {
         Plane right_dual = Plane(
@@ -3967,6 +4727,10 @@ public extension Dipole {
             (this.e45 * right_dual.e3215) + (this.e15 * right_dual.e4235) + (this.e25 * right_dual.e4315) + (this.e35 * right_dual.e4125)
         );
     }
+}
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<Dipole> lhs, Dipole rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Dipole {
     public Scalar bulk_contraction(Dipole other) {
@@ -3983,6 +4747,10 @@ public extension Dipole {
             -(right_dual.e423 * this.e15) - (right_dual.e431 * this.e25) - (right_dual.e412 * this.e35) - (right_dual.e415 * this.e23) - (right_dual.e425 * this.e31) - (right_dual.e435 * this.e12) - (right_dual.e321 * this.e45) - (right_dual.e235 * this.e41) - (right_dual.e315 * this.e42) - (right_dual.e125 * this.e43)
         );
     }
+}
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<Dipole> lhs, DipoleInversion rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Dipole {
     public Scalar bulk_contraction(DipoleInversion other) {
@@ -4002,6 +4770,10 @@ public extension Dipole {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(BulkContractionInfixPartial<Dipole> lhs, DualNum rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Dipole {
     public AntiPlane bulk_contraction(DualNum other) {
         return AntiPlane(
@@ -4009,6 +4781,10 @@ public extension Dipole {
             float4(other.e5 * -1.0) * float4(this.group0.xyz, this.e45)
         );
     }
+}
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<Dipole> lhs, FlatPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Dipole {
     public Scalar bulk_contraction(FlatPoint other) {
@@ -4021,6 +4797,10 @@ public extension Dipole {
             -(right_dual.e235 * this.e41) - (right_dual.e315 * this.e42) - (right_dual.e125 * this.e43) - (right_dual.e321 * this.e45)
         );
     }
+}
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<Dipole> lhs, Flector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Dipole {
     public Scalar bulk_contraction(Flector other) {
@@ -4036,6 +4816,10 @@ public extension Dipole {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(BulkContractionInfixPartial<Dipole> lhs, Motor rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Dipole {
     public AntiPlane bulk_contraction(Motor other) {
         AntiMotor right_dual = AntiMotor(
@@ -4049,6 +4833,10 @@ public extension Dipole {
             float4((this.group0.xyz * right_dual.group1.www), right_dual.e3215 * this.e45)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(BulkContractionInfixPartial<Dipole> lhs, MultiVector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Dipole {
     public MultiVector bulk_contraction(MultiVector other) {
@@ -4102,6 +4890,10 @@ public extension Dipole {
         );
     }
 }
+// Fancy infix trick (second half)
+public RoundPoint operator /(BulkContractionInfixPartial<Dipole> lhs, RoundPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Dipole {
     public RoundPoint bulk_contraction(RoundPoint other) {
         Sphere right_dual = Sphere(
@@ -4118,6 +4910,10 @@ public extension Dipole {
         );
     }
 }
+// Fancy infix trick (second half)
+public Dipole operator /(BulkContractionInfixPartial<Dipole> lhs, Scalar rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Dipole {
     public Dipole bulk_contraction(Scalar other) {
         AntiScalar right_dual = AntiScalar(
@@ -4133,6 +4929,10 @@ public extension Dipole {
             float3(right_dual.e12345) * this.group2.xyz
         );
     }
+}
+// Fancy infix trick (second half)
+public RoundPoint operator /(BulkContractionInfixPartial<Dipole> lhs, VersorEven rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Dipole {
     public RoundPoint bulk_contraction(VersorEven other) {
@@ -4153,6 +4953,10 @@ public extension Dipole {
             (this.e45 * right_dual.e3215) + (this.e15 * right_dual.e4235) + (this.e25 * right_dual.e4315) + (this.e35 * right_dual.e4125)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(BulkContractionInfixPartial<Dipole> lhs, VersorOdd rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Dipole {
     public AntiCircleRotor bulk_contraction(VersorOdd other) {
@@ -4176,17 +4980,13 @@ public extension Dipole {
         );
     }
 }
-public extension DipoleInversion {
-    // Fancy infix trick (first half)
-    public BulkContractionInfixPartial<DipoleInversion> operator /(BulkContractionInfix rhs) {
-        return BulkContractionInfixPartial<DipoleInversion>(this);
-    }
+// Fancy infix trick (first half)
+public BulkContractionInfixPartial<DipoleInversion> operator /(DipoleInversion lhs, BulkContractionInfix rhs) {
+    return BulkContractionInfixPartial<DipoleInversion>(lhs);
 }
-public extension BulkContractionInfixPartial<DipoleInversion> {
-    // Fancy infix trick (second half)
-    public VersorOdd operator /(AntiCircleRotor rhs) {
-        return this.a.bulk_contraction(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorOdd operator /(BulkContractionInfixPartial<DipoleInversion> lhs, AntiCircleRotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension DipoleInversion {
     public VersorOdd bulk_contraction(AntiCircleRotor other) {
@@ -4209,6 +5009,10 @@ public extension DipoleInversion {
             float4(right_dual.e12345) * this.group3
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(BulkContractionInfixPartial<DipoleInversion> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension DipoleInversion {
     public AntiDipoleInversion bulk_contraction(AntiDipoleInversion other) {
@@ -4234,6 +5038,10 @@ public extension DipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(BulkContractionInfixPartial<DipoleInversion> lhs, AntiDualNum rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension DipoleInversion {
     public VersorOdd bulk_contraction(AntiDualNum other) {
         DualNum right_dual = DualNum(
@@ -4252,6 +5060,10 @@ public extension DipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public RoundPoint operator /(BulkContractionInfixPartial<DipoleInversion> lhs, AntiFlatPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension DipoleInversion {
     public RoundPoint bulk_contraction(AntiFlatPoint other) {
         FlatPoint right_dual = FlatPoint(
@@ -4265,6 +5077,10 @@ public extension DipoleInversion {
             -(this.e4235 * right_dual.e15) - (this.e4315 * right_dual.e25) - (this.e4125 * right_dual.e35) - (this.e3215 * right_dual.e45)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(BulkContractionInfixPartial<DipoleInversion> lhs, AntiFlector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension DipoleInversion {
     public AntiDipoleInversion bulk_contraction(AntiFlector other) {
@@ -4286,6 +5102,10 @@ public extension DipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(BulkContractionInfixPartial<DipoleInversion> lhs, AntiLine rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension DipoleInversion {
     public AntiCircleRotor bulk_contraction(AntiLine other) {
         Line right_dual = Line(
@@ -4303,6 +5123,10 @@ public extension DipoleInversion {
             float4((this.e4125 * right_dual.e315) + (this.e3215 * right_dual.e415), (this.e4235 * right_dual.e125) + (this.e3215 * right_dual.e425), (this.e4315 * right_dual.e235) + (this.e3215 * right_dual.e435), -(this.e42 * right_dual.e315) - (this.e43 * right_dual.e125) - (this.e23 * right_dual.e415) - (this.e31 * right_dual.e425) - (this.e12 * right_dual.e435)) - float4((right_dual.group1.xyz.zxy * this.group3.yzx), this.e41 * right_dual.e235)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(BulkContractionInfixPartial<DipoleInversion> lhs, AntiMotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension DipoleInversion {
     public VersorOdd bulk_contraction(AntiMotor other) {
@@ -4324,6 +5148,10 @@ public extension DipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(BulkContractionInfixPartial<DipoleInversion> lhs, AntiPlane rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension DipoleInversion {
     public AntiDipoleInversion bulk_contraction(AntiPlane other) {
         Plane right_dual = Plane(
@@ -4341,6 +5169,10 @@ public extension DipoleInversion {
             float4(this.e12 * right_dual.e4315 * -1.0, this.e23 * right_dual.e4125 * -1.0, this.e31 * right_dual.e4235 * -1.0, (this.e25 * right_dual.e4315) + (this.e35 * right_dual.e4125)) + (float4(right_dual.e3215) * float4(this.group0.xyz, this.e45)) + (right_dual.group0.zxyx * float4(this.group1.yzx, this.e15))
         );
     }
+}
+// Fancy infix trick (second half)
+public RoundPoint operator /(BulkContractionInfixPartial<DipoleInversion> lhs, Circle rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension DipoleInversion {
     public RoundPoint bulk_contraction(Circle other) {
@@ -4360,6 +5192,10 @@ public extension DipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public RoundPoint operator /(BulkContractionInfixPartial<DipoleInversion> lhs, CircleRotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension DipoleInversion {
     public RoundPoint bulk_contraction(CircleRotor other) {
         AntiCircleRotor right_dual = AntiCircleRotor(
@@ -4377,6 +5213,10 @@ public extension DipoleInversion {
             -(right_dual.e45 * this.e3215) - (right_dual.e15 * this.e4235) - (right_dual.e25 * this.e4315) - (right_dual.e35 * this.e4125)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(BulkContractionInfixPartial<DipoleInversion> lhs, Dipole rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension DipoleInversion {
     public AntiCircleRotor bulk_contraction(Dipole other) {
@@ -4397,6 +5237,10 @@ public extension DipoleInversion {
             float4((right_dual.e415 * this.e3215) + (right_dual.e315 * this.e4125), (right_dual.e425 * this.e3215) + (right_dual.e125 * this.e4235), (right_dual.e435 * this.e3215) + (right_dual.e235 * this.e4315), -(right_dual.e431 * this.e25) - (right_dual.e412 * this.e35) - (right_dual.e415 * this.e23) - (right_dual.e425 * this.e31) - (right_dual.e435 * this.e12) - (right_dual.e321 * this.e45) - (right_dual.e235 * this.e41) - (right_dual.e315 * this.e42) - (right_dual.e125 * this.e43)) - float4((right_dual.group2.xyz.zxy * this.group3.yzx), right_dual.e423 * this.e15)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(BulkContractionInfixPartial<DipoleInversion> lhs, DipoleInversion rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension DipoleInversion {
     public AntiCircleRotor bulk_contraction(DipoleInversion other) {
@@ -4420,6 +5264,10 @@ public extension DipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(BulkContractionInfixPartial<DipoleInversion> lhs, DualNum rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension DipoleInversion {
     public AntiFlector bulk_contraction(DualNum other) {
         AntiDualNum right_dual = AntiDualNum(
@@ -4434,6 +5282,10 @@ public extension DipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(BulkContractionInfixPartial<DipoleInversion> lhs, FlatPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension DipoleInversion {
     public AntiMotor bulk_contraction(FlatPoint other) {
         AntiFlatPoint right_dual = AntiFlatPoint(
@@ -4447,6 +5299,10 @@ public extension DipoleInversion {
             float4(((right_dual.group0.yzx * this.group3.zxy) - (right_dual.group0.zxy * this.group3.yzx)), 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(BulkContractionInfixPartial<DipoleInversion> lhs, Flector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension DipoleInversion {
     public AntiMotor bulk_contraction(Flector other) {
@@ -4464,6 +5320,10 @@ public extension DipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(BulkContractionInfixPartial<DipoleInversion> lhs, Line rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension DipoleInversion {
     public AntiPlane bulk_contraction(Line other) {
         AntiLine right_dual = AntiLine(
@@ -4477,6 +5337,10 @@ public extension DipoleInversion {
             float4((right_dual.e12 * this.e4315) + (right_dual.e15 * this.e1234), (right_dual.e23 * this.e4125) + (right_dual.e25 * this.e1234), (right_dual.e31 * this.e4235) + (right_dual.e35 * this.e1234), -(right_dual.e25 * this.e4315) - (right_dual.e35 * this.e4125)) - (this.group3.zxyx * float4(right_dual.group0.xyz.yzx, right_dual.e15))
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(BulkContractionInfixPartial<DipoleInversion> lhs, Motor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension DipoleInversion {
     public AntiFlector bulk_contraction(Motor other) {
@@ -4493,6 +5357,10 @@ public extension DipoleInversion {
             float4((right_dual.e12 * this.e4315) + (right_dual.e15 * this.e1234), (right_dual.e23 * this.e4125) + (right_dual.e25 * this.e1234), (right_dual.e31 * this.e4235) + (right_dual.e35 * this.e1234), -(right_dual.e25 * this.e4315) - (right_dual.e35 * this.e4125)) + float4((this.group0.xyz * right_dual.group1.www), right_dual.e3215 * this.e45) - (this.group3.zxyx * float4(right_dual.group0.yzx, right_dual.e15))
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(BulkContractionInfixPartial<DipoleInversion> lhs, MultiVector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension DipoleInversion {
     public MultiVector bulk_contraction(MultiVector other) {
@@ -4546,6 +5414,10 @@ public extension DipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<DipoleInversion> lhs, Plane rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension DipoleInversion {
     public Scalar bulk_contraction(Plane other) {
         AntiPlane right_dual = AntiPlane(
@@ -4557,6 +5429,10 @@ public extension DipoleInversion {
             (right_dual.e1 * this.e4235) + (right_dual.e2 * this.e4315) + (right_dual.e3 * this.e4125) + (right_dual.e5 * this.e1234)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(BulkContractionInfixPartial<DipoleInversion> lhs, RoundPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension DipoleInversion {
     public AntiDipoleInversion bulk_contraction(RoundPoint other) {
@@ -4578,6 +5454,10 @@ public extension DipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public DipoleInversion operator /(BulkContractionInfixPartial<DipoleInversion> lhs, Scalar rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension DipoleInversion {
     public DipoleInversion bulk_contraction(Scalar other) {
         AntiScalar right_dual = AntiScalar(
@@ -4596,6 +5476,10 @@ public extension DipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<DipoleInversion> lhs, Sphere rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension DipoleInversion {
     public Scalar bulk_contraction(Sphere other) {
         RoundPoint right_dual = RoundPoint(
@@ -4609,6 +5493,10 @@ public extension DipoleInversion {
             (this.e1234 * right_dual.e5) + (this.e4235 * right_dual.e1) + (this.e4315 * right_dual.e2) + (this.e4125 * right_dual.e3) + (this.e3215 * right_dual.e4)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(BulkContractionInfixPartial<DipoleInversion> lhs, VersorEven rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension DipoleInversion {
     public AntiDipoleInversion bulk_contraction(VersorEven other) {
@@ -4634,6 +5522,10 @@ public extension DipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(BulkContractionInfixPartial<DipoleInversion> lhs, VersorOdd rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension DipoleInversion {
     public VersorOdd bulk_contraction(VersorOdd other) {
         VersorEven right_dual = VersorEven(
@@ -4658,17 +5550,13 @@ public extension DipoleInversion {
         );
     }
 }
-public extension DualNum {
-    // Fancy infix trick (first half)
-    public BulkContractionInfixPartial<DualNum> operator /(BulkContractionInfix rhs) {
-        return BulkContractionInfixPartial<DualNum>(this);
-    }
+// Fancy infix trick (first half)
+public BulkContractionInfixPartial<DualNum> operator /(DualNum lhs, BulkContractionInfix rhs) {
+    return BulkContractionInfixPartial<DualNum>(lhs);
 }
-public extension BulkContractionInfixPartial<DualNum> {
-    // Fancy infix trick (second half)
-    public VersorEven operator /(AntiCircleRotor rhs) {
-        return this.a.bulk_contraction(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorEven operator /(BulkContractionInfixPartial<DualNum> lhs, AntiCircleRotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension DualNum {
     public VersorEven bulk_contraction(AntiCircleRotor other) {
@@ -4691,6 +5579,10 @@ public extension DualNum {
             float4(0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(BulkContractionInfixPartial<DualNum> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension DualNum {
     public VersorOdd bulk_contraction(AntiDipoleInversion other) {
@@ -4716,6 +5608,10 @@ public extension DualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public DualNum operator /(BulkContractionInfixPartial<DualNum> lhs, AntiDualNum rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension DualNum {
     public DualNum bulk_contraction(AntiDualNum other) {
         DualNum right_dual = DualNum(
@@ -4728,6 +5624,10 @@ public extension DualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public FlatPoint operator /(BulkContractionInfixPartial<DualNum> lhs, AntiFlatPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension DualNum {
     public FlatPoint bulk_contraction(AntiFlatPoint other) {
         return FlatPoint(
@@ -4735,6 +5635,10 @@ public extension DualNum {
             float4(this.e12345) * float4(other.group0.xyz, other.e321 * -1.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(BulkContractionInfixPartial<DualNum> lhs, AntiFlector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension DualNum {
     public Flector bulk_contraction(AntiFlector other) {
@@ -4752,6 +5656,10 @@ public extension DualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public Line operator /(BulkContractionInfixPartial<DualNum> lhs, AntiLine rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension DualNum {
     public Line bulk_contraction(AntiLine other) {
         Line right_dual = Line(
@@ -4767,6 +5675,10 @@ public extension DualNum {
             float3(this.e12345) * right_dual.group1.xyz
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(BulkContractionInfixPartial<DualNum> lhs, AntiMotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension DualNum {
     public Motor bulk_contraction(AntiMotor other) {
@@ -4784,6 +5696,10 @@ public extension DualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public Plane operator /(BulkContractionInfixPartial<DualNum> lhs, AntiPlane rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension DualNum {
     public Plane bulk_contraction(AntiPlane other) {
         return Plane(
@@ -4792,6 +5708,10 @@ public extension DualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<DualNum> lhs, AntiScalar rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension DualNum {
     public Scalar bulk_contraction(AntiScalar other) {
         return Scalar(
@@ -4799,6 +5719,10 @@ public extension DualNum {
             other.e12345 * this.e12345 * -1.0
         );
     }
+}
+// Fancy infix trick (second half)
+public Dipole operator /(BulkContractionInfixPartial<DualNum> lhs, Circle rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension DualNum {
     public Dipole bulk_contraction(Circle other) {
@@ -4820,6 +5744,10 @@ public extension DualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(BulkContractionInfixPartial<DualNum> lhs, CircleRotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension DualNum {
     public AntiCircleRotor bulk_contraction(CircleRotor other) {
         AntiCircleRotor right_dual = AntiCircleRotor(
@@ -4840,6 +5768,10 @@ public extension DualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public Circle operator /(BulkContractionInfixPartial<DualNum> lhs, Dipole rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension DualNum {
     public Circle bulk_contraction(Dipole other) {
         Circle right_dual = Circle(
@@ -4859,6 +5791,10 @@ public extension DualNum {
             float3(this.e12345) * right_dual.group2.xyz
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(BulkContractionInfixPartial<DualNum> lhs, DipoleInversion rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension DualNum {
     public AntiDipoleInversion bulk_contraction(DipoleInversion other) {
@@ -4884,6 +5820,10 @@ public extension DualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDualNum operator /(BulkContractionInfixPartial<DualNum> lhs, DualNum rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension DualNum {
     public AntiDualNum bulk_contraction(DualNum other) {
         return AntiDualNum(
@@ -4892,6 +5832,10 @@ public extension DualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlatPoint operator /(BulkContractionInfixPartial<DualNum> lhs, FlatPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension DualNum {
     public AntiFlatPoint bulk_contraction(FlatPoint other) {
         return AntiFlatPoint(
@@ -4899,6 +5843,10 @@ public extension DualNum {
             float4(this.e12345) * float4(other.e15 * -1.0, other.e25 * -1.0, other.e35 * -1.0, other.e45)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(BulkContractionInfixPartial<DualNum> lhs, Flector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension DualNum {
     public AntiFlector bulk_contraction(Flector other) {
@@ -4916,6 +5864,10 @@ public extension DualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiLine operator /(BulkContractionInfixPartial<DualNum> lhs, Line rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension DualNum {
     public AntiLine bulk_contraction(Line other) {
         AntiLine right_dual = AntiLine(
@@ -4932,6 +5884,10 @@ public extension DualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(BulkContractionInfixPartial<DualNum> lhs, Motor rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension DualNum {
     public AntiMotor bulk_contraction(Motor other) {
         AntiMotor right_dual = AntiMotor(
@@ -4947,6 +5903,10 @@ public extension DualNum {
             float4(this.e12345) * right_dual.group1
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(BulkContractionInfixPartial<DualNum> lhs, MultiVector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension DualNum {
     public MultiVector bulk_contraction(MultiVector other) {
@@ -5000,6 +5960,10 @@ public extension DualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(BulkContractionInfixPartial<DualNum> lhs, Plane rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension DualNum {
     public AntiPlane bulk_contraction(Plane other) {
         return AntiPlane(
@@ -5007,6 +5971,10 @@ public extension DualNum {
             float4(this.e12345) * float4(other.e4235 * -1.0, other.e4315 * -1.0, other.e4125 * -1.0, other.e3215)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(BulkContractionInfixPartial<DualNum> lhs, RoundPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension DualNum {
     public VersorOdd bulk_contraction(RoundPoint other) {
@@ -5028,6 +5996,10 @@ public extension DualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public DualNum operator /(BulkContractionInfixPartial<DualNum> lhs, Scalar rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension DualNum {
     public DualNum bulk_contraction(Scalar other) {
         return DualNum(
@@ -5035,6 +6007,10 @@ public extension DualNum {
             float2(other.scalar) * this.group0.xy
         );
     }
+}
+// Fancy infix trick (second half)
+public RoundPoint operator /(BulkContractionInfixPartial<DualNum> lhs, Sphere rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension DualNum {
     public RoundPoint bulk_contraction(Sphere other) {
@@ -5051,6 +6027,10 @@ public extension DualNum {
             this.e12345 * right_dual.e5
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(BulkContractionInfixPartial<DualNum> lhs, VersorEven rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension DualNum {
     public VersorOdd bulk_contraction(VersorEven other) {
@@ -5076,6 +6056,10 @@ public extension DualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(BulkContractionInfixPartial<DualNum> lhs, VersorOdd rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension DualNum {
     public VersorEven bulk_contraction(VersorOdd other) {
         VersorEven right_dual = VersorEven(
@@ -5100,17 +6084,13 @@ public extension DualNum {
         );
     }
 }
-public extension FlatPoint {
-    // Fancy infix trick (first half)
-    public BulkContractionInfixPartial<FlatPoint> operator /(BulkContractionInfix rhs) {
-        return BulkContractionInfixPartial<FlatPoint>(this);
-    }
+// Fancy infix trick (first half)
+public BulkContractionInfixPartial<FlatPoint> operator /(FlatPoint lhs, BulkContractionInfix rhs) {
+    return BulkContractionInfixPartial<FlatPoint>(lhs);
 }
-public extension BulkContractionInfixPartial<FlatPoint> {
-    // Fancy infix trick (second half)
-    public AntiCircleRotor operator /(AntiCircleRotor rhs) {
-        return this.a.bulk_contraction(rhs);
-    }
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(BulkContractionInfixPartial<FlatPoint> lhs, AntiCircleRotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension FlatPoint {
     public AntiCircleRotor bulk_contraction(AntiCircleRotor other) {
@@ -5132,6 +6112,10 @@ public extension FlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public RoundPoint operator /(BulkContractionInfixPartial<FlatPoint> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension FlatPoint {
     public RoundPoint bulk_contraction(AntiDipoleInversion other) {
         DipoleInversion right_dual = DipoleInversion(
@@ -5152,6 +6136,10 @@ public extension FlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public FlatPoint operator /(BulkContractionInfixPartial<FlatPoint> lhs, AntiDualNum rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension FlatPoint {
     public FlatPoint bulk_contraction(AntiDualNum other) {
         return FlatPoint(
@@ -5159,6 +6147,10 @@ public extension FlatPoint {
             float4(other.scalar) * this.group0
         );
     }
+}
+// Fancy infix trick (second half)
+public DualNum operator /(BulkContractionInfixPartial<FlatPoint> lhs, AntiFlector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension FlatPoint {
     public DualNum bulk_contraction(AntiFlector other) {
@@ -5174,6 +6166,10 @@ public extension FlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public FlatPoint operator /(BulkContractionInfixPartial<FlatPoint> lhs, AntiMotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension FlatPoint {
     public FlatPoint bulk_contraction(AntiMotor other) {
         return FlatPoint(
@@ -5181,6 +6177,10 @@ public extension FlatPoint {
             float4(other.scalar) * this.group0
         );
     }
+}
+// Fancy infix trick (second half)
+public DualNum operator /(BulkContractionInfixPartial<FlatPoint> lhs, AntiPlane rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension FlatPoint {
     public DualNum bulk_contraction(AntiPlane other) {
@@ -5193,6 +6193,10 @@ public extension FlatPoint {
             float2((this.e15 * right_dual.e4235) + (this.e25 * right_dual.e4315) + (this.e35 * right_dual.e4125) + (this.e45 * right_dual.e3215), 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<FlatPoint> lhs, Dipole rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension FlatPoint {
     public Scalar bulk_contraction(Dipole other) {
@@ -5209,6 +6213,10 @@ public extension FlatPoint {
             -(right_dual.e423 * this.e15) - (right_dual.e431 * this.e25) - (right_dual.e412 * this.e35) - (right_dual.e321 * this.e45)
         );
     }
+}
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<FlatPoint> lhs, DipoleInversion rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension FlatPoint {
     public Scalar bulk_contraction(DipoleInversion other) {
@@ -5228,6 +6236,10 @@ public extension FlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public DualNum operator /(BulkContractionInfixPartial<FlatPoint> lhs, DualNum rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension FlatPoint {
     public DualNum bulk_contraction(DualNum other) {
         return DualNum(
@@ -5235,6 +6247,10 @@ public extension FlatPoint {
             float2(other.e5 * this.e45 * -1.0, 1.0) * float2(1.0, 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<FlatPoint> lhs, FlatPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension FlatPoint {
     public Scalar bulk_contraction(FlatPoint other) {
@@ -5244,6 +6260,10 @@ public extension FlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<FlatPoint> lhs, Flector rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension FlatPoint {
     public Scalar bulk_contraction(Flector other) {
         return Scalar(
@@ -5252,6 +6272,10 @@ public extension FlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public DualNum operator /(BulkContractionInfixPartial<FlatPoint> lhs, Motor rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension FlatPoint {
     public DualNum bulk_contraction(Motor other) {
         return DualNum(
@@ -5259,6 +6283,10 @@ public extension FlatPoint {
             float2(float4(other.group1.xyz, other.e5 * -1.0)[3] * this.e45, 1.0) * float2(1.0, 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(BulkContractionInfixPartial<FlatPoint> lhs, MultiVector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension FlatPoint {
     public MultiVector bulk_contraction(MultiVector other) {
@@ -5312,6 +6340,10 @@ public extension FlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public RoundPoint operator /(BulkContractionInfixPartial<FlatPoint> lhs, RoundPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension FlatPoint {
     public RoundPoint bulk_contraction(RoundPoint other) {
         Sphere right_dual = Sphere(
@@ -5328,6 +6360,10 @@ public extension FlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public FlatPoint operator /(BulkContractionInfixPartial<FlatPoint> lhs, Scalar rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension FlatPoint {
     public FlatPoint bulk_contraction(Scalar other) {
         return FlatPoint(
@@ -5335,6 +6371,10 @@ public extension FlatPoint {
             float4(other.scalar) * this.group0
         );
     }
+}
+// Fancy infix trick (second half)
+public RoundPoint operator /(BulkContractionInfixPartial<FlatPoint> lhs, VersorEven rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension FlatPoint {
     public RoundPoint bulk_contraction(VersorEven other) {
@@ -5355,6 +6395,10 @@ public extension FlatPoint {
             (this.e15 * right_dual.e4235) + (this.e25 * right_dual.e4315) + (this.e35 * right_dual.e4125) + (this.e45 * right_dual.e3215)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(BulkContractionInfixPartial<FlatPoint> lhs, VersorOdd rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension FlatPoint {
     public AntiCircleRotor bulk_contraction(VersorOdd other) {
@@ -5378,17 +6422,13 @@ public extension FlatPoint {
         );
     }
 }
-public extension Flector {
-    // Fancy infix trick (first half)
-    public BulkContractionInfixPartial<Flector> operator /(BulkContractionInfix rhs) {
-        return BulkContractionInfixPartial<Flector>(this);
-    }
+// Fancy infix trick (first half)
+public BulkContractionInfixPartial<Flector> operator /(Flector lhs, BulkContractionInfix rhs) {
+    return BulkContractionInfixPartial<Flector>(lhs);
 }
-public extension BulkContractionInfixPartial<Flector> {
-    // Fancy infix trick (second half)
-    public VersorOdd operator /(AntiCircleRotor rhs) {
-        return this.a.bulk_contraction(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorOdd operator /(BulkContractionInfixPartial<Flector> lhs, AntiCircleRotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Flector {
     public VersorOdd bulk_contraction(AntiCircleRotor other) {
@@ -5411,6 +6451,10 @@ public extension Flector {
             float4(right_dual.e12345) * this.group1
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(BulkContractionInfixPartial<Flector> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Flector {
     public AntiDipoleInversion bulk_contraction(AntiDipoleInversion other) {
@@ -5436,6 +6480,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(BulkContractionInfixPartial<Flector> lhs, AntiDualNum rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Flector {
     public Flector bulk_contraction(AntiDualNum other) {
         DualNum right_dual = DualNum(
@@ -5450,6 +6498,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public DualNum operator /(BulkContractionInfixPartial<Flector> lhs, AntiFlatPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Flector {
     public DualNum bulk_contraction(AntiFlatPoint other) {
         FlatPoint right_dual = FlatPoint(
@@ -5461,6 +6513,10 @@ public extension Flector {
             float2(-(right_dual.e15 * this.e4235) - (right_dual.e25 * this.e4315) - (right_dual.e35 * this.e4125) - (right_dual.e45 * this.e3215), 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(BulkContractionInfixPartial<Flector> lhs, AntiFlector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Flector {
     public Motor bulk_contraction(AntiFlector other) {
@@ -5478,6 +6534,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public FlatPoint operator /(BulkContractionInfixPartial<Flector> lhs, AntiLine rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Flector {
     public FlatPoint bulk_contraction(AntiLine other) {
         Line right_dual = Line(
@@ -5491,6 +6551,10 @@ public extension Flector {
             float4((this.e4125 * right_dual.e315) + (this.e3215 * right_dual.e415), (this.e4235 * right_dual.e125) + (this.e3215 * right_dual.e425), (this.e4315 * right_dual.e235) + (this.e3215 * right_dual.e435), -(this.e4315 * right_dual.e425) - (this.e4125 * right_dual.e435)) - (this.group1.yzxx * float4(right_dual.group1.xyz.zxy, right_dual.e415))
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(BulkContractionInfixPartial<Flector> lhs, AntiMotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Flector {
     public Flector bulk_contraction(AntiMotor other) {
@@ -5508,6 +6572,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(BulkContractionInfixPartial<Flector> lhs, AntiPlane rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Flector {
     public Motor bulk_contraction(AntiPlane other) {
         Plane right_dual = Plane(
@@ -5521,6 +6589,10 @@ public extension Flector {
             float4(this.e3215 * right_dual.e4235 * -1.0, this.e3215 * right_dual.e4315 * -1.0, this.e3215 * right_dual.e4125 * -1.0, (this.e25 * right_dual.e4315) + (this.e35 * right_dual.e4125) + (this.e45 * right_dual.e3215)) + (right_dual.group0.wwwx * float4(this.group1.xyz, this.e15))
         );
     }
+}
+// Fancy infix trick (second half)
+public RoundPoint operator /(BulkContractionInfixPartial<Flector> lhs, Circle rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Flector {
     public RoundPoint bulk_contraction(Circle other) {
@@ -5540,6 +6612,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public RoundPoint operator /(BulkContractionInfixPartial<Flector> lhs, CircleRotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Flector {
     public RoundPoint bulk_contraction(CircleRotor other) {
         AntiCircleRotor right_dual = AntiCircleRotor(
@@ -5557,6 +6633,10 @@ public extension Flector {
             -(right_dual.e45 * this.e3215) - (right_dual.e15 * this.e4235) - (right_dual.e25 * this.e4315) - (right_dual.e35 * this.e4125)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(BulkContractionInfixPartial<Flector> lhs, Dipole rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Flector {
     public AntiCircleRotor bulk_contraction(Dipole other) {
@@ -5577,6 +6657,10 @@ public extension Flector {
             float4((right_dual.e415 * this.e3215) + (right_dual.e315 * this.e4125), (right_dual.e425 * this.e3215) + (right_dual.e125 * this.e4235), (right_dual.e435 * this.e3215) + (right_dual.e235 * this.e4315), -(right_dual.e431 * this.e25) - (right_dual.e412 * this.e35) - (right_dual.e321 * this.e45)) - float4((right_dual.group2.xyz.zxy * this.group1.yzx), right_dual.e423 * this.e15)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(BulkContractionInfixPartial<Flector> lhs, DipoleInversion rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Flector {
     public AntiCircleRotor bulk_contraction(DipoleInversion other) {
@@ -5600,6 +6684,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(BulkContractionInfixPartial<Flector> lhs, DualNum rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Flector {
     public AntiFlector bulk_contraction(DualNum other) {
         AntiDualNum right_dual = AntiDualNum(
@@ -5614,6 +6702,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(BulkContractionInfixPartial<Flector> lhs, FlatPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Flector {
     public AntiMotor bulk_contraction(FlatPoint other) {
         AntiFlatPoint right_dual = AntiFlatPoint(
@@ -5627,6 +6719,10 @@ public extension Flector {
             float4(((right_dual.group0.yzx * this.group1.zxy) - (right_dual.group0.zxy * this.group1.yzx)), 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(BulkContractionInfixPartial<Flector> lhs, Flector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Flector {
     public AntiMotor bulk_contraction(Flector other) {
@@ -5644,6 +6740,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(BulkContractionInfixPartial<Flector> lhs, Line rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Flector {
     public AntiPlane bulk_contraction(Line other) {
         AntiLine right_dual = AntiLine(
@@ -5657,6 +6757,10 @@ public extension Flector {
             float4(right_dual.e12 * this.e4315, right_dual.e23 * this.e4125, right_dual.e31 * this.e4235, -(right_dual.e25 * this.e4315) - (right_dual.e35 * this.e4125)) - (this.group1.zxyx * float4(right_dual.group0.xyz.yzx, right_dual.e15))
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(BulkContractionInfixPartial<Flector> lhs, Motor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Flector {
     public AntiFlector bulk_contraction(Motor other) {
@@ -5673,6 +6777,10 @@ public extension Flector {
             float4(float3(0.0), -(right_dual.e25 * this.e4315) - (right_dual.e35 * this.e4125)) + float4((right_dual.group0.zxy * this.group1.yzx), right_dual.e3215 * this.e45) - (this.group1.zxyx * float4(right_dual.group0.yzx, right_dual.e15))
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(BulkContractionInfixPartial<Flector> lhs, MultiVector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Flector {
     public MultiVector bulk_contraction(MultiVector other) {
@@ -5726,6 +6834,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<Flector> lhs, Plane rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Flector {
     public Scalar bulk_contraction(Plane other) {
         AntiPlane right_dual = AntiPlane(
@@ -5737,6 +6849,10 @@ public extension Flector {
             (right_dual.e1 * this.e4235) + (right_dual.e2 * this.e4315) + (right_dual.e3 * this.e4125)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(BulkContractionInfixPartial<Flector> lhs, RoundPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Flector {
     public AntiDipoleInversion bulk_contraction(RoundPoint other) {
@@ -5758,6 +6874,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(BulkContractionInfixPartial<Flector> lhs, Scalar rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Flector {
     public Flector bulk_contraction(Scalar other) {
         AntiScalar right_dual = AntiScalar(
@@ -5772,6 +6892,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<Flector> lhs, Sphere rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Flector {
     public Scalar bulk_contraction(Sphere other) {
         RoundPoint right_dual = RoundPoint(
@@ -5785,6 +6909,10 @@ public extension Flector {
             (this.e4235 * right_dual.e1) + (this.e4315 * right_dual.e2) + (this.e4125 * right_dual.e3) + (this.e3215 * right_dual.e4)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(BulkContractionInfixPartial<Flector> lhs, VersorEven rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Flector {
     public AntiDipoleInversion bulk_contraction(VersorEven other) {
@@ -5810,6 +6938,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(BulkContractionInfixPartial<Flector> lhs, VersorOdd rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Flector {
     public VersorOdd bulk_contraction(VersorOdd other) {
         VersorEven right_dual = VersorEven(
@@ -5834,17 +6966,13 @@ public extension Flector {
         );
     }
 }
-public extension Line {
-    // Fancy infix trick (first half)
-    public BulkContractionInfixPartial<Line> operator /(BulkContractionInfix rhs) {
-        return BulkContractionInfixPartial<Line>(this);
-    }
+// Fancy infix trick (first half)
+public BulkContractionInfixPartial<Line> operator /(Line lhs, BulkContractionInfix rhs) {
+    return BulkContractionInfixPartial<Line>(lhs);
 }
-public extension BulkContractionInfixPartial<Line> {
-    // Fancy infix trick (second half)
-    public AntiDipoleInversion operator /(AntiCircleRotor rhs) {
-        return this.a.bulk_contraction(rhs);
-    }
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(BulkContractionInfixPartial<Line> lhs, AntiCircleRotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Line {
     public AntiDipoleInversion bulk_contraction(AntiCircleRotor other) {
@@ -5868,6 +6996,10 @@ public extension Line {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(BulkContractionInfixPartial<Line> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Line {
     public AntiCircleRotor bulk_contraction(AntiDipoleInversion other) {
         DipoleInversion right_dual = DipoleInversion(
@@ -5890,6 +7022,10 @@ public extension Line {
         );
     }
 }
+// Fancy infix trick (second half)
+public Line operator /(BulkContractionInfixPartial<Line> lhs, AntiDualNum rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Line {
     public Line bulk_contraction(AntiDualNum other) {
         DualNum right_dual = DualNum(
@@ -5903,6 +7039,10 @@ public extension Line {
             float3(right_dual.e12345) * this.group1.xyz
         );
     }
+}
+// Fancy infix trick (second half)
+public FlatPoint operator /(BulkContractionInfixPartial<Line> lhs, AntiFlector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Line {
     public FlatPoint bulk_contraction(AntiFlector other) {
@@ -5918,6 +7058,10 @@ public extension Line {
         );
     }
 }
+// Fancy infix trick (second half)
+public DualNum operator /(BulkContractionInfixPartial<Line> lhs, AntiLine rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Line {
     public DualNum bulk_contraction(AntiLine other) {
         Line right_dual = Line(
@@ -5931,6 +7075,10 @@ public extension Line {
             float2(-(right_dual.e415 * this.e235) - (right_dual.e425 * this.e315) - (right_dual.e435 * this.e125) - (right_dual.e235 * this.e415) - (right_dual.e315 * this.e425) - (right_dual.e125 * this.e435), 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(BulkContractionInfixPartial<Line> lhs, AntiMotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Line {
     public Motor bulk_contraction(AntiMotor other) {
@@ -5948,6 +7096,10 @@ public extension Line {
         );
     }
 }
+// Fancy infix trick (second half)
+public FlatPoint operator /(BulkContractionInfixPartial<Line> lhs, AntiPlane rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Line {
     public FlatPoint bulk_contraction(AntiPlane other) {
         Plane right_dual = Plane(
@@ -5959,6 +7111,10 @@ public extension Line {
             float4((this.e415 * right_dual.e3215) + (this.e315 * right_dual.e4125), (this.e425 * right_dual.e3215) + (this.e125 * right_dual.e4235), (this.e435 * right_dual.e3215) + (this.e235 * right_dual.e4315), -(this.e425 * right_dual.e4315) - (this.e435 * right_dual.e4125)) - (right_dual.group0.yzxx * float4(this.group1.xyz.zxy, this.e415))
         );
     }
+}
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<Line> lhs, Circle rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Line {
     public Scalar bulk_contraction(Circle other) {
@@ -5976,6 +7132,10 @@ public extension Line {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<Line> lhs, CircleRotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Line {
     public Scalar bulk_contraction(CircleRotor other) {
         AntiCircleRotor right_dual = AntiCircleRotor(
@@ -5991,6 +7151,10 @@ public extension Line {
             -(right_dual.e41 * this.e235) - (right_dual.e42 * this.e315) - (right_dual.e43 * this.e125) - (right_dual.e23 * this.e415) - (right_dual.e31 * this.e425) - (right_dual.e12 * this.e435)
         );
     }
+}
+// Fancy infix trick (second half)
+public RoundPoint operator /(BulkContractionInfixPartial<Line> lhs, Dipole rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Line {
     public RoundPoint bulk_contraction(Dipole other) {
@@ -6009,6 +7173,10 @@ public extension Line {
             -(right_dual.e415 * this.e235) - (right_dual.e425 * this.e315) - (right_dual.e435 * this.e125) - (right_dual.e235 * this.e415) - (right_dual.e315 * this.e425) - (right_dual.e125 * this.e435)
         );
     }
+}
+// Fancy infix trick (second half)
+public RoundPoint operator /(BulkContractionInfixPartial<Line> lhs, DipoleInversion rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Line {
     public RoundPoint bulk_contraction(DipoleInversion other) {
@@ -6030,6 +7198,10 @@ public extension Line {
         );
     }
 }
+// Fancy infix trick (second half)
+public FlatPoint operator /(BulkContractionInfixPartial<Line> lhs, DualNum rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Line {
     public FlatPoint bulk_contraction(DualNum other) {
         AntiDualNum right_dual = AntiDualNum(
@@ -6042,6 +7214,10 @@ public extension Line {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(BulkContractionInfixPartial<Line> lhs, FlatPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Line {
     public AntiPlane bulk_contraction(FlatPoint other) {
         AntiFlatPoint right_dual = AntiFlatPoint(
@@ -6053,6 +7229,10 @@ public extension Line {
             float4((float3(right_dual.e321) * this.group0.xyz), -(right_dual.e235 * this.e415) - (right_dual.e315 * this.e425) - (right_dual.e125 * this.e435))
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiPlane operator /(BulkContractionInfixPartial<Line> lhs, Flector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Line {
     public AntiPlane bulk_contraction(Flector other) {
@@ -6068,6 +7248,10 @@ public extension Line {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<Line> lhs, Line rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Line {
     public Scalar bulk_contraction(Line other) {
         AntiLine right_dual = AntiLine(
@@ -6081,6 +7265,10 @@ public extension Line {
             -(right_dual.e23 * this.e415) - (right_dual.e31 * this.e425) - (right_dual.e12 * this.e435)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(BulkContractionInfixPartial<Line> lhs, Motor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Line {
     public AntiMotor bulk_contraction(Motor other) {
@@ -6097,6 +7285,10 @@ public extension Line {
             float4(float3(1.0), 0.0) * float4(this.group0.xyz, 0.0) * float4(right_dual.group1.www, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(BulkContractionInfixPartial<Line> lhs, MultiVector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Line {
     public MultiVector bulk_contraction(MultiVector other) {
@@ -6150,6 +7342,10 @@ public extension Line {
         );
     }
 }
+// Fancy infix trick (second half)
+public Dipole operator /(BulkContractionInfixPartial<Line> lhs, RoundPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Line {
     public Dipole bulk_contraction(RoundPoint other) {
         Sphere right_dual = Sphere(
@@ -6168,6 +7364,10 @@ public extension Line {
         );
     }
 }
+// Fancy infix trick (second half)
+public Line operator /(BulkContractionInfixPartial<Line> lhs, Scalar rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Line {
     public Line bulk_contraction(Scalar other) {
         AntiScalar right_dual = AntiScalar(
@@ -6181,6 +7381,10 @@ public extension Line {
             float3(right_dual.e12345) * this.group1.xyz
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(BulkContractionInfixPartial<Line> lhs, VersorEven rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Line {
     public AntiCircleRotor bulk_contraction(VersorEven other) {
@@ -6203,6 +7407,10 @@ public extension Line {
             float4((this.e415 * right_dual.e3215) + (this.e315 * right_dual.e4125), (this.e425 * right_dual.e3215) + (this.e125 * right_dual.e4235), (this.e435 * right_dual.e3215) + (this.e235 * right_dual.e4315), -(this.e425 * right_dual.e31) - (this.e435 * right_dual.e12) - (this.e235 * right_dual.e41) - (this.e315 * right_dual.e42) - (this.e125 * right_dual.e43)) - float4((this.group1.xyz.zxy * right_dual.group3.yzx), this.e415 * right_dual.e23)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(BulkContractionInfixPartial<Line> lhs, VersorOdd rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Line {
     public AntiDipoleInversion bulk_contraction(VersorOdd other) {
@@ -6228,17 +7436,13 @@ public extension Line {
         );
     }
 }
-public extension Motor {
-    // Fancy infix trick (first half)
-    public BulkContractionInfixPartial<Motor> operator /(BulkContractionInfix rhs) {
-        return BulkContractionInfixPartial<Motor>(this);
-    }
+// Fancy infix trick (first half)
+public BulkContractionInfixPartial<Motor> operator /(Motor lhs, BulkContractionInfix rhs) {
+    return BulkContractionInfixPartial<Motor>(lhs);
 }
-public extension BulkContractionInfixPartial<Motor> {
-    // Fancy infix trick (second half)
-    public VersorEven operator /(AntiCircleRotor rhs) {
-        return this.a.bulk_contraction(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorEven operator /(BulkContractionInfixPartial<Motor> lhs, AntiCircleRotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Motor {
     public VersorEven bulk_contraction(AntiCircleRotor other) {
@@ -6261,6 +7465,10 @@ public extension Motor {
             float4((right_dual.e412 * this.e315) + (right_dual.e321 * this.e415), (right_dual.e423 * this.e125) + (right_dual.e321 * this.e425), (right_dual.e431 * this.e235) + (right_dual.e321 * this.e435), -(right_dual.e431 * this.e425) - (right_dual.e412 * this.e435)) - float4((right_dual.group0.xyz.yzx * this.group1.zxy), right_dual.e423 * this.e415)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(BulkContractionInfixPartial<Motor> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Motor {
     public VersorOdd bulk_contraction(AntiDipoleInversion other) {
@@ -6286,6 +7494,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(BulkContractionInfixPartial<Motor> lhs, AntiDualNum rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Motor {
     public Motor bulk_contraction(AntiDualNum other) {
         DualNum right_dual = DualNum(
@@ -6300,6 +7512,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public FlatPoint operator /(BulkContractionInfixPartial<Motor> lhs, AntiFlatPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Motor {
     public FlatPoint bulk_contraction(AntiFlatPoint other) {
         return FlatPoint(
@@ -6307,6 +7523,10 @@ public extension Motor {
             float4(this.e12345) * float4(other.group0.xyz, other.e321 * -1.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(BulkContractionInfixPartial<Motor> lhs, AntiFlector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Motor {
     public Flector bulk_contraction(AntiFlector other) {
@@ -6324,6 +7544,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(BulkContractionInfixPartial<Motor> lhs, AntiLine rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Motor {
     public Motor bulk_contraction(AntiLine other) {
         Line right_dual = Line(
@@ -6339,6 +7563,10 @@ public extension Motor {
             float4((float3(this.e12345) * right_dual.group1.xyz), -(right_dual.e415 * this.e235) - (right_dual.e425 * this.e315) - (right_dual.e435 * this.e125) - (right_dual.e235 * this.e415) - (right_dual.e315 * this.e425) - (right_dual.e125 * this.e435))
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(BulkContractionInfixPartial<Motor> lhs, AntiMotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Motor {
     public Motor bulk_contraction(AntiMotor other) {
@@ -6356,6 +7584,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(BulkContractionInfixPartial<Motor> lhs, AntiPlane rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Motor {
     public Flector bulk_contraction(AntiPlane other) {
         Plane right_dual = Plane(
@@ -6370,6 +7602,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<Motor> lhs, AntiScalar rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Motor {
     public Scalar bulk_contraction(AntiScalar other) {
         return Scalar(
@@ -6377,6 +7613,10 @@ public extension Motor {
             other.e12345 * this.e12345 * -1.0
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(BulkContractionInfixPartial<Motor> lhs, Circle rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Motor {
     public AntiCircleRotor bulk_contraction(Circle other) {
@@ -6398,6 +7638,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(BulkContractionInfixPartial<Motor> lhs, CircleRotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Motor {
     public AntiCircleRotor bulk_contraction(CircleRotor other) {
         AntiCircleRotor right_dual = AntiCircleRotor(
@@ -6417,6 +7661,10 @@ public extension Motor {
             float4((float3(this.e12345) * right_dual.group2.xyz), (right_dual.scalar * this.e12345) - (right_dual.e41 * this.e235) - (right_dual.e42 * this.e315) - (right_dual.e43 * this.e125) - (right_dual.e23 * this.e415) - (right_dual.e31 * this.e425) - (right_dual.e12 * this.e435))
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(BulkContractionInfixPartial<Motor> lhs, Dipole rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Motor {
     public AntiDipoleInversion bulk_contraction(Dipole other) {
@@ -6439,6 +7687,10 @@ public extension Motor {
             float4((right_dual.e412 * this.e315) + (right_dual.e321 * this.e415), (right_dual.e423 * this.e125) + (right_dual.e321 * this.e425), (right_dual.e431 * this.e235) + (right_dual.e321 * this.e435), -(right_dual.e415 * this.e235) - (right_dual.e425 * this.e315) - (right_dual.e435 * this.e125) - (right_dual.e315 * this.e425) - (right_dual.e125 * this.e435)) - float4((right_dual.group0.xyz.yzx * this.group1.zxy), right_dual.e235 * this.e415)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(BulkContractionInfixPartial<Motor> lhs, DipoleInversion rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Motor {
     public AntiDipoleInversion bulk_contraction(DipoleInversion other) {
@@ -6464,6 +7716,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(BulkContractionInfixPartial<Motor> lhs, DualNum rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Motor {
     public AntiMotor bulk_contraction(DualNum other) {
         AntiDualNum right_dual = AntiDualNum(
@@ -6478,6 +7734,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(BulkContractionInfixPartial<Motor> lhs, FlatPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Motor {
     public AntiFlector bulk_contraction(FlatPoint other) {
         AntiFlatPoint right_dual = AntiFlatPoint(
@@ -6491,6 +7751,10 @@ public extension Motor {
             float4((right_dual.group0.www * this.group0.xyz), -(right_dual.e235 * this.e415) - (right_dual.e315 * this.e425) - (right_dual.e125 * this.e435))
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(BulkContractionInfixPartial<Motor> lhs, Flector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Motor {
     public AntiFlector bulk_contraction(Flector other) {
@@ -6508,6 +7772,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(BulkContractionInfixPartial<Motor> lhs, Line rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Motor {
     public AntiMotor bulk_contraction(Line other) {
         AntiLine right_dual = AntiLine(
@@ -6524,6 +7792,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(BulkContractionInfixPartial<Motor> lhs, Motor rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Motor {
     public AntiMotor bulk_contraction(Motor other) {
         AntiMotor right_dual = AntiMotor(
@@ -6539,6 +7811,10 @@ public extension Motor {
             float4(((float3(right_dual.e3215) * this.group0.xyz) + (float3(this.e12345) * right_dual.group1.xyz)), right_dual.e3215 * this.e12345)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(BulkContractionInfixPartial<Motor> lhs, MultiVector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Motor {
     public MultiVector bulk_contraction(MultiVector other) {
@@ -6592,6 +7868,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(BulkContractionInfixPartial<Motor> lhs, Plane rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Motor {
     public AntiPlane bulk_contraction(Plane other) {
         return AntiPlane(
@@ -6599,6 +7879,10 @@ public extension Motor {
             float4(this.e12345) * float4(other.e4235 * -1.0, other.e4315 * -1.0, other.e4125 * -1.0, other.e3215)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(BulkContractionInfixPartial<Motor> lhs, RoundPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Motor {
     public VersorOdd bulk_contraction(RoundPoint other) {
@@ -6620,6 +7904,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(BulkContractionInfixPartial<Motor> lhs, Scalar rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Motor {
     public Motor bulk_contraction(Scalar other) {
         AntiScalar right_dual = AntiScalar(
@@ -6633,6 +7921,10 @@ public extension Motor {
             float4(right_dual.e12345) * this.group1
         );
     }
+}
+// Fancy infix trick (second half)
+public RoundPoint operator /(BulkContractionInfixPartial<Motor> lhs, Sphere rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Motor {
     public RoundPoint bulk_contraction(Sphere other) {
@@ -6649,6 +7941,10 @@ public extension Motor {
             this.e12345 * right_dual.e5
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(BulkContractionInfixPartial<Motor> lhs, VersorEven rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Motor {
     public VersorOdd bulk_contraction(VersorEven other) {
@@ -6674,6 +7970,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(BulkContractionInfixPartial<Motor> lhs, VersorOdd rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Motor {
     public VersorEven bulk_contraction(VersorOdd other) {
         VersorEven right_dual = VersorEven(
@@ -6698,17 +7998,13 @@ public extension Motor {
         );
     }
 }
-public extension MultiVector {
-    // Fancy infix trick (first half)
-    public BulkContractionInfixPartial<MultiVector> operator /(BulkContractionInfix rhs) {
-        return BulkContractionInfixPartial<MultiVector>(this);
-    }
+// Fancy infix trick (first half)
+public BulkContractionInfixPartial<MultiVector> operator /(MultiVector lhs, BulkContractionInfix rhs) {
+    return BulkContractionInfixPartial<MultiVector>(lhs);
 }
-public extension BulkContractionInfixPartial<MultiVector> {
-    // Fancy infix trick (second half)
-    public MultiVector operator /(AntiCircleRotor rhs) {
-        return this.a.bulk_contraction(rhs);
-    }
+// Fancy infix trick (second half)
+public MultiVector operator /(BulkContractionInfixPartial<MultiVector> lhs, AntiCircleRotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension MultiVector {
     public MultiVector bulk_contraction(AntiCircleRotor other) {
@@ -6745,6 +8041,10 @@ public extension MultiVector {
             right_dual.e12345 * this.e1234
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(BulkContractionInfixPartial<MultiVector> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension MultiVector {
     public MultiVector bulk_contraction(AntiDipoleInversion other) {
@@ -6784,6 +8084,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(BulkContractionInfixPartial<MultiVector> lhs, AntiDualNum rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension MultiVector {
     public MultiVector bulk_contraction(AntiDualNum other) {
         DualNum right_dual = DualNum(
@@ -6816,6 +8120,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(BulkContractionInfixPartial<MultiVector> lhs, AntiFlatPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension MultiVector {
     public MultiVector bulk_contraction(AntiFlatPoint other) {
         FlatPoint right_dual = FlatPoint(
@@ -6847,6 +8155,10 @@ public extension MultiVector {
             0.0
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(BulkContractionInfixPartial<MultiVector> lhs, AntiFlector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension MultiVector {
     public MultiVector bulk_contraction(AntiFlector other) {
@@ -6882,6 +8194,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(BulkContractionInfixPartial<MultiVector> lhs, AntiLine rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension MultiVector {
     public MultiVector bulk_contraction(AntiLine other) {
         Line right_dual = Line(
@@ -6915,6 +8231,10 @@ public extension MultiVector {
             0.0
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(BulkContractionInfixPartial<MultiVector> lhs, AntiMotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension MultiVector {
     public MultiVector bulk_contraction(AntiMotor other) {
@@ -6950,6 +8270,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(BulkContractionInfixPartial<MultiVector> lhs, AntiPlane rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension MultiVector {
     public MultiVector bulk_contraction(AntiPlane other) {
         Plane right_dual = Plane(
@@ -6982,6 +8306,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<MultiVector> lhs, AntiScalar rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension MultiVector {
     public Scalar bulk_contraction(AntiScalar other) {
         return Scalar(
@@ -6989,6 +8317,10 @@ public extension MultiVector {
             other.e12345 * this.e12345 * -1.0
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(BulkContractionInfixPartial<MultiVector> lhs, Circle rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension MultiVector {
     public MultiVector bulk_contraction(Circle other) {
@@ -7026,6 +8358,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(BulkContractionInfixPartial<MultiVector> lhs, CircleRotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension MultiVector {
     public MultiVector bulk_contraction(CircleRotor other) {
         AntiCircleRotor right_dual = AntiCircleRotor(
@@ -7062,6 +8398,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(BulkContractionInfixPartial<MultiVector> lhs, Dipole rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension MultiVector {
     public MultiVector bulk_contraction(Dipole other) {
         Circle right_dual = Circle(
@@ -7097,6 +8437,10 @@ public extension MultiVector {
             0.0
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(BulkContractionInfixPartial<MultiVector> lhs, DipoleInversion rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension MultiVector {
     public MultiVector bulk_contraction(DipoleInversion other) {
@@ -7136,6 +8480,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(BulkContractionInfixPartial<MultiVector> lhs, DualNum rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension MultiVector {
     public MultiVector bulk_contraction(DualNum other) {
         AntiDualNum right_dual = AntiDualNum(
@@ -7168,6 +8516,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(BulkContractionInfixPartial<MultiVector> lhs, FlatPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension MultiVector {
     public MultiVector bulk_contraction(FlatPoint other) {
         AntiFlatPoint right_dual = AntiFlatPoint(
@@ -7199,6 +8551,10 @@ public extension MultiVector {
             0.0
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(BulkContractionInfixPartial<MultiVector> lhs, Flector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension MultiVector {
     public MultiVector bulk_contraction(Flector other) {
@@ -7234,6 +8590,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(BulkContractionInfixPartial<MultiVector> lhs, Line rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension MultiVector {
     public MultiVector bulk_contraction(Line other) {
         AntiLine right_dual = AntiLine(
@@ -7268,6 +8628,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(BulkContractionInfixPartial<MultiVector> lhs, Motor rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension MultiVector {
     public MultiVector bulk_contraction(Motor other) {
         AntiMotor right_dual = AntiMotor(
@@ -7301,6 +8665,10 @@ public extension MultiVector {
             0.0
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(BulkContractionInfixPartial<MultiVector> lhs, MultiVector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension MultiVector {
     public MultiVector bulk_contraction(MultiVector other) {
@@ -7354,6 +8722,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(BulkContractionInfixPartial<MultiVector> lhs, Plane rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension MultiVector {
     public MultiVector bulk_contraction(Plane other) {
         AntiPlane right_dual = AntiPlane(
@@ -7385,6 +8757,10 @@ public extension MultiVector {
             0.0
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(BulkContractionInfixPartial<MultiVector> lhs, RoundPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension MultiVector {
     public MultiVector bulk_contraction(RoundPoint other) {
@@ -7420,6 +8796,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(BulkContractionInfixPartial<MultiVector> lhs, Scalar rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension MultiVector {
     public MultiVector bulk_contraction(Scalar other) {
         AntiScalar right_dual = AntiScalar(
@@ -7451,6 +8831,10 @@ public extension MultiVector {
             right_dual.e12345 * this.e1234
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(BulkContractionInfixPartial<MultiVector> lhs, Sphere rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension MultiVector {
     public MultiVector bulk_contraction(Sphere other) {
@@ -7485,6 +8869,10 @@ public extension MultiVector {
             0.0
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(BulkContractionInfixPartial<MultiVector> lhs, VersorEven rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension MultiVector {
     public MultiVector bulk_contraction(VersorEven other) {
@@ -7524,6 +8912,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(BulkContractionInfixPartial<MultiVector> lhs, VersorOdd rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension MultiVector {
     public MultiVector bulk_contraction(VersorOdd other) {
         VersorEven right_dual = VersorEven(
@@ -7562,17 +8954,13 @@ public extension MultiVector {
         );
     }
 }
-public extension Plane {
-    // Fancy infix trick (first half)
-    public BulkContractionInfixPartial<Plane> operator /(BulkContractionInfix rhs) {
-        return BulkContractionInfixPartial<Plane>(this);
-    }
+// Fancy infix trick (first half)
+public BulkContractionInfixPartial<Plane> operator /(Plane lhs, BulkContractionInfix rhs) {
+    return BulkContractionInfixPartial<Plane>(lhs);
 }
-public extension BulkContractionInfixPartial<Plane> {
-    // Fancy infix trick (second half)
-    public DipoleInversion operator /(AntiCircleRotor rhs) {
-        return this.a.bulk_contraction(rhs);
-    }
+// Fancy infix trick (second half)
+public DipoleInversion operator /(BulkContractionInfixPartial<Plane> lhs, AntiCircleRotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Plane {
     public DipoleInversion bulk_contraction(AntiCircleRotor other) {
@@ -7595,6 +8983,10 @@ public extension Plane {
             float4(right_dual.e12345) * this.group0
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(BulkContractionInfixPartial<Plane> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Plane {
     public AntiDipoleInversion bulk_contraction(AntiDipoleInversion other) {
@@ -7620,6 +9012,10 @@ public extension Plane {
         );
     }
 }
+// Fancy infix trick (second half)
+public Plane operator /(BulkContractionInfixPartial<Plane> lhs, AntiDualNum rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Plane {
     public Plane bulk_contraction(AntiDualNum other) {
         return Plane(
@@ -7627,6 +9023,10 @@ public extension Plane {
             float4(other.scalar) * this.group0
         );
     }
+}
+// Fancy infix trick (second half)
+public DualNum operator /(BulkContractionInfixPartial<Plane> lhs, AntiFlatPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Plane {
     public DualNum bulk_contraction(AntiFlatPoint other) {
@@ -7639,6 +9039,10 @@ public extension Plane {
             float2(-(right_dual.e15 * this.e4235) - (right_dual.e25 * this.e4315) - (right_dual.e35 * this.e4125) - (right_dual.e45 * this.e3215), 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(BulkContractionInfixPartial<Plane> lhs, AntiFlector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Plane {
     public Motor bulk_contraction(AntiFlector other) {
@@ -7656,6 +9060,10 @@ public extension Plane {
         );
     }
 }
+// Fancy infix trick (second half)
+public FlatPoint operator /(BulkContractionInfixPartial<Plane> lhs, AntiLine rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Plane {
     public FlatPoint bulk_contraction(AntiLine other) {
         Line right_dual = Line(
@@ -7669,6 +9077,10 @@ public extension Plane {
             float4((right_dual.e415 * this.e3215) + (right_dual.e315 * this.e4125), (right_dual.e425 * this.e3215) + (right_dual.e125 * this.e4235), (right_dual.e435 * this.e3215) + (right_dual.e235 * this.e4315), -(right_dual.e425 * this.e4315) - (right_dual.e435 * this.e4125)) - (this.group0.yzxx * float4(right_dual.group1.xyz.zxy, right_dual.e415))
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(BulkContractionInfixPartial<Plane> lhs, AntiMotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Plane {
     public Flector bulk_contraction(AntiMotor other) {
@@ -7686,6 +9098,10 @@ public extension Plane {
         );
     }
 }
+// Fancy infix trick (second half)
+public Line operator /(BulkContractionInfixPartial<Plane> lhs, AntiPlane rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Plane {
     public Line bulk_contraction(AntiPlane other) {
         Plane right_dual = Plane(
@@ -7699,6 +9115,10 @@ public extension Plane {
             (float3(right_dual.e3215) * this.group0.xyz) - (float3(this.e3215) * right_dual.group0.xyz)
         );
     }
+}
+// Fancy infix trick (second half)
+public RoundPoint operator /(BulkContractionInfixPartial<Plane> lhs, Circle rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Plane {
     public RoundPoint bulk_contraction(Circle other) {
@@ -7718,6 +9138,10 @@ public extension Plane {
         );
     }
 }
+// Fancy infix trick (second half)
+public RoundPoint operator /(BulkContractionInfixPartial<Plane> lhs, CircleRotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Plane {
     public RoundPoint bulk_contraction(CircleRotor other) {
         AntiCircleRotor right_dual = AntiCircleRotor(
@@ -7735,6 +9159,10 @@ public extension Plane {
             -(right_dual.e45 * this.e3215) - (right_dual.e15 * this.e4235) - (right_dual.e25 * this.e4315) - (right_dual.e35 * this.e4125)
         );
     }
+}
+// Fancy infix trick (second half)
+public Dipole operator /(BulkContractionInfixPartial<Plane> lhs, Dipole rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Plane {
     public Dipole bulk_contraction(Dipole other) {
@@ -7755,6 +9183,10 @@ public extension Plane {
             (float3(this.e3215) * right_dual.group1.xyz) + (right_dual.group2.xyz.yzx * this.group0.zxy) - (right_dual.group2.xyz.zxy * this.group0.yzx)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(BulkContractionInfixPartial<Plane> lhs, DipoleInversion rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Plane {
     public AntiCircleRotor bulk_contraction(DipoleInversion other) {
@@ -7778,6 +9210,10 @@ public extension Plane {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlatPoint operator /(BulkContractionInfixPartial<Plane> lhs, DualNum rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Plane {
     public AntiFlatPoint bulk_contraction(DualNum other) {
         AntiDualNum right_dual = AntiDualNum(
@@ -7789,6 +9225,10 @@ public extension Plane {
             float4(right_dual.group0.xy.xx, right_dual.e3215, 0.0) * float4(float3(1.0), 0.0) * float4(this.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiLine operator /(BulkContractionInfixPartial<Plane> lhs, FlatPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Plane {
     public AntiLine bulk_contraction(FlatPoint other) {
@@ -7803,6 +9243,10 @@ public extension Plane {
             (right_dual.group0.yzx * this.group0.zxy) - (right_dual.group0.zxy * this.group0.yzx)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(BulkContractionInfixPartial<Plane> lhs, Flector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Plane {
     public AntiMotor bulk_contraction(Flector other) {
@@ -7820,6 +9264,10 @@ public extension Plane {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(BulkContractionInfixPartial<Plane> lhs, Line rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Plane {
     public AntiPlane bulk_contraction(Line other) {
         AntiLine right_dual = AntiLine(
@@ -7833,6 +9281,10 @@ public extension Plane {
             float4(right_dual.e12 * this.e4315, right_dual.e23 * this.e4125, right_dual.e31 * this.e4235, -(right_dual.e25 * this.e4315) - (right_dual.e35 * this.e4125)) - (this.group0.zxyx * float4(right_dual.group0.xyz.yzx, right_dual.e15))
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(BulkContractionInfixPartial<Plane> lhs, Motor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Plane {
     public AntiFlector bulk_contraction(Motor other) {
@@ -7849,6 +9301,10 @@ public extension Plane {
             float4(right_dual.e12 * this.e4315, right_dual.e23 * this.e4125, right_dual.e31 * this.e4235, -(right_dual.e25 * this.e4315) - (right_dual.e35 * this.e4125)) - (this.group0.zxyx * float4(right_dual.group0.yzx, right_dual.e15))
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(BulkContractionInfixPartial<Plane> lhs, MultiVector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Plane {
     public MultiVector bulk_contraction(MultiVector other) {
@@ -7902,6 +9358,10 @@ public extension Plane {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<Plane> lhs, Plane rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Plane {
     public Scalar bulk_contraction(Plane other) {
         AntiPlane right_dual = AntiPlane(
@@ -7913,6 +9373,10 @@ public extension Plane {
             (right_dual.e1 * this.e4235) + (right_dual.e2 * this.e4315) + (right_dual.e3 * this.e4125)
         );
     }
+}
+// Fancy infix trick (second half)
+public Circle operator /(BulkContractionInfixPartial<Plane> lhs, RoundPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Plane {
     public Circle bulk_contraction(RoundPoint other) {
@@ -7932,6 +9396,10 @@ public extension Plane {
         );
     }
 }
+// Fancy infix trick (second half)
+public Plane operator /(BulkContractionInfixPartial<Plane> lhs, Scalar rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Plane {
     public Plane bulk_contraction(Scalar other) {
         return Plane(
@@ -7939,6 +9407,10 @@ public extension Plane {
             float4(other.scalar) * this.group0
         );
     }
+}
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<Plane> lhs, Sphere rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Plane {
     public Scalar bulk_contraction(Sphere other) {
@@ -7953,6 +9425,10 @@ public extension Plane {
             (this.e4235 * right_dual.e1) + (this.e4315 * right_dual.e2) + (this.e4125 * right_dual.e3) + (this.e3215 * right_dual.e4)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(BulkContractionInfixPartial<Plane> lhs, VersorEven rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Plane {
     public AntiDipoleInversion bulk_contraction(VersorEven other) {
@@ -7978,6 +9454,10 @@ public extension Plane {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(BulkContractionInfixPartial<Plane> lhs, VersorOdd rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Plane {
     public VersorOdd bulk_contraction(VersorOdd other) {
         VersorEven right_dual = VersorEven(
@@ -8002,17 +9482,13 @@ public extension Plane {
         );
     }
 }
-public extension RoundPoint {
-    // Fancy infix trick (first half)
-    public BulkContractionInfixPartial<RoundPoint> operator /(BulkContractionInfix rhs) {
-        return BulkContractionInfixPartial<RoundPoint>(this);
-    }
+// Fancy infix trick (first half)
+public BulkContractionInfixPartial<RoundPoint> operator /(RoundPoint lhs, BulkContractionInfix rhs) {
+    return BulkContractionInfixPartial<RoundPoint>(lhs);
 }
-public extension BulkContractionInfixPartial<RoundPoint> {
-    // Fancy infix trick (second half)
-    public RoundPoint operator /(AntiCircleRotor rhs) {
-        return this.a.bulk_contraction(rhs);
-    }
+// Fancy infix trick (second half)
+public RoundPoint operator /(BulkContractionInfixPartial<RoundPoint> lhs, AntiCircleRotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension RoundPoint {
     public RoundPoint bulk_contraction(AntiCircleRotor other) {
@@ -8032,6 +9508,10 @@ public extension RoundPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<RoundPoint> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension RoundPoint {
     public Scalar bulk_contraction(AntiDipoleInversion other) {
         DipoleInversion right_dual = DipoleInversion(
@@ -8050,6 +9530,10 @@ public extension RoundPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public RoundPoint operator /(BulkContractionInfixPartial<RoundPoint> lhs, AntiDualNum rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension RoundPoint {
     public RoundPoint bulk_contraction(AntiDualNum other) {
         DualNum right_dual = DualNum(
@@ -8064,6 +9548,10 @@ public extension RoundPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<RoundPoint> lhs, AntiFlector rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension RoundPoint {
     public Scalar bulk_contraction(AntiFlector other) {
         Flector right_dual = Flector(
@@ -8077,6 +9565,10 @@ public extension RoundPoint {
             (right_dual.e4235 * this.e1) + (right_dual.e4315 * this.e2) + (right_dual.e4125 * this.e3) + (right_dual.e3215 * this.e4)
         );
     }
+}
+// Fancy infix trick (second half)
+public RoundPoint operator /(BulkContractionInfixPartial<RoundPoint> lhs, AntiMotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension RoundPoint {
     public RoundPoint bulk_contraction(AntiMotor other) {
@@ -8094,6 +9586,10 @@ public extension RoundPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<RoundPoint> lhs, AntiPlane rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension RoundPoint {
     public Scalar bulk_contraction(AntiPlane other) {
         Plane right_dual = Plane(
@@ -8106,6 +9602,10 @@ public extension RoundPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<RoundPoint> lhs, DualNum rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension RoundPoint {
     public Scalar bulk_contraction(DualNum other) {
         return Scalar(
@@ -8114,6 +9614,10 @@ public extension RoundPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<RoundPoint> lhs, Motor rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension RoundPoint {
     public Scalar bulk_contraction(Motor other) {
         return Scalar(
@@ -8121,6 +9625,10 @@ public extension RoundPoint {
             float4(other.group1.xyz, other.e5 * -1.0)[3] * this.e4
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(BulkContractionInfixPartial<RoundPoint> lhs, MultiVector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension RoundPoint {
     public MultiVector bulk_contraction(MultiVector other) {
@@ -8174,6 +9682,10 @@ public extension RoundPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<RoundPoint> lhs, RoundPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension RoundPoint {
     public Scalar bulk_contraction(RoundPoint other) {
         Sphere right_dual = Sphere(
@@ -8188,6 +9700,10 @@ public extension RoundPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public RoundPoint operator /(BulkContractionInfixPartial<RoundPoint> lhs, Scalar rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension RoundPoint {
     public RoundPoint bulk_contraction(Scalar other) {
         AntiScalar right_dual = AntiScalar(
@@ -8201,6 +9717,10 @@ public extension RoundPoint {
             right_dual.e12345 * this.e5
         );
     }
+}
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<RoundPoint> lhs, VersorEven rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension RoundPoint {
     public Scalar bulk_contraction(VersorEven other) {
@@ -8219,6 +9739,10 @@ public extension RoundPoint {
             (this.e1 * right_dual.e4235) + (this.e2 * right_dual.e4315) + (this.e3 * right_dual.e4125) + (this.e4 * right_dual.e3215) + (this.e5 * right_dual.e1234)
         );
     }
+}
+// Fancy infix trick (second half)
+public RoundPoint operator /(BulkContractionInfixPartial<RoundPoint> lhs, VersorOdd rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension RoundPoint {
     public RoundPoint bulk_contraction(VersorOdd other) {
@@ -8240,17 +9764,13 @@ public extension RoundPoint {
         );
     }
 }
-public extension Scalar {
-    // Fancy infix trick (first half)
-    public BulkContractionInfixPartial<Scalar> operator /(BulkContractionInfix rhs) {
-        return BulkContractionInfixPartial<Scalar>(this);
-    }
+// Fancy infix trick (first half)
+public BulkContractionInfixPartial<Scalar> operator /(Scalar lhs, BulkContractionInfix rhs) {
+    return BulkContractionInfixPartial<Scalar>(lhs);
 }
-public extension BulkContractionInfixPartial<Scalar> {
-    // Fancy infix trick (second half)
-    public Scalar operator /(AntiCircleRotor rhs) {
-        return this.a.bulk_contraction(rhs);
-    }
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<Scalar> lhs, AntiCircleRotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Scalar {
     public Scalar bulk_contraction(AntiCircleRotor other) {
@@ -8260,6 +9780,10 @@ public extension Scalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<Scalar> lhs, AntiDualNum rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Scalar {
     public Scalar bulk_contraction(AntiDualNum other) {
         return Scalar(
@@ -8267,6 +9791,10 @@ public extension Scalar {
             other.scalar * this.scalar
         );
     }
+}
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<Scalar> lhs, AntiMotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Scalar {
     public Scalar bulk_contraction(AntiMotor other) {
@@ -8276,6 +9804,10 @@ public extension Scalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<Scalar> lhs, MultiVector rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Scalar {
     public Scalar bulk_contraction(MultiVector other) {
         return Scalar(
@@ -8283,6 +9815,10 @@ public extension Scalar {
             other.scalar * this.scalar
         );
     }
+}
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<Scalar> lhs, Scalar rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Scalar {
     public Scalar bulk_contraction(Scalar other) {
@@ -8292,6 +9828,10 @@ public extension Scalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<Scalar> lhs, VersorOdd rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Scalar {
     public Scalar bulk_contraction(VersorOdd other) {
         return Scalar(
@@ -8300,17 +9840,13 @@ public extension Scalar {
         );
     }
 }
-public extension Sphere {
-    // Fancy infix trick (first half)
-    public BulkContractionInfixPartial<Sphere> operator /(BulkContractionInfix rhs) {
-        return BulkContractionInfixPartial<Sphere>(this);
-    }
+// Fancy infix trick (first half)
+public BulkContractionInfixPartial<Sphere> operator /(Sphere lhs, BulkContractionInfix rhs) {
+    return BulkContractionInfixPartial<Sphere>(lhs);
 }
-public extension BulkContractionInfixPartial<Sphere> {
-    // Fancy infix trick (second half)
-    public DipoleInversion operator /(AntiCircleRotor rhs) {
-        return this.a.bulk_contraction(rhs);
-    }
+// Fancy infix trick (second half)
+public DipoleInversion operator /(BulkContractionInfixPartial<Sphere> lhs, AntiCircleRotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Sphere {
     public DipoleInversion bulk_contraction(AntiCircleRotor other) {
@@ -8333,6 +9869,10 @@ public extension Sphere {
             float4(right_dual.e12345) * this.group0
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(BulkContractionInfixPartial<Sphere> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Sphere {
     public AntiDipoleInversion bulk_contraction(AntiDipoleInversion other) {
@@ -8358,6 +9898,10 @@ public extension Sphere {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(BulkContractionInfixPartial<Sphere> lhs, AntiDualNum rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Sphere {
     public VersorOdd bulk_contraction(AntiDualNum other) {
         DualNum right_dual = DualNum(
@@ -8376,6 +9920,10 @@ public extension Sphere {
         );
     }
 }
+// Fancy infix trick (second half)
+public RoundPoint operator /(BulkContractionInfixPartial<Sphere> lhs, AntiFlatPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Sphere {
     public RoundPoint bulk_contraction(AntiFlatPoint other) {
         FlatPoint right_dual = FlatPoint(
@@ -8389,6 +9937,10 @@ public extension Sphere {
             -(right_dual.e15 * this.e4235) - (right_dual.e25 * this.e4315) - (right_dual.e35 * this.e4125) - (right_dual.e45 * this.e3215)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(BulkContractionInfixPartial<Sphere> lhs, AntiFlector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Sphere {
     public AntiDipoleInversion bulk_contraction(AntiFlector other) {
@@ -8410,6 +9962,10 @@ public extension Sphere {
         );
     }
 }
+// Fancy infix trick (second half)
+public Dipole operator /(BulkContractionInfixPartial<Sphere> lhs, AntiLine rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Sphere {
     public Dipole bulk_contraction(AntiLine other) {
         Line right_dual = Line(
@@ -8427,6 +9983,10 @@ public extension Sphere {
             (float3(this.e3215) * right_dual.group0.xyz) + (right_dual.group1.xyz.yzx * this.group0.zxy) - (right_dual.group1.xyz.zxy * this.group0.yzx)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(BulkContractionInfixPartial<Sphere> lhs, AntiMotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Sphere {
     public VersorOdd bulk_contraction(AntiMotor other) {
@@ -8448,6 +10008,10 @@ public extension Sphere {
         );
     }
 }
+// Fancy infix trick (second half)
+public Circle operator /(BulkContractionInfixPartial<Sphere> lhs, AntiPlane rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Sphere {
     public Circle bulk_contraction(AntiPlane other) {
         Plane right_dual = Plane(
@@ -8463,6 +10027,10 @@ public extension Sphere {
             (float3(right_dual.e3215) * this.group0.xyz) - (float3(this.e3215) * right_dual.group0.xyz)
         );
     }
+}
+// Fancy infix trick (second half)
+public RoundPoint operator /(BulkContractionInfixPartial<Sphere> lhs, Circle rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Sphere {
     public RoundPoint bulk_contraction(Circle other) {
@@ -8482,6 +10050,10 @@ public extension Sphere {
         );
     }
 }
+// Fancy infix trick (second half)
+public RoundPoint operator /(BulkContractionInfixPartial<Sphere> lhs, CircleRotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Sphere {
     public RoundPoint bulk_contraction(CircleRotor other) {
         AntiCircleRotor right_dual = AntiCircleRotor(
@@ -8499,6 +10071,10 @@ public extension Sphere {
             -(right_dual.e45 * this.e3215) - (right_dual.e15 * this.e4235) - (right_dual.e25 * this.e4315) - (right_dual.e35 * this.e4125)
         );
     }
+}
+// Fancy infix trick (second half)
+public Dipole operator /(BulkContractionInfixPartial<Sphere> lhs, Dipole rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Sphere {
     public Dipole bulk_contraction(Dipole other) {
@@ -8519,6 +10095,10 @@ public extension Sphere {
             (float3(this.e3215) * right_dual.group1.xyz) + (right_dual.group2.xyz.yzx * this.group0.zxy) - (right_dual.group2.xyz.zxy * this.group0.yzx)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(BulkContractionInfixPartial<Sphere> lhs, DipoleInversion rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Sphere {
     public AntiCircleRotor bulk_contraction(DipoleInversion other) {
@@ -8542,6 +10122,10 @@ public extension Sphere {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlatPoint operator /(BulkContractionInfixPartial<Sphere> lhs, DualNum rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Sphere {
     public AntiFlatPoint bulk_contraction(DualNum other) {
         return AntiFlatPoint(
@@ -8549,6 +10133,10 @@ public extension Sphere {
             float4(other.e5 * -1.0) * float4(this.group0.xyz, this.e1234)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiLine operator /(BulkContractionInfixPartial<Sphere> lhs, FlatPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Sphere {
     public AntiLine bulk_contraction(FlatPoint other) {
@@ -8563,6 +10151,10 @@ public extension Sphere {
             (right_dual.group0.yzx * this.group0.zxy) - (right_dual.group0.zxy * this.group0.yzx)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(BulkContractionInfixPartial<Sphere> lhs, Flector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Sphere {
     public AntiMotor bulk_contraction(Flector other) {
@@ -8580,6 +10172,10 @@ public extension Sphere {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(BulkContractionInfixPartial<Sphere> lhs, Line rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Sphere {
     public AntiPlane bulk_contraction(Line other) {
         AntiLine right_dual = AntiLine(
@@ -8593,6 +10189,10 @@ public extension Sphere {
             float4((right_dual.e12 * this.e4315) + (right_dual.e15 * this.e1234), (right_dual.e23 * this.e4125) + (right_dual.e25 * this.e1234), (right_dual.e31 * this.e4235) + (right_dual.e35 * this.e1234), -(right_dual.e25 * this.e4315) - (right_dual.e35 * this.e4125)) - (this.group0.zxyx * float4(right_dual.group0.xyz.yzx, right_dual.e15))
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(BulkContractionInfixPartial<Sphere> lhs, Motor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Sphere {
     public AntiFlector bulk_contraction(Motor other) {
@@ -8609,6 +10209,10 @@ public extension Sphere {
             float4((right_dual.e12 * this.e4315) + (right_dual.e15 * this.e1234), (right_dual.e23 * this.e4125) + (right_dual.e25 * this.e1234), (right_dual.e31 * this.e4235) + (right_dual.e35 * this.e1234), -(right_dual.e25 * this.e4315) - (right_dual.e35 * this.e4125)) - (this.group0.zxyx * float4(right_dual.group0.yzx, right_dual.e15))
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(BulkContractionInfixPartial<Sphere> lhs, MultiVector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Sphere {
     public MultiVector bulk_contraction(MultiVector other) {
@@ -8662,6 +10266,10 @@ public extension Sphere {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<Sphere> lhs, Plane rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Sphere {
     public Scalar bulk_contraction(Plane other) {
         AntiPlane right_dual = AntiPlane(
@@ -8673,6 +10281,10 @@ public extension Sphere {
             (right_dual.e1 * this.e4235) + (right_dual.e2 * this.e4315) + (right_dual.e3 * this.e4125) + (right_dual.e5 * this.e1234)
         );
     }
+}
+// Fancy infix trick (second half)
+public Circle operator /(BulkContractionInfixPartial<Sphere> lhs, RoundPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Sphere {
     public Circle bulk_contraction(RoundPoint other) {
@@ -8692,6 +10304,10 @@ public extension Sphere {
         );
     }
 }
+// Fancy infix trick (second half)
+public Sphere operator /(BulkContractionInfixPartial<Sphere> lhs, Scalar rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Sphere {
     public Sphere bulk_contraction(Scalar other) {
         AntiScalar right_dual = AntiScalar(
@@ -8706,6 +10322,10 @@ public extension Sphere {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<Sphere> lhs, Sphere rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Sphere {
     public Scalar bulk_contraction(Sphere other) {
         RoundPoint right_dual = RoundPoint(
@@ -8719,6 +10339,10 @@ public extension Sphere {
             (right_dual.e1 * this.e4235) + (right_dual.e2 * this.e4315) + (right_dual.e3 * this.e4125) + (right_dual.e4 * this.e3215) + (right_dual.e5 * this.e1234)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(BulkContractionInfixPartial<Sphere> lhs, VersorEven rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension Sphere {
     public AntiDipoleInversion bulk_contraction(VersorEven other) {
@@ -8744,6 +10368,10 @@ public extension Sphere {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(BulkContractionInfixPartial<Sphere> lhs, VersorOdd rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension Sphere {
     public VersorOdd bulk_contraction(VersorOdd other) {
         VersorEven right_dual = VersorEven(
@@ -8768,17 +10396,13 @@ public extension Sphere {
         );
     }
 }
-public extension VersorEven {
-    // Fancy infix trick (first half)
-    public BulkContractionInfixPartial<VersorEven> operator /(BulkContractionInfix rhs) {
-        return BulkContractionInfixPartial<VersorEven>(this);
-    }
+// Fancy infix trick (first half)
+public BulkContractionInfixPartial<VersorEven> operator /(VersorEven lhs, BulkContractionInfix rhs) {
+    return BulkContractionInfixPartial<VersorEven>(lhs);
 }
-public extension BulkContractionInfixPartial<VersorEven> {
-    // Fancy infix trick (second half)
-    public VersorEven operator /(AntiCircleRotor rhs) {
-        return this.a.bulk_contraction(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorEven operator /(BulkContractionInfixPartial<VersorEven> lhs, AntiCircleRotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension VersorEven {
     public VersorEven bulk_contraction(AntiCircleRotor other) {
@@ -8801,6 +10425,10 @@ public extension VersorEven {
             float4((right_dual.e415 * this.e321) + (right_dual.e321 * this.e415) + (right_dual.e315 * this.e412) + (right_dual.e12345 * this.e1), (right_dual.e425 * this.e321) + (right_dual.e321 * this.e425) + (right_dual.e125 * this.e423) + (right_dual.e12345 * this.e2), (right_dual.e435 * this.e321) + (right_dual.e321 * this.e435) + (right_dual.e235 * this.e431) + (right_dual.e12345 * this.e3), -(right_dual.e412 * this.e435) - (right_dual.e415 * this.e423) - (right_dual.e425 * this.e431) - (right_dual.e435 * this.e412)) + float4((right_dual.group0.xyz.zxy * this.group2.yzx), right_dual.e12345 * this.e4) - float4((right_dual.group0.xyz.yzx * this.group2.zxy), right_dual.e423 * this.e415) - float4((right_dual.group2.zxy * this.group0.yzx), right_dual.e431 * this.e425)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(BulkContractionInfixPartial<VersorEven> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension VersorEven {
     public VersorOdd bulk_contraction(AntiDipoleInversion other) {
@@ -8826,6 +10454,10 @@ public extension VersorEven {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(BulkContractionInfixPartial<VersorEven> lhs, AntiDualNum rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension VersorEven {
     public VersorEven bulk_contraction(AntiDualNum other) {
         DualNum right_dual = DualNum(
@@ -8844,6 +10476,10 @@ public extension VersorEven {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(BulkContractionInfixPartial<VersorEven> lhs, AntiFlatPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension VersorEven {
     public AntiCircleRotor bulk_contraction(AntiFlatPoint other) {
         FlatPoint right_dual = FlatPoint(
@@ -8859,6 +10495,10 @@ public extension VersorEven {
             float4((float3(this.e12345) * right_dual.group0.xyz), -(right_dual.e15 * this.e423) - (right_dual.e25 * this.e431) - (right_dual.e35 * this.e412) - (right_dual.e45 * this.e321))
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(BulkContractionInfixPartial<VersorEven> lhs, AntiFlector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension VersorEven {
     public VersorOdd bulk_contraction(AntiFlector other) {
@@ -8880,6 +10520,10 @@ public extension VersorEven {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(BulkContractionInfixPartial<VersorEven> lhs, AntiLine rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension VersorEven {
     public AntiDipoleInversion bulk_contraction(AntiLine other) {
         Line right_dual = Line(
@@ -8899,6 +10543,10 @@ public extension VersorEven {
             float4((right_dual.e415 * this.e321) + (right_dual.e315 * this.e412), (right_dual.e425 * this.e321) + (right_dual.e125 * this.e423), (right_dual.e435 * this.e321) + (right_dual.e235 * this.e431), -(right_dual.e425 * this.e315) - (right_dual.e435 * this.e125) - (right_dual.e235 * this.e415) - (right_dual.e315 * this.e425) - (right_dual.e125 * this.e435)) - float4((right_dual.group1.xyz.zxy * this.group0.yzx), right_dual.e415 * this.e235)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(BulkContractionInfixPartial<VersorEven> lhs, AntiMotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension VersorEven {
     public VersorEven bulk_contraction(AntiMotor other) {
@@ -8920,6 +10568,10 @@ public extension VersorEven {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(BulkContractionInfixPartial<VersorEven> lhs, AntiPlane rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension VersorEven {
     public VersorOdd bulk_contraction(AntiPlane other) {
         Plane right_dual = Plane(
@@ -8938,6 +10590,10 @@ public extension VersorEven {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<VersorEven> lhs, AntiScalar rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension VersorEven {
     public Scalar bulk_contraction(AntiScalar other) {
         return Scalar(
@@ -8945,6 +10601,10 @@ public extension VersorEven {
             other.e12345 * this.e12345 * -1.0
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(BulkContractionInfixPartial<VersorEven> lhs, Circle rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension VersorEven {
     public AntiCircleRotor bulk_contraction(Circle other) {
@@ -8966,6 +10626,10 @@ public extension VersorEven {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(BulkContractionInfixPartial<VersorEven> lhs, CircleRotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension VersorEven {
     public AntiCircleRotor bulk_contraction(CircleRotor other) {
         AntiCircleRotor right_dual = AntiCircleRotor(
@@ -8985,6 +10649,10 @@ public extension VersorEven {
             float4((float3(this.e12345) * right_dual.group2.xyz), (right_dual.scalar * this.e12345) - (right_dual.e41 * this.e235) - (right_dual.e42 * this.e315) - (right_dual.e43 * this.e125) - (right_dual.e23 * this.e415) - (right_dual.e31 * this.e425) - (right_dual.e12 * this.e435) - (right_dual.e45 * this.e321) - (right_dual.e15 * this.e423) - (right_dual.e25 * this.e431) - (right_dual.e35 * this.e412))
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(BulkContractionInfixPartial<VersorEven> lhs, Dipole rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension VersorEven {
     public AntiDipoleInversion bulk_contraction(Dipole other) {
@@ -9007,6 +10675,10 @@ public extension VersorEven {
             float4((right_dual.e412 * this.e315) + (right_dual.e415 * this.e321) + (right_dual.e321 * this.e415) + (right_dual.e315 * this.e412), (right_dual.e423 * this.e125) + (right_dual.e425 * this.e321) + (right_dual.e321 * this.e425) + (right_dual.e125 * this.e423), (right_dual.e431 * this.e235) + (right_dual.e435 * this.e321) + (right_dual.e321 * this.e435) + (right_dual.e235 * this.e431), -(right_dual.e415 * this.e235) - (right_dual.e425 * this.e315) - (right_dual.e435 * this.e125) - (right_dual.e125 * this.e435)) - float4((right_dual.group0.xyz.yzx * this.group2.zxy), right_dual.e235 * this.e415) - float4((right_dual.group2.xyz.zxy * this.group0.yzx), right_dual.e315 * this.e425)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(BulkContractionInfixPartial<VersorEven> lhs, DipoleInversion rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension VersorEven {
     public AntiDipoleInversion bulk_contraction(DipoleInversion other) {
@@ -9032,6 +10704,10 @@ public extension VersorEven {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(BulkContractionInfixPartial<VersorEven> lhs, DualNum rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension VersorEven {
     public AntiMotor bulk_contraction(DualNum other) {
         AntiDualNum right_dual = AntiDualNum(
@@ -9046,6 +10722,10 @@ public extension VersorEven {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(BulkContractionInfixPartial<VersorEven> lhs, FlatPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension VersorEven {
     public AntiFlector bulk_contraction(FlatPoint other) {
         AntiFlatPoint right_dual = AntiFlatPoint(
@@ -9059,6 +10739,10 @@ public extension VersorEven {
             float4((right_dual.e315 * this.e412) + (right_dual.e321 * this.e415), (right_dual.e125 * this.e423) + (right_dual.e321 * this.e425), (right_dual.e235 * this.e431) + (right_dual.e321 * this.e435), -(right_dual.e315 * this.e425) - (right_dual.e125 * this.e435)) - (right_dual.group0.zxyx * float4(this.group0.yzx, this.e415))
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(BulkContractionInfixPartial<VersorEven> lhs, Flector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension VersorEven {
     public AntiFlector bulk_contraction(Flector other) {
@@ -9076,6 +10760,10 @@ public extension VersorEven {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(BulkContractionInfixPartial<VersorEven> lhs, Line rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension VersorEven {
     public AntiMotor bulk_contraction(Line other) {
         AntiLine right_dual = AntiLine(
@@ -9092,6 +10780,10 @@ public extension VersorEven {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(BulkContractionInfixPartial<VersorEven> lhs, Motor rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension VersorEven {
     public AntiMotor bulk_contraction(Motor other) {
         AntiMotor right_dual = AntiMotor(
@@ -9107,6 +10799,10 @@ public extension VersorEven {
             float4(((float3(right_dual.e3215) * this.group1.xyz) + (float3(this.e12345) * right_dual.group1.xyz)), right_dual.e3215 * this.e12345)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(BulkContractionInfixPartial<VersorEven> lhs, MultiVector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension VersorEven {
     public MultiVector bulk_contraction(MultiVector other) {
@@ -9160,6 +10856,10 @@ public extension VersorEven {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(BulkContractionInfixPartial<VersorEven> lhs, Plane rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension VersorEven {
     public AntiPlane bulk_contraction(Plane other) {
         return AntiPlane(
@@ -9167,6 +10867,10 @@ public extension VersorEven {
             float4(this.e12345) * float4(other.e4235 * -1.0, other.e4315 * -1.0, other.e4125 * -1.0, other.e3215)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(BulkContractionInfixPartial<VersorEven> lhs, RoundPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension VersorEven {
     public VersorOdd bulk_contraction(RoundPoint other) {
@@ -9188,6 +10892,10 @@ public extension VersorEven {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(BulkContractionInfixPartial<VersorEven> lhs, Scalar rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension VersorEven {
     public VersorEven bulk_contraction(Scalar other) {
         AntiScalar right_dual = AntiScalar(
@@ -9206,6 +10914,10 @@ public extension VersorEven {
         );
     }
 }
+// Fancy infix trick (second half)
+public RoundPoint operator /(BulkContractionInfixPartial<VersorEven> lhs, Sphere rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension VersorEven {
     public RoundPoint bulk_contraction(Sphere other) {
         RoundPoint right_dual = RoundPoint(
@@ -9221,6 +10933,10 @@ public extension VersorEven {
             right_dual.e5 * this.e12345
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(BulkContractionInfixPartial<VersorEven> lhs, VersorEven rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension VersorEven {
     public VersorOdd bulk_contraction(VersorEven other) {
@@ -9246,6 +10962,10 @@ public extension VersorEven {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(BulkContractionInfixPartial<VersorEven> lhs, VersorOdd rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension VersorEven {
     public VersorEven bulk_contraction(VersorOdd other) {
         VersorEven right_dual = VersorEven(
@@ -9270,17 +10990,13 @@ public extension VersorEven {
         );
     }
 }
-public extension VersorOdd {
-    // Fancy infix trick (first half)
-    public BulkContractionInfixPartial<VersorOdd> operator /(BulkContractionInfix rhs) {
-        return BulkContractionInfixPartial<VersorOdd>(this);
-    }
+// Fancy infix trick (first half)
+public BulkContractionInfixPartial<VersorOdd> operator /(VersorOdd lhs, BulkContractionInfix rhs) {
+    return BulkContractionInfixPartial<VersorOdd>(lhs);
 }
-public extension BulkContractionInfixPartial<VersorOdd> {
-    // Fancy infix trick (second half)
-    public VersorOdd operator /(AntiCircleRotor rhs) {
-        return this.a.bulk_contraction(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorOdd operator /(BulkContractionInfixPartial<VersorOdd> lhs, AntiCircleRotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension VersorOdd {
     public VersorOdd bulk_contraction(AntiCircleRotor other) {
@@ -9303,6 +11019,10 @@ public extension VersorOdd {
             float4(right_dual.e12345) * this.group3
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(BulkContractionInfixPartial<VersorOdd> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension VersorOdd {
     public AntiDipoleInversion bulk_contraction(AntiDipoleInversion other) {
@@ -9328,6 +11048,10 @@ public extension VersorOdd {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(BulkContractionInfixPartial<VersorOdd> lhs, AntiDualNum rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension VersorOdd {
     public VersorOdd bulk_contraction(AntiDualNum other) {
         DualNum right_dual = DualNum(
@@ -9346,6 +11070,10 @@ public extension VersorOdd {
         );
     }
 }
+// Fancy infix trick (second half)
+public RoundPoint operator /(BulkContractionInfixPartial<VersorOdd> lhs, AntiFlatPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension VersorOdd {
     public RoundPoint bulk_contraction(AntiFlatPoint other) {
         FlatPoint right_dual = FlatPoint(
@@ -9359,6 +11087,10 @@ public extension VersorOdd {
             -(right_dual.e15 * this.e4235) - (right_dual.e25 * this.e4315) - (right_dual.e35 * this.e4125) - (right_dual.e45 * this.e3215)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(BulkContractionInfixPartial<VersorOdd> lhs, AntiFlector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension VersorOdd {
     public AntiDipoleInversion bulk_contraction(AntiFlector other) {
@@ -9380,6 +11112,10 @@ public extension VersorOdd {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(BulkContractionInfixPartial<VersorOdd> lhs, AntiLine rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension VersorOdd {
     public AntiCircleRotor bulk_contraction(AntiLine other) {
         Line right_dual = Line(
@@ -9397,6 +11133,10 @@ public extension VersorOdd {
             float4((right_dual.e415 * this.e3215) + (right_dual.e315 * this.e4125), (right_dual.e425 * this.e3215) + (right_dual.e125 * this.e4235), (right_dual.e435 * this.e3215) + (right_dual.e235 * this.e4315), -(right_dual.e425 * this.e31) - (right_dual.e435 * this.e12) - (right_dual.e235 * this.e41) - (right_dual.e315 * this.e42) - (right_dual.e125 * this.e43)) - float4((right_dual.group1.xyz.zxy * this.group3.yzx), right_dual.e415 * this.e23)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(BulkContractionInfixPartial<VersorOdd> lhs, AntiMotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension VersorOdd {
     public VersorOdd bulk_contraction(AntiMotor other) {
@@ -9418,6 +11158,10 @@ public extension VersorOdd {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(BulkContractionInfixPartial<VersorOdd> lhs, AntiPlane rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension VersorOdd {
     public AntiDipoleInversion bulk_contraction(AntiPlane other) {
         Plane right_dual = Plane(
@@ -9435,6 +11179,10 @@ public extension VersorOdd {
             float4(right_dual.e4315 * this.e12 * -1.0, right_dual.e4125 * this.e23 * -1.0, right_dual.e4235 * this.e31 * -1.0, (right_dual.e4125 * this.e35) + (right_dual.e3215 * this.e45)) + (right_dual.group0.zxyx * float4(this.group1.yzx, this.e15)) + (right_dual.group0.wwwy * float4(this.group0.xyz, this.e25))
         );
     }
+}
+// Fancy infix trick (second half)
+public RoundPoint operator /(BulkContractionInfixPartial<VersorOdd> lhs, Circle rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension VersorOdd {
     public RoundPoint bulk_contraction(Circle other) {
@@ -9454,6 +11202,10 @@ public extension VersorOdd {
         );
     }
 }
+// Fancy infix trick (second half)
+public RoundPoint operator /(BulkContractionInfixPartial<VersorOdd> lhs, CircleRotor rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension VersorOdd {
     public RoundPoint bulk_contraction(CircleRotor other) {
         AntiCircleRotor right_dual = AntiCircleRotor(
@@ -9471,6 +11223,10 @@ public extension VersorOdd {
             -(right_dual.e45 * this.e3215) - (right_dual.e15 * this.e4235) - (right_dual.e25 * this.e4315) - (right_dual.e35 * this.e4125)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(BulkContractionInfixPartial<VersorOdd> lhs, Dipole rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension VersorOdd {
     public AntiCircleRotor bulk_contraction(Dipole other) {
@@ -9491,6 +11247,10 @@ public extension VersorOdd {
             float4((right_dual.e415 * this.e3215) + (right_dual.e315 * this.e4125), (right_dual.e425 * this.e3215) + (right_dual.e125 * this.e4235), (right_dual.e435 * this.e3215) + (right_dual.e235 * this.e4315), -(right_dual.e431 * this.e25) - (right_dual.e412 * this.e35) - (right_dual.e415 * this.e23) - (right_dual.e425 * this.e31) - (right_dual.e435 * this.e12) - (right_dual.e321 * this.e45) - (right_dual.e235 * this.e41) - (right_dual.e315 * this.e42) - (right_dual.e125 * this.e43)) - float4((right_dual.group2.xyz.zxy * this.group3.yzx), right_dual.e423 * this.e15)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(BulkContractionInfixPartial<VersorOdd> lhs, DipoleInversion rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension VersorOdd {
     public AntiCircleRotor bulk_contraction(DipoleInversion other) {
@@ -9514,6 +11274,10 @@ public extension VersorOdd {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(BulkContractionInfixPartial<VersorOdd> lhs, DualNum rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension VersorOdd {
     public AntiFlector bulk_contraction(DualNum other) {
         AntiDualNum right_dual = AntiDualNum(
@@ -9528,6 +11292,10 @@ public extension VersorOdd {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(BulkContractionInfixPartial<VersorOdd> lhs, FlatPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension VersorOdd {
     public AntiMotor bulk_contraction(FlatPoint other) {
         AntiFlatPoint right_dual = AntiFlatPoint(
@@ -9541,6 +11309,10 @@ public extension VersorOdd {
             float4(((right_dual.group0.yzx * this.group3.zxy) - (right_dual.group0.zxy * this.group3.yzx)), 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(BulkContractionInfixPartial<VersorOdd> lhs, Flector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension VersorOdd {
     public AntiMotor bulk_contraction(Flector other) {
@@ -9558,6 +11330,10 @@ public extension VersorOdd {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(BulkContractionInfixPartial<VersorOdd> lhs, Line rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension VersorOdd {
     public AntiPlane bulk_contraction(Line other) {
         AntiLine right_dual = AntiLine(
@@ -9571,6 +11347,10 @@ public extension VersorOdd {
             float4((right_dual.e12 * this.e4315) + (right_dual.e15 * this.e1234), (right_dual.e23 * this.e4125) + (right_dual.e25 * this.e1234), (right_dual.e31 * this.e4235) + (right_dual.e35 * this.e1234), -(right_dual.e25 * this.e4315) - (right_dual.e35 * this.e4125)) - (this.group3.zxyx * float4(right_dual.group0.xyz.yzx, right_dual.e15))
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(BulkContractionInfixPartial<VersorOdd> lhs, Motor rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension VersorOdd {
     public AntiFlector bulk_contraction(Motor other) {
@@ -9587,6 +11367,10 @@ public extension VersorOdd {
             float4((right_dual.e15 * this.e1234) + (right_dual.e3215 * this.e41), (right_dual.e25 * this.e1234) + (right_dual.e3215 * this.e42), (right_dual.e35 * this.e1234) + (right_dual.e3215 * this.e43), -(right_dual.e25 * this.e4315) - (right_dual.e35 * this.e4125)) + float4((right_dual.group0.zxy * this.group3.yzx), right_dual.e3215 * this.e45) - (this.group3.zxyx * float4(right_dual.group0.yzx, right_dual.e15))
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(BulkContractionInfixPartial<VersorOdd> lhs, MultiVector rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension VersorOdd {
     public MultiVector bulk_contraction(MultiVector other) {
@@ -9640,6 +11424,10 @@ public extension VersorOdd {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<VersorOdd> lhs, Plane rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension VersorOdd {
     public Scalar bulk_contraction(Plane other) {
         AntiPlane right_dual = AntiPlane(
@@ -9651,6 +11439,10 @@ public extension VersorOdd {
             (right_dual.e1 * this.e4235) + (right_dual.e2 * this.e4315) + (right_dual.e3 * this.e4125) + (right_dual.e5 * this.e1234)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(BulkContractionInfixPartial<VersorOdd> lhs, RoundPoint rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension VersorOdd {
     public AntiDipoleInversion bulk_contraction(RoundPoint other) {
@@ -9672,6 +11464,10 @@ public extension VersorOdd {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(BulkContractionInfixPartial<VersorOdd> lhs, Scalar rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension VersorOdd {
     public VersorOdd bulk_contraction(Scalar other) {
         AntiScalar right_dual = AntiScalar(
@@ -9690,6 +11486,10 @@ public extension VersorOdd {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(BulkContractionInfixPartial<VersorOdd> lhs, Sphere rhs) {
+    return lhs.a.bulk_contraction(rhs);
+}
 public extension VersorOdd {
     public Scalar bulk_contraction(Sphere other) {
         RoundPoint right_dual = RoundPoint(
@@ -9703,6 +11503,10 @@ public extension VersorOdd {
             (right_dual.e1 * this.e4235) + (right_dual.e2 * this.e4315) + (right_dual.e3 * this.e4125) + (right_dual.e4 * this.e3215) + (right_dual.e5 * this.e1234)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(BulkContractionInfixPartial<VersorOdd> lhs, VersorEven rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension VersorOdd {
     public AntiDipoleInversion bulk_contraction(VersorEven other) {
@@ -9727,6 +11531,10 @@ public extension VersorOdd {
             (float4(right_dual.e3215) * float4(this.group0.xyz, this.e45)) + (right_dual.group3.zxyz * float4(this.group1.yzx, this.e35)) + (this.group2.wwwy * float4(right_dual.group2.xyz, right_dual.e4315)) + float4((right_dual.group1.zxy * this.group3.yzx), right_dual.e4235 * this.e15) - (float4(this.e3215) * float4(right_dual.group0.xyz, right_dual.e45)) - (right_dual.group2.wwwy * float4(this.group2.xyz, this.e4315)) - (this.group3.zxyx * float4(right_dual.group1.yzx, right_dual.e15)) - float4((right_dual.group3.yzx * this.group1.zxy), right_dual.e35 * this.e4125)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(BulkContractionInfixPartial<VersorOdd> lhs, VersorOdd rhs) {
+    return lhs.a.bulk_contraction(rhs);
 }
 public extension VersorOdd {
     public VersorOdd bulk_contraction(VersorOdd other) {

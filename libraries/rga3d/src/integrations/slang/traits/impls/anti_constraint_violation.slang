@@ -1,16 +1,12 @@
 implementing rga3d;
 using traits;
-public extension DualNum {
-    // Fancy postfix trick
-    public Scalar operator /(AntiConstraintViolationPrefixOrPostfix rhs)  {
-        return this.anti_constraint_violation();
+// Fancy postfix trick
+public Scalar operator /(DualNum lhs, AntiConstraintViolationPrefixOrPostfix rhs)  {
+    return lhs.anti_constraint_violation();
     }
-}
-public extension AntiConstraintViolationPrefixOrPostfix {
-    // Fancy prefix trick
-    public Scalar operator /(DualNum rhs) {
-        return rhs.anti_constraint_violation();
-    }
+// Fancy prefix trick
+public Scalar operator /(AntiConstraintViolationPrefixOrPostfix lhs, DualNum rhs) {
+    return rhs.anti_constraint_violation();
 }
 public extension DualNum {
     public Scalar anti_constraint_violation() {
@@ -20,17 +16,13 @@ public extension DualNum {
         );
     }
 }
-public extension Flector {
-    // Fancy postfix trick
-    public Scalar operator /(AntiConstraintViolationPrefixOrPostfix rhs)  {
-        return this.anti_constraint_violation();
+// Fancy postfix trick
+public Scalar operator /(Flector lhs, AntiConstraintViolationPrefixOrPostfix rhs)  {
+    return lhs.anti_constraint_violation();
     }
-}
-public extension AntiConstraintViolationPrefixOrPostfix {
-    // Fancy prefix trick
-    public Scalar operator /(Flector rhs) {
-        return rhs.anti_constraint_violation();
-    }
+// Fancy prefix trick
+public Scalar operator /(AntiConstraintViolationPrefixOrPostfix lhs, Flector rhs) {
+    return rhs.anti_constraint_violation();
 }
 public extension Flector {
     public Scalar anti_constraint_violation() {
@@ -46,17 +38,13 @@ public extension Flector {
         );
     }
 }
-public extension Line {
-    // Fancy postfix trick
-    public Scalar operator /(AntiConstraintViolationPrefixOrPostfix rhs)  {
-        return this.anti_constraint_violation();
+// Fancy postfix trick
+public Scalar operator /(Line lhs, AntiConstraintViolationPrefixOrPostfix rhs)  {
+    return lhs.anti_constraint_violation();
     }
-}
-public extension AntiConstraintViolationPrefixOrPostfix {
-    // Fancy prefix trick
-    public Scalar operator /(Line rhs) {
-        return rhs.anti_constraint_violation();
-    }
+// Fancy prefix trick
+public Scalar operator /(AntiConstraintViolationPrefixOrPostfix lhs, Line rhs) {
+    return rhs.anti_constraint_violation();
 }
 public extension Line {
     public Scalar anti_constraint_violation() {
@@ -72,17 +60,13 @@ public extension Line {
         );
     }
 }
-public extension Motor {
-    // Fancy postfix trick
-    public Scalar operator /(AntiConstraintViolationPrefixOrPostfix rhs)  {
-        return this.anti_constraint_violation();
+// Fancy postfix trick
+public Scalar operator /(Motor lhs, AntiConstraintViolationPrefixOrPostfix rhs)  {
+    return lhs.anti_constraint_violation();
     }
-}
-public extension AntiConstraintViolationPrefixOrPostfix {
-    // Fancy prefix trick
-    public Scalar operator /(Motor rhs) {
-        return rhs.anti_constraint_violation();
-    }
+// Fancy prefix trick
+public Scalar operator /(AntiConstraintViolationPrefixOrPostfix lhs, Motor rhs) {
+    return rhs.anti_constraint_violation();
 }
 public extension Motor {
     public Scalar anti_constraint_violation() {
@@ -98,17 +82,13 @@ public extension Motor {
         );
     }
 }
-public extension MultiVector {
-    // Fancy postfix trick
-    public MultiVector operator /(AntiConstraintViolationPrefixOrPostfix rhs)  {
-        return this.anti_constraint_violation();
+// Fancy postfix trick
+public MultiVector operator /(MultiVector lhs, AntiConstraintViolationPrefixOrPostfix rhs)  {
+    return lhs.anti_constraint_violation();
     }
-}
-public extension AntiConstraintViolationPrefixOrPostfix {
-    // Fancy prefix trick
-    public MultiVector operator /(MultiVector rhs) {
-        return rhs.anti_constraint_violation();
-    }
+// Fancy prefix trick
+public MultiVector operator /(AntiConstraintViolationPrefixOrPostfix lhs, MultiVector rhs) {
+    return rhs.anti_constraint_violation();
 }
 public extension MultiVector {
     public MultiVector anti_constraint_violation() {

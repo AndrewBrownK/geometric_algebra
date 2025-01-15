@@ -1,50 +1,38 @@
 implementing rga3d;
 using traits;
-public extension AntiScalar {
-    // Fancy postfix trick
-    public AntiScalar operator /(AntiAutoMorphismPrefixOrPostfix rhs)  {
-        return this.anti_auto_morphism();
+// Fancy postfix trick
+public AntiScalar operator /(AntiScalar lhs, AntiAutoMorphismPrefixOrPostfix rhs)  {
+    return lhs.anti_auto_morphism();
     }
-}
-public extension AntiAutoMorphismPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiScalar operator /(AntiScalar rhs) {
-        return rhs.anti_auto_morphism();
-    }
+// Fancy prefix trick
+public AntiScalar operator /(AntiAutoMorphismPrefixOrPostfix lhs, AntiScalar rhs) {
+    return rhs.anti_auto_morphism();
 }
 public extension AntiScalar {
     public AntiScalar anti_auto_morphism() {
         return this;
     }
 }
-public extension DualNum {
-    // Fancy postfix trick
-    public DualNum operator /(AntiAutoMorphismPrefixOrPostfix rhs)  {
-        return this.anti_auto_morphism();
+// Fancy postfix trick
+public DualNum operator /(DualNum lhs, AntiAutoMorphismPrefixOrPostfix rhs)  {
+    return lhs.anti_auto_morphism();
     }
-}
-public extension AntiAutoMorphismPrefixOrPostfix {
-    // Fancy prefix trick
-    public DualNum operator /(DualNum rhs) {
-        return rhs.anti_auto_morphism();
-    }
+// Fancy prefix trick
+public DualNum operator /(AntiAutoMorphismPrefixOrPostfix lhs, DualNum rhs) {
+    return rhs.anti_auto_morphism();
 }
 public extension DualNum {
     public DualNum anti_auto_morphism() {
         return this;
     }
 }
-public extension Flector {
-    // Fancy postfix trick
-    public Flector operator /(AntiAutoMorphismPrefixOrPostfix rhs)  {
-        return this.anti_auto_morphism();
+// Fancy postfix trick
+public Flector operator /(Flector lhs, AntiAutoMorphismPrefixOrPostfix rhs)  {
+    return lhs.anti_auto_morphism();
     }
-}
-public extension AntiAutoMorphismPrefixOrPostfix {
-    // Fancy prefix trick
-    public Flector operator /(Flector rhs) {
-        return rhs.anti_auto_morphism();
-    }
+// Fancy prefix trick
+public Flector operator /(AntiAutoMorphismPrefixOrPostfix lhs, Flector rhs) {
+    return rhs.anti_auto_morphism();
 }
 public extension Flector {
     public Flector anti_auto_morphism() {
@@ -56,17 +44,13 @@ public extension Flector {
         );
     }
 }
-public extension Horizon {
-    // Fancy postfix trick
-    public Horizon operator /(AntiAutoMorphismPrefixOrPostfix rhs)  {
-        return this.anti_auto_morphism();
+// Fancy postfix trick
+public Horizon operator /(Horizon lhs, AntiAutoMorphismPrefixOrPostfix rhs)  {
+    return lhs.anti_auto_morphism();
     }
-}
-public extension AntiAutoMorphismPrefixOrPostfix {
-    // Fancy prefix trick
-    public Horizon operator /(Horizon rhs) {
-        return rhs.anti_auto_morphism();
-    }
+// Fancy prefix trick
+public Horizon operator /(AntiAutoMorphismPrefixOrPostfix lhs, Horizon rhs) {
+    return rhs.anti_auto_morphism();
 }
 public extension Horizon {
     public Horizon anti_auto_morphism() {
@@ -76,51 +60,39 @@ public extension Horizon {
         );
     }
 }
-public extension Line {
-    // Fancy postfix trick
-    public Line operator /(AntiAutoMorphismPrefixOrPostfix rhs)  {
-        return this.anti_auto_morphism();
+// Fancy postfix trick
+public Line operator /(Line lhs, AntiAutoMorphismPrefixOrPostfix rhs)  {
+    return lhs.anti_auto_morphism();
     }
-}
-public extension AntiAutoMorphismPrefixOrPostfix {
-    // Fancy prefix trick
-    public Line operator /(Line rhs) {
-        return rhs.anti_auto_morphism();
-    }
+// Fancy prefix trick
+public Line operator /(AntiAutoMorphismPrefixOrPostfix lhs, Line rhs) {
+    return rhs.anti_auto_morphism();
 }
 public extension Line {
     public Line anti_auto_morphism() {
         return this;
     }
 }
-public extension Motor {
-    // Fancy postfix trick
-    public Motor operator /(AntiAutoMorphismPrefixOrPostfix rhs)  {
-        return this.anti_auto_morphism();
+// Fancy postfix trick
+public Motor operator /(Motor lhs, AntiAutoMorphismPrefixOrPostfix rhs)  {
+    return lhs.anti_auto_morphism();
     }
-}
-public extension AntiAutoMorphismPrefixOrPostfix {
-    // Fancy prefix trick
-    public Motor operator /(Motor rhs) {
-        return rhs.anti_auto_morphism();
-    }
+// Fancy prefix trick
+public Motor operator /(AntiAutoMorphismPrefixOrPostfix lhs, Motor rhs) {
+    return rhs.anti_auto_morphism();
 }
 public extension Motor {
     public Motor anti_auto_morphism() {
         return this;
     }
 }
-public extension MultiVector {
-    // Fancy postfix trick
-    public MultiVector operator /(AntiAutoMorphismPrefixOrPostfix rhs)  {
-        return this.anti_auto_morphism();
+// Fancy postfix trick
+public MultiVector operator /(MultiVector lhs, AntiAutoMorphismPrefixOrPostfix rhs)  {
+    return lhs.anti_auto_morphism();
     }
-}
-public extension AntiAutoMorphismPrefixOrPostfix {
-    // Fancy prefix trick
-    public MultiVector operator /(MultiVector rhs) {
-        return rhs.anti_auto_morphism();
-    }
+// Fancy prefix trick
+public MultiVector operator /(AntiAutoMorphismPrefixOrPostfix lhs, MultiVector rhs) {
+    return rhs.anti_auto_morphism();
 }
 public extension MultiVector {
     public MultiVector anti_auto_morphism() {
@@ -138,17 +110,13 @@ public extension MultiVector {
         );
     }
 }
-public extension Origin {
-    // Fancy postfix trick
-    public Origin operator /(AntiAutoMorphismPrefixOrPostfix rhs)  {
-        return this.anti_auto_morphism();
+// Fancy postfix trick
+public Origin operator /(Origin lhs, AntiAutoMorphismPrefixOrPostfix rhs)  {
+    return lhs.anti_auto_morphism();
     }
-}
-public extension AntiAutoMorphismPrefixOrPostfix {
-    // Fancy prefix trick
-    public Origin operator /(Origin rhs) {
-        return rhs.anti_auto_morphism();
-    }
+// Fancy prefix trick
+public Origin operator /(AntiAutoMorphismPrefixOrPostfix lhs, Origin rhs) {
+    return rhs.anti_auto_morphism();
 }
 public extension Origin {
     public Origin anti_auto_morphism() {
@@ -158,17 +126,13 @@ public extension Origin {
         );
     }
 }
-public extension Plane {
-    // Fancy postfix trick
-    public Plane operator /(AntiAutoMorphismPrefixOrPostfix rhs)  {
-        return this.anti_auto_morphism();
+// Fancy postfix trick
+public Plane operator /(Plane lhs, AntiAutoMorphismPrefixOrPostfix rhs)  {
+    return lhs.anti_auto_morphism();
     }
-}
-public extension AntiAutoMorphismPrefixOrPostfix {
-    // Fancy prefix trick
-    public Plane operator /(Plane rhs) {
-        return rhs.anti_auto_morphism();
-    }
+// Fancy prefix trick
+public Plane operator /(AntiAutoMorphismPrefixOrPostfix lhs, Plane rhs) {
+    return rhs.anti_auto_morphism();
 }
 public extension Plane {
     public Plane anti_auto_morphism() {
@@ -178,17 +142,13 @@ public extension Plane {
         );
     }
 }
-public extension Point {
-    // Fancy postfix trick
-    public Point operator /(AntiAutoMorphismPrefixOrPostfix rhs)  {
-        return this.anti_auto_morphism();
+// Fancy postfix trick
+public Point operator /(Point lhs, AntiAutoMorphismPrefixOrPostfix rhs)  {
+    return lhs.anti_auto_morphism();
     }
-}
-public extension AntiAutoMorphismPrefixOrPostfix {
-    // Fancy prefix trick
-    public Point operator /(Point rhs) {
-        return rhs.anti_auto_morphism();
-    }
+// Fancy prefix trick
+public Point operator /(AntiAutoMorphismPrefixOrPostfix lhs, Point rhs) {
+    return rhs.anti_auto_morphism();
 }
 public extension Point {
     public Point anti_auto_morphism() {
@@ -198,17 +158,13 @@ public extension Point {
         );
     }
 }
-public extension Scalar {
-    // Fancy postfix trick
-    public Scalar operator /(AntiAutoMorphismPrefixOrPostfix rhs)  {
-        return this.anti_auto_morphism();
+// Fancy postfix trick
+public Scalar operator /(Scalar lhs, AntiAutoMorphismPrefixOrPostfix rhs)  {
+    return lhs.anti_auto_morphism();
     }
-}
-public extension AntiAutoMorphismPrefixOrPostfix {
-    // Fancy prefix trick
-    public Scalar operator /(Scalar rhs) {
-        return rhs.anti_auto_morphism();
-    }
+// Fancy prefix trick
+public Scalar operator /(AntiAutoMorphismPrefixOrPostfix lhs, Scalar rhs) {
+    return rhs.anti_auto_morphism();
 }
 public extension Scalar {
     public Scalar anti_auto_morphism() {

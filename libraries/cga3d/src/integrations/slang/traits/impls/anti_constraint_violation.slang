@@ -1,16 +1,12 @@
 implementing cga3d;
 using traits;
-public extension AntiCircleRotor {
-    // Fancy postfix trick
-    public VersorEven operator /(AntiConstraintViolationPrefixOrPostfix rhs)  {
-        return this.anti_constraint_violation();
+// Fancy postfix trick
+public VersorEven operator /(AntiCircleRotor lhs, AntiConstraintViolationPrefixOrPostfix rhs)  {
+    return lhs.anti_constraint_violation();
     }
-}
-public extension AntiConstraintViolationPrefixOrPostfix {
-    // Fancy prefix trick
-    public VersorEven operator /(AntiCircleRotor rhs) {
-        return rhs.anti_constraint_violation();
-    }
+// Fancy prefix trick
+public VersorEven operator /(AntiConstraintViolationPrefixOrPostfix lhs, AntiCircleRotor rhs) {
+    return rhs.anti_constraint_violation();
 }
 public extension AntiCircleRotor {
     public VersorEven anti_constraint_violation() {
@@ -44,17 +40,13 @@ public extension AntiCircleRotor {
         );
     }
 }
-public extension AntiDipoleInversion {
-    // Fancy postfix trick
-    public VersorEven operator /(AntiConstraintViolationPrefixOrPostfix rhs)  {
-        return this.anti_constraint_violation();
+// Fancy postfix trick
+public VersorEven operator /(AntiDipoleInversion lhs, AntiConstraintViolationPrefixOrPostfix rhs)  {
+    return lhs.anti_constraint_violation();
     }
-}
-public extension AntiConstraintViolationPrefixOrPostfix {
-    // Fancy prefix trick
-    public VersorEven operator /(AntiDipoleInversion rhs) {
-        return rhs.anti_constraint_violation();
-    }
+// Fancy prefix trick
+public VersorEven operator /(AntiConstraintViolationPrefixOrPostfix lhs, AntiDipoleInversion rhs) {
+    return rhs.anti_constraint_violation();
 }
 public extension AntiDipoleInversion {
     public VersorEven anti_constraint_violation() {
@@ -90,17 +82,13 @@ public extension AntiDipoleInversion {
         );
     }
 }
-public extension AntiDualNum {
-    // Fancy postfix trick
-    public DualNum operator /(AntiConstraintViolationPrefixOrPostfix rhs)  {
-        return this.anti_constraint_violation();
+// Fancy postfix trick
+public DualNum operator /(AntiDualNum lhs, AntiConstraintViolationPrefixOrPostfix rhs)  {
+    return lhs.anti_constraint_violation();
     }
-}
-public extension AntiConstraintViolationPrefixOrPostfix {
-    // Fancy prefix trick
-    public DualNum operator /(AntiDualNum rhs) {
-        return rhs.anti_constraint_violation();
-    }
+// Fancy prefix trick
+public DualNum operator /(AntiConstraintViolationPrefixOrPostfix lhs, AntiDualNum rhs) {
+    return rhs.anti_constraint_violation();
 }
 public extension AntiDualNum {
     public DualNum anti_constraint_violation() {
@@ -110,17 +98,13 @@ public extension AntiDualNum {
         );
     }
 }
-public extension AntiFlector {
-    // Fancy postfix trick
-    public DualNum operator /(AntiConstraintViolationPrefixOrPostfix rhs)  {
-        return this.anti_constraint_violation();
+// Fancy postfix trick
+public DualNum operator /(AntiFlector lhs, AntiConstraintViolationPrefixOrPostfix rhs)  {
+    return lhs.anti_constraint_violation();
     }
-}
-public extension AntiConstraintViolationPrefixOrPostfix {
-    // Fancy prefix trick
-    public DualNum operator /(AntiFlector rhs) {
-        return rhs.anti_constraint_violation();
-    }
+// Fancy prefix trick
+public DualNum operator /(AntiConstraintViolationPrefixOrPostfix lhs, AntiFlector rhs) {
+    return rhs.anti_constraint_violation();
 }
 public extension AntiFlector {
     public DualNum anti_constraint_violation() {
@@ -136,17 +120,13 @@ public extension AntiFlector {
         );
     }
 }
-public extension AntiLine {
-    // Fancy postfix trick
-    public DualNum operator /(AntiConstraintViolationPrefixOrPostfix rhs)  {
-        return this.anti_constraint_violation();
+// Fancy postfix trick
+public DualNum operator /(AntiLine lhs, AntiConstraintViolationPrefixOrPostfix rhs)  {
+    return lhs.anti_constraint_violation();
     }
-}
-public extension AntiConstraintViolationPrefixOrPostfix {
-    // Fancy prefix trick
-    public DualNum operator /(AntiLine rhs) {
-        return rhs.anti_constraint_violation();
-    }
+// Fancy prefix trick
+public DualNum operator /(AntiConstraintViolationPrefixOrPostfix lhs, AntiLine rhs) {
+    return rhs.anti_constraint_violation();
 }
 public extension AntiLine {
     public DualNum anti_constraint_violation() {
@@ -162,17 +142,13 @@ public extension AntiLine {
         );
     }
 }
-public extension AntiMotor {
-    // Fancy postfix trick
-    public DualNum operator /(AntiConstraintViolationPrefixOrPostfix rhs)  {
-        return this.anti_constraint_violation();
+// Fancy postfix trick
+public DualNum operator /(AntiMotor lhs, AntiConstraintViolationPrefixOrPostfix rhs)  {
+    return lhs.anti_constraint_violation();
     }
-}
-public extension AntiConstraintViolationPrefixOrPostfix {
-    // Fancy prefix trick
-    public DualNum operator /(AntiMotor rhs) {
-        return rhs.anti_constraint_violation();
-    }
+// Fancy prefix trick
+public DualNum operator /(AntiConstraintViolationPrefixOrPostfix lhs, AntiMotor rhs) {
+    return rhs.anti_constraint_violation();
 }
 public extension AntiMotor {
     public DualNum anti_constraint_violation() {
@@ -188,17 +164,13 @@ public extension AntiMotor {
         );
     }
 }
-public extension Circle {
-    // Fancy postfix trick
-    public VersorEven operator /(AntiConstraintViolationPrefixOrPostfix rhs)  {
-        return this.anti_constraint_violation();
+// Fancy postfix trick
+public VersorEven operator /(Circle lhs, AntiConstraintViolationPrefixOrPostfix rhs)  {
+    return lhs.anti_constraint_violation();
     }
-}
-public extension AntiConstraintViolationPrefixOrPostfix {
-    // Fancy prefix trick
-    public VersorEven operator /(Circle rhs) {
-        return rhs.anti_constraint_violation();
-    }
+// Fancy prefix trick
+public VersorEven operator /(AntiConstraintViolationPrefixOrPostfix lhs, Circle rhs) {
+    return rhs.anti_constraint_violation();
 }
 public extension Circle {
     public VersorEven anti_constraint_violation() {
@@ -232,17 +204,13 @@ public extension Circle {
         );
     }
 }
-public extension CircleRotor {
-    // Fancy postfix trick
-    public VersorEven operator /(AntiConstraintViolationPrefixOrPostfix rhs)  {
-        return this.anti_constraint_violation();
+// Fancy postfix trick
+public VersorEven operator /(CircleRotor lhs, AntiConstraintViolationPrefixOrPostfix rhs)  {
+    return lhs.anti_constraint_violation();
     }
-}
-public extension AntiConstraintViolationPrefixOrPostfix {
-    // Fancy prefix trick
-    public VersorEven operator /(CircleRotor rhs) {
-        return rhs.anti_constraint_violation();
-    }
+// Fancy prefix trick
+public VersorEven operator /(AntiConstraintViolationPrefixOrPostfix lhs, CircleRotor rhs) {
+    return rhs.anti_constraint_violation();
 }
 public extension CircleRotor {
     public VersorEven anti_constraint_violation() {
@@ -276,17 +244,13 @@ public extension CircleRotor {
         );
     }
 }
-public extension Dipole {
-    // Fancy postfix trick
-    public VersorEven operator /(AntiConstraintViolationPrefixOrPostfix rhs)  {
-        return this.anti_constraint_violation();
+// Fancy postfix trick
+public VersorEven operator /(Dipole lhs, AntiConstraintViolationPrefixOrPostfix rhs)  {
+    return lhs.anti_constraint_violation();
     }
-}
-public extension AntiConstraintViolationPrefixOrPostfix {
-    // Fancy prefix trick
-    public VersorEven operator /(Dipole rhs) {
-        return rhs.anti_constraint_violation();
-    }
+// Fancy prefix trick
+public VersorEven operator /(AntiConstraintViolationPrefixOrPostfix lhs, Dipole rhs) {
+    return rhs.anti_constraint_violation();
 }
 public extension Dipole {
     public VersorEven anti_constraint_violation() {
@@ -320,17 +284,13 @@ public extension Dipole {
         );
     }
 }
-public extension DipoleInversion {
-    // Fancy postfix trick
-    public VersorEven operator /(AntiConstraintViolationPrefixOrPostfix rhs)  {
-        return this.anti_constraint_violation();
+// Fancy postfix trick
+public VersorEven operator /(DipoleInversion lhs, AntiConstraintViolationPrefixOrPostfix rhs)  {
+    return lhs.anti_constraint_violation();
     }
-}
-public extension AntiConstraintViolationPrefixOrPostfix {
-    // Fancy prefix trick
-    public VersorEven operator /(DipoleInversion rhs) {
-        return rhs.anti_constraint_violation();
-    }
+// Fancy prefix trick
+public VersorEven operator /(AntiConstraintViolationPrefixOrPostfix lhs, DipoleInversion rhs) {
+    return rhs.anti_constraint_violation();
 }
 public extension DipoleInversion {
     public VersorEven anti_constraint_violation() {
@@ -366,17 +326,13 @@ public extension DipoleInversion {
         );
     }
 }
-public extension DualNum {
-    // Fancy postfix trick
-    public DualNum operator /(AntiConstraintViolationPrefixOrPostfix rhs)  {
-        return this.anti_constraint_violation();
+// Fancy postfix trick
+public DualNum operator /(DualNum lhs, AntiConstraintViolationPrefixOrPostfix rhs)  {
+    return lhs.anti_constraint_violation();
     }
-}
-public extension AntiConstraintViolationPrefixOrPostfix {
-    // Fancy prefix trick
-    public DualNum operator /(DualNum rhs) {
-        return rhs.anti_constraint_violation();
-    }
+// Fancy prefix trick
+public DualNum operator /(AntiConstraintViolationPrefixOrPostfix lhs, DualNum rhs) {
+    return rhs.anti_constraint_violation();
 }
 public extension DualNum {
     public DualNum anti_constraint_violation() {
@@ -386,17 +342,13 @@ public extension DualNum {
         );
     }
 }
-public extension Flector {
-    // Fancy postfix trick
-    public DualNum operator /(AntiConstraintViolationPrefixOrPostfix rhs)  {
-        return this.anti_constraint_violation();
+// Fancy postfix trick
+public DualNum operator /(Flector lhs, AntiConstraintViolationPrefixOrPostfix rhs)  {
+    return lhs.anti_constraint_violation();
     }
-}
-public extension AntiConstraintViolationPrefixOrPostfix {
-    // Fancy prefix trick
-    public DualNum operator /(Flector rhs) {
-        return rhs.anti_constraint_violation();
-    }
+// Fancy prefix trick
+public DualNum operator /(AntiConstraintViolationPrefixOrPostfix lhs, Flector rhs) {
+    return rhs.anti_constraint_violation();
 }
 public extension Flector {
     public DualNum anti_constraint_violation() {
@@ -412,17 +364,13 @@ public extension Flector {
         );
     }
 }
-public extension Line {
-    // Fancy postfix trick
-    public DualNum operator /(AntiConstraintViolationPrefixOrPostfix rhs)  {
-        return this.anti_constraint_violation();
+// Fancy postfix trick
+public DualNum operator /(Line lhs, AntiConstraintViolationPrefixOrPostfix rhs)  {
+    return lhs.anti_constraint_violation();
     }
-}
-public extension AntiConstraintViolationPrefixOrPostfix {
-    // Fancy prefix trick
-    public DualNum operator /(Line rhs) {
-        return rhs.anti_constraint_violation();
-    }
+// Fancy prefix trick
+public DualNum operator /(AntiConstraintViolationPrefixOrPostfix lhs, Line rhs) {
+    return rhs.anti_constraint_violation();
 }
 public extension Line {
     public DualNum anti_constraint_violation() {
@@ -438,17 +386,13 @@ public extension Line {
         );
     }
 }
-public extension Motor {
-    // Fancy postfix trick
-    public DualNum operator /(AntiConstraintViolationPrefixOrPostfix rhs)  {
-        return this.anti_constraint_violation();
+// Fancy postfix trick
+public DualNum operator /(Motor lhs, AntiConstraintViolationPrefixOrPostfix rhs)  {
+    return lhs.anti_constraint_violation();
     }
-}
-public extension AntiConstraintViolationPrefixOrPostfix {
-    // Fancy prefix trick
-    public DualNum operator /(Motor rhs) {
-        return rhs.anti_constraint_violation();
-    }
+// Fancy prefix trick
+public DualNum operator /(AntiConstraintViolationPrefixOrPostfix lhs, Motor rhs) {
+    return rhs.anti_constraint_violation();
 }
 public extension Motor {
     public DualNum anti_constraint_violation() {
@@ -464,17 +408,13 @@ public extension Motor {
         );
     }
 }
-public extension MultiVector {
-    // Fancy postfix trick
-    public MultiVector operator /(AntiConstraintViolationPrefixOrPostfix rhs)  {
-        return this.anti_constraint_violation();
+// Fancy postfix trick
+public MultiVector operator /(MultiVector lhs, AntiConstraintViolationPrefixOrPostfix rhs)  {
+    return lhs.anti_constraint_violation();
     }
-}
-public extension AntiConstraintViolationPrefixOrPostfix {
-    // Fancy prefix trick
-    public MultiVector operator /(MultiVector rhs) {
-        return rhs.anti_constraint_violation();
-    }
+// Fancy prefix trick
+public MultiVector operator /(AntiConstraintViolationPrefixOrPostfix lhs, MultiVector rhs) {
+    return rhs.anti_constraint_violation();
 }
 public extension MultiVector {
     public MultiVector anti_constraint_violation() {
@@ -552,17 +492,13 @@ public extension MultiVector {
         );
     }
 }
-public extension VersorEven {
-    // Fancy postfix trick
-    public VersorEven operator /(AntiConstraintViolationPrefixOrPostfix rhs)  {
-        return this.anti_constraint_violation();
+// Fancy postfix trick
+public VersorEven operator /(VersorEven lhs, AntiConstraintViolationPrefixOrPostfix rhs)  {
+    return lhs.anti_constraint_violation();
     }
-}
-public extension AntiConstraintViolationPrefixOrPostfix {
-    // Fancy prefix trick
-    public VersorEven operator /(VersorEven rhs) {
-        return rhs.anti_constraint_violation();
-    }
+// Fancy prefix trick
+public VersorEven operator /(AntiConstraintViolationPrefixOrPostfix lhs, VersorEven rhs) {
+    return rhs.anti_constraint_violation();
 }
 public extension VersorEven {
     public VersorEven anti_constraint_violation() {
@@ -598,17 +534,13 @@ public extension VersorEven {
         );
     }
 }
-public extension VersorOdd {
-    // Fancy postfix trick
-    public VersorEven operator /(AntiConstraintViolationPrefixOrPostfix rhs)  {
-        return this.anti_constraint_violation();
+// Fancy postfix trick
+public VersorEven operator /(VersorOdd lhs, AntiConstraintViolationPrefixOrPostfix rhs)  {
+    return lhs.anti_constraint_violation();
     }
-}
-public extension AntiConstraintViolationPrefixOrPostfix {
-    // Fancy prefix trick
-    public VersorEven operator /(VersorOdd rhs) {
-        return rhs.anti_constraint_violation();
-    }
+// Fancy prefix trick
+public VersorEven operator /(AntiConstraintViolationPrefixOrPostfix lhs, VersorOdd rhs) {
+    return rhs.anti_constraint_violation();
 }
 public extension VersorOdd {
     public VersorEven anti_constraint_violation() {

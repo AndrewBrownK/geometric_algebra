@@ -1,16 +1,12 @@
 implementing rga3d;
 using traits;
-public extension AntiScalar {
-    // Fancy postfix trick
-    public AntiScalar operator /(UnitizePrefixOrPostfix rhs)  {
-        return this.unitize();
+// Fancy postfix trick
+public AntiScalar operator /(AntiScalar lhs, UnitizePrefixOrPostfix rhs)  {
+    return lhs.unitize();
     }
-}
-public extension UnitizePrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiScalar operator /(AntiScalar rhs) {
-        return rhs.unitize();
-    }
+// Fancy prefix trick
+public AntiScalar operator /(UnitizePrefixOrPostfix lhs, AntiScalar rhs) {
+    return rhs.unitize();
 }
 public extension AntiScalar {
     public AntiScalar unitize() {
@@ -20,17 +16,13 @@ public extension AntiScalar {
         );
     }
 }
-public extension DualNum {
-    // Fancy postfix trick
-    public DualNum operator /(UnitizePrefixOrPostfix rhs)  {
-        return this.unitize();
+// Fancy postfix trick
+public DualNum operator /(DualNum lhs, UnitizePrefixOrPostfix rhs)  {
+    return lhs.unitize();
     }
-}
-public extension UnitizePrefixOrPostfix {
-    // Fancy prefix trick
-    public DualNum operator /(DualNum rhs) {
-        return rhs.unitize();
-    }
+// Fancy prefix trick
+public DualNum operator /(UnitizePrefixOrPostfix lhs, DualNum rhs) {
+    return rhs.unitize();
 }
 public extension DualNum {
     public DualNum unitize() {
@@ -40,17 +32,13 @@ public extension DualNum {
         );
     }
 }
-public extension Flector {
-    // Fancy postfix trick
-    public Flector operator /(UnitizePrefixOrPostfix rhs)  {
-        return this.unitize();
+// Fancy postfix trick
+public Flector operator /(Flector lhs, UnitizePrefixOrPostfix rhs)  {
+    return lhs.unitize();
     }
-}
-public extension UnitizePrefixOrPostfix {
-    // Fancy prefix trick
-    public Flector operator /(Flector rhs) {
-        return rhs.unitize();
-    }
+// Fancy prefix trick
+public Flector operator /(UnitizePrefixOrPostfix lhs, Flector rhs) {
+    return rhs.unitize();
 }
 public extension Flector {
     public Flector unitize() {
@@ -66,17 +54,13 @@ public extension Flector {
         );
     }
 }
-public extension Line {
-    // Fancy postfix trick
-    public Line operator /(UnitizePrefixOrPostfix rhs)  {
-        return this.unitize();
+// Fancy postfix trick
+public Line operator /(Line lhs, UnitizePrefixOrPostfix rhs)  {
+    return lhs.unitize();
     }
-}
-public extension UnitizePrefixOrPostfix {
-    // Fancy prefix trick
-    public Line operator /(Line rhs) {
-        return rhs.unitize();
-    }
+// Fancy prefix trick
+public Line operator /(UnitizePrefixOrPostfix lhs, Line rhs) {
+    return rhs.unitize();
 }
 public extension Line {
     public Line unitize() {
@@ -92,17 +76,13 @@ public extension Line {
         );
     }
 }
-public extension Motor {
-    // Fancy postfix trick
-    public Motor operator /(UnitizePrefixOrPostfix rhs)  {
-        return this.unitize();
+// Fancy postfix trick
+public Motor operator /(Motor lhs, UnitizePrefixOrPostfix rhs)  {
+    return lhs.unitize();
     }
-}
-public extension UnitizePrefixOrPostfix {
-    // Fancy prefix trick
-    public Motor operator /(Motor rhs) {
-        return rhs.unitize();
-    }
+// Fancy prefix trick
+public Motor operator /(UnitizePrefixOrPostfix lhs, Motor rhs) {
+    return rhs.unitize();
 }
 public extension Motor {
     public Motor unitize() {
@@ -118,17 +98,13 @@ public extension Motor {
         );
     }
 }
-public extension MultiVector {
-    // Fancy postfix trick
-    public MultiVector operator /(UnitizePrefixOrPostfix rhs)  {
-        return this.unitize();
+// Fancy postfix trick
+public MultiVector operator /(MultiVector lhs, UnitizePrefixOrPostfix rhs)  {
+    return lhs.unitize();
     }
-}
-public extension UnitizePrefixOrPostfix {
-    // Fancy prefix trick
-    public MultiVector operator /(MultiVector rhs) {
-        return rhs.unitize();
-    }
+// Fancy prefix trick
+public MultiVector operator /(UnitizePrefixOrPostfix lhs, MultiVector rhs) {
+    return rhs.unitize();
 }
 public extension MultiVector {
     public MultiVector unitize() {
@@ -150,17 +126,13 @@ public extension MultiVector {
         );
     }
 }
-public extension Origin {
-    // Fancy postfix trick
-    public Origin operator /(UnitizePrefixOrPostfix rhs)  {
-        return this.unitize();
+// Fancy postfix trick
+public Origin operator /(Origin lhs, UnitizePrefixOrPostfix rhs)  {
+    return lhs.unitize();
     }
-}
-public extension UnitizePrefixOrPostfix {
-    // Fancy prefix trick
-    public Origin operator /(Origin rhs) {
-        return rhs.unitize();
-    }
+// Fancy prefix trick
+public Origin operator /(UnitizePrefixOrPostfix lhs, Origin rhs) {
+    return rhs.unitize();
 }
 public extension Origin {
     public Origin unitize() {
@@ -170,17 +142,13 @@ public extension Origin {
         );
     }
 }
-public extension Plane {
-    // Fancy postfix trick
-    public Plane operator /(UnitizePrefixOrPostfix rhs)  {
-        return this.unitize();
+// Fancy postfix trick
+public Plane operator /(Plane lhs, UnitizePrefixOrPostfix rhs)  {
+    return lhs.unitize();
     }
-}
-public extension UnitizePrefixOrPostfix {
-    // Fancy prefix trick
-    public Plane operator /(Plane rhs) {
-        return rhs.unitize();
-    }
+// Fancy prefix trick
+public Plane operator /(UnitizePrefixOrPostfix lhs, Plane rhs) {
+    return rhs.unitize();
 }
 public extension Plane {
     public Plane unitize() {
@@ -190,17 +158,13 @@ public extension Plane {
         );
     }
 }
-public extension Point {
-    // Fancy postfix trick
-    public Point operator /(UnitizePrefixOrPostfix rhs)  {
-        return this.unitize();
+// Fancy postfix trick
+public Point operator /(Point lhs, UnitizePrefixOrPostfix rhs)  {
+    return lhs.unitize();
     }
-}
-public extension UnitizePrefixOrPostfix {
-    // Fancy prefix trick
-    public Point operator /(Point rhs) {
-        return rhs.unitize();
-    }
+// Fancy prefix trick
+public Point operator /(UnitizePrefixOrPostfix lhs, Point rhs) {
+    return rhs.unitize();
 }
 public extension Point {
     public Point unitize() {

@@ -1,16 +1,12 @@
 implementing cga3d;
 using traits;
-public extension AntiCircleRotor {
-    // Fancy postfix trick
-    public AntiScalar operator /(RoundWeightNormSquaredPrefixOrPostfix rhs)  {
-        return this.round_weight_norm_squared();
+// Fancy postfix trick
+public AntiScalar operator /(AntiCircleRotor lhs, RoundWeightNormSquaredPrefixOrPostfix rhs)  {
+    return lhs.round_weight_norm_squared();
     }
-}
-public extension RoundWeightNormSquaredPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiScalar operator /(AntiCircleRotor rhs) {
-        return rhs.round_weight_norm_squared();
-    }
+// Fancy prefix trick
+public AntiScalar operator /(RoundWeightNormSquaredPrefixOrPostfix lhs, AntiCircleRotor rhs) {
+    return rhs.round_weight_norm_squared();
 }
 public extension AntiCircleRotor {
     public AntiScalar round_weight_norm_squared() {
@@ -21,17 +17,13 @@ public extension AntiCircleRotor {
         return round_weight_carrier.anti_dot_product(round_weight_carrier);
     }
 }
-public extension AntiDipoleInversion {
-    // Fancy postfix trick
-    public AntiScalar operator /(RoundWeightNormSquaredPrefixOrPostfix rhs)  {
-        return this.round_weight_norm_squared();
+// Fancy postfix trick
+public AntiScalar operator /(AntiDipoleInversion lhs, RoundWeightNormSquaredPrefixOrPostfix rhs)  {
+    return lhs.round_weight_norm_squared();
     }
-}
-public extension RoundWeightNormSquaredPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiScalar operator /(AntiDipoleInversion rhs) {
-        return rhs.round_weight_norm_squared();
-    }
+// Fancy prefix trick
+public AntiScalar operator /(RoundWeightNormSquaredPrefixOrPostfix lhs, AntiDipoleInversion rhs) {
+    return rhs.round_weight_norm_squared();
 }
 public extension AntiDipoleInversion {
     public AntiScalar round_weight_norm_squared() {
@@ -42,17 +34,13 @@ public extension AntiDipoleInversion {
         return round_weight_carrier.anti_dot_product(round_weight_carrier);
     }
 }
-public extension Circle {
-    // Fancy postfix trick
-    public AntiScalar operator /(RoundWeightNormSquaredPrefixOrPostfix rhs)  {
-        return this.round_weight_norm_squared();
+// Fancy postfix trick
+public AntiScalar operator /(Circle lhs, RoundWeightNormSquaredPrefixOrPostfix rhs)  {
+    return lhs.round_weight_norm_squared();
     }
-}
-public extension RoundWeightNormSquaredPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiScalar operator /(Circle rhs) {
-        return rhs.round_weight_norm_squared();
-    }
+// Fancy prefix trick
+public AntiScalar operator /(RoundWeightNormSquaredPrefixOrPostfix lhs, Circle rhs) {
+    return rhs.round_weight_norm_squared();
 }
 public extension Circle {
     public AntiScalar round_weight_norm_squared() {
@@ -63,17 +51,13 @@ public extension Circle {
         return round_weight_carrier.anti_dot_product(round_weight_carrier);
     }
 }
-public extension CircleRotor {
-    // Fancy postfix trick
-    public AntiScalar operator /(RoundWeightNormSquaredPrefixOrPostfix rhs)  {
-        return this.round_weight_norm_squared();
+// Fancy postfix trick
+public AntiScalar operator /(CircleRotor lhs, RoundWeightNormSquaredPrefixOrPostfix rhs)  {
+    return lhs.round_weight_norm_squared();
     }
-}
-public extension RoundWeightNormSquaredPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiScalar operator /(CircleRotor rhs) {
-        return rhs.round_weight_norm_squared();
-    }
+// Fancy prefix trick
+public AntiScalar operator /(RoundWeightNormSquaredPrefixOrPostfix lhs, CircleRotor rhs) {
+    return rhs.round_weight_norm_squared();
 }
 public extension CircleRotor {
     public AntiScalar round_weight_norm_squared() {
@@ -84,17 +68,13 @@ public extension CircleRotor {
         return round_weight_carrier.anti_dot_product(round_weight_carrier);
     }
 }
-public extension Dipole {
-    // Fancy postfix trick
-    public AntiScalar operator /(RoundWeightNormSquaredPrefixOrPostfix rhs)  {
-        return this.round_weight_norm_squared();
+// Fancy postfix trick
+public AntiScalar operator /(Dipole lhs, RoundWeightNormSquaredPrefixOrPostfix rhs)  {
+    return lhs.round_weight_norm_squared();
     }
-}
-public extension RoundWeightNormSquaredPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiScalar operator /(Dipole rhs) {
-        return rhs.round_weight_norm_squared();
-    }
+// Fancy prefix trick
+public AntiScalar operator /(RoundWeightNormSquaredPrefixOrPostfix lhs, Dipole rhs) {
+    return rhs.round_weight_norm_squared();
 }
 public extension Dipole {
     public AntiScalar round_weight_norm_squared() {
@@ -105,17 +85,13 @@ public extension Dipole {
         return round_weight_carrier.anti_dot_product(round_weight_carrier);
     }
 }
-public extension DipoleInversion {
-    // Fancy postfix trick
-    public AntiScalar operator /(RoundWeightNormSquaredPrefixOrPostfix rhs)  {
-        return this.round_weight_norm_squared();
+// Fancy postfix trick
+public AntiScalar operator /(DipoleInversion lhs, RoundWeightNormSquaredPrefixOrPostfix rhs)  {
+    return lhs.round_weight_norm_squared();
     }
-}
-public extension RoundWeightNormSquaredPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiScalar operator /(DipoleInversion rhs) {
-        return rhs.round_weight_norm_squared();
-    }
+// Fancy prefix trick
+public AntiScalar operator /(RoundWeightNormSquaredPrefixOrPostfix lhs, DipoleInversion rhs) {
+    return rhs.round_weight_norm_squared();
 }
 public extension DipoleInversion {
     public AntiScalar round_weight_norm_squared() {
@@ -126,17 +102,13 @@ public extension DipoleInversion {
         return round_weight_carrier.anti_dot_product(round_weight_carrier);
     }
 }
-public extension MultiVector {
-    // Fancy postfix trick
-    public AntiScalar operator /(RoundWeightNormSquaredPrefixOrPostfix rhs)  {
-        return this.round_weight_norm_squared();
+// Fancy postfix trick
+public AntiScalar operator /(MultiVector lhs, RoundWeightNormSquaredPrefixOrPostfix rhs)  {
+    return lhs.round_weight_norm_squared();
     }
-}
-public extension RoundWeightNormSquaredPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiScalar operator /(MultiVector rhs) {
-        return rhs.round_weight_norm_squared();
-    }
+// Fancy prefix trick
+public AntiScalar operator /(RoundWeightNormSquaredPrefixOrPostfix lhs, MultiVector rhs) {
+    return rhs.round_weight_norm_squared();
 }
 public extension MultiVector {
     public AntiScalar round_weight_norm_squared() {
@@ -147,17 +119,13 @@ public extension MultiVector {
         return round_weight_carrier.anti_dot_product(round_weight_carrier);
     }
 }
-public extension RoundPoint {
-    // Fancy postfix trick
-    public AntiScalar operator /(RoundWeightNormSquaredPrefixOrPostfix rhs)  {
-        return this.round_weight_norm_squared();
+// Fancy postfix trick
+public AntiScalar operator /(RoundPoint lhs, RoundWeightNormSquaredPrefixOrPostfix rhs)  {
+    return lhs.round_weight_norm_squared();
     }
-}
-public extension RoundWeightNormSquaredPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiScalar operator /(RoundPoint rhs) {
-        return rhs.round_weight_norm_squared();
-    }
+// Fancy prefix trick
+public AntiScalar operator /(RoundWeightNormSquaredPrefixOrPostfix lhs, RoundPoint rhs) {
+    return rhs.round_weight_norm_squared();
 }
 public extension RoundPoint {
     public AntiScalar round_weight_norm_squared() {
@@ -168,17 +136,13 @@ public extension RoundPoint {
         return round_weight_carrier.anti_dot_product(round_weight_carrier);
     }
 }
-public extension Sphere {
-    // Fancy postfix trick
-    public AntiScalar operator /(RoundWeightNormSquaredPrefixOrPostfix rhs)  {
-        return this.round_weight_norm_squared();
+// Fancy postfix trick
+public AntiScalar operator /(Sphere lhs, RoundWeightNormSquaredPrefixOrPostfix rhs)  {
+    return lhs.round_weight_norm_squared();
     }
-}
-public extension RoundWeightNormSquaredPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiScalar operator /(Sphere rhs) {
-        return rhs.round_weight_norm_squared();
-    }
+// Fancy prefix trick
+public AntiScalar operator /(RoundWeightNormSquaredPrefixOrPostfix lhs, Sphere rhs) {
+    return rhs.round_weight_norm_squared();
 }
 public extension Sphere {
     public AntiScalar round_weight_norm_squared() {
@@ -189,17 +153,13 @@ public extension Sphere {
         return round_weight_carrier.anti_dot_product(round_weight_carrier);
     }
 }
-public extension VersorEven {
-    // Fancy postfix trick
-    public AntiScalar operator /(RoundWeightNormSquaredPrefixOrPostfix rhs)  {
-        return this.round_weight_norm_squared();
+// Fancy postfix trick
+public AntiScalar operator /(VersorEven lhs, RoundWeightNormSquaredPrefixOrPostfix rhs)  {
+    return lhs.round_weight_norm_squared();
     }
-}
-public extension RoundWeightNormSquaredPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiScalar operator /(VersorEven rhs) {
-        return rhs.round_weight_norm_squared();
-    }
+// Fancy prefix trick
+public AntiScalar operator /(RoundWeightNormSquaredPrefixOrPostfix lhs, VersorEven rhs) {
+    return rhs.round_weight_norm_squared();
 }
 public extension VersorEven {
     public AntiScalar round_weight_norm_squared() {
@@ -210,17 +170,13 @@ public extension VersorEven {
         return round_weight_carrier.anti_dot_product(round_weight_carrier);
     }
 }
-public extension VersorOdd {
-    // Fancy postfix trick
-    public AntiScalar operator /(RoundWeightNormSquaredPrefixOrPostfix rhs)  {
-        return this.round_weight_norm_squared();
+// Fancy postfix trick
+public AntiScalar operator /(VersorOdd lhs, RoundWeightNormSquaredPrefixOrPostfix rhs)  {
+    return lhs.round_weight_norm_squared();
     }
-}
-public extension RoundWeightNormSquaredPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiScalar operator /(VersorOdd rhs) {
-        return rhs.round_weight_norm_squared();
-    }
+// Fancy prefix trick
+public AntiScalar operator /(RoundWeightNormSquaredPrefixOrPostfix lhs, VersorOdd rhs) {
+    return rhs.round_weight_norm_squared();
 }
 public extension VersorOdd {
     public AntiScalar round_weight_norm_squared() {

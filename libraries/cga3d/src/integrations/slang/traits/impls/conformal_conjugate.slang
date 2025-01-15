@@ -1,16 +1,12 @@
 implementing cga3d;
 using traits;
-public extension AntiCircleRotor {
-    // Fancy postfix trick
-    public AntiCircleRotor operator /(ConformalConjugatePrefixOrPostfix rhs)  {
-        return this.conformal_conjugate();
+// Fancy postfix trick
+public AntiCircleRotor operator /(AntiCircleRotor lhs, ConformalConjugatePrefixOrPostfix rhs)  {
+    return lhs.conformal_conjugate();
     }
-}
-public extension ConformalConjugatePrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiCircleRotor operator /(AntiCircleRotor rhs) {
-        return rhs.conformal_conjugate();
-    }
+// Fancy prefix trick
+public AntiCircleRotor operator /(ConformalConjugatePrefixOrPostfix lhs, AntiCircleRotor rhs) {
+    return rhs.conformal_conjugate();
 }
 public extension AntiCircleRotor {
     public AntiCircleRotor conformal_conjugate() {
@@ -24,17 +20,13 @@ public extension AntiCircleRotor {
         );
     }
 }
-public extension AntiDipoleInversion {
-    // Fancy postfix trick
-    public AntiDipoleInversion operator /(ConformalConjugatePrefixOrPostfix rhs)  {
-        return this.conformal_conjugate();
+// Fancy postfix trick
+public AntiDipoleInversion operator /(AntiDipoleInversion lhs, ConformalConjugatePrefixOrPostfix rhs)  {
+    return lhs.conformal_conjugate();
     }
-}
-public extension ConformalConjugatePrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiDipoleInversion operator /(AntiDipoleInversion rhs) {
-        return rhs.conformal_conjugate();
-    }
+// Fancy prefix trick
+public AntiDipoleInversion operator /(ConformalConjugatePrefixOrPostfix lhs, AntiDipoleInversion rhs) {
+    return rhs.conformal_conjugate();
 }
 public extension AntiDipoleInversion {
     public AntiDipoleInversion conformal_conjugate() {
@@ -50,17 +42,13 @@ public extension AntiDipoleInversion {
         );
     }
 }
-public extension AntiDualNum {
-    // Fancy postfix trick
-    public AntiDualNum operator /(ConformalConjugatePrefixOrPostfix rhs)  {
-        return this.conformal_conjugate();
+// Fancy postfix trick
+public AntiDualNum operator /(AntiDualNum lhs, ConformalConjugatePrefixOrPostfix rhs)  {
+    return lhs.conformal_conjugate();
     }
-}
-public extension ConformalConjugatePrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiDualNum operator /(AntiDualNum rhs) {
-        return rhs.conformal_conjugate();
-    }
+// Fancy prefix trick
+public AntiDualNum operator /(ConformalConjugatePrefixOrPostfix lhs, AntiDualNum rhs) {
+    return rhs.conformal_conjugate();
 }
 public extension AntiDualNum {
     public AntiDualNum conformal_conjugate() {
@@ -70,17 +58,13 @@ public extension AntiDualNum {
         );
     }
 }
-public extension AntiFlatPoint {
-    // Fancy postfix trick
-    public AntiFlatPoint operator /(ConformalConjugatePrefixOrPostfix rhs)  {
-        return this.conformal_conjugate();
+// Fancy postfix trick
+public AntiFlatPoint operator /(AntiFlatPoint lhs, ConformalConjugatePrefixOrPostfix rhs)  {
+    return lhs.conformal_conjugate();
     }
-}
-public extension ConformalConjugatePrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiFlatPoint operator /(AntiFlatPoint rhs) {
-        return rhs.conformal_conjugate();
-    }
+// Fancy prefix trick
+public AntiFlatPoint operator /(ConformalConjugatePrefixOrPostfix lhs, AntiFlatPoint rhs) {
+    return rhs.conformal_conjugate();
 }
 public extension AntiFlatPoint {
     public AntiFlatPoint conformal_conjugate() {
@@ -90,17 +74,13 @@ public extension AntiFlatPoint {
         );
     }
 }
-public extension AntiFlector {
-    // Fancy postfix trick
-    public AntiFlector operator /(ConformalConjugatePrefixOrPostfix rhs)  {
-        return this.conformal_conjugate();
+// Fancy postfix trick
+public AntiFlector operator /(AntiFlector lhs, ConformalConjugatePrefixOrPostfix rhs)  {
+    return lhs.conformal_conjugate();
     }
-}
-public extension ConformalConjugatePrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiFlector operator /(AntiFlector rhs) {
-        return rhs.conformal_conjugate();
-    }
+// Fancy prefix trick
+public AntiFlector operator /(ConformalConjugatePrefixOrPostfix lhs, AntiFlector rhs) {
+    return rhs.conformal_conjugate();
 }
 public extension AntiFlector {
     public AntiFlector conformal_conjugate() {
@@ -112,17 +92,13 @@ public extension AntiFlector {
         );
     }
 }
-public extension AntiLine {
-    // Fancy postfix trick
-    public AntiLine operator /(ConformalConjugatePrefixOrPostfix rhs)  {
-        return this.conformal_conjugate();
+// Fancy postfix trick
+public AntiLine operator /(AntiLine lhs, ConformalConjugatePrefixOrPostfix rhs)  {
+    return lhs.conformal_conjugate();
     }
-}
-public extension ConformalConjugatePrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiLine operator /(AntiLine rhs) {
-        return rhs.conformal_conjugate();
-    }
+// Fancy prefix trick
+public AntiLine operator /(ConformalConjugatePrefixOrPostfix lhs, AntiLine rhs) {
+    return rhs.conformal_conjugate();
 }
 public extension AntiLine {
     public AntiLine conformal_conjugate() {
@@ -134,17 +110,13 @@ public extension AntiLine {
         );
     }
 }
-public extension AntiMotor {
-    // Fancy postfix trick
-    public AntiMotor operator /(ConformalConjugatePrefixOrPostfix rhs)  {
-        return this.conformal_conjugate();
+// Fancy postfix trick
+public AntiMotor operator /(AntiMotor lhs, ConformalConjugatePrefixOrPostfix rhs)  {
+    return lhs.conformal_conjugate();
     }
-}
-public extension ConformalConjugatePrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiMotor operator /(AntiMotor rhs) {
-        return rhs.conformal_conjugate();
-    }
+// Fancy prefix trick
+public AntiMotor operator /(ConformalConjugatePrefixOrPostfix lhs, AntiMotor rhs) {
+    return rhs.conformal_conjugate();
 }
 public extension AntiMotor {
     public AntiMotor conformal_conjugate() {
@@ -156,17 +128,13 @@ public extension AntiMotor {
         );
     }
 }
-public extension AntiPlane {
-    // Fancy postfix trick
-    public AntiPlane operator /(ConformalConjugatePrefixOrPostfix rhs)  {
-        return this.conformal_conjugate();
+// Fancy postfix trick
+public AntiPlane operator /(AntiPlane lhs, ConformalConjugatePrefixOrPostfix rhs)  {
+    return lhs.conformal_conjugate();
     }
-}
-public extension ConformalConjugatePrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiPlane operator /(AntiPlane rhs) {
-        return rhs.conformal_conjugate();
-    }
+// Fancy prefix trick
+public AntiPlane operator /(ConformalConjugatePrefixOrPostfix lhs, AntiPlane rhs) {
+    return rhs.conformal_conjugate();
 }
 public extension AntiPlane {
     public AntiPlane conformal_conjugate() {
@@ -176,17 +144,13 @@ public extension AntiPlane {
         );
     }
 }
-public extension AntiScalar {
-    // Fancy postfix trick
-    public AntiScalar operator /(ConformalConjugatePrefixOrPostfix rhs)  {
-        return this.conformal_conjugate();
+// Fancy postfix trick
+public AntiScalar operator /(AntiScalar lhs, ConformalConjugatePrefixOrPostfix rhs)  {
+    return lhs.conformal_conjugate();
     }
-}
-public extension ConformalConjugatePrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiScalar operator /(AntiScalar rhs) {
-        return rhs.conformal_conjugate();
-    }
+// Fancy prefix trick
+public AntiScalar operator /(ConformalConjugatePrefixOrPostfix lhs, AntiScalar rhs) {
+    return rhs.conformal_conjugate();
 }
 public extension AntiScalar {
     public AntiScalar conformal_conjugate() {
@@ -196,17 +160,13 @@ public extension AntiScalar {
         );
     }
 }
-public extension Circle {
-    // Fancy postfix trick
-    public Circle operator /(ConformalConjugatePrefixOrPostfix rhs)  {
-        return this.conformal_conjugate();
+// Fancy postfix trick
+public Circle operator /(Circle lhs, ConformalConjugatePrefixOrPostfix rhs)  {
+    return lhs.conformal_conjugate();
     }
-}
-public extension ConformalConjugatePrefixOrPostfix {
-    // Fancy prefix trick
-    public Circle operator /(Circle rhs) {
-        return rhs.conformal_conjugate();
-    }
+// Fancy prefix trick
+public Circle operator /(ConformalConjugatePrefixOrPostfix lhs, Circle rhs) {
+    return rhs.conformal_conjugate();
 }
 public extension Circle {
     public Circle conformal_conjugate() {
@@ -220,17 +180,13 @@ public extension Circle {
         );
     }
 }
-public extension CircleRotor {
-    // Fancy postfix trick
-    public CircleRotor operator /(ConformalConjugatePrefixOrPostfix rhs)  {
-        return this.conformal_conjugate();
+// Fancy postfix trick
+public CircleRotor operator /(CircleRotor lhs, ConformalConjugatePrefixOrPostfix rhs)  {
+    return lhs.conformal_conjugate();
     }
-}
-public extension ConformalConjugatePrefixOrPostfix {
-    // Fancy prefix trick
-    public CircleRotor operator /(CircleRotor rhs) {
-        return rhs.conformal_conjugate();
-    }
+// Fancy prefix trick
+public CircleRotor operator /(ConformalConjugatePrefixOrPostfix lhs, CircleRotor rhs) {
+    return rhs.conformal_conjugate();
 }
 public extension CircleRotor {
     public CircleRotor conformal_conjugate() {
@@ -244,17 +200,13 @@ public extension CircleRotor {
         );
     }
 }
-public extension Dipole {
-    // Fancy postfix trick
-    public Dipole operator /(ConformalConjugatePrefixOrPostfix rhs)  {
-        return this.conformal_conjugate();
+// Fancy postfix trick
+public Dipole operator /(Dipole lhs, ConformalConjugatePrefixOrPostfix rhs)  {
+    return lhs.conformal_conjugate();
     }
-}
-public extension ConformalConjugatePrefixOrPostfix {
-    // Fancy prefix trick
-    public Dipole operator /(Dipole rhs) {
-        return rhs.conformal_conjugate();
-    }
+// Fancy prefix trick
+public Dipole operator /(ConformalConjugatePrefixOrPostfix lhs, Dipole rhs) {
+    return rhs.conformal_conjugate();
 }
 public extension Dipole {
     public Dipole conformal_conjugate() {
@@ -268,17 +220,13 @@ public extension Dipole {
         );
     }
 }
-public extension DipoleInversion {
-    // Fancy postfix trick
-    public DipoleInversion operator /(ConformalConjugatePrefixOrPostfix rhs)  {
-        return this.conformal_conjugate();
+// Fancy postfix trick
+public DipoleInversion operator /(DipoleInversion lhs, ConformalConjugatePrefixOrPostfix rhs)  {
+    return lhs.conformal_conjugate();
     }
-}
-public extension ConformalConjugatePrefixOrPostfix {
-    // Fancy prefix trick
-    public DipoleInversion operator /(DipoleInversion rhs) {
-        return rhs.conformal_conjugate();
-    }
+// Fancy prefix trick
+public DipoleInversion operator /(ConformalConjugatePrefixOrPostfix lhs, DipoleInversion rhs) {
+    return rhs.conformal_conjugate();
 }
 public extension DipoleInversion {
     public DipoleInversion conformal_conjugate() {
@@ -294,17 +242,13 @@ public extension DipoleInversion {
         );
     }
 }
-public extension DualNum {
-    // Fancy postfix trick
-    public DualNum operator /(ConformalConjugatePrefixOrPostfix rhs)  {
-        return this.conformal_conjugate();
+// Fancy postfix trick
+public DualNum operator /(DualNum lhs, ConformalConjugatePrefixOrPostfix rhs)  {
+    return lhs.conformal_conjugate();
     }
-}
-public extension ConformalConjugatePrefixOrPostfix {
-    // Fancy prefix trick
-    public DualNum operator /(DualNum rhs) {
-        return rhs.conformal_conjugate();
-    }
+// Fancy prefix trick
+public DualNum operator /(ConformalConjugatePrefixOrPostfix lhs, DualNum rhs) {
+    return rhs.conformal_conjugate();
 }
 public extension DualNum {
     public DualNum conformal_conjugate() {
@@ -314,17 +258,13 @@ public extension DualNum {
         );
     }
 }
-public extension FlatPoint {
-    // Fancy postfix trick
-    public FlatPoint operator /(ConformalConjugatePrefixOrPostfix rhs)  {
-        return this.conformal_conjugate();
+// Fancy postfix trick
+public FlatPoint operator /(FlatPoint lhs, ConformalConjugatePrefixOrPostfix rhs)  {
+    return lhs.conformal_conjugate();
     }
-}
-public extension ConformalConjugatePrefixOrPostfix {
-    // Fancy prefix trick
-    public FlatPoint operator /(FlatPoint rhs) {
-        return rhs.conformal_conjugate();
-    }
+// Fancy prefix trick
+public FlatPoint operator /(ConformalConjugatePrefixOrPostfix lhs, FlatPoint rhs) {
+    return rhs.conformal_conjugate();
 }
 public extension FlatPoint {
     public FlatPoint conformal_conjugate() {
@@ -334,17 +274,13 @@ public extension FlatPoint {
         );
     }
 }
-public extension Flector {
-    // Fancy postfix trick
-    public Flector operator /(ConformalConjugatePrefixOrPostfix rhs)  {
-        return this.conformal_conjugate();
+// Fancy postfix trick
+public Flector operator /(Flector lhs, ConformalConjugatePrefixOrPostfix rhs)  {
+    return lhs.conformal_conjugate();
     }
-}
-public extension ConformalConjugatePrefixOrPostfix {
-    // Fancy prefix trick
-    public Flector operator /(Flector rhs) {
-        return rhs.conformal_conjugate();
-    }
+// Fancy prefix trick
+public Flector operator /(ConformalConjugatePrefixOrPostfix lhs, Flector rhs) {
+    return rhs.conformal_conjugate();
 }
 public extension Flector {
     public Flector conformal_conjugate() {
@@ -356,17 +292,13 @@ public extension Flector {
         );
     }
 }
-public extension Line {
-    // Fancy postfix trick
-    public Line operator /(ConformalConjugatePrefixOrPostfix rhs)  {
-        return this.conformal_conjugate();
+// Fancy postfix trick
+public Line operator /(Line lhs, ConformalConjugatePrefixOrPostfix rhs)  {
+    return lhs.conformal_conjugate();
     }
-}
-public extension ConformalConjugatePrefixOrPostfix {
-    // Fancy prefix trick
-    public Line operator /(Line rhs) {
-        return rhs.conformal_conjugate();
-    }
+// Fancy prefix trick
+public Line operator /(ConformalConjugatePrefixOrPostfix lhs, Line rhs) {
+    return rhs.conformal_conjugate();
 }
 public extension Line {
     public Line conformal_conjugate() {
@@ -378,17 +310,13 @@ public extension Line {
         );
     }
 }
-public extension Motor {
-    // Fancy postfix trick
-    public Motor operator /(ConformalConjugatePrefixOrPostfix rhs)  {
-        return this.conformal_conjugate();
+// Fancy postfix trick
+public Motor operator /(Motor lhs, ConformalConjugatePrefixOrPostfix rhs)  {
+    return lhs.conformal_conjugate();
     }
-}
-public extension ConformalConjugatePrefixOrPostfix {
-    // Fancy prefix trick
-    public Motor operator /(Motor rhs) {
-        return rhs.conformal_conjugate();
-    }
+// Fancy prefix trick
+public Motor operator /(ConformalConjugatePrefixOrPostfix lhs, Motor rhs) {
+    return rhs.conformal_conjugate();
 }
 public extension Motor {
     public Motor conformal_conjugate() {
@@ -400,17 +328,13 @@ public extension Motor {
         );
     }
 }
-public extension MultiVector {
-    // Fancy postfix trick
-    public MultiVector operator /(ConformalConjugatePrefixOrPostfix rhs)  {
-        return this.conformal_conjugate();
+// Fancy postfix trick
+public MultiVector operator /(MultiVector lhs, ConformalConjugatePrefixOrPostfix rhs)  {
+    return lhs.conformal_conjugate();
     }
-}
-public extension ConformalConjugatePrefixOrPostfix {
-    // Fancy prefix trick
-    public MultiVector operator /(MultiVector rhs) {
-        return rhs.conformal_conjugate();
-    }
+// Fancy prefix trick
+public MultiVector operator /(ConformalConjugatePrefixOrPostfix lhs, MultiVector rhs) {
+    return rhs.conformal_conjugate();
 }
 public extension MultiVector {
     public MultiVector conformal_conjugate() {
@@ -440,17 +364,13 @@ public extension MultiVector {
         );
     }
 }
-public extension Plane {
-    // Fancy postfix trick
-    public Plane operator /(ConformalConjugatePrefixOrPostfix rhs)  {
-        return this.conformal_conjugate();
+// Fancy postfix trick
+public Plane operator /(Plane lhs, ConformalConjugatePrefixOrPostfix rhs)  {
+    return lhs.conformal_conjugate();
     }
-}
-public extension ConformalConjugatePrefixOrPostfix {
-    // Fancy prefix trick
-    public Plane operator /(Plane rhs) {
-        return rhs.conformal_conjugate();
-    }
+// Fancy prefix trick
+public Plane operator /(ConformalConjugatePrefixOrPostfix lhs, Plane rhs) {
+    return rhs.conformal_conjugate();
 }
 public extension Plane {
     public Plane conformal_conjugate() {
@@ -460,17 +380,13 @@ public extension Plane {
         );
     }
 }
-public extension RoundPoint {
-    // Fancy postfix trick
-    public RoundPoint operator /(ConformalConjugatePrefixOrPostfix rhs)  {
-        return this.conformal_conjugate();
+// Fancy postfix trick
+public RoundPoint operator /(RoundPoint lhs, ConformalConjugatePrefixOrPostfix rhs)  {
+    return lhs.conformal_conjugate();
     }
-}
-public extension ConformalConjugatePrefixOrPostfix {
-    // Fancy prefix trick
-    public RoundPoint operator /(RoundPoint rhs) {
-        return rhs.conformal_conjugate();
-    }
+// Fancy prefix trick
+public RoundPoint operator /(ConformalConjugatePrefixOrPostfix lhs, RoundPoint rhs) {
+    return rhs.conformal_conjugate();
 }
 public extension RoundPoint {
     public RoundPoint conformal_conjugate() {
@@ -482,34 +398,26 @@ public extension RoundPoint {
         );
     }
 }
-public extension Scalar {
-    // Fancy postfix trick
-    public Scalar operator /(ConformalConjugatePrefixOrPostfix rhs)  {
-        return this.conformal_conjugate();
+// Fancy postfix trick
+public Scalar operator /(Scalar lhs, ConformalConjugatePrefixOrPostfix rhs)  {
+    return lhs.conformal_conjugate();
     }
-}
-public extension ConformalConjugatePrefixOrPostfix {
-    // Fancy prefix trick
-    public Scalar operator /(Scalar rhs) {
-        return rhs.conformal_conjugate();
-    }
+// Fancy prefix trick
+public Scalar operator /(ConformalConjugatePrefixOrPostfix lhs, Scalar rhs) {
+    return rhs.conformal_conjugate();
 }
 public extension Scalar {
     public Scalar conformal_conjugate() {
         return this;
     }
 }
-public extension Sphere {
-    // Fancy postfix trick
-    public Sphere operator /(ConformalConjugatePrefixOrPostfix rhs)  {
-        return this.conformal_conjugate();
+// Fancy postfix trick
+public Sphere operator /(Sphere lhs, ConformalConjugatePrefixOrPostfix rhs)  {
+    return lhs.conformal_conjugate();
     }
-}
-public extension ConformalConjugatePrefixOrPostfix {
-    // Fancy prefix trick
-    public Sphere operator /(Sphere rhs) {
-        return rhs.conformal_conjugate();
-    }
+// Fancy prefix trick
+public Sphere operator /(ConformalConjugatePrefixOrPostfix lhs, Sphere rhs) {
+    return rhs.conformal_conjugate();
 }
 public extension Sphere {
     public Sphere conformal_conjugate() {
@@ -521,17 +429,13 @@ public extension Sphere {
         );
     }
 }
-public extension VersorEven {
-    // Fancy postfix trick
-    public VersorEven operator /(ConformalConjugatePrefixOrPostfix rhs)  {
-        return this.conformal_conjugate();
+// Fancy postfix trick
+public VersorEven operator /(VersorEven lhs, ConformalConjugatePrefixOrPostfix rhs)  {
+    return lhs.conformal_conjugate();
     }
-}
-public extension ConformalConjugatePrefixOrPostfix {
-    // Fancy prefix trick
-    public VersorEven operator /(VersorEven rhs) {
-        return rhs.conformal_conjugate();
-    }
+// Fancy prefix trick
+public VersorEven operator /(ConformalConjugatePrefixOrPostfix lhs, VersorEven rhs) {
+    return rhs.conformal_conjugate();
 }
 public extension VersorEven {
     public VersorEven conformal_conjugate() {
@@ -547,17 +451,13 @@ public extension VersorEven {
         );
     }
 }
-public extension VersorOdd {
-    // Fancy postfix trick
-    public VersorOdd operator /(ConformalConjugatePrefixOrPostfix rhs)  {
-        return this.conformal_conjugate();
+// Fancy postfix trick
+public VersorOdd operator /(VersorOdd lhs, ConformalConjugatePrefixOrPostfix rhs)  {
+    return lhs.conformal_conjugate();
     }
-}
-public extension ConformalConjugatePrefixOrPostfix {
-    // Fancy prefix trick
-    public VersorOdd operator /(VersorOdd rhs) {
-        return rhs.conformal_conjugate();
-    }
+// Fancy prefix trick
+public VersorOdd operator /(ConformalConjugatePrefixOrPostfix lhs, VersorOdd rhs) {
+    return rhs.conformal_conjugate();
 }
 public extension VersorOdd {
     public VersorOdd conformal_conjugate() {

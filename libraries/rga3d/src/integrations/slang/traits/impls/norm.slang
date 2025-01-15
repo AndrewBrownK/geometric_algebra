@@ -1,16 +1,12 @@
 implementing rga3d;
 using traits;
-public extension Flector {
-    // Fancy postfix trick
-    public DualNum operator /(NormPrefixOrPostfix rhs)  {
-        return this.norm();
+// Fancy postfix trick
+public DualNum operator /(Flector lhs, NormPrefixOrPostfix rhs)  {
+    return lhs.norm();
     }
-}
-public extension NormPrefixOrPostfix {
-    // Fancy prefix trick
-    public DualNum operator /(Flector rhs) {
-        return rhs.norm();
-    }
+// Fancy prefix trick
+public DualNum operator /(NormPrefixOrPostfix lhs, Flector rhs) {
+    return rhs.norm();
 }
 public extension Flector {
     public DualNum norm() {
@@ -20,17 +16,13 @@ public extension Flector {
         );
     }
 }
-public extension Line {
-    // Fancy postfix trick
-    public DualNum operator /(NormPrefixOrPostfix rhs)  {
-        return this.norm();
+// Fancy postfix trick
+public DualNum operator /(Line lhs, NormPrefixOrPostfix rhs)  {
+    return lhs.norm();
     }
-}
-public extension NormPrefixOrPostfix {
-    // Fancy prefix trick
-    public DualNum operator /(Line rhs) {
-        return rhs.norm();
-    }
+// Fancy prefix trick
+public DualNum operator /(NormPrefixOrPostfix lhs, Line rhs) {
+    return rhs.norm();
 }
 public extension Line {
     public DualNum norm() {
@@ -40,17 +32,13 @@ public extension Line {
         );
     }
 }
-public extension Motor {
-    // Fancy postfix trick
-    public DualNum operator /(NormPrefixOrPostfix rhs)  {
-        return this.norm();
+// Fancy postfix trick
+public DualNum operator /(Motor lhs, NormPrefixOrPostfix rhs)  {
+    return lhs.norm();
     }
-}
-public extension NormPrefixOrPostfix {
-    // Fancy prefix trick
-    public DualNum operator /(Motor rhs) {
-        return rhs.norm();
-    }
+// Fancy prefix trick
+public DualNum operator /(NormPrefixOrPostfix lhs, Motor rhs) {
+    return rhs.norm();
 }
 public extension Motor {
     public DualNum norm() {
@@ -60,17 +48,13 @@ public extension Motor {
         );
     }
 }
-public extension MultiVector {
-    // Fancy postfix trick
-    public DualNum operator /(NormPrefixOrPostfix rhs)  {
-        return this.norm();
+// Fancy postfix trick
+public DualNum operator /(MultiVector lhs, NormPrefixOrPostfix rhs)  {
+    return lhs.norm();
     }
-}
-public extension NormPrefixOrPostfix {
-    // Fancy prefix trick
-    public DualNum operator /(MultiVector rhs) {
-        return rhs.norm();
-    }
+// Fancy prefix trick
+public DualNum operator /(NormPrefixOrPostfix lhs, MultiVector rhs) {
+    return rhs.norm();
 }
 public extension MultiVector {
     public DualNum norm() {
@@ -80,17 +64,13 @@ public extension MultiVector {
         );
     }
 }
-public extension Point {
-    // Fancy postfix trick
-    public DualNum operator /(NormPrefixOrPostfix rhs)  {
-        return this.norm();
+// Fancy postfix trick
+public DualNum operator /(Point lhs, NormPrefixOrPostfix rhs)  {
+    return lhs.norm();
     }
-}
-public extension NormPrefixOrPostfix {
-    // Fancy prefix trick
-    public DualNum operator /(Point rhs) {
-        return rhs.norm();
-    }
+// Fancy prefix trick
+public DualNum operator /(NormPrefixOrPostfix lhs, Point rhs) {
+    return rhs.norm();
 }
 public extension Point {
     public DualNum norm() {

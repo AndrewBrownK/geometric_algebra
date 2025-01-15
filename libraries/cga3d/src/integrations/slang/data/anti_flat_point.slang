@@ -6,7 +6,7 @@ public struct AntiFlatPoint {
     // e235, e315, e125, e321
     internal float4 group0;
 
-    __init(
+    public __init(
         float e235, float e315, float e125, float e321
     ) {
         group0 = float4(e235, e315, e125, e321);

@@ -1,33 +1,25 @@
 implementing rga3d;
 using traits;
-public extension AntiScalar {
-    // Fancy postfix trick
-    public AntiScalar operator /(WeightPrefixOrPostfix rhs)  {
-        return this.weight();
+// Fancy postfix trick
+public AntiScalar operator /(AntiScalar lhs, WeightPrefixOrPostfix rhs)  {
+    return lhs.weight();
     }
-}
-public extension WeightPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiScalar operator /(AntiScalar rhs) {
-        return rhs.weight();
-    }
+// Fancy prefix trick
+public AntiScalar operator /(WeightPrefixOrPostfix lhs, AntiScalar rhs) {
+    return rhs.weight();
 }
 public extension AntiScalar {
     public AntiScalar weight() {
         return this;
     }
 }
-public extension DualNum {
-    // Fancy postfix trick
-    public AntiScalar operator /(WeightPrefixOrPostfix rhs)  {
-        return this.weight();
+// Fancy postfix trick
+public AntiScalar operator /(DualNum lhs, WeightPrefixOrPostfix rhs)  {
+    return lhs.weight();
     }
-}
-public extension WeightPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiScalar operator /(DualNum rhs) {
-        return rhs.weight();
-    }
+// Fancy prefix trick
+public AntiScalar operator /(WeightPrefixOrPostfix lhs, DualNum rhs) {
+    return rhs.weight();
 }
 public extension DualNum {
     public AntiScalar weight() {
@@ -37,17 +29,13 @@ public extension DualNum {
         );
     }
 }
-public extension Flector {
-    // Fancy postfix trick
-    public Flector operator /(WeightPrefixOrPostfix rhs)  {
-        return this.weight();
+// Fancy postfix trick
+public Flector operator /(Flector lhs, WeightPrefixOrPostfix rhs)  {
+    return lhs.weight();
     }
-}
-public extension WeightPrefixOrPostfix {
-    // Fancy prefix trick
-    public Flector operator /(Flector rhs) {
-        return rhs.weight();
-    }
+// Fancy prefix trick
+public Flector operator /(WeightPrefixOrPostfix lhs, Flector rhs) {
+    return rhs.weight();
 }
 public extension Flector {
     public Flector weight() {
@@ -59,17 +47,13 @@ public extension Flector {
         );
     }
 }
-public extension Line {
-    // Fancy postfix trick
-    public Line operator /(WeightPrefixOrPostfix rhs)  {
-        return this.weight();
+// Fancy postfix trick
+public Line operator /(Line lhs, WeightPrefixOrPostfix rhs)  {
+    return lhs.weight();
     }
-}
-public extension WeightPrefixOrPostfix {
-    // Fancy prefix trick
-    public Line operator /(Line rhs) {
-        return rhs.weight();
-    }
+// Fancy prefix trick
+public Line operator /(WeightPrefixOrPostfix lhs, Line rhs) {
+    return rhs.weight();
 }
 public extension Line {
     public Line weight() {
@@ -81,17 +65,13 @@ public extension Line {
         );
     }
 }
-public extension Motor {
-    // Fancy postfix trick
-    public Motor operator /(WeightPrefixOrPostfix rhs)  {
-        return this.weight();
+// Fancy postfix trick
+public Motor operator /(Motor lhs, WeightPrefixOrPostfix rhs)  {
+    return lhs.weight();
     }
-}
-public extension WeightPrefixOrPostfix {
-    // Fancy prefix trick
-    public Motor operator /(Motor rhs) {
-        return rhs.weight();
-    }
+// Fancy prefix trick
+public Motor operator /(WeightPrefixOrPostfix lhs, Motor rhs) {
+    return rhs.weight();
 }
 public extension Motor {
     public Motor weight() {
@@ -103,17 +83,13 @@ public extension Motor {
         );
     }
 }
-public extension MultiVector {
-    // Fancy postfix trick
-    public MultiVector operator /(WeightPrefixOrPostfix rhs)  {
-        return this.weight();
+// Fancy postfix trick
+public MultiVector operator /(MultiVector lhs, WeightPrefixOrPostfix rhs)  {
+    return lhs.weight();
     }
-}
-public extension WeightPrefixOrPostfix {
-    // Fancy prefix trick
-    public MultiVector operator /(MultiVector rhs) {
-        return rhs.weight();
-    }
+// Fancy prefix trick
+public MultiVector operator /(WeightPrefixOrPostfix lhs, MultiVector rhs) {
+    return rhs.weight();
 }
 public extension MultiVector {
     public MultiVector weight() {
@@ -131,34 +107,26 @@ public extension MultiVector {
         );
     }
 }
-public extension Origin {
-    // Fancy postfix trick
-    public Origin operator /(WeightPrefixOrPostfix rhs)  {
-        return this.weight();
+// Fancy postfix trick
+public Origin operator /(Origin lhs, WeightPrefixOrPostfix rhs)  {
+    return lhs.weight();
     }
-}
-public extension WeightPrefixOrPostfix {
-    // Fancy prefix trick
-    public Origin operator /(Origin rhs) {
-        return rhs.weight();
-    }
+// Fancy prefix trick
+public Origin operator /(WeightPrefixOrPostfix lhs, Origin rhs) {
+    return rhs.weight();
 }
 public extension Origin {
     public Origin weight() {
         return this;
     }
 }
-public extension Plane {
-    // Fancy postfix trick
-    public Plane operator /(WeightPrefixOrPostfix rhs)  {
-        return this.weight();
+// Fancy postfix trick
+public Plane operator /(Plane lhs, WeightPrefixOrPostfix rhs)  {
+    return lhs.weight();
     }
-}
-public extension WeightPrefixOrPostfix {
-    // Fancy prefix trick
-    public Plane operator /(Plane rhs) {
-        return rhs.weight();
-    }
+// Fancy prefix trick
+public Plane operator /(WeightPrefixOrPostfix lhs, Plane rhs) {
+    return rhs.weight();
 }
 public extension Plane {
     public Plane weight() {
@@ -168,17 +136,13 @@ public extension Plane {
         );
     }
 }
-public extension Point {
-    // Fancy postfix trick
-    public Origin operator /(WeightPrefixOrPostfix rhs)  {
-        return this.weight();
+// Fancy postfix trick
+public Origin operator /(Point lhs, WeightPrefixOrPostfix rhs)  {
+    return lhs.weight();
     }
-}
-public extension WeightPrefixOrPostfix {
-    // Fancy prefix trick
-    public Origin operator /(Point rhs) {
-        return rhs.weight();
-    }
+// Fancy prefix trick
+public Origin operator /(WeightPrefixOrPostfix lhs, Point rhs) {
+    return rhs.weight();
 }
 public extension Point {
     public Origin weight() {

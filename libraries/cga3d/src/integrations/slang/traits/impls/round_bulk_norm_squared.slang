@@ -1,16 +1,12 @@
 implementing cga3d;
 using traits;
-public extension AntiCircleRotor {
-    // Fancy postfix trick
-    public Scalar operator /(RoundBulkNormSquaredPrefixOrPostfix rhs)  {
-        return this.round_bulk_norm_squared();
+// Fancy postfix trick
+public Scalar operator /(AntiCircleRotor lhs, RoundBulkNormSquaredPrefixOrPostfix rhs)  {
+    return lhs.round_bulk_norm_squared();
     }
-}
-public extension RoundBulkNormSquaredPrefixOrPostfix {
-    // Fancy prefix trick
-    public Scalar operator /(AntiCircleRotor rhs) {
-        return rhs.round_bulk_norm_squared();
-    }
+// Fancy prefix trick
+public Scalar operator /(RoundBulkNormSquaredPrefixOrPostfix lhs, AntiCircleRotor rhs) {
+    return rhs.round_bulk_norm_squared();
 }
 public extension AntiCircleRotor {
     public Scalar round_bulk_norm_squared() {
@@ -18,17 +14,13 @@ public extension AntiCircleRotor {
         return round_bulk.dot_product(round_bulk);
     }
 }
-public extension AntiDipoleInversion {
-    // Fancy postfix trick
-    public Scalar operator /(RoundBulkNormSquaredPrefixOrPostfix rhs)  {
-        return this.round_bulk_norm_squared();
+// Fancy postfix trick
+public Scalar operator /(AntiDipoleInversion lhs, RoundBulkNormSquaredPrefixOrPostfix rhs)  {
+    return lhs.round_bulk_norm_squared();
     }
-}
-public extension RoundBulkNormSquaredPrefixOrPostfix {
-    // Fancy prefix trick
-    public Scalar operator /(AntiDipoleInversion rhs) {
-        return rhs.round_bulk_norm_squared();
-    }
+// Fancy prefix trick
+public Scalar operator /(RoundBulkNormSquaredPrefixOrPostfix lhs, AntiDipoleInversion rhs) {
+    return rhs.round_bulk_norm_squared();
 }
 public extension AntiDipoleInversion {
     public Scalar round_bulk_norm_squared() {
@@ -36,17 +28,13 @@ public extension AntiDipoleInversion {
         return round_bulk.dot_product(round_bulk);
     }
 }
-public extension AntiDualNum {
-    // Fancy postfix trick
-    public Scalar operator /(RoundBulkNormSquaredPrefixOrPostfix rhs)  {
-        return this.round_bulk_norm_squared();
+// Fancy postfix trick
+public Scalar operator /(AntiDualNum lhs, RoundBulkNormSquaredPrefixOrPostfix rhs)  {
+    return lhs.round_bulk_norm_squared();
     }
-}
-public extension RoundBulkNormSquaredPrefixOrPostfix {
-    // Fancy prefix trick
-    public Scalar operator /(AntiDualNum rhs) {
-        return rhs.round_bulk_norm_squared();
-    }
+// Fancy prefix trick
+public Scalar operator /(RoundBulkNormSquaredPrefixOrPostfix lhs, AntiDualNum rhs) {
+    return rhs.round_bulk_norm_squared();
 }
 public extension AntiDualNum {
     public Scalar round_bulk_norm_squared() {
@@ -54,17 +42,13 @@ public extension AntiDualNum {
         return round_bulk.dot_product(round_bulk);
     }
 }
-public extension AntiFlatPoint {
-    // Fancy postfix trick
-    public Scalar operator /(RoundBulkNormSquaredPrefixOrPostfix rhs)  {
-        return this.round_bulk_norm_squared();
+// Fancy postfix trick
+public Scalar operator /(AntiFlatPoint lhs, RoundBulkNormSquaredPrefixOrPostfix rhs)  {
+    return lhs.round_bulk_norm_squared();
     }
-}
-public extension RoundBulkNormSquaredPrefixOrPostfix {
-    // Fancy prefix trick
-    public Scalar operator /(AntiFlatPoint rhs) {
-        return rhs.round_bulk_norm_squared();
-    }
+// Fancy prefix trick
+public Scalar operator /(RoundBulkNormSquaredPrefixOrPostfix lhs, AntiFlatPoint rhs) {
+    return rhs.round_bulk_norm_squared();
 }
 public extension AntiFlatPoint {
     public Scalar round_bulk_norm_squared() {
@@ -72,17 +56,13 @@ public extension AntiFlatPoint {
         return round_bulk.dot_product(round_bulk);
     }
 }
-public extension AntiFlector {
-    // Fancy postfix trick
-    public Scalar operator /(RoundBulkNormSquaredPrefixOrPostfix rhs)  {
-        return this.round_bulk_norm_squared();
+// Fancy postfix trick
+public Scalar operator /(AntiFlector lhs, RoundBulkNormSquaredPrefixOrPostfix rhs)  {
+    return lhs.round_bulk_norm_squared();
     }
-}
-public extension RoundBulkNormSquaredPrefixOrPostfix {
-    // Fancy prefix trick
-    public Scalar operator /(AntiFlector rhs) {
-        return rhs.round_bulk_norm_squared();
-    }
+// Fancy prefix trick
+public Scalar operator /(RoundBulkNormSquaredPrefixOrPostfix lhs, AntiFlector rhs) {
+    return rhs.round_bulk_norm_squared();
 }
 public extension AntiFlector {
     public Scalar round_bulk_norm_squared() {
@@ -90,17 +70,13 @@ public extension AntiFlector {
         return round_bulk.dot_product(round_bulk);
     }
 }
-public extension AntiLine {
-    // Fancy postfix trick
-    public Scalar operator /(RoundBulkNormSquaredPrefixOrPostfix rhs)  {
-        return this.round_bulk_norm_squared();
+// Fancy postfix trick
+public Scalar operator /(AntiLine lhs, RoundBulkNormSquaredPrefixOrPostfix rhs)  {
+    return lhs.round_bulk_norm_squared();
     }
-}
-public extension RoundBulkNormSquaredPrefixOrPostfix {
-    // Fancy prefix trick
-    public Scalar operator /(AntiLine rhs) {
-        return rhs.round_bulk_norm_squared();
-    }
+// Fancy prefix trick
+public Scalar operator /(RoundBulkNormSquaredPrefixOrPostfix lhs, AntiLine rhs) {
+    return rhs.round_bulk_norm_squared();
 }
 public extension AntiLine {
     public Scalar round_bulk_norm_squared() {
@@ -108,17 +84,13 @@ public extension AntiLine {
         return round_bulk.dot_product(round_bulk);
     }
 }
-public extension AntiMotor {
-    // Fancy postfix trick
-    public Scalar operator /(RoundBulkNormSquaredPrefixOrPostfix rhs)  {
-        return this.round_bulk_norm_squared();
+// Fancy postfix trick
+public Scalar operator /(AntiMotor lhs, RoundBulkNormSquaredPrefixOrPostfix rhs)  {
+    return lhs.round_bulk_norm_squared();
     }
-}
-public extension RoundBulkNormSquaredPrefixOrPostfix {
-    // Fancy prefix trick
-    public Scalar operator /(AntiMotor rhs) {
-        return rhs.round_bulk_norm_squared();
-    }
+// Fancy prefix trick
+public Scalar operator /(RoundBulkNormSquaredPrefixOrPostfix lhs, AntiMotor rhs) {
+    return rhs.round_bulk_norm_squared();
 }
 public extension AntiMotor {
     public Scalar round_bulk_norm_squared() {
@@ -126,17 +98,13 @@ public extension AntiMotor {
         return round_bulk.dot_product(round_bulk);
     }
 }
-public extension AntiPlane {
-    // Fancy postfix trick
-    public Scalar operator /(RoundBulkNormSquaredPrefixOrPostfix rhs)  {
-        return this.round_bulk_norm_squared();
+// Fancy postfix trick
+public Scalar operator /(AntiPlane lhs, RoundBulkNormSquaredPrefixOrPostfix rhs)  {
+    return lhs.round_bulk_norm_squared();
     }
-}
-public extension RoundBulkNormSquaredPrefixOrPostfix {
-    // Fancy prefix trick
-    public Scalar operator /(AntiPlane rhs) {
-        return rhs.round_bulk_norm_squared();
-    }
+// Fancy prefix trick
+public Scalar operator /(RoundBulkNormSquaredPrefixOrPostfix lhs, AntiPlane rhs) {
+    return rhs.round_bulk_norm_squared();
 }
 public extension AntiPlane {
     public Scalar round_bulk_norm_squared() {
@@ -144,17 +112,13 @@ public extension AntiPlane {
         return round_bulk.dot_product(round_bulk);
     }
 }
-public extension Circle {
-    // Fancy postfix trick
-    public Scalar operator /(RoundBulkNormSquaredPrefixOrPostfix rhs)  {
-        return this.round_bulk_norm_squared();
+// Fancy postfix trick
+public Scalar operator /(Circle lhs, RoundBulkNormSquaredPrefixOrPostfix rhs)  {
+    return lhs.round_bulk_norm_squared();
     }
-}
-public extension RoundBulkNormSquaredPrefixOrPostfix {
-    // Fancy prefix trick
-    public Scalar operator /(Circle rhs) {
-        return rhs.round_bulk_norm_squared();
-    }
+// Fancy prefix trick
+public Scalar operator /(RoundBulkNormSquaredPrefixOrPostfix lhs, Circle rhs) {
+    return rhs.round_bulk_norm_squared();
 }
 public extension Circle {
     public Scalar round_bulk_norm_squared() {
@@ -162,17 +126,13 @@ public extension Circle {
         return round_bulk.dot_product(round_bulk);
     }
 }
-public extension CircleRotor {
-    // Fancy postfix trick
-    public Scalar operator /(RoundBulkNormSquaredPrefixOrPostfix rhs)  {
-        return this.round_bulk_norm_squared();
+// Fancy postfix trick
+public Scalar operator /(CircleRotor lhs, RoundBulkNormSquaredPrefixOrPostfix rhs)  {
+    return lhs.round_bulk_norm_squared();
     }
-}
-public extension RoundBulkNormSquaredPrefixOrPostfix {
-    // Fancy prefix trick
-    public Scalar operator /(CircleRotor rhs) {
-        return rhs.round_bulk_norm_squared();
-    }
+// Fancy prefix trick
+public Scalar operator /(RoundBulkNormSquaredPrefixOrPostfix lhs, CircleRotor rhs) {
+    return rhs.round_bulk_norm_squared();
 }
 public extension CircleRotor {
     public Scalar round_bulk_norm_squared() {
@@ -180,17 +140,13 @@ public extension CircleRotor {
         return round_bulk.dot_product(round_bulk);
     }
 }
-public extension Dipole {
-    // Fancy postfix trick
-    public Scalar operator /(RoundBulkNormSquaredPrefixOrPostfix rhs)  {
-        return this.round_bulk_norm_squared();
+// Fancy postfix trick
+public Scalar operator /(Dipole lhs, RoundBulkNormSquaredPrefixOrPostfix rhs)  {
+    return lhs.round_bulk_norm_squared();
     }
-}
-public extension RoundBulkNormSquaredPrefixOrPostfix {
-    // Fancy prefix trick
-    public Scalar operator /(Dipole rhs) {
-        return rhs.round_bulk_norm_squared();
-    }
+// Fancy prefix trick
+public Scalar operator /(RoundBulkNormSquaredPrefixOrPostfix lhs, Dipole rhs) {
+    return rhs.round_bulk_norm_squared();
 }
 public extension Dipole {
     public Scalar round_bulk_norm_squared() {
@@ -198,17 +154,13 @@ public extension Dipole {
         return round_bulk.dot_product(round_bulk);
     }
 }
-public extension DipoleInversion {
-    // Fancy postfix trick
-    public Scalar operator /(RoundBulkNormSquaredPrefixOrPostfix rhs)  {
-        return this.round_bulk_norm_squared();
+// Fancy postfix trick
+public Scalar operator /(DipoleInversion lhs, RoundBulkNormSquaredPrefixOrPostfix rhs)  {
+    return lhs.round_bulk_norm_squared();
     }
-}
-public extension RoundBulkNormSquaredPrefixOrPostfix {
-    // Fancy prefix trick
-    public Scalar operator /(DipoleInversion rhs) {
-        return rhs.round_bulk_norm_squared();
-    }
+// Fancy prefix trick
+public Scalar operator /(RoundBulkNormSquaredPrefixOrPostfix lhs, DipoleInversion rhs) {
+    return rhs.round_bulk_norm_squared();
 }
 public extension DipoleInversion {
     public Scalar round_bulk_norm_squared() {
@@ -216,17 +168,13 @@ public extension DipoleInversion {
         return round_bulk.dot_product(round_bulk);
     }
 }
-public extension MultiVector {
-    // Fancy postfix trick
-    public Scalar operator /(RoundBulkNormSquaredPrefixOrPostfix rhs)  {
-        return this.round_bulk_norm_squared();
+// Fancy postfix trick
+public Scalar operator /(MultiVector lhs, RoundBulkNormSquaredPrefixOrPostfix rhs)  {
+    return lhs.round_bulk_norm_squared();
     }
-}
-public extension RoundBulkNormSquaredPrefixOrPostfix {
-    // Fancy prefix trick
-    public Scalar operator /(MultiVector rhs) {
-        return rhs.round_bulk_norm_squared();
-    }
+// Fancy prefix trick
+public Scalar operator /(RoundBulkNormSquaredPrefixOrPostfix lhs, MultiVector rhs) {
+    return rhs.round_bulk_norm_squared();
 }
 public extension MultiVector {
     public Scalar round_bulk_norm_squared() {
@@ -234,17 +182,13 @@ public extension MultiVector {
         return round_bulk.dot_product(round_bulk);
     }
 }
-public extension RoundPoint {
-    // Fancy postfix trick
-    public Scalar operator /(RoundBulkNormSquaredPrefixOrPostfix rhs)  {
-        return this.round_bulk_norm_squared();
+// Fancy postfix trick
+public Scalar operator /(RoundPoint lhs, RoundBulkNormSquaredPrefixOrPostfix rhs)  {
+    return lhs.round_bulk_norm_squared();
     }
-}
-public extension RoundBulkNormSquaredPrefixOrPostfix {
-    // Fancy prefix trick
-    public Scalar operator /(RoundPoint rhs) {
-        return rhs.round_bulk_norm_squared();
-    }
+// Fancy prefix trick
+public Scalar operator /(RoundBulkNormSquaredPrefixOrPostfix lhs, RoundPoint rhs) {
+    return rhs.round_bulk_norm_squared();
 }
 public extension RoundPoint {
     public Scalar round_bulk_norm_squared() {
@@ -252,17 +196,13 @@ public extension RoundPoint {
         return round_bulk.dot_product(round_bulk);
     }
 }
-public extension Scalar {
-    // Fancy postfix trick
-    public Scalar operator /(RoundBulkNormSquaredPrefixOrPostfix rhs)  {
-        return this.round_bulk_norm_squared();
+// Fancy postfix trick
+public Scalar operator /(Scalar lhs, RoundBulkNormSquaredPrefixOrPostfix rhs)  {
+    return lhs.round_bulk_norm_squared();
     }
-}
-public extension RoundBulkNormSquaredPrefixOrPostfix {
-    // Fancy prefix trick
-    public Scalar operator /(Scalar rhs) {
-        return rhs.round_bulk_norm_squared();
-    }
+// Fancy prefix trick
+public Scalar operator /(RoundBulkNormSquaredPrefixOrPostfix lhs, Scalar rhs) {
+    return rhs.round_bulk_norm_squared();
 }
 public extension Scalar {
     public Scalar round_bulk_norm_squared() {
@@ -270,17 +210,13 @@ public extension Scalar {
         return round_bulk.dot_product(round_bulk);
     }
 }
-public extension VersorEven {
-    // Fancy postfix trick
-    public Scalar operator /(RoundBulkNormSquaredPrefixOrPostfix rhs)  {
-        return this.round_bulk_norm_squared();
+// Fancy postfix trick
+public Scalar operator /(VersorEven lhs, RoundBulkNormSquaredPrefixOrPostfix rhs)  {
+    return lhs.round_bulk_norm_squared();
     }
-}
-public extension RoundBulkNormSquaredPrefixOrPostfix {
-    // Fancy prefix trick
-    public Scalar operator /(VersorEven rhs) {
-        return rhs.round_bulk_norm_squared();
-    }
+// Fancy prefix trick
+public Scalar operator /(RoundBulkNormSquaredPrefixOrPostfix lhs, VersorEven rhs) {
+    return rhs.round_bulk_norm_squared();
 }
 public extension VersorEven {
     public Scalar round_bulk_norm_squared() {
@@ -288,17 +224,13 @@ public extension VersorEven {
         return round_bulk.dot_product(round_bulk);
     }
 }
-public extension VersorOdd {
-    // Fancy postfix trick
-    public Scalar operator /(RoundBulkNormSquaredPrefixOrPostfix rhs)  {
-        return this.round_bulk_norm_squared();
+// Fancy postfix trick
+public Scalar operator /(VersorOdd lhs, RoundBulkNormSquaredPrefixOrPostfix rhs)  {
+    return lhs.round_bulk_norm_squared();
     }
-}
-public extension RoundBulkNormSquaredPrefixOrPostfix {
-    // Fancy prefix trick
-    public Scalar operator /(VersorOdd rhs) {
-        return rhs.round_bulk_norm_squared();
-    }
+// Fancy prefix trick
+public Scalar operator /(RoundBulkNormSquaredPrefixOrPostfix lhs, VersorOdd rhs) {
+    return rhs.round_bulk_norm_squared();
 }
 public extension VersorOdd {
     public Scalar round_bulk_norm_squared() {

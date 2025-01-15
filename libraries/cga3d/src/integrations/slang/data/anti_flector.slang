@@ -8,7 +8,7 @@ public struct AntiFlector {
     // e1, e2, e3, e5
     internal float4 group1;
 
-    __init(
+    public __init(
         float e235, float e315, float e125, float e321, float e1, float e2, float e3, float e5
     ) {
         group0 = float4(e235, e315, e125, e321);

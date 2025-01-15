@@ -1,16 +1,12 @@
 implementing cga3d;
 using traits;
-public extension AntiCircleRotor {
-    // Fancy infix trick (first half)
-    public AntiSandwichInfixPartial<AntiCircleRotor> operator /(AntiSandwichInfix rhs) {
-        return AntiSandwichInfixPartial<AntiCircleRotor>(this);
-    }
+// Fancy infix trick (first half)
+public AntiSandwichInfixPartial<AntiCircleRotor> operator /(AntiCircleRotor lhs, AntiSandwichInfix rhs) {
+    return AntiSandwichInfixPartial<AntiCircleRotor>(lhs);
 }
-public extension AntiSandwichInfixPartial<AntiCircleRotor> {
-    // Fancy infix trick (second half)
-    public VersorOdd operator /(AntiCircleRotor rhs) {
-        return this.a.anti_sandwich(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<AntiCircleRotor> lhs, AntiCircleRotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiCircleRotor {
     public VersorOdd anti_sandwich(AntiCircleRotor other) {
@@ -26,6 +22,10 @@ public extension AntiCircleRotor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<AntiCircleRotor> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiCircleRotor {
     public VersorEven anti_sandwich(AntiDipoleInversion other) {
         return VersorOdd(
@@ -39,6 +39,10 @@ public extension AntiCircleRotor {
             float4(this.e45 * other.e415, this.e45 * other.e425, this.e45 * other.e435, this.e35 * other.e435 * -1.0) + (other.group3.yzxw * float4(this.group1.zxy, this.scalar)) + (float4(other.group2.zx, other.e5, other.e2) * float4(this.group0.xyz.yzz, this.e25)) + (float4(other.group3.ww, other.e315, other.e1) * float4(this.group0.xyz.xyx, this.e15)) + float4((other.group0.xyz.yzx * this.group2.zxy), this.e35 * other.e3) - (this.group1.xyxz * float4(other.group1.ww, other.e2, other.e125)) - (this.group1.yzzw * float4(other.group3.zx, other.e321, other.e5)) - (this.group2.xyzx * float4(other.group2.www, other.e415)) - (this.group2.wwwy * float4(other.group3.xyz, other.e425)) - (other.group2.yzxx * float4(this.group0.xyz.zxy, this.e23)) - float4((other.group0.xyz.zxy * this.group2.yzx), this.e31 * other.e315)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<AntiCircleRotor> lhs, AntiDualNum rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiCircleRotor {
     public VersorOdd anti_sandwich(AntiDualNum other) {
@@ -54,6 +58,10 @@ public extension AntiCircleRotor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<AntiCircleRotor> lhs, AntiFlatPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiCircleRotor {
     public VersorEven anti_sandwich(AntiFlatPoint other) {
         return VersorOdd(
@@ -67,6 +75,10 @@ public extension AntiCircleRotor {
             float4(this.e42 * other.e125, this.e43 * other.e235, this.e41 * other.e315, this.e12 * other.e125 * -1.0) - (this.group1.xyzy * other.group0.wwwy) - (other.group0.yzxx * float4(this.group0.xyz.zxy, this.e23))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<AntiCircleRotor> lhs, AntiFlector rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiCircleRotor {
     public VersorEven anti_sandwich(AntiFlector other) {
@@ -82,6 +94,10 @@ public extension AntiCircleRotor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<AntiCircleRotor> lhs, AntiLine rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiCircleRotor {
     public VersorOdd anti_sandwich(AntiLine other) {
         return VersorEven(
@@ -95,6 +111,10 @@ public extension AntiCircleRotor {
             float4(this.e43 * other.e25 * -1.0, this.e41 * other.e35 * -1.0, this.e42 * other.e15 * -1.0, this.e43 * other.e12) + float4((other.group0.xyz * this.group1.www), this.e42 * other.e31) + float4((this.group0.xyz.yzx * other.group1.xyz.zxy), this.e41 * other.e23)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<AntiCircleRotor> lhs, AntiMotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiCircleRotor {
     public VersorOdd anti_sandwich(AntiMotor other) {
@@ -110,6 +130,10 @@ public extension AntiCircleRotor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<AntiCircleRotor> lhs, AntiPlane rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiCircleRotor {
     public VersorEven anti_sandwich(AntiPlane other) {
         return DipoleInversion(
@@ -124,6 +148,10 @@ public extension AntiCircleRotor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<AntiCircleRotor> lhs, AntiScalar rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiCircleRotor {
     public VersorEven anti_sandwich(AntiScalar other) {
         return AntiCircleRotor(
@@ -135,6 +163,10 @@ public extension AntiCircleRotor {
             float4(other.e12345) * this.group2
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<AntiCircleRotor> lhs, Circle rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiCircleRotor {
     public VersorEven anti_sandwich(Circle other) {
@@ -150,6 +182,10 @@ public extension AntiCircleRotor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<AntiCircleRotor> lhs, CircleRotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiCircleRotor {
     public VersorEven anti_sandwich(CircleRotor other) {
         return VersorOdd(
@@ -163,6 +199,10 @@ public extension AntiCircleRotor {
             float4((this.e42 * other.e125) + (this.e45 * other.e415) + (this.e35 * other.e431), (this.e43 * other.e235) + (this.e45 * other.e425) + (this.e15 * other.e412), (this.e41 * other.e315) + (this.e45 * other.e435) + (this.e25 * other.e423), -(this.e15 * other.e415) - (this.e25 * other.e425) - (this.e35 * other.e435)) - (this.group1.xyzz * float4(other.group1.www, other.e125)) - (other.group2.yzxx * float4(this.group0.xyz.zxy, this.e23)) - float4((other.group0.xyz.zxy * this.group2.yzx), this.e31 * other.e315)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<AntiCircleRotor> lhs, Dipole rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiCircleRotor {
     public VersorOdd anti_sandwich(Dipole other) {
@@ -178,6 +218,10 @@ public extension AntiCircleRotor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<AntiCircleRotor> lhs, DipoleInversion rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiCircleRotor {
     public VersorOdd anti_sandwich(DipoleInversion other) {
         return VersorEven(
@@ -191,6 +235,10 @@ public extension AntiCircleRotor {
             float4(this.scalar * other.e4235, this.scalar * other.e4315, this.scalar * other.e4125, this.scalar * other.e1234 * -1.0) + (float4(other.group1.ww, other.e4315, this.e23) * float4(this.group1.xyx, other.e41)) + (float4(other.group2.zx, other.e3215, other.e31) * float4(this.group0.xyz.yzz, this.e42)) + (float4(other.group3.zx, other.e45, this.e31) * float4(this.group1.yzz, other.e42)) + (float4(other.group3.ww, other.e25, other.e23) * float4(this.group0.xyz.xyx, this.e41)) + float4((other.group0.xyz.yzx * this.group2.zxy), this.e43 * other.e12) + float4((this.group1.www * other.group1.xyz), this.e12 * other.e43) - (float4(other.e1234) * float4(this.group2.xyz, this.e45)) - (other.group3.yzxz * float4(this.group1.zxy, this.e43)) - float4((this.group0.xyz.zxy * other.group2.yzx), this.e41 * other.e4235) - float4((other.group0.xyz.zxy * this.group2.yzx), this.e42 * other.e4315)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<AntiCircleRotor> lhs, DualNum rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiCircleRotor {
     public VersorEven anti_sandwich(DualNum other) {
@@ -206,6 +254,10 @@ public extension AntiCircleRotor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<AntiCircleRotor> lhs, FlatPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiCircleRotor {
     public VersorOdd anti_sandwich(FlatPoint other) {
         return VersorEven(
@@ -219,6 +271,10 @@ public extension AntiCircleRotor {
             float4((float3(other.e45) * this.group1.xyz), 0.0) + float4((this.group0.xyz.yzx * other.group0.zxy), 0.0) - float4((this.group0.xyz.zxy * other.group0.yzx), 0.0)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<AntiCircleRotor> lhs, Flector rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiCircleRotor {
     public VersorOdd anti_sandwich(Flector other) {
@@ -234,6 +290,10 @@ public extension AntiCircleRotor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<AntiCircleRotor> lhs, Line rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiCircleRotor {
     public VersorEven anti_sandwich(Line other) {
         return VersorOdd(
@@ -248,6 +308,10 @@ public extension AntiCircleRotor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<AntiCircleRotor> lhs, Motor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiCircleRotor {
     public VersorEven anti_sandwich(Motor other) {
         return VersorOdd(
@@ -261,6 +325,10 @@ public extension AntiCircleRotor {
             float4((this.e42 * other.e125) + (this.e45 * other.e415), (this.e43 * other.e235) + (this.e45 * other.e425), (this.e43 * other.e5) + (this.e45 * other.e435), -(this.e31 * other.e315) - (this.e12 * other.e125) - (this.e45 * other.e5) - (this.e15 * other.e415) - (this.e25 * other.e425) - (this.e35 * other.e435)) + (other.group1.wwyw * float4(this.group0.xyz.xyx, this.scalar)) - (other.group1.yzxx * float4(this.group0.xyz.zxy, this.e23))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiSandwichInfixPartial<AntiCircleRotor> lhs, MultiVector rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiCircleRotor {
     public MultiVector anti_sandwich(MultiVector other) {
@@ -290,6 +358,10 @@ public extension AntiCircleRotor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<AntiCircleRotor> lhs, Plane rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiCircleRotor {
     public VersorOdd anti_sandwich(Plane other) {
         return AntiDipoleInversion(
@@ -303,6 +375,10 @@ public extension AntiCircleRotor {
             (float4(other.e3215) * float4(this.group0.xyz, this.e45)) + (this.group2.wwwy * other.group0.xyzy) + (other.group0.zxyx * float4(this.group1.yzx, this.e15)) + float4(float3(0.0), this.e35 * other.e4125) - (other.group0.yzxw * float4(this.group1.zxy, this.scalar))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<AntiCircleRotor> lhs, RoundPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiCircleRotor {
     public VersorEven anti_sandwich(RoundPoint other) {
@@ -318,6 +394,10 @@ public extension AntiCircleRotor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<AntiCircleRotor> lhs, Scalar rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiCircleRotor {
     public VersorOdd anti_sandwich(Scalar other) {
         return CircleRotor(
@@ -329,6 +409,10 @@ public extension AntiCircleRotor {
             float4(other.scalar) * this.group2 * float4(-1.0)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<AntiCircleRotor> lhs, Sphere rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiCircleRotor {
     public VersorOdd anti_sandwich(Sphere other) {
@@ -344,6 +428,10 @@ public extension AntiCircleRotor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<AntiCircleRotor> lhs, VersorEven rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiCircleRotor {
     public VersorEven anti_sandwich(VersorEven other) {
         return VersorOdd(
@@ -357,6 +445,10 @@ public extension AntiCircleRotor {
             float4(this.e35 * other.e431, this.e15 * other.e412, this.e25 * other.e423, this.e35 * other.e435 * -1.0) + (other.group3.yzxz * float4(this.group1.zxy, this.e35)) + float4((this.group0.xyz.xyx * other.group2.wwy), this.e15 * other.e1) + float4((this.group0.xyz.yzz * other.group2.zxw), this.e25 * other.e2) + float4((this.group1.www * other.group1.xyz), this.scalar * other.e5) - (this.group1.xyxy * float4(other.group1.ww, other.e2, other.e315)) - (this.group1.yzzz * float4(other.group3.zx, other.e321, other.e125)) - (this.group2.yzzx * float4(other.group0.zx, other.e4, other.e415)) - (this.group2.wwwy * float4(other.group3.xyz, other.e425)) - (other.group2.yzxx * float4(this.group0.xyz.zxy, this.e23)) - (float4(other.group3.ww, other.e431, other.e5) * float4(this.group2.xyx, this.e45))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<AntiCircleRotor> lhs, VersorOdd rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiCircleRotor {
     public VersorOdd anti_sandwich(VersorOdd other) {
@@ -372,17 +464,13 @@ public extension AntiCircleRotor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension AntiDipoleInversion {
-    // Fancy infix trick (first half)
-    public AntiSandwichInfixPartial<AntiDipoleInversion> operator /(AntiSandwichInfix rhs) {
-        return AntiSandwichInfixPartial<AntiDipoleInversion>(this);
-    }
+// Fancy infix trick (first half)
+public AntiSandwichInfixPartial<AntiDipoleInversion> operator /(AntiDipoleInversion lhs, AntiSandwichInfix rhs) {
+    return AntiSandwichInfixPartial<AntiDipoleInversion>(lhs);
 }
-public extension AntiSandwichInfixPartial<AntiDipoleInversion> {
-    // Fancy infix trick (second half)
-    public VersorOdd operator /(AntiCircleRotor rhs) {
-        return this.a.anti_sandwich(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<AntiDipoleInversion> lhs, AntiCircleRotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiDipoleInversion {
     public VersorOdd anti_sandwich(AntiCircleRotor other) {
@@ -398,6 +486,10 @@ public extension AntiDipoleInversion {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<AntiDipoleInversion> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiDipoleInversion {
     public VersorEven anti_sandwich(AntiDipoleInversion other) {
         return VersorEven(
@@ -411,6 +503,10 @@ public extension AntiDipoleInversion {
             float4((other.e435 * this.e2) + (other.e321 * this.e415) + (other.e4 * this.e235) + (other.e3 * this.e425), (other.e425 * this.e321) + (other.e321 * this.e425) + (other.e4 * this.e315) + (other.e1 * this.e435), (other.e435 * this.e321) + (other.e321 * this.e435) + (other.e4 * this.e125) + (other.e2 * this.e415), -(other.e435 * this.e412) - (other.e4 * this.e321) - (other.e2 * this.e431) - (other.e3 * this.e412)) + (float4(this.e321, this.e3, this.e1, this.e4) * other.group1.xxyw) + (float4(this.e315, this.e5, this.e5, this.e2) * float4(other.group0.xyz.zyz, other.e431)) + (float4(this.e5, this.e125, this.e235, this.e1) * float4(other.group0.xyz.xxy, other.e423)) + float4((this.group0.xyz.zxy * other.group2.yzx), other.e412 * this.e3) - (float4(other.group2.zx, other.e5, this.e435) * float4(this.group0.xyz.yzz, other.e412)) - (float4(other.group3.ww, other.e315, this.e425) * float4(this.group0.xyz.xyx, other.e431)) - float4((other.group0.xyz.yzx * this.group2.zxy), other.e423 * this.e415) - float4((other.group1.yzx * this.group3.zxy), other.e415 * this.e423) - float4((other.group3.yzx * this.group1.zxy), other.e425 * this.e431) - float4((this.group2.www * other.group2.xyz), other.e1 * this.e423)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<AntiDipoleInversion> lhs, AntiDualNum rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiDipoleInversion {
     public VersorOdd anti_sandwich(AntiDualNum other) {
@@ -426,6 +522,10 @@ public extension AntiDipoleInversion {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<AntiDipoleInversion> lhs, AntiFlatPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiDipoleInversion {
     public VersorEven anti_sandwich(AntiFlatPoint other) {
         return VersorEven(
@@ -439,6 +539,10 @@ public extension AntiDipoleInversion {
             float4(((float3(other.e321) * this.group1.xyz) + (this.group0.xyz.zxy * other.group0.yzx) - (float3(this.e4) * other.group0.xyz) - (this.group0.xyz.yzx * other.group0.zxy)), this.e4 * other.e321)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<AntiDipoleInversion> lhs, AntiFlector rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiDipoleInversion {
     public VersorEven anti_sandwich(AntiFlector other) {
@@ -454,6 +558,10 @@ public extension AntiDipoleInversion {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<AntiDipoleInversion> lhs, AntiLine rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiDipoleInversion {
     public VersorOdd anti_sandwich(AntiLine other) {
         return VersorOdd(
@@ -467,6 +575,10 @@ public extension AntiDipoleInversion {
             float4((this.e431 * other.e35) + (this.e4 * other.e15) + (this.e3 * other.e31), (this.e412 * other.e15) + (this.e4 * other.e25) + (this.e1 * other.e12), (this.e423 * other.e25) + (this.e4 * other.e35) + (this.e2 * other.e23), -(this.e415 * other.e15) - (this.e425 * other.e25) - (this.e435 * other.e35) - (this.e1 * other.e15) - (this.e2 * other.e25) - (this.e3 * other.e35)) - (float4(this.e321, this.e3, this.e1, this.e315) * float4(other.group0.xyz.xxy, other.e31)) - (float4(this.e2, this.e321, this.e321, this.e125) * float4(other.group0.xyz.zyz, other.e12)) - float4((this.group0.xyz.zxy * other.group1.xyz.yzx), this.e235 * other.e23)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<AntiDipoleInversion> lhs, AntiMotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiDipoleInversion {
     public VersorOdd anti_sandwich(AntiMotor other) {
@@ -482,6 +594,10 @@ public extension AntiDipoleInversion {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<AntiDipoleInversion> lhs, AntiPlane rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiDipoleInversion {
     public VersorEven anti_sandwich(AntiPlane other) {
         return VersorEven(
@@ -495,6 +611,10 @@ public extension AntiDipoleInversion {
             float4(this.e425 * other.e3, this.e435 * other.e1, this.e415 * other.e2, this.e412 * other.e3 * -1.0) - (other.group0.yzxy * float4(this.group1.zxy, this.e431)) - (other.group0.wwwx * float4(this.group0.xyz, this.e423))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<AntiDipoleInversion> lhs, AntiScalar rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiDipoleInversion {
     public VersorEven anti_sandwich(AntiScalar other) {
@@ -510,6 +630,10 @@ public extension AntiDipoleInversion {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<AntiDipoleInversion> lhs, Circle rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiDipoleInversion {
     public VersorEven anti_sandwich(Circle other) {
         return VersorEven(
@@ -523,6 +647,10 @@ public extension AntiDipoleInversion {
             float4((this.e321 * other.e415) + (this.e2 * other.e435), (this.e321 * other.e425) + (this.e3 * other.e415), (this.e321 * other.e435) + (this.e1 * other.e425), -(this.e425 * other.e431) - (this.e435 * other.e412)) + (float4(other.e321) * float4(this.group1.xyz, this.e4)) + (float4(this.e315, this.e5, this.e5, this.e3) * float4(other.group0.xyz.zyz, other.e412)) + (float4(this.e5, this.e125, this.e235, this.e2) * float4(other.group0.xyz.xxy, other.e431)) + float4((this.group0.xyz.zxy * other.group2.xyz.yzx), this.e1 * other.e423) - float4((other.group2.xyz * this.group2.www), this.e412 * other.e435) - float4((this.group0.xyz.yzx * other.group2.xyz.zxy), this.e423 * other.e415) - float4((other.group0.xyz.yzx * this.group2.zxy), this.e431 * other.e425) - float4((this.group3.zxy * other.group1.yzx), this.e415 * other.e423)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<AntiDipoleInversion> lhs, CircleRotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiDipoleInversion {
     public VersorEven anti_sandwich(CircleRotor other) {
@@ -538,6 +666,10 @@ public extension AntiDipoleInversion {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<AntiDipoleInversion> lhs, Dipole rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiDipoleInversion {
     public VersorOdd anti_sandwich(Dipole other) {
         return VersorOdd(
@@ -551,6 +683,10 @@ public extension AntiDipoleInversion {
             float4((this.e415 * other.e45) + (this.e125 * other.e42) + (this.e4 * other.e15) + (this.e3 * other.e31), (this.e425 * other.e45) + (this.e235 * other.e43) + (this.e4 * other.e25) + (this.e1 * other.e12), (this.e435 * other.e45) + (this.e315 * other.e41) + (this.e4 * other.e35) + (this.e2 * other.e23), -(this.e235 * other.e23) - (this.e315 * other.e31) - (this.e125 * other.e12) - (this.e3 * other.e35)) + float4((this.group0.xyz.yzx * other.group2.xyz.zxy), this.e5 * other.e45) - (float4(this.e315, this.e5, this.e5, this.e425) * float4(other.group0.xyz.zyz, other.e25)) - (float4(this.e5, this.e125, this.e235, this.e1) * float4(other.group0.xyz.xxy, other.e15)) - float4((this.group0.xyz.zxy * other.group2.xyz.yzx), this.e415 * other.e15) - float4((this.group1.www * other.group1.xyz), this.e2 * other.e25) - float4((this.group3.yzx * other.group1.zxy), this.e435 * other.e35)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<AntiDipoleInversion> lhs, DipoleInversion rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiDipoleInversion {
     public VersorOdd anti_sandwich(DipoleInversion other) {
@@ -566,6 +702,10 @@ public extension AntiDipoleInversion {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<AntiDipoleInversion> lhs, DualNum rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiDipoleInversion {
     public VersorEven anti_sandwich(DualNum other) {
         return VersorEven(
@@ -579,6 +719,10 @@ public extension AntiDipoleInversion {
             float4(((float3(other.e12345) * this.group3.xyz) - (float3(other.e5) * this.group0.xyz)), this.e4 * other.e12345)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<AntiDipoleInversion> lhs, FlatPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiDipoleInversion {
     public VersorOdd anti_sandwich(FlatPoint other) {
@@ -594,6 +738,10 @@ public extension AntiDipoleInversion {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<AntiDipoleInversion> lhs, Flector rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiDipoleInversion {
     public VersorOdd anti_sandwich(Flector other) {
         return VersorOdd(
@@ -607,6 +755,10 @@ public extension AntiDipoleInversion {
             float4((this.e415 * other.e45) + (this.e425 * other.e4125) + (this.e4 * other.e15), (this.e425 * other.e45) + (this.e435 * other.e4235) + (this.e4 * other.e25), (this.e415 * other.e4315) + (this.e435 * other.e45) + (this.e4 * other.e35), -(this.e435 * other.e35) - (this.e235 * other.e4235) - (this.e315 * other.e4315) - (this.e125 * other.e4125) - (this.e1 * other.e15) - (this.e2 * other.e25) - (this.e3 * other.e35)) + (float4(other.group0.zx, other.e3215, other.e45) * float4(this.group0.xyz.yzz, this.e5)) + (float4(other.group1.ww, other.e25, other.e3215) * float4(this.group0.xyz.xyx, this.e321)) - (this.group1.zxyy * float4(other.group1.yzx, other.e25)) - (other.group0.yzxx * float4(this.group0.xyz.zxy, this.e415))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<AntiDipoleInversion> lhs, Line rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiDipoleInversion {
     public VersorEven anti_sandwich(Line other) {
@@ -622,6 +774,10 @@ public extension AntiDipoleInversion {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<AntiDipoleInversion> lhs, Motor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiDipoleInversion {
     public VersorEven anti_sandwich(Motor other) {
         return VersorEven(
@@ -635,6 +791,10 @@ public extension AntiDipoleInversion {
             float4((this.e321 * other.e415) + (this.e1 * other.e12345) + (this.e2 * other.e435) - (this.e3 * other.e425), (this.e321 * other.e425) + (this.e2 * other.e12345) + (this.e3 * other.e415) - (this.e1 * other.e435), (this.e321 * other.e435) + (this.e1 * other.e425) + (this.e3 * other.e12345) - (this.e2 * other.e415), 0.0) + float4((this.group0.xyz.zxy * other.group1.yzx), this.e4 * other.e12345) - float4((this.group0.xyz.xyx * other.group1.wwy), this.e423 * other.e415) - float4((this.group0.xyz.yzz * other.group1.zxw), this.e431 * other.e425) - float4((this.group2.www * other.group1.xyz), this.e412 * other.e435)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiSandwichInfixPartial<AntiDipoleInversion> lhs, MultiVector rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiDipoleInversion {
     public MultiVector anti_sandwich(MultiVector other) {
@@ -664,6 +824,10 @@ public extension AntiDipoleInversion {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<AntiDipoleInversion> lhs, Plane rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiDipoleInversion {
     public VersorOdd anti_sandwich(Plane other) {
         return VersorOdd(
@@ -677,6 +841,10 @@ public extension AntiDipoleInversion {
             float4(this.e425 * other.e4125, this.e435 * other.e4235, this.e415 * other.e4315, -(this.e315 * other.e4315) - (this.e125 * other.e4125)) + (float4(other.e3215) * float4(this.group0.xyz, this.e321)) - (other.group0.yzxx * float4(this.group1.zxy, this.e235))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<AntiDipoleInversion> lhs, RoundPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiDipoleInversion {
     public VersorEven anti_sandwich(RoundPoint other) {
@@ -692,6 +860,10 @@ public extension AntiDipoleInversion {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<AntiDipoleInversion> lhs, Scalar rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiDipoleInversion {
     public VersorOdd anti_sandwich(Scalar other) {
         return DipoleInversion(
@@ -705,6 +877,10 @@ public extension AntiDipoleInversion {
             float4(other.scalar) * this.group3 * float4(-1.0, -1.0, -1.0, 1.0)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<AntiDipoleInversion> lhs, Sphere rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiDipoleInversion {
     public VersorOdd anti_sandwich(Sphere other) {
@@ -720,6 +896,10 @@ public extension AntiDipoleInversion {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<AntiDipoleInversion> lhs, VersorEven rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiDipoleInversion {
     public VersorEven anti_sandwich(VersorEven other) {
         return VersorEven(
@@ -733,6 +913,10 @@ public extension AntiDipoleInversion {
             float4((this.e315 * other.e412) + (this.e1 * other.e12345) + (this.e2 * other.e435) + (this.e5 * other.e423), (this.e125 * other.e423) + (this.e2 * other.e12345) + (this.e3 * other.e415) + (this.e5 * other.e431), (this.e125 * other.e4) + (this.e1 * other.e425) + (this.e3 * other.e12345) + (this.e5 * other.e412), -(this.e415 * other.e423) - (this.e425 * other.e431) - (this.e435 * other.e412) - (this.e321 * other.e4)) + (float4(other.group1.ww, other.e2, other.e321) * float4(this.group1.xyx, this.e4)) + (float4(other.group3.zx, other.e321, other.e423) * float4(this.group1.yzz, this.e1)) + (float4(other.group3.ww, other.e431, other.e412) * float4(this.group2.xyx, this.e3)) + float4((this.group0.xyz.zxy * other.group2.yzx), this.e4 * other.e12345) + float4((this.group1.www * other.group1.xyz), this.e2 * other.e431) - float4((this.group0.xyz.xyx * other.group2.wwy), this.e423 * other.e415) - float4((this.group0.xyz.yzz * other.group2.zxw), this.e423 * other.e1) - float4((this.group1.zxy * other.group3.yzx), this.e431 * other.e425) - float4((this.group2.zxy * other.group0.yzx), this.e431 * other.e2) - float4((this.group2.www * other.group2.xyz), this.e412 * other.e435) - float4((this.group3.zxy * other.group1.yzx), this.e412 * other.e3)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<AntiDipoleInversion> lhs, VersorOdd rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiDipoleInversion {
     public VersorOdd anti_sandwich(VersorOdd other) {
@@ -748,17 +932,13 @@ public extension AntiDipoleInversion {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension AntiDualNum {
-    // Fancy infix trick (first half)
-    public AntiSandwichInfixPartial<AntiDualNum> operator /(AntiSandwichInfix rhs) {
-        return AntiSandwichInfixPartial<AntiDualNum>(this);
-    }
+// Fancy infix trick (first half)
+public AntiSandwichInfixPartial<AntiDualNum> operator /(AntiDualNum lhs, AntiSandwichInfix rhs) {
+    return AntiSandwichInfixPartial<AntiDualNum>(lhs);
 }
-public extension AntiSandwichInfixPartial<AntiDualNum> {
-    // Fancy infix trick (second half)
-    public VersorOdd operator /(AntiCircleRotor rhs) {
-        return this.a.anti_sandwich(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<AntiDualNum> lhs, AntiCircleRotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiDualNum {
     public VersorOdd anti_sandwich(AntiCircleRotor other) {
@@ -774,6 +954,10 @@ public extension AntiDualNum {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<AntiDualNum> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiDualNum {
     public VersorEven anti_sandwich(AntiDipoleInversion other) {
         return VersorOdd(
@@ -788,6 +972,10 @@ public extension AntiDualNum {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiDualNum operator /(AntiSandwichInfixPartial<AntiDualNum> lhs, AntiDualNum rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiDualNum {
     public AntiDualNum anti_sandwich(AntiDualNum other) {
         return DualNum(
@@ -795,6 +983,10 @@ public extension AntiDualNum {
             float2(-(other.e3215 * this.scalar) - (other.scalar * this.e3215), other.scalar * this.scalar) * float2(1.0, -1.0)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiSandwichInfixPartial<AntiDualNum> lhs, AntiFlatPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiDualNum {
     public AntiFlector anti_sandwich(AntiFlatPoint other) {
@@ -806,6 +998,10 @@ public extension AntiDualNum {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiSandwichInfixPartial<AntiDualNum> lhs, AntiFlector rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiDualNum {
     public AntiFlector anti_sandwich(AntiFlector other) {
         return Flector(
@@ -815,6 +1011,10 @@ public extension AntiDualNum {
             float4(this.group0.xy.yy, this.scalar, (this.scalar * other.e5) - (this.e3215 * other.e321)) * float4(other.group1.xyz, 1.0) * float4(-1.0, -1.0, -1.0, 1.0)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public AntiLine operator /(AntiSandwichInfixPartial<AntiDualNum> lhs, AntiLine rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiDualNum {
     public AntiLine anti_sandwich(AntiLine other) {
@@ -826,6 +1026,10 @@ public extension AntiDualNum {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiSandwichInfixPartial<AntiDualNum> lhs, AntiMotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiDualNum {
     public AntiMotor anti_sandwich(AntiMotor other) {
         return Motor(
@@ -835,6 +1039,10 @@ public extension AntiDualNum {
             -(float4(this.e3215) * other.group0) - (float4(this.scalar) * other.group1)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiSandwichInfixPartial<AntiDualNum> lhs, AntiPlane rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiDualNum {
     public AntiFlector anti_sandwich(AntiPlane other) {
@@ -846,6 +1054,10 @@ public extension AntiDualNum {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public DualNum operator /(AntiSandwichInfixPartial<AntiDualNum> lhs, AntiScalar rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiDualNum {
     public DualNum anti_sandwich(AntiScalar other) {
         return AntiDualNum(
@@ -853,6 +1065,10 @@ public extension AntiDualNum {
             float2(other.e12345) * this.group0.xy
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<AntiDualNum> lhs, Circle rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiDualNum {
     public VersorEven anti_sandwich(Circle other) {
@@ -868,6 +1084,10 @@ public extension AntiDualNum {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<AntiDualNum> lhs, CircleRotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiDualNum {
     public VersorEven anti_sandwich(CircleRotor other) {
         return VersorOdd(
@@ -881,6 +1101,10 @@ public extension AntiDualNum {
             float4(this.group0.xy.xx, this.e3215, (this.e3215 * other.e12345) - (this.e3215 * other.e321)) * float4(other.group0.xyz, 1.0) * float4(-1.0, -1.0, -1.0, 1.0)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<AntiDualNum> lhs, Dipole rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiDualNum {
     public VersorOdd anti_sandwich(Dipole other) {
@@ -896,6 +1120,10 @@ public extension AntiDualNum {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<AntiDualNum> lhs, DipoleInversion rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiDualNum {
     public VersorOdd anti_sandwich(DipoleInversion other) {
         return VersorEven(
@@ -910,6 +1138,10 @@ public extension AntiDualNum {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public DualNum operator /(AntiSandwichInfixPartial<AntiDualNum> lhs, DualNum rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiDualNum {
     public DualNum anti_sandwich(DualNum other) {
         return AntiDualNum(
@@ -917,6 +1149,10 @@ public extension AntiDualNum {
             float2((this.e3215 * other.e12345) + (this.scalar * other.e5), this.scalar * other.e12345)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(AntiSandwichInfixPartial<AntiDualNum> lhs, FlatPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiDualNum {
     public Flector anti_sandwich(FlatPoint other) {
@@ -928,6 +1164,10 @@ public extension AntiDualNum {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(AntiSandwichInfixPartial<AntiDualNum> lhs, Flector rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiDualNum {
     public Flector anti_sandwich(Flector other) {
         return AntiFlector(
@@ -937,6 +1177,10 @@ public extension AntiDualNum {
             float4(this.group0.xy.yy, this.scalar, -(this.e3215 * other.e45) - (this.scalar * other.e3215)) * float4(other.group1.xyz, 1.0)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public Line operator /(AntiSandwichInfixPartial<AntiDualNum> lhs, Line rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiDualNum {
     public Line anti_sandwich(Line other) {
@@ -948,6 +1192,10 @@ public extension AntiDualNum {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(AntiSandwichInfixPartial<AntiDualNum> lhs, Motor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiDualNum {
     public Motor anti_sandwich(Motor other) {
         return AntiMotor(
@@ -957,6 +1205,10 @@ public extension AntiDualNum {
             (float4(this.e3215) * other.group0) + (float4(this.scalar) * other.group1)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiSandwichInfixPartial<AntiDualNum> lhs, MultiVector rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiDualNum {
     public MultiVector anti_sandwich(MultiVector other) {
@@ -986,6 +1238,10 @@ public extension AntiDualNum {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(AntiSandwichInfixPartial<AntiDualNum> lhs, Plane rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiDualNum {
     public Flector anti_sandwich(Plane other) {
         return AntiFlector(
@@ -995,6 +1251,10 @@ public extension AntiDualNum {
             float4(this.scalar) * other.group0 * float4(1.0, 1.0, 1.0, -1.0)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<AntiDualNum> lhs, RoundPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiDualNum {
     public VersorEven anti_sandwich(RoundPoint other) {
@@ -1010,6 +1270,10 @@ public extension AntiDualNum {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiDualNum operator /(AntiSandwichInfixPartial<AntiDualNum> lhs, Scalar rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiDualNum {
     public AntiDualNum anti_sandwich(Scalar other) {
         return DualNum(
@@ -1017,6 +1281,10 @@ public extension AntiDualNum {
             float2(other.scalar) * this.group0.xy * float2(-1.0)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<AntiDualNum> lhs, Sphere rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiDualNum {
     public VersorOdd anti_sandwich(Sphere other) {
@@ -1032,6 +1300,10 @@ public extension AntiDualNum {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<AntiDualNum> lhs, VersorEven rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiDualNum {
     public VersorEven anti_sandwich(VersorEven other) {
         return VersorOdd(
@@ -1045,6 +1317,10 @@ public extension AntiDualNum {
             float4(this.scalar * other.e1 * -1.0, this.scalar * other.e2 * -1.0, this.scalar * other.e3 * -1.0, (this.e3215 * other.e12345) + (this.scalar * other.e5)) - (float4(this.e3215) * float4(other.group0.xyz, other.e321))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<AntiDualNum> lhs, VersorOdd rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiDualNum {
     public VersorOdd anti_sandwich(VersorOdd other) {
@@ -1060,17 +1336,13 @@ public extension AntiDualNum {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension AntiFlatPoint {
-    // Fancy infix trick (first half)
-    public AntiSandwichInfixPartial<AntiFlatPoint> operator /(AntiSandwichInfix rhs) {
-        return AntiSandwichInfixPartial<AntiFlatPoint>(this);
-    }
+// Fancy infix trick (first half)
+public AntiSandwichInfixPartial<AntiFlatPoint> operator /(AntiFlatPoint lhs, AntiSandwichInfix rhs) {
+    return AntiSandwichInfixPartial<AntiFlatPoint>(lhs);
 }
-public extension AntiSandwichInfixPartial<AntiFlatPoint> {
-    // Fancy infix trick (second half)
-    public VersorOdd operator /(AntiCircleRotor rhs) {
-        return this.a.anti_sandwich(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<AntiFlatPoint> lhs, AntiCircleRotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiFlatPoint {
     public VersorOdd anti_sandwich(AntiCircleRotor other) {
@@ -1086,6 +1358,10 @@ public extension AntiFlatPoint {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<AntiFlatPoint> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiFlatPoint {
     public VersorEven anti_sandwich(AntiDipoleInversion other) {
         return VersorEven(
@@ -1100,6 +1376,10 @@ public extension AntiFlatPoint {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiSandwichInfixPartial<AntiFlatPoint> lhs, AntiDualNum rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiFlatPoint {
     public AntiMotor anti_sandwich(AntiDualNum other) {
         return Flector(
@@ -1109,6 +1389,10 @@ public extension AntiFlatPoint {
             float4(float3(0.0), other.e3215 * this.e321)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiSandwichInfixPartial<AntiFlatPoint> lhs, AntiFlatPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiFlatPoint {
     public AntiFlector anti_sandwich(AntiFlatPoint other) {
@@ -1120,6 +1404,10 @@ public extension AntiFlatPoint {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiSandwichInfixPartial<AntiFlatPoint> lhs, AntiFlector rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiFlatPoint {
     public AntiFlector anti_sandwich(AntiFlector other) {
         return Motor(
@@ -1129,6 +1417,10 @@ public extension AntiFlatPoint {
             float4(-(this.e235 * other.e321) - (this.e315 * other.e3), -(this.e315 * other.e321) - (this.e125 * other.e1), -(this.e235 * other.e2) - (this.e125 * other.e321), (this.e125 * other.e3) + (this.e321 * other.e5)) + (this.group0.zxyx * other.group1.yzxx) + (this.group0.wwwy * float4(other.group0.xyz, other.e2))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiSandwichInfixPartial<AntiFlatPoint> lhs, AntiLine rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiFlatPoint {
     public AntiMotor anti_sandwich(AntiLine other) {
@@ -1140,6 +1432,10 @@ public extension AntiFlatPoint {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiSandwichInfixPartial<AntiFlatPoint> lhs, AntiMotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiFlatPoint {
     public AntiMotor anti_sandwich(AntiMotor other) {
         return Flector(
@@ -1149,6 +1445,10 @@ public extension AntiFlatPoint {
             float4((this.group0.www * other.group0.xyz * float3(-1.0)), (this.e321 * other.e3215) - (this.e235 * other.e23) - (this.e315 * other.e31) - (this.e125 * other.e12))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiSandwichInfixPartial<AntiFlatPoint> lhs, AntiPlane rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiFlatPoint {
     public AntiFlector anti_sandwich(AntiPlane other) {
@@ -1160,6 +1460,10 @@ public extension AntiFlatPoint {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(AntiSandwichInfixPartial<AntiFlatPoint> lhs, AntiScalar rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiFlatPoint {
     public Motor anti_sandwich(AntiScalar other) {
         return AntiFlatPoint(
@@ -1167,6 +1471,10 @@ public extension AntiFlatPoint {
             float4(other.e12345) * this.group0
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<AntiFlatPoint> lhs, Circle rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiFlatPoint {
     public VersorEven anti_sandwich(Circle other) {
@@ -1182,6 +1490,10 @@ public extension AntiFlatPoint {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<AntiFlatPoint> lhs, CircleRotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiFlatPoint {
     public VersorEven anti_sandwich(CircleRotor other) {
         return VersorEven(
@@ -1195,6 +1507,10 @@ public extension AntiFlatPoint {
             float4((float3(this.e321) * other.group1.xyz), 0.0) + float4((other.group0.xyz.zxy * this.group0.yzx), 0.0) - float4((other.group0.xyz.yzx * this.group0.zxy), 0.0)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<AntiFlatPoint> lhs, Dipole rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiFlatPoint {
     public VersorOdd anti_sandwich(Dipole other) {
@@ -1210,6 +1526,10 @@ public extension AntiFlatPoint {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<AntiFlatPoint> lhs, DipoleInversion rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiFlatPoint {
     public VersorOdd anti_sandwich(DipoleInversion other) {
         return VersorOdd(
@@ -1224,6 +1544,10 @@ public extension AntiFlatPoint {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(AntiSandwichInfixPartial<AntiFlatPoint> lhs, DualNum rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiFlatPoint {
     public Motor anti_sandwich(DualNum other) {
         return AntiFlector(
@@ -1233,6 +1557,10 @@ public extension AntiFlatPoint {
             float4(float3(0.0), this.e321 * other.e5)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(AntiSandwichInfixPartial<AntiFlatPoint> lhs, FlatPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiFlatPoint {
     public Flector anti_sandwich(FlatPoint other) {
@@ -1244,6 +1572,10 @@ public extension AntiFlatPoint {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(AntiSandwichInfixPartial<AntiFlatPoint> lhs, Flector rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiFlatPoint {
     public Flector anti_sandwich(Flector other) {
         return AntiMotor(
@@ -1253,6 +1585,10 @@ public extension AntiFlatPoint {
             float4((this.e315 * other.e4125) + (this.e321 * other.e15), (this.e125 * other.e4235) + (this.e321 * other.e25), (this.e125 * other.e45) + (this.e321 * other.e35), -(this.e315 * other.e4315) - (this.e125 * other.e4125)) + (this.group0.xyxw * float4(other.group0.ww, other.e4315, other.e3215)) - (this.group0.zxyx * other.group1.yzxx)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(AntiSandwichInfixPartial<AntiFlatPoint> lhs, Line rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiFlatPoint {
     public Motor anti_sandwich(Line other) {
@@ -1264,6 +1600,10 @@ public extension AntiFlatPoint {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(AntiSandwichInfixPartial<AntiFlatPoint> lhs, Motor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiFlatPoint {
     public Motor anti_sandwich(Motor other) {
         return AntiFlector(
@@ -1273,6 +1613,10 @@ public extension AntiFlatPoint {
             float4((this.group0.www * other.group0.xyz), (this.e321 * other.e5) - (this.e235 * other.e415) - (this.e315 * other.e425) - (this.e125 * other.e435))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiSandwichInfixPartial<AntiFlatPoint> lhs, MultiVector rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiFlatPoint {
     public MultiVector anti_sandwich(MultiVector other) {
@@ -1302,6 +1646,10 @@ public extension AntiFlatPoint {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(AntiSandwichInfixPartial<AntiFlatPoint> lhs, Plane rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiFlatPoint {
     public Flector anti_sandwich(Plane other) {
         return AntiMotor(
@@ -1311,6 +1659,10 @@ public extension AntiFlatPoint {
             (this.group0.yzxw * other.group0.zxyw) + float4(float3(0.0), -(this.e315 * other.e4315) - (this.e125 * other.e4125)) - (this.group0.zxyx * other.group0.yzxx)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<AntiFlatPoint> lhs, RoundPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiFlatPoint {
     public VersorEven anti_sandwich(RoundPoint other) {
@@ -1326,6 +1678,10 @@ public extension AntiFlatPoint {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiSandwichInfixPartial<AntiFlatPoint> lhs, Scalar rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiFlatPoint {
     public AntiMotor anti_sandwich(Scalar other) {
         return FlatPoint(
@@ -1333,6 +1689,10 @@ public extension AntiFlatPoint {
             float4(other.scalar) * this.group0 * float4(1.0, 1.0, 1.0, -1.0)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<AntiFlatPoint> lhs, Sphere rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiFlatPoint {
     public VersorOdd anti_sandwich(Sphere other) {
@@ -1348,6 +1708,10 @@ public extension AntiFlatPoint {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<AntiFlatPoint> lhs, VersorEven rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiFlatPoint {
     public VersorEven anti_sandwich(VersorEven other) {
         return VersorEven(
@@ -1361,6 +1725,10 @@ public extension AntiFlatPoint {
             float4(((float3(this.e321) * other.group1.xyz) + (float3(other.e412, other.e423, other.e4) * this.group0.yzz) + (float3(other.e4, other.e4, other.e431) * this.group0.xyx) - (this.group0.zxy * other.group0.yzx)), this.e321 * other.e4 * -1.0)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<AntiFlatPoint> lhs, VersorOdd rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiFlatPoint {
     public VersorOdd anti_sandwich(VersorOdd other) {
@@ -1376,17 +1744,13 @@ public extension AntiFlatPoint {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension AntiFlector {
-    // Fancy infix trick (first half)
-    public AntiSandwichInfixPartial<AntiFlector> operator /(AntiSandwichInfix rhs) {
-        return AntiSandwichInfixPartial<AntiFlector>(this);
-    }
+// Fancy infix trick (first half)
+public AntiSandwichInfixPartial<AntiFlector> operator /(AntiFlector lhs, AntiSandwichInfix rhs) {
+    return AntiSandwichInfixPartial<AntiFlector>(lhs);
 }
-public extension AntiSandwichInfixPartial<AntiFlector> {
-    // Fancy infix trick (second half)
-    public VersorOdd operator /(AntiCircleRotor rhs) {
-        return this.a.anti_sandwich(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<AntiFlector> lhs, AntiCircleRotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiFlector {
     public VersorOdd anti_sandwich(AntiCircleRotor other) {
@@ -1402,6 +1766,10 @@ public extension AntiFlector {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<AntiFlector> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiFlector {
     public VersorEven anti_sandwich(AntiDipoleInversion other) {
         return VersorEven(
@@ -1416,6 +1784,10 @@ public extension AntiFlector {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiSandwichInfixPartial<AntiFlector> lhs, AntiDualNum rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiFlector {
     public AntiMotor anti_sandwich(AntiDualNum other) {
         return Flector(
@@ -1425,6 +1797,10 @@ public extension AntiFlector {
             float4(other.group0.xy.yy, other.scalar, (other.e3215 * this.e321) + (other.scalar * this.e5)) * float4(this.group1.xyz, 1.0) * float4(-1.0, -1.0, -1.0, 1.0)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiSandwichInfixPartial<AntiFlector> lhs, AntiFlatPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiFlector {
     public AntiFlector anti_sandwich(AntiFlatPoint other) {
@@ -1436,6 +1812,10 @@ public extension AntiFlector {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiSandwichInfixPartial<AntiFlector> lhs, AntiFlector rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiFlector {
     public AntiFlector anti_sandwich(AntiFlector other) {
         return Motor(
@@ -1445,6 +1825,10 @@ public extension AntiFlector {
             (float4(other.e5) * float4(this.group1.xyz, this.e321)) + (float4(this.e321, this.e3, this.e1, this.e235) * float4(other.group0.xxy, other.e1)) + (float4(this.e2, this.e321, this.e321, this.e315) * float4(other.group0.zyz, other.e2)) + (other.group1.yzxz * this.group0.zxyz) - (float4(this.e315, this.e5, this.e5, this.e5) * float4(other.group1.zyz, other.e321)) - (float4(this.e5, this.e125, this.e235, this.e3) * float4(other.group1.xxy, other.e125)) - (other.group0.yzxx * this.group1.zxyx) - (other.group0.wwwy * float4(this.group0.xyz, this.e2))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiSandwichInfixPartial<AntiFlector> lhs, AntiLine rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiFlector {
     public AntiMotor anti_sandwich(AntiLine other) {
@@ -1456,6 +1840,10 @@ public extension AntiFlector {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiSandwichInfixPartial<AntiFlector> lhs, AntiMotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiFlector {
     public AntiMotor anti_sandwich(AntiMotor other) {
         return Flector(
@@ -1465,6 +1853,10 @@ public extension AntiFlector {
             float4(float3(0.0), (this.e5 * other.scalar) - (this.e1 * other.e15) - (this.e2 * other.e25) - (this.e3 * other.e35)) + float4((this.group1.zxy * other.group0.yzx), this.e321 * other.e3215) - (this.group0.wwwx * other.group0.xyzx) - (other.group0.zxwz * float4(this.group1.yzz, this.e125)) - (other.group0.wwyy * float4(this.group1.xyx, this.e315))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiSandwichInfixPartial<AntiFlector> lhs, AntiPlane rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiFlector {
     public AntiFlector anti_sandwich(AntiPlane other) {
@@ -1476,6 +1868,10 @@ public extension AntiFlector {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(AntiSandwichInfixPartial<AntiFlector> lhs, AntiScalar rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiFlector {
     public Motor anti_sandwich(AntiScalar other) {
         return AntiFlector(
@@ -1485,6 +1881,10 @@ public extension AntiFlector {
             float4(other.e12345) * this.group1
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<AntiFlector> lhs, Circle rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiFlector {
     public VersorEven anti_sandwich(Circle other) {
@@ -1500,6 +1900,10 @@ public extension AntiFlector {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<AntiFlector> lhs, CircleRotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiFlector {
     public VersorEven anti_sandwich(CircleRotor other) {
         return VersorEven(
@@ -1513,6 +1917,10 @@ public extension AntiFlector {
             float4((this.e1 * other.e12345) + (this.e2 * other.e435) - (this.e125 * other.e431) - (this.e3 * other.e425), (this.e2 * other.e12345) + (this.e3 * other.e415) - (this.e235 * other.e412) - (this.e1 * other.e435), (this.e1 * other.e425) + (this.e3 * other.e12345) - (this.e315 * other.e423) - (this.e2 * other.e415), 0.0) + (float4(this.e315, this.e5, this.e5, this.e2) * float4(other.group0.xyz.zyz, other.e431)) + (float4(this.e5, this.e125, this.e235, this.e1) * float4(other.group0.xyz.xxy, other.e423)) + float4((this.group0.www * other.group1.xyz), this.e3 * other.e412)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<AntiFlector> lhs, Dipole rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiFlector {
     public VersorOdd anti_sandwich(Dipole other) {
@@ -1528,6 +1936,10 @@ public extension AntiFlector {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<AntiFlector> lhs, DipoleInversion rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiFlector {
     public VersorOdd anti_sandwich(DipoleInversion other) {
         return VersorOdd(
@@ -1542,6 +1954,10 @@ public extension AntiFlector {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(AntiSandwichInfixPartial<AntiFlector> lhs, DualNum rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiFlector {
     public Motor anti_sandwich(DualNum other) {
         return AntiFlector(
@@ -1551,6 +1967,10 @@ public extension AntiFlector {
             float4(other.group0.xy.yy, other.e12345, (this.e321 * other.e5) + (this.e5 * other.e12345)) * float4(this.group1.xyz, 1.0)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(AntiSandwichInfixPartial<AntiFlector> lhs, FlatPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiFlector {
     public Flector anti_sandwich(FlatPoint other) {
@@ -1562,6 +1982,10 @@ public extension AntiFlector {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(AntiSandwichInfixPartial<AntiFlector> lhs, Flector rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiFlector {
     public Flector anti_sandwich(Flector other) {
         return AntiMotor(
@@ -1571,6 +1995,10 @@ public extension AntiFlector {
             float4((this.e321 * other.e15) + (this.e1 * other.e3215) + (this.e2 * other.e35) + (this.e5 * other.e4235), (this.e321 * other.e25) + (this.e2 * other.e3215) + (this.e3 * other.e15) + (this.e5 * other.e4315), (this.e321 * other.e35) + (this.e1 * other.e25) + (this.e3 * other.e3215) + (this.e5 * other.e4125), -(this.e125 * other.e4125) - (this.e1 * other.e15) - (this.e2 * other.e25) - (this.e3 * other.e35)) + (this.group0.xyxw * float4(other.group0.ww, other.e4315, other.e3215)) + (float4(other.group1.zx, other.e45, other.e45) * float4(this.group0.yzz, this.e5)) - (this.group0.zxyx * other.group1.yzxx) - float4((this.group1.zxy * other.group0.yzx), this.e315 * other.e4315)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(AntiSandwichInfixPartial<AntiFlector> lhs, Line rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiFlector {
     public Motor anti_sandwich(Line other) {
@@ -1582,6 +2010,10 @@ public extension AntiFlector {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(AntiSandwichInfixPartial<AntiFlector> lhs, Motor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiFlector {
     public Motor anti_sandwich(Motor other) {
         return AntiFlector(
@@ -1591,6 +2023,10 @@ public extension AntiFlector {
             float4(this.e2 * other.e435, this.e3 * other.e415, this.e3 * other.e12345, -(this.e315 * other.e425) - (this.e125 * other.e435) - (this.e1 * other.e235) - (this.e2 * other.e315) - (this.e3 * other.e125)) + (float4(this.e321) * float4(other.group0.xyz, other.e5)) + (this.group1.xyxw * other.group0.wwyw) - (other.group0.yzxx * float4(this.group1.zxy, this.e235))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiSandwichInfixPartial<AntiFlector> lhs, MultiVector rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiFlector {
     public MultiVector anti_sandwich(MultiVector other) {
@@ -1620,6 +2056,10 @@ public extension AntiFlector {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(AntiSandwichInfixPartial<AntiFlector> lhs, Plane rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiFlector {
     public Flector anti_sandwich(Plane other) {
         return AntiMotor(
@@ -1629,6 +2069,10 @@ public extension AntiFlector {
             float4((this.e1 * other.e3215) + (this.e5 * other.e4235), (this.e2 * other.e3215) + (this.e5 * other.e4315), (this.e3 * other.e3215) + (this.e5 * other.e4125), -(this.e315 * other.e4315) - (this.e125 * other.e4125)) + (this.group0.yzxw * other.group0.zxyw) - (this.group0.zxyx * other.group0.yzxx)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<AntiFlector> lhs, RoundPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiFlector {
     public VersorEven anti_sandwich(RoundPoint other) {
@@ -1644,6 +2088,10 @@ public extension AntiFlector {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiSandwichInfixPartial<AntiFlector> lhs, Scalar rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiFlector {
     public AntiMotor anti_sandwich(Scalar other) {
         return Flector(
@@ -1653,6 +2101,10 @@ public extension AntiFlector {
             float4(other.scalar) * this.group1 * float4(-1.0, -1.0, -1.0, 1.0)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<AntiFlector> lhs, Sphere rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiFlector {
     public VersorOdd anti_sandwich(Sphere other) {
@@ -1668,6 +2120,10 @@ public extension AntiFlector {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<AntiFlector> lhs, VersorEven rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiFlector {
     public VersorEven anti_sandwich(VersorEven other) {
         return VersorEven(
@@ -1681,6 +2137,10 @@ public extension AntiFlector {
             float4((this.e1 * other.e12345) + (this.e2 * other.e435) + (this.e5 * other.e423) - (this.e3 * other.e425), (this.e2 * other.e12345) + (this.e3 * other.e415) + (this.e5 * other.e431) - (this.e1 * other.e435), (this.e1 * other.e425) + (this.e3 * other.e12345) + (this.e5 * other.e412) - (this.e2 * other.e415), 0.0) + (float4(other.group0.zx, other.e4, other.e431) * float4(this.group0.yzz, this.e2)) + (float4(other.group3.ww, other.e431, other.e423) * float4(this.group0.xyx, this.e1)) + float4((this.group0.www * other.group1.xyz), this.e3 * other.e412) - (this.group0.zxyw * float4(other.group0.yzx, other.e4))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<AntiFlector> lhs, VersorOdd rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiFlector {
     public VersorOdd anti_sandwich(VersorOdd other) {
@@ -1696,17 +2156,13 @@ public extension AntiFlector {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension AntiLine {
-    // Fancy infix trick (first half)
-    public AntiSandwichInfixPartial<AntiLine> operator /(AntiSandwichInfix rhs) {
-        return AntiSandwichInfixPartial<AntiLine>(this);
-    }
+// Fancy infix trick (first half)
+public AntiSandwichInfixPartial<AntiLine> operator /(AntiLine lhs, AntiSandwichInfix rhs) {
+    return AntiSandwichInfixPartial<AntiLine>(lhs);
 }
-public extension AntiSandwichInfixPartial<AntiLine> {
-    // Fancy infix trick (second half)
-    public VersorOdd operator /(AntiCircleRotor rhs) {
-        return this.a.anti_sandwich(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<AntiLine> lhs, AntiCircleRotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiLine {
     public VersorOdd anti_sandwich(AntiCircleRotor other) {
@@ -1722,6 +2178,10 @@ public extension AntiLine {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<AntiLine> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiLine {
     public VersorEven anti_sandwich(AntiDipoleInversion other) {
         return VersorOdd(
@@ -1736,6 +2196,10 @@ public extension AntiLine {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiSandwichInfixPartial<AntiLine> lhs, AntiDualNum rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiLine {
     public AntiMotor anti_sandwich(AntiDualNum other) {
         return Line(
@@ -1745,6 +2209,10 @@ public extension AntiLine {
             -(float3(other.e3215) * this.group0.xyz) - (float3(other.scalar) * this.group1.xyz)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiSandwichInfixPartial<AntiLine> lhs, AntiFlatPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiLine {
     public AntiFlector anti_sandwich(AntiFlatPoint other) {
@@ -1756,6 +2224,10 @@ public extension AntiLine {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiSandwichInfixPartial<AntiLine> lhs, AntiFlector rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiLine {
     public AntiFlector anti_sandwich(AntiFlector other) {
         return Flector(
@@ -1765,6 +2237,10 @@ public extension AntiLine {
             (other.group1.yzxx * float4(this.group0.xyz.zxy, this.e15)) + float4(float3(0.0), (other.e2 * this.e25) + (other.e3 * this.e35) - (other.e125 * this.e12)) - (float4(other.group0.ww, other.e2, other.e235) * float4(this.group0.xyz.xyx, this.e23)) - (float4(other.group1.zx, other.e321, other.e315) * float4(this.group0.xyz.yzz, this.e31))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiSandwichInfixPartial<AntiLine> lhs, AntiLine rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiLine {
     public AntiMotor anti_sandwich(AntiLine other) {
@@ -1776,6 +2252,10 @@ public extension AntiLine {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiSandwichInfixPartial<AntiLine> lhs, AntiMotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiLine {
     public AntiMotor anti_sandwich(AntiMotor other) {
         return Motor(
@@ -1785,6 +2265,10 @@ public extension AntiLine {
             float4(-(this.e23 * other.e3215) - (this.e31 * other.e35) - (this.e15 * other.scalar) - (this.e25 * other.e12), -(this.e31 * other.e3215) - (this.e12 * other.e15) - (this.e25 * other.scalar) - (this.e35 * other.e23), -(this.e23 * other.e25) - (this.e12 * other.e3215) - (this.e15 * other.e31) - (this.e35 * other.scalar), (this.e12 * other.e35) + (this.e15 * other.e23) + (this.e25 * other.e31) + (this.e35 * other.e12)) + (other.group1.yzxx * float4(this.group0.xyz.zxy, this.e23)) + float4((this.group1.xyz.zxy * other.group0.yzx), this.e31 * other.e25)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiSandwichInfixPartial<AntiLine> lhs, AntiPlane rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiLine {
     public AntiFlector anti_sandwich(AntiPlane other) {
@@ -1796,6 +2280,10 @@ public extension AntiLine {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(AntiSandwichInfixPartial<AntiLine> lhs, AntiScalar rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiLine {
     public Motor anti_sandwich(AntiScalar other) {
         return AntiLine(
@@ -1805,6 +2293,10 @@ public extension AntiLine {
             float3(other.e12345) * this.group1.xyz
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<AntiLine> lhs, Circle rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiLine {
     public VersorEven anti_sandwich(Circle other) {
@@ -1820,6 +2312,10 @@ public extension AntiLine {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<AntiLine> lhs, CircleRotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiLine {
     public VersorEven anti_sandwich(CircleRotor other) {
         return VersorOdd(
@@ -1833,6 +2329,10 @@ public extension AntiLine {
             float4(this.e35 * other.e431, this.e15 * other.e412, this.e25 * other.e423, -(this.e12 * other.e125) - (this.e15 * other.e415) - (this.e25 * other.e425) - (this.e35 * other.e435)) - float4((this.group0.xyz * other.group1.www), this.e23 * other.e235) - float4((this.group1.xyz.yzx * other.group0.xyz.zxy), this.e31 * other.e315)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<AntiLine> lhs, Dipole rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiLine {
     public VersorOdd anti_sandwich(Dipole other) {
@@ -1848,6 +2348,10 @@ public extension AntiLine {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<AntiLine> lhs, DipoleInversion rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiLine {
     public VersorOdd anti_sandwich(DipoleInversion other) {
         return VersorEven(
@@ -1862,6 +2366,10 @@ public extension AntiLine {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(AntiSandwichInfixPartial<AntiLine> lhs, DualNum rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiLine {
     public Motor anti_sandwich(DualNum other) {
         return AntiLine(
@@ -1871,6 +2379,10 @@ public extension AntiLine {
             (float3(other.e5) * this.group0.xyz) + (float3(other.e12345) * this.group1.xyz)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(AntiSandwichInfixPartial<AntiLine> lhs, FlatPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiLine {
     public Flector anti_sandwich(FlatPoint other) {
@@ -1882,6 +2394,10 @@ public extension AntiLine {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(AntiSandwichInfixPartial<AntiLine> lhs, Flector rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiLine {
     public Flector anti_sandwich(Flector other) {
         return AntiFlector(
@@ -1891,6 +2407,10 @@ public extension AntiLine {
             float4(this.e12 * other.e4315 * -1.0, this.e23 * other.e4125 * -1.0, this.e31 * other.e4235 * -1.0, (this.e12 * other.e35) + (this.e15 * other.e4235) + (this.e25 * other.e4315) + (this.e35 * other.e4125)) + (float4(other.group0.ww, other.e4315, other.e15) * float4(this.group0.xyz.xyx, this.e23)) + (float4(other.group1.zx, other.e45, other.e25) * float4(this.group0.xyz.yzz, this.e31))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(AntiSandwichInfixPartial<AntiLine> lhs, Line rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiLine {
     public Motor anti_sandwich(Line other) {
@@ -1902,6 +2422,10 @@ public extension AntiLine {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(AntiSandwichInfixPartial<AntiLine> lhs, Motor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiLine {
     public Motor anti_sandwich(Motor other) {
         return AntiMotor(
@@ -1911,6 +2435,10 @@ public extension AntiLine {
             float4((this.e23 * other.e5) + (this.e31 * other.e125) + (this.e15 * other.e12345) + (this.e25 * other.e435), (this.e31 * other.e5) + (this.e12 * other.e235) + (this.e25 * other.e12345) + (this.e35 * other.e415), (this.e23 * other.e315) + (this.e12 * other.e5) + (this.e15 * other.e425) + (this.e35 * other.e12345), -(this.e12 * other.e125) - (this.e15 * other.e415) - (this.e25 * other.e425) - (this.e35 * other.e435)) - (other.group1.yzxx * float4(this.group0.xyz.zxy, this.e23)) - float4((this.group1.xyz.zxy * other.group0.yzx), this.e31 * other.e315)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiSandwichInfixPartial<AntiLine> lhs, MultiVector rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiLine {
     public MultiVector anti_sandwich(MultiVector other) {
@@ -1940,6 +2468,10 @@ public extension AntiLine {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(AntiSandwichInfixPartial<AntiLine> lhs, Plane rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiLine {
     public Flector anti_sandwich(Plane other) {
         return AntiFlector(
@@ -1949,6 +2481,10 @@ public extension AntiLine {
             float4(this.e12 * other.e4315 * -1.0, this.e23 * other.e4125 * -1.0, this.e31 * other.e4235 * -1.0, (this.e25 * other.e4315) + (this.e35 * other.e4125)) + (other.group0.zxyx * float4(this.group0.xyz.yzx, this.e15))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<AntiLine> lhs, RoundPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiLine {
     public VersorEven anti_sandwich(RoundPoint other) {
@@ -1964,6 +2500,10 @@ public extension AntiLine {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiSandwichInfixPartial<AntiLine> lhs, Scalar rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiLine {
     public AntiMotor anti_sandwich(Scalar other) {
         return Line(
@@ -1973,6 +2513,10 @@ public extension AntiLine {
             float3(other.scalar) * this.group1.xyz * float3(-1.0)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<AntiLine> lhs, Sphere rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiLine {
     public VersorOdd anti_sandwich(Sphere other) {
@@ -1988,6 +2532,10 @@ public extension AntiLine {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<AntiLine> lhs, VersorEven rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiLine {
     public VersorEven anti_sandwich(VersorEven other) {
         return VersorOdd(
@@ -2001,6 +2549,10 @@ public extension AntiLine {
             (other.group3.yzxx * float4(this.group0.xyz.zxy, this.e15)) + float4(float3(0.0), (this.e35 * other.e3) - (this.e25 * other.e425) - (this.e35 * other.e435)) + float4((this.group1.xyz.zxy * other.group0.yzx), this.e25 * other.e2) - (float4(other.group0.zx, other.e4, other.e415) * float4(this.group1.xyz.yzz, this.e15)) - (float4(other.group1.ww, other.e2, other.e235) * float4(this.group0.xyz.xyx, this.e23)) - (float4(other.group3.zx, other.e321, other.e315) * float4(this.group0.xyz.yzz, this.e31)) - (float4(other.group3.ww, other.e431, other.e125) * float4(this.group1.xyz.xyx, this.e12))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<AntiLine> lhs, VersorOdd rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiLine {
     public VersorOdd anti_sandwich(VersorOdd other) {
@@ -2016,17 +2568,13 @@ public extension AntiLine {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension AntiMotor {
-    // Fancy infix trick (first half)
-    public AntiSandwichInfixPartial<AntiMotor> operator /(AntiSandwichInfix rhs) {
-        return AntiSandwichInfixPartial<AntiMotor>(this);
-    }
+// Fancy infix trick (first half)
+public AntiSandwichInfixPartial<AntiMotor> operator /(AntiMotor lhs, AntiSandwichInfix rhs) {
+    return AntiSandwichInfixPartial<AntiMotor>(lhs);
 }
-public extension AntiSandwichInfixPartial<AntiMotor> {
-    // Fancy infix trick (second half)
-    public VersorOdd operator /(AntiCircleRotor rhs) {
-        return this.a.anti_sandwich(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<AntiMotor> lhs, AntiCircleRotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiMotor {
     public VersorOdd anti_sandwich(AntiCircleRotor other) {
@@ -2042,6 +2590,10 @@ public extension AntiMotor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<AntiMotor> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiMotor {
     public VersorEven anti_sandwich(AntiDipoleInversion other) {
         return VersorOdd(
@@ -2056,6 +2608,10 @@ public extension AntiMotor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiSandwichInfixPartial<AntiMotor> lhs, AntiDualNum rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiMotor {
     public AntiMotor anti_sandwich(AntiDualNum other) {
         return Motor(
@@ -2065,6 +2621,10 @@ public extension AntiMotor {
             -(float4(other.e3215) * this.group0) - (float4(other.scalar) * this.group1)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiSandwichInfixPartial<AntiMotor> lhs, AntiFlatPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiMotor {
     public AntiFlector anti_sandwich(AntiFlatPoint other) {
@@ -2076,6 +2636,10 @@ public extension AntiMotor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiSandwichInfixPartial<AntiMotor> lhs, AntiFlector rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiMotor {
     public AntiFlector anti_sandwich(AntiFlector other) {
         return Flector(
@@ -2085,6 +2649,10 @@ public extension AntiMotor {
             (other.group1.yzxx * float4(this.group0.zxy, this.e15)) + float4(float3(0.0), (other.e2 * this.e25) + (other.e3 * this.e35) + (other.e5 * this.scalar) - (other.e321 * this.e3215)) - (other.group0.wwwx * this.group0.xyzx) - (this.group0.ywwz * float4(other.group1.zyz, other.e125)) - (this.group0.wzxy * float4(other.group1.xxy, other.e315))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiSandwichInfixPartial<AntiMotor> lhs, AntiLine rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiMotor {
     public AntiMotor anti_sandwich(AntiLine other) {
@@ -2096,6 +2664,10 @@ public extension AntiMotor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiSandwichInfixPartial<AntiMotor> lhs, AntiMotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiMotor {
     public AntiMotor anti_sandwich(AntiMotor other) {
         return Motor(
@@ -2105,6 +2677,10 @@ public extension AntiMotor {
             float4(-(other.scalar * this.e15) - (other.e15 * this.scalar) - (other.e35 * this.e31) - (other.e3215 * this.e23), -(other.scalar * this.e25) - (other.e15 * this.e12) - (other.e25 * this.scalar) - (other.e3215 * this.e31), -(other.scalar * this.e35) - (other.e25 * this.e23) - (other.e35 * this.scalar) - (other.e3215 * this.e12), (other.e12 * this.e35) + (other.e15 * this.e23) + (other.e25 * this.e31) + (other.e35 * this.e12)) + (other.group0.yzxx * this.group1.zxyx) + float4((other.group1.yzx * this.group0.zxy), other.e31 * this.e25) - (other.group0.xxyw * this.group1.wzxw) - float4((other.group0.zyz * this.group1.yww), other.e3215 * this.scalar)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiSandwichInfixPartial<AntiMotor> lhs, AntiPlane rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiMotor {
     public AntiFlector anti_sandwich(AntiPlane other) {
@@ -2116,6 +2692,10 @@ public extension AntiMotor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(AntiSandwichInfixPartial<AntiMotor> lhs, AntiScalar rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiMotor {
     public Motor anti_sandwich(AntiScalar other) {
         return AntiMotor(
@@ -2125,6 +2705,10 @@ public extension AntiMotor {
             float4(other.e12345) * this.group1
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<AntiMotor> lhs, Circle rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiMotor {
     public VersorEven anti_sandwich(Circle other) {
@@ -2140,6 +2724,10 @@ public extension AntiMotor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<AntiMotor> lhs, CircleRotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiMotor {
     public VersorEven anti_sandwich(CircleRotor other) {
         return VersorOdd(
@@ -2153,6 +2741,10 @@ public extension AntiMotor {
             float4(float3(0.0), -(this.e15 * other.e415) - (this.e25 * other.e425) - (this.e35 * other.e435) - (this.e3215 * other.e321)) + float4((other.group0.xyz.yzx * this.group1.zxy), this.e3215 * other.e12345) - (this.group0.xyzz * float4(other.group1.www, other.e125)) - float4((other.group0.xyz.xxy * this.group1.wzx), this.e23 * other.e235) - float4((other.group0.xyz.zyz * this.group1.yww), this.e31 * other.e315)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<AntiMotor> lhs, Dipole rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiMotor {
     public VersorOdd anti_sandwich(Dipole other) {
@@ -2168,6 +2760,10 @@ public extension AntiMotor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<AntiMotor> lhs, DipoleInversion rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiMotor {
     public VersorOdd anti_sandwich(DipoleInversion other) {
         return VersorEven(
@@ -2182,6 +2778,10 @@ public extension AntiMotor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(AntiSandwichInfixPartial<AntiMotor> lhs, DualNum rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiMotor {
     public Motor anti_sandwich(DualNum other) {
         return AntiMotor(
@@ -2191,6 +2791,10 @@ public extension AntiMotor {
             (float4(other.e5) * this.group0) + (float4(other.e12345) * this.group1)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(AntiSandwichInfixPartial<AntiMotor> lhs, FlatPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiMotor {
     public Flector anti_sandwich(FlatPoint other) {
@@ -2202,6 +2806,10 @@ public extension AntiMotor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(AntiSandwichInfixPartial<AntiMotor> lhs, Flector rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiMotor {
     public Flector anti_sandwich(Flector other) {
         return AntiFlector(
@@ -2211,6 +2819,10 @@ public extension AntiMotor {
             (this.group0.xyxx * float4(other.group0.ww, other.e4315, other.e15)) + (this.group0.yzzy * float4(other.group1.zx, other.e45, other.e25)) + (this.group0.wwwz * float4(other.group1.xyz, other.e35)) + float4(float3(0.0), (this.e15 * other.e4235) + (this.e25 * other.e4315) + (this.e35 * other.e4125) - (this.e3215 * other.e45)) - (this.group0.zxyw * other.group1.yzxw)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(AntiSandwichInfixPartial<AntiMotor> lhs, Line rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiMotor {
     public Motor anti_sandwich(Line other) {
@@ -2222,6 +2834,10 @@ public extension AntiMotor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(AntiSandwichInfixPartial<AntiMotor> lhs, Motor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiMotor {
     public Motor anti_sandwich(Motor other) {
         return AntiMotor(
@@ -2231,6 +2847,10 @@ public extension AntiMotor {
             float4((this.scalar * other.e235) + (this.e15 * other.e12345) + (this.e25 * other.e435) + (this.e3215 * other.e415), (this.scalar * other.e315) + (this.e25 * other.e12345) + (this.e35 * other.e415) + (this.e3215 * other.e425), (this.scalar * other.e125) + (this.e15 * other.e425) + (this.e35 * other.e12345) + (this.e3215 * other.e435), -(this.e12 * other.e125) - (this.e15 * other.e415) - (this.e25 * other.e425) - (this.e35 * other.e435)) + (this.group0.xyxw * other.group1.wwyw) + float4((this.group0.yzz * other.group1.zxw), this.e3215 * other.e12345) - (this.group0.zxyx * other.group1.yzxx) - float4((this.group1.zxy * other.group0.yzx), this.e31 * other.e315)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiSandwichInfixPartial<AntiMotor> lhs, MultiVector rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiMotor {
     public MultiVector anti_sandwich(MultiVector other) {
@@ -2260,6 +2880,10 @@ public extension AntiMotor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(AntiSandwichInfixPartial<AntiMotor> lhs, Plane rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiMotor {
     public Flector anti_sandwich(Plane other) {
         return AntiFlector(
@@ -2269,6 +2893,10 @@ public extension AntiMotor {
             (other.group0.xyzy * float4(this.group0.www, this.e25)) + (other.group0.zxyx * float4(this.group0.yzx, this.e15)) + float4(float3(0.0), this.e35 * other.e4125) - (this.group0.zxyw * other.group0.yzxw)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<AntiMotor> lhs, RoundPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiMotor {
     public VersorEven anti_sandwich(RoundPoint other) {
@@ -2284,6 +2912,10 @@ public extension AntiMotor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiSandwichInfixPartial<AntiMotor> lhs, Scalar rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiMotor {
     public AntiMotor anti_sandwich(Scalar other) {
         return Motor(
@@ -2293,6 +2925,10 @@ public extension AntiMotor {
             float4(other.scalar) * this.group1 * float4(-1.0)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<AntiMotor> lhs, Sphere rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiMotor {
     public VersorOdd anti_sandwich(Sphere other) {
@@ -2308,6 +2944,10 @@ public extension AntiMotor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<AntiMotor> lhs, VersorEven rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiMotor {
     public VersorEven anti_sandwich(VersorEven other) {
         return VersorOdd(
@@ -2321,6 +2961,10 @@ public extension AntiMotor {
             (this.group0.zxyw * float4(other.group3.yzx, other.e5)) + (this.group1.zxyx * float4(other.group0.yzx, other.e1)) + float4(float3(0.0), (this.e25 * other.e2) + (this.e35 * other.e3) + (this.e3215 * other.e12345) - (this.e3215 * other.e321)) - (this.group0.xyxx * float4(other.group1.ww, other.e2, other.e235)) - (this.group0.yzzy * float4(other.group3.zx, other.e321, other.e315)) - (this.group0.wwwz * float4(other.group3.xyz, other.e125)) - (this.group1.xyxx * float4(other.group3.ww, other.e431, other.e415)) - (this.group1.yzzy * float4(other.group0.zx, other.e4, other.e425)) - (this.group1.wwwz * float4(other.group0.xyz, other.e435))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<AntiMotor> lhs, VersorOdd rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiMotor {
     public VersorOdd anti_sandwich(VersorOdd other) {
@@ -2336,17 +2980,13 @@ public extension AntiMotor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension AntiPlane {
-    // Fancy infix trick (first half)
-    public AntiSandwichInfixPartial<AntiPlane> operator /(AntiSandwichInfix rhs) {
-        return AntiSandwichInfixPartial<AntiPlane>(this);
-    }
+// Fancy infix trick (first half)
+public AntiSandwichInfixPartial<AntiPlane> operator /(AntiPlane lhs, AntiSandwichInfix rhs) {
+    return AntiSandwichInfixPartial<AntiPlane>(lhs);
 }
-public extension AntiSandwichInfixPartial<AntiPlane> {
-    // Fancy infix trick (second half)
-    public VersorOdd operator /(AntiCircleRotor rhs) {
-        return this.a.anti_sandwich(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<AntiPlane> lhs, AntiCircleRotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiPlane {
     public VersorOdd anti_sandwich(AntiCircleRotor other) {
@@ -2362,6 +3002,10 @@ public extension AntiPlane {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<AntiPlane> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiPlane {
     public VersorEven anti_sandwich(AntiDipoleInversion other) {
         return VersorEven(
@@ -2376,6 +3020,10 @@ public extension AntiPlane {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiSandwichInfixPartial<AntiPlane> lhs, AntiDualNum rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiPlane {
     public AntiMotor anti_sandwich(AntiDualNum other) {
         return Flector(
@@ -2385,6 +3033,10 @@ public extension AntiPlane {
             float4(other.scalar) * this.group0 * float4(-1.0, -1.0, -1.0, 1.0)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiSandwichInfixPartial<AntiPlane> lhs, AntiFlatPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiPlane {
     public AntiFlector anti_sandwich(AntiFlatPoint other) {
@@ -2396,6 +3048,10 @@ public extension AntiPlane {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiSandwichInfixPartial<AntiPlane> lhs, AntiFlector rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiPlane {
     public AntiFlector anti_sandwich(AntiFlector other) {
         return Motor(
@@ -2405,6 +3061,10 @@ public extension AntiPlane {
             float4((other.e125 * this.e2) + (other.e5 * this.e1), (other.e235 * this.e3) + (other.e5 * this.e2), (other.e315 * this.e1) + (other.e5 * this.e3), -(other.e125 * this.e3) - (other.e321 * this.e5)) - (other.group0.yzxx * this.group0.zxyx) - (this.group0.wwwy * float4(other.group1.xyz, other.e315))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiSandwichInfixPartial<AntiPlane> lhs, AntiLine rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiPlane {
     public AntiMotor anti_sandwich(AntiLine other) {
@@ -2416,6 +3076,10 @@ public extension AntiPlane {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiSandwichInfixPartial<AntiPlane> lhs, AntiMotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiPlane {
     public AntiMotor anti_sandwich(AntiMotor other) {
         return Flector(
@@ -2425,6 +3089,10 @@ public extension AntiPlane {
             (other.group0.yzxw * this.group0.zxyw) + float4(float3(0.0), other.e35 * this.e3 * -1.0) - (this.group0.xyzy * float4(other.group0.www, other.e25)) - (this.group0.yzxx * float4(other.group0.zxy, other.e15))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiSandwichInfixPartial<AntiPlane> lhs, AntiPlane rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiPlane {
     public AntiFlector anti_sandwich(AntiPlane other) {
@@ -2436,6 +3104,10 @@ public extension AntiPlane {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(AntiSandwichInfixPartial<AntiPlane> lhs, AntiScalar rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiPlane {
     public Motor anti_sandwich(AntiScalar other) {
         return AntiPlane(
@@ -2443,6 +3115,10 @@ public extension AntiPlane {
             float4(other.e12345) * this.group0
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<AntiPlane> lhs, Circle rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiPlane {
     public VersorEven anti_sandwich(Circle other) {
@@ -2458,6 +3134,10 @@ public extension AntiPlane {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<AntiPlane> lhs, CircleRotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiPlane {
     public VersorEven anti_sandwich(CircleRotor other) {
         return AntiDipoleInversion(
@@ -2471,6 +3151,10 @@ public extension AntiPlane {
             float4((this.e1 * other.e12345) + (this.e2 * other.e435), (this.e2 * other.e12345) + (this.e3 * other.e415), (this.e1 * other.e425) + (this.e3 * other.e12345), -(this.e2 * other.e315) - (this.e3 * other.e125) - (this.e5 * other.e321)) + float4((other.group0.xyz * this.group0.www), this.e5 * other.e12345) - (this.group0.zxyx * float4(other.group1.yzx, other.e235))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<AntiPlane> lhs, Dipole rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiPlane {
     public VersorOdd anti_sandwich(Dipole other) {
@@ -2486,6 +3170,10 @@ public extension AntiPlane {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<AntiPlane> lhs, DipoleInversion rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiPlane {
     public VersorOdd anti_sandwich(DipoleInversion other) {
         return VersorOdd(
@@ -2500,6 +3188,10 @@ public extension AntiPlane {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(AntiSandwichInfixPartial<AntiPlane> lhs, DualNum rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiPlane {
     public Motor anti_sandwich(DualNum other) {
         return AntiFlector(
@@ -2509,6 +3201,10 @@ public extension AntiPlane {
             float4(other.e12345) * this.group0
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(AntiSandwichInfixPartial<AntiPlane> lhs, FlatPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiPlane {
     public Flector anti_sandwich(FlatPoint other) {
@@ -2520,6 +3216,10 @@ public extension AntiPlane {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(AntiSandwichInfixPartial<AntiPlane> lhs, Flector rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiPlane {
     public Flector anti_sandwich(Flector other) {
         return AntiMotor(
@@ -2529,6 +3229,10 @@ public extension AntiPlane {
             float4((this.e2 * other.e35) + (this.e5 * other.e4235), (this.e3 * other.e15) + (this.e5 * other.e4315), (this.e3 * other.e3215) + (this.e5 * other.e4125), -(this.e2 * other.e25) - (this.e3 * other.e35)) + (this.group0.xyxw * float4(other.group1.ww, other.e25, other.e45)) - (this.group0.zxyx * other.group0.yzxx)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(AntiSandwichInfixPartial<AntiPlane> lhs, Line rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiPlane {
     public Motor anti_sandwich(Line other) {
@@ -2540,6 +3244,10 @@ public extension AntiPlane {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(AntiSandwichInfixPartial<AntiPlane> lhs, Motor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiPlane {
     public Motor anti_sandwich(Motor other) {
         return AntiFlector(
@@ -2549,6 +3257,10 @@ public extension AntiPlane {
             float4(this.e2 * other.e435, this.e3 * other.e415, this.e3 * other.e12345, -(this.e2 * other.e315) - (this.e3 * other.e125)) + (this.group0.xyxw * other.group0.wwyw) - (this.group0.zxyx * float4(other.group0.yzx, other.e235))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiSandwichInfixPartial<AntiPlane> lhs, MultiVector rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiPlane {
     public MultiVector anti_sandwich(MultiVector other) {
@@ -2578,6 +3290,10 @@ public extension AntiPlane {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(AntiSandwichInfixPartial<AntiPlane> lhs, Plane rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiPlane {
     public Flector anti_sandwich(Plane other) {
         return AntiMotor(
@@ -2587,6 +3303,10 @@ public extension AntiPlane {
             float4(((float3(this.e5) * other.group0.xyz) + (float3(other.e3215) * this.group0.xyz)), 0.0)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiSandwichInfixPartial<AntiPlane> lhs, RoundPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiPlane {
     public AntiDipoleInversion anti_sandwich(RoundPoint other) {
@@ -2600,6 +3320,10 @@ public extension AntiPlane {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiSandwichInfixPartial<AntiPlane> lhs, Scalar rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiPlane {
     public AntiMotor anti_sandwich(Scalar other) {
         return Plane(
@@ -2607,6 +3331,10 @@ public extension AntiPlane {
             float4(other.scalar) * this.group0 * float4(-1.0, -1.0, -1.0, 1.0)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public DipoleInversion operator /(AntiSandwichInfixPartial<AntiPlane> lhs, Sphere rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiPlane {
     public DipoleInversion anti_sandwich(Sphere other) {
@@ -2619,6 +3347,10 @@ public extension AntiPlane {
             (this.group0.xyzx * other.group0.wwwx) + (this.group0.wwwy * other.group0.xyzy) + float4(float3(0.0), (this.e3 * other.e4125) + (this.e5 * other.e1234))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<AntiPlane> lhs, VersorEven rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiPlane {
     public VersorEven anti_sandwich(VersorEven other) {
@@ -2634,6 +3366,10 @@ public extension AntiPlane {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<AntiPlane> lhs, VersorOdd rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiPlane {
     public VersorOdd anti_sandwich(VersorOdd other) {
         return VersorOdd(
@@ -2648,17 +3384,13 @@ public extension AntiPlane {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension AntiScalar {
-    // Fancy infix trick (first half)
-    public AntiSandwichInfixPartial<AntiScalar> operator /(AntiSandwichInfix rhs) {
-        return AntiSandwichInfixPartial<AntiScalar>(this);
-    }
+// Fancy infix trick (first half)
+public AntiSandwichInfixPartial<AntiScalar> operator /(AntiScalar lhs, AntiSandwichInfix rhs) {
+    return AntiSandwichInfixPartial<AntiScalar>(lhs);
 }
-public extension AntiSandwichInfixPartial<AntiScalar> {
-    // Fancy infix trick (second half)
-    public AntiCircleRotor operator /(AntiCircleRotor rhs) {
-        return this.a.anti_sandwich(rhs);
-    }
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(AntiSandwichInfixPartial<AntiScalar> lhs, AntiCircleRotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiScalar {
     public AntiCircleRotor anti_sandwich(AntiCircleRotor other) {
@@ -2671,6 +3403,10 @@ public extension AntiScalar {
             float4(this.e12345) * other.group2
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiSandwichInfixPartial<AntiScalar> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiScalar {
     public AntiDipoleInversion anti_sandwich(AntiDipoleInversion other) {
@@ -2686,6 +3422,10 @@ public extension AntiScalar {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiDualNum operator /(AntiSandwichInfixPartial<AntiScalar> lhs, AntiDualNum rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiScalar {
     public AntiDualNum anti_sandwich(AntiDualNum other) {
         return AntiDualNum(
@@ -2694,6 +3434,10 @@ public extension AntiScalar {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiFlatPoint operator /(AntiSandwichInfixPartial<AntiScalar> lhs, AntiFlatPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiScalar {
     public AntiFlatPoint anti_sandwich(AntiFlatPoint other) {
         return AntiFlatPoint(
@@ -2701,6 +3445,10 @@ public extension AntiScalar {
             float4(this.e12345) * other.group0
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiSandwichInfixPartial<AntiScalar> lhs, AntiFlector rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiScalar {
     public AntiFlector anti_sandwich(AntiFlector other) {
@@ -2712,6 +3460,10 @@ public extension AntiScalar {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiLine operator /(AntiSandwichInfixPartial<AntiScalar> lhs, AntiLine rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiScalar {
     public AntiLine anti_sandwich(AntiLine other) {
         return AntiLine(
@@ -2721,6 +3473,10 @@ public extension AntiScalar {
             float3(this.e12345) * other.group1.xyz
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiSandwichInfixPartial<AntiScalar> lhs, AntiMotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiScalar {
     public AntiMotor anti_sandwich(AntiMotor other) {
@@ -2732,6 +3488,10 @@ public extension AntiScalar {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(AntiSandwichInfixPartial<AntiScalar> lhs, AntiPlane rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiScalar {
     public AntiPlane anti_sandwich(AntiPlane other) {
         return AntiPlane(
@@ -2740,6 +3500,10 @@ public extension AntiScalar {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(AntiSandwichInfixPartial<AntiScalar> lhs, AntiScalar rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiScalar {
     public AntiScalar anti_sandwich(AntiScalar other) {
         return AntiScalar(
@@ -2747,6 +3511,10 @@ public extension AntiScalar {
             other.e12345 * this.e12345
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public Circle operator /(AntiSandwichInfixPartial<AntiScalar> lhs, Circle rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiScalar {
     public Circle anti_sandwich(Circle other) {
@@ -2760,6 +3528,10 @@ public extension AntiScalar {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public CircleRotor operator /(AntiSandwichInfixPartial<AntiScalar> lhs, CircleRotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiScalar {
     public CircleRotor anti_sandwich(CircleRotor other) {
         return CircleRotor(
@@ -2772,6 +3544,10 @@ public extension AntiScalar {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Dipole operator /(AntiSandwichInfixPartial<AntiScalar> lhs, Dipole rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiScalar {
     public Dipole anti_sandwich(Dipole other) {
         return Dipole(
@@ -2783,6 +3559,10 @@ public extension AntiScalar {
             float3(this.e12345) * other.group2.xyz
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public DipoleInversion operator /(AntiSandwichInfixPartial<AntiScalar> lhs, DipoleInversion rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiScalar {
     public DipoleInversion anti_sandwich(DipoleInversion other) {
@@ -2798,6 +3578,10 @@ public extension AntiScalar {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public DualNum operator /(AntiSandwichInfixPartial<AntiScalar> lhs, DualNum rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiScalar {
     public DualNum anti_sandwich(DualNum other) {
         return DualNum(
@@ -2806,6 +3590,10 @@ public extension AntiScalar {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public FlatPoint operator /(AntiSandwichInfixPartial<AntiScalar> lhs, FlatPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiScalar {
     public FlatPoint anti_sandwich(FlatPoint other) {
         return FlatPoint(
@@ -2813,6 +3601,10 @@ public extension AntiScalar {
             float4(this.e12345) * other.group0
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(AntiSandwichInfixPartial<AntiScalar> lhs, Flector rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiScalar {
     public Flector anti_sandwich(Flector other) {
@@ -2824,6 +3616,10 @@ public extension AntiScalar {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Line operator /(AntiSandwichInfixPartial<AntiScalar> lhs, Line rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiScalar {
     public Line anti_sandwich(Line other) {
         return Line(
@@ -2834,6 +3630,10 @@ public extension AntiScalar {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(AntiSandwichInfixPartial<AntiScalar> lhs, Motor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiScalar {
     public Motor anti_sandwich(Motor other) {
         return Motor(
@@ -2843,6 +3643,10 @@ public extension AntiScalar {
             float4(this.e12345) * other.group1
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiSandwichInfixPartial<AntiScalar> lhs, MultiVector rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiScalar {
     public MultiVector anti_sandwich(MultiVector other) {
@@ -2872,6 +3676,10 @@ public extension AntiScalar {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Plane operator /(AntiSandwichInfixPartial<AntiScalar> lhs, Plane rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiScalar {
     public Plane anti_sandwich(Plane other) {
         return Plane(
@@ -2879,6 +3687,10 @@ public extension AntiScalar {
             float4(this.e12345) * other.group0
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public RoundPoint operator /(AntiSandwichInfixPartial<AntiScalar> lhs, RoundPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiScalar {
     public RoundPoint anti_sandwich(RoundPoint other) {
@@ -2890,6 +3702,10 @@ public extension AntiScalar {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(AntiSandwichInfixPartial<AntiScalar> lhs, Scalar rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiScalar {
     public Scalar anti_sandwich(Scalar other) {
         return Scalar(
@@ -2897,6 +3713,10 @@ public extension AntiScalar {
             this.e12345 * other.scalar
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public Sphere operator /(AntiSandwichInfixPartial<AntiScalar> lhs, Sphere rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiScalar {
     public Sphere anti_sandwich(Sphere other) {
@@ -2907,6 +3727,10 @@ public extension AntiScalar {
             this.e12345 * other.e1234
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<AntiScalar> lhs, VersorEven rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension AntiScalar {
     public VersorEven anti_sandwich(VersorEven other) {
@@ -2922,6 +3746,10 @@ public extension AntiScalar {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<AntiScalar> lhs, VersorOdd rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension AntiScalar {
     public VersorOdd anti_sandwich(VersorOdd other) {
         return VersorOdd(
@@ -2936,17 +3764,13 @@ public extension AntiScalar {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Circle {
-    // Fancy infix trick (first half)
-    public AntiSandwichInfixPartial<Circle> operator /(AntiSandwichInfix rhs) {
-        return AntiSandwichInfixPartial<Circle>(this);
-    }
+// Fancy infix trick (first half)
+public AntiSandwichInfixPartial<Circle> operator /(Circle lhs, AntiSandwichInfix rhs) {
+    return AntiSandwichInfixPartial<Circle>(lhs);
 }
-public extension AntiSandwichInfixPartial<Circle> {
-    // Fancy infix trick (second half)
-    public VersorOdd operator /(AntiCircleRotor rhs) {
-        return this.a.anti_sandwich(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<Circle> lhs, AntiCircleRotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Circle {
     public VersorOdd anti_sandwich(AntiCircleRotor other) {
@@ -2962,6 +3786,10 @@ public extension Circle {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<Circle> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Circle {
     public VersorEven anti_sandwich(AntiDipoleInversion other) {
         return VersorEven(
@@ -2975,6 +3803,10 @@ public extension Circle {
             float4((other.e412 * this.e315) + (other.e415 * this.e321) + (other.e321 * this.e415) + (other.e315 * this.e412) + (other.e4 * this.e235) + (other.e3 * this.e425), (other.e423 * this.e125) + (other.e425 * this.e321) + (other.e321 * this.e425) + (other.e125 * this.e423) + (other.e4 * this.e315) + (other.e1 * this.e435), (other.e431 * this.e235) + (other.e435 * this.e321) + (other.e321 * this.e435) + (other.e235 * this.e431) + (other.e4 * this.e125) + (other.e2 * this.e415), -(other.e425 * this.e431) - (other.e435 * this.e412) - (other.e4 * this.e321) - (other.e1 * this.e423) - (other.e2 * this.e431) - (other.e3 * this.e412)) - (float4(other.group2.zx, other.e5, this.e435) * float4(this.group0.xyz.yzz, other.e412)) - (float4(other.group3.ww, other.e315, this.e425) * float4(this.group0.xyz.xyx, other.e431)) - float4((other.group0.xyz.yzx * this.group2.xyz.zxy), other.e423 * this.e415) - float4((other.group3.yzx * this.group1.zxy), other.e415 * this.e423)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<Circle> lhs, AntiDualNum rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Circle {
     public VersorOdd anti_sandwich(AntiDualNum other) {
@@ -2990,6 +3822,10 @@ public extension Circle {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<Circle> lhs, AntiFlatPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Circle {
     public VersorEven anti_sandwich(AntiFlatPoint other) {
         return VersorEven(
@@ -3003,6 +3839,10 @@ public extension Circle {
             float4((float3(other.e321) * this.group1.xyz), 0.0) + float4((this.group0.xyz.zxy * other.group0.yzx), 0.0) - float4((this.group0.xyz.yzx * other.group0.zxy), 0.0)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<Circle> lhs, AntiFlector rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Circle {
     public VersorEven anti_sandwich(AntiFlector other) {
@@ -3018,6 +3858,10 @@ public extension Circle {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<Circle> lhs, AntiLine rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Circle {
     public VersorOdd anti_sandwich(AntiLine other) {
         return VersorOdd(
@@ -3031,6 +3875,10 @@ public extension Circle {
             float4(other.e35 * this.e431, other.e15 * this.e412, other.e25 * this.e423, -(other.e12 * this.e125) - (other.e15 * this.e415) - (other.e25 * this.e425) - (other.e35 * this.e435)) - float4((other.group0.xyz * this.group1.www), other.e23 * this.e235) - float4((other.group1.xyz.yzx * this.group0.xyz.zxy), other.e31 * this.e315)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<Circle> lhs, AntiMotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Circle {
     public VersorOdd anti_sandwich(AntiMotor other) {
@@ -3046,6 +3894,10 @@ public extension Circle {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<Circle> lhs, AntiPlane rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Circle {
     public VersorEven anti_sandwich(AntiPlane other) {
         return AntiDipoleInversion(
@@ -3060,6 +3912,10 @@ public extension Circle {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<Circle> lhs, AntiScalar rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Circle {
     public VersorEven anti_sandwich(AntiScalar other) {
         return Circle(
@@ -3071,6 +3927,10 @@ public extension Circle {
             float3(other.e12345) * this.group2.xyz
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<Circle> lhs, Circle rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Circle {
     public VersorEven anti_sandwich(Circle other) {
@@ -3086,6 +3946,10 @@ public extension Circle {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<Circle> lhs, CircleRotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Circle {
     public VersorEven anti_sandwich(CircleRotor other) {
         return VersorEven(
@@ -3099,6 +3963,10 @@ public extension Circle {
             float4((this.e412 * other.e315) + (this.e415 * other.e321) + (this.e321 * other.e415) + (this.e315 * other.e412), (this.e423 * other.e125) + (this.e425 * other.e321) + (this.e321 * other.e425) + (this.e125 * other.e423), (this.e431 * other.e235) + (this.e435 * other.e321) + (this.e321 * other.e435) + (this.e235 * other.e431), -(this.e412 * other.e435) - (this.e415 * other.e423) - (this.e425 * other.e431) - (this.e435 * other.e412)) - float4((this.group0.xyz.yzx * other.group2.zxy), this.e423 * other.e415) - float4((this.group2.xyz.zxy * other.group0.xyz.yzx), this.e431 * other.e425)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<Circle> lhs, Dipole rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Circle {
     public VersorOdd anti_sandwich(Dipole other) {
@@ -3114,6 +3982,10 @@ public extension Circle {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<Circle> lhs, DipoleInversion rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Circle {
     public VersorOdd anti_sandwich(DipoleInversion other) {
         return VersorOdd(
@@ -3127,6 +3999,10 @@ public extension Circle {
             float4((this.e431 * other.e35) + (this.e415 * other.e45) + (this.e425 * other.e4125) + (this.e125 * other.e42), (this.e412 * other.e15) + (this.e425 * other.e45) + (this.e435 * other.e4235) + (this.e235 * other.e43), (this.e412 * other.e3215) + (this.e415 * other.e4315) + (this.e435 * other.e45) + (this.e315 * other.e41), -(this.e415 * other.e15) - (this.e425 * other.e25) - (this.e435 * other.e35) - (this.e125 * other.e4125)) + (float4(other.group3.ww, other.e25, other.e3215) * float4(this.group0.xyz.xyx, this.e321)) - (other.group1.xyzz * float4(this.group1.www, this.e125)) - (other.group3.yzxy * float4(this.group1.zxy, this.e315)) - (float4(other.group0.xyz.zx, other.e1234, other.e31) * float4(this.group2.xyz.yzz, this.e315)) - (float4(other.group2.ww, other.e42, other.e4235) * float4(this.group2.xyz.xyx, this.e235)) - float4((this.group0.xyz.zxy * other.group2.yzx), this.e235 * other.e23)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<Circle> lhs, DualNum rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Circle {
     public VersorEven anti_sandwich(DualNum other) {
@@ -3142,6 +4018,10 @@ public extension Circle {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<Circle> lhs, FlatPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Circle {
     public VersorOdd anti_sandwich(FlatPoint other) {
         return VersorOdd(
@@ -3155,6 +4035,10 @@ public extension Circle {
             float4((this.e431 * other.e35) + (this.e415 * other.e45), (this.e412 * other.e15) + (this.e425 * other.e45), (this.e423 * other.e25) + (this.e435 * other.e45), -(this.e425 * other.e25) - (this.e435 * other.e35)) - (other.group0.yzxx * float4(this.group0.xyz.zxy, this.e415))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<Circle> lhs, Flector rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Circle {
     public VersorOdd anti_sandwich(Flector other) {
@@ -3170,6 +4054,10 @@ public extension Circle {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<Circle> lhs, Line rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Circle {
     public VersorEven anti_sandwich(Line other) {
         return VersorEven(
@@ -3184,6 +4072,10 @@ public extension Circle {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<Circle> lhs, Motor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Circle {
     public VersorEven anti_sandwich(Motor other) {
         return VersorEven(
@@ -3197,6 +4089,10 @@ public extension Circle {
             float4((this.e412 * other.e315) + (this.e321 * other.e415), (this.e423 * other.e125) + (this.e321 * other.e425), (this.e431 * other.e235) + (this.e321 * other.e435), this.e412 * other.e435 * -1.0) - float4((this.group0.xyz.xyx * other.group1.wwy), this.e423 * other.e415) - float4((this.group0.xyz.yzz * other.group1.zxw), this.e431 * other.e425)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiSandwichInfixPartial<Circle> lhs, MultiVector rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Circle {
     public MultiVector anti_sandwich(MultiVector other) {
@@ -3226,6 +4122,10 @@ public extension Circle {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<Circle> lhs, Plane rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Circle {
     public VersorOdd anti_sandwich(Plane other) {
         return DipoleInversion(
@@ -3239,6 +4139,10 @@ public extension Circle {
             float4(this.e425 * other.e4125, this.e435 * other.e4235, this.e415 * other.e4315, -(this.e315 * other.e4315) - (this.e125 * other.e4125)) + (float4(other.e3215) * float4(this.group0.xyz, this.e321)) - (other.group0.yzxx * float4(this.group1.zxy, this.e235))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<Circle> lhs, RoundPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Circle {
     public VersorEven anti_sandwich(RoundPoint other) {
@@ -3254,6 +4158,10 @@ public extension Circle {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<Circle> lhs, Scalar rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Circle {
     public VersorOdd anti_sandwich(Scalar other) {
         return Dipole(
@@ -3265,6 +4173,10 @@ public extension Circle {
             float3(other.scalar) * this.group2.xyz
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<Circle> lhs, Sphere rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Circle {
     public VersorOdd anti_sandwich(Sphere other) {
@@ -3280,6 +4192,10 @@ public extension Circle {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<Circle> lhs, VersorEven rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Circle {
     public VersorEven anti_sandwich(VersorEven other) {
         return VersorEven(
@@ -3293,6 +4209,10 @@ public extension Circle {
             float4((this.e412 * other.e315) + (this.e415 * other.e321) + (this.e425 * other.e3) + (this.e321 * other.e415) + (this.e235 * other.e4) + (this.e315 * other.e412), (this.e423 * other.e125) + (this.e425 * other.e321) + (this.e435 * other.e1) + (this.e321 * other.e425) + (this.e315 * other.e4) + (this.e125 * other.e423), (this.e431 * other.e235) + (this.e415 * other.e2) + (this.e435 * other.e321) + (this.e321 * other.e435) + (this.e235 * other.e431) + (this.e125 * other.e4), -(this.e412 * other.e435) - (this.e412 * other.e3) - (this.e415 * other.e423) - (this.e425 * other.e431) - (this.e435 * other.e412) - (this.e321 * other.e4)) - (other.group3.yzxy * float4(this.group1.zxy, this.e431)) - float4((this.group0.xyz.xyx * other.group2.wwy), this.e423 * other.e415) - float4((this.group0.xyz.yzz * other.group2.zxw), this.e423 * other.e1) - float4((this.group2.xyz.zxy * other.group0.yzx), this.e431 * other.e425)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<Circle> lhs, VersorOdd rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Circle {
     public VersorOdd anti_sandwich(VersorOdd other) {
@@ -3308,17 +4228,13 @@ public extension Circle {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension CircleRotor {
-    // Fancy infix trick (first half)
-    public AntiSandwichInfixPartial<CircleRotor> operator /(AntiSandwichInfix rhs) {
-        return AntiSandwichInfixPartial<CircleRotor>(this);
-    }
+// Fancy infix trick (first half)
+public AntiSandwichInfixPartial<CircleRotor> operator /(CircleRotor lhs, AntiSandwichInfix rhs) {
+    return AntiSandwichInfixPartial<CircleRotor>(lhs);
 }
-public extension AntiSandwichInfixPartial<CircleRotor> {
-    // Fancy infix trick (second half)
-    public VersorOdd operator /(AntiCircleRotor rhs) {
-        return this.a.anti_sandwich(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<CircleRotor> lhs, AntiCircleRotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension CircleRotor {
     public VersorOdd anti_sandwich(AntiCircleRotor other) {
@@ -3334,6 +4250,10 @@ public extension CircleRotor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<CircleRotor> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension CircleRotor {
     public VersorEven anti_sandwich(AntiDipoleInversion other) {
         return VersorEven(
@@ -3347,6 +4267,10 @@ public extension CircleRotor {
             float4((other.e415 * this.e321) + (other.e321 * this.e415) + (other.e315 * this.e412) + (other.e4 * this.e235) + (other.e1 * this.e12345) + (other.e3 * this.e425), (other.e425 * this.e321) + (other.e321 * this.e425) + (other.e125 * this.e423) + (other.e4 * this.e315) + (other.e1 * this.e435) + (other.e2 * this.e12345), (other.e435 * this.e321) + (other.e321 * this.e435) + (other.e235 * this.e431) + (other.e4 * this.e125) + (other.e2 * this.e415) + (other.e3 * this.e12345), -(other.e425 * this.e431) - (other.e435 * this.e412) - (other.e4 * this.e321) - (other.e1 * this.e423) - (other.e2 * this.e431) - (other.e3 * this.e412)) + (this.group2.yzxw * float4(other.group0.xyz.zxy, other.e4)) - (float4(other.group2.zx, other.e5, this.e435) * float4(this.group0.xyz.yzz, other.e412)) - (float4(other.group3.ww, other.e315, this.e425) * float4(this.group0.xyz.xyx, other.e431)) - float4((other.group0.xyz.yzx * this.group2.zxy), other.e423 * this.e415) - float4((other.group3.yzx * this.group1.zxy), other.e415 * this.e423)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<CircleRotor> lhs, AntiDualNum rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension CircleRotor {
     public VersorOdd anti_sandwich(AntiDualNum other) {
@@ -3362,6 +4286,10 @@ public extension CircleRotor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<CircleRotor> lhs, AntiFlatPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension CircleRotor {
     public VersorEven anti_sandwich(AntiFlatPoint other) {
         return VersorEven(
@@ -3375,6 +4303,10 @@ public extension CircleRotor {
             float4((float3(other.e321) * this.group1.xyz), 0.0) + float4((this.group0.xyz.zxy * other.group0.yzx), 0.0) - float4((this.group0.xyz.yzx * other.group0.zxy), 0.0)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<CircleRotor> lhs, AntiFlector rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension CircleRotor {
     public VersorEven anti_sandwich(AntiFlector other) {
@@ -3390,6 +4322,10 @@ public extension CircleRotor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<CircleRotor> lhs, AntiLine rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension CircleRotor {
     public VersorOdd anti_sandwich(AntiLine other) {
         return VersorOdd(
@@ -3403,6 +4339,10 @@ public extension CircleRotor {
             float4(other.e35 * this.e431, other.e15 * this.e412, other.e25 * this.e423, -(other.e12 * this.e125) - (other.e15 * this.e415) - (other.e25 * this.e425) - (other.e35 * this.e435)) - float4((other.group0.xyz * this.group1.www), other.e23 * this.e235) - float4((other.group1.xyz.yzx * this.group0.xyz.zxy), other.e31 * this.e315)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<CircleRotor> lhs, AntiMotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension CircleRotor {
     public VersorOdd anti_sandwich(AntiMotor other) {
@@ -3418,6 +4358,10 @@ public extension CircleRotor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<CircleRotor> lhs, AntiPlane rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension CircleRotor {
     public VersorEven anti_sandwich(AntiPlane other) {
         return AntiDipoleInversion(
@@ -3432,6 +4376,10 @@ public extension CircleRotor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<CircleRotor> lhs, AntiScalar rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension CircleRotor {
     public VersorEven anti_sandwich(AntiScalar other) {
         return CircleRotor(
@@ -3443,6 +4391,10 @@ public extension CircleRotor {
             float4(other.e12345) * this.group2
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<CircleRotor> lhs, Circle rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension CircleRotor {
     public VersorEven anti_sandwich(Circle other) {
@@ -3458,6 +4410,10 @@ public extension CircleRotor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<CircleRotor> lhs, CircleRotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension CircleRotor {
     public VersorEven anti_sandwich(CircleRotor other) {
         return VersorEven(
@@ -3471,6 +4427,10 @@ public extension CircleRotor {
             float4((other.e412 * this.e315) + (other.e415 * this.e321) + (other.e321 * this.e415) + (other.e315 * this.e412), (other.e423 * this.e125) + (other.e425 * this.e321) + (other.e321 * this.e425) + (other.e125 * this.e423), (other.e431 * this.e235) + (other.e435 * this.e321) + (other.e321 * this.e435) + (other.e235 * this.e431), -(other.e412 * this.e435) - (other.e415 * this.e423) - (other.e425 * this.e431) - (other.e435 * this.e412)) - float4((other.group0.xyz.yzx * this.group2.zxy), other.e423 * this.e415) - float4((this.group0.xyz.yzx * other.group2.zxy), other.e431 * this.e425)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<CircleRotor> lhs, Dipole rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension CircleRotor {
     public VersorOdd anti_sandwich(Dipole other) {
@@ -3486,6 +4446,10 @@ public extension CircleRotor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<CircleRotor> lhs, DipoleInversion rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension CircleRotor {
     public VersorOdd anti_sandwich(DipoleInversion other) {
         return VersorOdd(
@@ -3499,6 +4463,10 @@ public extension CircleRotor {
             float4((this.e415 * other.e45) + (this.e425 * other.e4125) + (this.e125 * other.e42) + (this.e12345 * other.e4235), (this.e425 * other.e45) + (this.e435 * other.e4235) + (this.e235 * other.e43) + (this.e12345 * other.e4315), (this.e415 * other.e4315) + (this.e435 * other.e45) + (this.e315 * other.e41) + (this.e12345 * other.e4125), -(this.e315 * other.e31) - (this.e315 * other.e4315) - (this.e125 * other.e12) - (this.e125 * other.e4125)) + (float4(other.group2.zx, other.e3215, other.e3215) * float4(this.group0.xyz.yzz, this.e12345)) + (float4(other.group3.ww, other.e25, other.e3215) * float4(this.group0.xyz.xyx, this.e321)) - (this.group1.zxyz * float4(other.group3.yzx, other.e35)) - (this.group2.xyzx * float4(other.group2.www, other.e4235)) - (other.group1.xyzx * float4(this.group1.www, this.e235)) - (other.group2.yzxx * float4(this.group0.xyz.zxy, this.e415)) - float4((other.group0.xyz.zxy * this.group2.yzx), this.e425 * other.e25)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<CircleRotor> lhs, DualNum rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension CircleRotor {
     public VersorEven anti_sandwich(DualNum other) {
@@ -3514,6 +4482,10 @@ public extension CircleRotor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<CircleRotor> lhs, FlatPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension CircleRotor {
     public VersorOdd anti_sandwich(FlatPoint other) {
         return VersorOdd(
@@ -3527,6 +4499,10 @@ public extension CircleRotor {
             float4((this.e431 * other.e35) + (this.e415 * other.e45), (this.e412 * other.e15) + (this.e425 * other.e45), (this.e423 * other.e25) + (this.e435 * other.e45), -(this.e425 * other.e25) - (this.e435 * other.e35)) - (other.group0.yzxx * float4(this.group0.xyz.zxy, this.e415))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<CircleRotor> lhs, Flector rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension CircleRotor {
     public VersorOdd anti_sandwich(Flector other) {
@@ -3542,6 +4518,10 @@ public extension CircleRotor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<CircleRotor> lhs, Line rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension CircleRotor {
     public VersorEven anti_sandwich(Line other) {
         return VersorEven(
@@ -3556,6 +4536,10 @@ public extension CircleRotor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<CircleRotor> lhs, Motor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension CircleRotor {
     public VersorEven anti_sandwich(Motor other) {
         return VersorEven(
@@ -3569,6 +4553,10 @@ public extension CircleRotor {
             float4((this.e412 * other.e315) + (this.e321 * other.e415), (this.e423 * other.e125) + (this.e321 * other.e425), (this.e431 * other.e235) + (this.e321 * other.e435), this.e412 * other.e435 * -1.0) - float4((this.group0.xyz.xyx * other.group1.wwy), this.e423 * other.e415) - float4((this.group0.xyz.yzz * other.group1.zxw), this.e431 * other.e425)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiSandwichInfixPartial<CircleRotor> lhs, MultiVector rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension CircleRotor {
     public MultiVector anti_sandwich(MultiVector other) {
@@ -3598,6 +4586,10 @@ public extension CircleRotor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<CircleRotor> lhs, Plane rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension CircleRotor {
     public VersorOdd anti_sandwich(Plane other) {
         return DipoleInversion(
@@ -3611,6 +4603,10 @@ public extension CircleRotor {
             float4(this.e12345 * other.e4235, this.e12345 * other.e4315, this.e12345 * other.e4125, -(this.e315 * other.e4315) - (this.e125 * other.e4125)) + (float4(other.e3215) * float4(this.group0.xyz, this.e321)) + (other.group0.zxyw * float4(this.group1.yzx, this.e12345)) - (other.group0.yzxx * float4(this.group1.zxy, this.e235))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<CircleRotor> lhs, RoundPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension CircleRotor {
     public VersorEven anti_sandwich(RoundPoint other) {
@@ -3626,6 +4622,10 @@ public extension CircleRotor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<CircleRotor> lhs, Scalar rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension CircleRotor {
     public VersorOdd anti_sandwich(Scalar other) {
         return AntiCircleRotor(
@@ -3637,6 +4637,10 @@ public extension CircleRotor {
             float4(other.scalar) * this.group2
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<CircleRotor> lhs, Sphere rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension CircleRotor {
     public VersorOdd anti_sandwich(Sphere other) {
@@ -3652,6 +4656,10 @@ public extension CircleRotor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<CircleRotor> lhs, VersorEven rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension CircleRotor {
     public VersorEven anti_sandwich(VersorEven other) {
         return VersorEven(
@@ -3665,6 +4673,10 @@ public extension CircleRotor {
             float4((this.e415 * other.e321) + (this.e425 * other.e3) + (this.e321 * other.e415) + (this.e235 * other.e4) + (this.e315 * other.e412) + (this.e12345 * other.e1), (this.e425 * other.e321) + (this.e435 * other.e1) + (this.e321 * other.e425) + (this.e315 * other.e4) + (this.e125 * other.e423) + (this.e12345 * other.e2), (this.e415 * other.e2) + (this.e435 * other.e321) + (this.e321 * other.e435) + (this.e235 * other.e431) + (this.e125 * other.e4) + (this.e12345 * other.e3), -(this.e412 * other.e435) - (this.e412 * other.e3) - (this.e415 * other.e423) - (this.e425 * other.e431) - (this.e435 * other.e412) - (this.e321 * other.e4)) + float4((this.group0.xyz.zxy * other.group2.yzx), this.e12345 * other.e4) - float4((this.group0.xyz.xyx * other.group2.wwy), this.e423 * other.e415) - float4((this.group0.xyz.yzz * other.group2.zxw), this.e423 * other.e1) - float4((this.group1.zxy * other.group3.yzx), this.e431 * other.e425) - float4((this.group2.zxy * other.group0.yzx), this.e431 * other.e2)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<CircleRotor> lhs, VersorOdd rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension CircleRotor {
     public VersorOdd anti_sandwich(VersorOdd other) {
@@ -3680,17 +4692,13 @@ public extension CircleRotor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Dipole {
-    // Fancy infix trick (first half)
-    public AntiSandwichInfixPartial<Dipole> operator /(AntiSandwichInfix rhs) {
-        return AntiSandwichInfixPartial<Dipole>(this);
-    }
+// Fancy infix trick (first half)
+public AntiSandwichInfixPartial<Dipole> operator /(Dipole lhs, AntiSandwichInfix rhs) {
+    return AntiSandwichInfixPartial<Dipole>(lhs);
 }
-public extension AntiSandwichInfixPartial<Dipole> {
-    // Fancy infix trick (second half)
-    public VersorOdd operator /(AntiCircleRotor rhs) {
-        return this.a.anti_sandwich(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<Dipole> lhs, AntiCircleRotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Dipole {
     public VersorOdd anti_sandwich(AntiCircleRotor other) {
@@ -3706,6 +4714,10 @@ public extension Dipole {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<Dipole> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Dipole {
     public VersorEven anti_sandwich(AntiDipoleInversion other) {
         return VersorOdd(
@@ -3719,6 +4731,10 @@ public extension Dipole {
             float4((other.e415 * this.e45) + (other.e2 * this.e12), (other.e425 * this.e45) + (other.e3 * this.e23), (other.e435 * this.e45) + (other.e1 * this.e31), -(other.e125 * this.e12) - (other.e5 * this.e45)) + (float4(other.group2.zx, other.e5, other.e3) * float4(this.group0.xyz.yzz, this.e35)) + (float4(other.group3.ww, other.e315, other.e2) * float4(this.group0.xyz.xyx, this.e25)) + float4((other.group0.xyz.yzx * this.group2.xyz.zxy), other.e1 * this.e15) - (this.group1.xyzx * float4(other.group1.www, other.e235)) - (this.group1.yzxy * float4(other.group3.zxy, other.e315)) - float4((this.group2.xyz * other.group2.www), other.e435 * this.e35) - float4((other.group0.xyz.zxy * this.group2.xyz.yzx), other.e415 * this.e15) - float4((this.group0.xyz.zxy * other.group2.yzx), other.e425 * this.e25)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<Dipole> lhs, AntiDualNum rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Dipole {
     public VersorOdd anti_sandwich(AntiDualNum other) {
@@ -3734,6 +4750,10 @@ public extension Dipole {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<Dipole> lhs, AntiFlatPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Dipole {
     public VersorEven anti_sandwich(AntiFlatPoint other) {
         return VersorOdd(
@@ -3747,6 +4767,10 @@ public extension Dipole {
             float4(other.e125 * this.e42, other.e235 * this.e43, other.e315 * this.e41, other.e125 * this.e12 * -1.0) - (other.group0.wwwy * this.group1.xyzy) - float4((this.group0.xyz.zxy * other.group0.yzx), other.e235 * this.e23)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<Dipole> lhs, AntiFlector rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Dipole {
     public VersorEven anti_sandwich(AntiFlector other) {
@@ -3762,6 +4786,10 @@ public extension Dipole {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<Dipole> lhs, AntiLine rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Dipole {
     public VersorOdd anti_sandwich(AntiLine other) {
         return VersorEven(
@@ -3775,6 +4803,10 @@ public extension Dipole {
             float4(other.e25 * this.e43 * -1.0, other.e35 * this.e41 * -1.0, other.e15 * this.e42 * -1.0, other.e12 * this.e43) + float4((other.group0.xyz * this.group1.www), other.e23 * this.e41) + float4((other.group1.xyz.zxy * this.group0.xyz.yzx), other.e31 * this.e42)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<Dipole> lhs, AntiMotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Dipole {
     public VersorOdd anti_sandwich(AntiMotor other) {
@@ -3790,6 +4822,10 @@ public extension Dipole {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<Dipole> lhs, AntiPlane rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Dipole {
     public VersorEven anti_sandwich(AntiPlane other) {
         return DipoleInversion(
@@ -3804,6 +4840,10 @@ public extension Dipole {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<Dipole> lhs, AntiScalar rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Dipole {
     public VersorEven anti_sandwich(AntiScalar other) {
         return Dipole(
@@ -3815,6 +4855,10 @@ public extension Dipole {
             float3(other.e12345) * this.group2.xyz
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<Dipole> lhs, Circle rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Dipole {
     public VersorEven anti_sandwich(Circle other) {
@@ -3830,6 +4874,10 @@ public extension Dipole {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<Dipole> lhs, CircleRotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Dipole {
     public VersorEven anti_sandwich(CircleRotor other) {
         return VersorOdd(
@@ -3843,6 +4891,10 @@ public extension Dipole {
             float4((other.e431 * this.e35) + (other.e415 * this.e45) + (other.e125 * this.e42), (other.e412 * this.e15) + (other.e425 * this.e45) + (other.e235 * this.e43), (other.e423 * this.e25) + (other.e435 * this.e45) + (other.e315 * this.e41), -(other.e235 * this.e23) - (other.e315 * this.e31) - (other.e125 * this.e12)) - float4((other.group0.xyz.zxy * this.group2.xyz.yzx), other.e415 * this.e15) - float4((this.group0.xyz.zxy * other.group2.yzx), other.e425 * this.e25) - float4((other.group1.www * this.group1.xyz), other.e435 * this.e35)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<Dipole> lhs, Dipole rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Dipole {
     public VersorOdd anti_sandwich(Dipole other) {
@@ -3858,6 +4910,10 @@ public extension Dipole {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<Dipole> lhs, DipoleInversion rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Dipole {
     public VersorOdd anti_sandwich(DipoleInversion other) {
         return VersorEven(
@@ -3871,6 +4927,10 @@ public extension Dipole {
             (float4(other.group1.ww, other.e4315, this.e23) * float4(this.group1.xyx, other.e41)) + (float4(other.group2.zx, other.e3215, other.e31) * float4(this.group0.xyz.yzz, this.e42)) + (float4(other.group3.zx, other.e45, this.e31) * float4(this.group1.yzz, other.e42)) + (float4(other.group3.ww, other.e25, other.e23) * float4(this.group0.xyz.xyx, this.e41)) + float4((this.group2.xyz.zxy * other.group0.xyz.yzx), this.e43 * other.e12) + float4((this.group1.www * other.group1.xyz), this.e12 * other.e43) - (this.group1.zxyw * float4(other.group3.yzx, other.e1234)) - (float4(other.group0.xyz.zx, other.e1234, other.e4125) * float4(this.group2.xyz.yzz, this.e43)) - (float4(other.group2.ww, other.e42, other.e4315) * float4(this.group2.xyz.xyx, this.e42)) - float4((this.group0.xyz.zxy * other.group2.yzx), this.e41 * other.e4235)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<Dipole> lhs, DualNum rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Dipole {
     public VersorEven anti_sandwich(DualNum other) {
@@ -3886,6 +4946,10 @@ public extension Dipole {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<Dipole> lhs, FlatPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Dipole {
     public VersorOdd anti_sandwich(FlatPoint other) {
         return VersorEven(
@@ -3899,6 +4963,10 @@ public extension Dipole {
             float4((float3(other.e45) * this.group1.xyz), 0.0) + float4((this.group0.xyz.yzx * other.group0.zxy), 0.0) - float4((this.group0.xyz.zxy * other.group0.yzx), 0.0)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<Dipole> lhs, Flector rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Dipole {
     public VersorOdd anti_sandwich(Flector other) {
@@ -3914,6 +4982,10 @@ public extension Dipole {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<Dipole> lhs, Line rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Dipole {
     public VersorEven anti_sandwich(Line other) {
         return VersorOdd(
@@ -3928,6 +5000,10 @@ public extension Dipole {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<Dipole> lhs, Motor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Dipole {
     public VersorEven anti_sandwich(Motor other) {
         return VersorOdd(
@@ -3941,6 +5017,10 @@ public extension Dipole {
             float4((this.e41 * other.e5) + (this.e42 * other.e125) + (this.e45 * other.e415), (this.e42 * other.e5) + (this.e43 * other.e235) + (this.e45 * other.e425), (this.e41 * other.e315) + (this.e43 * other.e5) + (this.e45 * other.e435), -(this.e23 * other.e235) - (this.e31 * other.e315) - (this.e12 * other.e125) - (this.e45 * other.e5) - (this.e25 * other.e425) - (this.e35 * other.e435)) - float4((this.group0.xyz.zxy * other.group1.yzx), this.e15 * other.e415)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiSandwichInfixPartial<Dipole> lhs, MultiVector rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Dipole {
     public MultiVector anti_sandwich(MultiVector other) {
@@ -3970,6 +5050,10 @@ public extension Dipole {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<Dipole> lhs, Plane rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Dipole {
     public VersorOdd anti_sandwich(Plane other) {
         return AntiDipoleInversion(
@@ -3983,6 +5067,10 @@ public extension Dipole {
             float4(this.e12 * other.e4315 * -1.0, this.e23 * other.e4125 * -1.0, this.e31 * other.e4235 * -1.0, (this.e45 * other.e3215) + (this.e35 * other.e4125)) + (other.group0.zxyy * float4(this.group1.yzx, this.e25)) + (other.group0.wwwx * float4(this.group0.xyz, this.e15))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<Dipole> lhs, RoundPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Dipole {
     public VersorEven anti_sandwich(RoundPoint other) {
@@ -3998,6 +5086,10 @@ public extension Dipole {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<Dipole> lhs, Scalar rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Dipole {
     public VersorOdd anti_sandwich(Scalar other) {
         return Circle(
@@ -4009,6 +5101,10 @@ public extension Dipole {
             float3(other.scalar) * this.group2.xyz * float3(-1.0)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<Dipole> lhs, Sphere rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Dipole {
     public VersorOdd anti_sandwich(Sphere other) {
@@ -4024,6 +5120,10 @@ public extension Dipole {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<Dipole> lhs, VersorEven rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Dipole {
     public VersorEven anti_sandwich(VersorEven other) {
         return VersorOdd(
@@ -4037,6 +5137,10 @@ public extension Dipole {
             float4((this.e12 * other.e2) + (this.e45 * other.e415), (this.e23 * other.e3) + (this.e45 * other.e425), (this.e31 * other.e1) + (this.e45 * other.e435), -(this.e12 * other.e125) - (this.e45 * other.e5)) + float4((this.group0.xyz.xyx * other.group2.wwy), this.e15 * other.e1) + float4((this.group0.xyz.yzz * other.group2.zxw), this.e25 * other.e2) + float4((this.group2.xyz.zxy * other.group0.yzx), this.e35 * other.e3) - (this.group1.xyxx * float4(other.group1.ww, other.e2, other.e235)) - (this.group1.yzzy * float4(other.group3.zx, other.e321, other.e315)) - (float4(other.group0.zx, other.e4, other.e435) * float4(this.group2.xyz.yzz, this.e35)) - (float4(other.group3.ww, other.e431, other.e425) * float4(this.group2.xyz.xyx, this.e25)) - float4((this.group0.xyz.zxy * other.group2.yzx), this.e15 * other.e415)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<Dipole> lhs, VersorOdd rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Dipole {
     public VersorOdd anti_sandwich(VersorOdd other) {
@@ -4052,17 +5156,13 @@ public extension Dipole {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension DipoleInversion {
-    // Fancy infix trick (first half)
-    public AntiSandwichInfixPartial<DipoleInversion> operator /(AntiSandwichInfix rhs) {
-        return AntiSandwichInfixPartial<DipoleInversion>(this);
-    }
+// Fancy infix trick (first half)
+public AntiSandwichInfixPartial<DipoleInversion> operator /(DipoleInversion lhs, AntiSandwichInfix rhs) {
+    return AntiSandwichInfixPartial<DipoleInversion>(lhs);
 }
-public extension AntiSandwichInfixPartial<DipoleInversion> {
-    // Fancy infix trick (second half)
-    public VersorOdd operator /(AntiCircleRotor rhs) {
-        return this.a.anti_sandwich(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<DipoleInversion> lhs, AntiCircleRotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension DipoleInversion {
     public VersorOdd anti_sandwich(AntiCircleRotor other) {
@@ -4078,6 +5178,10 @@ public extension DipoleInversion {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<DipoleInversion> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension DipoleInversion {
     public VersorEven anti_sandwich(AntiDipoleInversion other) {
         return VersorOdd(
@@ -4091,6 +5195,10 @@ public extension DipoleInversion {
             float4(other.e2 * this.e12, other.e3 * this.e23, other.e1 * this.e31, other.e5 * this.e45 * -1.0) + (float4(this.e45, this.e4125, this.e4235, this.e15) * float4(other.group1.xxy, other.e1)) + (float4(this.e4315, this.e45, this.e45, this.e25) * float4(other.group1.zyz, other.e2)) + (this.group2.wwwz * float4(other.group2.xyz, other.e3)) + (float4(other.group2.zx, other.e5, this.e4125) * float4(this.group0.xyz.yzz, other.e125)) + (float4(other.group3.ww, other.e315, this.e4315) * float4(this.group0.xyz.xyx, other.e315)) + float4((other.group0.xyz.yzx * this.group2.zxy), other.e235 * this.e4235) - (float4(this.e25, this.e3215, this.e3215, this.e25) * float4(other.group0.xyz.zyz, other.e425)) - (float4(this.e3215, this.e35, this.e15, this.e15) * float4(other.group0.xyz.xxy, other.e415)) - (other.group1.yzxw * this.group3.zxyw) - (other.group2.wwwy * float4(this.group2.xyz, this.e31)) - (this.group1.xyzx * float4(other.group1.www, other.e235)) - (this.group1.yzxz * float4(other.group3.zxy, other.e125)) - float4((this.group0.xyz.zxy * other.group2.yzx), other.e435 * this.e35)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<DipoleInversion> lhs, AntiDualNum rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension DipoleInversion {
     public VersorOdd anti_sandwich(AntiDualNum other) {
@@ -4106,6 +5214,10 @@ public extension DipoleInversion {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<DipoleInversion> lhs, AntiFlatPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension DipoleInversion {
     public VersorEven anti_sandwich(AntiFlatPoint other) {
         return VersorOdd(
@@ -4119,6 +5231,10 @@ public extension DipoleInversion {
             (other.group0.xyzy * float4(this.group2.www, this.e4315)) + float4(float3(0.0), (other.e125 * this.e4125) - (other.e125 * this.e12) - (other.e321 * this.e3215)) + float4((this.group0.xyz.yzx * other.group0.zxy), other.e235 * this.e4235) - (other.group0.wwwy * this.group1.xyzy) - float4((this.group0.xyz.zxy * other.group0.yzx), other.e235 * this.e23)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<DipoleInversion> lhs, AntiFlector rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension DipoleInversion {
     public VersorEven anti_sandwich(AntiFlector other) {
@@ -4134,6 +5250,10 @@ public extension DipoleInversion {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<DipoleInversion> lhs, AntiLine rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension DipoleInversion {
     public VersorOdd anti_sandwich(AntiLine other) {
         return VersorEven(
@@ -4147,6 +5267,10 @@ public extension DipoleInversion {
             float4((other.e35 * this.e42) - (other.e31 * this.e4125) - (other.e25 * this.e43), (other.e25 * this.e1234) - (other.e12 * this.e4235) - (other.e35 * this.e41), (other.e35 * this.e1234) - (other.e23 * this.e4315) - (other.e15 * this.e42), 0.0) + (float4(this.e45, this.e4125, this.e4235, this.e41) * float4(other.group0.xyz.xxy, other.e23)) + (float4(this.e1234, this.e43, this.e41, this.e43) * float4(other.group1.xyz.xxy, other.e12)) + (float4(this.e4315, this.e45, this.e45, this.e42) * float4(other.group0.xyz.zyz, other.e31))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<DipoleInversion> lhs, AntiMotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension DipoleInversion {
     public VersorOdd anti_sandwich(AntiMotor other) {
@@ -4162,6 +5286,10 @@ public extension DipoleInversion {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<DipoleInversion> lhs, AntiPlane rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension DipoleInversion {
     public VersorEven anti_sandwich(AntiPlane other) {
         return VersorOdd(
@@ -4175,6 +5303,10 @@ public extension DipoleInversion {
             (other.group0.yzxy * float4(this.group1.zxy, this.e25)) + float4(float3(0.0), other.e3 * this.e35) + float4((this.group0.xyz * other.group0.www), other.e1 * this.e15) - (other.group0.zxyw * this.group1.yzxw)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<DipoleInversion> lhs, AntiScalar rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension DipoleInversion {
     public VersorEven anti_sandwich(AntiScalar other) {
@@ -4190,6 +5322,10 @@ public extension DipoleInversion {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<DipoleInversion> lhs, Circle rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension DipoleInversion {
     public VersorEven anti_sandwich(Circle other) {
         return VersorOdd(
@@ -4203,6 +5339,10 @@ public extension DipoleInversion {
             float4((other.e415 * this.e45) + (other.e435 * this.e4315), (other.e415 * this.e4125) + (other.e425 * this.e45), (other.e425 * this.e4235) + (other.e435 * this.e45), -(other.e435 * this.e35) - (other.e321 * this.e3215)) + (float4(this.e42, this.e1234, this.e1234, this.e4125) * float4(other.group2.xyz.zyz, other.e125)) + (float4(this.e1234, this.e43, this.e41, this.e4315) * float4(other.group2.xyz.xxy, other.e315)) + float4((other.group0.xyz.yzx * this.group2.zxy), other.e235 * this.e4235) - (float4(this.e25, this.e3215, this.e3215, this.e31) * float4(other.group0.xyz.zyz, other.e315)) - (float4(this.e3215, this.e35, this.e15, this.e23) * float4(other.group0.xyz.xxy, other.e235)) - (other.group1.yzxx * float4(this.group3.zxy, this.e15)) - (other.group1.wwwy * float4(this.group1.xyz, this.e25)) - float4((other.group2.xyz.yzx * this.group0.xyz.zxy), other.e125 * this.e12)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<DipoleInversion> lhs, CircleRotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension DipoleInversion {
     public VersorEven anti_sandwich(CircleRotor other) {
@@ -4218,6 +5358,10 @@ public extension DipoleInversion {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<DipoleInversion> lhs, Dipole rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension DipoleInversion {
     public VersorOdd anti_sandwich(Dipole other) {
         return VersorEven(
@@ -4231,6 +5375,10 @@ public extension DipoleInversion {
             float4(-(other.e41 * this.e3215) - (other.e43 * this.e25) - (other.e31 * this.e4125) - (other.e25 * this.e43), -(other.e41 * this.e35) - (other.e42 * this.e3215) - (other.e12 * this.e4235) - (other.e35 * this.e41), -(other.e42 * this.e15) - (other.e43 * this.e3215) - (other.e23 * this.e4315) - (other.e15 * this.e42), (other.e23 * this.e41) + (other.e31 * this.e42) + (other.e12 * this.e43) + (other.e45 * this.e1234)) + (float4(this.e42, this.e1234, this.e1234, this.e31) * float4(other.group2.xyz.zyz, other.e42)) + (float4(this.e45, this.e4125, this.e4235, this.e4315) * float4(other.group1.xxy, other.e42)) + (float4(this.e1234, this.e43, this.e41, this.e4235) * float4(other.group2.xyz.xxy, other.e41)) + (float4(this.e4315, this.e45, this.e45, this.e12) * float4(other.group1.zyz, other.e43)) + float4((other.group0.xyz.yzx * this.group2.zxy), other.e41 * this.e23) + float4((other.group1.www * this.group1.xyz), other.e43 * this.e4125)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<DipoleInversion> lhs, DipoleInversion rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension DipoleInversion {
     public VersorOdd anti_sandwich(DipoleInversion other) {
@@ -4246,6 +5394,10 @@ public extension DipoleInversion {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<DipoleInversion> lhs, DualNum rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension DipoleInversion {
     public VersorEven anti_sandwich(DualNum other) {
         return VersorOdd(
@@ -4259,6 +5411,10 @@ public extension DipoleInversion {
             float4(this.e4235 * other.e12345, this.e4315 * other.e12345, this.e4125 * other.e12345, this.e45 * other.e5 * -1.0) + (float4(other.group0.xy.xx, other.e5, other.e12345) * float4(this.group0.xyz, this.e3215))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<DipoleInversion> lhs, FlatPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension DipoleInversion {
     public VersorOdd anti_sandwich(FlatPoint other) {
@@ -4274,6 +5430,10 @@ public extension DipoleInversion {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<DipoleInversion> lhs, Flector rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension DipoleInversion {
     public VersorOdd anti_sandwich(Flector other) {
         return VersorEven(
@@ -4287,6 +5447,10 @@ public extension DipoleInversion {
             float4((this.e42 * other.e35) + (this.e23 * other.e45) + (this.e31 * other.e4125) + (this.e1234 * other.e15), (this.e43 * other.e15) + (this.e31 * other.e45) + (this.e12 * other.e4235) + (this.e1234 * other.e25), (this.e43 * other.e3215) + (this.e23 * other.e4315) + (this.e12 * other.e45) + (this.e1234 * other.e35), this.e43 * other.e4125 * -1.0) + (float4(other.group1.ww, other.e25, other.e45) * float4(this.group0.xyz.xyx, this.e1234)) - (other.group1.yzxy * float4(this.group1.zxy, this.e42)) - float4((this.group0.xyz.zxy * other.group0.yzx), this.e41 * other.e4235)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<DipoleInversion> lhs, Line rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension DipoleInversion {
     public VersorEven anti_sandwich(Line other) {
@@ -4302,6 +5466,10 @@ public extension DipoleInversion {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<DipoleInversion> lhs, Motor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension DipoleInversion {
     public VersorEven anti_sandwich(Motor other) {
         return VersorOdd(
@@ -4315,6 +5483,10 @@ public extension DipoleInversion {
             float4((this.e4235 * other.e12345) + (this.e4315 * other.e435), (this.e4315 * other.e12345) + (this.e4125 * other.e415), (this.e4235 * other.e425) + (this.e4125 * other.e12345), -(this.e12 * other.e125) - (this.e45 * other.e5) - (this.e15 * other.e415) - (this.e25 * other.e425) - (this.e35 * other.e435)) + (other.group1.zxwy * float4(this.group0.xyz.yzz, this.e4315)) + (other.group1.wwyx * float4(this.group0.xyz.xyx, this.e4235)) + float4((this.group1.www * other.group0.xyz), this.e4125 * other.e125) + float4((this.group2.www * other.group1.xyz), this.e3215 * other.e12345) - (other.group1.yzxx * float4(this.group0.xyz.zxy, this.e23)) - float4((this.group3.zxy * other.group0.yzx), this.e31 * other.e315)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiSandwichInfixPartial<DipoleInversion> lhs, MultiVector rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension DipoleInversion {
     public MultiVector anti_sandwich(MultiVector other) {
@@ -4344,6 +5516,10 @@ public extension DipoleInversion {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<DipoleInversion> lhs, Plane rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension DipoleInversion {
     public VersorOdd anti_sandwich(Plane other) {
         return VersorEven(
@@ -4357,6 +5533,10 @@ public extension DipoleInversion {
             float4((this.e41 * other.e3215) + (this.e31 * other.e4125), (this.e42 * other.e3215) + (this.e12 * other.e4235), (this.e43 * other.e3215) + (this.e23 * other.e4315), -(this.e42 * other.e4315) - (this.e43 * other.e4125)) - (other.group0.yzxx * float4(this.group1.zxy, this.e41))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<DipoleInversion> lhs, RoundPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension DipoleInversion {
     public VersorEven anti_sandwich(RoundPoint other) {
@@ -4372,6 +5552,10 @@ public extension DipoleInversion {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<DipoleInversion> lhs, Scalar rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension DipoleInversion {
     public VersorOdd anti_sandwich(Scalar other) {
         return AntiDipoleInversion(
@@ -4385,6 +5569,10 @@ public extension DipoleInversion {
             float4(other.scalar) * this.group3 * float4(1.0, 1.0, 1.0, -1.0)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<DipoleInversion> lhs, Sphere rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension DipoleInversion {
     public VersorOdd anti_sandwich(Sphere other) {
@@ -4400,6 +5588,10 @@ public extension DipoleInversion {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<DipoleInversion> lhs, VersorEven rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension DipoleInversion {
     public VersorEven anti_sandwich(VersorEven other) {
         return VersorOdd(
@@ -4413,6 +5605,10 @@ public extension DipoleInversion {
             float4(this.e4315 * other.e435, this.e4125 * other.e415, this.e4125 * other.e12345, this.e3215 * other.e321 * -1.0) + (this.group3.xyxw * float4(other.group0.ww, other.e425, other.e12345)) + (other.group2.xyzz * float4(this.group2.www, this.e4125)) + (other.group3.yzxz * float4(this.group1.zxy, this.e35)) + float4((this.group0.xyz.xyx * other.group2.wwy), this.e15 * other.e1) + float4((this.group0.xyz.yzz * other.group2.zxw), this.e25 * other.e2) + float4((this.group1.www * other.group1.xyz), this.e4235 * other.e235) + float4((this.group2.zxy * other.group0.yzx), this.e4315 * other.e315) - (this.group1.xyxy * float4(other.group1.ww, other.e2, other.e315)) - (this.group1.yzzz * float4(other.group3.zx, other.e321, other.e125)) - (this.group2.yzzx * float4(other.group0.zx, other.e4, other.e415)) - (other.group1.yzxy * float4(this.group3.zxy, this.e25)) - (other.group2.yzxx * float4(this.group0.xyz.zxy, this.e23)) - (float4(other.group3.ww, other.e431, other.e5) * float4(this.group2.xyx, this.e45)) - float4((this.group3.www * other.group0.xyz), this.e35 * other.e435)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<DipoleInversion> lhs, VersorOdd rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension DipoleInversion {
     public VersorOdd anti_sandwich(VersorOdd other) {
@@ -4428,17 +5624,13 @@ public extension DipoleInversion {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension DualNum {
-    // Fancy infix trick (first half)
-    public AntiSandwichInfixPartial<DualNum> operator /(AntiSandwichInfix rhs) {
-        return AntiSandwichInfixPartial<DualNum>(this);
-    }
+// Fancy infix trick (first half)
+public AntiSandwichInfixPartial<DualNum> operator /(DualNum lhs, AntiSandwichInfix rhs) {
+    return AntiSandwichInfixPartial<DualNum>(lhs);
 }
-public extension AntiSandwichInfixPartial<DualNum> {
-    // Fancy infix trick (second half)
-    public VersorOdd operator /(AntiCircleRotor rhs) {
-        return this.a.anti_sandwich(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<DualNum> lhs, AntiCircleRotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension DualNum {
     public VersorOdd anti_sandwich(AntiCircleRotor other) {
@@ -4454,6 +5646,10 @@ public extension DualNum {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<DualNum> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension DualNum {
     public VersorEven anti_sandwich(AntiDipoleInversion other) {
         return VersorEven(
@@ -4468,6 +5664,10 @@ public extension DualNum {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiDualNum operator /(AntiSandwichInfixPartial<DualNum> lhs, AntiDualNum rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension DualNum {
     public AntiDualNum anti_sandwich(AntiDualNum other) {
         return AntiDualNum(
@@ -4475,6 +5675,10 @@ public extension DualNum {
             float2((other.e3215 * this.e12345) + (other.scalar * this.e5), other.scalar * this.e12345)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiSandwichInfixPartial<DualNum> lhs, AntiFlatPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension DualNum {
     public AntiFlector anti_sandwich(AntiFlatPoint other) {
@@ -4486,6 +5690,10 @@ public extension DualNum {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiSandwichInfixPartial<DualNum> lhs, AntiFlector rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension DualNum {
     public AntiFlector anti_sandwich(AntiFlector other) {
         return AntiFlector(
@@ -4495,6 +5703,10 @@ public extension DualNum {
             float4(this.group0.xy.yy, this.e12345, (other.e5 * this.e12345) - (other.e321 * this.e5)) * float4(other.group1.xyz, 1.0)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public AntiLine operator /(AntiSandwichInfixPartial<DualNum> lhs, AntiLine rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension DualNum {
     public AntiLine anti_sandwich(AntiLine other) {
@@ -4506,6 +5718,10 @@ public extension DualNum {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiSandwichInfixPartial<DualNum> lhs, AntiMotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension DualNum {
     public AntiMotor anti_sandwich(AntiMotor other) {
         return AntiMotor(
@@ -4515,6 +5731,10 @@ public extension DualNum {
             (float4(this.e5) * other.group0) + (float4(this.e12345) * other.group1)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiSandwichInfixPartial<DualNum> lhs, AntiPlane rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension DualNum {
     public AntiFlector anti_sandwich(AntiPlane other) {
@@ -4526,6 +5746,10 @@ public extension DualNum {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public DualNum operator /(AntiSandwichInfixPartial<DualNum> lhs, AntiScalar rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension DualNum {
     public DualNum anti_sandwich(AntiScalar other) {
         return DualNum(
@@ -4533,6 +5757,10 @@ public extension DualNum {
             float2(other.e12345) * this.group0.xy
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<DualNum> lhs, Circle rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension DualNum {
     public VersorEven anti_sandwich(Circle other) {
@@ -4548,6 +5776,10 @@ public extension DualNum {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<DualNum> lhs, CircleRotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension DualNum {
     public VersorEven anti_sandwich(CircleRotor other) {
         return VersorEven(
@@ -4561,6 +5793,10 @@ public extension DualNum {
             float4(this.group0.xy.xx, this.e5, 0.0) * float4(float3(1.0), 0.0) * float4(other.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<DualNum> lhs, Dipole rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension DualNum {
     public VersorOdd anti_sandwich(Dipole other) {
@@ -4576,6 +5812,10 @@ public extension DualNum {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<DualNum> lhs, DipoleInversion rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension DualNum {
     public VersorOdd anti_sandwich(DipoleInversion other) {
         return VersorOdd(
@@ -4590,6 +5830,10 @@ public extension DualNum {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public DualNum operator /(AntiSandwichInfixPartial<DualNum> lhs, DualNum rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension DualNum {
     public DualNum anti_sandwich(DualNum other) {
         return DualNum(
@@ -4597,6 +5841,10 @@ public extension DualNum {
             float2((other.e5 * this.e12345) + (other.e12345 * this.e5), other.e12345 * this.e12345)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(AntiSandwichInfixPartial<DualNum> lhs, FlatPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension DualNum {
     public Flector anti_sandwich(FlatPoint other) {
@@ -4608,6 +5856,10 @@ public extension DualNum {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(AntiSandwichInfixPartial<DualNum> lhs, Flector rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension DualNum {
     public Flector anti_sandwich(Flector other) {
         return Flector(
@@ -4617,6 +5869,10 @@ public extension DualNum {
             float4(this.group0.xy.yy, this.e12345, (this.e5 * other.e45) + (this.e12345 * other.e3215)) * float4(other.group1.xyz, 1.0)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public Line operator /(AntiSandwichInfixPartial<DualNum> lhs, Line rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension DualNum {
     public Line anti_sandwich(Line other) {
@@ -4628,6 +5884,10 @@ public extension DualNum {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(AntiSandwichInfixPartial<DualNum> lhs, Motor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension DualNum {
     public Motor anti_sandwich(Motor other) {
         return Motor(
@@ -4637,6 +5897,10 @@ public extension DualNum {
             (float4(this.e5) * other.group0) + (float4(this.e12345) * other.group1)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiSandwichInfixPartial<DualNum> lhs, MultiVector rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension DualNum {
     public MultiVector anti_sandwich(MultiVector other) {
@@ -4666,6 +5930,10 @@ public extension DualNum {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(AntiSandwichInfixPartial<DualNum> lhs, Plane rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension DualNum {
     public Flector anti_sandwich(Plane other) {
         return Flector(
@@ -4675,6 +5943,10 @@ public extension DualNum {
             float4(this.e12345) * other.group0
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<DualNum> lhs, RoundPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension DualNum {
     public VersorEven anti_sandwich(RoundPoint other) {
@@ -4690,6 +5962,10 @@ public extension DualNum {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiDualNum operator /(AntiSandwichInfixPartial<DualNum> lhs, Scalar rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension DualNum {
     public AntiDualNum anti_sandwich(Scalar other) {
         return AntiDualNum(
@@ -4697,6 +5973,10 @@ public extension DualNum {
             float2(other.scalar) * this.group0.xy
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<DualNum> lhs, Sphere rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension DualNum {
     public VersorOdd anti_sandwich(Sphere other) {
@@ -4712,6 +5992,10 @@ public extension DualNum {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<DualNum> lhs, VersorEven rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension DualNum {
     public VersorEven anti_sandwich(VersorEven other) {
         return VersorEven(
@@ -4725,6 +6009,10 @@ public extension DualNum {
             float4(((float3(this.e5) * other.group0.xyz) + (float3(this.e12345) * other.group3.xyz)), this.e12345 * other.e4)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<DualNum> lhs, VersorOdd rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension DualNum {
     public VersorOdd anti_sandwich(VersorOdd other) {
@@ -4740,17 +6028,13 @@ public extension DualNum {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension FlatPoint {
-    // Fancy infix trick (first half)
-    public AntiSandwichInfixPartial<FlatPoint> operator /(AntiSandwichInfix rhs) {
-        return AntiSandwichInfixPartial<FlatPoint>(this);
-    }
+// Fancy infix trick (first half)
+public AntiSandwichInfixPartial<FlatPoint> operator /(FlatPoint lhs, AntiSandwichInfix rhs) {
+    return AntiSandwichInfixPartial<FlatPoint>(lhs);
 }
-public extension AntiSandwichInfixPartial<FlatPoint> {
-    // Fancy infix trick (second half)
-    public VersorOdd operator /(AntiCircleRotor rhs) {
-        return this.a.anti_sandwich(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<FlatPoint> lhs, AntiCircleRotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension FlatPoint {
     public VersorOdd anti_sandwich(AntiCircleRotor other) {
@@ -4766,6 +6050,10 @@ public extension FlatPoint {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<FlatPoint> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension FlatPoint {
     public VersorEven anti_sandwich(AntiDipoleInversion other) {
         return VersorOdd(
@@ -4780,6 +6068,10 @@ public extension FlatPoint {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiSandwichInfixPartial<FlatPoint> lhs, AntiDualNum rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension FlatPoint {
     public AntiMotor anti_sandwich(AntiDualNum other) {
         return AntiFlector(
@@ -4789,6 +6081,10 @@ public extension FlatPoint {
             float4(float3(0.0), other.e3215 * this.e45)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiSandwichInfixPartial<FlatPoint> lhs, AntiFlatPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension FlatPoint {
     public AntiFlector anti_sandwich(AntiFlatPoint other) {
@@ -4800,6 +6096,10 @@ public extension FlatPoint {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiSandwichInfixPartial<FlatPoint> lhs, AntiFlector rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension FlatPoint {
     public AntiFlector anti_sandwich(AntiFlector other) {
         return AntiMotor(
@@ -4809,6 +6109,10 @@ public extension FlatPoint {
             float4(-(other.e321 * this.e15) - (other.e3 * this.e25), -(other.e321 * this.e25) - (other.e1 * this.e35), -(other.e321 * this.e35) - (other.e2 * this.e15), (other.e2 * this.e25) + (other.e3 * this.e35)) + (other.group1.yzxx * this.group0.zxyx) - (float4(this.e45) * float4(other.group0.xyz, other.e5))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiSandwichInfixPartial<FlatPoint> lhs, AntiLine rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension FlatPoint {
     public AntiMotor anti_sandwich(AntiLine other) {
@@ -4820,6 +6124,10 @@ public extension FlatPoint {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiSandwichInfixPartial<FlatPoint> lhs, AntiMotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension FlatPoint {
     public AntiMotor anti_sandwich(AntiMotor other) {
         return AntiFlector(
@@ -4829,6 +6137,10 @@ public extension FlatPoint {
             float4((float3(this.e45) * other.group0.xyz), (other.e23 * this.e15) + (other.e31 * this.e25) + (other.e12 * this.e35) + (other.e3215 * this.e45))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiSandwichInfixPartial<FlatPoint> lhs, AntiPlane rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension FlatPoint {
     public AntiFlector anti_sandwich(AntiPlane other) {
@@ -4840,6 +6152,10 @@ public extension FlatPoint {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(AntiSandwichInfixPartial<FlatPoint> lhs, AntiScalar rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension FlatPoint {
     public Motor anti_sandwich(AntiScalar other) {
         return FlatPoint(
@@ -4847,6 +6163,10 @@ public extension FlatPoint {
             float4(other.e12345) * this.group0
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<FlatPoint> lhs, Circle rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension FlatPoint {
     public VersorEven anti_sandwich(Circle other) {
@@ -4862,6 +6182,10 @@ public extension FlatPoint {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<FlatPoint> lhs, CircleRotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension FlatPoint {
     public VersorEven anti_sandwich(CircleRotor other) {
         return VersorOdd(
@@ -4875,6 +6199,10 @@ public extension FlatPoint {
             float4((other.e431 * this.e35) + (other.e415 * this.e45), (other.e412 * this.e15) + (other.e425 * this.e45), (other.e423 * this.e25) + (other.e435 * this.e45), -(other.e425 * this.e25) - (other.e435 * this.e35)) - (this.group0.yzxx * float4(other.group0.xyz.zxy, other.e415))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<FlatPoint> lhs, Dipole rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension FlatPoint {
     public VersorOdd anti_sandwich(Dipole other) {
@@ -4890,6 +6218,10 @@ public extension FlatPoint {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<FlatPoint> lhs, DipoleInversion rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension FlatPoint {
     public VersorOdd anti_sandwich(DipoleInversion other) {
         return VersorEven(
@@ -4904,6 +6236,10 @@ public extension FlatPoint {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(AntiSandwichInfixPartial<FlatPoint> lhs, DualNum rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension FlatPoint {
     public Motor anti_sandwich(DualNum other) {
         return Flector(
@@ -4913,6 +6249,10 @@ public extension FlatPoint {
             float4(float3(0.0), other.e5 * this.e45 * -1.0)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(AntiSandwichInfixPartial<FlatPoint> lhs, FlatPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension FlatPoint {
     public Flector anti_sandwich(FlatPoint other) {
@@ -4924,6 +6264,10 @@ public extension FlatPoint {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(AntiSandwichInfixPartial<FlatPoint> lhs, Flector rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension FlatPoint {
     public Flector anti_sandwich(Flector other) {
         return Motor(
@@ -4933,6 +6277,10 @@ public extension FlatPoint {
             float4(-(this.e15 * other.e45) - (this.e25 * other.e4125), -(this.e25 * other.e45) - (this.e35 * other.e4235), -(this.e15 * other.e4315) - (this.e35 * other.e45), (this.e35 * other.e4125) + (this.e45 * other.e3215)) + (this.group0.zxyx * other.group1.yzxx) + (this.group0.wwwy * float4(other.group0.xyz, other.e4315))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(AntiSandwichInfixPartial<FlatPoint> lhs, Line rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension FlatPoint {
     public Motor anti_sandwich(Line other) {
@@ -4944,6 +6292,10 @@ public extension FlatPoint {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(AntiSandwichInfixPartial<FlatPoint> lhs, Motor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension FlatPoint {
     public Motor anti_sandwich(Motor other) {
         return Flector(
@@ -4953,6 +6305,10 @@ public extension FlatPoint {
             float4((this.group0.www * other.group0.xyz), -(this.e15 * other.e415) - (this.e25 * other.e425) - (this.e35 * other.e435) - (this.e45 * other.e5))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiSandwichInfixPartial<FlatPoint> lhs, MultiVector rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension FlatPoint {
     public MultiVector anti_sandwich(MultiVector other) {
@@ -4982,6 +6338,10 @@ public extension FlatPoint {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(AntiSandwichInfixPartial<FlatPoint> lhs, Plane rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension FlatPoint {
     public Flector anti_sandwich(Plane other) {
         return Motor(
@@ -4991,6 +6351,10 @@ public extension FlatPoint {
             float4(this.e25 * other.e4125 * -1.0, this.e35 * other.e4235 * -1.0, this.e15 * other.e4315 * -1.0, (this.e25 * other.e4315) + (this.e35 * other.e4125) + (this.e45 * other.e3215)) + (this.group0.zxyx * other.group0.yzxx)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<FlatPoint> lhs, RoundPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension FlatPoint {
     public VersorEven anti_sandwich(RoundPoint other) {
@@ -5006,6 +6370,10 @@ public extension FlatPoint {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiSandwichInfixPartial<FlatPoint> lhs, Scalar rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension FlatPoint {
     public AntiMotor anti_sandwich(Scalar other) {
         return AntiFlatPoint(
@@ -5013,6 +6381,10 @@ public extension FlatPoint {
             float4(other.scalar) * this.group0 * float4(-1.0, -1.0, -1.0, 1.0)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<FlatPoint> lhs, Sphere rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension FlatPoint {
     public VersorOdd anti_sandwich(Sphere other) {
@@ -5028,6 +6400,10 @@ public extension FlatPoint {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<FlatPoint> lhs, VersorEven rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension FlatPoint {
     public VersorEven anti_sandwich(VersorEven other) {
         return VersorOdd(
@@ -5041,6 +6417,10 @@ public extension FlatPoint {
             (this.group0.zxyx * float4(other.group0.yzx, other.e1)) + (this.group0.wwwy * float4(other.group1.xyz, other.e2)) + float4(float3(0.0), (this.e35 * other.e3) - (this.e35 * other.e435) - (this.e45 * other.e5)) - (this.group0.xyxx * float4(other.group3.ww, other.e431, other.e415)) - (this.group0.yzzy * float4(other.group0.zx, other.e4, other.e425))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<FlatPoint> lhs, VersorOdd rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension FlatPoint {
     public VersorOdd anti_sandwich(VersorOdd other) {
@@ -5056,17 +6436,13 @@ public extension FlatPoint {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Flector {
-    // Fancy infix trick (first half)
-    public AntiSandwichInfixPartial<Flector> operator /(AntiSandwichInfix rhs) {
-        return AntiSandwichInfixPartial<Flector>(this);
-    }
+// Fancy infix trick (first half)
+public AntiSandwichInfixPartial<Flector> operator /(Flector lhs, AntiSandwichInfix rhs) {
+    return AntiSandwichInfixPartial<Flector>(lhs);
 }
-public extension AntiSandwichInfixPartial<Flector> {
-    // Fancy infix trick (second half)
-    public VersorOdd operator /(AntiCircleRotor rhs) {
-        return this.a.anti_sandwich(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<Flector> lhs, AntiCircleRotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Flector {
     public VersorOdd anti_sandwich(AntiCircleRotor other) {
@@ -5082,6 +6458,10 @@ public extension Flector {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<Flector> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Flector {
     public VersorEven anti_sandwich(AntiDipoleInversion other) {
         return VersorOdd(
@@ -5096,6 +6476,10 @@ public extension Flector {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiSandwichInfixPartial<Flector> lhs, AntiDualNum rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Flector {
     public AntiMotor anti_sandwich(AntiDualNum other) {
         return AntiFlector(
@@ -5105,6 +6489,10 @@ public extension Flector {
             float4(other.group0.xy.yy, other.scalar, (other.e3215 * this.e45) - (other.scalar * this.e3215)) * float4(this.group1.xyz, 1.0)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiSandwichInfixPartial<Flector> lhs, AntiFlatPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Flector {
     public AntiFlector anti_sandwich(AntiFlatPoint other) {
@@ -5116,6 +6504,10 @@ public extension Flector {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiSandwichInfixPartial<Flector> lhs, AntiFlector rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Flector {
     public AntiFlector anti_sandwich(AntiFlector other) {
         return AntiMotor(
@@ -5125,6 +6517,10 @@ public extension Flector {
             float4(-(other.e321 * this.e15) - (other.e1 * this.e3215) - (other.e3 * this.e25) - (other.e5 * this.e4235), -(other.e321 * this.e25) - (other.e1 * this.e35) - (other.e2 * this.e3215) - (other.e5 * this.e4315), -(other.e321 * this.e35) - (other.e2 * this.e15) - (other.e3 * this.e3215) - (other.e5 * this.e4125), (other.e125 * this.e4125) + (other.e1 * this.e15) + (other.e2 * this.e25) + (other.e3 * this.e35)) + (other.group0.yzxx * this.group1.zxyx) + float4((other.group1.yzx * this.group0.zxy), other.e315 * this.e4315) - (float4(this.e45, this.e4125, this.e4235, this.e3215) * other.group0.xxyw) - (float4(this.e4315, this.e45, this.e45, this.e45) * float4(other.group0.zyz, other.e5))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiSandwichInfixPartial<Flector> lhs, AntiLine rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Flector {
     public AntiMotor anti_sandwich(AntiLine other) {
@@ -5136,6 +6532,10 @@ public extension Flector {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiSandwichInfixPartial<Flector> lhs, AntiMotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Flector {
     public AntiMotor anti_sandwich(AntiMotor other) {
         return AntiFlector(
@@ -5145,6 +6545,10 @@ public extension Flector {
             (float4(this.e45, this.e4125, this.e4235, this.e15) * other.group0.xxyx) + (float4(this.e4315, this.e45, this.e45, this.e25) * other.group0.zyzy) + (other.group0.wwwz * float4(this.group1.xyz, this.e35)) + float4(float3(0.0), (other.e3215 * this.e45) - (other.e15 * this.e4235) - (other.e25 * this.e4315) - (other.e35 * this.e4125)) - (other.group0.yzxw * this.group1.zxyw)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiSandwichInfixPartial<Flector> lhs, AntiPlane rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Flector {
     public AntiFlector anti_sandwich(AntiPlane other) {
@@ -5156,6 +6560,10 @@ public extension Flector {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(AntiSandwichInfixPartial<Flector> lhs, AntiScalar rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Flector {
     public Motor anti_sandwich(AntiScalar other) {
         return Flector(
@@ -5165,6 +6573,10 @@ public extension Flector {
             float4(other.e12345) * this.group1
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<Flector> lhs, Circle rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Flector {
     public VersorEven anti_sandwich(Circle other) {
@@ -5180,6 +6592,10 @@ public extension Flector {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<Flector> lhs, CircleRotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Flector {
     public VersorEven anti_sandwich(CircleRotor other) {
         return VersorOdd(
@@ -5193,6 +6609,10 @@ public extension Flector {
             (float4(other.e12345) * this.group1) + (float4(this.e45, this.e4125, this.e4235, this.e4315) * float4(other.group1.xxy, other.e315)) + (float4(this.e4315, this.e45, this.e45, this.e4125) * float4(other.group1.zyz, other.e125)) + float4(float3(0.0), other.e321 * this.e3215 * -1.0) + float4((other.group0.xyz.yzx * this.group0.zxy), other.e235 * this.e4235) - (float4(this.e25, this.e3215, this.e3215, this.e25) * float4(other.group0.xyz.zyz, other.e425)) - (float4(this.e3215, this.e35, this.e15, this.e15) * float4(other.group0.xyz.xxy, other.e415)) - (other.group1.yzxz * float4(this.group1.zxy, this.e35))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<Flector> lhs, Dipole rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Flector {
     public VersorOdd anti_sandwich(Dipole other) {
@@ -5208,6 +6628,10 @@ public extension Flector {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<Flector> lhs, DipoleInversion rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Flector {
     public VersorOdd anti_sandwich(DipoleInversion other) {
         return VersorEven(
@@ -5222,6 +6646,10 @@ public extension Flector {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(AntiSandwichInfixPartial<Flector> lhs, DualNum rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Flector {
     public Motor anti_sandwich(DualNum other) {
         return Flector(
@@ -5231,6 +6659,10 @@ public extension Flector {
             float4(other.group0.xy.yy, other.e12345, (other.e12345 * this.e3215) - (other.e5 * this.e45)) * float4(this.group1.xyz, 1.0)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(AntiSandwichInfixPartial<Flector> lhs, FlatPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Flector {
     public Flector anti_sandwich(FlatPoint other) {
@@ -5242,6 +6674,10 @@ public extension Flector {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(AntiSandwichInfixPartial<Flector> lhs, Flector rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Flector {
     public Flector anti_sandwich(Flector other) {
         return Motor(
@@ -5251,6 +6687,10 @@ public extension Flector {
             (float4(other.e3215) * float4(this.group1.xyz, this.e45)) + (float4(this.e45, this.e4125, this.e4235, this.e15) * float4(other.group0.xxy, other.e4235)) + (float4(this.e4315, this.e45, this.e45, this.e25) * float4(other.group0.zyz, other.e4315)) + (other.group1.yzxz * this.group0.zxyz) - (float4(this.e25, this.e3215, this.e3215, this.e3215) * float4(other.group1.zyz, other.e45)) - (float4(this.e3215, this.e35, this.e15, this.e4125) * float4(other.group1.xxy, other.e35)) - (other.group0.yzxx * this.group1.zxyx) - (other.group0.wwwy * float4(this.group0.xyz, this.e4315))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(AntiSandwichInfixPartial<Flector> lhs, Line rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Flector {
     public Motor anti_sandwich(Line other) {
@@ -5262,6 +6702,10 @@ public extension Flector {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(AntiSandwichInfixPartial<Flector> lhs, Motor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Flector {
     public Motor anti_sandwich(Motor other) {
         return Flector(
@@ -5271,6 +6715,10 @@ public extension Flector {
             (this.group1.xyxy * float4(other.group0.wwy, other.e315)) + (this.group1.yzzz * float4(other.group0.zxw, other.e125)) + float4(float3(0.0), (this.e3215 * other.e12345) - (this.e25 * other.e425) - (this.e35 * other.e435) - (this.e45 * other.e5)) + float4((this.group0.www * other.group0.xyz), this.e4235 * other.e235) - (other.group0.yzxx * float4(this.group1.zxy, this.e15))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiSandwichInfixPartial<Flector> lhs, MultiVector rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Flector {
     public MultiVector anti_sandwich(MultiVector other) {
@@ -5300,6 +6748,10 @@ public extension Flector {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(AntiSandwichInfixPartial<Flector> lhs, Plane rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Flector {
     public Flector anti_sandwich(Plane other) {
         return Motor(
@@ -5309,6 +6761,10 @@ public extension Flector {
             float4(-(this.e25 * other.e4125) - (this.e3215 * other.e4235), -(this.e35 * other.e4235) - (this.e3215 * other.e4315), -(this.e15 * other.e4315) - (this.e3215 * other.e4125), (this.e35 * other.e4125) + (this.e45 * other.e3215)) + (this.group0.zxyx * other.group0.yzxx) + (other.group0.wwwy * float4(this.group1.xyz, this.e25))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<Flector> lhs, RoundPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Flector {
     public VersorEven anti_sandwich(RoundPoint other) {
@@ -5324,6 +6780,10 @@ public extension Flector {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiSandwichInfixPartial<Flector> lhs, Scalar rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Flector {
     public AntiMotor anti_sandwich(Scalar other) {
         return AntiFlector(
@@ -5333,6 +6793,10 @@ public extension Flector {
             float4(other.scalar) * this.group1 * float4(1.0, 1.0, 1.0, -1.0)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<Flector> lhs, Sphere rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Flector {
     public VersorOdd anti_sandwich(Sphere other) {
@@ -5348,6 +6812,10 @@ public extension Flector {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<Flector> lhs, VersorEven rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Flector {
     public VersorEven anti_sandwich(VersorEven other) {
         return VersorOdd(
@@ -5361,6 +6829,10 @@ public extension Flector {
             (this.group0.zxyx * float4(other.group0.yzx, other.e1)) + (this.group0.wwwy * float4(other.group1.xyz, other.e2)) + (this.group1.yzzx * float4(other.group1.zx, other.e12345, other.e235)) + (float4(other.group0.ww, other.e425, other.e3) * float4(this.group1.xyx, this.e35)) + float4(float3(0.0), (this.e4315 * other.e315) + (this.e4125 * other.e125) + (this.e3215 * other.e12345) - (this.e3215 * other.e321)) - (this.group0.xyxx * float4(other.group3.ww, other.e431, other.e415)) - (this.group0.yzzy * float4(other.group0.zx, other.e4, other.e425)) - (other.group1.yzxz * float4(this.group1.zxy, this.e35)) - float4((this.group1.www * other.group0.xyz), this.e45 * other.e5)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<Flector> lhs, VersorOdd rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Flector {
     public VersorOdd anti_sandwich(VersorOdd other) {
@@ -5376,17 +6848,13 @@ public extension Flector {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Line {
-    // Fancy infix trick (first half)
-    public AntiSandwichInfixPartial<Line> operator /(AntiSandwichInfix rhs) {
-        return AntiSandwichInfixPartial<Line>(this);
-    }
+// Fancy infix trick (first half)
+public AntiSandwichInfixPartial<Line> operator /(Line lhs, AntiSandwichInfix rhs) {
+    return AntiSandwichInfixPartial<Line>(lhs);
 }
-public extension AntiSandwichInfixPartial<Line> {
-    // Fancy infix trick (second half)
-    public VersorOdd operator /(AntiCircleRotor rhs) {
-        return this.a.anti_sandwich(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<Line> lhs, AntiCircleRotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Line {
     public VersorOdd anti_sandwich(AntiCircleRotor other) {
@@ -5402,6 +6870,10 @@ public extension Line {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<Line> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Line {
     public VersorEven anti_sandwich(AntiDipoleInversion other) {
         return VersorEven(
@@ -5416,6 +6888,10 @@ public extension Line {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiSandwichInfixPartial<Line> lhs, AntiDualNum rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Line {
     public AntiMotor anti_sandwich(AntiDualNum other) {
         return AntiLine(
@@ -5425,6 +6901,10 @@ public extension Line {
             (float3(other.e3215) * this.group0.xyz) + (float3(other.scalar) * this.group1.xyz)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiSandwichInfixPartial<Line> lhs, AntiFlatPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Line {
     public AntiFlector anti_sandwich(AntiFlatPoint other) {
@@ -5436,6 +6916,10 @@ public extension Line {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiSandwichInfixPartial<Line> lhs, AntiFlector rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Line {
     public AntiFlector anti_sandwich(AntiFlector other) {
         return AntiFlector(
@@ -5445,6 +6929,10 @@ public extension Line {
             (float4(other.group0.ww, other.e2, other.e1) * float4(this.group0.xyz.xyx, this.e235)) + (float4(other.group1.zx, other.e321, other.e2) * float4(this.group0.xyz.yzz, this.e315)) + float4(float3(0.0), (other.e3 * this.e125) - (other.e315 * this.e425) - (other.e125 * this.e435)) - float4((this.group0.xyz.zxy * other.group1.yzx), other.e235 * this.e415)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiSandwichInfixPartial<Line> lhs, AntiLine rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Line {
     public AntiMotor anti_sandwich(AntiLine other) {
@@ -5456,6 +6944,10 @@ public extension Line {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiSandwichInfixPartial<Line> lhs, AntiMotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Line {
     public AntiMotor anti_sandwich(AntiMotor other) {
         return AntiMotor(
@@ -5465,6 +6957,10 @@ public extension Line {
             float4((other.e12 * this.e315) + (other.scalar * this.e235) + (other.e35 * this.e425) + (other.e3215 * this.e415), (other.e23 * this.e125) + (other.scalar * this.e315) + (other.e15 * this.e435) + (other.e3215 * this.e425), (other.e31 * this.e235) + (other.scalar * this.e125) + (other.e25 * this.e415) + (other.e3215 * this.e435), -(other.e23 * this.e235) - (other.e31 * this.e315) - (other.e12 * this.e125) - (other.e35 * this.e435)) - (other.group1.yzxx * float4(this.group0.xyz.zxy, this.e415)) - float4((this.group1.xyz.zxy * other.group0.yzx), other.e25 * this.e425)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiSandwichInfixPartial<Line> lhs, AntiPlane rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Line {
     public AntiFlector anti_sandwich(AntiPlane other) {
@@ -5476,6 +6972,10 @@ public extension Line {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(AntiSandwichInfixPartial<Line> lhs, AntiScalar rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Line {
     public Motor anti_sandwich(AntiScalar other) {
         return Line(
@@ -5485,6 +6985,10 @@ public extension Line {
             float3(other.e12345) * this.group1.xyz
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<Line> lhs, Circle rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Line {
     public VersorEven anti_sandwich(Circle other) {
@@ -5500,6 +7004,10 @@ public extension Line {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<Line> lhs, CircleRotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Line {
     public VersorEven anti_sandwich(CircleRotor other) {
         return VersorEven(
@@ -5513,6 +7021,10 @@ public extension Line {
             float4((other.e412 * this.e315) + (other.e321 * this.e415), (other.e423 * this.e125) + (other.e321 * this.e425), (other.e431 * this.e235) + (other.e321 * this.e435), -(other.e431 * this.e425) - (other.e412 * this.e435)) - float4((other.group0.xyz.yzx * this.group1.xyz.zxy), other.e423 * this.e415)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<Line> lhs, Dipole rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Line {
     public VersorOdd anti_sandwich(Dipole other) {
@@ -5528,6 +7040,10 @@ public extension Line {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<Line> lhs, DipoleInversion rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Line {
     public VersorOdd anti_sandwich(DipoleInversion other) {
         return VersorOdd(
@@ -5542,6 +7058,10 @@ public extension Line {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(AntiSandwichInfixPartial<Line> lhs, DualNum rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Line {
     public Motor anti_sandwich(DualNum other) {
         return Line(
@@ -5551,6 +7071,10 @@ public extension Line {
             (float3(other.e5) * this.group0.xyz) + (float3(other.e12345) * this.group1.xyz)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(AntiSandwichInfixPartial<Line> lhs, FlatPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Line {
     public Flector anti_sandwich(FlatPoint other) {
@@ -5562,6 +7086,10 @@ public extension Line {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(AntiSandwichInfixPartial<Line> lhs, Flector rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Line {
     public Flector anti_sandwich(Flector other) {
         return Flector(
@@ -5571,6 +7099,10 @@ public extension Line {
             float4((other.e45 * this.e415) + (other.e4125 * this.e425), (other.e45 * this.e425) + (other.e4235 * this.e435), (other.e45 * this.e435) + (other.e4315 * this.e415), -(other.e25 * this.e425) - (other.e35 * this.e435) - (other.e4235 * this.e235) - (other.e4315 * this.e315) - (other.e4125 * this.e125)) - float4((this.group0.xyz.zxy * other.group1.yzx), other.e15 * this.e415)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(AntiSandwichInfixPartial<Line> lhs, Line rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Line {
     public Motor anti_sandwich(Line other) {
@@ -5582,6 +7114,10 @@ public extension Line {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(AntiSandwichInfixPartial<Line> lhs, Motor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Line {
     public Motor anti_sandwich(Motor other) {
         return Motor(
@@ -5591,6 +7127,10 @@ public extension Line {
             float4((this.e415 * other.e5) + (this.e425 * other.e125) + (this.e235 * other.e12345) + (this.e315 * other.e435), (this.e425 * other.e5) + (this.e435 * other.e235) + (this.e315 * other.e12345) + (this.e125 * other.e415), (this.e415 * other.e315) + (this.e435 * other.e5) + (this.e235 * other.e425) + (this.e125 * other.e12345), -(this.e435 * other.e125) - (this.e235 * other.e415) - (this.e315 * other.e425) - (this.e125 * other.e435)) - (other.group1.yzxx * float4(this.group0.xyz.zxy, this.e415)) - float4((this.group1.xyz.zxy * other.group0.yzx), this.e425 * other.e315)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiSandwichInfixPartial<Line> lhs, MultiVector rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Line {
     public MultiVector anti_sandwich(MultiVector other) {
@@ -5620,6 +7160,10 @@ public extension Line {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(AntiSandwichInfixPartial<Line> lhs, Plane rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Line {
     public Flector anti_sandwich(Plane other) {
         return Flector(
@@ -5629,6 +7173,10 @@ public extension Line {
             float4(this.e425 * other.e4125, this.e435 * other.e4235, this.e415 * other.e4315, -(this.e315 * other.e4315) - (this.e125 * other.e4125)) - (other.group0.yzxx * float4(this.group0.xyz.zxy, this.e235))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<Line> lhs, RoundPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Line {
     public VersorEven anti_sandwich(RoundPoint other) {
@@ -5644,6 +7192,10 @@ public extension Line {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiSandwichInfixPartial<Line> lhs, Scalar rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Line {
     public AntiMotor anti_sandwich(Scalar other) {
         return AntiLine(
@@ -5653,6 +7205,10 @@ public extension Line {
             float3(other.scalar) * this.group1.xyz
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<Line> lhs, Sphere rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Line {
     public VersorOdd anti_sandwich(Sphere other) {
@@ -5668,6 +7224,10 @@ public extension Line {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<Line> lhs, VersorEven rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Line {
     public VersorEven anti_sandwich(VersorEven other) {
         return VersorEven(
@@ -5681,6 +7241,10 @@ public extension Line {
             float4((this.e415 * other.e321) + (this.e425 * other.e3) + (this.e235 * other.e4) + (this.e315 * other.e412), (this.e425 * other.e321) + (this.e435 * other.e1) + (this.e315 * other.e4) + (this.e125 * other.e423), (this.e415 * other.e2) + (this.e435 * other.e321) + (this.e235 * other.e431) + (this.e125 * other.e4), this.e435 * other.e412 * -1.0) - (other.group0.yzxy * float4(this.group1.xyz.zxy, this.e425)) - float4((this.group0.xyz.zxy * other.group3.yzx), this.e415 * other.e423)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<Line> lhs, VersorOdd rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Line {
     public VersorOdd anti_sandwich(VersorOdd other) {
@@ -5696,17 +7260,13 @@ public extension Line {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Motor {
-    // Fancy infix trick (first half)
-    public AntiSandwichInfixPartial<Motor> operator /(AntiSandwichInfix rhs) {
-        return AntiSandwichInfixPartial<Motor>(this);
-    }
+// Fancy infix trick (first half)
+public AntiSandwichInfixPartial<Motor> operator /(Motor lhs, AntiSandwichInfix rhs) {
+    return AntiSandwichInfixPartial<Motor>(lhs);
 }
-public extension AntiSandwichInfixPartial<Motor> {
-    // Fancy infix trick (second half)
-    public VersorOdd operator /(AntiCircleRotor rhs) {
-        return this.a.anti_sandwich(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<Motor> lhs, AntiCircleRotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Motor {
     public VersorOdd anti_sandwich(AntiCircleRotor other) {
@@ -5722,6 +7282,10 @@ public extension Motor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<Motor> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Motor {
     public VersorEven anti_sandwich(AntiDipoleInversion other) {
         return VersorEven(
@@ -5736,6 +7300,10 @@ public extension Motor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiSandwichInfixPartial<Motor> lhs, AntiDualNum rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Motor {
     public AntiMotor anti_sandwich(AntiDualNum other) {
         return AntiMotor(
@@ -5745,6 +7313,10 @@ public extension Motor {
             (float4(other.e3215) * this.group0) + (float4(other.scalar) * this.group1)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiSandwichInfixPartial<Motor> lhs, AntiFlatPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Motor {
     public AntiFlector anti_sandwich(AntiFlatPoint other) {
@@ -5756,6 +7328,10 @@ public extension Motor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiSandwichInfixPartial<Motor> lhs, AntiFlector rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Motor {
     public AntiFlector anti_sandwich(AntiFlector other) {
         return AntiFlector(
@@ -5765,6 +7341,10 @@ public extension Motor {
             (other.group1.xxyy * float4(this.group0.wzx, this.e315)) + (other.group1.zyzz * float4(this.group0.yww, this.e125)) + float4(float3(0.0), (other.e5 * this.e12345) - (other.e315 * this.e425) - (other.e125 * this.e435) - (other.e321 * this.e5)) + float4((other.group0.www * this.group0.xyz), other.e1 * this.e235) - (this.group0.zxyx * float4(other.group1.yzx, other.e235))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiSandwichInfixPartial<Motor> lhs, AntiLine rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Motor {
     public AntiMotor anti_sandwich(AntiLine other) {
@@ -5776,6 +7356,10 @@ public extension Motor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiSandwichInfixPartial<Motor> lhs, AntiMotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Motor {
     public AntiMotor anti_sandwich(AntiMotor other) {
         return AntiMotor(
@@ -5785,6 +7369,10 @@ public extension Motor {
             float4((other.scalar * this.e235) + (other.e15 * this.e12345) + (other.e35 * this.e425) + (other.e3215 * this.e415), (other.scalar * this.e315) + (other.e15 * this.e435) + (other.e25 * this.e12345) + (other.e3215 * this.e425), (other.scalar * this.e125) + (other.e25 * this.e415) + (other.e35 * this.e12345) + (other.e3215 * this.e435), -(other.e12 * this.e125) - (other.e15 * this.e415) - (other.e25 * this.e425) - (other.e35 * this.e435)) + (other.group0.xxyw * this.group1.wzxw) + float4((other.group0.zyz * this.group1.yww), other.e3215 * this.e12345) - (other.group0.yzxx * this.group1.zxyx) - float4((other.group1.yzx * this.group0.zxy), other.e31 * this.e315)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiSandwichInfixPartial<Motor> lhs, AntiPlane rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Motor {
     public AntiFlector anti_sandwich(AntiPlane other) {
@@ -5796,6 +7384,10 @@ public extension Motor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(AntiSandwichInfixPartial<Motor> lhs, AntiScalar rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Motor {
     public Motor anti_sandwich(AntiScalar other) {
         return Motor(
@@ -5805,6 +7397,10 @@ public extension Motor {
             float4(other.e12345) * this.group1
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<Motor> lhs, Circle rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Motor {
     public VersorEven anti_sandwich(Circle other) {
@@ -5820,6 +7416,10 @@ public extension Motor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<Motor> lhs, CircleRotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Motor {
     public VersorEven anti_sandwich(CircleRotor other) {
         return VersorEven(
@@ -5833,6 +7433,10 @@ public extension Motor {
             float4((other.e423 * this.e5) + (other.e412 * this.e315) + (other.e321 * this.e415), (other.e423 * this.e125) + (other.e431 * this.e5) + (other.e321 * this.e425), (other.e431 * this.e235) + (other.e412 * this.e5) + (other.e321 * this.e435), -(other.e431 * this.e425) - (other.e412 * this.e435)) - float4((other.group0.xyz.yzx * this.group1.zxy), other.e423 * this.e415)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<Motor> lhs, Dipole rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Motor {
     public VersorOdd anti_sandwich(Dipole other) {
@@ -5848,6 +7452,10 @@ public extension Motor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<Motor> lhs, DipoleInversion rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Motor {
     public VersorOdd anti_sandwich(DipoleInversion other) {
         return VersorOdd(
@@ -5862,6 +7470,10 @@ public extension Motor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(AntiSandwichInfixPartial<Motor> lhs, DualNum rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Motor {
     public Motor anti_sandwich(DualNum other) {
         return Motor(
@@ -5871,6 +7483,10 @@ public extension Motor {
             (float4(other.e5) * this.group0) + (float4(other.e12345) * this.group1)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(AntiSandwichInfixPartial<Motor> lhs, FlatPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Motor {
     public Flector anti_sandwich(FlatPoint other) {
@@ -5882,6 +7498,10 @@ public extension Motor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(AntiSandwichInfixPartial<Motor> lhs, Flector rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Motor {
     public Flector anti_sandwich(Flector other) {
         return Flector(
@@ -5891,6 +7511,10 @@ public extension Motor {
             float4(other.e4125 * this.e425, other.e4315 * this.e12345, other.e4125 * this.e12345, -(other.e25 * this.e425) - (other.e35 * this.e435) - (other.e4235 * this.e235) - (other.e4315 * this.e315) - (other.e4125 * this.e125)) + (float4(other.e45) * float4(this.group0.xyz, this.e5)) + (other.group1.xxyw * this.group0.wzxw) - (this.group0.zxyx * float4(other.group1.yzx, other.e15))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(AntiSandwichInfixPartial<Motor> lhs, Line rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Motor {
     public Motor anti_sandwich(Line other) {
@@ -5902,6 +7526,10 @@ public extension Motor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(AntiSandwichInfixPartial<Motor> lhs, Motor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Motor {
     public Motor anti_sandwich(Motor other) {
         return Motor(
@@ -5911,6 +7539,10 @@ public extension Motor {
             float4((other.e12345 * this.e235) + (other.e235 * this.e12345) + (other.e125 * this.e425) + (other.e5 * this.e415), (other.e12345 * this.e315) + (other.e235 * this.e435) + (other.e315 * this.e12345) + (other.e5 * this.e425), (other.e12345 * this.e125) + (other.e315 * this.e415) + (other.e125 * this.e12345) + (other.e5 * this.e435), -(other.e435 * this.e125) - (other.e235 * this.e415) - (other.e315 * this.e425) - (other.e125 * this.e435)) + (other.group0.xxyw * this.group1.wzxw) + float4((other.group0.zyz * this.group1.yww), other.e5 * this.e12345) - (other.group0.yzxx * this.group1.zxyx) - float4((other.group1.yzx * this.group0.zxy), other.e425 * this.e315)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiSandwichInfixPartial<Motor> lhs, MultiVector rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Motor {
     public MultiVector anti_sandwich(MultiVector other) {
@@ -5940,6 +7572,10 @@ public extension Motor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(AntiSandwichInfixPartial<Motor> lhs, Plane rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Motor {
     public Flector anti_sandwich(Plane other) {
         return Flector(
@@ -5949,6 +7585,10 @@ public extension Motor {
             float4(this.e12345 * other.e4235, this.e12345 * other.e4315, this.e12345 * other.e4125, -(this.e315 * other.e4315) - (this.e125 * other.e4125)) + (this.group0.yzxw * other.group0.zxyw) - (other.group0.yzxx * float4(this.group0.zxy, this.e235))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<Motor> lhs, RoundPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Motor {
     public VersorEven anti_sandwich(RoundPoint other) {
@@ -5964,6 +7604,10 @@ public extension Motor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiSandwichInfixPartial<Motor> lhs, Scalar rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Motor {
     public AntiMotor anti_sandwich(Scalar other) {
         return AntiMotor(
@@ -5973,6 +7617,10 @@ public extension Motor {
             float4(other.scalar) * this.group1
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<Motor> lhs, Sphere rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Motor {
     public VersorOdd anti_sandwich(Sphere other) {
@@ -5988,6 +7636,10 @@ public extension Motor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<Motor> lhs, VersorEven rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Motor {
     public VersorEven anti_sandwich(VersorEven other) {
         return VersorEven(
@@ -6001,6 +7653,10 @@ public extension Motor {
             float4((this.e425 * other.e3) + (this.e12345 * other.e1) + (this.e235 * other.e4) + (this.e315 * other.e412) + (this.e5 * other.e423), (this.e435 * other.e1) + (this.e12345 * other.e2) + (this.e315 * other.e4) + (this.e125 * other.e423) + (this.e5 * other.e431), (this.e435 * other.e321) + (this.e12345 * other.e3) + (this.e235 * other.e431) + (this.e125 * other.e4) + (this.e5 * other.e412), this.e435 * other.e412 * -1.0) + (this.group0.xyxw * float4(other.group1.ww, other.e2, other.e4)) - (this.group0.zxyx * float4(other.group3.yzx, other.e423)) - (other.group0.yzxy * float4(this.group1.zxy, this.e425))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<Motor> lhs, VersorOdd rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Motor {
     public VersorOdd anti_sandwich(VersorOdd other) {
@@ -6016,17 +7672,13 @@ public extension Motor {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension MultiVector {
-    // Fancy infix trick (first half)
-    public AntiSandwichInfixPartial<MultiVector> operator /(AntiSandwichInfix rhs) {
-        return AntiSandwichInfixPartial<MultiVector>(this);
-    }
+// Fancy infix trick (first half)
+public AntiSandwichInfixPartial<MultiVector> operator /(MultiVector lhs, AntiSandwichInfix rhs) {
+    return AntiSandwichInfixPartial<MultiVector>(lhs);
 }
-public extension AntiSandwichInfixPartial<MultiVector> {
-    // Fancy infix trick (second half)
-    public MultiVector operator /(AntiCircleRotor rhs) {
-        return this.a.anti_sandwich(rhs);
-    }
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiSandwichInfixPartial<MultiVector> lhs, AntiCircleRotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension MultiVector {
     public MultiVector anti_sandwich(AntiCircleRotor other) {
@@ -6056,6 +7708,10 @@ public extension MultiVector {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiSandwichInfixPartial<MultiVector> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension MultiVector {
     public MultiVector anti_sandwich(AntiDipoleInversion other) {
         return MultiVector(
@@ -6083,6 +7739,10 @@ public extension MultiVector {
             (other.e321 * this.e1234) + (other.e4 * this.scalar) + (other.e4 * this.e45) - (other.e423 * this.e23) - (other.e423 * this.e4235) - (other.e431 * this.e31) - (other.e431 * this.e4315) - (other.e412 * this.e12) - (other.e412 * this.e4125) - (other.e415 * this.e41) - (other.e425 * this.e42) - (other.e435 * this.e43) - (other.e1 * this.e41) - (other.e2 * this.e42) - (other.e3 * this.e43)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiSandwichInfixPartial<MultiVector> lhs, AntiDualNum rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension MultiVector {
     public MultiVector anti_sandwich(AntiDualNum other) {
@@ -6112,6 +7772,10 @@ public extension MultiVector {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiSandwichInfixPartial<MultiVector> lhs, AntiFlatPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension MultiVector {
     public MultiVector anti_sandwich(AntiFlatPoint other) {
         return MultiVector(
@@ -6139,6 +7803,10 @@ public extension MultiVector {
             other.e321 * this.e1234
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiSandwichInfixPartial<MultiVector> lhs, AntiFlector rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension MultiVector {
     public MultiVector anti_sandwich(AntiFlector other) {
@@ -6168,6 +7836,10 @@ public extension MultiVector {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiSandwichInfixPartial<MultiVector> lhs, AntiLine rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension MultiVector {
     public MultiVector anti_sandwich(AntiLine other) {
         return MultiVector(
@@ -6195,6 +7867,10 @@ public extension MultiVector {
             -(other.e23 * this.e423) - (other.e31 * this.e431) - (other.e12 * this.e412)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiSandwichInfixPartial<MultiVector> lhs, AntiMotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension MultiVector {
     public MultiVector anti_sandwich(AntiMotor other) {
@@ -6224,6 +7900,10 @@ public extension MultiVector {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiSandwichInfixPartial<MultiVector> lhs, AntiPlane rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension MultiVector {
     public MultiVector anti_sandwich(AntiPlane other) {
         return MultiVector(
@@ -6251,6 +7931,10 @@ public extension MultiVector {
             -(other.e1 * this.e41) - (other.e2 * this.e42) - (other.e3 * this.e43)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiSandwichInfixPartial<MultiVector> lhs, AntiScalar rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension MultiVector {
     public MultiVector anti_sandwich(AntiScalar other) {
@@ -6280,6 +7964,10 @@ public extension MultiVector {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiSandwichInfixPartial<MultiVector> lhs, Circle rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension MultiVector {
     public MultiVector anti_sandwich(Circle other) {
         return MultiVector(
@@ -6307,6 +7995,10 @@ public extension MultiVector {
             (other.e321 * this.e1234) - (other.e423 * this.e23) - (other.e423 * this.e4235) - (other.e431 * this.e31) - (other.e431 * this.e4315) - (other.e412 * this.e12) - (other.e412 * this.e4125) - (other.e415 * this.e41) - (other.e425 * this.e42) - (other.e435 * this.e43)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiSandwichInfixPartial<MultiVector> lhs, CircleRotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension MultiVector {
     public MultiVector anti_sandwich(CircleRotor other) {
@@ -6336,6 +8028,10 @@ public extension MultiVector {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiSandwichInfixPartial<MultiVector> lhs, Dipole rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension MultiVector {
     public MultiVector anti_sandwich(Dipole other) {
         return MultiVector(
@@ -6363,6 +8059,10 @@ public extension MultiVector {
             (other.e41 * this.e1) + (other.e42 * this.e2) + (other.e43 * this.e3) - (other.e41 * this.e415) - (other.e42 * this.e425) - (other.e43 * this.e435) - (other.e23 * this.e423) - (other.e31 * this.e431) - (other.e12 * this.e412) - (other.e45 * this.e4)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiSandwichInfixPartial<MultiVector> lhs, DipoleInversion rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension MultiVector {
     public MultiVector anti_sandwich(DipoleInversion other) {
@@ -6392,6 +8092,10 @@ public extension MultiVector {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiSandwichInfixPartial<MultiVector> lhs, DualNum rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension MultiVector {
     public MultiVector anti_sandwich(DualNum other) {
         return MultiVector(
@@ -6419,6 +8123,10 @@ public extension MultiVector {
             other.e12345 * this.e1234
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiSandwichInfixPartial<MultiVector> lhs, FlatPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension MultiVector {
     public MultiVector anti_sandwich(FlatPoint other) {
@@ -6448,6 +8156,10 @@ public extension MultiVector {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiSandwichInfixPartial<MultiVector> lhs, Flector rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension MultiVector {
     public MultiVector anti_sandwich(Flector other) {
         return MultiVector(
@@ -6475,6 +8187,10 @@ public extension MultiVector {
             (other.e4235 * this.e423) + (other.e4315 * this.e431) + (other.e4125 * this.e412) - (other.e45 * this.e4)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiSandwichInfixPartial<MultiVector> lhs, Line rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension MultiVector {
     public MultiVector anti_sandwich(Line other) {
@@ -6504,6 +8220,10 @@ public extension MultiVector {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiSandwichInfixPartial<MultiVector> lhs, Motor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension MultiVector {
     public MultiVector anti_sandwich(Motor other) {
         return MultiVector(
@@ -6531,6 +8251,10 @@ public extension MultiVector {
             (other.e12345 * this.e1234) - (other.e415 * this.e41) - (other.e425 * this.e42) - (other.e435 * this.e43)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiSandwichInfixPartial<MultiVector> lhs, MultiVector rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension MultiVector {
     public MultiVector anti_sandwich(MultiVector other) {
@@ -6560,6 +8284,10 @@ public extension MultiVector {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiSandwichInfixPartial<MultiVector> lhs, Plane rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension MultiVector {
     public MultiVector anti_sandwich(Plane other) {
         return MultiVector(
@@ -6587,6 +8315,10 @@ public extension MultiVector {
             (this.e423 * other.e4235) + (this.e431 * other.e4315) + (this.e412 * other.e4125)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiSandwichInfixPartial<MultiVector> lhs, RoundPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension MultiVector {
     public MultiVector anti_sandwich(RoundPoint other) {
@@ -6616,6 +8348,10 @@ public extension MultiVector {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiSandwichInfixPartial<MultiVector> lhs, Scalar rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension MultiVector {
     public MultiVector anti_sandwich(Scalar other) {
         return MultiVector(
@@ -6643,6 +8379,10 @@ public extension MultiVector {
             this.e4 * other.scalar
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiSandwichInfixPartial<MultiVector> lhs, Sphere rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension MultiVector {
     public MultiVector anti_sandwich(Sphere other) {
@@ -6672,6 +8412,10 @@ public extension MultiVector {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiSandwichInfixPartial<MultiVector> lhs, VersorEven rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension MultiVector {
     public MultiVector anti_sandwich(VersorEven other) {
         return MultiVector(
@@ -6699,6 +8443,10 @@ public extension MultiVector {
             (this.scalar * other.e4) + (this.e45 * other.e4) + (this.e1234 * other.e12345) + (this.e1234 * other.e321) - (this.e41 * other.e415) - (this.e41 * other.e1) - (this.e42 * other.e425) - (this.e42 * other.e2) - (this.e43 * other.e435) - (this.e43 * other.e3) - (this.e23 * other.e423) - (this.e31 * other.e431) - (this.e12 * other.e412) - (this.e4235 * other.e423) - (this.e4315 * other.e431) - (this.e4125 * other.e412)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiSandwichInfixPartial<MultiVector> lhs, VersorOdd rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension MultiVector {
     public MultiVector anti_sandwich(VersorOdd other) {
@@ -6728,17 +8476,13 @@ public extension MultiVector {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Plane {
-    // Fancy infix trick (first half)
-    public AntiSandwichInfixPartial<Plane> operator /(AntiSandwichInfix rhs) {
-        return AntiSandwichInfixPartial<Plane>(this);
-    }
+// Fancy infix trick (first half)
+public AntiSandwichInfixPartial<Plane> operator /(Plane lhs, AntiSandwichInfix rhs) {
+    return AntiSandwichInfixPartial<Plane>(lhs);
 }
-public extension AntiSandwichInfixPartial<Plane> {
-    // Fancy infix trick (second half)
-    public VersorOdd operator /(AntiCircleRotor rhs) {
-        return this.a.anti_sandwich(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<Plane> lhs, AntiCircleRotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Plane {
     public VersorOdd anti_sandwich(AntiCircleRotor other) {
@@ -6754,6 +8498,10 @@ public extension Plane {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<Plane> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Plane {
     public VersorEven anti_sandwich(AntiDipoleInversion other) {
         return VersorOdd(
@@ -6768,6 +8516,10 @@ public extension Plane {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiSandwichInfixPartial<Plane> lhs, AntiDualNum rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Plane {
     public AntiMotor anti_sandwich(AntiDualNum other) {
         return AntiFlector(
@@ -6777,6 +8529,10 @@ public extension Plane {
             float4(other.scalar) * this.group0 * float4(1.0, 1.0, 1.0, -1.0)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiSandwichInfixPartial<Plane> lhs, AntiFlatPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Plane {
     public AntiFlector anti_sandwich(AntiFlatPoint other) {
@@ -6788,6 +8544,10 @@ public extension Plane {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiSandwichInfixPartial<Plane> lhs, AntiFlector rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Plane {
     public AntiFlector anti_sandwich(AntiFlector other) {
         return AntiMotor(
@@ -6797,6 +8557,10 @@ public extension Plane {
             float4(-(other.e1 * this.e3215) - (other.e5 * this.e4235), -(other.e2 * this.e3215) - (other.e5 * this.e4315), -(other.e3 * this.e3215) - (other.e5 * this.e4125), (other.e315 * this.e4315) + (other.e125 * this.e4125)) + (other.group0.yzxx * this.group0.zxyx) - (other.group0.zxyw * this.group0.yzxw)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiSandwichInfixPartial<Plane> lhs, AntiLine rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Plane {
     public AntiMotor anti_sandwich(AntiLine other) {
@@ -6808,6 +8572,10 @@ public extension Plane {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiSandwichInfixPartial<Plane> lhs, AntiMotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Plane {
     public AntiMotor anti_sandwich(AntiMotor other) {
         return AntiFlector(
@@ -6817,6 +8585,10 @@ public extension Plane {
             float4((other.e12 * this.e4315) + (other.scalar * this.e4235), (other.e23 * this.e4125) + (other.scalar * this.e4315), (other.e31 * this.e4235) + (other.scalar * this.e4125), -(other.e15 * this.e4235) - (other.e25 * this.e4315) - (other.e35 * this.e4125)) - (other.group0.yzxw * this.group0.zxyw)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiSandwichInfixPartial<Plane> lhs, AntiPlane rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Plane {
     public AntiFlector anti_sandwich(AntiPlane other) {
@@ -6828,6 +8600,10 @@ public extension Plane {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(AntiSandwichInfixPartial<Plane> lhs, AntiScalar rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Plane {
     public Motor anti_sandwich(AntiScalar other) {
         return Plane(
@@ -6835,6 +8611,10 @@ public extension Plane {
             float4(other.e12345) * this.group0
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<Plane> lhs, Circle rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Plane {
     public VersorEven anti_sandwich(Circle other) {
@@ -6850,6 +8630,10 @@ public extension Plane {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<Plane> lhs, CircleRotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Plane {
     public VersorEven anti_sandwich(CircleRotor other) {
         return DipoleInversion(
@@ -6863,6 +8647,10 @@ public extension Plane {
             float4(other.e425 * this.e4125 * -1.0, other.e435 * this.e4235 * -1.0, other.e415 * this.e4315 * -1.0, (other.e125 * this.e4125) + (other.e12345 * this.e3215)) + (other.group2.wwwy * this.group0.xyzy) + (this.group0.yzxx * float4(other.group1.zxy, other.e235)) - (float4(this.e3215) * float4(other.group0.xyz, other.e321))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<Plane> lhs, Dipole rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Plane {
     public VersorOdd anti_sandwich(Dipole other) {
@@ -6878,6 +8666,10 @@ public extension Plane {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<Plane> lhs, DipoleInversion rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Plane {
     public VersorOdd anti_sandwich(DipoleInversion other) {
         return VersorEven(
@@ -6892,6 +8684,10 @@ public extension Plane {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(AntiSandwichInfixPartial<Plane> lhs, DualNum rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Plane {
     public Motor anti_sandwich(DualNum other) {
         return Flector(
@@ -6901,6 +8697,10 @@ public extension Plane {
             float4(other.e12345) * this.group0
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(AntiSandwichInfixPartial<Plane> lhs, FlatPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Plane {
     public Flector anti_sandwich(FlatPoint other) {
@@ -6912,6 +8712,10 @@ public extension Plane {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(AntiSandwichInfixPartial<Plane> lhs, Flector rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Plane {
     public Flector anti_sandwich(Flector other) {
         return Motor(
@@ -6921,6 +8725,10 @@ public extension Plane {
             float4((other.e35 * this.e4315) + (other.e3215 * this.e4235), (other.e15 * this.e4125) + (other.e3215 * this.e4315), (other.e25 * this.e4235) + (other.e3215 * this.e4125), -(other.e35 * this.e4125) - (other.e45 * this.e3215)) - (other.group0.yzxx * this.group0.zxyx) - (this.group0.wwwy * float4(other.group1.xyz, other.e25))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(AntiSandwichInfixPartial<Plane> lhs, Line rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Plane {
     public Motor anti_sandwich(Line other) {
@@ -6932,6 +8740,10 @@ public extension Plane {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(AntiSandwichInfixPartial<Plane> lhs, Motor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Plane {
     public Motor anti_sandwich(Motor other) {
         return Flector(
@@ -6941,6 +8753,10 @@ public extension Plane {
             float4(other.e425 * this.e4125 * -1.0, other.e435 * this.e4235 * -1.0, other.e415 * this.e4315 * -1.0, (other.e315 * this.e4315) + (other.e125 * this.e4125)) + (other.group0.zxyw * this.group0.yzxw) + (this.group0.xyzx * float4(other.group0.www, other.e235))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiSandwichInfixPartial<Plane> lhs, MultiVector rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Plane {
     public MultiVector anti_sandwich(MultiVector other) {
@@ -6970,6 +8786,10 @@ public extension Plane {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(AntiSandwichInfixPartial<Plane> lhs, Plane rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Plane {
     public Flector anti_sandwich(Plane other) {
         return Motor(
@@ -6979,6 +8799,10 @@ public extension Plane {
             float4(((float3(other.e3215) * this.group0.xyz) - (float3(this.e3215) * other.group0.xyz)), 0.0)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiSandwichInfixPartial<Plane> lhs, RoundPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Plane {
     public AntiDipoleInversion anti_sandwich(RoundPoint other) {
@@ -6992,6 +8816,10 @@ public extension Plane {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiSandwichInfixPartial<Plane> lhs, Scalar rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Plane {
     public AntiMotor anti_sandwich(Scalar other) {
         return AntiPlane(
@@ -6999,6 +8827,10 @@ public extension Plane {
             float4(other.scalar) * this.group0 * float4(1.0, 1.0, 1.0, -1.0)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public DipoleInversion operator /(AntiSandwichInfixPartial<Plane> lhs, Sphere rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Plane {
     public DipoleInversion anti_sandwich(Sphere other) {
@@ -7011,6 +8843,10 @@ public extension Plane {
             (this.group0.xyzx * other.group0.wwwx) + float4(float3(0.0), (this.e4315 * other.e4315) + (this.e4125 * other.e4125)) - (float4(this.e3215) * float4(other.group0.xyz, other.e1234))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<Plane> lhs, VersorEven rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Plane {
     public VersorEven anti_sandwich(VersorEven other) {
@@ -7026,6 +8862,10 @@ public extension Plane {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<Plane> lhs, VersorOdd rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Plane {
     public VersorOdd anti_sandwich(VersorOdd other) {
         return VersorEven(
@@ -7040,17 +8880,13 @@ public extension Plane {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension RoundPoint {
-    // Fancy infix trick (first half)
-    public AntiSandwichInfixPartial<RoundPoint> operator /(AntiSandwichInfix rhs) {
-        return AntiSandwichInfixPartial<RoundPoint>(this);
-    }
+// Fancy infix trick (first half)
+public AntiSandwichInfixPartial<RoundPoint> operator /(RoundPoint lhs, AntiSandwichInfix rhs) {
+    return AntiSandwichInfixPartial<RoundPoint>(lhs);
 }
-public extension AntiSandwichInfixPartial<RoundPoint> {
-    // Fancy infix trick (second half)
-    public VersorOdd operator /(AntiCircleRotor rhs) {
-        return this.a.anti_sandwich(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<RoundPoint> lhs, AntiCircleRotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension RoundPoint {
     public VersorOdd anti_sandwich(AntiCircleRotor other) {
@@ -7066,6 +8902,10 @@ public extension RoundPoint {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<RoundPoint> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension RoundPoint {
     public VersorEven anti_sandwich(AntiDipoleInversion other) {
         return VersorEven(
@@ -7079,6 +8919,10 @@ public extension RoundPoint {
             float4(-(other.e425 * this.e3) - (other.e235 * this.e4), -(other.e435 * this.e1) - (other.e315 * this.e4), -(other.e415 * this.e2) - (other.e125 * this.e4), (other.e412 * this.e3) + (other.e321 * this.e4)) + (this.group0.yzxy * float4(other.group1.zxy, other.e431)) + float4((float3(this.e5) * other.group0.xyz), other.e423 * this.e1)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<RoundPoint> lhs, AntiDualNum rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension RoundPoint {
     public VersorOdd anti_sandwich(AntiDualNum other) {
@@ -7094,6 +8938,10 @@ public extension RoundPoint {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<RoundPoint> lhs, AntiFlatPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension RoundPoint {
     public VersorEven anti_sandwich(AntiFlatPoint other) {
         return AntiDipoleInversion(
@@ -7107,6 +8955,10 @@ public extension RoundPoint {
             float4((float3(this.e4) * other.group0.xyz * float3(-1.0)), -(other.e235 * this.e1) - (other.e315 * this.e2) - (other.e125 * this.e3) - (other.e321 * this.e5))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<RoundPoint> lhs, AntiFlector rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension RoundPoint {
     public VersorEven anti_sandwich(AntiFlector other) {
@@ -7122,6 +8974,10 @@ public extension RoundPoint {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<RoundPoint> lhs, AntiLine rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension RoundPoint {
     public VersorOdd anti_sandwich(AntiLine other) {
         return DipoleInversion(
@@ -7135,6 +8991,10 @@ public extension RoundPoint {
             float4((other.e31 * this.e3) + (other.e15 * this.e4), (other.e12 * this.e1) + (other.e25 * this.e4), (other.e23 * this.e2) + (other.e35 * this.e4), -(other.e25 * this.e2) - (other.e35 * this.e3)) - (this.group0.yzxx * float4(other.group0.xyz.zxy, other.e15))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<RoundPoint> lhs, AntiMotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension RoundPoint {
     public VersorOdd anti_sandwich(AntiMotor other) {
@@ -7150,6 +9010,10 @@ public extension RoundPoint {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiSandwichInfixPartial<RoundPoint> lhs, AntiPlane rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension RoundPoint {
     public AntiDipoleInversion anti_sandwich(AntiPlane other) {
         return CircleRotor(
@@ -7162,6 +9026,10 @@ public extension RoundPoint {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public CircleRotor operator /(AntiSandwichInfixPartial<RoundPoint> lhs, AntiScalar rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension RoundPoint {
     public CircleRotor anti_sandwich(AntiScalar other) {
         return RoundPoint(
@@ -7171,6 +9039,10 @@ public extension RoundPoint {
             other.e12345 * this.e5
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<RoundPoint> lhs, Circle rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension RoundPoint {
     public VersorEven anti_sandwich(Circle other) {
@@ -7186,6 +9058,10 @@ public extension RoundPoint {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<RoundPoint> lhs, CircleRotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension RoundPoint {
     public VersorEven anti_sandwich(CircleRotor other) {
         return AntiDipoleInversion(
@@ -7199,6 +9075,10 @@ public extension RoundPoint {
             float4((other.e435 * this.e2) + (other.e12345 * this.e1), (other.e415 * this.e3) + (other.e12345 * this.e2), (other.e425 * this.e1) + (other.e12345 * this.e3), -(other.e315 * this.e2) - (other.e125 * this.e3)) + (float4(this.e5) * float4(other.group0.xyz, other.e12345)) - (other.group1.yzxw * float4(this.group0.zxy, this.e5)) - (other.group2.xyzx * this.group0.wwwx)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<RoundPoint> lhs, Dipole rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension RoundPoint {
     public VersorOdd anti_sandwich(Dipole other) {
@@ -7214,6 +9094,10 @@ public extension RoundPoint {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<RoundPoint> lhs, DipoleInversion rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension RoundPoint {
     public VersorOdd anti_sandwich(DipoleInversion other) {
         return VersorOdd(
@@ -7227,6 +9111,10 @@ public extension RoundPoint {
             float4(other.e15 * this.e4, other.e25 * this.e4, other.e35 * this.e4, other.e35 * this.e3 * -1.0) + (other.group1.yzxw * float4(this.group0.zxy, this.e5)) - (this.group0.yzxy * float4(other.group1.zxy, other.e25)) - float4((float3(this.e5) * other.group0.xyz), other.e15 * this.e1)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<RoundPoint> lhs, DualNum rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension RoundPoint {
     public VersorEven anti_sandwich(DualNum other) {
@@ -7242,6 +9130,10 @@ public extension RoundPoint {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<RoundPoint> lhs, FlatPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension RoundPoint {
     public VersorOdd anti_sandwich(FlatPoint other) {
         return DipoleInversion(
@@ -7255,6 +9147,10 @@ public extension RoundPoint {
             float4((float3(this.e4) * other.group0.xyz), (other.e45 * this.e5) - (other.e15 * this.e1) - (other.e25 * this.e2) - (other.e35 * this.e3))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<RoundPoint> lhs, Flector rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension RoundPoint {
     public VersorOdd anti_sandwich(Flector other) {
@@ -7270,6 +9166,10 @@ public extension RoundPoint {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<RoundPoint> lhs, Line rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension RoundPoint {
     public VersorEven anti_sandwich(Line other) {
         return AntiDipoleInversion(
@@ -7284,6 +9184,10 @@ public extension RoundPoint {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<RoundPoint> lhs, Motor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension RoundPoint {
     public VersorEven anti_sandwich(Motor other) {
         return VersorEven(
@@ -7297,6 +9201,10 @@ public extension RoundPoint {
             float4(((float3(other.e12345) * this.group0.xyz) + (other.group0.zxy * this.group0.yzx) - (float3(this.e4) * other.group1.xyz) - (other.group0.yzx * this.group0.zxy)), other.e12345 * this.e4)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiSandwichInfixPartial<RoundPoint> lhs, MultiVector rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension RoundPoint {
     public MultiVector anti_sandwich(MultiVector other) {
@@ -7326,6 +9234,10 @@ public extension RoundPoint {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public DipoleInversion operator /(AntiSandwichInfixPartial<RoundPoint> lhs, Plane rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension RoundPoint {
     public DipoleInversion anti_sandwich(Plane other) {
         return AntiCircleRotor(
@@ -7337,6 +9249,10 @@ public extension RoundPoint {
             (other.group0.xyzx * float4(float3(this.e5), this.e1)) + (other.group0.wwwy * this.group0.xyzy) + float4(float3(0.0), (other.e4125 * this.e3) + (other.e3215 * this.e4))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiSandwichInfixPartial<RoundPoint> lhs, RoundPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension RoundPoint {
     public AntiDipoleInversion anti_sandwich(RoundPoint other) {
@@ -7350,6 +9266,10 @@ public extension RoundPoint {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(AntiSandwichInfixPartial<RoundPoint> lhs, Scalar rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension RoundPoint {
     public AntiCircleRotor anti_sandwich(Scalar other) {
         return Sphere(
@@ -7359,6 +9279,10 @@ public extension RoundPoint {
             this.e4 * other.scalar
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public DipoleInversion operator /(AntiSandwichInfixPartial<RoundPoint> lhs, Sphere rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension RoundPoint {
     public DipoleInversion anti_sandwich(Sphere other) {
@@ -7371,6 +9295,10 @@ public extension RoundPoint {
             (this.group0.xyzx * other.group0.wwwx) + float4(float3(0.0), (this.e3 * other.e4125) + (this.e4 * other.e3215) + (this.e5 * other.e1234)) + float4((float3(this.e5) * other.group0.xyz), this.e2 * other.e4315)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<RoundPoint> lhs, VersorEven rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension RoundPoint {
     public VersorEven anti_sandwich(VersorEven other) {
@@ -7386,6 +9314,10 @@ public extension RoundPoint {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<RoundPoint> lhs, VersorOdd rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension RoundPoint {
     public VersorOdd anti_sandwich(VersorOdd other) {
         return VersorOdd(
@@ -7400,17 +9332,13 @@ public extension RoundPoint {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Scalar {
-    // Fancy infix trick (first half)
-    public AntiSandwichInfixPartial<Scalar> operator /(AntiSandwichInfix rhs) {
-        return AntiSandwichInfixPartial<Scalar>(this);
-    }
+// Fancy infix trick (first half)
+public AntiSandwichInfixPartial<Scalar> operator /(Scalar lhs, AntiSandwichInfix rhs) {
+    return AntiSandwichInfixPartial<Scalar>(lhs);
 }
-public extension AntiSandwichInfixPartial<Scalar> {
-    // Fancy infix trick (second half)
-    public AntiCircleRotor operator /(AntiCircleRotor rhs) {
-        return this.a.anti_sandwich(rhs);
-    }
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(AntiSandwichInfixPartial<Scalar> lhs, AntiCircleRotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Scalar {
     public AntiCircleRotor anti_sandwich(AntiCircleRotor other) {
@@ -7423,6 +9351,10 @@ public extension Scalar {
             float4(this.scalar) * other.group2 * float4(-1.0)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiSandwichInfixPartial<Scalar> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Scalar {
     public AntiDipoleInversion anti_sandwich(AntiDipoleInversion other) {
@@ -7438,6 +9370,10 @@ public extension Scalar {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiDualNum operator /(AntiSandwichInfixPartial<Scalar> lhs, AntiDualNum rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Scalar {
     public AntiDualNum anti_sandwich(AntiDualNum other) {
         return DualNum(
@@ -7446,6 +9382,10 @@ public extension Scalar {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiFlatPoint operator /(AntiSandwichInfixPartial<Scalar> lhs, AntiFlatPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Scalar {
     public AntiFlatPoint anti_sandwich(AntiFlatPoint other) {
         return FlatPoint(
@@ -7453,6 +9393,10 @@ public extension Scalar {
             float4(this.scalar) * other.group0 * float4(1.0, 1.0, 1.0, -1.0)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiSandwichInfixPartial<Scalar> lhs, AntiFlector rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Scalar {
     public AntiFlector anti_sandwich(AntiFlector other) {
@@ -7464,6 +9408,10 @@ public extension Scalar {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiLine operator /(AntiSandwichInfixPartial<Scalar> lhs, AntiLine rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Scalar {
     public AntiLine anti_sandwich(AntiLine other) {
         return Line(
@@ -7473,6 +9421,10 @@ public extension Scalar {
             float3(this.scalar) * other.group1.xyz * float3(-1.0)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiSandwichInfixPartial<Scalar> lhs, AntiMotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Scalar {
     public AntiMotor anti_sandwich(AntiMotor other) {
@@ -7484,6 +9436,10 @@ public extension Scalar {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(AntiSandwichInfixPartial<Scalar> lhs, AntiPlane rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Scalar {
     public AntiPlane anti_sandwich(AntiPlane other) {
         return Plane(
@@ -7492,6 +9448,10 @@ public extension Scalar {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(AntiSandwichInfixPartial<Scalar> lhs, AntiScalar rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Scalar {
     public AntiScalar anti_sandwich(AntiScalar other) {
         return Scalar(
@@ -7499,6 +9459,10 @@ public extension Scalar {
             other.e12345 * this.scalar
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public Circle operator /(AntiSandwichInfixPartial<Scalar> lhs, Circle rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Scalar {
     public Circle anti_sandwich(Circle other) {
@@ -7512,6 +9476,10 @@ public extension Scalar {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public CircleRotor operator /(AntiSandwichInfixPartial<Scalar> lhs, CircleRotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Scalar {
     public CircleRotor anti_sandwich(CircleRotor other) {
         return AntiCircleRotor(
@@ -7524,6 +9492,10 @@ public extension Scalar {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Dipole operator /(AntiSandwichInfixPartial<Scalar> lhs, Dipole rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Scalar {
     public Dipole anti_sandwich(Dipole other) {
         return Circle(
@@ -7535,6 +9507,10 @@ public extension Scalar {
             float3(this.scalar) * other.group2.xyz * float3(-1.0)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public DipoleInversion operator /(AntiSandwichInfixPartial<Scalar> lhs, DipoleInversion rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Scalar {
     public DipoleInversion anti_sandwich(DipoleInversion other) {
@@ -7550,6 +9526,10 @@ public extension Scalar {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public DualNum operator /(AntiSandwichInfixPartial<Scalar> lhs, DualNum rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Scalar {
     public DualNum anti_sandwich(DualNum other) {
         return AntiDualNum(
@@ -7558,6 +9538,10 @@ public extension Scalar {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public FlatPoint operator /(AntiSandwichInfixPartial<Scalar> lhs, FlatPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Scalar {
     public FlatPoint anti_sandwich(FlatPoint other) {
         return AntiFlatPoint(
@@ -7565,6 +9549,10 @@ public extension Scalar {
             float4(this.scalar) * other.group0 * float4(-1.0, -1.0, -1.0, 1.0)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(AntiSandwichInfixPartial<Scalar> lhs, Flector rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Scalar {
     public Flector anti_sandwich(Flector other) {
@@ -7576,6 +9564,10 @@ public extension Scalar {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Line operator /(AntiSandwichInfixPartial<Scalar> lhs, Line rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Scalar {
     public Line anti_sandwich(Line other) {
         return AntiLine(
@@ -7586,6 +9578,10 @@ public extension Scalar {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(AntiSandwichInfixPartial<Scalar> lhs, Motor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Scalar {
     public Motor anti_sandwich(Motor other) {
         return AntiMotor(
@@ -7595,6 +9591,10 @@ public extension Scalar {
             float4(this.scalar) * other.group1
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiSandwichInfixPartial<Scalar> lhs, MultiVector rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Scalar {
     public MultiVector anti_sandwich(MultiVector other) {
@@ -7624,6 +9624,10 @@ public extension Scalar {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Plane operator /(AntiSandwichInfixPartial<Scalar> lhs, Plane rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Scalar {
     public Plane anti_sandwich(Plane other) {
         return AntiPlane(
@@ -7631,6 +9635,10 @@ public extension Scalar {
             float4(this.scalar) * other.group0 * float4(1.0, 1.0, 1.0, -1.0)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public RoundPoint operator /(AntiSandwichInfixPartial<Scalar> lhs, RoundPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Scalar {
     public RoundPoint anti_sandwich(RoundPoint other) {
@@ -7642,6 +9650,10 @@ public extension Scalar {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(AntiSandwichInfixPartial<Scalar> lhs, Scalar rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Scalar {
     public Scalar anti_sandwich(Scalar other) {
         return AntiScalar(
@@ -7649,6 +9661,10 @@ public extension Scalar {
             other.scalar * this.scalar * -1.0
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public Sphere operator /(AntiSandwichInfixPartial<Scalar> lhs, Sphere rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Scalar {
     public Sphere anti_sandwich(Sphere other) {
@@ -7659,6 +9675,10 @@ public extension Scalar {
             this.scalar * other.e3215 * -1.0
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<Scalar> lhs, VersorEven rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Scalar {
     public VersorEven anti_sandwich(VersorEven other) {
@@ -7674,6 +9694,10 @@ public extension Scalar {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<Scalar> lhs, VersorOdd rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Scalar {
     public VersorOdd anti_sandwich(VersorOdd other) {
         return VersorEven(
@@ -7688,17 +9712,13 @@ public extension Scalar {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension Sphere {
-    // Fancy infix trick (first half)
-    public AntiSandwichInfixPartial<Sphere> operator /(AntiSandwichInfix rhs) {
-        return AntiSandwichInfixPartial<Sphere>(this);
-    }
+// Fancy infix trick (first half)
+public AntiSandwichInfixPartial<Sphere> operator /(Sphere lhs, AntiSandwichInfix rhs) {
+    return AntiSandwichInfixPartial<Sphere>(lhs);
 }
-public extension AntiSandwichInfixPartial<Sphere> {
-    // Fancy infix trick (second half)
-    public VersorOdd operator /(AntiCircleRotor rhs) {
-        return this.a.anti_sandwich(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<Sphere> lhs, AntiCircleRotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Sphere {
     public VersorOdd anti_sandwich(AntiCircleRotor other) {
@@ -7714,6 +9734,10 @@ public extension Sphere {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<Sphere> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Sphere {
     public VersorEven anti_sandwich(AntiDipoleInversion other) {
         return VersorOdd(
@@ -7727,6 +9751,10 @@ public extension Sphere {
             float4(other.e425 * this.e4125 * -1.0, other.e435 * this.e4235 * -1.0, other.e415 * this.e4315 * -1.0, other.e125 * this.e4125) + (other.group2.xyzy * float4(float3(this.e1234), this.e4315)) + (this.group0.yzxx * float4(other.group1.zxy, other.e235)) - (float4(this.e3215) * float4(other.group0.xyz, other.e321))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<Sphere> lhs, AntiDualNum rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Sphere {
     public VersorOdd anti_sandwich(AntiDualNum other) {
@@ -7742,6 +9770,10 @@ public extension Sphere {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<Sphere> lhs, AntiFlatPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Sphere {
     public VersorEven anti_sandwich(AntiFlatPoint other) {
         return DipoleInversion(
@@ -7755,6 +9787,10 @@ public extension Sphere {
             float4((float3(this.e1234) * other.group0.xyz), (other.e235 * this.e4235) + (other.e315 * this.e4315) + (other.e125 * this.e4125) - (other.e321 * this.e3215))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<Sphere> lhs, AntiFlector rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Sphere {
     public VersorEven anti_sandwich(AntiFlector other) {
@@ -7770,6 +9806,10 @@ public extension Sphere {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<Sphere> lhs, AntiLine rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Sphere {
     public VersorOdd anti_sandwich(AntiLine other) {
         return AntiDipoleInversion(
@@ -7783,6 +9823,10 @@ public extension Sphere {
             float4((other.e12 * this.e4315) + (other.e15 * this.e1234), (other.e23 * this.e4125) + (other.e25 * this.e1234), (other.e31 * this.e4235) + (other.e35 * this.e1234), -(other.e25 * this.e4315) - (other.e35 * this.e4125)) - (this.group0.zxyx * float4(other.group0.xyz.yzx, other.e15))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<Sphere> lhs, AntiMotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Sphere {
     public VersorOdd anti_sandwich(AntiMotor other) {
@@ -7798,6 +9842,10 @@ public extension Sphere {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiSandwichInfixPartial<Sphere> lhs, AntiPlane rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Sphere {
     public AntiDipoleInversion anti_sandwich(AntiPlane other) {
         return AntiCircleRotor(
@@ -7810,6 +9858,10 @@ public extension Sphere {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public CircleRotor operator /(AntiSandwichInfixPartial<Sphere> lhs, AntiScalar rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Sphere {
     public CircleRotor anti_sandwich(AntiScalar other) {
         return Sphere(
@@ -7819,6 +9871,10 @@ public extension Sphere {
             other.e12345 * this.e1234
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<Sphere> lhs, Circle rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Sphere {
     public VersorEven anti_sandwich(Circle other) {
@@ -7834,6 +9890,10 @@ public extension Sphere {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<Sphere> lhs, CircleRotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Sphere {
     public VersorEven anti_sandwich(CircleRotor other) {
         return DipoleInversion(
@@ -7847,6 +9907,10 @@ public extension Sphere {
             float4(other.e425 * this.e4125 * -1.0, other.e435 * this.e4235 * -1.0, other.e415 * this.e4315 * -1.0, other.e12345 * this.e3215) + (other.group2.xyzy * float4(float3(this.e1234), this.e4315)) + (other.group2.wwwz * this.group0.xyzz) + (this.group0.yzxx * float4(other.group1.zxy, other.e235)) - (float4(this.e3215) * float4(other.group0.xyz, other.e321))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<Sphere> lhs, Dipole rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Sphere {
     public VersorOdd anti_sandwich(Dipole other) {
@@ -7862,6 +9926,10 @@ public extension Sphere {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<Sphere> lhs, DipoleInversion rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Sphere {
     public VersorOdd anti_sandwich(DipoleInversion other) {
         return VersorEven(
@@ -7875,6 +9943,10 @@ public extension Sphere {
             float4(-(other.e41 * this.e3215) - (other.e31 * this.e4125), -(other.e42 * this.e3215) - (other.e12 * this.e4235), -(other.e43 * this.e3215) - (other.e23 * this.e4315), (other.e43 * this.e4125) + (other.e45 * this.e1234)) + (this.group0.yzxx * float4(other.group1.zxy, other.e41)) + float4((float3(this.e1234) * other.group2.xyz), other.e42 * this.e4315)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<Sphere> lhs, DualNum rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Sphere {
     public VersorEven anti_sandwich(DualNum other) {
@@ -7890,6 +9962,10 @@ public extension Sphere {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<Sphere> lhs, FlatPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Sphere {
     public VersorOdd anti_sandwich(FlatPoint other) {
         return AntiDipoleInversion(
@@ -7903,6 +9979,10 @@ public extension Sphere {
             float4((float3(this.e1234) * other.group0.xyz), -(other.e15 * this.e4235) - (other.e25 * this.e4315) - (other.e35 * this.e4125) - (other.e45 * this.e3215))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<Sphere> lhs, Flector rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Sphere {
     public VersorOdd anti_sandwich(Flector other) {
@@ -7918,6 +9998,10 @@ public extension Sphere {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<Sphere> lhs, Line rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Sphere {
     public VersorEven anti_sandwich(Line other) {
         return DipoleInversion(
@@ -7932,6 +10016,10 @@ public extension Sphere {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<Sphere> lhs, Motor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Sphere {
     public VersorEven anti_sandwich(Motor other) {
         return VersorOdd(
@@ -7945,6 +10033,10 @@ public extension Sphere {
             float4(other.e425 * this.e4125 * -1.0, other.e435 * this.e4235 * -1.0, other.e415 * this.e4315 * -1.0, other.e125 * this.e4125) + (other.group0.zxyw * this.group0.yzxw) + (other.group1.xyzy * float4(float3(this.e1234), this.e4315)) + (this.group0.xyzx * float4(other.group0.www, other.e235))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiSandwichInfixPartial<Sphere> lhs, MultiVector rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Sphere {
     public MultiVector anti_sandwich(MultiVector other) {
@@ -7974,6 +10066,10 @@ public extension Sphere {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public DipoleInversion operator /(AntiSandwichInfixPartial<Sphere> lhs, Plane rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Sphere {
     public DipoleInversion anti_sandwich(Plane other) {
         return CircleRotor(
@@ -7985,6 +10081,10 @@ public extension Sphere {
             (other.group0.wwwx * this.group0.xyzx) + float4(float3(0.0), (other.e4315 * this.e4315) + (other.e4125 * this.e4125)) - (other.group0 * float4(this.group0.www, this.e1234))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiSandwichInfixPartial<Sphere> lhs, RoundPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Sphere {
     public AntiDipoleInversion anti_sandwich(RoundPoint other) {
@@ -7998,6 +10098,10 @@ public extension Sphere {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(AntiSandwichInfixPartial<Sphere> lhs, Scalar rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Sphere {
     public AntiCircleRotor anti_sandwich(Scalar other) {
         return RoundPoint(
@@ -8007,6 +10111,10 @@ public extension Sphere {
             other.scalar * this.e3215 * -1.0
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public DipoleInversion operator /(AntiSandwichInfixPartial<Sphere> lhs, Sphere rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Sphere {
     public DipoleInversion anti_sandwich(Sphere other) {
@@ -8019,6 +10127,10 @@ public extension Sphere {
             (other.group0.wwwx * this.group0.xyzx) + float4(float3(0.0), (other.e4315 * this.e4315) + (other.e4125 * this.e4125) - (other.e1234 * this.e3215)) - (other.group0 * float4(this.group0.www, this.e1234))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<Sphere> lhs, VersorEven rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension Sphere {
     public VersorEven anti_sandwich(VersorEven other) {
@@ -8034,6 +10146,10 @@ public extension Sphere {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<Sphere> lhs, VersorOdd rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension Sphere {
     public VersorOdd anti_sandwich(VersorOdd other) {
         return VersorEven(
@@ -8048,17 +10164,13 @@ public extension Sphere {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension VersorEven {
-    // Fancy infix trick (first half)
-    public AntiSandwichInfixPartial<VersorEven> operator /(AntiSandwichInfix rhs) {
-        return AntiSandwichInfixPartial<VersorEven>(this);
-    }
+// Fancy infix trick (first half)
+public AntiSandwichInfixPartial<VersorEven> operator /(VersorEven lhs, AntiSandwichInfix rhs) {
+    return AntiSandwichInfixPartial<VersorEven>(lhs);
 }
-public extension AntiSandwichInfixPartial<VersorEven> {
-    // Fancy infix trick (second half)
-    public VersorOdd operator /(AntiCircleRotor rhs) {
-        return this.a.anti_sandwich(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<VersorEven> lhs, AntiCircleRotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension VersorEven {
     public VersorOdd anti_sandwich(AntiCircleRotor other) {
@@ -8074,6 +10186,10 @@ public extension VersorEven {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<VersorEven> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension VersorEven {
     public VersorEven anti_sandwich(AntiDipoleInversion other) {
         return VersorEven(
@@ -8087,6 +10203,10 @@ public extension VersorEven {
             float4((other.e315 * this.e412) + (other.e4 * this.e235) + (other.e1 * this.e12345) + (other.e3 * this.e425), (other.e125 * this.e423) + (other.e4 * this.e315) + (other.e1 * this.e435) + (other.e2 * this.e12345), (other.e235 * this.e431) + (other.e4 * this.e125) + (other.e2 * this.e415) + (other.e3 * this.e12345), -(other.e4 * this.e321) - (other.e1 * this.e423) - (other.e2 * this.e431) - (other.e3 * this.e412)) + (float4(this.e321, this.e3, this.e1, this.e3) * float4(other.group1.xxy, other.e412)) + (float4(this.e2, this.e321, this.e321, this.e4) * other.group1.zyzw) + float4((other.group0.xyz.xxy * this.group2.wzx), other.e423 * this.e1) + float4((other.group0.xyz.zyz * this.group2.yww), other.e431 * this.e2) + float4((other.group1.www * this.group1.xyz), other.e4 * this.e12345) - (float4(this.e431, this.e4, this.e4, this.e423) * float4(other.group2.zyz, other.e415)) - (float4(this.e4, this.e412, this.e423, this.e435) * float4(other.group2.xxy, other.e412)) - (this.group0.xyzz * float4(other.group3.www, other.e435)) - float4((other.group0.xyz.yzx * this.group2.zxy), other.e423 * this.e415) - float4((other.group1.yzx * this.group3.zxy), other.e431 * this.e425) - float4((other.group3.yzx * this.group1.zxy), other.e425 * this.e431)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<VersorEven> lhs, AntiDualNum rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension VersorEven {
     public VersorOdd anti_sandwich(AntiDualNum other) {
@@ -8102,6 +10222,10 @@ public extension VersorEven {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<VersorEven> lhs, AntiFlatPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension VersorEven {
     public VersorEven anti_sandwich(AntiFlatPoint other) {
         return VersorEven(
@@ -8115,6 +10239,10 @@ public extension VersorEven {
             float4(((float3(other.e321) * this.group1.xyz) + (other.group0.yzx * this.group0.zxy) - (float3(this.e431, this.e4, this.e4) * other.group0.zyz) - (float3(this.e4, this.e412, this.e423) * other.group0.xxy)), other.e321 * this.e4)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<VersorEven> lhs, AntiFlector rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension VersorEven {
     public VersorEven anti_sandwich(AntiFlector other) {
@@ -8130,6 +10258,10 @@ public extension VersorEven {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<VersorEven> lhs, AntiLine rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension VersorEven {
     public VersorOdd anti_sandwich(AntiLine other) {
         return VersorOdd(
@@ -8143,6 +10275,10 @@ public extension VersorEven {
             float4((other.e31 * this.e3) + (other.e15 * this.e4) + (other.e35 * this.e431), (other.e12 * this.e1) + (other.e15 * this.e412) + (other.e25 * this.e4), (other.e23 * this.e2) + (other.e25 * this.e423) + (other.e35 * this.e4), -(other.e15 * this.e415) - (other.e15 * this.e1) - (other.e25 * this.e425) - (other.e25 * this.e2) - (other.e35 * this.e435) - (other.e35 * this.e3)) - (float4(this.e321, this.e3, this.e1, this.e235) * float4(other.group0.xyz.xxy, other.e23)) - (float4(this.e2, this.e321, this.e321, this.e315) * float4(other.group0.xyz.zyz, other.e31)) - float4((other.group1.xyz.yzx * this.group0.zxy), other.e12 * this.e125)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<VersorEven> lhs, AntiMotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension VersorEven {
     public VersorOdd anti_sandwich(AntiMotor other) {
@@ -8158,6 +10294,10 @@ public extension VersorEven {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<VersorEven> lhs, AntiPlane rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension VersorEven {
     public VersorEven anti_sandwich(AntiPlane other) {
         return VersorEven(
@@ -8171,6 +10311,10 @@ public extension VersorEven {
             float4((other.e1 * this.e12345) + (other.e3 * this.e425), (other.e1 * this.e435) + (other.e2 * this.e12345), (other.e2 * this.e415) + (other.e3 * this.e12345), other.e3 * this.e412 * -1.0) - (other.group0.yzxx * float4(this.group1.zxy, this.e423)) - (other.group0.wwwy * this.group0.xyzy)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<VersorEven> lhs, AntiScalar rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension VersorEven {
     public VersorEven anti_sandwich(AntiScalar other) {
@@ -8186,6 +10330,10 @@ public extension VersorEven {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<VersorEven> lhs, Circle rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension VersorEven {
     public VersorEven anti_sandwich(Circle other) {
         return VersorEven(
@@ -8199,6 +10347,10 @@ public extension VersorEven {
             float4((other.e435 * this.e2) + (other.e321 * this.e415), (other.e425 * this.e321) + (other.e321 * this.e425), (other.e435 * this.e321) + (other.e321 * this.e435), -(other.e425 * this.e431) - (other.e435 * this.e412)) + (float4(this.e321, this.e3, this.e1, this.e4) * other.group1.xxyw) + float4((other.group0.xyz.xxy * this.group2.wzx), other.e423 * this.e1) + float4((other.group0.xyz.zyz * this.group2.yww), other.e431 * this.e2) + float4((other.group2.xyz.yzx * this.group0.zxy), other.e412 * this.e3) - (float4(this.e431, this.e4, this.e4, this.e435) * float4(other.group2.xyz.zyz, other.e412)) - (float4(this.e4, this.e412, this.e423, this.e425) * float4(other.group2.xyz.xxy, other.e431)) - (other.group1.yzxx * float4(this.group3.zxy, this.e423)) - float4((other.group0.xyz.yzx * this.group2.zxy), other.e423 * this.e415)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<VersorEven> lhs, CircleRotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension VersorEven {
     public VersorEven anti_sandwich(CircleRotor other) {
@@ -8214,6 +10366,10 @@ public extension VersorEven {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<VersorEven> lhs, Dipole rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension VersorEven {
     public VersorOdd anti_sandwich(Dipole other) {
         return VersorOdd(
@@ -8227,6 +10383,10 @@ public extension VersorEven {
             float4((other.e31 * this.e3) + (other.e45 * this.e415) + (other.e15 * this.e4) + (other.e35 * this.e431), (other.e12 * this.e1) + (other.e45 * this.e425) + (other.e15 * this.e412) + (other.e25 * this.e4), (other.e23 * this.e2) + (other.e45 * this.e435) + (other.e25 * this.e423) + (other.e35 * this.e4), -(other.e23 * this.e235) - (other.e31 * this.e315) - (other.e12 * this.e125) - (other.e35 * this.e3)) + (this.group2.zxyw * float4(other.group0.xyz.yzx, other.e45)) - (float4(this.e321, this.e3, this.e1, this.e2) * float4(other.group1.xxy, other.e25)) - (float4(this.e2, this.e321, this.e321, this.e435) * float4(other.group1.zyz, other.e35)) - float4((other.group0.xyz.xxy * this.group2.wzx), other.e15 * this.e415) - float4((other.group0.xyz.zyz * this.group2.yww), other.e15 * this.e1) - float4((other.group2.xyz.yzx * this.group0.zxy), other.e25 * this.e425)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<VersorEven> lhs, DipoleInversion rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension VersorEven {
     public VersorOdd anti_sandwich(DipoleInversion other) {
@@ -8242,6 +10402,10 @@ public extension VersorEven {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<VersorEven> lhs, DualNum rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension VersorEven {
     public VersorEven anti_sandwich(DualNum other) {
         return VersorEven(
@@ -8255,6 +10419,10 @@ public extension VersorEven {
             float4(((float3(other.e12345) * this.group3.xyz) - (float3(other.e5) * this.group0.xyz)), other.e12345 * this.e4)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<VersorEven> lhs, FlatPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension VersorEven {
     public VersorOdd anti_sandwich(FlatPoint other) {
@@ -8270,6 +10438,10 @@ public extension VersorEven {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<VersorEven> lhs, Flector rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension VersorEven {
     public VersorOdd anti_sandwich(Flector other) {
         return VersorOdd(
@@ -8283,6 +10455,10 @@ public extension VersorEven {
             float4((other.e4235 * this.e12345) + (other.e4125 * this.e425) + (other.e3215 * this.e423), (other.e4235 * this.e435) + (other.e4315 * this.e12345) + (other.e3215 * this.e431), (other.e4315 * this.e415) + (other.e4125 * this.e12345) + (other.e3215 * this.e412), -(other.e25 * this.e425) - (other.e25 * this.e2) - (other.e35 * this.e435) - (other.e35 * this.e3) - (other.e4235 * this.e235) - (other.e4315 * this.e315) - (other.e4125 * this.e125)) + (float4(this.e431, this.e4, this.e4, this.e12345) * float4(other.group0.zyz, other.e3215)) + (float4(this.e4, this.e412, this.e423, this.e5) * other.group0.xxyw) + (this.group1 * float4(other.group0.www, other.e3215)) - (other.group0.yzxx * float4(this.group0.zxy, this.e415)) - float4((other.group1.yzx * this.group1.zxy), other.e15 * this.e1)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<VersorEven> lhs, Line rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension VersorEven {
     public VersorEven anti_sandwich(Line other) {
@@ -8298,6 +10474,10 @@ public extension VersorEven {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<VersorEven> lhs, Motor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension VersorEven {
     public VersorEven anti_sandwich(Motor other) {
         return VersorEven(
@@ -8311,6 +10491,10 @@ public extension VersorEven {
             float4((other.e435 * this.e2) + (other.e12345 * this.e1) + (other.e315 * this.e412) - (other.e5 * this.e423), (other.e425 * this.e321) + (other.e12345 * this.e2) + (other.e125 * this.e423) - (other.e5 * this.e431), (other.e435 * this.e321) + (other.e12345 * this.e3) + (other.e235 * this.e431) - (other.e5 * this.e412), 0.0) + (float4(this.e321, this.e3, this.e1, this.e4) * other.group0.xxyw) - (float4(this.e431, this.e4, this.e4, this.e412) * float4(other.group1.zyz, other.e435)) - (float4(this.e4, this.e412, this.e423, this.e431) * float4(other.group1.xxy, other.e425)) - (other.group0.yzxx * float4(this.group3.zxy, this.e423))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiSandwichInfixPartial<VersorEven> lhs, MultiVector rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension VersorEven {
     public MultiVector anti_sandwich(MultiVector other) {
@@ -8340,6 +10524,10 @@ public extension VersorEven {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<VersorEven> lhs, Plane rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension VersorEven {
     public VersorOdd anti_sandwich(Plane other) {
         return VersorOdd(
@@ -8353,6 +10541,10 @@ public extension VersorEven {
             float4(other.e3215 * this.e423, other.e3215 * this.e431, other.e3215 * this.e412, -(other.e4315 * this.e315) - (other.e4125 * this.e125)) + (float4(this.e12345, this.e435, this.e415, this.e12345) * other.group0.xxyw) + (float4(this.e425, this.e12345, this.e12345, this.e321) * other.group0.zyzw) - (other.group0.yzxx * float4(this.group1.zxy, this.e235))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<VersorEven> lhs, RoundPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension VersorEven {
     public VersorEven anti_sandwich(RoundPoint other) {
@@ -8368,6 +10560,10 @@ public extension VersorEven {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<VersorEven> lhs, Scalar rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension VersorEven {
     public VersorOdd anti_sandwich(Scalar other) {
         return VersorOdd(
@@ -8381,6 +10577,10 @@ public extension VersorEven {
             float4(other.scalar) * float4(this.group3.xyz, this.e5) * float4(-1.0, -1.0, -1.0, 1.0)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<VersorEven> lhs, Sphere rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension VersorEven {
     public VersorOdd anti_sandwich(Sphere other) {
@@ -8396,6 +10596,10 @@ public extension VersorEven {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<VersorEven> lhs, VersorEven rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension VersorEven {
     public VersorEven anti_sandwich(VersorEven other) {
         return VersorEven(
@@ -8409,6 +10613,10 @@ public extension VersorEven {
             float4((other.e315 * this.e412) + (other.e1 * this.e12345) + (other.e3 * this.e425) + (other.e4 * this.e235), (other.e125 * this.e423) + (other.e1 * this.e435) + (other.e2 * this.e12345) + (other.e4 * this.e315), (other.e235 * this.e431) + (other.e2 * this.e415) + (other.e3 * this.e12345) + (other.e4 * this.e125), -(other.e1 * this.e423) - (other.e2 * this.e431) - (other.e3 * this.e412) - (other.e4 * this.e321)) + (float4(this.e321, this.e3, this.e1, this.e4) * float4(other.group1.xxy, other.e12345)) + (float4(this.e2, this.e321, this.e321, this.e4) * other.group1.zyzw) + (other.group0.xxyx * float4(this.group2.wzx, this.e1)) + (other.group0.zyzy * float4(this.group2.yww, this.e2)) + (other.group0.wwwz * this.group3.xyzz) + float4((other.group1.www * this.group1.xyz), other.e4 * this.e12345) - (float4(this.e431, this.e4, this.e4, this.e423) * float4(other.group2.zyz, other.e415)) - (float4(this.e4, this.e412, this.e423, this.e435) * float4(other.group2.xxy, other.e412)) - (other.group0.yzxx * float4(this.group2.zxy, this.e415)) - (this.group0.xyzy * float4(other.group2.www, other.e425)) - float4((other.group1.yzx * this.group3.zxy), other.e431 * this.e425) - float4((other.group3.yzx * this.group1.zxy), other.e435 * this.e412)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<VersorEven> lhs, VersorOdd rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension VersorEven {
     public VersorOdd anti_sandwich(VersorOdd other) {
@@ -8424,17 +10632,13 @@ public extension VersorEven {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
-public extension VersorOdd {
-    // Fancy infix trick (first half)
-    public AntiSandwichInfixPartial<VersorOdd> operator /(AntiSandwichInfix rhs) {
-        return AntiSandwichInfixPartial<VersorOdd>(this);
-    }
+// Fancy infix trick (first half)
+public AntiSandwichInfixPartial<VersorOdd> operator /(VersorOdd lhs, AntiSandwichInfix rhs) {
+    return AntiSandwichInfixPartial<VersorOdd>(lhs);
 }
-public extension AntiSandwichInfixPartial<VersorOdd> {
-    // Fancy infix trick (second half)
-    public VersorOdd operator /(AntiCircleRotor rhs) {
-        return this.a.anti_sandwich(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<VersorOdd> lhs, AntiCircleRotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension VersorOdd {
     public VersorOdd anti_sandwich(AntiCircleRotor other) {
@@ -8450,6 +10654,10 @@ public extension VersorOdd {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<VersorOdd> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension VersorOdd {
     public VersorEven anti_sandwich(AntiDipoleInversion other) {
         return VersorOdd(
@@ -8463,6 +10671,10 @@ public extension VersorOdd {
             (float4(other.e5) * this.group0) + (float4(this.e42, this.e1234, this.e1234, this.e25) * float4(other.group2.zyz, other.e2)) + (float4(this.e45, this.e4125, this.e4235, this.e4315) * float4(other.group1.xxy, other.e315)) + (float4(this.e1234, this.e43, this.e41, this.e15) * float4(other.group2.xxy, other.e1)) + (float4(this.e4315, this.e45, this.e45, this.e4125) * float4(other.group1.zyz, other.e125)) + (other.group3.yzxz * float4(this.group1.zxy, this.e35)) + float4((other.group0.xyz.yzx * this.group2.zxy), other.e235 * this.e4235) - (float4(other.e321) * float4(this.group1.xyz, this.e3215)) - (float4(this.scalar, this.e12, this.e23, this.e12) * float4(other.group3.xxy, other.e125)) - (float4(this.e31, this.scalar, this.scalar, this.e45) * other.group3.zyzw) - (float4(this.e25, this.e3215, this.e3215, this.e25) * float4(other.group0.xyz.zyz, other.e425)) - (float4(this.e3215, this.e35, this.e15, this.e15) * float4(other.group0.xyz.xxy, other.e415)) - (other.group1.yzxz * float4(this.group3.zxy, this.e35)) - (other.group2.yzxx * float4(this.group0.zxy, this.e23)) - (other.group2.wwwy * float4(this.group2.xyz, this.e31))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<VersorOdd> lhs, AntiDualNum rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension VersorOdd {
     public VersorOdd anti_sandwich(AntiDualNum other) {
@@ -8478,6 +10690,10 @@ public extension VersorOdd {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<VersorOdd> lhs, AntiFlatPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension VersorOdd {
     public VersorEven anti_sandwich(AntiFlatPoint other) {
         return VersorOdd(
@@ -8491,6 +10707,10 @@ public extension VersorOdd {
             (float4(this.e42, this.e1234, this.e1234, this.e4315) * other.group0.zyzy) + (float4(this.e1234, this.e43, this.e41, this.e4235) * other.group0.xxyx) + float4(float3(0.0), (other.e125 * this.e4125) - (other.e125 * this.e12) - (other.e321 * this.e3215)) - (other.group0.yzxx * float4(this.group0.zxy, this.e23)) - (other.group0.wwwy * this.group1.xyzy)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<VersorOdd> lhs, AntiFlector rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension VersorOdd {
     public VersorEven anti_sandwich(AntiFlector other) {
@@ -8506,6 +10726,10 @@ public extension VersorOdd {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<VersorOdd> lhs, AntiLine rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension VersorOdd {
     public VersorOdd anti_sandwich(AntiLine other) {
         return VersorEven(
@@ -8519,6 +10743,10 @@ public extension VersorOdd {
             float4((other.e35 * this.e42) - (other.e31 * this.e4125) - (other.e25 * this.e43), (other.e25 * this.e1234) - (other.e12 * this.e4235) - (other.e35 * this.e41), (other.e35 * this.e1234) - (other.e23 * this.e4315) - (other.e15 * this.e42), 0.0) + (float4(this.e45, this.e4125, this.e4235, this.e41) * float4(other.group0.xyz.xxy, other.e23)) + (float4(this.e1234, this.e43, this.e41, this.e43) * float4(other.group1.xyz.xxy, other.e12)) + (float4(this.e4315, this.e45, this.e45, this.e42) * float4(other.group0.xyz.zyz, other.e31))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<VersorOdd> lhs, AntiMotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension VersorOdd {
     public VersorOdd anti_sandwich(AntiMotor other) {
@@ -8534,6 +10762,10 @@ public extension VersorOdd {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<VersorOdd> lhs, AntiPlane rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension VersorOdd {
     public VersorEven anti_sandwich(AntiPlane other) {
         return VersorOdd(
@@ -8547,6 +10779,10 @@ public extension VersorOdd {
             float4(other.e3 * this.e31 * -1.0, other.e2 * this.scalar * -1.0, other.e3 * this.scalar * -1.0, (other.e3 * this.e35) + (other.e5 * this.scalar)) + (other.group0.yzxx * float4(this.group1.zxy, this.e15)) + (other.group0.wwwy * float4(this.group0.xyz, this.e25)) - (float4(this.scalar, this.e12, this.e23, this.e45) * other.group0.xxyw)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<VersorOdd> lhs, AntiScalar rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension VersorOdd {
     public VersorEven anti_sandwich(AntiScalar other) {
@@ -8562,6 +10798,10 @@ public extension VersorOdd {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<VersorOdd> lhs, Circle rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension VersorOdd {
     public VersorEven anti_sandwich(Circle other) {
         return VersorOdd(
@@ -8575,6 +10815,10 @@ public extension VersorOdd {
             float4((other.e415 * this.e45) + (other.e435 * this.e4315), (other.e415 * this.e4125) + (other.e425 * this.e45), (other.e425 * this.e4235) + (other.e435 * this.e45), -(other.e435 * this.e35) - (other.e321 * this.e3215)) + (float4(this.e42, this.e1234, this.e1234, this.e4125) * float4(other.group2.xyz.zyz, other.e125)) + (float4(this.e1234, this.e43, this.e41, this.e4315) * float4(other.group2.xyz.xxy, other.e315)) + float4((other.group0.xyz.yzx * this.group2.zxy), other.e235 * this.e4235) - (float4(this.e25, this.e3215, this.e3215, this.e31) * float4(other.group0.xyz.zyz, other.e315)) - (float4(this.e3215, this.e35, this.e15, this.e23) * float4(other.group0.xyz.xxy, other.e235)) - (other.group1.yzxx * float4(this.group3.zxy, this.e15)) - (other.group1.wwwy * float4(this.group1.xyz, this.e25)) - float4((other.group2.xyz.yzx * this.group0.zxy), other.e125 * this.e12)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<VersorOdd> lhs, CircleRotor rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension VersorOdd {
     public VersorEven anti_sandwich(CircleRotor other) {
@@ -8590,6 +10834,10 @@ public extension VersorOdd {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<VersorOdd> lhs, Dipole rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension VersorOdd {
     public VersorOdd anti_sandwich(Dipole other) {
         return VersorEven(
@@ -8603,6 +10851,10 @@ public extension VersorOdd {
             float4(-(other.e41 * this.e3215) - (other.e43 * this.e25) - (other.e31 * this.e4125) - (other.e25 * this.e43), -(other.e41 * this.e35) - (other.e42 * this.e3215) - (other.e12 * this.e4235) - (other.e35 * this.e41), -(other.e42 * this.e15) - (other.e43 * this.e3215) - (other.e23 * this.e4315) - (other.e15 * this.e42), (other.e23 * this.e41) + (other.e31 * this.e42) + (other.e12 * this.e43) + (other.e45 * this.e1234)) + (float4(this.e42, this.e1234, this.e1234, this.e31) * float4(other.group2.xyz.zyz, other.e42)) + (float4(this.e45, this.e4125, this.e4235, this.e4315) * float4(other.group1.xxy, other.e42)) + (float4(this.e1234, this.e43, this.e41, this.e4235) * float4(other.group2.xyz.xxy, other.e41)) + (float4(this.e4315, this.e45, this.e45, this.e12) * float4(other.group1.zyz, other.e43)) + float4((other.group0.xyz.yzx * this.group2.zxy), other.e41 * this.e23) + float4((other.group1.www * this.group1.xyz), other.e43 * this.e4125)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<VersorOdd> lhs, DipoleInversion rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension VersorOdd {
     public VersorOdd anti_sandwich(DipoleInversion other) {
@@ -8618,6 +10870,10 @@ public extension VersorOdd {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<VersorOdd> lhs, DualNum rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension VersorOdd {
     public VersorEven anti_sandwich(DualNum other) {
         return VersorOdd(
@@ -8631,6 +10887,10 @@ public extension VersorOdd {
             (float4(other.e5) * this.group0) + (float4(other.e12345) * this.group3) + float4(float3(0.0), other.e5 * this.e45 * -1.0)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<VersorOdd> lhs, FlatPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension VersorOdd {
     public VersorOdd anti_sandwich(FlatPoint other) {
@@ -8646,6 +10906,10 @@ public extension VersorOdd {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<VersorOdd> lhs, Flector rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension VersorOdd {
     public VersorOdd anti_sandwich(Flector other) {
         return VersorEven(
@@ -8659,6 +10923,10 @@ public extension VersorOdd {
             float4((other.e35 * this.e42) + (other.e45 * this.e23) + (other.e4235 * this.scalar) + (other.e4125 * this.e31) + (other.e3215 * this.e41), (other.e25 * this.e1234) + (other.e45 * this.e31) + (other.e4235 * this.e12) + (other.e4315 * this.scalar) + (other.e3215 * this.e42), (other.e35 * this.e1234) + (other.e45 * this.e12) + (other.e4315 * this.e23) + (other.e4125 * this.scalar) + (other.e3215 * this.e43), other.e4125 * this.e43 * -1.0) + (float4(this.e1234, this.e43, this.e41, this.e1234) * other.group0.xxyw) - (other.group1.yzxy * float4(this.group1.zxy, this.e42)) - (this.group0.zxyx * float4(other.group0.yzx, other.e4235))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<VersorOdd> lhs, Line rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension VersorOdd {
     public VersorEven anti_sandwich(Line other) {
@@ -8674,6 +10942,10 @@ public extension VersorOdd {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<VersorOdd> lhs, Motor rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension VersorOdd {
     public VersorEven anti_sandwich(Motor other) {
         return VersorOdd(
@@ -8687,6 +10959,10 @@ public extension VersorOdd {
             float4(other.e5 * this.e41, other.e5 * this.e42, other.e5 * this.e43, -(other.e435 * this.e35) - (other.e235 * this.e23) - (other.e315 * this.e31) - (other.e125 * this.e12) - (other.e5 * this.e45)) + (float4(this.e42, this.e1234, this.e1234, this.scalar) * other.group1.zyzw) + (float4(this.e45, this.e4125, this.e4235, this.e3215) * other.group0.xxyw) + (float4(this.e1234, this.e43, this.e41, this.e4125) * other.group1.xxyz) + (float4(this.e4315, this.e45, this.e45, this.e4235) * float4(other.group0.zyz, other.e235)) + (this.group3.xyzy * float4(other.group0.www, other.e315)) - (other.group0.yzxx * float4(this.group3.zxy, this.e15)) - float4((other.group1.yzx * this.group0.zxy), other.e425 * this.e25)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiSandwichInfixPartial<VersorOdd> lhs, MultiVector rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension VersorOdd {
     public MultiVector anti_sandwich(MultiVector other) {
@@ -8716,6 +10992,10 @@ public extension VersorOdd {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<VersorOdd> lhs, Plane rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension VersorOdd {
     public VersorOdd anti_sandwich(Plane other) {
         return VersorEven(
@@ -8729,6 +11009,10 @@ public extension VersorOdd {
             float4((other.e4235 * this.scalar) + (other.e4125 * this.e31) + (other.e3215 * this.e41), (other.e4235 * this.e12) + (other.e4315 * this.scalar) + (other.e3215 * this.e42), (other.e4315 * this.e23) + (other.e4125 * this.scalar) + (other.e3215 * this.e43), -(other.e4315 * this.e42) - (other.e4125 * this.e43)) - (other.group0.yzxx * float4(this.group1.zxy, this.e41))
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<VersorOdd> lhs, RoundPoint rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension VersorOdd {
     public VersorEven anti_sandwich(RoundPoint other) {
@@ -8744,6 +11028,10 @@ public extension VersorOdd {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<VersorOdd> lhs, Scalar rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension VersorOdd {
     public VersorOdd anti_sandwich(Scalar other) {
         return VersorEven(
@@ -8757,6 +11045,10 @@ public extension VersorOdd {
             float4(other.scalar) * float4(this.group3.xyz, this.e1234) * float4(1.0, 1.0, 1.0, -1.0)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<VersorOdd> lhs, Sphere rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension VersorOdd {
     public VersorOdd anti_sandwich(Sphere other) {
@@ -8772,6 +11064,10 @@ public extension VersorOdd {
         ).geometric_anti_product(this.anti_reverse());
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiSandwichInfixPartial<VersorOdd> lhs, VersorEven rhs) {
+    return lhs.a.anti_sandwich(rhs);
+}
 public extension VersorOdd {
     public VersorEven anti_sandwich(VersorEven other) {
         return VersorOdd(
@@ -8785,6 +11081,10 @@ public extension VersorOdd {
             (float4(this.e42, this.e1234, this.e1234, this.e15) * float4(other.group2.zyz, other.e1)) + (float4(this.e45, this.e4125, this.e4235, this.e4315) * float4(other.group1.xxy, other.e315)) + (float4(this.e1234, this.e43, this.e41, this.scalar) * other.group2.xxyw) + (float4(this.e4315, this.e45, this.e45, this.e4125) * float4(other.group1.zyz, other.e125)) + (other.group0.yzxw * float4(this.group2.zxy, this.e3215)) + (other.group3.yzxz * float4(this.group1.zxy, this.e35)) + (this.group3.xyzx * float4(other.group0.www, other.e235)) + float4((other.group2.www * this.group0.xyz), other.e2 * this.e25) - (float4(other.e321) * float4(this.group1.xyz, this.e3215)) - (float4(this.scalar, this.e12, this.e23, this.e31) * float4(other.group3.xxy, other.e315)) - (float4(this.e31, this.scalar, this.scalar, this.e12) * float4(other.group3.zyz, other.e125)) - (float4(this.e25, this.e3215, this.e3215, this.e25) * float4(other.group0.zyz, other.e425)) - (float4(this.e3215, this.e35, this.e15, this.e15) * float4(other.group0.xxy, other.e415)) - (other.group1.yzxz * float4(this.group3.zxy, this.e35)) - (other.group2.yzxx * float4(this.group0.zxy, this.e23)) - float4((other.group3.www * this.group2.xyz), other.e5 * this.e45)
         ).geometric_anti_product(this.anti_reverse());
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiSandwichInfixPartial<VersorOdd> lhs, VersorOdd rhs) {
+    return lhs.a.anti_sandwich(rhs);
 }
 public extension VersorOdd {
     public VersorOdd anti_sandwich(VersorOdd other) {

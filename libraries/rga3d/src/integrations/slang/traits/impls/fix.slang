@@ -1,16 +1,12 @@
 implementing rga3d;
 using traits;
-public extension Horizon {
-    // Fancy postfix trick
-    public Horizon operator /(FixPrefixOrPostfix rhs)  {
-        return this.fix();
+// Fancy postfix trick
+public Horizon operator /(Horizon lhs, FixPrefixOrPostfix rhs)  {
+    return lhs.fix();
     }
-}
-public extension FixPrefixOrPostfix {
-    // Fancy prefix trick
-    public Horizon operator /(Horizon rhs) {
-        return rhs.fix();
-    }
+// Fancy prefix trick
+public Horizon operator /(FixPrefixOrPostfix lhs, Horizon rhs) {
+    return rhs.fix();
 }
 public extension Horizon {
     public Horizon fix() {
@@ -20,17 +16,13 @@ public extension Horizon {
         );
     }
 }
-public extension Plane {
-    // Fancy postfix trick
-    public Plane operator /(FixPrefixOrPostfix rhs)  {
-        return this.fix();
+// Fancy postfix trick
+public Plane operator /(Plane lhs, FixPrefixOrPostfix rhs)  {
+    return lhs.fix();
     }
-}
-public extension FixPrefixOrPostfix {
-    // Fancy prefix trick
-    public Plane operator /(Plane rhs) {
-        return rhs.fix();
-    }
+// Fancy prefix trick
+public Plane operator /(FixPrefixOrPostfix lhs, Plane rhs) {
+    return rhs.fix();
 }
 public extension Plane {
     public Plane fix() {
@@ -40,17 +32,13 @@ public extension Plane {
         );
     }
 }
-public extension Point {
-    // Fancy postfix trick
-    public Point operator /(FixPrefixOrPostfix rhs)  {
-        return this.fix();
+// Fancy postfix trick
+public Point operator /(Point lhs, FixPrefixOrPostfix rhs)  {
+    return lhs.fix();
     }
-}
-public extension FixPrefixOrPostfix {
-    // Fancy prefix trick
-    public Point operator /(Point rhs) {
-        return rhs.fix();
-    }
+// Fancy prefix trick
+public Point operator /(FixPrefixOrPostfix lhs, Point rhs) {
+    return rhs.fix();
 }
 public extension Point {
     public Point fix() {
@@ -60,17 +48,13 @@ public extension Point {
         );
     }
 }
-public extension Scalar {
-    // Fancy postfix trick
-    public Scalar operator /(FixPrefixOrPostfix rhs)  {
-        return this.fix();
+// Fancy postfix trick
+public Scalar operator /(Scalar lhs, FixPrefixOrPostfix rhs)  {
+    return lhs.fix();
     }
-}
-public extension FixPrefixOrPostfix {
-    // Fancy prefix trick
-    public Scalar operator /(Scalar rhs) {
-        return rhs.fix();
-    }
+// Fancy prefix trick
+public Scalar operator /(FixPrefixOrPostfix lhs, Scalar rhs) {
+    return rhs.fix();
 }
 public extension Scalar {
     public Scalar fix() {

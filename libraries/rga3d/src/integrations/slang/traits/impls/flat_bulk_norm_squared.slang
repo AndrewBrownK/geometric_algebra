@@ -1,16 +1,12 @@
 implementing rga3d;
 using traits;
-public extension Flector {
-    // Fancy postfix trick
-    public Scalar operator /(FlatBulkNormSquaredPrefixOrPostfix rhs)  {
-        return this.flat_bulk_norm_squared();
+// Fancy postfix trick
+public Scalar operator /(Flector lhs, FlatBulkNormSquaredPrefixOrPostfix rhs)  {
+    return lhs.flat_bulk_norm_squared();
     }
-}
-public extension FlatBulkNormSquaredPrefixOrPostfix {
-    // Fancy prefix trick
-    public Scalar operator /(Flector rhs) {
-        return rhs.flat_bulk_norm_squared();
-    }
+// Fancy prefix trick
+public Scalar operator /(FlatBulkNormSquaredPrefixOrPostfix lhs, Flector rhs) {
+    return rhs.flat_bulk_norm_squared();
 }
 public extension Flector {
     public Scalar flat_bulk_norm_squared() {
@@ -21,17 +17,13 @@ public extension Flector {
         return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
 }
-public extension Line {
-    // Fancy postfix trick
-    public Scalar operator /(FlatBulkNormSquaredPrefixOrPostfix rhs)  {
-        return this.flat_bulk_norm_squared();
+// Fancy postfix trick
+public Scalar operator /(Line lhs, FlatBulkNormSquaredPrefixOrPostfix rhs)  {
+    return lhs.flat_bulk_norm_squared();
     }
-}
-public extension FlatBulkNormSquaredPrefixOrPostfix {
-    // Fancy prefix trick
-    public Scalar operator /(Line rhs) {
-        return rhs.flat_bulk_norm_squared();
-    }
+// Fancy prefix trick
+public Scalar operator /(FlatBulkNormSquaredPrefixOrPostfix lhs, Line rhs) {
+    return rhs.flat_bulk_norm_squared();
 }
 public extension Line {
     public Scalar flat_bulk_norm_squared() {
@@ -42,17 +34,13 @@ public extension Line {
         return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
 }
-public extension Motor {
-    // Fancy postfix trick
-    public Scalar operator /(FlatBulkNormSquaredPrefixOrPostfix rhs)  {
-        return this.flat_bulk_norm_squared();
+// Fancy postfix trick
+public Scalar operator /(Motor lhs, FlatBulkNormSquaredPrefixOrPostfix rhs)  {
+    return lhs.flat_bulk_norm_squared();
     }
-}
-public extension FlatBulkNormSquaredPrefixOrPostfix {
-    // Fancy prefix trick
-    public Scalar operator /(Motor rhs) {
-        return rhs.flat_bulk_norm_squared();
-    }
+// Fancy prefix trick
+public Scalar operator /(FlatBulkNormSquaredPrefixOrPostfix lhs, Motor rhs) {
+    return rhs.flat_bulk_norm_squared();
 }
 public extension Motor {
     public Scalar flat_bulk_norm_squared() {
@@ -63,17 +51,13 @@ public extension Motor {
         return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
 }
-public extension MultiVector {
-    // Fancy postfix trick
-    public Scalar operator /(FlatBulkNormSquaredPrefixOrPostfix rhs)  {
-        return this.flat_bulk_norm_squared();
+// Fancy postfix trick
+public Scalar operator /(MultiVector lhs, FlatBulkNormSquaredPrefixOrPostfix rhs)  {
+    return lhs.flat_bulk_norm_squared();
     }
-}
-public extension FlatBulkNormSquaredPrefixOrPostfix {
-    // Fancy prefix trick
-    public Scalar operator /(MultiVector rhs) {
-        return rhs.flat_bulk_norm_squared();
-    }
+// Fancy prefix trick
+public Scalar operator /(FlatBulkNormSquaredPrefixOrPostfix lhs, MultiVector rhs) {
+    return rhs.flat_bulk_norm_squared();
 }
 public extension MultiVector {
     public Scalar flat_bulk_norm_squared() {
@@ -84,17 +68,13 @@ public extension MultiVector {
         return flat_bulk_thing.dot_product(flat_bulk_thing);
     }
 }
-public extension Point {
-    // Fancy postfix trick
-    public Scalar operator /(FlatBulkNormSquaredPrefixOrPostfix rhs)  {
-        return this.flat_bulk_norm_squared();
+// Fancy postfix trick
+public Scalar operator /(Point lhs, FlatBulkNormSquaredPrefixOrPostfix rhs)  {
+    return lhs.flat_bulk_norm_squared();
     }
-}
-public extension FlatBulkNormSquaredPrefixOrPostfix {
-    // Fancy prefix trick
-    public Scalar operator /(Point rhs) {
-        return rhs.flat_bulk_norm_squared();
-    }
+// Fancy prefix trick
+public Scalar operator /(FlatBulkNormSquaredPrefixOrPostfix lhs, Point rhs) {
+    return rhs.flat_bulk_norm_squared();
 }
 public extension Point {
     public Scalar flat_bulk_norm_squared() {

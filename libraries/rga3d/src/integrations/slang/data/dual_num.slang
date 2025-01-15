@@ -6,7 +6,7 @@ public struct DualNum {
     // scalar, e1234, 0, 0
     internal float4 group0;
 
-    __init(
+    public __init(
         float scalar, float e1234
     ) {
         group0 = float4(scalar, e1234, 0.0, 0.0);

@@ -1,16 +1,12 @@
 implementing cga3d;
 using traits;
-public extension AntiCircleRotor {
-    // Fancy infix trick (first half)
-    public AntiRejectViaHorizonFromInfixPartial<AntiCircleRotor> operator /(AntiRejectViaHorizonFromInfix rhs) {
-        return AntiRejectViaHorizonFromInfixPartial<AntiCircleRotor>(this);
-    }
+// Fancy infix trick (first half)
+public AntiRejectViaHorizonFromInfixPartial<AntiCircleRotor> operator /(AntiCircleRotor lhs, AntiRejectViaHorizonFromInfix rhs) {
+    return AntiRejectViaHorizonFromInfixPartial<AntiCircleRotor>(lhs);
 }
-public extension AntiRejectViaHorizonFromInfixPartial<AntiCircleRotor> {
-    // Fancy infix trick (second half)
-    public VersorOdd operator /(AntiCircleRotor rhs) {
-        return this.a.anti_reject_via_horizon_from(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<AntiCircleRotor> lhs, AntiCircleRotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiCircleRotor {
     public VersorOdd anti_reject_via_horizon_from(AntiCircleRotor other) {
@@ -43,6 +39,10 @@ public extension AntiCircleRotor {
             float4(right_dual.e12345) * wedge.group3
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<AntiCircleRotor> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiCircleRotor {
     public VersorOdd anti_reject_via_horizon_from(AntiDipoleInversion other) {
@@ -78,6 +78,10 @@ public extension AntiCircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<AntiCircleRotor> lhs, AntiDualNum rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiCircleRotor {
     public VersorOdd anti_reject_via_horizon_from(AntiDualNum other) {
         VersorOdd wedge = VersorOdd(
@@ -106,6 +110,10 @@ public extension AntiCircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(AntiRejectViaHorizonFromInfixPartial<AntiCircleRotor> lhs, AntiFlatPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiCircleRotor {
     public AntiCircleRotor anti_reject_via_horizon_from(AntiFlatPoint other) {
         CircleRotor wedge = CircleRotor(
@@ -129,6 +137,10 @@ public extension AntiCircleRotor {
             float4((wedge.group2.www * right_dual.group0.xyz), -(wedge.e423 * right_dual.e15) - (wedge.e431 * right_dual.e25) - (wedge.e412 * right_dual.e35) - (wedge.e321 * right_dual.e45))
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<AntiCircleRotor> lhs, AntiFlector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiCircleRotor {
     public VersorOdd anti_reject_via_horizon_from(AntiFlector other) {
@@ -160,6 +172,10 @@ public extension AntiCircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(AntiRejectViaHorizonFromInfixPartial<AntiCircleRotor> lhs, AntiLine rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiCircleRotor {
     public AntiCircleRotor anti_reject_via_horizon_from(AntiLine other) {
         DipoleInversion wedge = DipoleInversion(
@@ -187,6 +203,10 @@ public extension AntiCircleRotor {
             float4((wedge.e4125 * right_dual.e315) + (wedge.e3215 * right_dual.e415), (wedge.e4235 * right_dual.e125) + (wedge.e3215 * right_dual.e425), (wedge.e4315 * right_dual.e235) + (wedge.e3215 * right_dual.e435), -(wedge.e42 * right_dual.e315) - (wedge.e43 * right_dual.e125) - (wedge.e23 * right_dual.e415) - (wedge.e31 * right_dual.e425) - (wedge.e12 * right_dual.e435)) - float4((right_dual.group1.xyz.zxy * wedge.group3.yzx), wedge.e41 * right_dual.e235)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<AntiCircleRotor> lhs, AntiMotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiCircleRotor {
     public VersorOdd anti_reject_via_horizon_from(AntiMotor other) {
@@ -218,6 +238,10 @@ public extension AntiCircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(AntiRejectViaHorizonFromInfixPartial<AntiCircleRotor> lhs, AntiPlane rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiCircleRotor {
     public AntiCircleRotor anti_reject_via_horizon_from(AntiPlane other) {
         AntiDipoleInversion wedge = AntiDipoleInversion(
@@ -244,6 +268,10 @@ public extension AntiCircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(AntiRejectViaHorizonFromInfixPartial<AntiCircleRotor> lhs, AntiScalar rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiCircleRotor {
     public Scalar anti_reject_via_horizon_from(AntiScalar other) {
         return Scalar(
@@ -251,6 +279,10 @@ public extension AntiCircleRotor {
             this.scalar * pow(other.e12345, 2) * -1.0
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(AntiRejectViaHorizonFromInfixPartial<AntiCircleRotor> lhs, Circle rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiCircleRotor {
     public AntiCircleRotor anti_reject_via_horizon_from(Circle other) {
@@ -280,6 +312,10 @@ public extension AntiCircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(AntiRejectViaHorizonFromInfixPartial<AntiCircleRotor> lhs, CircleRotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiCircleRotor {
     public AntiCircleRotor anti_reject_via_horizon_from(CircleRotor other) {
         CircleRotor wedge = CircleRotor(
@@ -307,6 +343,10 @@ public extension AntiCircleRotor {
             float4((float3(wedge.e12345) * right_dual.group2.xyz), (right_dual.scalar * wedge.e12345) - (right_dual.e41 * wedge.e235) - (right_dual.e42 * wedge.e315) - (right_dual.e43 * wedge.e125) - (right_dual.e23 * wedge.e415) - (right_dual.e31 * wedge.e425) - (right_dual.e12 * wedge.e435) - (right_dual.e45 * wedge.e321) - (right_dual.e15 * wedge.e423) - (right_dual.e25 * wedge.e431) - (right_dual.e35 * wedge.e412))
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(AntiRejectViaHorizonFromInfixPartial<AntiCircleRotor> lhs, Dipole rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiCircleRotor {
     public AntiCircleRotor anti_reject_via_horizon_from(Dipole other) {
@@ -337,6 +377,10 @@ public extension AntiCircleRotor {
             float4((right_dual.e415 * wedge.e3215) + (right_dual.e315 * wedge.e4125), (right_dual.e425 * wedge.e3215) + (right_dual.e125 * wedge.e4235), (right_dual.e435 * wedge.e3215) + (right_dual.e235 * wedge.e4315), -(right_dual.e431 * wedge.e25) - (right_dual.e412 * wedge.e35) - (right_dual.e415 * wedge.e23) - (right_dual.e425 * wedge.e31) - (right_dual.e435 * wedge.e12) - (right_dual.e321 * wedge.e45) - (right_dual.e235 * wedge.e41) - (right_dual.e315 * wedge.e42) - (right_dual.e125 * wedge.e43)) - float4((right_dual.group2.xyz.zxy * wedge.group3.yzx), right_dual.e423 * wedge.e15)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(AntiRejectViaHorizonFromInfixPartial<AntiCircleRotor> lhs, DipoleInversion rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiCircleRotor {
     public AntiCircleRotor anti_reject_via_horizon_from(DipoleInversion other) {
@@ -370,6 +414,10 @@ public extension AntiCircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiRejectViaHorizonFromInfixPartial<AntiCircleRotor> lhs, DualNum rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiCircleRotor {
     public AntiMotor anti_reject_via_horizon_from(DualNum other) {
         Motor wedge = Motor(
@@ -390,6 +438,10 @@ public extension AntiCircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiRejectViaHorizonFromInfixPartial<AntiCircleRotor> lhs, FlatPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiCircleRotor {
     public AntiMotor anti_reject_via_horizon_from(FlatPoint other) {
         Flector wedge = Flector(
@@ -409,6 +461,10 @@ public extension AntiCircleRotor {
             float4(((right_dual.group0.yzx * wedge.group1.zxy) - (right_dual.group0.zxy * wedge.group1.yzx)), 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiRejectViaHorizonFromInfixPartial<AntiCircleRotor> lhs, Flector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiCircleRotor {
     public AntiMotor anti_reject_via_horizon_from(Flector other) {
@@ -432,6 +488,10 @@ public extension AntiCircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiRejectViaHorizonFromInfixPartial<AntiCircleRotor> lhs, Line rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiCircleRotor {
     public AntiMotor anti_reject_via_horizon_from(Line other) {
         Motor wedge = Motor(
@@ -454,6 +514,10 @@ public extension AntiCircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiRejectViaHorizonFromInfixPartial<AntiCircleRotor> lhs, Motor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiCircleRotor {
     public AntiMotor anti_reject_via_horizon_from(Motor other) {
         Motor wedge = Motor(
@@ -475,6 +539,10 @@ public extension AntiCircleRotor {
             float4(((float3(right_dual.e3215) * wedge.group0.xyz) + (float3(wedge.e12345) * right_dual.group1.xyz)), right_dual.e3215 * wedge.e12345)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiRejectViaHorizonFromInfixPartial<AntiCircleRotor> lhs, MultiVector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiCircleRotor {
     public MultiVector anti_reject_via_horizon_from(MultiVector other) {
@@ -552,6 +620,10 @@ public extension AntiCircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(AntiRejectViaHorizonFromInfixPartial<AntiCircleRotor> lhs, Plane rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiCircleRotor {
     public Scalar anti_reject_via_horizon_from(Plane other) {
         Plane wedge = Plane(
@@ -567,6 +639,10 @@ public extension AntiCircleRotor {
             (right_dual.e1 * wedge.e4235) + (right_dual.e2 * wedge.e4315) + (right_dual.e3 * wedge.e4125)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(AntiRejectViaHorizonFromInfixPartial<AntiCircleRotor> lhs, RoundPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiCircleRotor {
     public AntiCircleRotor anti_reject_via_horizon_from(RoundPoint other) {
@@ -596,6 +672,10 @@ public extension AntiCircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(AntiRejectViaHorizonFromInfixPartial<AntiCircleRotor> lhs, Scalar rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiCircleRotor {
     public AntiCircleRotor anti_reject_via_horizon_from(Scalar other) {
         AntiCircleRotor wedge = AntiCircleRotor(
@@ -620,6 +700,10 @@ public extension AntiCircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(AntiRejectViaHorizonFromInfixPartial<AntiCircleRotor> lhs, Sphere rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiCircleRotor {
     public Scalar anti_reject_via_horizon_from(Sphere other) {
         Sphere wedge = Sphere(
@@ -639,6 +723,10 @@ public extension AntiCircleRotor {
             (right_dual.e1 * wedge.e4235) + (right_dual.e2 * wedge.e4315) + (right_dual.e3 * wedge.e4125) + (right_dual.e4 * wedge.e3215) + (right_dual.e5 * wedge.e1234)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<AntiCircleRotor> lhs, VersorEven rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiCircleRotor {
     public VersorOdd anti_reject_via_horizon_from(VersorEven other) {
@@ -674,6 +762,10 @@ public extension AntiCircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<AntiCircleRotor> lhs, VersorOdd rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiCircleRotor {
     public VersorOdd anti_reject_via_horizon_from(VersorOdd other) {
         VersorOdd wedge = VersorOdd(
@@ -708,17 +800,13 @@ public extension AntiCircleRotor {
         );
     }
 }
-public extension AntiDipoleInversion {
-    // Fancy infix trick (first half)
-    public AntiRejectViaHorizonFromInfixPartial<AntiDipoleInversion> operator /(AntiRejectViaHorizonFromInfix rhs) {
-        return AntiRejectViaHorizonFromInfixPartial<AntiDipoleInversion>(this);
-    }
+// Fancy infix trick (first half)
+public AntiRejectViaHorizonFromInfixPartial<AntiDipoleInversion> operator /(AntiDipoleInversion lhs, AntiRejectViaHorizonFromInfix rhs) {
+    return AntiRejectViaHorizonFromInfixPartial<AntiDipoleInversion>(lhs);
 }
-public extension AntiRejectViaHorizonFromInfixPartial<AntiDipoleInversion> {
-    // Fancy infix trick (second half)
-    public VersorEven operator /(AntiCircleRotor rhs) {
-        return this.a.anti_reject_via_horizon_from(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiRejectViaHorizonFromInfixPartial<AntiDipoleInversion> lhs, AntiCircleRotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiDipoleInversion {
     public VersorEven anti_reject_via_horizon_from(AntiCircleRotor other) {
@@ -751,6 +839,10 @@ public extension AntiDipoleInversion {
             float4((right_dual.e415 * wedge.e321) + (right_dual.e321 * wedge.e415) + (right_dual.e315 * wedge.e412) + (right_dual.e12345 * wedge.e1), (right_dual.e425 * wedge.e321) + (right_dual.e321 * wedge.e425) + (right_dual.e125 * wedge.e423) + (right_dual.e12345 * wedge.e2), (right_dual.e435 * wedge.e321) + (right_dual.e321 * wedge.e435) + (right_dual.e235 * wedge.e431) + (right_dual.e12345 * wedge.e3), -(right_dual.e412 * wedge.e435) - (right_dual.e415 * wedge.e423) - (right_dual.e425 * wedge.e431) - (right_dual.e435 * wedge.e412)) + float4((right_dual.group0.xyz.zxy * wedge.group2.yzx), right_dual.e12345 * wedge.e4) - float4((right_dual.group0.xyz.yzx * wedge.group2.zxy), right_dual.e423 * wedge.e415) - float4((right_dual.group2.zxy * wedge.group0.yzx), right_dual.e431 * wedge.e425)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<AntiDipoleInversion> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiDipoleInversion {
     public AntiDipoleInversion anti_reject_via_horizon_from(AntiDipoleInversion other) {
@@ -786,6 +878,10 @@ public extension AntiDipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiRejectViaHorizonFromInfixPartial<AntiDipoleInversion> lhs, AntiDualNum rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiDipoleInversion {
     public VersorEven anti_reject_via_horizon_from(AntiDualNum other) {
         VersorEven wedge = VersorEven(
@@ -814,6 +910,10 @@ public extension AntiDipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public RoundPoint operator /(AntiRejectViaHorizonFromInfixPartial<AntiDipoleInversion> lhs, AntiFlatPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiDipoleInversion {
     public RoundPoint anti_reject_via_horizon_from(AntiFlatPoint other) {
         Sphere wedge = Sphere(
@@ -833,6 +933,10 @@ public extension AntiDipoleInversion {
             -(right_dual.e15 * wedge.e4235) - (right_dual.e25 * wedge.e4315) - (right_dual.e35 * wedge.e4125) - (right_dual.e45 * wedge.e3215)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<AntiDipoleInversion> lhs, AntiFlector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiDipoleInversion {
     public AntiDipoleInversion anti_reject_via_horizon_from(AntiFlector other) {
@@ -864,6 +968,10 @@ public extension AntiDipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<AntiDipoleInversion> lhs, AntiLine rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiDipoleInversion {
     public AntiDipoleInversion anti_reject_via_horizon_from(AntiLine other) {
         CircleRotor wedge = CircleRotor(
@@ -891,6 +999,10 @@ public extension AntiDipoleInversion {
             float4((wedge.e412 * right_dual.e315) + (wedge.e321 * right_dual.e415), (wedge.e423 * right_dual.e125) + (wedge.e321 * right_dual.e425), (wedge.e431 * right_dual.e235) + (wedge.e321 * right_dual.e435), -(wedge.e415 * right_dual.e235) - (wedge.e425 * right_dual.e315) - (wedge.e435 * right_dual.e125) - (wedge.e315 * right_dual.e425) - (wedge.e125 * right_dual.e435)) - float4((wedge.group0.xyz.yzx * right_dual.group1.xyz.zxy), wedge.e235 * right_dual.e415)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiRejectViaHorizonFromInfixPartial<AntiDipoleInversion> lhs, AntiMotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiDipoleInversion {
     public VersorEven anti_reject_via_horizon_from(AntiMotor other) {
@@ -922,6 +1034,10 @@ public extension AntiDipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<AntiDipoleInversion> lhs, AntiPlane rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiDipoleInversion {
     public AntiDipoleInversion anti_reject_via_horizon_from(AntiPlane other) {
         DipoleInversion wedge = DipoleInversion(
@@ -950,6 +1066,10 @@ public extension AntiDipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public RoundPoint operator /(AntiRejectViaHorizonFromInfixPartial<AntiDipoleInversion> lhs, Circle rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiDipoleInversion {
     public RoundPoint anti_reject_via_horizon_from(Circle other) {
         Sphere wedge = Sphere(
@@ -974,6 +1094,10 @@ public extension AntiDipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public RoundPoint operator /(AntiRejectViaHorizonFromInfixPartial<AntiDipoleInversion> lhs, CircleRotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiDipoleInversion {
     public RoundPoint anti_reject_via_horizon_from(CircleRotor other) {
         Sphere wedge = Sphere(
@@ -997,6 +1121,10 @@ public extension AntiDipoleInversion {
             -(right_dual.e45 * wedge.e3215) - (right_dual.e15 * wedge.e4235) - (right_dual.e25 * wedge.e4315) - (right_dual.e35 * wedge.e4125)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<AntiDipoleInversion> lhs, Dipole rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiDipoleInversion {
     public AntiDipoleInversion anti_reject_via_horizon_from(Dipole other) {
@@ -1027,6 +1155,10 @@ public extension AntiDipoleInversion {
             float4((right_dual.e412 * wedge.e315) + (right_dual.e415 * wedge.e321) + (right_dual.e321 * wedge.e415) + (right_dual.e315 * wedge.e412), (right_dual.e423 * wedge.e125) + (right_dual.e425 * wedge.e321) + (right_dual.e321 * wedge.e425) + (right_dual.e125 * wedge.e423), (right_dual.e431 * wedge.e235) + (right_dual.e435 * wedge.e321) + (right_dual.e321 * wedge.e435) + (right_dual.e235 * wedge.e431), -(right_dual.e415 * wedge.e235) - (right_dual.e425 * wedge.e315) - (right_dual.e435 * wedge.e125) - (right_dual.e125 * wedge.e435)) - float4((right_dual.group0.xyz.yzx * wedge.group2.zxy), right_dual.e235 * wedge.e415) - float4((right_dual.group2.xyz.zxy * wedge.group0.xyz.yzx), right_dual.e315 * wedge.e425)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<AntiDipoleInversion> lhs, DipoleInversion rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiDipoleInversion {
     public AntiDipoleInversion anti_reject_via_horizon_from(DipoleInversion other) {
@@ -1060,6 +1192,10 @@ public extension AntiDipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiRejectViaHorizonFromInfixPartial<AntiDipoleInversion> lhs, DualNum rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiDipoleInversion {
     public AntiFlector anti_reject_via_horizon_from(DualNum other) {
         Flector wedge = Flector(
@@ -1080,6 +1216,10 @@ public extension AntiDipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiRejectViaHorizonFromInfixPartial<AntiDipoleInversion> lhs, FlatPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiDipoleInversion {
     public AntiFlector anti_reject_via_horizon_from(FlatPoint other) {
         Motor wedge = Motor(
@@ -1099,6 +1239,10 @@ public extension AntiDipoleInversion {
             float4((right_dual.group0.www * wedge.group0.xyz), -(right_dual.e235 * wedge.e415) - (right_dual.e315 * wedge.e425) - (right_dual.e125 * wedge.e435))
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiRejectViaHorizonFromInfixPartial<AntiDipoleInversion> lhs, Flector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiDipoleInversion {
     public AntiFlector anti_reject_via_horizon_from(Flector other) {
@@ -1122,6 +1266,10 @@ public extension AntiDipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(AntiRejectViaHorizonFromInfixPartial<AntiDipoleInversion> lhs, Line rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiDipoleInversion {
     public AntiPlane anti_reject_via_horizon_from(Line other) {
         Plane wedge = Plane(
@@ -1139,6 +1287,10 @@ public extension AntiDipoleInversion {
             float4(right_dual.e12 * wedge.e4315, right_dual.e23 * wedge.e4125, right_dual.e31 * wedge.e4235, -(right_dual.e25 * wedge.e4315) - (right_dual.e35 * wedge.e4125)) - (wedge.group0.zxyx * float4(right_dual.group0.xyz.yzx, right_dual.e15))
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiRejectViaHorizonFromInfixPartial<AntiDipoleInversion> lhs, Motor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiDipoleInversion {
     public AntiFlector anti_reject_via_horizon_from(Motor other) {
@@ -1161,6 +1313,10 @@ public extension AntiDipoleInversion {
             float4(float3(0.0), -(right_dual.e25 * wedge.e4315) - (right_dual.e35 * wedge.e4125)) + float4((right_dual.group0.zxy * wedge.group1.yzx), right_dual.e3215 * wedge.e45) - (wedge.group1.zxyx * float4(right_dual.group0.yzx, right_dual.e15))
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiRejectViaHorizonFromInfixPartial<AntiDipoleInversion> lhs, MultiVector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiDipoleInversion {
     public MultiVector anti_reject_via_horizon_from(MultiVector other) {
@@ -1238,6 +1394,10 @@ public extension AntiDipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(AntiRejectViaHorizonFromInfixPartial<AntiDipoleInversion> lhs, Plane rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiDipoleInversion {
     public AntiPlane anti_reject_via_horizon_from(Plane other) {
         return AntiPlane(
@@ -1245,6 +1405,10 @@ public extension AntiDipoleInversion {
             float4((this.e4 * other.e3215) + (this.e1 * other.e4235) + (this.e2 * other.e4315) + (this.e3 * other.e4125)) * float4(other.e4235 * -1.0, other.e4315 * -1.0, other.e4125 * -1.0, other.e3215)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<AntiDipoleInversion> lhs, RoundPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiDipoleInversion {
     public AntiDipoleInversion anti_reject_via_horizon_from(RoundPoint other) {
@@ -1276,6 +1440,10 @@ public extension AntiDipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<AntiDipoleInversion> lhs, Scalar rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiDipoleInversion {
     public AntiDipoleInversion anti_reject_via_horizon_from(Scalar other) {
         AntiDipoleInversion wedge = AntiDipoleInversion(
@@ -1304,6 +1472,10 @@ public extension AntiDipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public RoundPoint operator /(AntiRejectViaHorizonFromInfixPartial<AntiDipoleInversion> lhs, Sphere rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiDipoleInversion {
     public RoundPoint anti_reject_via_horizon_from(Sphere other) {
         AntiScalar wedge = AntiScalar(
@@ -1323,6 +1495,10 @@ public extension AntiDipoleInversion {
             wedge.e12345 * right_dual.e5
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<AntiDipoleInversion> lhs, VersorEven rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiDipoleInversion {
     public AntiDipoleInversion anti_reject_via_horizon_from(VersorEven other) {
@@ -1358,6 +1534,10 @@ public extension AntiDipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiRejectViaHorizonFromInfixPartial<AntiDipoleInversion> lhs, VersorOdd rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiDipoleInversion {
     public VersorEven anti_reject_via_horizon_from(VersorOdd other) {
         VersorEven wedge = VersorEven(
@@ -1392,17 +1572,13 @@ public extension AntiDipoleInversion {
         );
     }
 }
-public extension AntiDualNum {
-    // Fancy infix trick (first half)
-    public AntiRejectViaHorizonFromInfixPartial<AntiDualNum> operator /(AntiRejectViaHorizonFromInfix rhs) {
-        return AntiRejectViaHorizonFromInfixPartial<AntiDualNum>(this);
-    }
+// Fancy infix trick (first half)
+public AntiRejectViaHorizonFromInfixPartial<AntiDualNum> operator /(AntiDualNum lhs, AntiRejectViaHorizonFromInfix rhs) {
+    return AntiRejectViaHorizonFromInfixPartial<AntiDualNum>(lhs);
 }
-public extension AntiRejectViaHorizonFromInfixPartial<AntiDualNum> {
-    // Fancy infix trick (second half)
-    public VersorOdd operator /(AntiCircleRotor rhs) {
-        return this.a.anti_reject_via_horizon_from(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<AntiDualNum> lhs, AntiCircleRotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiDualNum {
     public VersorOdd anti_reject_via_horizon_from(AntiCircleRotor other) {
@@ -1435,6 +1611,10 @@ public extension AntiDualNum {
             float4(right_dual.e12345) * wedge.group3
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<AntiDualNum> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiDualNum {
     public VersorOdd anti_reject_via_horizon_from(AntiDipoleInversion other) {
@@ -1470,6 +1650,10 @@ public extension AntiDualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDualNum operator /(AntiRejectViaHorizonFromInfixPartial<AntiDualNum> lhs, AntiDualNum rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiDualNum {
     public AntiDualNum anti_reject_via_horizon_from(AntiDualNum other) {
         return AntiDualNum(
@@ -1478,6 +1662,10 @@ public extension AntiDualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(AntiRejectViaHorizonFromInfixPartial<AntiDualNum> lhs, AntiFlatPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiDualNum {
     public Scalar anti_reject_via_horizon_from(AntiFlatPoint other) {
         return Scalar(
@@ -1485,6 +1673,10 @@ public extension AntiDualNum {
             float4(other.group0.xyz, other.e321 * -1.0)[3] * this.scalar * other.e321 * -1.0
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiRejectViaHorizonFromInfixPartial<AntiDualNum> lhs, AntiFlector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiDualNum {
     public AntiMotor anti_reject_via_horizon_from(AntiFlector other) {
@@ -1508,6 +1700,10 @@ public extension AntiDualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(AntiRejectViaHorizonFromInfixPartial<AntiDualNum> lhs, AntiLine rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiDualNum {
     public Scalar anti_reject_via_horizon_from(AntiLine other) {
         AntiLine wedge = AntiLine(
@@ -1527,6 +1723,10 @@ public extension AntiDualNum {
             -(wedge.e23 * right_dual.e415) - (wedge.e31 * right_dual.e425) - (wedge.e12 * right_dual.e435)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiRejectViaHorizonFromInfixPartial<AntiDualNum> lhs, AntiMotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiDualNum {
     public AntiMotor anti_reject_via_horizon_from(AntiMotor other) {
@@ -1550,6 +1750,10 @@ public extension AntiDualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(AntiRejectViaHorizonFromInfixPartial<AntiDualNum> lhs, AntiPlane rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiDualNum {
     public Scalar anti_reject_via_horizon_from(AntiPlane other) {
         AntiPlane wedge = AntiPlane(
@@ -1566,6 +1770,10 @@ public extension AntiDualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(AntiRejectViaHorizonFromInfixPartial<AntiDualNum> lhs, AntiScalar rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiDualNum {
     public Scalar anti_reject_via_horizon_from(AntiScalar other) {
         return Scalar(
@@ -1573,6 +1781,10 @@ public extension AntiDualNum {
             this.scalar * pow(other.e12345, 2) * -1.0
         );
     }
+}
+// Fancy infix trick (second half)
+public Scalar operator /(AntiRejectViaHorizonFromInfixPartial<AntiDualNum> lhs, Circle rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiDualNum {
     public Scalar anti_reject_via_horizon_from(Circle other) {
@@ -1597,6 +1809,10 @@ public extension AntiDualNum {
             -(wedge.e423 * right_dual.e15) - (wedge.e431 * right_dual.e25) - (wedge.e412 * right_dual.e35) - (wedge.e415 * right_dual.e23) - (wedge.e425 * right_dual.e31) - (wedge.e435 * right_dual.e12) - (wedge.e321 * right_dual.e45) - (wedge.e235 * right_dual.e41) - (wedge.e315 * right_dual.e42) - (wedge.e125 * right_dual.e43)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(AntiRejectViaHorizonFromInfixPartial<AntiDualNum> lhs, CircleRotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiDualNum {
     public AntiCircleRotor anti_reject_via_horizon_from(CircleRotor other) {
@@ -1626,6 +1842,10 @@ public extension AntiDualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(AntiRejectViaHorizonFromInfixPartial<AntiDualNum> lhs, Dipole rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiDualNum {
     public Scalar anti_reject_via_horizon_from(Dipole other) {
         Dipole wedge = Dipole(
@@ -1649,6 +1869,10 @@ public extension AntiDualNum {
             -(right_dual.e423 * wedge.e15) - (right_dual.e431 * wedge.e25) - (right_dual.e412 * wedge.e35) - (right_dual.e415 * wedge.e23) - (right_dual.e425 * wedge.e31) - (right_dual.e435 * wedge.e12) - (right_dual.e321 * wedge.e45) - (right_dual.e235 * wedge.e41) - (right_dual.e315 * wedge.e42) - (right_dual.e125 * wedge.e43)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(AntiRejectViaHorizonFromInfixPartial<AntiDualNum> lhs, DipoleInversion rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiDualNum {
     public AntiCircleRotor anti_reject_via_horizon_from(DipoleInversion other) {
@@ -1682,6 +1906,10 @@ public extension AntiDualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDualNum operator /(AntiRejectViaHorizonFromInfixPartial<AntiDualNum> lhs, DualNum rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiDualNum {
     public AntiDualNum anti_reject_via_horizon_from(DualNum other) {
         return AntiDualNum(
@@ -1690,6 +1918,10 @@ public extension AntiDualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(AntiRejectViaHorizonFromInfixPartial<AntiDualNum> lhs, FlatPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiDualNum {
     public Scalar anti_reject_via_horizon_from(FlatPoint other) {
         return Scalar(
@@ -1697,6 +1929,10 @@ public extension AntiDualNum {
             this.scalar * pow(other.e45, 2) * -1.0
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiRejectViaHorizonFromInfixPartial<AntiDualNum> lhs, Flector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiDualNum {
     public AntiMotor anti_reject_via_horizon_from(Flector other) {
@@ -1720,6 +1956,10 @@ public extension AntiDualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(AntiRejectViaHorizonFromInfixPartial<AntiDualNum> lhs, Line rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiDualNum {
     public Scalar anti_reject_via_horizon_from(Line other) {
         Line wedge = Line(
@@ -1739,6 +1979,10 @@ public extension AntiDualNum {
             -(right_dual.e23 * wedge.e415) - (right_dual.e31 * wedge.e425) - (right_dual.e12 * wedge.e435)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiRejectViaHorizonFromInfixPartial<AntiDualNum> lhs, Motor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiDualNum {
     public AntiMotor anti_reject_via_horizon_from(Motor other) {
@@ -1761,6 +2005,10 @@ public extension AntiDualNum {
             float4(((float3(right_dual.e3215) * wedge.group0.xyz) + (float3(wedge.e12345) * right_dual.group1.xyz)), right_dual.e3215 * wedge.e12345)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiRejectViaHorizonFromInfixPartial<AntiDualNum> lhs, MultiVector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiDualNum {
     public MultiVector anti_reject_via_horizon_from(MultiVector other) {
@@ -1838,6 +2086,10 @@ public extension AntiDualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(AntiRejectViaHorizonFromInfixPartial<AntiDualNum> lhs, Plane rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiDualNum {
     public Scalar anti_reject_via_horizon_from(Plane other) {
         Plane wedge = Plane(
@@ -1853,6 +2105,10 @@ public extension AntiDualNum {
             (right_dual.e1 * wedge.e4235) + (right_dual.e2 * wedge.e4315) + (right_dual.e3 * wedge.e4125)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<AntiDualNum> lhs, RoundPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiDualNum {
     public VersorOdd anti_reject_via_horizon_from(RoundPoint other) {
@@ -1884,6 +2140,10 @@ public extension AntiDualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDualNum operator /(AntiRejectViaHorizonFromInfixPartial<AntiDualNum> lhs, Scalar rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiDualNum {
     public AntiDualNum anti_reject_via_horizon_from(Scalar other) {
         return AntiDualNum(
@@ -1891,6 +2151,10 @@ public extension AntiDualNum {
             float2(other.scalar) * float2(this.e3215 * other.scalar, this.scalar * other.scalar)
         );
     }
+}
+// Fancy infix trick (second half)
+public Scalar operator /(AntiRejectViaHorizonFromInfixPartial<AntiDualNum> lhs, Sphere rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiDualNum {
     public Scalar anti_reject_via_horizon_from(Sphere other) {
@@ -1911,6 +2175,10 @@ public extension AntiDualNum {
             (right_dual.e1 * wedge.e4235) + (right_dual.e2 * wedge.e4315) + (right_dual.e3 * wedge.e4125) + (right_dual.e4 * wedge.e3215) + (right_dual.e5 * wedge.e1234)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<AntiDualNum> lhs, VersorEven rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiDualNum {
     public VersorOdd anti_reject_via_horizon_from(VersorEven other) {
@@ -1946,6 +2214,10 @@ public extension AntiDualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<AntiDualNum> lhs, VersorOdd rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiDualNum {
     public VersorOdd anti_reject_via_horizon_from(VersorOdd other) {
         VersorOdd wedge = VersorOdd(
@@ -1980,17 +2252,13 @@ public extension AntiDualNum {
         );
     }
 }
-public extension AntiFlatPoint {
-    // Fancy infix trick (first half)
-    public AntiRejectViaHorizonFromInfixPartial<AntiFlatPoint> operator /(AntiRejectViaHorizonFromInfix rhs) {
-        return AntiRejectViaHorizonFromInfixPartial<AntiFlatPoint>(this);
-    }
+// Fancy infix trick (first half)
+public AntiRejectViaHorizonFromInfixPartial<AntiFlatPoint> operator /(AntiFlatPoint lhs, AntiRejectViaHorizonFromInfix rhs) {
+    return AntiRejectViaHorizonFromInfixPartial<AntiFlatPoint>(lhs);
 }
-public extension AntiRejectViaHorizonFromInfixPartial<AntiFlatPoint> {
-    // Fancy infix trick (second half)
-    public VersorEven operator /(AntiCircleRotor rhs) {
-        return this.a.anti_reject_via_horizon_from(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiRejectViaHorizonFromInfixPartial<AntiFlatPoint> lhs, AntiCircleRotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiFlatPoint {
     public VersorEven anti_reject_via_horizon_from(AntiCircleRotor other) {
@@ -2022,6 +2290,10 @@ public extension AntiFlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<AntiFlatPoint> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiFlatPoint {
     public AntiDipoleInversion anti_reject_via_horizon_from(AntiDipoleInversion other) {
         Sphere wedge = Sphere(
@@ -2052,6 +2324,10 @@ public extension AntiFlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlatPoint operator /(AntiRejectViaHorizonFromInfixPartial<AntiFlatPoint> lhs, AntiDualNum rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiFlatPoint {
     public AntiFlatPoint anti_reject_via_horizon_from(AntiDualNum other) {
         return AntiFlatPoint(
@@ -2059,6 +2335,10 @@ public extension AntiFlatPoint {
             float4(other.scalar) * float4(other.scalar * this.e235, other.scalar * this.e315, other.scalar * this.e125, other.scalar * this.e321)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiRejectViaHorizonFromInfixPartial<AntiFlatPoint> lhs, AntiFlector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiFlatPoint {
     public AntiFlector anti_reject_via_horizon_from(AntiFlector other) {
@@ -2080,6 +2360,10 @@ public extension AntiFlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiRejectViaHorizonFromInfixPartial<AntiFlatPoint> lhs, AntiMotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiFlatPoint {
     public AntiFlector anti_reject_via_horizon_from(AntiMotor other) {
         AntiFlatPoint wedge = AntiFlatPoint(
@@ -2100,6 +2384,10 @@ public extension AntiFlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlatPoint operator /(AntiRejectViaHorizonFromInfixPartial<AntiFlatPoint> lhs, AntiPlane rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiFlatPoint {
     public AntiFlatPoint anti_reject_via_horizon_from(AntiPlane other) {
         AntiDualNum wedge = AntiDualNum(
@@ -2111,6 +2399,10 @@ public extension AntiFlatPoint {
             float4(wedge.group0.xy.xx, wedge.e3215, 0.0) * float4(float3(1.0), 0.0) * float4(other.group0.xyz, 0.0) * float4(-1.0, -1.0, -1.0, 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public Circle operator /(AntiRejectViaHorizonFromInfixPartial<AntiFlatPoint> lhs, Dipole rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiFlatPoint {
     public Circle anti_reject_via_horizon_from(Dipole other) {
@@ -2135,6 +2427,10 @@ public extension AntiFlatPoint {
             float3(wedge.e12345) * right_dual.group2.xyz
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<AntiFlatPoint> lhs, DipoleInversion rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiFlatPoint {
     public AntiDipoleInversion anti_reject_via_horizon_from(DipoleInversion other) {
@@ -2164,6 +2460,10 @@ public extension AntiFlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlatPoint operator /(AntiRejectViaHorizonFromInfixPartial<AntiFlatPoint> lhs, FlatPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiFlatPoint {
     public AntiFlatPoint anti_reject_via_horizon_from(FlatPoint other) {
         return AntiFlatPoint(
@@ -2171,6 +2471,10 @@ public extension AntiFlatPoint {
             float4(this.e321 * other.e45 * -1.0) * float4(other.e15 * -1.0, other.e25 * -1.0, other.e35 * -1.0, other.e45)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiRejectViaHorizonFromInfixPartial<AntiFlatPoint> lhs, Flector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiFlatPoint {
     public AntiFlector anti_reject_via_horizon_from(Flector other) {
@@ -2191,6 +2495,10 @@ public extension AntiFlatPoint {
             float4(wedge.e12345) * right_dual.group1
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiRejectViaHorizonFromInfixPartial<AntiFlatPoint> lhs, MultiVector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiFlatPoint {
     public MultiVector anti_reject_via_horizon_from(MultiVector other) {
@@ -2268,6 +2576,10 @@ public extension AntiFlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public Circle operator /(AntiRejectViaHorizonFromInfixPartial<AntiFlatPoint> lhs, RoundPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiFlatPoint {
     public Circle anti_reject_via_horizon_from(RoundPoint other) {
         Sphere wedge = Sphere(
@@ -2292,6 +2604,10 @@ public extension AntiFlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlatPoint operator /(AntiRejectViaHorizonFromInfixPartial<AntiFlatPoint> lhs, Scalar rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiFlatPoint {
     public AntiFlatPoint anti_reject_via_horizon_from(Scalar other) {
         return AntiFlatPoint(
@@ -2299,6 +2615,10 @@ public extension AntiFlatPoint {
             float4(other.scalar) * float4(this.e235 * other.scalar, this.e315 * other.scalar, this.e125 * other.scalar, this.e321 * other.scalar)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<AntiFlatPoint> lhs, VersorEven rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiFlatPoint {
     public AntiDipoleInversion anti_reject_via_horizon_from(VersorEven other) {
@@ -2329,6 +2649,10 @@ public extension AntiFlatPoint {
             float4((wedge.e4315 * right_dual.e12) + (wedge.e1234 * right_dual.e15), (wedge.e4125 * right_dual.e23) + (wedge.e1234 * right_dual.e25), (wedge.e4235 * right_dual.e31) + (wedge.e1234 * right_dual.e35), -(wedge.e4125 * right_dual.e35) - (wedge.e3215 * right_dual.e45)) - (wedge.group0.zxyx * float4(right_dual.group1.yzx, right_dual.e15)) - (wedge.group0.wwwy * float4(right_dual.group0.xyz, right_dual.e25))
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiRejectViaHorizonFromInfixPartial<AntiFlatPoint> lhs, VersorOdd rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiFlatPoint {
     public VersorEven anti_reject_via_horizon_from(VersorOdd other) {
@@ -2362,17 +2686,13 @@ public extension AntiFlatPoint {
         );
     }
 }
-public extension AntiFlector {
-    // Fancy infix trick (first half)
-    public AntiRejectViaHorizonFromInfixPartial<AntiFlector> operator /(AntiRejectViaHorizonFromInfix rhs) {
-        return AntiRejectViaHorizonFromInfixPartial<AntiFlector>(this);
-    }
+// Fancy infix trick (first half)
+public AntiRejectViaHorizonFromInfixPartial<AntiFlector> operator /(AntiFlector lhs, AntiRejectViaHorizonFromInfix rhs) {
+    return AntiRejectViaHorizonFromInfixPartial<AntiFlector>(lhs);
 }
-public extension AntiRejectViaHorizonFromInfixPartial<AntiFlector> {
-    // Fancy infix trick (second half)
-    public VersorEven operator /(AntiCircleRotor rhs) {
-        return this.a.anti_reject_via_horizon_from(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiRejectViaHorizonFromInfixPartial<AntiFlector> lhs, AntiCircleRotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiFlector {
     public VersorEven anti_reject_via_horizon_from(AntiCircleRotor other) {
@@ -2405,6 +2725,10 @@ public extension AntiFlector {
             float4((right_dual.e415 * wedge.e321) + (right_dual.e321 * wedge.e415) + (right_dual.e315 * wedge.e412) + (right_dual.e12345 * wedge.e1), (right_dual.e425 * wedge.e321) + (right_dual.e321 * wedge.e425) + (right_dual.e125 * wedge.e423) + (right_dual.e12345 * wedge.e2), (right_dual.e435 * wedge.e321) + (right_dual.e321 * wedge.e435) + (right_dual.e235 * wedge.e431) + (right_dual.e12345 * wedge.e3), -(right_dual.e412 * wedge.e435) - (right_dual.e415 * wedge.e423) - (right_dual.e425 * wedge.e431) - (right_dual.e435 * wedge.e412)) + float4((right_dual.group0.xyz.zxy * wedge.group2.yzx), right_dual.e12345 * wedge.e4) - float4((right_dual.group0.xyz.yzx * wedge.group2.zxy), right_dual.e423 * wedge.e415) - float4((right_dual.group2.zxy * wedge.group0.yzx), right_dual.e431 * wedge.e425)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<AntiFlector> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiFlector {
     public AntiDipoleInversion anti_reject_via_horizon_from(AntiDipoleInversion other) {
@@ -2440,6 +2764,10 @@ public extension AntiFlector {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiRejectViaHorizonFromInfixPartial<AntiFlector> lhs, AntiDualNum rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiFlector {
     public AntiFlector anti_reject_via_horizon_from(AntiDualNum other) {
         AntiFlector wedge = AntiFlector(
@@ -2460,6 +2788,10 @@ public extension AntiFlector {
         );
     }
 }
+// Fancy infix trick (second half)
+public DualNum operator /(AntiRejectViaHorizonFromInfixPartial<AntiFlector> lhs, AntiFlatPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiFlector {
     public DualNum anti_reject_via_horizon_from(AntiFlatPoint other) {
         return DualNum(
@@ -2467,6 +2799,10 @@ public extension AntiFlector {
             float2(-(float4(other.group0.xyz, other.e321 * -1.0)[3] * other.e235 * this.e1) - (float4(other.group0.xyz, other.e321 * -1.0)[3] * other.e315 * this.e2) - (float4(other.group0.xyz, other.e321 * -1.0)[3] * other.e125 * this.e3) - (float4(other.group0.xyz, other.e321 * -1.0)[3] * other.e321 * this.e5), 1.0) * float2(-1.0, 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiRejectViaHorizonFromInfixPartial<AntiFlector> lhs, AntiFlector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiFlector {
     public AntiFlector anti_reject_via_horizon_from(AntiFlector other) {
@@ -2490,6 +2826,10 @@ public extension AntiFlector {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(AntiRejectViaHorizonFromInfixPartial<AntiFlector> lhs, AntiLine rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiFlector {
     public AntiPlane anti_reject_via_horizon_from(AntiLine other) {
         AntiFlatPoint wedge = AntiFlatPoint(
@@ -2507,6 +2847,10 @@ public extension AntiFlector {
             float4((float3(wedge.e321) * right_dual.group0.xyz), -(wedge.e235 * right_dual.e415) - (wedge.e315 * right_dual.e425) - (wedge.e125 * right_dual.e435))
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiRejectViaHorizonFromInfixPartial<AntiFlector> lhs, AntiMotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiFlector {
     public AntiFlector anti_reject_via_horizon_from(AntiMotor other) {
@@ -2530,6 +2874,10 @@ public extension AntiFlector {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiRejectViaHorizonFromInfixPartial<AntiFlector> lhs, AntiPlane rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiFlector {
     public AntiFlector anti_reject_via_horizon_from(AntiPlane other) {
         AntiMotor wedge = AntiMotor(
@@ -2549,6 +2897,10 @@ public extension AntiFlector {
             float4(wedge.e12 * right_dual.e4315 * -1.0, wedge.e23 * right_dual.e4125 * -1.0, wedge.e31 * right_dual.e4235 * -1.0, (wedge.e25 * right_dual.e4315) + (wedge.e35 * right_dual.e4125)) + (right_dual.group0.zxyx * float4(wedge.group0.yzx, wedge.e15))
         );
     }
+}
+// Fancy infix trick (second half)
+public RoundPoint operator /(AntiRejectViaHorizonFromInfixPartial<AntiFlector> lhs, Circle rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiFlector {
     public RoundPoint anti_reject_via_horizon_from(Circle other) {
@@ -2574,6 +2926,10 @@ public extension AntiFlector {
         );
     }
 }
+// Fancy infix trick (second half)
+public RoundPoint operator /(AntiRejectViaHorizonFromInfixPartial<AntiFlector> lhs, CircleRotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiFlector {
     public RoundPoint anti_reject_via_horizon_from(CircleRotor other) {
         Sphere wedge = Sphere(
@@ -2597,6 +2953,10 @@ public extension AntiFlector {
             -(right_dual.e45 * wedge.e3215) - (right_dual.e15 * wedge.e4235) - (right_dual.e25 * wedge.e4315) - (right_dual.e35 * wedge.e4125)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<AntiFlector> lhs, Dipole rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiFlector {
     public AntiDipoleInversion anti_reject_via_horizon_from(Dipole other) {
@@ -2627,6 +2987,10 @@ public extension AntiFlector {
             float4((right_dual.e412 * wedge.e315) + (right_dual.e415 * wedge.e321) + (right_dual.e321 * wedge.e415) + (right_dual.e315 * wedge.e412), (right_dual.e423 * wedge.e125) + (right_dual.e425 * wedge.e321) + (right_dual.e321 * wedge.e425) + (right_dual.e125 * wedge.e423), (right_dual.e431 * wedge.e235) + (right_dual.e435 * wedge.e321) + (right_dual.e321 * wedge.e435) + (right_dual.e235 * wedge.e431), -(right_dual.e415 * wedge.e235) - (right_dual.e425 * wedge.e315) - (right_dual.e435 * wedge.e125) - (right_dual.e125 * wedge.e435)) - float4((right_dual.group0.xyz.yzx * wedge.group2.zxy), right_dual.e235 * wedge.e415) - float4((right_dual.group2.xyz.zxy * wedge.group0.xyz.yzx), right_dual.e315 * wedge.e425)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<AntiFlector> lhs, DipoleInversion rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiFlector {
     public AntiDipoleInversion anti_reject_via_horizon_from(DipoleInversion other) {
@@ -2660,6 +3024,10 @@ public extension AntiFlector {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlatPoint operator /(AntiRejectViaHorizonFromInfixPartial<AntiFlector> lhs, DualNum rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiFlector {
     public AntiFlatPoint anti_reject_via_horizon_from(DualNum other) {
         AntiDualNum right_dual = AntiDualNum(
@@ -2671,6 +3039,10 @@ public extension AntiFlector {
             float4(right_dual.group0.xy.xx, right_dual.e3215, 0.0) * float4(float3(0.0), 0.0) * float4(float3(1.0), 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiRejectViaHorizonFromInfixPartial<AntiFlector> lhs, FlatPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiFlector {
     public AntiFlector anti_reject_via_horizon_from(FlatPoint other) {
@@ -2691,6 +3063,10 @@ public extension AntiFlector {
             float4((right_dual.group0.www * wedge.group0.xyz), -(right_dual.e235 * wedge.e415) - (right_dual.e315 * wedge.e425) - (right_dual.e125 * wedge.e435))
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiRejectViaHorizonFromInfixPartial<AntiFlector> lhs, Flector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiFlector {
     public AntiFlector anti_reject_via_horizon_from(Flector other) {
@@ -2714,6 +3090,10 @@ public extension AntiFlector {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(AntiRejectViaHorizonFromInfixPartial<AntiFlector> lhs, Line rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiFlector {
     public AntiPlane anti_reject_via_horizon_from(Line other) {
         Plane wedge = Plane(
@@ -2731,6 +3111,10 @@ public extension AntiFlector {
             float4(right_dual.e12 * wedge.e4315, right_dual.e23 * wedge.e4125, right_dual.e31 * wedge.e4235, -(right_dual.e25 * wedge.e4315) - (right_dual.e35 * wedge.e4125)) - (wedge.group0.zxyx * float4(right_dual.group0.xyz.yzx, right_dual.e15))
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiRejectViaHorizonFromInfixPartial<AntiFlector> lhs, Motor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiFlector {
     public AntiFlector anti_reject_via_horizon_from(Motor other) {
@@ -2753,6 +3137,10 @@ public extension AntiFlector {
             float4(float3(0.0), -(right_dual.e25 * wedge.e4315) - (right_dual.e35 * wedge.e4125)) + float4((right_dual.group0.zxy * wedge.group1.yzx), right_dual.e3215 * wedge.e45) - (wedge.group1.zxyx * float4(right_dual.group0.yzx, right_dual.e15))
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiRejectViaHorizonFromInfixPartial<AntiFlector> lhs, MultiVector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiFlector {
     public MultiVector anti_reject_via_horizon_from(MultiVector other) {
@@ -2830,6 +3218,10 @@ public extension AntiFlector {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(AntiRejectViaHorizonFromInfixPartial<AntiFlector> lhs, Plane rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiFlector {
     public AntiPlane anti_reject_via_horizon_from(Plane other) {
         return AntiPlane(
@@ -2837,6 +3229,10 @@ public extension AntiFlector {
             float4((this.e1 * other.e4235) + (this.e2 * other.e4315) + (this.e3 * other.e4125)) * float4(other.e4235 * -1.0, other.e4315 * -1.0, other.e4125 * -1.0, other.e3215)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<AntiFlector> lhs, RoundPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiFlector {
     public AntiDipoleInversion anti_reject_via_horizon_from(RoundPoint other) {
@@ -2868,6 +3264,10 @@ public extension AntiFlector {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiRejectViaHorizonFromInfixPartial<AntiFlector> lhs, Scalar rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiFlector {
     public AntiFlector anti_reject_via_horizon_from(Scalar other) {
         AntiFlector wedge = AntiFlector(
@@ -2888,6 +3288,10 @@ public extension AntiFlector {
         );
     }
 }
+// Fancy infix trick (second half)
+public RoundPoint operator /(AntiRejectViaHorizonFromInfixPartial<AntiFlector> lhs, Sphere rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiFlector {
     public RoundPoint anti_reject_via_horizon_from(Sphere other) {
         AntiScalar wedge = AntiScalar(
@@ -2907,6 +3311,10 @@ public extension AntiFlector {
             wedge.e12345 * right_dual.e5
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<AntiFlector> lhs, VersorEven rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiFlector {
     public AntiDipoleInversion anti_reject_via_horizon_from(VersorEven other) {
@@ -2942,6 +3350,10 @@ public extension AntiFlector {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiRejectViaHorizonFromInfixPartial<AntiFlector> lhs, VersorOdd rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiFlector {
     public VersorEven anti_reject_via_horizon_from(VersorOdd other) {
         VersorEven wedge = VersorEven(
@@ -2976,17 +3388,13 @@ public extension AntiFlector {
         );
     }
 }
-public extension AntiLine {
-    // Fancy infix trick (first half)
-    public AntiRejectViaHorizonFromInfixPartial<AntiLine> operator /(AntiRejectViaHorizonFromInfix rhs) {
-        return AntiRejectViaHorizonFromInfixPartial<AntiLine>(this);
-    }
+// Fancy infix trick (first half)
+public AntiRejectViaHorizonFromInfixPartial<AntiLine> operator /(AntiLine lhs, AntiRejectViaHorizonFromInfix rhs) {
+    return AntiRejectViaHorizonFromInfixPartial<AntiLine>(lhs);
 }
-public extension AntiRejectViaHorizonFromInfixPartial<AntiLine> {
-    // Fancy infix trick (second half)
-    public VersorOdd operator /(AntiCircleRotor rhs) {
-        return this.a.anti_reject_via_horizon_from(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<AntiLine> lhs, AntiCircleRotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiLine {
     public VersorOdd anti_reject_via_horizon_from(AntiCircleRotor other) {
@@ -3020,6 +3428,10 @@ public extension AntiLine {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<AntiLine> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiLine {
     public VersorOdd anti_reject_via_horizon_from(AntiDipoleInversion other) {
         CircleRotor wedge = CircleRotor(
@@ -3052,6 +3464,10 @@ public extension AntiLine {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiLine operator /(AntiRejectViaHorizonFromInfixPartial<AntiLine> lhs, AntiDualNum rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiLine {
     public AntiLine anti_reject_via_horizon_from(AntiDualNum other) {
         AntiLine wedge = AntiLine(
@@ -3071,6 +3487,10 @@ public extension AntiLine {
             float3(right_dual.e12345) * wedge.group1.xyz
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiRejectViaHorizonFromInfixPartial<AntiLine> lhs, AntiFlector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiLine {
     public AntiMotor anti_reject_via_horizon_from(AntiFlector other) {
@@ -3092,6 +3512,10 @@ public extension AntiLine {
         );
     }
 }
+// Fancy infix trick (second half)
+public FlatPoint operator /(AntiRejectViaHorizonFromInfixPartial<AntiLine> lhs, AntiLine rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiLine {
     public FlatPoint anti_reject_via_horizon_from(AntiLine other) {
         AntiDualNum wedge = AntiDualNum(
@@ -3103,6 +3527,10 @@ public extension AntiLine {
             float4(wedge.group0.xy.xx, wedge.e3215, 0.0) * float4(float3(1.0), 0.0) * float4(float3(other.e23 * -1.0, other.e31 * -1.0, other.e12 * -1.0), 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiRejectViaHorizonFromInfixPartial<AntiLine> lhs, AntiMotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiLine {
     public AntiMotor anti_reject_via_horizon_from(AntiMotor other) {
@@ -3126,6 +3554,10 @@ public extension AntiLine {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiLine operator /(AntiRejectViaHorizonFromInfixPartial<AntiLine> lhs, AntiPlane rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiLine {
     public AntiLine anti_reject_via_horizon_from(AntiPlane other) {
         AntiFlatPoint wedge = AntiFlatPoint(
@@ -3143,6 +3575,10 @@ public extension AntiLine {
             (wedge.group0.yzx * right_dual.group0.zxy) - (wedge.group0.zxy * right_dual.group0.yzx)
         );
     }
+}
+// Fancy infix trick (second half)
+public Dipole operator /(AntiRejectViaHorizonFromInfixPartial<AntiLine> lhs, Circle rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiLine {
     public Dipole anti_reject_via_horizon_from(Circle other) {
@@ -3168,6 +3604,10 @@ public extension AntiLine {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(AntiRejectViaHorizonFromInfixPartial<AntiLine> lhs, CircleRotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiLine {
     public AntiCircleRotor anti_reject_via_horizon_from(CircleRotor other) {
         AntiScalar wedge = AntiScalar(
@@ -3191,6 +3631,10 @@ public extension AntiLine {
             float4(wedge.e12345) * right_dual.group2
         );
     }
+}
+// Fancy infix trick (second half)
+public Dipole operator /(AntiRejectViaHorizonFromInfixPartial<AntiLine> lhs, Dipole rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiLine {
     public Dipole anti_reject_via_horizon_from(Dipole other) {
@@ -3217,6 +3661,10 @@ public extension AntiLine {
             (float3(wedge.e3215) * right_dual.group1.xyz) + (right_dual.group2.xyz.yzx * wedge.group0.zxy) - (right_dual.group2.xyz.zxy * wedge.group0.yzx)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(AntiRejectViaHorizonFromInfixPartial<AntiLine> lhs, DipoleInversion rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiLine {
     public AntiCircleRotor anti_reject_via_horizon_from(DipoleInversion other) {
@@ -3246,6 +3694,10 @@ public extension AntiLine {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiLine operator /(AntiRejectViaHorizonFromInfixPartial<AntiLine> lhs, FlatPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiLine {
     public AntiLine anti_reject_via_horizon_from(FlatPoint other) {
         Plane wedge = Plane(
@@ -3263,6 +3715,10 @@ public extension AntiLine {
             (right_dual.group0.yzx * wedge.group0.zxy) - (right_dual.group0.zxy * wedge.group0.yzx)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiRejectViaHorizonFromInfixPartial<AntiLine> lhs, Flector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiLine {
     public AntiMotor anti_reject_via_horizon_from(Flector other) {
@@ -3284,6 +3740,10 @@ public extension AntiLine {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiLine operator /(AntiRejectViaHorizonFromInfixPartial<AntiLine> lhs, Line rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiLine {
     public AntiLine anti_reject_via_horizon_from(Line other) {
         AntiScalar wedge = AntiScalar(
@@ -3303,6 +3763,10 @@ public extension AntiLine {
             float3(wedge.e12345) * right_dual.group1.xyz
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiRejectViaHorizonFromInfixPartial<AntiLine> lhs, Motor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiLine {
     public AntiMotor anti_reject_via_horizon_from(Motor other) {
@@ -3325,6 +3789,10 @@ public extension AntiLine {
             float4(((float3(right_dual.e3215) * wedge.group0.xyz) + (float3(wedge.e12345) * right_dual.group1.xyz)), right_dual.e3215 * wedge.e12345)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiRejectViaHorizonFromInfixPartial<AntiLine> lhs, MultiVector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiLine {
     public MultiVector anti_reject_via_horizon_from(MultiVector other) {
@@ -3402,6 +3870,10 @@ public extension AntiLine {
         );
     }
 }
+// Fancy infix trick (second half)
+public Dipole operator /(AntiRejectViaHorizonFromInfixPartial<AntiLine> lhs, RoundPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiLine {
     public Dipole anti_reject_via_horizon_from(RoundPoint other) {
         Circle wedge = Circle(
@@ -3428,6 +3900,10 @@ public extension AntiLine {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiLine operator /(AntiRejectViaHorizonFromInfixPartial<AntiLine> lhs, Scalar rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiLine {
     public AntiLine anti_reject_via_horizon_from(Scalar other) {
         AntiLine wedge = AntiLine(
@@ -3447,6 +3923,10 @@ public extension AntiLine {
             float3(right_dual.e12345) * wedge.group1.xyz
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<AntiLine> lhs, VersorEven rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiLine {
     public VersorOdd anti_reject_via_horizon_from(VersorEven other) {
@@ -3479,6 +3959,10 @@ public extension AntiLine {
             float4(wedge.e12345) * right_dual.group3
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<AntiLine> lhs, VersorOdd rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiLine {
     public VersorOdd anti_reject_via_horizon_from(VersorOdd other) {
@@ -3514,17 +3998,13 @@ public extension AntiLine {
         );
     }
 }
-public extension AntiMotor {
-    // Fancy infix trick (first half)
-    public AntiRejectViaHorizonFromInfixPartial<AntiMotor> operator /(AntiRejectViaHorizonFromInfix rhs) {
-        return AntiRejectViaHorizonFromInfixPartial<AntiMotor>(this);
-    }
+// Fancy infix trick (first half)
+public AntiRejectViaHorizonFromInfixPartial<AntiMotor> operator /(AntiMotor lhs, AntiRejectViaHorizonFromInfix rhs) {
+    return AntiRejectViaHorizonFromInfixPartial<AntiMotor>(lhs);
 }
-public extension AntiRejectViaHorizonFromInfixPartial<AntiMotor> {
-    // Fancy infix trick (second half)
-    public VersorOdd operator /(AntiCircleRotor rhs) {
-        return this.a.anti_reject_via_horizon_from(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<AntiMotor> lhs, AntiCircleRotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiMotor {
     public VersorOdd anti_reject_via_horizon_from(AntiCircleRotor other) {
@@ -3557,6 +4037,10 @@ public extension AntiMotor {
             float4(right_dual.e12345) * wedge.group3
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<AntiMotor> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiMotor {
     public VersorOdd anti_reject_via_horizon_from(AntiDipoleInversion other) {
@@ -3592,6 +4076,10 @@ public extension AntiMotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiRejectViaHorizonFromInfixPartial<AntiMotor> lhs, AntiDualNum rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiMotor {
     public AntiMotor anti_reject_via_horizon_from(AntiDualNum other) {
         AntiMotor wedge = AntiMotor(
@@ -3612,6 +4100,10 @@ public extension AntiMotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(AntiRejectViaHorizonFromInfixPartial<AntiMotor> lhs, AntiFlatPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiMotor {
     public Scalar anti_reject_via_horizon_from(AntiFlatPoint other) {
         return Scalar(
@@ -3619,6 +4111,10 @@ public extension AntiMotor {
             float4(other.group0.xyz, other.e321 * -1.0)[3] * other.e321 * this.scalar * -1.0
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiRejectViaHorizonFromInfixPartial<AntiMotor> lhs, AntiFlector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiMotor {
     public AntiMotor anti_reject_via_horizon_from(AntiFlector other) {
@@ -3642,6 +4138,10 @@ public extension AntiMotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiRejectViaHorizonFromInfixPartial<AntiMotor> lhs, AntiLine rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiMotor {
     public AntiMotor anti_reject_via_horizon_from(AntiLine other) {
         AntiMotor wedge = AntiMotor(
@@ -3663,6 +4163,10 @@ public extension AntiMotor {
             float4(float3(1.0), 0.0) * float4(right_dual.group0.xyz, 0.0) * float4(wedge.group1.www, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiRejectViaHorizonFromInfixPartial<AntiMotor> lhs, AntiMotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiMotor {
     public AntiMotor anti_reject_via_horizon_from(AntiMotor other) {
@@ -3686,6 +4190,10 @@ public extension AntiMotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiRejectViaHorizonFromInfixPartial<AntiMotor> lhs, AntiPlane rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiMotor {
     public AntiMotor anti_reject_via_horizon_from(AntiPlane other) {
         AntiFlector wedge = AntiFlector(
@@ -3706,6 +4214,10 @@ public extension AntiMotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(AntiRejectViaHorizonFromInfixPartial<AntiMotor> lhs, AntiScalar rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiMotor {
     public Scalar anti_reject_via_horizon_from(AntiScalar other) {
         return Scalar(
@@ -3713,6 +4225,10 @@ public extension AntiMotor {
             this.scalar * pow(other.e12345, 2) * -1.0
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(AntiRejectViaHorizonFromInfixPartial<AntiMotor> lhs, Circle rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiMotor {
     public AntiCircleRotor anti_reject_via_horizon_from(Circle other) {
@@ -3742,6 +4258,10 @@ public extension AntiMotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(AntiRejectViaHorizonFromInfixPartial<AntiMotor> lhs, CircleRotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiMotor {
     public AntiCircleRotor anti_reject_via_horizon_from(CircleRotor other) {
         CircleRotor wedge = CircleRotor(
@@ -3769,6 +4289,10 @@ public extension AntiMotor {
             float4((float3(wedge.e12345) * right_dual.group2.xyz), (right_dual.scalar * wedge.e12345) - (right_dual.e41 * wedge.e235) - (right_dual.e42 * wedge.e315) - (right_dual.e43 * wedge.e125) - (right_dual.e23 * wedge.e415) - (right_dual.e31 * wedge.e425) - (right_dual.e12 * wedge.e435) - (right_dual.e45 * wedge.e321) - (right_dual.e15 * wedge.e423) - (right_dual.e25 * wedge.e431) - (right_dual.e35 * wedge.e412))
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(AntiRejectViaHorizonFromInfixPartial<AntiMotor> lhs, Dipole rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiMotor {
     public AntiCircleRotor anti_reject_via_horizon_from(Dipole other) {
@@ -3799,6 +4323,10 @@ public extension AntiMotor {
             float4((right_dual.e415 * wedge.e3215) + (right_dual.e315 * wedge.e4125), (right_dual.e425 * wedge.e3215) + (right_dual.e125 * wedge.e4235), (right_dual.e435 * wedge.e3215) + (right_dual.e235 * wedge.e4315), -(right_dual.e431 * wedge.e25) - (right_dual.e412 * wedge.e35) - (right_dual.e415 * wedge.e23) - (right_dual.e425 * wedge.e31) - (right_dual.e435 * wedge.e12) - (right_dual.e321 * wedge.e45) - (right_dual.e235 * wedge.e41) - (right_dual.e315 * wedge.e42) - (right_dual.e125 * wedge.e43)) - float4((right_dual.group2.xyz.zxy * wedge.group3.yzx), right_dual.e423 * wedge.e15)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(AntiRejectViaHorizonFromInfixPartial<AntiMotor> lhs, DipoleInversion rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiMotor {
     public AntiCircleRotor anti_reject_via_horizon_from(DipoleInversion other) {
@@ -3832,6 +4360,10 @@ public extension AntiMotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiRejectViaHorizonFromInfixPartial<AntiMotor> lhs, DualNum rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiMotor {
     public AntiMotor anti_reject_via_horizon_from(DualNum other) {
         Motor wedge = Motor(
@@ -3852,6 +4384,10 @@ public extension AntiMotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiRejectViaHorizonFromInfixPartial<AntiMotor> lhs, FlatPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiMotor {
     public AntiMotor anti_reject_via_horizon_from(FlatPoint other) {
         Flector wedge = Flector(
@@ -3871,6 +4407,10 @@ public extension AntiMotor {
             float4(((right_dual.group0.yzx * wedge.group1.zxy) - (right_dual.group0.zxy * wedge.group1.yzx)), 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiRejectViaHorizonFromInfixPartial<AntiMotor> lhs, Flector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiMotor {
     public AntiMotor anti_reject_via_horizon_from(Flector other) {
@@ -3894,6 +4434,10 @@ public extension AntiMotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiRejectViaHorizonFromInfixPartial<AntiMotor> lhs, Line rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiMotor {
     public AntiMotor anti_reject_via_horizon_from(Line other) {
         Motor wedge = Motor(
@@ -3916,6 +4460,10 @@ public extension AntiMotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiRejectViaHorizonFromInfixPartial<AntiMotor> lhs, Motor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiMotor {
     public AntiMotor anti_reject_via_horizon_from(Motor other) {
         Motor wedge = Motor(
@@ -3937,6 +4485,10 @@ public extension AntiMotor {
             float4(((float3(right_dual.e3215) * wedge.group0.xyz) + (float3(wedge.e12345) * right_dual.group1.xyz)), right_dual.e3215 * wedge.e12345)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiRejectViaHorizonFromInfixPartial<AntiMotor> lhs, MultiVector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiMotor {
     public MultiVector anti_reject_via_horizon_from(MultiVector other) {
@@ -4014,6 +4566,10 @@ public extension AntiMotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(AntiRejectViaHorizonFromInfixPartial<AntiMotor> lhs, Plane rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiMotor {
     public Scalar anti_reject_via_horizon_from(Plane other) {
         Plane wedge = Plane(
@@ -4029,6 +4585,10 @@ public extension AntiMotor {
             (right_dual.e1 * wedge.e4235) + (right_dual.e2 * wedge.e4315) + (right_dual.e3 * wedge.e4125)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<AntiMotor> lhs, RoundPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiMotor {
     public VersorOdd anti_reject_via_horizon_from(RoundPoint other) {
@@ -4060,6 +4620,10 @@ public extension AntiMotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiRejectViaHorizonFromInfixPartial<AntiMotor> lhs, Scalar rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiMotor {
     public AntiMotor anti_reject_via_horizon_from(Scalar other) {
         AntiMotor wedge = AntiMotor(
@@ -4080,6 +4644,10 @@ public extension AntiMotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(AntiRejectViaHorizonFromInfixPartial<AntiMotor> lhs, Sphere rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiMotor {
     public Scalar anti_reject_via_horizon_from(Sphere other) {
         Sphere wedge = Sphere(
@@ -4099,6 +4667,10 @@ public extension AntiMotor {
             (right_dual.e1 * wedge.e4235) + (right_dual.e2 * wedge.e4315) + (right_dual.e3 * wedge.e4125) + (right_dual.e4 * wedge.e3215) + (right_dual.e5 * wedge.e1234)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<AntiMotor> lhs, VersorEven rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiMotor {
     public VersorOdd anti_reject_via_horizon_from(VersorEven other) {
@@ -4134,6 +4706,10 @@ public extension AntiMotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<AntiMotor> lhs, VersorOdd rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiMotor {
     public VersorOdd anti_reject_via_horizon_from(VersorOdd other) {
         VersorOdd wedge = VersorOdd(
@@ -4168,17 +4744,13 @@ public extension AntiMotor {
         );
     }
 }
-public extension AntiPlane {
-    // Fancy infix trick (first half)
-    public AntiRejectViaHorizonFromInfixPartial<AntiPlane> operator /(AntiRejectViaHorizonFromInfix rhs) {
-        return AntiRejectViaHorizonFromInfixPartial<AntiPlane>(this);
-    }
+// Fancy infix trick (first half)
+public AntiRejectViaHorizonFromInfixPartial<AntiPlane> operator /(AntiPlane lhs, AntiRejectViaHorizonFromInfix rhs) {
+    return AntiRejectViaHorizonFromInfixPartial<AntiPlane>(lhs);
 }
-public extension AntiRejectViaHorizonFromInfixPartial<AntiPlane> {
-    // Fancy infix trick (second half)
-    public AntiDipoleInversion operator /(AntiCircleRotor rhs) {
-        return this.a.anti_reject_via_horizon_from(rhs);
-    }
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<AntiPlane> lhs, AntiCircleRotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiPlane {
     public AntiDipoleInversion anti_reject_via_horizon_from(AntiCircleRotor other) {
@@ -4211,6 +4783,10 @@ public extension AntiPlane {
             float4((wedge.e415 * right_dual.e321) + (wedge.e321 * right_dual.e415) + (wedge.e315 * right_dual.e412) + (wedge.e1 * right_dual.e12345), (wedge.e425 * right_dual.e321) + (wedge.e321 * right_dual.e425) + (wedge.e125 * right_dual.e423) + (wedge.e2 * right_dual.e12345), (wedge.e435 * right_dual.e321) + (wedge.e321 * right_dual.e435) + (wedge.e235 * right_dual.e431) + (wedge.e3 * right_dual.e12345), -(wedge.e435 * right_dual.e125) - (wedge.e235 * right_dual.e415) - (wedge.e315 * right_dual.e425) - (wedge.e125 * right_dual.e435)) + (right_dual.group2.yzxw * float4(wedge.group0.xyz.zxy, wedge.e5)) - (right_dual.group2.zxyx * float4(wedge.group0.xyz.yzx, wedge.e415)) - float4((right_dual.group0.xyz.yzx * wedge.group2.zxy), wedge.e425 * right_dual.e315)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<AntiPlane> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiPlane {
     public AntiDipoleInversion anti_reject_via_horizon_from(AntiDipoleInversion other) {
@@ -4246,6 +4822,10 @@ public extension AntiPlane {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(AntiRejectViaHorizonFromInfixPartial<AntiPlane> lhs, AntiDualNum rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiPlane {
     public AntiPlane anti_reject_via_horizon_from(AntiDualNum other) {
         return AntiPlane(
@@ -4254,6 +4834,10 @@ public extension AntiPlane {
         );
     }
 }
+// Fancy infix trick (second half)
+public DualNum operator /(AntiRejectViaHorizonFromInfixPartial<AntiPlane> lhs, AntiFlatPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiPlane {
     public DualNum anti_reject_via_horizon_from(AntiFlatPoint other) {
         return DualNum(
@@ -4261,6 +4845,10 @@ public extension AntiPlane {
             float2(-(float4(other.group0.xyz, other.e321 * -1.0)[3] * other.e235 * this.e1) - (float4(other.group0.xyz, other.e321 * -1.0)[3] * other.e315 * this.e2) - (float4(other.group0.xyz, other.e321 * -1.0)[3] * other.e125 * this.e3) - (float4(other.group0.xyz, other.e321 * -1.0)[3] * other.e321 * this.e5), 1.0) * float2(-1.0, 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiRejectViaHorizonFromInfixPartial<AntiPlane> lhs, AntiFlector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiPlane {
     public AntiFlector anti_reject_via_horizon_from(AntiFlector other) {
@@ -4284,6 +4872,10 @@ public extension AntiPlane {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(AntiRejectViaHorizonFromInfixPartial<AntiPlane> lhs, AntiLine rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiPlane {
     public AntiPlane anti_reject_via_horizon_from(AntiLine other) {
         AntiFlatPoint wedge = AntiFlatPoint(
@@ -4301,6 +4893,10 @@ public extension AntiPlane {
             float4((float3(wedge.e321) * right_dual.group0.xyz), -(wedge.e235 * right_dual.e415) - (wedge.e315 * right_dual.e425) - (wedge.e125 * right_dual.e435))
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiRejectViaHorizonFromInfixPartial<AntiPlane> lhs, AntiMotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiPlane {
     public AntiFlector anti_reject_via_horizon_from(AntiMotor other) {
@@ -4324,6 +4920,10 @@ public extension AntiPlane {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(AntiRejectViaHorizonFromInfixPartial<AntiPlane> lhs, AntiPlane rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiPlane {
     public AntiPlane anti_reject_via_horizon_from(AntiPlane other) {
         AntiLine wedge = AntiLine(
@@ -4341,6 +4941,10 @@ public extension AntiPlane {
             float4(wedge.e12 * right_dual.e4315 * -1.0, wedge.e23 * right_dual.e4125 * -1.0, wedge.e31 * right_dual.e4235 * -1.0, (wedge.e25 * right_dual.e4315) + (wedge.e35 * right_dual.e4125)) + (right_dual.group0.zxyx * float4(wedge.group0.xyz.yzx, wedge.e15))
         );
     }
+}
+// Fancy infix trick (second half)
+public RoundPoint operator /(AntiRejectViaHorizonFromInfixPartial<AntiPlane> lhs, Circle rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiPlane {
     public RoundPoint anti_reject_via_horizon_from(Circle other) {
@@ -4366,6 +4970,10 @@ public extension AntiPlane {
         );
     }
 }
+// Fancy infix trick (second half)
+public RoundPoint operator /(AntiRejectViaHorizonFromInfixPartial<AntiPlane> lhs, CircleRotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiPlane {
     public RoundPoint anti_reject_via_horizon_from(CircleRotor other) {
         Sphere wedge = Sphere(
@@ -4389,6 +4997,10 @@ public extension AntiPlane {
             -(right_dual.e45 * wedge.e3215) - (right_dual.e15 * wedge.e4235) - (right_dual.e25 * wedge.e4315) - (right_dual.e35 * wedge.e4125)
         );
     }
+}
+// Fancy infix trick (second half)
+public RoundPoint operator /(AntiRejectViaHorizonFromInfixPartial<AntiPlane> lhs, Dipole rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiPlane {
     public RoundPoint anti_reject_via_horizon_from(Dipole other) {
@@ -4415,6 +5027,10 @@ public extension AntiPlane {
             -(right_dual.e415 * wedge.e235) - (right_dual.e425 * wedge.e315) - (right_dual.e435 * wedge.e125) - (right_dual.e235 * wedge.e415) - (right_dual.e315 * wedge.e425) - (right_dual.e125 * wedge.e435)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<AntiPlane> lhs, DipoleInversion rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiPlane {
     public AntiDipoleInversion anti_reject_via_horizon_from(DipoleInversion other) {
@@ -4448,6 +5064,10 @@ public extension AntiPlane {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(AntiRejectViaHorizonFromInfixPartial<AntiPlane> lhs, FlatPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiPlane {
     public AntiPlane anti_reject_via_horizon_from(FlatPoint other) {
         Line wedge = Line(
@@ -4465,6 +5085,10 @@ public extension AntiPlane {
             float4((float3(right_dual.e321) * wedge.group0.xyz), -(right_dual.e235 * wedge.e415) - (right_dual.e315 * wedge.e425) - (right_dual.e125 * wedge.e435))
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiRejectViaHorizonFromInfixPartial<AntiPlane> lhs, Flector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiPlane {
     public AntiFlector anti_reject_via_horizon_from(Flector other) {
@@ -4488,6 +5112,10 @@ public extension AntiPlane {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(AntiRejectViaHorizonFromInfixPartial<AntiPlane> lhs, Line rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiPlane {
     public AntiPlane anti_reject_via_horizon_from(Line other) {
         Plane wedge = Plane(
@@ -4505,6 +5133,10 @@ public extension AntiPlane {
             float4(right_dual.e12 * wedge.e4315, right_dual.e23 * wedge.e4125, right_dual.e31 * wedge.e4235, -(right_dual.e25 * wedge.e4315) - (right_dual.e35 * wedge.e4125)) - (wedge.group0.zxyx * float4(right_dual.group0.xyz.yzx, right_dual.e15))
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiRejectViaHorizonFromInfixPartial<AntiPlane> lhs, Motor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiPlane {
     public AntiFlector anti_reject_via_horizon_from(Motor other) {
@@ -4527,6 +5159,10 @@ public extension AntiPlane {
             float4(float3(0.0), -(right_dual.e25 * wedge.e4315) - (right_dual.e35 * wedge.e4125)) + float4((right_dual.group0.zxy * wedge.group1.yzx), right_dual.e3215 * wedge.e45) - (wedge.group1.zxyx * float4(right_dual.group0.yzx, right_dual.e15))
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiRejectViaHorizonFromInfixPartial<AntiPlane> lhs, MultiVector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiPlane {
     public MultiVector anti_reject_via_horizon_from(MultiVector other) {
@@ -4604,6 +5240,10 @@ public extension AntiPlane {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(AntiRejectViaHorizonFromInfixPartial<AntiPlane> lhs, Plane rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiPlane {
     public AntiPlane anti_reject_via_horizon_from(Plane other) {
         return AntiPlane(
@@ -4611,6 +5251,10 @@ public extension AntiPlane {
             float4((this.e1 * other.e4235) + (this.e2 * other.e4315) + (this.e3 * other.e4125)) * float4(other.e4235 * -1.0, other.e4315 * -1.0, other.e4125 * -1.0, other.e3215)
         );
     }
+}
+// Fancy infix trick (second half)
+public RoundPoint operator /(AntiRejectViaHorizonFromInfixPartial<AntiPlane> lhs, RoundPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiPlane {
     public RoundPoint anti_reject_via_horizon_from(RoundPoint other) {
@@ -4636,6 +5280,10 @@ public extension AntiPlane {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(AntiRejectViaHorizonFromInfixPartial<AntiPlane> lhs, Scalar rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiPlane {
     public AntiPlane anti_reject_via_horizon_from(Scalar other) {
         return AntiPlane(
@@ -4643,6 +5291,10 @@ public extension AntiPlane {
             float4(other.scalar) * float4(this.e1 * other.scalar, this.e2 * other.scalar, this.e3 * other.scalar, this.e5 * other.scalar)
         );
     }
+}
+// Fancy infix trick (second half)
+public RoundPoint operator /(AntiRejectViaHorizonFromInfixPartial<AntiPlane> lhs, Sphere rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiPlane {
     public RoundPoint anti_reject_via_horizon_from(Sphere other) {
@@ -4663,6 +5315,10 @@ public extension AntiPlane {
             wedge.e12345 * right_dual.e5
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<AntiPlane> lhs, VersorEven rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiPlane {
     public AntiDipoleInversion anti_reject_via_horizon_from(VersorEven other) {
@@ -4698,6 +5354,10 @@ public extension AntiPlane {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiRejectViaHorizonFromInfixPartial<AntiPlane> lhs, VersorOdd rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiPlane {
     public VersorEven anti_reject_via_horizon_from(VersorOdd other) {
         VersorEven wedge = VersorEven(
@@ -4732,17 +5392,13 @@ public extension AntiPlane {
         );
     }
 }
-public extension AntiScalar {
-    // Fancy infix trick (first half)
-    public AntiRejectViaHorizonFromInfixPartial<AntiScalar> operator /(AntiRejectViaHorizonFromInfix rhs) {
-        return AntiRejectViaHorizonFromInfixPartial<AntiScalar>(this);
-    }
+// Fancy infix trick (first half)
+public AntiRejectViaHorizonFromInfixPartial<AntiScalar> operator /(AntiScalar lhs, AntiRejectViaHorizonFromInfix rhs) {
+    return AntiRejectViaHorizonFromInfixPartial<AntiScalar>(lhs);
 }
-public extension AntiRejectViaHorizonFromInfixPartial<AntiScalar> {
-    // Fancy infix trick (second half)
-    public CircleRotor operator /(AntiCircleRotor rhs) {
-        return this.a.anti_reject_via_horizon_from(rhs);
-    }
+// Fancy infix trick (second half)
+public CircleRotor operator /(AntiRejectViaHorizonFromInfixPartial<AntiScalar> lhs, AntiCircleRotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiScalar {
     public CircleRotor anti_reject_via_horizon_from(AntiCircleRotor other) {
@@ -4768,6 +5424,10 @@ public extension AntiScalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public DualNum operator /(AntiRejectViaHorizonFromInfixPartial<AntiScalar> lhs, AntiDualNum rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiScalar {
     public DualNum anti_reject_via_horizon_from(AntiDualNum other) {
         return DualNum(
@@ -4775,6 +5435,10 @@ public extension AntiScalar {
             float2(other.scalar * this.e12345) * other.group0.xy
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(AntiRejectViaHorizonFromInfixPartial<AntiScalar> lhs, AntiMotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiScalar {
     public Motor anti_reject_via_horizon_from(AntiMotor other) {
@@ -4795,6 +5459,10 @@ public extension AntiScalar {
             float4(wedge.e12345) * right_dual.group1
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiRejectViaHorizonFromInfixPartial<AntiScalar> lhs, MultiVector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiScalar {
     public MultiVector anti_reject_via_horizon_from(MultiVector other) {
@@ -4852,6 +5520,10 @@ public extension AntiScalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(AntiRejectViaHorizonFromInfixPartial<AntiScalar> lhs, Scalar rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension AntiScalar {
     public AntiScalar anti_reject_via_horizon_from(Scalar other) {
         return AntiScalar(
@@ -4859,6 +5531,10 @@ public extension AntiScalar {
             this.e12345 * pow(other.scalar, 2)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiRejectViaHorizonFromInfixPartial<AntiScalar> lhs, VersorOdd rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension AntiScalar {
     public VersorEven anti_reject_via_horizon_from(VersorOdd other) {
@@ -4888,17 +5564,13 @@ public extension AntiScalar {
         );
     }
 }
-public extension Circle {
-    // Fancy infix trick (first half)
-    public AntiRejectViaHorizonFromInfixPartial<Circle> operator /(AntiRejectViaHorizonFromInfix rhs) {
-        return AntiRejectViaHorizonFromInfixPartial<Circle>(this);
-    }
+// Fancy infix trick (first half)
+public AntiRejectViaHorizonFromInfixPartial<Circle> operator /(Circle lhs, AntiRejectViaHorizonFromInfix rhs) {
+    return AntiRejectViaHorizonFromInfixPartial<Circle>(lhs);
 }
-public extension AntiRejectViaHorizonFromInfixPartial<Circle> {
-    // Fancy infix trick (second half)
-    public VersorEven operator /(AntiCircleRotor rhs) {
-        return this.a.anti_reject_via_horizon_from(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiRejectViaHorizonFromInfixPartial<Circle> lhs, AntiCircleRotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Circle {
     public VersorEven anti_reject_via_horizon_from(AntiCircleRotor other) {
@@ -4930,6 +5602,10 @@ public extension Circle {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<Circle> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Circle {
     public AntiDipoleInversion anti_reject_via_horizon_from(AntiDipoleInversion other) {
         Sphere wedge = Sphere(
@@ -4960,6 +5636,10 @@ public extension Circle {
         );
     }
 }
+// Fancy infix trick (second half)
+public Circle operator /(AntiRejectViaHorizonFromInfixPartial<Circle> lhs, AntiDualNum rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Circle {
     public Circle anti_reject_via_horizon_from(AntiDualNum other) {
         Circle wedge = Circle(
@@ -4983,6 +5663,10 @@ public extension Circle {
             float3(right_dual.e12345) * wedge.group2.xyz
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<Circle> lhs, AntiFlector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Circle {
     public AntiDipoleInversion anti_reject_via_horizon_from(AntiFlector other) {
@@ -5010,6 +5694,10 @@ public extension Circle {
         );
     }
 }
+// Fancy infix trick (second half)
+public Line operator /(AntiRejectViaHorizonFromInfixPartial<Circle> lhs, AntiLine rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Circle {
     public Line anti_reject_via_horizon_from(AntiLine other) {
         AntiScalar wedge = AntiScalar(
@@ -5029,6 +5717,10 @@ public extension Circle {
             float3(wedge.e12345) * right_dual.group1.xyz
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiRejectViaHorizonFromInfixPartial<Circle> lhs, AntiMotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Circle {
     public VersorEven anti_reject_via_horizon_from(AntiMotor other) {
@@ -5058,6 +5750,10 @@ public extension Circle {
         );
     }
 }
+// Fancy infix trick (second half)
+public Circle operator /(AntiRejectViaHorizonFromInfixPartial<Circle> lhs, AntiPlane rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Circle {
     public Circle anti_reject_via_horizon_from(AntiPlane other) {
         Sphere wedge = Sphere(
@@ -5079,6 +5775,10 @@ public extension Circle {
             (float3(right_dual.e3215) * wedge.group0.xyz) - (float3(wedge.e3215) * right_dual.group0.xyz)
         );
     }
+}
+// Fancy infix trick (second half)
+public Circle operator /(AntiRejectViaHorizonFromInfixPartial<Circle> lhs, Dipole rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Circle {
     public Circle anti_reject_via_horizon_from(Dipole other) {
@@ -5103,6 +5803,10 @@ public extension Circle {
             float3(wedge.e12345) * right_dual.group2.xyz
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<Circle> lhs, DipoleInversion rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Circle {
     public AntiDipoleInversion anti_reject_via_horizon_from(DipoleInversion other) {
@@ -5132,6 +5836,10 @@ public extension Circle {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlatPoint operator /(AntiRejectViaHorizonFromInfixPartial<Circle> lhs, DualNum rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Circle {
     public AntiFlatPoint anti_reject_via_horizon_from(DualNum other) {
         AntiDualNum right_dual = AntiDualNum(
@@ -5144,6 +5852,10 @@ public extension Circle {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlatPoint operator /(AntiRejectViaHorizonFromInfixPartial<Circle> lhs, FlatPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Circle {
     public AntiFlatPoint anti_reject_via_horizon_from(FlatPoint other) {
         return AntiFlatPoint(
@@ -5151,6 +5863,10 @@ public extension Circle {
             float4(-(this.e423 * other.e15) - (this.e431 * other.e25) - (this.e412 * other.e35) - (this.e321 * other.e45)) * float4(other.e15 * -1.0, other.e25 * -1.0, other.e35 * -1.0, other.e45)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiRejectViaHorizonFromInfixPartial<Circle> lhs, Flector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Circle {
     public AntiFlector anti_reject_via_horizon_from(Flector other) {
@@ -5172,6 +5888,10 @@ public extension Circle {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiRejectViaHorizonFromInfixPartial<Circle> lhs, Motor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Circle {
     public AntiFlector anti_reject_via_horizon_from(Motor other) {
         Plane wedge = Plane(
@@ -5191,6 +5911,10 @@ public extension Circle {
             float4(right_dual.e12 * wedge.e4315, right_dual.e23 * wedge.e4125, right_dual.e31 * wedge.e4235, -(right_dual.e25 * wedge.e4315) - (right_dual.e35 * wedge.e4125)) - (wedge.group0.zxyx * float4(right_dual.group0.yzx, right_dual.e15))
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiRejectViaHorizonFromInfixPartial<Circle> lhs, MultiVector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Circle {
     public MultiVector anti_reject_via_horizon_from(MultiVector other) {
@@ -5268,6 +5992,10 @@ public extension Circle {
         );
     }
 }
+// Fancy infix trick (second half)
+public Circle operator /(AntiRejectViaHorizonFromInfixPartial<Circle> lhs, RoundPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Circle {
     public Circle anti_reject_via_horizon_from(RoundPoint other) {
         Sphere wedge = Sphere(
@@ -5292,6 +6020,10 @@ public extension Circle {
         );
     }
 }
+// Fancy infix trick (second half)
+public Circle operator /(AntiRejectViaHorizonFromInfixPartial<Circle> lhs, Scalar rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Circle {
     public Circle anti_reject_via_horizon_from(Scalar other) {
         Circle wedge = Circle(
@@ -5315,6 +6047,10 @@ public extension Circle {
             float3(right_dual.e12345) * wedge.group2.xyz
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<Circle> lhs, VersorEven rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Circle {
     public AntiDipoleInversion anti_reject_via_horizon_from(VersorEven other) {
@@ -5345,6 +6081,10 @@ public extension Circle {
             float4((wedge.e4315 * right_dual.e12) + (wedge.e1234 * right_dual.e15), (wedge.e4125 * right_dual.e23) + (wedge.e1234 * right_dual.e25), (wedge.e4235 * right_dual.e31) + (wedge.e1234 * right_dual.e35), -(wedge.e4125 * right_dual.e35) - (wedge.e3215 * right_dual.e45)) - (wedge.group0.zxyx * float4(right_dual.group1.yzx, right_dual.e15)) - (wedge.group0.wwwy * float4(right_dual.group0.xyz, right_dual.e25))
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiRejectViaHorizonFromInfixPartial<Circle> lhs, VersorOdd rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Circle {
     public VersorEven anti_reject_via_horizon_from(VersorOdd other) {
@@ -5378,17 +6118,13 @@ public extension Circle {
         );
     }
 }
-public extension CircleRotor {
-    // Fancy infix trick (first half)
-    public AntiRejectViaHorizonFromInfixPartial<CircleRotor> operator /(AntiRejectViaHorizonFromInfix rhs) {
-        return AntiRejectViaHorizonFromInfixPartial<CircleRotor>(this);
-    }
+// Fancy infix trick (first half)
+public AntiRejectViaHorizonFromInfixPartial<CircleRotor> operator /(CircleRotor lhs, AntiRejectViaHorizonFromInfix rhs) {
+    return AntiRejectViaHorizonFromInfixPartial<CircleRotor>(lhs);
 }
-public extension AntiRejectViaHorizonFromInfixPartial<CircleRotor> {
-    // Fancy infix trick (second half)
-    public VersorEven operator /(AntiCircleRotor rhs) {
-        return this.a.anti_reject_via_horizon_from(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiRejectViaHorizonFromInfixPartial<CircleRotor> lhs, AntiCircleRotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension CircleRotor {
     public VersorEven anti_reject_via_horizon_from(AntiCircleRotor other) {
@@ -5420,6 +6156,10 @@ public extension CircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<CircleRotor> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension CircleRotor {
     public AntiDipoleInversion anti_reject_via_horizon_from(AntiDipoleInversion other) {
         Sphere wedge = Sphere(
@@ -5450,6 +6190,10 @@ public extension CircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiRejectViaHorizonFromInfixPartial<CircleRotor> lhs, AntiDualNum rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension CircleRotor {
     public VersorEven anti_reject_via_horizon_from(AntiDualNum other) {
         CircleRotor wedge = CircleRotor(
@@ -5475,6 +6219,10 @@ public extension CircleRotor {
             float4(0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<CircleRotor> lhs, AntiFlector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension CircleRotor {
     public AntiDipoleInversion anti_reject_via_horizon_from(AntiFlector other) {
@@ -5502,6 +6250,10 @@ public extension CircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Line operator /(AntiRejectViaHorizonFromInfixPartial<CircleRotor> lhs, AntiLine rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension CircleRotor {
     public Line anti_reject_via_horizon_from(AntiLine other) {
         AntiScalar wedge = AntiScalar(
@@ -5521,6 +6273,10 @@ public extension CircleRotor {
             float3(wedge.e12345) * right_dual.group1.xyz
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiRejectViaHorizonFromInfixPartial<CircleRotor> lhs, AntiMotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension CircleRotor {
     public VersorEven anti_reject_via_horizon_from(AntiMotor other) {
@@ -5550,6 +6306,10 @@ public extension CircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Circle operator /(AntiRejectViaHorizonFromInfixPartial<CircleRotor> lhs, AntiPlane rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension CircleRotor {
     public Circle anti_reject_via_horizon_from(AntiPlane other) {
         Sphere wedge = Sphere(
@@ -5571,6 +6331,10 @@ public extension CircleRotor {
             (float3(right_dual.e3215) * wedge.group0.xyz) - (float3(wedge.e3215) * right_dual.group0.xyz)
         );
     }
+}
+// Fancy infix trick (second half)
+public Circle operator /(AntiRejectViaHorizonFromInfixPartial<CircleRotor> lhs, Dipole rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension CircleRotor {
     public Circle anti_reject_via_horizon_from(Dipole other) {
@@ -5595,6 +6359,10 @@ public extension CircleRotor {
             float3(wedge.e12345) * right_dual.group2.xyz
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<CircleRotor> lhs, DipoleInversion rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension CircleRotor {
     public AntiDipoleInversion anti_reject_via_horizon_from(DipoleInversion other) {
@@ -5624,6 +6392,10 @@ public extension CircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlatPoint operator /(AntiRejectViaHorizonFromInfixPartial<CircleRotor> lhs, DualNum rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension CircleRotor {
     public AntiFlatPoint anti_reject_via_horizon_from(DualNum other) {
         AntiDualNum right_dual = AntiDualNum(
@@ -5636,6 +6408,10 @@ public extension CircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlatPoint operator /(AntiRejectViaHorizonFromInfixPartial<CircleRotor> lhs, FlatPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension CircleRotor {
     public AntiFlatPoint anti_reject_via_horizon_from(FlatPoint other) {
         return AntiFlatPoint(
@@ -5643,6 +6419,10 @@ public extension CircleRotor {
             float4(-(this.e423 * other.e15) - (this.e431 * other.e25) - (this.e412 * other.e35) - (this.e321 * other.e45)) * float4(other.e15 * -1.0, other.e25 * -1.0, other.e35 * -1.0, other.e45)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiRejectViaHorizonFromInfixPartial<CircleRotor> lhs, Flector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension CircleRotor {
     public AntiFlector anti_reject_via_horizon_from(Flector other) {
@@ -5664,6 +6444,10 @@ public extension CircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiRejectViaHorizonFromInfixPartial<CircleRotor> lhs, Motor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension CircleRotor {
     public AntiFlector anti_reject_via_horizon_from(Motor other) {
         Plane wedge = Plane(
@@ -5683,6 +6467,10 @@ public extension CircleRotor {
             float4(right_dual.e12 * wedge.e4315, right_dual.e23 * wedge.e4125, right_dual.e31 * wedge.e4235, -(right_dual.e25 * wedge.e4315) - (right_dual.e35 * wedge.e4125)) - (wedge.group0.zxyx * float4(right_dual.group0.yzx, right_dual.e15))
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiRejectViaHorizonFromInfixPartial<CircleRotor> lhs, MultiVector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension CircleRotor {
     public MultiVector anti_reject_via_horizon_from(MultiVector other) {
@@ -5760,6 +6548,10 @@ public extension CircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Circle operator /(AntiRejectViaHorizonFromInfixPartial<CircleRotor> lhs, RoundPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension CircleRotor {
     public Circle anti_reject_via_horizon_from(RoundPoint other) {
         Sphere wedge = Sphere(
@@ -5784,6 +6576,10 @@ public extension CircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public CircleRotor operator /(AntiRejectViaHorizonFromInfixPartial<CircleRotor> lhs, Scalar rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension CircleRotor {
     public CircleRotor anti_reject_via_horizon_from(Scalar other) {
         CircleRotor wedge = CircleRotor(
@@ -5807,6 +6603,10 @@ public extension CircleRotor {
             float4(right_dual.e12345) * wedge.group2
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<CircleRotor> lhs, VersorEven rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension CircleRotor {
     public AntiDipoleInversion anti_reject_via_horizon_from(VersorEven other) {
@@ -5837,6 +6637,10 @@ public extension CircleRotor {
             float4((wedge.e4315 * right_dual.e12) + (wedge.e1234 * right_dual.e15), (wedge.e4125 * right_dual.e23) + (wedge.e1234 * right_dual.e25), (wedge.e4235 * right_dual.e31) + (wedge.e1234 * right_dual.e35), -(wedge.e4125 * right_dual.e35) - (wedge.e3215 * right_dual.e45)) - (wedge.group0.zxyx * float4(right_dual.group1.yzx, right_dual.e15)) - (wedge.group0.wwwy * float4(right_dual.group0.xyz, right_dual.e25))
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiRejectViaHorizonFromInfixPartial<CircleRotor> lhs, VersorOdd rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension CircleRotor {
     public VersorEven anti_reject_via_horizon_from(VersorOdd other) {
@@ -5870,17 +6674,13 @@ public extension CircleRotor {
         );
     }
 }
-public extension Dipole {
-    // Fancy infix trick (first half)
-    public AntiRejectViaHorizonFromInfixPartial<Dipole> operator /(AntiRejectViaHorizonFromInfix rhs) {
-        return AntiRejectViaHorizonFromInfixPartial<Dipole>(this);
-    }
+// Fancy infix trick (first half)
+public AntiRejectViaHorizonFromInfixPartial<Dipole> operator /(Dipole lhs, AntiRejectViaHorizonFromInfix rhs) {
+    return AntiRejectViaHorizonFromInfixPartial<Dipole>(lhs);
 }
-public extension AntiRejectViaHorizonFromInfixPartial<Dipole> {
-    // Fancy infix trick (second half)
-    public VersorOdd operator /(AntiCircleRotor rhs) {
-        return this.a.anti_reject_via_horizon_from(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<Dipole> lhs, AntiCircleRotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Dipole {
     public VersorOdd anti_reject_via_horizon_from(AntiCircleRotor other) {
@@ -5914,6 +6714,10 @@ public extension Dipole {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<Dipole> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Dipole {
     public VersorOdd anti_reject_via_horizon_from(AntiDipoleInversion other) {
         CircleRotor wedge = CircleRotor(
@@ -5946,6 +6750,10 @@ public extension Dipole {
         );
     }
 }
+// Fancy infix trick (second half)
+public Dipole operator /(AntiRejectViaHorizonFromInfixPartial<Dipole> lhs, AntiDualNum rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Dipole {
     public Dipole anti_reject_via_horizon_from(AntiDualNum other) {
         Dipole wedge = Dipole(
@@ -5970,6 +6778,10 @@ public extension Dipole {
         );
     }
 }
+// Fancy infix trick (second half)
+public FlatPoint operator /(AntiRejectViaHorizonFromInfixPartial<Dipole> lhs, AntiFlatPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Dipole {
     public FlatPoint anti_reject_via_horizon_from(AntiFlatPoint other) {
         return FlatPoint(
@@ -5977,6 +6789,10 @@ public extension Dipole {
             float4(-(other.e235 * this.e41) - (other.e315 * this.e42) - (other.e125 * this.e43) - (other.e321 * this.e45)) * float4(other.group0.xyz, other.e321 * -1.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<Dipole> lhs, AntiFlector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Dipole {
     public VersorOdd anti_reject_via_horizon_from(AntiFlector other) {
@@ -6006,6 +6822,10 @@ public extension Dipole {
         );
     }
 }
+// Fancy infix trick (second half)
+public Dipole operator /(AntiRejectViaHorizonFromInfixPartial<Dipole> lhs, AntiLine rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Dipole {
     public Dipole anti_reject_via_horizon_from(AntiLine other) {
         Sphere wedge = Sphere(
@@ -6029,6 +6849,10 @@ public extension Dipole {
             (float3(wedge.e3215) * right_dual.group0.xyz) + (right_dual.group1.xyz.yzx * wedge.group0.zxy) - (right_dual.group1.xyz.zxy * wedge.group0.yzx)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<Dipole> lhs, AntiMotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Dipole {
     public VersorOdd anti_reject_via_horizon_from(AntiMotor other) {
@@ -6060,6 +6884,10 @@ public extension Dipole {
         );
     }
 }
+// Fancy infix trick (second half)
+public Dipole operator /(AntiRejectViaHorizonFromInfixPartial<Dipole> lhs, AntiPlane rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Dipole {
     public Dipole anti_reject_via_horizon_from(AntiPlane other) {
         Circle wedge = Circle(
@@ -6083,6 +6911,10 @@ public extension Dipole {
             (float3(right_dual.e3215) * wedge.group1.xyz) + (wedge.group2.xyz.yzx * right_dual.group0.zxy) - (wedge.group2.xyz.zxy * right_dual.group0.yzx)
         );
     }
+}
+// Fancy infix trick (second half)
+public Dipole operator /(AntiRejectViaHorizonFromInfixPartial<Dipole> lhs, Circle rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Dipole {
     public Dipole anti_reject_via_horizon_from(Circle other) {
@@ -6108,6 +6940,10 @@ public extension Dipole {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(AntiRejectViaHorizonFromInfixPartial<Dipole> lhs, CircleRotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Dipole {
     public AntiCircleRotor anti_reject_via_horizon_from(CircleRotor other) {
         AntiScalar wedge = AntiScalar(
@@ -6131,6 +6967,10 @@ public extension Dipole {
             float4(wedge.e12345) * right_dual.group2
         );
     }
+}
+// Fancy infix trick (second half)
+public Dipole operator /(AntiRejectViaHorizonFromInfixPartial<Dipole> lhs, Dipole rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Dipole {
     public Dipole anti_reject_via_horizon_from(Dipole other) {
@@ -6157,6 +6997,10 @@ public extension Dipole {
             (float3(wedge.e3215) * right_dual.group1.xyz) + (right_dual.group2.xyz.yzx * wedge.group0.zxy) - (right_dual.group2.xyz.zxy * wedge.group0.yzx)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(AntiRejectViaHorizonFromInfixPartial<Dipole> lhs, DipoleInversion rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Dipole {
     public AntiCircleRotor anti_reject_via_horizon_from(DipoleInversion other) {
@@ -6186,6 +7030,10 @@ public extension Dipole {
         );
     }
 }
+// Fancy infix trick (second half)
+public FlatPoint operator /(AntiRejectViaHorizonFromInfixPartial<Dipole> lhs, DualNum rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Dipole {
     public FlatPoint anti_reject_via_horizon_from(DualNum other) {
         AntiDualNum right_dual = AntiDualNum(
@@ -6197,6 +7045,10 @@ public extension Dipole {
             float4(right_dual.group0.xy.xx, right_dual.e3215, 0.0) * float4(float3(1.0), 0.0) * float4(float3(this.e41 * other.e5, this.e42 * other.e5, this.e43 * other.e5), 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiLine operator /(AntiRejectViaHorizonFromInfixPartial<Dipole> lhs, FlatPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Dipole {
     public AntiLine anti_reject_via_horizon_from(FlatPoint other) {
@@ -6215,6 +7067,10 @@ public extension Dipole {
             (right_dual.group0.yzx * wedge.group0.zxy) - (right_dual.group0.zxy * wedge.group0.yzx)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiRejectViaHorizonFromInfixPartial<Dipole> lhs, Flector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Dipole {
     public AntiMotor anti_reject_via_horizon_from(Flector other) {
@@ -6236,6 +7092,10 @@ public extension Dipole {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiLine operator /(AntiRejectViaHorizonFromInfixPartial<Dipole> lhs, Line rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Dipole {
     public AntiLine anti_reject_via_horizon_from(Line other) {
         AntiScalar wedge = AntiScalar(
@@ -6255,6 +7115,10 @@ public extension Dipole {
             float3(wedge.e12345) * right_dual.group1.xyz
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiRejectViaHorizonFromInfixPartial<Dipole> lhs, Motor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Dipole {
     public AntiMotor anti_reject_via_horizon_from(Motor other) {
@@ -6277,6 +7141,10 @@ public extension Dipole {
             float4(((float3(right_dual.e3215) * wedge.group0.xyz) + (float3(wedge.e12345) * right_dual.group1.xyz)), right_dual.e3215 * wedge.e12345)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiRejectViaHorizonFromInfixPartial<Dipole> lhs, MultiVector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Dipole {
     public MultiVector anti_reject_via_horizon_from(MultiVector other) {
@@ -6354,6 +7222,10 @@ public extension Dipole {
         );
     }
 }
+// Fancy infix trick (second half)
+public Dipole operator /(AntiRejectViaHorizonFromInfixPartial<Dipole> lhs, RoundPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Dipole {
     public Dipole anti_reject_via_horizon_from(RoundPoint other) {
         Circle wedge = Circle(
@@ -6380,6 +7252,10 @@ public extension Dipole {
         );
     }
 }
+// Fancy infix trick (second half)
+public Dipole operator /(AntiRejectViaHorizonFromInfixPartial<Dipole> lhs, Scalar rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Dipole {
     public Dipole anti_reject_via_horizon_from(Scalar other) {
         Dipole wedge = Dipole(
@@ -6403,6 +7279,10 @@ public extension Dipole {
             float3(right_dual.e12345) * wedge.group2.xyz
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<Dipole> lhs, VersorEven rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Dipole {
     public VersorOdd anti_reject_via_horizon_from(VersorEven other) {
@@ -6435,6 +7315,10 @@ public extension Dipole {
             float4(wedge.e12345) * right_dual.group3
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<Dipole> lhs, VersorOdd rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Dipole {
     public VersorOdd anti_reject_via_horizon_from(VersorOdd other) {
@@ -6470,17 +7354,13 @@ public extension Dipole {
         );
     }
 }
-public extension DipoleInversion {
-    // Fancy infix trick (first half)
-    public AntiRejectViaHorizonFromInfixPartial<DipoleInversion> operator /(AntiRejectViaHorizonFromInfix rhs) {
-        return AntiRejectViaHorizonFromInfixPartial<DipoleInversion>(this);
-    }
+// Fancy infix trick (first half)
+public AntiRejectViaHorizonFromInfixPartial<DipoleInversion> operator /(DipoleInversion lhs, AntiRejectViaHorizonFromInfix rhs) {
+    return AntiRejectViaHorizonFromInfixPartial<DipoleInversion>(lhs);
 }
-public extension AntiRejectViaHorizonFromInfixPartial<DipoleInversion> {
-    // Fancy infix trick (second half)
-    public VersorOdd operator /(AntiCircleRotor rhs) {
-        return this.a.anti_reject_via_horizon_from(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<DipoleInversion> lhs, AntiCircleRotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension DipoleInversion {
     public VersorOdd anti_reject_via_horizon_from(AntiCircleRotor other) {
@@ -6514,6 +7394,10 @@ public extension DipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<DipoleInversion> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension DipoleInversion {
     public VersorOdd anti_reject_via_horizon_from(AntiDipoleInversion other) {
         CircleRotor wedge = CircleRotor(
@@ -6546,6 +7430,10 @@ public extension DipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<DipoleInversion> lhs, AntiDualNum rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension DipoleInversion {
     public VersorOdd anti_reject_via_horizon_from(AntiDualNum other) {
         DipoleInversion wedge = DipoleInversion(
@@ -6574,6 +7462,10 @@ public extension DipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public FlatPoint operator /(AntiRejectViaHorizonFromInfixPartial<DipoleInversion> lhs, AntiFlatPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension DipoleInversion {
     public FlatPoint anti_reject_via_horizon_from(AntiFlatPoint other) {
         return FlatPoint(
@@ -6581,6 +7473,10 @@ public extension DipoleInversion {
             float4(-(other.e235 * this.e41) - (other.e315 * this.e42) - (other.e125 * this.e43) - (other.e321 * this.e45)) * float4(other.group0.xyz, other.e321 * -1.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<DipoleInversion> lhs, AntiFlector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension DipoleInversion {
     public VersorOdd anti_reject_via_horizon_from(AntiFlector other) {
@@ -6610,6 +7506,10 @@ public extension DipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public Dipole operator /(AntiRejectViaHorizonFromInfixPartial<DipoleInversion> lhs, AntiLine rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension DipoleInversion {
     public Dipole anti_reject_via_horizon_from(AntiLine other) {
         Sphere wedge = Sphere(
@@ -6633,6 +7533,10 @@ public extension DipoleInversion {
             (float3(wedge.e3215) * right_dual.group0.xyz) + (right_dual.group1.xyz.yzx * wedge.group0.zxy) - (right_dual.group1.xyz.zxy * wedge.group0.yzx)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<DipoleInversion> lhs, AntiMotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension DipoleInversion {
     public VersorOdd anti_reject_via_horizon_from(AntiMotor other) {
@@ -6664,6 +7568,10 @@ public extension DipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public DipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<DipoleInversion> lhs, AntiPlane rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension DipoleInversion {
     public DipoleInversion anti_reject_via_horizon_from(AntiPlane other) {
         CircleRotor wedge = CircleRotor(
@@ -6690,6 +7598,10 @@ public extension DipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public Dipole operator /(AntiRejectViaHorizonFromInfixPartial<DipoleInversion> lhs, Circle rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension DipoleInversion {
     public Dipole anti_reject_via_horizon_from(Circle other) {
         AntiScalar wedge = AntiScalar(
@@ -6714,6 +7626,10 @@ public extension DipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(AntiRejectViaHorizonFromInfixPartial<DipoleInversion> lhs, CircleRotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension DipoleInversion {
     public AntiCircleRotor anti_reject_via_horizon_from(CircleRotor other) {
         AntiScalar wedge = AntiScalar(
@@ -6737,6 +7653,10 @@ public extension DipoleInversion {
             float4(wedge.e12345) * right_dual.group2
         );
     }
+}
+// Fancy infix trick (second half)
+public Dipole operator /(AntiRejectViaHorizonFromInfixPartial<DipoleInversion> lhs, Dipole rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension DipoleInversion {
     public Dipole anti_reject_via_horizon_from(Dipole other) {
@@ -6763,6 +7683,10 @@ public extension DipoleInversion {
             (float3(wedge.e3215) * right_dual.group1.xyz) + (right_dual.group2.xyz.yzx * wedge.group0.zxy) - (right_dual.group2.xyz.zxy * wedge.group0.yzx)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(AntiRejectViaHorizonFromInfixPartial<DipoleInversion> lhs, DipoleInversion rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension DipoleInversion {
     public AntiCircleRotor anti_reject_via_horizon_from(DipoleInversion other) {
@@ -6792,6 +7716,10 @@ public extension DipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiRejectViaHorizonFromInfixPartial<DipoleInversion> lhs, DualNum rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension DipoleInversion {
     public AntiMotor anti_reject_via_horizon_from(DualNum other) {
         Motor wedge = Motor(
@@ -6812,6 +7740,10 @@ public extension DipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiLine operator /(AntiRejectViaHorizonFromInfixPartial<DipoleInversion> lhs, FlatPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension DipoleInversion {
     public AntiLine anti_reject_via_horizon_from(FlatPoint other) {
         Plane wedge = Plane(
@@ -6829,6 +7761,10 @@ public extension DipoleInversion {
             (right_dual.group0.yzx * wedge.group0.zxy) - (right_dual.group0.zxy * wedge.group0.yzx)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiRejectViaHorizonFromInfixPartial<DipoleInversion> lhs, Flector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension DipoleInversion {
     public AntiMotor anti_reject_via_horizon_from(Flector other) {
@@ -6850,6 +7786,10 @@ public extension DipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiLine operator /(AntiRejectViaHorizonFromInfixPartial<DipoleInversion> lhs, Line rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension DipoleInversion {
     public AntiLine anti_reject_via_horizon_from(Line other) {
         AntiScalar wedge = AntiScalar(
@@ -6869,6 +7809,10 @@ public extension DipoleInversion {
             float3(wedge.e12345) * right_dual.group1.xyz
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiRejectViaHorizonFromInfixPartial<DipoleInversion> lhs, Motor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension DipoleInversion {
     public AntiMotor anti_reject_via_horizon_from(Motor other) {
@@ -6891,6 +7835,10 @@ public extension DipoleInversion {
             float4(((float3(right_dual.e3215) * wedge.group0.xyz) + (float3(wedge.e12345) * right_dual.group1.xyz)), right_dual.e3215 * wedge.e12345)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiRejectViaHorizonFromInfixPartial<DipoleInversion> lhs, MultiVector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension DipoleInversion {
     public MultiVector anti_reject_via_horizon_from(MultiVector other) {
@@ -6968,6 +7916,10 @@ public extension DipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public DipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<DipoleInversion> lhs, RoundPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension DipoleInversion {
     public DipoleInversion anti_reject_via_horizon_from(RoundPoint other) {
         CircleRotor wedge = CircleRotor(
@@ -6996,6 +7948,10 @@ public extension DipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public DipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<DipoleInversion> lhs, Scalar rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension DipoleInversion {
     public DipoleInversion anti_reject_via_horizon_from(Scalar other) {
         DipoleInversion wedge = DipoleInversion(
@@ -7023,6 +7979,10 @@ public extension DipoleInversion {
             float4(right_dual.e12345) * wedge.group3
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<DipoleInversion> lhs, VersorEven rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension DipoleInversion {
     public VersorOdd anti_reject_via_horizon_from(VersorEven other) {
@@ -7055,6 +8015,10 @@ public extension DipoleInversion {
             float4(wedge.e12345) * right_dual.group3
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<DipoleInversion> lhs, VersorOdd rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension DipoleInversion {
     public VersorOdd anti_reject_via_horizon_from(VersorOdd other) {
@@ -7090,17 +8054,13 @@ public extension DipoleInversion {
         );
     }
 }
-public extension DualNum {
-    // Fancy infix trick (first half)
-    public AntiRejectViaHorizonFromInfixPartial<DualNum> operator /(AntiRejectViaHorizonFromInfix rhs) {
-        return AntiRejectViaHorizonFromInfixPartial<DualNum>(this);
-    }
+// Fancy infix trick (first half)
+public AntiRejectViaHorizonFromInfixPartial<DualNum> operator /(DualNum lhs, AntiRejectViaHorizonFromInfix rhs) {
+    return AntiRejectViaHorizonFromInfixPartial<DualNum>(lhs);
 }
-public extension AntiRejectViaHorizonFromInfixPartial<DualNum> {
-    // Fancy infix trick (second half)
-    public VersorEven operator /(AntiCircleRotor rhs) {
-        return this.a.anti_reject_via_horizon_from(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiRejectViaHorizonFromInfixPartial<DualNum> lhs, AntiCircleRotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension DualNum {
     public VersorEven anti_reject_via_horizon_from(AntiCircleRotor other) {
@@ -7129,6 +8089,10 @@ public extension DualNum {
             float4((right_dual.e412 * wedge.e315) + (right_dual.e321 * wedge.e415), (right_dual.e423 * wedge.e125) + (right_dual.e321 * wedge.e425), (right_dual.e431 * wedge.e235) + (right_dual.e321 * wedge.e435), -(right_dual.e431 * wedge.e425) - (right_dual.e412 * wedge.e435)) - float4((right_dual.group0.xyz.yzx * wedge.group1.zxy), right_dual.e423 * wedge.e415)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<DualNum> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension DualNum {
     public AntiDipoleInversion anti_reject_via_horizon_from(AntiDipoleInversion other) {
@@ -7160,6 +8124,10 @@ public extension DualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public DualNum operator /(AntiRejectViaHorizonFromInfixPartial<DualNum> lhs, AntiDualNum rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension DualNum {
     public DualNum anti_reject_via_horizon_from(AntiDualNum other) {
         DualNum wedge = DualNum(
@@ -7176,6 +8144,10 @@ public extension DualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public DualNum operator /(AntiRejectViaHorizonFromInfixPartial<DualNum> lhs, AntiFlatPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension DualNum {
     public DualNum anti_reject_via_horizon_from(AntiFlatPoint other) {
         return DualNum(
@@ -7183,6 +8155,10 @@ public extension DualNum {
             float2(float4(other.group0.xyz, other.e321 * -1.0)[3] * other.e321 * this.e5 * -1.0, 1.0) * float2(-1.0, 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(AntiRejectViaHorizonFromInfixPartial<DualNum> lhs, AntiFlector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension DualNum {
     public Motor anti_reject_via_horizon_from(AntiFlector other) {
@@ -7206,6 +8182,10 @@ public extension DualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public DualNum operator /(AntiRejectViaHorizonFromInfixPartial<DualNum> lhs, AntiLine rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension DualNum {
     public DualNum anti_reject_via_horizon_from(AntiLine other) {
         AntiFlatPoint wedge = AntiFlatPoint(
@@ -7223,6 +8203,10 @@ public extension DualNum {
             float2(-(wedge.e235 * right_dual.e415) - (wedge.e315 * right_dual.e425) - (wedge.e125 * right_dual.e435), 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(AntiRejectViaHorizonFromInfixPartial<DualNum> lhs, AntiMotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension DualNum {
     public Motor anti_reject_via_horizon_from(AntiMotor other) {
@@ -7246,6 +8230,10 @@ public extension DualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public DualNum operator /(AntiRejectViaHorizonFromInfixPartial<DualNum> lhs, AntiPlane rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension DualNum {
     public DualNum anti_reject_via_horizon_from(AntiPlane other) {
         FlatPoint wedge = FlatPoint(
@@ -7261,6 +8249,10 @@ public extension DualNum {
             float2((wedge.e15 * right_dual.e4235) + (wedge.e25 * right_dual.e4315) + (wedge.e35 * right_dual.e4125) + (wedge.e45 * right_dual.e3215), 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public RoundPoint operator /(AntiRejectViaHorizonFromInfixPartial<DualNum> lhs, Circle rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension DualNum {
     public RoundPoint anti_reject_via_horizon_from(Circle other) {
@@ -7284,6 +8276,10 @@ public extension DualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public RoundPoint operator /(AntiRejectViaHorizonFromInfixPartial<DualNum> lhs, CircleRotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension DualNum {
     public RoundPoint anti_reject_via_horizon_from(CircleRotor other) {
         Plane wedge = Plane(
@@ -7305,6 +8301,10 @@ public extension DualNum {
             -(right_dual.e45 * wedge.e3215) - (right_dual.e15 * wedge.e4235) - (right_dual.e25 * wedge.e4315) - (right_dual.e35 * wedge.e4125)
         );
     }
+}
+// Fancy infix trick (second half)
+public RoundPoint operator /(AntiRejectViaHorizonFromInfixPartial<DualNum> lhs, Dipole rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension DualNum {
     public RoundPoint anti_reject_via_horizon_from(Dipole other) {
@@ -7329,6 +8329,10 @@ public extension DualNum {
             -(right_dual.e415 * wedge.e235) - (right_dual.e425 * wedge.e315) - (right_dual.e435 * wedge.e125) - (right_dual.e235 * wedge.e415) - (right_dual.e315 * wedge.e425) - (right_dual.e125 * wedge.e435)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<DualNum> lhs, DipoleInversion rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension DualNum {
     public AntiDipoleInversion anti_reject_via_horizon_from(DipoleInversion other) {
@@ -7359,6 +8363,10 @@ public extension DualNum {
             float4((right_dual.e321 * wedge.e415) + (right_dual.e1 * wedge.e12345), (right_dual.e321 * wedge.e425) + (right_dual.e2 * wedge.e12345), (right_dual.e321 * wedge.e435) + (right_dual.e3 * wedge.e12345), -(right_dual.e425 * wedge.e315) - (right_dual.e435 * wedge.e125) - (right_dual.e235 * wedge.e415) - (right_dual.e315 * wedge.e425) - (right_dual.e125 * wedge.e435)) + float4((right_dual.group0.xyz.zxy * wedge.group1.yzx), right_dual.e5 * wedge.e12345) - (wedge.group1.zxyx * float4(right_dual.group0.xyz.yzx, right_dual.e415))
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiRejectViaHorizonFromInfixPartial<DualNum> lhs, MultiVector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension DualNum {
     public MultiVector anti_reject_via_horizon_from(MultiVector other) {
@@ -7436,6 +8444,10 @@ public extension DualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public RoundPoint operator /(AntiRejectViaHorizonFromInfixPartial<DualNum> lhs, RoundPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension DualNum {
     public RoundPoint anti_reject_via_horizon_from(RoundPoint other) {
         FlatPoint wedge = FlatPoint(
@@ -7456,6 +8468,10 @@ public extension DualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public DualNum operator /(AntiRejectViaHorizonFromInfixPartial<DualNum> lhs, Scalar rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension DualNum {
     public DualNum anti_reject_via_horizon_from(Scalar other) {
         return DualNum(
@@ -7463,6 +8479,10 @@ public extension DualNum {
             float2(other.scalar) * float2(this.e5 * other.scalar, this.e12345 * other.scalar)
         );
     }
+}
+// Fancy infix trick (second half)
+public RoundPoint operator /(AntiRejectViaHorizonFromInfixPartial<DualNum> lhs, Sphere rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension DualNum {
     public RoundPoint anti_reject_via_horizon_from(Sphere other) {
@@ -7483,6 +8503,10 @@ public extension DualNum {
             wedge.e12345 * right_dual.e5
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<DualNum> lhs, VersorEven rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension DualNum {
     public AntiDipoleInversion anti_reject_via_horizon_from(VersorEven other) {
@@ -7514,6 +8538,10 @@ public extension DualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiRejectViaHorizonFromInfixPartial<DualNum> lhs, VersorOdd rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension DualNum {
     public VersorEven anti_reject_via_horizon_from(VersorOdd other) {
         Motor wedge = Motor(
@@ -7544,17 +8572,13 @@ public extension DualNum {
         );
     }
 }
-public extension FlatPoint {
-    // Fancy infix trick (first half)
-    public AntiRejectViaHorizonFromInfixPartial<FlatPoint> operator /(AntiRejectViaHorizonFromInfix rhs) {
-        return AntiRejectViaHorizonFromInfixPartial<FlatPoint>(this);
-    }
+// Fancy infix trick (first half)
+public AntiRejectViaHorizonFromInfixPartial<FlatPoint> operator /(FlatPoint lhs, AntiRejectViaHorizonFromInfix rhs) {
+    return AntiRejectViaHorizonFromInfixPartial<FlatPoint>(lhs);
 }
-public extension AntiRejectViaHorizonFromInfixPartial<FlatPoint> {
-    // Fancy infix trick (second half)
-    public VersorOdd operator /(AntiCircleRotor rhs) {
-        return this.a.anti_reject_via_horizon_from(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<FlatPoint> lhs, AntiCircleRotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension FlatPoint {
     public VersorOdd anti_reject_via_horizon_from(AntiCircleRotor other) {
@@ -7583,6 +8607,10 @@ public extension FlatPoint {
             float4(right_dual.e12345) * wedge.group1
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<FlatPoint> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension FlatPoint {
     public VersorOdd anti_reject_via_horizon_from(AntiDipoleInversion other) {
@@ -7614,6 +8642,10 @@ public extension FlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public FlatPoint operator /(AntiRejectViaHorizonFromInfixPartial<FlatPoint> lhs, AntiDualNum rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension FlatPoint {
     public FlatPoint anti_reject_via_horizon_from(AntiDualNum other) {
         return FlatPoint(
@@ -7622,6 +8654,10 @@ public extension FlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public FlatPoint operator /(AntiRejectViaHorizonFromInfixPartial<FlatPoint> lhs, AntiFlatPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension FlatPoint {
     public FlatPoint anti_reject_via_horizon_from(AntiFlatPoint other) {
         return FlatPoint(
@@ -7629,6 +8665,10 @@ public extension FlatPoint {
             float4(other.e321 * this.e45 * -1.0) * float4(other.group0.xyz, other.e321 * -1.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(AntiRejectViaHorizonFromInfixPartial<FlatPoint> lhs, AntiFlector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension FlatPoint {
     public Flector anti_reject_via_horizon_from(AntiFlector other) {
@@ -7652,6 +8692,10 @@ public extension FlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public FlatPoint operator /(AntiRejectViaHorizonFromInfixPartial<FlatPoint> lhs, AntiLine rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension FlatPoint {
     public FlatPoint anti_reject_via_horizon_from(AntiLine other) {
         Plane wedge = Plane(
@@ -7669,6 +8713,10 @@ public extension FlatPoint {
             float4((right_dual.e415 * wedge.e3215) + (right_dual.e315 * wedge.e4125), (right_dual.e425 * wedge.e3215) + (right_dual.e125 * wedge.e4235), (right_dual.e435 * wedge.e3215) + (right_dual.e235 * wedge.e4315), -(right_dual.e425 * wedge.e4315) - (right_dual.e435 * wedge.e4125)) - (wedge.group0.yzxx * float4(right_dual.group1.xyz.zxy, right_dual.e415))
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(AntiRejectViaHorizonFromInfixPartial<FlatPoint> lhs, AntiMotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension FlatPoint {
     public Flector anti_reject_via_horizon_from(AntiMotor other) {
@@ -7692,6 +8740,10 @@ public extension FlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public FlatPoint operator /(AntiRejectViaHorizonFromInfixPartial<FlatPoint> lhs, AntiPlane rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension FlatPoint {
     public FlatPoint anti_reject_via_horizon_from(AntiPlane other) {
         Line wedge = Line(
@@ -7709,6 +8761,10 @@ public extension FlatPoint {
             float4((wedge.e415 * right_dual.e3215) + (wedge.e315 * right_dual.e4125), (wedge.e425 * right_dual.e3215) + (wedge.e125 * right_dual.e4235), (wedge.e435 * right_dual.e3215) + (wedge.e235 * right_dual.e4315), -(wedge.e425 * right_dual.e4315) - (wedge.e435 * right_dual.e4125)) - (right_dual.group0.yzxx * float4(wedge.group1.xyz.zxy, wedge.e415))
         );
     }
+}
+// Fancy infix trick (second half)
+public Dipole operator /(AntiRejectViaHorizonFromInfixPartial<FlatPoint> lhs, Circle rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension FlatPoint {
     public Dipole anti_reject_via_horizon_from(Circle other) {
@@ -7734,6 +8790,10 @@ public extension FlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(AntiRejectViaHorizonFromInfixPartial<FlatPoint> lhs, CircleRotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension FlatPoint {
     public AntiCircleRotor anti_reject_via_horizon_from(CircleRotor other) {
         AntiScalar wedge = AntiScalar(
@@ -7758,6 +8818,10 @@ public extension FlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public Dipole operator /(AntiRejectViaHorizonFromInfixPartial<FlatPoint> lhs, Dipole rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension FlatPoint {
     public Dipole anti_reject_via_horizon_from(Dipole other) {
         Plane wedge = Plane(
@@ -7781,6 +8845,10 @@ public extension FlatPoint {
             (float3(wedge.e3215) * right_dual.group1.xyz) + (right_dual.group2.xyz.yzx * wedge.group0.zxy) - (right_dual.group2.xyz.zxy * wedge.group0.yzx)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(AntiRejectViaHorizonFromInfixPartial<FlatPoint> lhs, DipoleInversion rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension FlatPoint {
     public AntiCircleRotor anti_reject_via_horizon_from(DipoleInversion other) {
@@ -7807,6 +8875,10 @@ public extension FlatPoint {
             float4(right_dual.e125 * wedge.e4315 * -1.0, right_dual.e235 * wedge.e4125 * -1.0, right_dual.e315 * wedge.e4235 * -1.0, (right_dual.e2 * wedge.e4315) + (right_dual.e3 * wedge.e4125)) + (float4(wedge.e3215) * float4(right_dual.group1.xyz, right_dual.e4)) + (wedge.group0.zxyx * float4(right_dual.group2.yzx, right_dual.e1))
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiRejectViaHorizonFromInfixPartial<FlatPoint> lhs, MultiVector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension FlatPoint {
     public MultiVector anti_reject_via_horizon_from(MultiVector other) {
@@ -7884,6 +8956,10 @@ public extension FlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public Dipole operator /(AntiRejectViaHorizonFromInfixPartial<FlatPoint> lhs, RoundPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension FlatPoint {
     public Dipole anti_reject_via_horizon_from(RoundPoint other) {
         Line wedge = Line(
@@ -7908,6 +8984,10 @@ public extension FlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public FlatPoint operator /(AntiRejectViaHorizonFromInfixPartial<FlatPoint> lhs, Scalar rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension FlatPoint {
     public FlatPoint anti_reject_via_horizon_from(Scalar other) {
         return FlatPoint(
@@ -7915,6 +8995,10 @@ public extension FlatPoint {
             float4(other.scalar) * float4(this.e15 * other.scalar, this.e25 * other.scalar, this.e35 * other.scalar, this.e45 * other.scalar)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<FlatPoint> lhs, VersorEven rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension FlatPoint {
     public VersorOdd anti_reject_via_horizon_from(VersorEven other) {
@@ -7946,6 +9030,10 @@ public extension FlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<FlatPoint> lhs, VersorOdd rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension FlatPoint {
     public VersorOdd anti_reject_via_horizon_from(VersorOdd other) {
         Flector wedge = Flector(
@@ -7976,17 +9064,13 @@ public extension FlatPoint {
         );
     }
 }
-public extension Flector {
-    // Fancy infix trick (first half)
-    public AntiRejectViaHorizonFromInfixPartial<Flector> operator /(AntiRejectViaHorizonFromInfix rhs) {
-        return AntiRejectViaHorizonFromInfixPartial<Flector>(this);
-    }
+// Fancy infix trick (first half)
+public AntiRejectViaHorizonFromInfixPartial<Flector> operator /(Flector lhs, AntiRejectViaHorizonFromInfix rhs) {
+    return AntiRejectViaHorizonFromInfixPartial<Flector>(lhs);
 }
-public extension AntiRejectViaHorizonFromInfixPartial<Flector> {
-    // Fancy infix trick (second half)
-    public VersorOdd operator /(AntiCircleRotor rhs) {
-        return this.a.anti_reject_via_horizon_from(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<Flector> lhs, AntiCircleRotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Flector {
     public VersorOdd anti_reject_via_horizon_from(AntiCircleRotor other) {
@@ -8015,6 +9099,10 @@ public extension Flector {
             float4(right_dual.e12345) * wedge.group1
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<Flector> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Flector {
     public VersorOdd anti_reject_via_horizon_from(AntiDipoleInversion other) {
@@ -8046,6 +9134,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(AntiRejectViaHorizonFromInfixPartial<Flector> lhs, AntiDualNum rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Flector {
     public Flector anti_reject_via_horizon_from(AntiDualNum other) {
         Flector wedge = Flector(
@@ -8066,6 +9158,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public FlatPoint operator /(AntiRejectViaHorizonFromInfixPartial<Flector> lhs, AntiFlatPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Flector {
     public FlatPoint anti_reject_via_horizon_from(AntiFlatPoint other) {
         return FlatPoint(
@@ -8073,6 +9169,10 @@ public extension Flector {
             float4(other.e321 * this.e45 * -1.0) * float4(other.group0.xyz, other.e321 * -1.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(AntiRejectViaHorizonFromInfixPartial<Flector> lhs, AntiFlector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Flector {
     public Flector anti_reject_via_horizon_from(AntiFlector other) {
@@ -8096,6 +9196,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public FlatPoint operator /(AntiRejectViaHorizonFromInfixPartial<Flector> lhs, AntiLine rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Flector {
     public FlatPoint anti_reject_via_horizon_from(AntiLine other) {
         Plane wedge = Plane(
@@ -8113,6 +9217,10 @@ public extension Flector {
             float4((right_dual.e415 * wedge.e3215) + (right_dual.e315 * wedge.e4125), (right_dual.e425 * wedge.e3215) + (right_dual.e125 * wedge.e4235), (right_dual.e435 * wedge.e3215) + (right_dual.e235 * wedge.e4315), -(right_dual.e425 * wedge.e4315) - (right_dual.e435 * wedge.e4125)) - (wedge.group0.yzxx * float4(right_dual.group1.xyz.zxy, right_dual.e415))
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(AntiRejectViaHorizonFromInfixPartial<Flector> lhs, AntiMotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Flector {
     public Flector anti_reject_via_horizon_from(AntiMotor other) {
@@ -8136,6 +9244,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(AntiRejectViaHorizonFromInfixPartial<Flector> lhs, AntiPlane rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Flector {
     public Flector anti_reject_via_horizon_from(AntiPlane other) {
         Motor wedge = Motor(
@@ -8155,6 +9267,10 @@ public extension Flector {
             float4(wedge.e12345) * right_dual.group0
         );
     }
+}
+// Fancy infix trick (second half)
+public Dipole operator /(AntiRejectViaHorizonFromInfixPartial<Flector> lhs, Circle rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Flector {
     public Dipole anti_reject_via_horizon_from(Circle other) {
@@ -8180,6 +9296,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(AntiRejectViaHorizonFromInfixPartial<Flector> lhs, CircleRotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Flector {
     public AntiCircleRotor anti_reject_via_horizon_from(CircleRotor other) {
         AntiScalar wedge = AntiScalar(
@@ -8204,6 +9324,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public Dipole operator /(AntiRejectViaHorizonFromInfixPartial<Flector> lhs, Dipole rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Flector {
     public Dipole anti_reject_via_horizon_from(Dipole other) {
         Plane wedge = Plane(
@@ -8227,6 +9351,10 @@ public extension Flector {
             (float3(wedge.e3215) * right_dual.group1.xyz) + (right_dual.group2.xyz.yzx * wedge.group0.zxy) - (right_dual.group2.xyz.zxy * wedge.group0.yzx)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(AntiRejectViaHorizonFromInfixPartial<Flector> lhs, DipoleInversion rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Flector {
     public AntiCircleRotor anti_reject_via_horizon_from(DipoleInversion other) {
@@ -8253,6 +9381,10 @@ public extension Flector {
             float4(right_dual.e125 * wedge.e4315 * -1.0, right_dual.e235 * wedge.e4125 * -1.0, right_dual.e315 * wedge.e4235 * -1.0, (right_dual.e2 * wedge.e4315) + (right_dual.e3 * wedge.e4125)) + (float4(wedge.e3215) * float4(right_dual.group1.xyz, right_dual.e4)) + (wedge.group0.zxyx * float4(right_dual.group2.yzx, right_dual.e1))
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiRejectViaHorizonFromInfixPartial<Flector> lhs, MultiVector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Flector {
     public MultiVector anti_reject_via_horizon_from(MultiVector other) {
@@ -8330,6 +9462,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public DipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<Flector> lhs, RoundPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Flector {
     public DipoleInversion anti_reject_via_horizon_from(RoundPoint other) {
         Motor wedge = Motor(
@@ -8356,6 +9492,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(AntiRejectViaHorizonFromInfixPartial<Flector> lhs, Scalar rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Flector {
     public Flector anti_reject_via_horizon_from(Scalar other) {
         Flector wedge = Flector(
@@ -8375,6 +9515,10 @@ public extension Flector {
             float4(right_dual.e12345) * wedge.group1
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<Flector> lhs, VersorEven rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Flector {
     public VersorOdd anti_reject_via_horizon_from(VersorEven other) {
@@ -8406,6 +9550,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<Flector> lhs, VersorOdd rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Flector {
     public VersorOdd anti_reject_via_horizon_from(VersorOdd other) {
         Flector wedge = Flector(
@@ -8436,17 +9584,13 @@ public extension Flector {
         );
     }
 }
-public extension Line {
-    // Fancy infix trick (first half)
-    public AntiRejectViaHorizonFromInfixPartial<Line> operator /(AntiRejectViaHorizonFromInfix rhs) {
-        return AntiRejectViaHorizonFromInfixPartial<Line>(this);
-    }
+// Fancy infix trick (first half)
+public AntiRejectViaHorizonFromInfixPartial<Line> operator /(Line lhs, AntiRejectViaHorizonFromInfix rhs) {
+    return AntiRejectViaHorizonFromInfixPartial<Line>(lhs);
 }
-public extension AntiRejectViaHorizonFromInfixPartial<Line> {
-    // Fancy infix trick (second half)
-    public VersorEven operator /(AntiCircleRotor rhs) {
-        return this.a.anti_reject_via_horizon_from(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiRejectViaHorizonFromInfixPartial<Line> lhs, AntiCircleRotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Line {
     public VersorEven anti_reject_via_horizon_from(AntiCircleRotor other) {
@@ -8476,6 +9620,10 @@ public extension Line {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<Line> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Line {
     public AntiDipoleInversion anti_reject_via_horizon_from(AntiDipoleInversion other) {
         Plane wedge = Plane(
@@ -8504,6 +9652,10 @@ public extension Line {
         );
     }
 }
+// Fancy infix trick (second half)
+public Line operator /(AntiRejectViaHorizonFromInfixPartial<Line> lhs, AntiDualNum rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Line {
     public Line anti_reject_via_horizon_from(AntiDualNum other) {
         Line wedge = Line(
@@ -8523,6 +9675,10 @@ public extension Line {
             float3(right_dual.e12345) * wedge.group1.xyz
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(AntiRejectViaHorizonFromInfixPartial<Line> lhs, AntiFlector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Line {
     public Motor anti_reject_via_horizon_from(AntiFlector other) {
@@ -8544,6 +9700,10 @@ public extension Line {
         );
     }
 }
+// Fancy infix trick (second half)
+public Line operator /(AntiRejectViaHorizonFromInfixPartial<Line> lhs, AntiLine rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Line {
     public Line anti_reject_via_horizon_from(AntiLine other) {
         AntiScalar wedge = AntiScalar(
@@ -8563,6 +9723,10 @@ public extension Line {
             float3(wedge.e12345) * right_dual.group1.xyz
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(AntiRejectViaHorizonFromInfixPartial<Line> lhs, AntiMotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Line {
     public Motor anti_reject_via_horizon_from(AntiMotor other) {
@@ -8586,6 +9750,10 @@ public extension Line {
         );
     }
 }
+// Fancy infix trick (second half)
+public Line operator /(AntiRejectViaHorizonFromInfixPartial<Line> lhs, AntiPlane rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Line {
     public Line anti_reject_via_horizon_from(AntiPlane other) {
         Plane wedge = Plane(
@@ -8603,6 +9771,10 @@ public extension Line {
             (float3(right_dual.e3215) * wedge.group0.xyz) - (float3(wedge.e3215) * right_dual.group0.xyz)
         );
     }
+}
+// Fancy infix trick (second half)
+public Circle operator /(AntiRejectViaHorizonFromInfixPartial<Line> lhs, Dipole rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Line {
     public Circle anti_reject_via_horizon_from(Dipole other) {
@@ -8627,6 +9799,10 @@ public extension Line {
             float3(wedge.e12345) * right_dual.group2.xyz
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<Line> lhs, DipoleInversion rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Line {
     public AntiDipoleInversion anti_reject_via_horizon_from(DipoleInversion other) {
@@ -8655,6 +9831,10 @@ public extension Line {
             float4(wedge.e12345) * right_dual.group3
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiRejectViaHorizonFromInfixPartial<Line> lhs, MultiVector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Line {
     public MultiVector anti_reject_via_horizon_from(MultiVector other) {
@@ -8732,6 +9912,10 @@ public extension Line {
         );
     }
 }
+// Fancy infix trick (second half)
+public Circle operator /(AntiRejectViaHorizonFromInfixPartial<Line> lhs, RoundPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Line {
     public Circle anti_reject_via_horizon_from(RoundPoint other) {
         Plane wedge = Plane(
@@ -8754,6 +9938,10 @@ public extension Line {
         );
     }
 }
+// Fancy infix trick (second half)
+public Line operator /(AntiRejectViaHorizonFromInfixPartial<Line> lhs, Scalar rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Line {
     public Line anti_reject_via_horizon_from(Scalar other) {
         Line wedge = Line(
@@ -8773,6 +9961,10 @@ public extension Line {
             float3(right_dual.e12345) * wedge.group1.xyz
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<Line> lhs, VersorEven rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Line {
     public AntiDipoleInversion anti_reject_via_horizon_from(VersorEven other) {
@@ -8801,6 +9993,10 @@ public extension Line {
             float4(wedge.e4315 * right_dual.e12, wedge.e4125 * right_dual.e23, wedge.e4235 * right_dual.e31, -(wedge.e4125 * right_dual.e35) - (wedge.e3215 * right_dual.e45)) - (wedge.group0.zxyx * float4(right_dual.group1.yzx, right_dual.e15)) - (wedge.group0.wwwy * float4(right_dual.group0.xyz, right_dual.e25))
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiRejectViaHorizonFromInfixPartial<Line> lhs, VersorOdd rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Line {
     public VersorEven anti_reject_via_horizon_from(VersorOdd other) {
@@ -8832,17 +10028,13 @@ public extension Line {
         );
     }
 }
-public extension Motor {
-    // Fancy infix trick (first half)
-    public AntiRejectViaHorizonFromInfixPartial<Motor> operator /(AntiRejectViaHorizonFromInfix rhs) {
-        return AntiRejectViaHorizonFromInfixPartial<Motor>(this);
-    }
+// Fancy infix trick (first half)
+public AntiRejectViaHorizonFromInfixPartial<Motor> operator /(Motor lhs, AntiRejectViaHorizonFromInfix rhs) {
+    return AntiRejectViaHorizonFromInfixPartial<Motor>(lhs);
 }
-public extension AntiRejectViaHorizonFromInfixPartial<Motor> {
-    // Fancy infix trick (second half)
-    public VersorEven operator /(AntiCircleRotor rhs) {
-        return this.a.anti_reject_via_horizon_from(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiRejectViaHorizonFromInfixPartial<Motor> lhs, AntiCircleRotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Motor {
     public VersorEven anti_reject_via_horizon_from(AntiCircleRotor other) {
@@ -8871,6 +10063,10 @@ public extension Motor {
             float4((right_dual.e412 * wedge.e315) + (right_dual.e321 * wedge.e415), (right_dual.e423 * wedge.e125) + (right_dual.e321 * wedge.e425), (right_dual.e431 * wedge.e235) + (right_dual.e321 * wedge.e435), -(right_dual.e431 * wedge.e425) - (right_dual.e412 * wedge.e435)) - float4((right_dual.group0.xyz.yzx * wedge.group1.zxy), right_dual.e423 * wedge.e415)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<Motor> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Motor {
     public AntiDipoleInversion anti_reject_via_horizon_from(AntiDipoleInversion other) {
@@ -8902,6 +10098,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(AntiRejectViaHorizonFromInfixPartial<Motor> lhs, AntiDualNum rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Motor {
     public Motor anti_reject_via_horizon_from(AntiDualNum other) {
         Motor wedge = Motor(
@@ -8922,6 +10122,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public DualNum operator /(AntiRejectViaHorizonFromInfixPartial<Motor> lhs, AntiFlatPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Motor {
     public DualNum anti_reject_via_horizon_from(AntiFlatPoint other) {
         return DualNum(
@@ -8929,6 +10133,10 @@ public extension Motor {
             float2(float4(other.group0.xyz, other.e321 * -1.0)[3] * other.e321 * this.e5 * -1.0, 1.0) * float2(-1.0, 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(AntiRejectViaHorizonFromInfixPartial<Motor> lhs, AntiFlector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Motor {
     public Motor anti_reject_via_horizon_from(AntiFlector other) {
@@ -8952,6 +10160,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(AntiRejectViaHorizonFromInfixPartial<Motor> lhs, AntiLine rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Motor {
     public Motor anti_reject_via_horizon_from(AntiLine other) {
         Motor wedge = Motor(
@@ -8973,6 +10185,10 @@ public extension Motor {
             float4((float3(wedge.e12345) * right_dual.group1.xyz), -(right_dual.e415 * wedge.e235) - (right_dual.e425 * wedge.e315) - (right_dual.e435 * wedge.e125) - (right_dual.e235 * wedge.e415) - (right_dual.e315 * wedge.e425) - (right_dual.e125 * wedge.e435))
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(AntiRejectViaHorizonFromInfixPartial<Motor> lhs, AntiMotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Motor {
     public Motor anti_reject_via_horizon_from(AntiMotor other) {
@@ -8996,6 +10212,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(AntiRejectViaHorizonFromInfixPartial<Motor> lhs, AntiPlane rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Motor {
     public Motor anti_reject_via_horizon_from(AntiPlane other) {
         Flector wedge = Flector(
@@ -9015,6 +10235,10 @@ public extension Motor {
             float4(wedge.e3215 * right_dual.e4235 * -1.0, wedge.e3215 * right_dual.e4315 * -1.0, wedge.e3215 * right_dual.e4125 * -1.0, (wedge.e25 * right_dual.e4315) + (wedge.e35 * right_dual.e4125) + (wedge.e45 * right_dual.e3215)) + (right_dual.group0.wwwx * float4(wedge.group1.xyz, wedge.e15))
         );
     }
+}
+// Fancy infix trick (second half)
+public RoundPoint operator /(AntiRejectViaHorizonFromInfixPartial<Motor> lhs, Circle rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Motor {
     public RoundPoint anti_reject_via_horizon_from(Circle other) {
@@ -9038,6 +10262,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public RoundPoint operator /(AntiRejectViaHorizonFromInfixPartial<Motor> lhs, CircleRotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Motor {
     public RoundPoint anti_reject_via_horizon_from(CircleRotor other) {
         Plane wedge = Plane(
@@ -9059,6 +10287,10 @@ public extension Motor {
             -(right_dual.e45 * wedge.e3215) - (right_dual.e15 * wedge.e4235) - (right_dual.e25 * wedge.e4315) - (right_dual.e35 * wedge.e4125)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<Motor> lhs, Dipole rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Motor {
     public AntiDipoleInversion anti_reject_via_horizon_from(Dipole other) {
@@ -9087,6 +10319,10 @@ public extension Motor {
             float4((right_dual.e412 * wedge.e315) + (right_dual.e321 * wedge.e415), (right_dual.e423 * wedge.e125) + (right_dual.e321 * wedge.e425), (right_dual.e431 * wedge.e235) + (right_dual.e321 * wedge.e435), -(right_dual.e415 * wedge.e235) - (right_dual.e425 * wedge.e315) - (right_dual.e435 * wedge.e125) - (right_dual.e315 * wedge.e425) - (right_dual.e125 * wedge.e435)) - float4((right_dual.group0.xyz.yzx * wedge.group1.zxy), right_dual.e235 * wedge.e415)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<Motor> lhs, DipoleInversion rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Motor {
     public AntiDipoleInversion anti_reject_via_horizon_from(DipoleInversion other) {
@@ -9117,6 +10353,10 @@ public extension Motor {
             float4((right_dual.e321 * wedge.e415) + (right_dual.e1 * wedge.e12345), (right_dual.e321 * wedge.e425) + (right_dual.e2 * wedge.e12345), (right_dual.e321 * wedge.e435) + (right_dual.e3 * wedge.e12345), -(right_dual.e425 * wedge.e315) - (right_dual.e435 * wedge.e125) - (right_dual.e235 * wedge.e415) - (right_dual.e315 * wedge.e425) - (right_dual.e125 * wedge.e435)) + float4((right_dual.group0.xyz.zxy * wedge.group1.yzx), right_dual.e5 * wedge.e12345) - (wedge.group1.zxyx * float4(right_dual.group0.xyz.yzx, right_dual.e415))
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiRejectViaHorizonFromInfixPartial<Motor> lhs, MultiVector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Motor {
     public MultiVector anti_reject_via_horizon_from(MultiVector other) {
@@ -9194,6 +10434,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<Motor> lhs, RoundPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Motor {
     public AntiDipoleInversion anti_reject_via_horizon_from(RoundPoint other) {
         Flector wedge = Flector(
@@ -9220,6 +10464,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(AntiRejectViaHorizonFromInfixPartial<Motor> lhs, Scalar rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Motor {
     public Motor anti_reject_via_horizon_from(Scalar other) {
         Motor wedge = Motor(
@@ -9240,6 +10488,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public RoundPoint operator /(AntiRejectViaHorizonFromInfixPartial<Motor> lhs, Sphere rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Motor {
     public RoundPoint anti_reject_via_horizon_from(Sphere other) {
         AntiScalar wedge = AntiScalar(
@@ -9259,6 +10511,10 @@ public extension Motor {
             wedge.e12345 * right_dual.e5
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<Motor> lhs, VersorEven rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Motor {
     public AntiDipoleInversion anti_reject_via_horizon_from(VersorEven other) {
@@ -9290,6 +10546,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiRejectViaHorizonFromInfixPartial<Motor> lhs, VersorOdd rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Motor {
     public VersorEven anti_reject_via_horizon_from(VersorOdd other) {
         Motor wedge = Motor(
@@ -9320,17 +10580,13 @@ public extension Motor {
         );
     }
 }
-public extension MultiVector {
-    // Fancy infix trick (first half)
-    public AntiRejectViaHorizonFromInfixPartial<MultiVector> operator /(AntiRejectViaHorizonFromInfix rhs) {
-        return AntiRejectViaHorizonFromInfixPartial<MultiVector>(this);
-    }
+// Fancy infix trick (first half)
+public AntiRejectViaHorizonFromInfixPartial<MultiVector> operator /(MultiVector lhs, AntiRejectViaHorizonFromInfix rhs) {
+    return AntiRejectViaHorizonFromInfixPartial<MultiVector>(lhs);
 }
-public extension AntiRejectViaHorizonFromInfixPartial<MultiVector> {
-    // Fancy infix trick (second half)
-    public MultiVector operator /(AntiCircleRotor rhs) {
-        return this.a.anti_reject_via_horizon_from(rhs);
-    }
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiRejectViaHorizonFromInfixPartial<MultiVector> lhs, AntiCircleRotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension MultiVector {
     public MultiVector anti_reject_via_horizon_from(AntiCircleRotor other) {
@@ -9391,6 +10647,10 @@ public extension MultiVector {
             right_dual.e12345 * wedge.e1234
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiRejectViaHorizonFromInfixPartial<MultiVector> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension MultiVector {
     public MultiVector anti_reject_via_horizon_from(AntiDipoleInversion other) {
@@ -9454,6 +10714,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiRejectViaHorizonFromInfixPartial<MultiVector> lhs, AntiDualNum rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension MultiVector {
     public MultiVector anti_reject_via_horizon_from(AntiDualNum other) {
         MultiVector wedge = MultiVector(
@@ -9510,6 +10774,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiRejectViaHorizonFromInfixPartial<MultiVector> lhs, AntiFlatPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension MultiVector {
     public MultiVector anti_reject_via_horizon_from(AntiFlatPoint other) {
         MultiVector wedge = MultiVector(
@@ -9565,6 +10833,10 @@ public extension MultiVector {
             0.0
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiRejectViaHorizonFromInfixPartial<MultiVector> lhs, AntiFlector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension MultiVector {
     public MultiVector anti_reject_via_horizon_from(AntiFlector other) {
@@ -9624,6 +10896,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiRejectViaHorizonFromInfixPartial<MultiVector> lhs, AntiLine rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension MultiVector {
     public MultiVector anti_reject_via_horizon_from(AntiLine other) {
         MultiVector wedge = MultiVector(
@@ -9681,6 +10957,10 @@ public extension MultiVector {
             0.0
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiRejectViaHorizonFromInfixPartial<MultiVector> lhs, AntiMotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension MultiVector {
     public MultiVector anti_reject_via_horizon_from(AntiMotor other) {
@@ -9740,6 +11020,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiRejectViaHorizonFromInfixPartial<MultiVector> lhs, AntiPlane rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension MultiVector {
     public MultiVector anti_reject_via_horizon_from(AntiPlane other) {
         MultiVector wedge = MultiVector(
@@ -9796,6 +11080,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(AntiRejectViaHorizonFromInfixPartial<MultiVector> lhs, AntiScalar rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension MultiVector {
     public Scalar anti_reject_via_horizon_from(AntiScalar other) {
         return Scalar(
@@ -9803,6 +11091,10 @@ public extension MultiVector {
             pow(other.e12345, 2) * this.scalar * -1.0
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiRejectViaHorizonFromInfixPartial<MultiVector> lhs, Circle rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension MultiVector {
     public MultiVector anti_reject_via_horizon_from(Circle other) {
@@ -9864,6 +11156,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiRejectViaHorizonFromInfixPartial<MultiVector> lhs, CircleRotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension MultiVector {
     public MultiVector anti_reject_via_horizon_from(CircleRotor other) {
         MultiVector wedge = MultiVector(
@@ -9924,6 +11220,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiRejectViaHorizonFromInfixPartial<MultiVector> lhs, Dipole rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension MultiVector {
     public MultiVector anti_reject_via_horizon_from(Dipole other) {
         MultiVector wedge = MultiVector(
@@ -9983,6 +11283,10 @@ public extension MultiVector {
             0.0
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiRejectViaHorizonFromInfixPartial<MultiVector> lhs, DipoleInversion rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension MultiVector {
     public MultiVector anti_reject_via_horizon_from(DipoleInversion other) {
@@ -10046,6 +11350,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiRejectViaHorizonFromInfixPartial<MultiVector> lhs, DualNum rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension MultiVector {
     public MultiVector anti_reject_via_horizon_from(DualNum other) {
         MultiVector wedge = MultiVector(
@@ -10102,6 +11410,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiRejectViaHorizonFromInfixPartial<MultiVector> lhs, FlatPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension MultiVector {
     public MultiVector anti_reject_via_horizon_from(FlatPoint other) {
         MultiVector wedge = MultiVector(
@@ -10157,6 +11469,10 @@ public extension MultiVector {
             0.0
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiRejectViaHorizonFromInfixPartial<MultiVector> lhs, Flector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension MultiVector {
     public MultiVector anti_reject_via_horizon_from(Flector other) {
@@ -10216,6 +11532,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiRejectViaHorizonFromInfixPartial<MultiVector> lhs, Line rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension MultiVector {
     public MultiVector anti_reject_via_horizon_from(Line other) {
         MultiVector wedge = MultiVector(
@@ -10274,6 +11594,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiRejectViaHorizonFromInfixPartial<MultiVector> lhs, Motor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension MultiVector {
     public MultiVector anti_reject_via_horizon_from(Motor other) {
         MultiVector wedge = MultiVector(
@@ -10331,6 +11655,10 @@ public extension MultiVector {
             0.0
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiRejectViaHorizonFromInfixPartial<MultiVector> lhs, MultiVector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension MultiVector {
     public MultiVector anti_reject_via_horizon_from(MultiVector other) {
@@ -10408,6 +11736,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiRejectViaHorizonFromInfixPartial<MultiVector> lhs, Plane rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension MultiVector {
     public MultiVector anti_reject_via_horizon_from(Plane other) {
         MultiVector wedge = MultiVector(
@@ -10463,6 +11795,10 @@ public extension MultiVector {
             0.0
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiRejectViaHorizonFromInfixPartial<MultiVector> lhs, RoundPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension MultiVector {
     public MultiVector anti_reject_via_horizon_from(RoundPoint other) {
@@ -10522,6 +11858,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiRejectViaHorizonFromInfixPartial<MultiVector> lhs, Scalar rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension MultiVector {
     public MultiVector anti_reject_via_horizon_from(Scalar other) {
         MultiVector wedge = MultiVector(
@@ -10577,6 +11917,10 @@ public extension MultiVector {
             right_dual.e12345 * wedge.e1234
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiRejectViaHorizonFromInfixPartial<MultiVector> lhs, Sphere rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension MultiVector {
     public MultiVector anti_reject_via_horizon_from(Sphere other) {
@@ -10635,6 +11979,10 @@ public extension MultiVector {
             0.0
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiRejectViaHorizonFromInfixPartial<MultiVector> lhs, VersorEven rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension MultiVector {
     public MultiVector anti_reject_via_horizon_from(VersorEven other) {
@@ -10698,6 +12046,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiRejectViaHorizonFromInfixPartial<MultiVector> lhs, VersorOdd rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension MultiVector {
     public MultiVector anti_reject_via_horizon_from(VersorOdd other) {
         MultiVector wedge = MultiVector(
@@ -10760,17 +12112,13 @@ public extension MultiVector {
         );
     }
 }
-public extension Plane {
-    // Fancy infix trick (first half)
-    public AntiRejectViaHorizonFromInfixPartial<Plane> operator /(AntiRejectViaHorizonFromInfix rhs) {
-        return AntiRejectViaHorizonFromInfixPartial<Plane>(this);
-    }
+// Fancy infix trick (first half)
+public AntiRejectViaHorizonFromInfixPartial<Plane> operator /(Plane lhs, AntiRejectViaHorizonFromInfix rhs) {
+    return AntiRejectViaHorizonFromInfixPartial<Plane>(lhs);
 }
-public extension AntiRejectViaHorizonFromInfixPartial<Plane> {
-    // Fancy infix trick (second half)
-    public DipoleInversion operator /(AntiCircleRotor rhs) {
-        return this.a.anti_reject_via_horizon_from(rhs);
-    }
+// Fancy infix trick (second half)
+public DipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<Plane> lhs, AntiCircleRotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Plane {
     public DipoleInversion anti_reject_via_horizon_from(AntiCircleRotor other) {
@@ -10797,6 +12145,10 @@ public extension Plane {
             float4(right_dual.e12345) * wedge.group0
         );
     }
+}
+// Fancy infix trick (second half)
+public DipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<Plane> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Plane {
     public DipoleInversion anti_reject_via_horizon_from(AntiDipoleInversion other) {
@@ -10826,6 +12178,10 @@ public extension Plane {
         );
     }
 }
+// Fancy infix trick (second half)
+public Plane operator /(AntiRejectViaHorizonFromInfixPartial<Plane> lhs, AntiDualNum rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Plane {
     public Plane anti_reject_via_horizon_from(AntiDualNum other) {
         return Plane(
@@ -10833,6 +12189,10 @@ public extension Plane {
             float4(other.scalar) * float4(other.scalar * this.e4235, other.scalar * this.e4315, other.scalar * this.e4125, other.scalar * this.e3215)
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(AntiRejectViaHorizonFromInfixPartial<Plane> lhs, AntiFlector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Plane {
     public Flector anti_reject_via_horizon_from(AntiFlector other) {
@@ -10854,6 +12214,10 @@ public extension Plane {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(AntiRejectViaHorizonFromInfixPartial<Plane> lhs, AntiMotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Plane {
     public Flector anti_reject_via_horizon_from(AntiMotor other) {
         Plane wedge = Plane(
@@ -10874,6 +12238,10 @@ public extension Plane {
         );
     }
 }
+// Fancy infix trick (second half)
+public Plane operator /(AntiRejectViaHorizonFromInfixPartial<Plane> lhs, AntiPlane rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Plane {
     public Plane anti_reject_via_horizon_from(AntiPlane other) {
         return Plane(
@@ -10881,6 +12249,10 @@ public extension Plane {
             float4((other.e1 * this.e4235) + (other.e2 * this.e4315) + (other.e3 * this.e4125)) * float4(other.group0.xyz, other.e5 * -1.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiRejectViaHorizonFromInfixPartial<Plane> lhs, MultiVector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Plane {
     public MultiVector anti_reject_via_horizon_from(MultiVector other) {
@@ -10958,6 +12330,10 @@ public extension Plane {
         );
     }
 }
+// Fancy infix trick (second half)
+public Sphere operator /(AntiRejectViaHorizonFromInfixPartial<Plane> lhs, RoundPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Plane {
     public Sphere anti_reject_via_horizon_from(RoundPoint other) {
         AntiScalar wedge = AntiScalar(
@@ -10978,6 +12354,10 @@ public extension Plane {
         );
     }
 }
+// Fancy infix trick (second half)
+public Plane operator /(AntiRejectViaHorizonFromInfixPartial<Plane> lhs, Scalar rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Plane {
     public Plane anti_reject_via_horizon_from(Scalar other) {
         return Plane(
@@ -10985,6 +12365,10 @@ public extension Plane {
             float4(other.scalar) * float4(this.e4235 * other.scalar, this.e4315 * other.scalar, this.e4125 * other.scalar, this.e3215 * other.scalar)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<Plane> lhs, VersorEven rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Plane {
     public VersorOdd anti_reject_via_horizon_from(VersorEven other) {
@@ -11014,6 +12398,10 @@ public extension Plane {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<Plane> lhs, VersorOdd rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Plane {
     public VersorOdd anti_reject_via_horizon_from(VersorOdd other) {
         Plane wedge = Plane(
@@ -11042,17 +12430,13 @@ public extension Plane {
         );
     }
 }
-public extension RoundPoint {
-    // Fancy infix trick (first half)
-    public AntiRejectViaHorizonFromInfixPartial<RoundPoint> operator /(AntiRejectViaHorizonFromInfix rhs) {
-        return AntiRejectViaHorizonFromInfixPartial<RoundPoint>(this);
-    }
+// Fancy infix trick (first half)
+public AntiRejectViaHorizonFromInfixPartial<RoundPoint> operator /(RoundPoint lhs, AntiRejectViaHorizonFromInfix rhs) {
+    return AntiRejectViaHorizonFromInfixPartial<RoundPoint>(lhs);
 }
-public extension AntiRejectViaHorizonFromInfixPartial<RoundPoint> {
-    // Fancy infix trick (second half)
-    public AntiDipoleInversion operator /(AntiCircleRotor rhs) {
-        return this.a.anti_reject_via_horizon_from(rhs);
-    }
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<RoundPoint> lhs, AntiCircleRotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension RoundPoint {
     public AntiDipoleInversion anti_reject_via_horizon_from(AntiCircleRotor other) {
@@ -11085,6 +12469,10 @@ public extension RoundPoint {
             float4((wedge.e415 * right_dual.e321) + (wedge.e321 * right_dual.e415) + (wedge.e315 * right_dual.e412) + (wedge.e1 * right_dual.e12345), (wedge.e425 * right_dual.e321) + (wedge.e321 * right_dual.e425) + (wedge.e125 * right_dual.e423) + (wedge.e2 * right_dual.e12345), (wedge.e435 * right_dual.e321) + (wedge.e321 * right_dual.e435) + (wedge.e235 * right_dual.e431) + (wedge.e3 * right_dual.e12345), -(wedge.e435 * right_dual.e125) - (wedge.e235 * right_dual.e415) - (wedge.e315 * right_dual.e425) - (wedge.e125 * right_dual.e435)) + (right_dual.group2.yzxw * float4(wedge.group0.xyz.zxy, wedge.e5)) - (right_dual.group2.zxyx * float4(wedge.group0.xyz.yzx, wedge.e415)) - float4((right_dual.group0.xyz.yzx * wedge.group2.zxy), wedge.e425 * right_dual.e315)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<RoundPoint> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension RoundPoint {
     public AntiDipoleInversion anti_reject_via_horizon_from(AntiDipoleInversion other) {
@@ -11120,6 +12508,10 @@ public extension RoundPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiRejectViaHorizonFromInfixPartial<RoundPoint> lhs, AntiDualNum rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension RoundPoint {
     public VersorEven anti_reject_via_horizon_from(AntiDualNum other) {
         VersorEven wedge = VersorEven(
@@ -11148,6 +12540,10 @@ public extension RoundPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public RoundPoint operator /(AntiRejectViaHorizonFromInfixPartial<RoundPoint> lhs, AntiFlatPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension RoundPoint {
     public RoundPoint anti_reject_via_horizon_from(AntiFlatPoint other) {
         Sphere wedge = Sphere(
@@ -11167,6 +12563,10 @@ public extension RoundPoint {
             -(right_dual.e15 * wedge.e4235) - (right_dual.e25 * wedge.e4315) - (right_dual.e35 * wedge.e4125) - (right_dual.e45 * wedge.e3215)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<RoundPoint> lhs, AntiFlector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension RoundPoint {
     public AntiDipoleInversion anti_reject_via_horizon_from(AntiFlector other) {
@@ -11198,6 +12598,10 @@ public extension RoundPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public RoundPoint operator /(AntiRejectViaHorizonFromInfixPartial<RoundPoint> lhs, AntiLine rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension RoundPoint {
     public RoundPoint anti_reject_via_horizon_from(AntiLine other) {
         Circle wedge = Circle(
@@ -11221,6 +12625,10 @@ public extension RoundPoint {
             -(wedge.e415 * right_dual.e235) - (wedge.e425 * right_dual.e315) - (wedge.e435 * right_dual.e125) - (wedge.e235 * right_dual.e415) - (wedge.e315 * right_dual.e425) - (wedge.e125 * right_dual.e435)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiRejectViaHorizonFromInfixPartial<RoundPoint> lhs, AntiMotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension RoundPoint {
     public VersorEven anti_reject_via_horizon_from(AntiMotor other) {
@@ -11252,6 +12660,10 @@ public extension RoundPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public RoundPoint operator /(AntiRejectViaHorizonFromInfixPartial<RoundPoint> lhs, AntiPlane rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension RoundPoint {
     public RoundPoint anti_reject_via_horizon_from(AntiPlane other) {
         Dipole wedge = Dipole(
@@ -11273,6 +12685,10 @@ public extension RoundPoint {
             (wedge.e45 * right_dual.e3215) + (wedge.e15 * right_dual.e4235) + (wedge.e25 * right_dual.e4315) + (wedge.e35 * right_dual.e4125)
         );
     }
+}
+// Fancy infix trick (second half)
+public RoundPoint operator /(AntiRejectViaHorizonFromInfixPartial<RoundPoint> lhs, Circle rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension RoundPoint {
     public RoundPoint anti_reject_via_horizon_from(Circle other) {
@@ -11298,6 +12714,10 @@ public extension RoundPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public RoundPoint operator /(AntiRejectViaHorizonFromInfixPartial<RoundPoint> lhs, CircleRotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension RoundPoint {
     public RoundPoint anti_reject_via_horizon_from(CircleRotor other) {
         Sphere wedge = Sphere(
@@ -11321,6 +12741,10 @@ public extension RoundPoint {
             -(right_dual.e45 * wedge.e3215) - (right_dual.e15 * wedge.e4235) - (right_dual.e25 * wedge.e4315) - (right_dual.e35 * wedge.e4125)
         );
     }
+}
+// Fancy infix trick (second half)
+public RoundPoint operator /(AntiRejectViaHorizonFromInfixPartial<RoundPoint> lhs, Dipole rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension RoundPoint {
     public RoundPoint anti_reject_via_horizon_from(Dipole other) {
@@ -11347,6 +12771,10 @@ public extension RoundPoint {
             -(right_dual.e415 * wedge.e235) - (right_dual.e425 * wedge.e315) - (right_dual.e435 * wedge.e125) - (right_dual.e235 * wedge.e415) - (right_dual.e315 * wedge.e425) - (right_dual.e125 * wedge.e435)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<RoundPoint> lhs, DipoleInversion rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension RoundPoint {
     public AntiDipoleInversion anti_reject_via_horizon_from(DipoleInversion other) {
@@ -11380,6 +12808,10 @@ public extension RoundPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public DualNum operator /(AntiRejectViaHorizonFromInfixPartial<RoundPoint> lhs, DualNum rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension RoundPoint {
     public DualNum anti_reject_via_horizon_from(DualNum other) {
         return DualNum(
@@ -11387,6 +12819,10 @@ public extension RoundPoint {
             float2(pow(other.e5, 2) * this.e4 * -1.0, 1.0) * float2(1.0, 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiPlane operator /(AntiRejectViaHorizonFromInfixPartial<RoundPoint> lhs, FlatPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension RoundPoint {
     public AntiPlane anti_reject_via_horizon_from(FlatPoint other) {
@@ -11405,6 +12841,10 @@ public extension RoundPoint {
             float4((float3(right_dual.e321) * wedge.group0.xyz), -(right_dual.e235 * wedge.e415) - (right_dual.e315 * wedge.e425) - (right_dual.e125 * wedge.e435))
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiRejectViaHorizonFromInfixPartial<RoundPoint> lhs, Flector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension RoundPoint {
     public AntiFlector anti_reject_via_horizon_from(Flector other) {
@@ -11428,6 +12868,10 @@ public extension RoundPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(AntiRejectViaHorizonFromInfixPartial<RoundPoint> lhs, Line rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension RoundPoint {
     public AntiPlane anti_reject_via_horizon_from(Line other) {
         Plane wedge = Plane(
@@ -11445,6 +12889,10 @@ public extension RoundPoint {
             float4(right_dual.e12 * wedge.e4315, right_dual.e23 * wedge.e4125, right_dual.e31 * wedge.e4235, -(right_dual.e25 * wedge.e4315) - (right_dual.e35 * wedge.e4125)) - (wedge.group0.zxyx * float4(right_dual.group0.xyz.yzx, right_dual.e15))
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiRejectViaHorizonFromInfixPartial<RoundPoint> lhs, Motor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension RoundPoint {
     public AntiFlector anti_reject_via_horizon_from(Motor other) {
@@ -11467,6 +12915,10 @@ public extension RoundPoint {
             float4(float3(0.0), -(right_dual.e25 * wedge.e4315) - (right_dual.e35 * wedge.e4125)) + float4((right_dual.group0.zxy * wedge.group1.yzx), right_dual.e3215 * wedge.e45) - (wedge.group1.zxyx * float4(right_dual.group0.yzx, right_dual.e15))
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiRejectViaHorizonFromInfixPartial<RoundPoint> lhs, MultiVector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension RoundPoint {
     public MultiVector anti_reject_via_horizon_from(MultiVector other) {
@@ -11544,6 +12996,10 @@ public extension RoundPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(AntiRejectViaHorizonFromInfixPartial<RoundPoint> lhs, Plane rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension RoundPoint {
     public AntiPlane anti_reject_via_horizon_from(Plane other) {
         return AntiPlane(
@@ -11551,6 +13007,10 @@ public extension RoundPoint {
             float4((other.e4235 * this.e1) + (other.e4315 * this.e2) + (other.e4125 * this.e3) + (other.e3215 * this.e4)) * float4(other.e4235 * -1.0, other.e4315 * -1.0, other.e4125 * -1.0, other.e3215)
         );
     }
+}
+// Fancy infix trick (second half)
+public RoundPoint operator /(AntiRejectViaHorizonFromInfixPartial<RoundPoint> lhs, RoundPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension RoundPoint {
     public RoundPoint anti_reject_via_horizon_from(RoundPoint other) {
@@ -11576,6 +13036,10 @@ public extension RoundPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public RoundPoint operator /(AntiRejectViaHorizonFromInfixPartial<RoundPoint> lhs, Scalar rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension RoundPoint {
     public RoundPoint anti_reject_via_horizon_from(Scalar other) {
         RoundPoint wedge = RoundPoint(
@@ -11596,6 +13060,10 @@ public extension RoundPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public RoundPoint operator /(AntiRejectViaHorizonFromInfixPartial<RoundPoint> lhs, Sphere rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension RoundPoint {
     public RoundPoint anti_reject_via_horizon_from(Sphere other) {
         AntiScalar wedge = AntiScalar(
@@ -11615,6 +13083,10 @@ public extension RoundPoint {
             wedge.e12345 * right_dual.e5
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<RoundPoint> lhs, VersorEven rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension RoundPoint {
     public AntiDipoleInversion anti_reject_via_horizon_from(VersorEven other) {
@@ -11650,6 +13122,10 @@ public extension RoundPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiRejectViaHorizonFromInfixPartial<RoundPoint> lhs, VersorOdd rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension RoundPoint {
     public VersorEven anti_reject_via_horizon_from(VersorOdd other) {
         VersorEven wedge = VersorEven(
@@ -11684,17 +13160,13 @@ public extension RoundPoint {
         );
     }
 }
-public extension Scalar {
-    // Fancy infix trick (first half)
-    public AntiRejectViaHorizonFromInfixPartial<Scalar> operator /(AntiRejectViaHorizonFromInfix rhs) {
-        return AntiRejectViaHorizonFromInfixPartial<Scalar>(this);
-    }
+// Fancy infix trick (first half)
+public AntiRejectViaHorizonFromInfixPartial<Scalar> operator /(Scalar lhs, AntiRejectViaHorizonFromInfix rhs) {
+    return AntiRejectViaHorizonFromInfixPartial<Scalar>(lhs);
 }
-public extension AntiRejectViaHorizonFromInfixPartial<Scalar> {
-    // Fancy infix trick (second half)
-    public AntiCircleRotor operator /(AntiCircleRotor rhs) {
-        return this.a.anti_reject_via_horizon_from(rhs);
-    }
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(AntiRejectViaHorizonFromInfixPartial<Scalar> lhs, AntiCircleRotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Scalar {
     public AntiCircleRotor anti_reject_via_horizon_from(AntiCircleRotor other) {
@@ -11723,6 +13195,10 @@ public extension Scalar {
             float4((float3(right_dual.e12345) * wedge.group2.xyz), (wedge.scalar * right_dual.e12345) - (wedge.e41 * right_dual.e235) - (wedge.e42 * right_dual.e315) - (wedge.e43 * right_dual.e125) - (wedge.e23 * right_dual.e415) - (wedge.e31 * right_dual.e425) - (wedge.e12 * right_dual.e435) - (wedge.e45 * right_dual.e321) - (wedge.e15 * right_dual.e423) - (wedge.e25 * right_dual.e431) - (wedge.e35 * right_dual.e412))
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(AntiRejectViaHorizonFromInfixPartial<Scalar> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Scalar {
     public AntiCircleRotor anti_reject_via_horizon_from(AntiDipoleInversion other) {
@@ -11756,6 +13232,10 @@ public extension Scalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDualNum operator /(AntiRejectViaHorizonFromInfixPartial<Scalar> lhs, AntiDualNum rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Scalar {
     public AntiDualNum anti_reject_via_horizon_from(AntiDualNum other) {
         return AntiDualNum(
@@ -11764,6 +13244,10 @@ public extension Scalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(AntiRejectViaHorizonFromInfixPartial<Scalar> lhs, AntiFlatPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Scalar {
     public Scalar anti_reject_via_horizon_from(AntiFlatPoint other) {
         return Scalar(
@@ -11771,6 +13255,10 @@ public extension Scalar {
             float4(other.group0.xyz, other.e321 * -1.0)[3] * other.e321 * this.scalar * -1.0
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiRejectViaHorizonFromInfixPartial<Scalar> lhs, AntiFlector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Scalar {
     public AntiMotor anti_reject_via_horizon_from(AntiFlector other) {
@@ -11794,6 +13282,10 @@ public extension Scalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(AntiRejectViaHorizonFromInfixPartial<Scalar> lhs, AntiLine rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Scalar {
     public Scalar anti_reject_via_horizon_from(AntiLine other) {
         AntiLine wedge = AntiLine(
@@ -11813,6 +13305,10 @@ public extension Scalar {
             -(wedge.e23 * right_dual.e415) - (wedge.e31 * right_dual.e425) - (wedge.e12 * right_dual.e435)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiRejectViaHorizonFromInfixPartial<Scalar> lhs, AntiMotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Scalar {
     public AntiMotor anti_reject_via_horizon_from(AntiMotor other) {
@@ -11836,6 +13332,10 @@ public extension Scalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(AntiRejectViaHorizonFromInfixPartial<Scalar> lhs, AntiPlane rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Scalar {
     public Scalar anti_reject_via_horizon_from(AntiPlane other) {
         AntiPlane wedge = AntiPlane(
@@ -11852,6 +13352,10 @@ public extension Scalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(AntiRejectViaHorizonFromInfixPartial<Scalar> lhs, AntiScalar rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Scalar {
     public Scalar anti_reject_via_horizon_from(AntiScalar other) {
         return Scalar(
@@ -11859,6 +13363,10 @@ public extension Scalar {
             pow(other.e12345, 2) * this.scalar * -1.0
         );
     }
+}
+// Fancy infix trick (second half)
+public Scalar operator /(AntiRejectViaHorizonFromInfixPartial<Scalar> lhs, Circle rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Scalar {
     public Scalar anti_reject_via_horizon_from(Circle other) {
@@ -11883,6 +13391,10 @@ public extension Scalar {
             -(wedge.e423 * right_dual.e15) - (wedge.e431 * right_dual.e25) - (wedge.e412 * right_dual.e35) - (wedge.e415 * right_dual.e23) - (wedge.e425 * right_dual.e31) - (wedge.e435 * right_dual.e12) - (wedge.e321 * right_dual.e45) - (wedge.e235 * right_dual.e41) - (wedge.e315 * right_dual.e42) - (wedge.e125 * right_dual.e43)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(AntiRejectViaHorizonFromInfixPartial<Scalar> lhs, CircleRotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Scalar {
     public AntiCircleRotor anti_reject_via_horizon_from(CircleRotor other) {
@@ -11912,6 +13424,10 @@ public extension Scalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(AntiRejectViaHorizonFromInfixPartial<Scalar> lhs, Dipole rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Scalar {
     public Scalar anti_reject_via_horizon_from(Dipole other) {
         Dipole wedge = Dipole(
@@ -11935,6 +13451,10 @@ public extension Scalar {
             -(right_dual.e423 * wedge.e15) - (right_dual.e431 * wedge.e25) - (right_dual.e412 * wedge.e35) - (right_dual.e415 * wedge.e23) - (right_dual.e425 * wedge.e31) - (right_dual.e435 * wedge.e12) - (right_dual.e321 * wedge.e45) - (right_dual.e235 * wedge.e41) - (right_dual.e315 * wedge.e42) - (right_dual.e125 * wedge.e43)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(AntiRejectViaHorizonFromInfixPartial<Scalar> lhs, DipoleInversion rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Scalar {
     public AntiCircleRotor anti_reject_via_horizon_from(DipoleInversion other) {
@@ -11968,6 +13488,10 @@ public extension Scalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDualNum operator /(AntiRejectViaHorizonFromInfixPartial<Scalar> lhs, DualNum rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Scalar {
     public AntiDualNum anti_reject_via_horizon_from(DualNum other) {
         return AntiDualNum(
@@ -11976,6 +13500,10 @@ public extension Scalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(AntiRejectViaHorizonFromInfixPartial<Scalar> lhs, FlatPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Scalar {
     public Scalar anti_reject_via_horizon_from(FlatPoint other) {
         return Scalar(
@@ -11983,6 +13511,10 @@ public extension Scalar {
             pow(other.e45, 2) * this.scalar * -1.0
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiRejectViaHorizonFromInfixPartial<Scalar> lhs, Flector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Scalar {
     public AntiMotor anti_reject_via_horizon_from(Flector other) {
@@ -12006,6 +13538,10 @@ public extension Scalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(AntiRejectViaHorizonFromInfixPartial<Scalar> lhs, Line rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Scalar {
     public Scalar anti_reject_via_horizon_from(Line other) {
         Line wedge = Line(
@@ -12025,6 +13561,10 @@ public extension Scalar {
             -(right_dual.e23 * wedge.e415) - (right_dual.e31 * wedge.e425) - (right_dual.e12 * wedge.e435)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiRejectViaHorizonFromInfixPartial<Scalar> lhs, Motor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Scalar {
     public AntiMotor anti_reject_via_horizon_from(Motor other) {
@@ -12047,6 +13587,10 @@ public extension Scalar {
             float4(((float3(right_dual.e3215) * wedge.group0.xyz) + (float3(wedge.e12345) * right_dual.group1.xyz)), right_dual.e3215 * wedge.e12345)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiRejectViaHorizonFromInfixPartial<Scalar> lhs, MultiVector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Scalar {
     public MultiVector anti_reject_via_horizon_from(MultiVector other) {
@@ -12124,6 +13668,10 @@ public extension Scalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(AntiRejectViaHorizonFromInfixPartial<Scalar> lhs, Plane rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Scalar {
     public Scalar anti_reject_via_horizon_from(Plane other) {
         Plane wedge = Plane(
@@ -12139,6 +13687,10 @@ public extension Scalar {
             (right_dual.e1 * wedge.e4235) + (right_dual.e2 * wedge.e4315) + (right_dual.e3 * wedge.e4125)
         );
     }
+}
+// Fancy infix trick (second half)
+public Scalar operator /(AntiRejectViaHorizonFromInfixPartial<Scalar> lhs, RoundPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Scalar {
     public Scalar anti_reject_via_horizon_from(RoundPoint other) {
@@ -12160,6 +13712,10 @@ public extension Scalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(AntiRejectViaHorizonFromInfixPartial<Scalar> lhs, Scalar rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Scalar {
     public Scalar anti_reject_via_horizon_from(Scalar other) {
         return Scalar(
@@ -12167,6 +13723,10 @@ public extension Scalar {
             pow(other.scalar, 2) * this.scalar
         );
     }
+}
+// Fancy infix trick (second half)
+public Scalar operator /(AntiRejectViaHorizonFromInfixPartial<Scalar> lhs, Sphere rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Scalar {
     public Scalar anti_reject_via_horizon_from(Sphere other) {
@@ -12187,6 +13747,10 @@ public extension Scalar {
             (right_dual.e1 * wedge.e4235) + (right_dual.e2 * wedge.e4315) + (right_dual.e3 * wedge.e4125) + (right_dual.e4 * wedge.e3215) + (right_dual.e5 * wedge.e1234)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<Scalar> lhs, VersorEven rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Scalar {
     public VersorOdd anti_reject_via_horizon_from(VersorEven other) {
@@ -12222,6 +13786,10 @@ public extension Scalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<Scalar> lhs, VersorOdd rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Scalar {
     public VersorOdd anti_reject_via_horizon_from(VersorOdd other) {
         VersorOdd wedge = VersorOdd(
@@ -12256,17 +13824,13 @@ public extension Scalar {
         );
     }
 }
-public extension Sphere {
-    // Fancy infix trick (first half)
-    public AntiRejectViaHorizonFromInfixPartial<Sphere> operator /(AntiRejectViaHorizonFromInfix rhs) {
-        return AntiRejectViaHorizonFromInfixPartial<Sphere>(this);
-    }
+// Fancy infix trick (first half)
+public AntiRejectViaHorizonFromInfixPartial<Sphere> operator /(Sphere lhs, AntiRejectViaHorizonFromInfix rhs) {
+    return AntiRejectViaHorizonFromInfixPartial<Sphere>(lhs);
 }
-public extension AntiRejectViaHorizonFromInfixPartial<Sphere> {
-    // Fancy infix trick (second half)
-    public DipoleInversion operator /(AntiCircleRotor rhs) {
-        return this.a.anti_reject_via_horizon_from(rhs);
-    }
+// Fancy infix trick (second half)
+public DipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<Sphere> lhs, AntiCircleRotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Sphere {
     public DipoleInversion anti_reject_via_horizon_from(AntiCircleRotor other) {
@@ -12296,6 +13860,10 @@ public extension Sphere {
         );
     }
 }
+// Fancy infix trick (second half)
+public DipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<Sphere> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Sphere {
     public DipoleInversion anti_reject_via_horizon_from(AntiDipoleInversion other) {
         AntiScalar wedge = AntiScalar(
@@ -12324,6 +13892,10 @@ public extension Sphere {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<Sphere> lhs, AntiDualNum rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Sphere {
     public VersorOdd anti_reject_via_horizon_from(AntiDualNum other) {
         Sphere wedge = Sphere(
@@ -12348,6 +13920,10 @@ public extension Sphere {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(AntiRejectViaHorizonFromInfixPartial<Sphere> lhs, AntiFlector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Sphere {
     public Flector anti_reject_via_horizon_from(AntiFlector other) {
         AntiScalar wedge = AntiScalar(
@@ -12367,6 +13943,10 @@ public extension Sphere {
             float4(wedge.e12345) * right_dual.group1
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<Sphere> lhs, AntiMotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Sphere {
     public VersorOdd anti_reject_via_horizon_from(AntiMotor other) {
@@ -12394,6 +13974,10 @@ public extension Sphere {
         );
     }
 }
+// Fancy infix trick (second half)
+public Plane operator /(AntiRejectViaHorizonFromInfixPartial<Sphere> lhs, AntiPlane rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Sphere {
     public Plane anti_reject_via_horizon_from(AntiPlane other) {
         return Plane(
@@ -12402,6 +13986,10 @@ public extension Sphere {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDualNum operator /(AntiRejectViaHorizonFromInfixPartial<Sphere> lhs, DualNum rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Sphere {
     public AntiDualNum anti_reject_via_horizon_from(DualNum other) {
         return AntiDualNum(
@@ -12409,6 +13997,10 @@ public extension Sphere {
             float2(other.e5 * this.e1234) * float2(other.e5 * -1.0, other.e12345 * -1.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiRejectViaHorizonFromInfixPartial<Sphere> lhs, Motor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Sphere {
     public AntiMotor anti_reject_via_horizon_from(Motor other) {
@@ -12429,6 +14021,10 @@ public extension Sphere {
             float4(wedge.e12345) * right_dual.group1
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiRejectViaHorizonFromInfixPartial<Sphere> lhs, MultiVector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Sphere {
     public MultiVector anti_reject_via_horizon_from(MultiVector other) {
@@ -12506,6 +14102,10 @@ public extension Sphere {
         );
     }
 }
+// Fancy infix trick (second half)
+public Sphere operator /(AntiRejectViaHorizonFromInfixPartial<Sphere> lhs, RoundPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Sphere {
     public Sphere anti_reject_via_horizon_from(RoundPoint other) {
         AntiScalar wedge = AntiScalar(
@@ -12526,6 +14126,10 @@ public extension Sphere {
         );
     }
 }
+// Fancy infix trick (second half)
+public Sphere operator /(AntiRejectViaHorizonFromInfixPartial<Sphere> lhs, Scalar rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension Sphere {
     public Sphere anti_reject_via_horizon_from(Scalar other) {
         Sphere wedge = Sphere(
@@ -12545,6 +14149,10 @@ public extension Sphere {
             right_dual.e12345 * wedge.e1234
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<Sphere> lhs, VersorEven rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Sphere {
     public VersorOdd anti_reject_via_horizon_from(VersorEven other) {
@@ -12573,6 +14181,10 @@ public extension Sphere {
             float4(wedge.e12345) * right_dual.group3
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<Sphere> lhs, VersorOdd rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension Sphere {
     public VersorOdd anti_reject_via_horizon_from(VersorOdd other) {
@@ -12604,17 +14216,13 @@ public extension Sphere {
         );
     }
 }
-public extension VersorEven {
-    // Fancy infix trick (first half)
-    public AntiRejectViaHorizonFromInfixPartial<VersorEven> operator /(AntiRejectViaHorizonFromInfix rhs) {
-        return AntiRejectViaHorizonFromInfixPartial<VersorEven>(this);
-    }
+// Fancy infix trick (first half)
+public AntiRejectViaHorizonFromInfixPartial<VersorEven> operator /(VersorEven lhs, AntiRejectViaHorizonFromInfix rhs) {
+    return AntiRejectViaHorizonFromInfixPartial<VersorEven>(lhs);
 }
-public extension AntiRejectViaHorizonFromInfixPartial<VersorEven> {
-    // Fancy infix trick (second half)
-    public VersorEven operator /(AntiCircleRotor rhs) {
-        return this.a.anti_reject_via_horizon_from(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiRejectViaHorizonFromInfixPartial<VersorEven> lhs, AntiCircleRotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension VersorEven {
     public VersorEven anti_reject_via_horizon_from(AntiCircleRotor other) {
@@ -12647,6 +14255,10 @@ public extension VersorEven {
             float4((right_dual.e415 * wedge.e321) + (right_dual.e321 * wedge.e415) + (right_dual.e315 * wedge.e412) + (right_dual.e12345 * wedge.e1), (right_dual.e425 * wedge.e321) + (right_dual.e321 * wedge.e425) + (right_dual.e125 * wedge.e423) + (right_dual.e12345 * wedge.e2), (right_dual.e435 * wedge.e321) + (right_dual.e321 * wedge.e435) + (right_dual.e235 * wedge.e431) + (right_dual.e12345 * wedge.e3), -(right_dual.e412 * wedge.e435) - (right_dual.e415 * wedge.e423) - (right_dual.e425 * wedge.e431) - (right_dual.e435 * wedge.e412)) + float4((right_dual.group0.xyz.zxy * wedge.group2.yzx), right_dual.e12345 * wedge.e4) - float4((right_dual.group0.xyz.yzx * wedge.group2.zxy), right_dual.e423 * wedge.e415) - float4((right_dual.group2.zxy * wedge.group0.yzx), right_dual.e431 * wedge.e425)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<VersorEven> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension VersorEven {
     public AntiDipoleInversion anti_reject_via_horizon_from(AntiDipoleInversion other) {
@@ -12682,6 +14294,10 @@ public extension VersorEven {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiRejectViaHorizonFromInfixPartial<VersorEven> lhs, AntiDualNum rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension VersorEven {
     public VersorEven anti_reject_via_horizon_from(AntiDualNum other) {
         VersorEven wedge = VersorEven(
@@ -12710,6 +14326,10 @@ public extension VersorEven {
         );
     }
 }
+// Fancy infix trick (second half)
+public RoundPoint operator /(AntiRejectViaHorizonFromInfixPartial<VersorEven> lhs, AntiFlatPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension VersorEven {
     public RoundPoint anti_reject_via_horizon_from(AntiFlatPoint other) {
         Sphere wedge = Sphere(
@@ -12729,6 +14349,10 @@ public extension VersorEven {
             -(right_dual.e15 * wedge.e4235) - (right_dual.e25 * wedge.e4315) - (right_dual.e35 * wedge.e4125) - (right_dual.e45 * wedge.e3215)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<VersorEven> lhs, AntiFlector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension VersorEven {
     public AntiDipoleInversion anti_reject_via_horizon_from(AntiFlector other) {
@@ -12760,6 +14384,10 @@ public extension VersorEven {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<VersorEven> lhs, AntiLine rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension VersorEven {
     public AntiDipoleInversion anti_reject_via_horizon_from(AntiLine other) {
         CircleRotor wedge = CircleRotor(
@@ -12787,6 +14415,10 @@ public extension VersorEven {
             float4((wedge.e412 * right_dual.e315) + (wedge.e321 * right_dual.e415), (wedge.e423 * right_dual.e125) + (wedge.e321 * right_dual.e425), (wedge.e431 * right_dual.e235) + (wedge.e321 * right_dual.e435), -(wedge.e415 * right_dual.e235) - (wedge.e425 * right_dual.e315) - (wedge.e435 * right_dual.e125) - (wedge.e315 * right_dual.e425) - (wedge.e125 * right_dual.e435)) - float4((wedge.group0.xyz.yzx * right_dual.group1.xyz.zxy), wedge.e235 * right_dual.e415)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiRejectViaHorizonFromInfixPartial<VersorEven> lhs, AntiMotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension VersorEven {
     public VersorEven anti_reject_via_horizon_from(AntiMotor other) {
@@ -12818,6 +14450,10 @@ public extension VersorEven {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<VersorEven> lhs, AntiPlane rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension VersorEven {
     public AntiDipoleInversion anti_reject_via_horizon_from(AntiPlane other) {
         DipoleInversion wedge = DipoleInversion(
@@ -12846,6 +14482,10 @@ public extension VersorEven {
         );
     }
 }
+// Fancy infix trick (second half)
+public RoundPoint operator /(AntiRejectViaHorizonFromInfixPartial<VersorEven> lhs, Circle rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension VersorEven {
     public RoundPoint anti_reject_via_horizon_from(Circle other) {
         Sphere wedge = Sphere(
@@ -12870,6 +14510,10 @@ public extension VersorEven {
         );
     }
 }
+// Fancy infix trick (second half)
+public RoundPoint operator /(AntiRejectViaHorizonFromInfixPartial<VersorEven> lhs, CircleRotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension VersorEven {
     public RoundPoint anti_reject_via_horizon_from(CircleRotor other) {
         Sphere wedge = Sphere(
@@ -12893,6 +14537,10 @@ public extension VersorEven {
             -(right_dual.e45 * wedge.e3215) - (right_dual.e15 * wedge.e4235) - (right_dual.e25 * wedge.e4315) - (right_dual.e35 * wedge.e4125)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<VersorEven> lhs, Dipole rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension VersorEven {
     public AntiDipoleInversion anti_reject_via_horizon_from(Dipole other) {
@@ -12923,6 +14571,10 @@ public extension VersorEven {
             float4((right_dual.e412 * wedge.e315) + (right_dual.e415 * wedge.e321) + (right_dual.e321 * wedge.e415) + (right_dual.e315 * wedge.e412), (right_dual.e423 * wedge.e125) + (right_dual.e425 * wedge.e321) + (right_dual.e321 * wedge.e425) + (right_dual.e125 * wedge.e423), (right_dual.e431 * wedge.e235) + (right_dual.e435 * wedge.e321) + (right_dual.e321 * wedge.e435) + (right_dual.e235 * wedge.e431), -(right_dual.e415 * wedge.e235) - (right_dual.e425 * wedge.e315) - (right_dual.e435 * wedge.e125) - (right_dual.e125 * wedge.e435)) - float4((right_dual.group0.xyz.yzx * wedge.group2.zxy), right_dual.e235 * wedge.e415) - float4((right_dual.group2.xyz.zxy * wedge.group0.xyz.yzx), right_dual.e315 * wedge.e425)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<VersorEven> lhs, DipoleInversion rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension VersorEven {
     public AntiDipoleInversion anti_reject_via_horizon_from(DipoleInversion other) {
@@ -12956,6 +14608,10 @@ public extension VersorEven {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiRejectViaHorizonFromInfixPartial<VersorEven> lhs, DualNum rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension VersorEven {
     public AntiFlector anti_reject_via_horizon_from(DualNum other) {
         Flector wedge = Flector(
@@ -12976,6 +14632,10 @@ public extension VersorEven {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiRejectViaHorizonFromInfixPartial<VersorEven> lhs, FlatPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension VersorEven {
     public AntiFlector anti_reject_via_horizon_from(FlatPoint other) {
         Motor wedge = Motor(
@@ -12995,6 +14655,10 @@ public extension VersorEven {
             float4((right_dual.group0.www * wedge.group0.xyz), -(right_dual.e235 * wedge.e415) - (right_dual.e315 * wedge.e425) - (right_dual.e125 * wedge.e435))
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiRejectViaHorizonFromInfixPartial<VersorEven> lhs, Flector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension VersorEven {
     public AntiFlector anti_reject_via_horizon_from(Flector other) {
@@ -13018,6 +14682,10 @@ public extension VersorEven {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(AntiRejectViaHorizonFromInfixPartial<VersorEven> lhs, Line rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension VersorEven {
     public AntiPlane anti_reject_via_horizon_from(Line other) {
         Plane wedge = Plane(
@@ -13035,6 +14703,10 @@ public extension VersorEven {
             float4(right_dual.e12 * wedge.e4315, right_dual.e23 * wedge.e4125, right_dual.e31 * wedge.e4235, -(right_dual.e25 * wedge.e4315) - (right_dual.e35 * wedge.e4125)) - (wedge.group0.zxyx * float4(right_dual.group0.xyz.yzx, right_dual.e15))
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(AntiRejectViaHorizonFromInfixPartial<VersorEven> lhs, Motor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension VersorEven {
     public AntiFlector anti_reject_via_horizon_from(Motor other) {
@@ -13057,6 +14729,10 @@ public extension VersorEven {
             float4(float3(0.0), -(right_dual.e25 * wedge.e4315) - (right_dual.e35 * wedge.e4125)) + float4((right_dual.group0.zxy * wedge.group1.yzx), right_dual.e3215 * wedge.e45) - (wedge.group1.zxyx * float4(right_dual.group0.yzx, right_dual.e15))
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiRejectViaHorizonFromInfixPartial<VersorEven> lhs, MultiVector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension VersorEven {
     public MultiVector anti_reject_via_horizon_from(MultiVector other) {
@@ -13134,6 +14810,10 @@ public extension VersorEven {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(AntiRejectViaHorizonFromInfixPartial<VersorEven> lhs, Plane rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension VersorEven {
     public AntiPlane anti_reject_via_horizon_from(Plane other) {
         return AntiPlane(
@@ -13141,6 +14821,10 @@ public extension VersorEven {
             float4((other.e4235 * this.e1) + (other.e4315 * this.e2) + (other.e4125 * this.e3) + (other.e3215 * this.e4)) * float4(other.e4235 * -1.0, other.e4315 * -1.0, other.e4125 * -1.0, other.e3215)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<VersorEven> lhs, RoundPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension VersorEven {
     public AntiDipoleInversion anti_reject_via_horizon_from(RoundPoint other) {
@@ -13172,6 +14856,10 @@ public extension VersorEven {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiRejectViaHorizonFromInfixPartial<VersorEven> lhs, Scalar rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension VersorEven {
     public VersorEven anti_reject_via_horizon_from(Scalar other) {
         VersorEven wedge = VersorEven(
@@ -13200,6 +14888,10 @@ public extension VersorEven {
         );
     }
 }
+// Fancy infix trick (second half)
+public RoundPoint operator /(AntiRejectViaHorizonFromInfixPartial<VersorEven> lhs, Sphere rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension VersorEven {
     public RoundPoint anti_reject_via_horizon_from(Sphere other) {
         AntiScalar wedge = AntiScalar(
@@ -13219,6 +14911,10 @@ public extension VersorEven {
             wedge.e12345 * right_dual.e5
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(AntiRejectViaHorizonFromInfixPartial<VersorEven> lhs, VersorEven rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension VersorEven {
     public AntiDipoleInversion anti_reject_via_horizon_from(VersorEven other) {
@@ -13254,6 +14950,10 @@ public extension VersorEven {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(AntiRejectViaHorizonFromInfixPartial<VersorEven> lhs, VersorOdd rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension VersorEven {
     public VersorEven anti_reject_via_horizon_from(VersorOdd other) {
         VersorEven wedge = VersorEven(
@@ -13288,17 +14988,13 @@ public extension VersorEven {
         );
     }
 }
-public extension VersorOdd {
-    // Fancy infix trick (first half)
-    public AntiRejectViaHorizonFromInfixPartial<VersorOdd> operator /(AntiRejectViaHorizonFromInfix rhs) {
-        return AntiRejectViaHorizonFromInfixPartial<VersorOdd>(this);
-    }
+// Fancy infix trick (first half)
+public AntiRejectViaHorizonFromInfixPartial<VersorOdd> operator /(VersorOdd lhs, AntiRejectViaHorizonFromInfix rhs) {
+    return AntiRejectViaHorizonFromInfixPartial<VersorOdd>(lhs);
 }
-public extension AntiRejectViaHorizonFromInfixPartial<VersorOdd> {
-    // Fancy infix trick (second half)
-    public VersorOdd operator /(AntiCircleRotor rhs) {
-        return this.a.anti_reject_via_horizon_from(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<VersorOdd> lhs, AntiCircleRotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension VersorOdd {
     public VersorOdd anti_reject_via_horizon_from(AntiCircleRotor other) {
@@ -13331,6 +15027,10 @@ public extension VersorOdd {
             float4(right_dual.e12345) * wedge.group3
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<VersorOdd> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension VersorOdd {
     public VersorOdd anti_reject_via_horizon_from(AntiDipoleInversion other) {
@@ -13366,6 +15066,10 @@ public extension VersorOdd {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<VersorOdd> lhs, AntiDualNum rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension VersorOdd {
     public VersorOdd anti_reject_via_horizon_from(AntiDualNum other) {
         VersorOdd wedge = VersorOdd(
@@ -13394,6 +15098,10 @@ public extension VersorOdd {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(AntiRejectViaHorizonFromInfixPartial<VersorOdd> lhs, AntiFlatPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension VersorOdd {
     public AntiCircleRotor anti_reject_via_horizon_from(AntiFlatPoint other) {
         CircleRotor wedge = CircleRotor(
@@ -13417,6 +15125,10 @@ public extension VersorOdd {
             float4((wedge.group2.www * right_dual.group0.xyz), -(wedge.e423 * right_dual.e15) - (wedge.e431 * right_dual.e25) - (wedge.e412 * right_dual.e35) - (wedge.e321 * right_dual.e45))
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<VersorOdd> lhs, AntiFlector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension VersorOdd {
     public VersorOdd anti_reject_via_horizon_from(AntiFlector other) {
@@ -13448,6 +15160,10 @@ public extension VersorOdd {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(AntiRejectViaHorizonFromInfixPartial<VersorOdd> lhs, AntiLine rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension VersorOdd {
     public AntiCircleRotor anti_reject_via_horizon_from(AntiLine other) {
         DipoleInversion wedge = DipoleInversion(
@@ -13475,6 +15191,10 @@ public extension VersorOdd {
             float4((wedge.e4125 * right_dual.e315) + (wedge.e3215 * right_dual.e415), (wedge.e4235 * right_dual.e125) + (wedge.e3215 * right_dual.e425), (wedge.e4315 * right_dual.e235) + (wedge.e3215 * right_dual.e435), -(wedge.e42 * right_dual.e315) - (wedge.e43 * right_dual.e125) - (wedge.e23 * right_dual.e415) - (wedge.e31 * right_dual.e425) - (wedge.e12 * right_dual.e435)) - float4((right_dual.group1.xyz.zxy * wedge.group3.yzx), wedge.e41 * right_dual.e235)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<VersorOdd> lhs, AntiMotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension VersorOdd {
     public VersorOdd anti_reject_via_horizon_from(AntiMotor other) {
@@ -13506,6 +15226,10 @@ public extension VersorOdd {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<VersorOdd> lhs, AntiPlane rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension VersorOdd {
     public VersorOdd anti_reject_via_horizon_from(AntiPlane other) {
         VersorEven wedge = VersorEven(
@@ -13534,6 +15258,10 @@ public extension VersorOdd {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(AntiRejectViaHorizonFromInfixPartial<VersorOdd> lhs, AntiScalar rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension VersorOdd {
     public Scalar anti_reject_via_horizon_from(AntiScalar other) {
         return Scalar(
@@ -13541,6 +15269,10 @@ public extension VersorOdd {
             pow(other.e12345, 2) * this.scalar * -1.0
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(AntiRejectViaHorizonFromInfixPartial<VersorOdd> lhs, Circle rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension VersorOdd {
     public AntiCircleRotor anti_reject_via_horizon_from(Circle other) {
@@ -13570,6 +15302,10 @@ public extension VersorOdd {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(AntiRejectViaHorizonFromInfixPartial<VersorOdd> lhs, CircleRotor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension VersorOdd {
     public AntiCircleRotor anti_reject_via_horizon_from(CircleRotor other) {
         CircleRotor wedge = CircleRotor(
@@ -13597,6 +15333,10 @@ public extension VersorOdd {
             float4((float3(wedge.e12345) * right_dual.group2.xyz), (right_dual.scalar * wedge.e12345) - (right_dual.e41 * wedge.e235) - (right_dual.e42 * wedge.e315) - (right_dual.e43 * wedge.e125) - (right_dual.e23 * wedge.e415) - (right_dual.e31 * wedge.e425) - (right_dual.e12 * wedge.e435) - (right_dual.e45 * wedge.e321) - (right_dual.e15 * wedge.e423) - (right_dual.e25 * wedge.e431) - (right_dual.e35 * wedge.e412))
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(AntiRejectViaHorizonFromInfixPartial<VersorOdd> lhs, Dipole rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension VersorOdd {
     public AntiCircleRotor anti_reject_via_horizon_from(Dipole other) {
@@ -13627,6 +15367,10 @@ public extension VersorOdd {
             float4((right_dual.e415 * wedge.e3215) + (right_dual.e315 * wedge.e4125), (right_dual.e425 * wedge.e3215) + (right_dual.e125 * wedge.e4235), (right_dual.e435 * wedge.e3215) + (right_dual.e235 * wedge.e4315), -(right_dual.e431 * wedge.e25) - (right_dual.e412 * wedge.e35) - (right_dual.e415 * wedge.e23) - (right_dual.e425 * wedge.e31) - (right_dual.e435 * wedge.e12) - (right_dual.e321 * wedge.e45) - (right_dual.e235 * wedge.e41) - (right_dual.e315 * wedge.e42) - (right_dual.e125 * wedge.e43)) - float4((right_dual.group2.xyz.zxy * wedge.group3.yzx), right_dual.e423 * wedge.e15)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(AntiRejectViaHorizonFromInfixPartial<VersorOdd> lhs, DipoleInversion rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension VersorOdd {
     public AntiCircleRotor anti_reject_via_horizon_from(DipoleInversion other) {
@@ -13660,6 +15404,10 @@ public extension VersorOdd {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiRejectViaHorizonFromInfixPartial<VersorOdd> lhs, DualNum rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension VersorOdd {
     public AntiMotor anti_reject_via_horizon_from(DualNum other) {
         Motor wedge = Motor(
@@ -13680,6 +15428,10 @@ public extension VersorOdd {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiRejectViaHorizonFromInfixPartial<VersorOdd> lhs, FlatPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension VersorOdd {
     public AntiMotor anti_reject_via_horizon_from(FlatPoint other) {
         Flector wedge = Flector(
@@ -13699,6 +15451,10 @@ public extension VersorOdd {
             float4(((right_dual.group0.yzx * wedge.group1.zxy) - (right_dual.group0.zxy * wedge.group1.yzx)), 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiRejectViaHorizonFromInfixPartial<VersorOdd> lhs, Flector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension VersorOdd {
     public AntiMotor anti_reject_via_horizon_from(Flector other) {
@@ -13722,6 +15478,10 @@ public extension VersorOdd {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiRejectViaHorizonFromInfixPartial<VersorOdd> lhs, Line rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension VersorOdd {
     public AntiMotor anti_reject_via_horizon_from(Line other) {
         Motor wedge = Motor(
@@ -13744,6 +15504,10 @@ public extension VersorOdd {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(AntiRejectViaHorizonFromInfixPartial<VersorOdd> lhs, Motor rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension VersorOdd {
     public AntiMotor anti_reject_via_horizon_from(Motor other) {
         Motor wedge = Motor(
@@ -13765,6 +15529,10 @@ public extension VersorOdd {
             float4(((float3(right_dual.e3215) * wedge.group0.xyz) + (float3(wedge.e12345) * right_dual.group1.xyz)), right_dual.e3215 * wedge.e12345)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(AntiRejectViaHorizonFromInfixPartial<VersorOdd> lhs, MultiVector rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension VersorOdd {
     public MultiVector anti_reject_via_horizon_from(MultiVector other) {
@@ -13842,6 +15610,10 @@ public extension VersorOdd {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(AntiRejectViaHorizonFromInfixPartial<VersorOdd> lhs, Plane rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension VersorOdd {
     public Scalar anti_reject_via_horizon_from(Plane other) {
         Plane wedge = Plane(
@@ -13857,6 +15629,10 @@ public extension VersorOdd {
             (right_dual.e1 * wedge.e4235) + (right_dual.e2 * wedge.e4315) + (right_dual.e3 * wedge.e4125)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<VersorOdd> lhs, RoundPoint rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension VersorOdd {
     public VersorOdd anti_reject_via_horizon_from(RoundPoint other) {
@@ -13888,6 +15664,10 @@ public extension VersorOdd {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<VersorOdd> lhs, Scalar rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension VersorOdd {
     public VersorOdd anti_reject_via_horizon_from(Scalar other) {
         VersorOdd wedge = VersorOdd(
@@ -13916,6 +15696,10 @@ public extension VersorOdd {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(AntiRejectViaHorizonFromInfixPartial<VersorOdd> lhs, Sphere rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
+}
 public extension VersorOdd {
     public Scalar anti_reject_via_horizon_from(Sphere other) {
         Sphere wedge = Sphere(
@@ -13935,6 +15719,10 @@ public extension VersorOdd {
             (right_dual.e1 * wedge.e4235) + (right_dual.e2 * wedge.e4315) + (right_dual.e3 * wedge.e4125) + (right_dual.e4 * wedge.e3215) + (right_dual.e5 * wedge.e1234)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<VersorOdd> lhs, VersorEven rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension VersorOdd {
     public VersorOdd anti_reject_via_horizon_from(VersorEven other) {
@@ -13969,6 +15757,10 @@ public extension VersorOdd {
             float4(wedge.e12345) * right_dual.group3
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(AntiRejectViaHorizonFromInfixPartial<VersorOdd> lhs, VersorOdd rhs) {
+    return lhs.a.anti_reject_via_horizon_from(rhs);
 }
 public extension VersorOdd {
     public VersorOdd anti_reject_via_horizon_from(VersorOdd other) {

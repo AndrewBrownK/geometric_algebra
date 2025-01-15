@@ -10,7 +10,7 @@ public struct CircleRotor {
     // e235, e315, e125, e12345
     internal float4 group2;
 
-    __init(
+    public __init(
         float e423, float e431, float e412, float e415, float e425, float e435, float e321, float e235, float e315, float e125, float e12345
     ) {
         group0 = float4(e423, e431, e412, 0.0);

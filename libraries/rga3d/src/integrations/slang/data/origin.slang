@@ -9,7 +9,7 @@ public struct Origin {
     // e4, 0, 0, 0
     internal float4 group0;
 
-    __init(
+    public __init(
         float e4
     ) {
         group0 = float4(e4, 0.0, 0.0, 0.0);

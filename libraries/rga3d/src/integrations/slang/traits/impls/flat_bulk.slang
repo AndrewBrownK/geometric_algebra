@@ -1,16 +1,12 @@
 implementing rga3d;
 using traits;
-public extension DualNum {
-    // Fancy postfix trick
-    public Scalar operator /(FlatBulkPrefixOrPostfix rhs)  {
-        return this.flat_bulk();
+// Fancy postfix trick
+public Scalar operator /(DualNum lhs, FlatBulkPrefixOrPostfix rhs)  {
+    return lhs.flat_bulk();
     }
-}
-public extension FlatBulkPrefixOrPostfix {
-    // Fancy prefix trick
-    public Scalar operator /(DualNum rhs) {
-        return rhs.flat_bulk();
-    }
+// Fancy prefix trick
+public Scalar operator /(FlatBulkPrefixOrPostfix lhs, DualNum rhs) {
+    return rhs.flat_bulk();
 }
 public extension DualNum {
     public Scalar flat_bulk() {
@@ -20,17 +16,13 @@ public extension DualNum {
         );
     }
 }
-public extension Flector {
-    // Fancy postfix trick
-    public Flector operator /(FlatBulkPrefixOrPostfix rhs)  {
-        return this.flat_bulk();
+// Fancy postfix trick
+public Flector operator /(Flector lhs, FlatBulkPrefixOrPostfix rhs)  {
+    return lhs.flat_bulk();
     }
-}
-public extension FlatBulkPrefixOrPostfix {
-    // Fancy prefix trick
-    public Flector operator /(Flector rhs) {
-        return rhs.flat_bulk();
-    }
+// Fancy prefix trick
+public Flector operator /(FlatBulkPrefixOrPostfix lhs, Flector rhs) {
+    return rhs.flat_bulk();
 }
 public extension Flector {
     public Flector flat_bulk() {
@@ -42,34 +34,26 @@ public extension Flector {
         );
     }
 }
-public extension Horizon {
-    // Fancy postfix trick
-    public Horizon operator /(FlatBulkPrefixOrPostfix rhs)  {
-        return this.flat_bulk();
+// Fancy postfix trick
+public Horizon operator /(Horizon lhs, FlatBulkPrefixOrPostfix rhs)  {
+    return lhs.flat_bulk();
     }
-}
-public extension FlatBulkPrefixOrPostfix {
-    // Fancy prefix trick
-    public Horizon operator /(Horizon rhs) {
-        return rhs.flat_bulk();
-    }
+// Fancy prefix trick
+public Horizon operator /(FlatBulkPrefixOrPostfix lhs, Horizon rhs) {
+    return rhs.flat_bulk();
 }
 public extension Horizon {
     public Horizon flat_bulk() {
         return this;
     }
 }
-public extension Line {
-    // Fancy postfix trick
-    public Line operator /(FlatBulkPrefixOrPostfix rhs)  {
-        return this.flat_bulk();
+// Fancy postfix trick
+public Line operator /(Line lhs, FlatBulkPrefixOrPostfix rhs)  {
+    return lhs.flat_bulk();
     }
-}
-public extension FlatBulkPrefixOrPostfix {
-    // Fancy prefix trick
-    public Line operator /(Line rhs) {
-        return rhs.flat_bulk();
-    }
+// Fancy prefix trick
+public Line operator /(FlatBulkPrefixOrPostfix lhs, Line rhs) {
+    return rhs.flat_bulk();
 }
 public extension Line {
     public Line flat_bulk() {
@@ -81,17 +65,13 @@ public extension Line {
         );
     }
 }
-public extension Motor {
-    // Fancy postfix trick
-    public Motor operator /(FlatBulkPrefixOrPostfix rhs)  {
-        return this.flat_bulk();
+// Fancy postfix trick
+public Motor operator /(Motor lhs, FlatBulkPrefixOrPostfix rhs)  {
+    return lhs.flat_bulk();
     }
-}
-public extension FlatBulkPrefixOrPostfix {
-    // Fancy prefix trick
-    public Motor operator /(Motor rhs) {
-        return rhs.flat_bulk();
-    }
+// Fancy prefix trick
+public Motor operator /(FlatBulkPrefixOrPostfix lhs, Motor rhs) {
+    return rhs.flat_bulk();
 }
 public extension Motor {
     public Motor flat_bulk() {
@@ -103,17 +83,13 @@ public extension Motor {
         );
     }
 }
-public extension MultiVector {
-    // Fancy postfix trick
-    public MultiVector operator /(FlatBulkPrefixOrPostfix rhs)  {
-        return this.flat_bulk();
+// Fancy postfix trick
+public MultiVector operator /(MultiVector lhs, FlatBulkPrefixOrPostfix rhs)  {
+    return lhs.flat_bulk();
     }
-}
-public extension FlatBulkPrefixOrPostfix {
-    // Fancy prefix trick
-    public MultiVector operator /(MultiVector rhs) {
-        return rhs.flat_bulk();
-    }
+// Fancy prefix trick
+public MultiVector operator /(FlatBulkPrefixOrPostfix lhs, MultiVector rhs) {
+    return rhs.flat_bulk();
 }
 public extension MultiVector {
     public MultiVector flat_bulk() {
@@ -131,17 +107,13 @@ public extension MultiVector {
         );
     }
 }
-public extension Plane {
-    // Fancy postfix trick
-    public Horizon operator /(FlatBulkPrefixOrPostfix rhs)  {
-        return this.flat_bulk();
+// Fancy postfix trick
+public Horizon operator /(Plane lhs, FlatBulkPrefixOrPostfix rhs)  {
+    return lhs.flat_bulk();
     }
-}
-public extension FlatBulkPrefixOrPostfix {
-    // Fancy prefix trick
-    public Horizon operator /(Plane rhs) {
-        return rhs.flat_bulk();
-    }
+// Fancy prefix trick
+public Horizon operator /(FlatBulkPrefixOrPostfix lhs, Plane rhs) {
+    return rhs.flat_bulk();
 }
 public extension Plane {
     public Horizon flat_bulk() {
@@ -151,17 +123,13 @@ public extension Plane {
         );
     }
 }
-public extension Point {
-    // Fancy postfix trick
-    public Point operator /(FlatBulkPrefixOrPostfix rhs)  {
-        return this.flat_bulk();
+// Fancy postfix trick
+public Point operator /(Point lhs, FlatBulkPrefixOrPostfix rhs)  {
+    return lhs.flat_bulk();
     }
-}
-public extension FlatBulkPrefixOrPostfix {
-    // Fancy prefix trick
-    public Point operator /(Point rhs) {
-        return rhs.flat_bulk();
-    }
+// Fancy prefix trick
+public Point operator /(FlatBulkPrefixOrPostfix lhs, Point rhs) {
+    return rhs.flat_bulk();
 }
 public extension Point {
     public Point flat_bulk() {
@@ -171,17 +139,13 @@ public extension Point {
         );
     }
 }
-public extension Scalar {
-    // Fancy postfix trick
-    public Scalar operator /(FlatBulkPrefixOrPostfix rhs)  {
-        return this.flat_bulk();
+// Fancy postfix trick
+public Scalar operator /(Scalar lhs, FlatBulkPrefixOrPostfix rhs)  {
+    return lhs.flat_bulk();
     }
-}
-public extension FlatBulkPrefixOrPostfix {
-    // Fancy prefix trick
-    public Scalar operator /(Scalar rhs) {
-        return rhs.flat_bulk();
-    }
+// Fancy prefix trick
+public Scalar operator /(FlatBulkPrefixOrPostfix lhs, Scalar rhs) {
+    return rhs.flat_bulk();
 }
 public extension Scalar {
     public Scalar flat_bulk() {

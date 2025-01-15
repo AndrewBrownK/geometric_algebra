@@ -1,16 +1,12 @@
 implementing rga3d;
 using traits;
-public extension AntiScalar {
-    // Fancy postfix trick
-    public Scalar operator /(RightComplementPrefixOrPostfix rhs)  {
-        return this.right_complement();
+// Fancy postfix trick
+public Scalar operator /(AntiScalar lhs, RightComplementPrefixOrPostfix rhs)  {
+    return lhs.right_complement();
     }
-}
-public extension RightComplementPrefixOrPostfix {
-    // Fancy prefix trick
-    public Scalar operator /(AntiScalar rhs) {
-        return rhs.right_complement();
-    }
+// Fancy prefix trick
+public Scalar operator /(RightComplementPrefixOrPostfix lhs, AntiScalar rhs) {
+    return rhs.right_complement();
 }
 public extension AntiScalar {
     public Scalar right_complement() {
@@ -20,17 +16,13 @@ public extension AntiScalar {
         );
     }
 }
-public extension DualNum {
-    // Fancy postfix trick
-    public DualNum operator /(RightComplementPrefixOrPostfix rhs)  {
-        return this.right_complement();
+// Fancy postfix trick
+public DualNum operator /(DualNum lhs, RightComplementPrefixOrPostfix rhs)  {
+    return lhs.right_complement();
     }
-}
-public extension RightComplementPrefixOrPostfix {
-    // Fancy prefix trick
-    public DualNum operator /(DualNum rhs) {
-        return rhs.right_complement();
-    }
+// Fancy prefix trick
+public DualNum operator /(RightComplementPrefixOrPostfix lhs, DualNum rhs) {
+    return rhs.right_complement();
 }
 public extension DualNum {
     public DualNum right_complement() {
@@ -40,17 +32,13 @@ public extension DualNum {
         );
     }
 }
-public extension Flector {
-    // Fancy postfix trick
-    public Flector operator /(RightComplementPrefixOrPostfix rhs)  {
-        return this.right_complement();
+// Fancy postfix trick
+public Flector operator /(Flector lhs, RightComplementPrefixOrPostfix rhs)  {
+    return lhs.right_complement();
     }
-}
-public extension RightComplementPrefixOrPostfix {
-    // Fancy prefix trick
-    public Flector operator /(Flector rhs) {
-        return rhs.right_complement();
-    }
+// Fancy prefix trick
+public Flector operator /(RightComplementPrefixOrPostfix lhs, Flector rhs) {
+    return rhs.right_complement();
 }
 public extension Flector {
     public Flector right_complement() {
@@ -62,17 +50,13 @@ public extension Flector {
         );
     }
 }
-public extension Horizon {
-    // Fancy postfix trick
-    public Origin operator /(RightComplementPrefixOrPostfix rhs)  {
-        return this.right_complement();
+// Fancy postfix trick
+public Origin operator /(Horizon lhs, RightComplementPrefixOrPostfix rhs)  {
+    return lhs.right_complement();
     }
-}
-public extension RightComplementPrefixOrPostfix {
-    // Fancy prefix trick
-    public Origin operator /(Horizon rhs) {
-        return rhs.right_complement();
-    }
+// Fancy prefix trick
+public Origin operator /(RightComplementPrefixOrPostfix lhs, Horizon rhs) {
+    return rhs.right_complement();
 }
 public extension Horizon {
     public Origin right_complement() {
@@ -82,17 +66,13 @@ public extension Horizon {
         );
     }
 }
-public extension Line {
-    // Fancy postfix trick
-    public Line operator /(RightComplementPrefixOrPostfix rhs)  {
-        return this.right_complement();
+// Fancy postfix trick
+public Line operator /(Line lhs, RightComplementPrefixOrPostfix rhs)  {
+    return lhs.right_complement();
     }
-}
-public extension RightComplementPrefixOrPostfix {
-    // Fancy prefix trick
-    public Line operator /(Line rhs) {
-        return rhs.right_complement();
-    }
+// Fancy prefix trick
+public Line operator /(RightComplementPrefixOrPostfix lhs, Line rhs) {
+    return rhs.right_complement();
 }
 public extension Line {
     public Line right_complement() {
@@ -104,17 +84,13 @@ public extension Line {
         );
     }
 }
-public extension Motor {
-    // Fancy postfix trick
-    public Motor operator /(RightComplementPrefixOrPostfix rhs)  {
-        return this.right_complement();
+// Fancy postfix trick
+public Motor operator /(Motor lhs, RightComplementPrefixOrPostfix rhs)  {
+    return lhs.right_complement();
     }
-}
-public extension RightComplementPrefixOrPostfix {
-    // Fancy prefix trick
-    public Motor operator /(Motor rhs) {
-        return rhs.right_complement();
-    }
+// Fancy prefix trick
+public Motor operator /(RightComplementPrefixOrPostfix lhs, Motor rhs) {
+    return rhs.right_complement();
 }
 public extension Motor {
     public Motor right_complement() {
@@ -126,17 +102,13 @@ public extension Motor {
         );
     }
 }
-public extension MultiVector {
-    // Fancy postfix trick
-    public MultiVector operator /(RightComplementPrefixOrPostfix rhs)  {
-        return this.right_complement();
+// Fancy postfix trick
+public MultiVector operator /(MultiVector lhs, RightComplementPrefixOrPostfix rhs)  {
+    return lhs.right_complement();
     }
-}
-public extension RightComplementPrefixOrPostfix {
-    // Fancy prefix trick
-    public MultiVector operator /(MultiVector rhs) {
-        return rhs.right_complement();
-    }
+// Fancy prefix trick
+public MultiVector operator /(RightComplementPrefixOrPostfix lhs, MultiVector rhs) {
+    return rhs.right_complement();
 }
 public extension MultiVector {
     public MultiVector right_complement() {
@@ -154,17 +126,13 @@ public extension MultiVector {
         );
     }
 }
-public extension Origin {
-    // Fancy postfix trick
-    public Horizon operator /(RightComplementPrefixOrPostfix rhs)  {
-        return this.right_complement();
+// Fancy postfix trick
+public Horizon operator /(Origin lhs, RightComplementPrefixOrPostfix rhs)  {
+    return lhs.right_complement();
     }
-}
-public extension RightComplementPrefixOrPostfix {
-    // Fancy prefix trick
-    public Horizon operator /(Origin rhs) {
-        return rhs.right_complement();
-    }
+// Fancy prefix trick
+public Horizon operator /(RightComplementPrefixOrPostfix lhs, Origin rhs) {
+    return rhs.right_complement();
 }
 public extension Origin {
     public Horizon right_complement() {
@@ -174,17 +142,13 @@ public extension Origin {
         );
     }
 }
-public extension Plane {
-    // Fancy postfix trick
-    public Point operator /(RightComplementPrefixOrPostfix rhs)  {
-        return this.right_complement();
+// Fancy postfix trick
+public Point operator /(Plane lhs, RightComplementPrefixOrPostfix rhs)  {
+    return lhs.right_complement();
     }
-}
-public extension RightComplementPrefixOrPostfix {
-    // Fancy prefix trick
-    public Point operator /(Plane rhs) {
-        return rhs.right_complement();
-    }
+// Fancy prefix trick
+public Point operator /(RightComplementPrefixOrPostfix lhs, Plane rhs) {
+    return rhs.right_complement();
 }
 public extension Plane {
     public Point right_complement() {
@@ -194,17 +158,13 @@ public extension Plane {
         );
     }
 }
-public extension Point {
-    // Fancy postfix trick
-    public Plane operator /(RightComplementPrefixOrPostfix rhs)  {
-        return this.right_complement();
+// Fancy postfix trick
+public Plane operator /(Point lhs, RightComplementPrefixOrPostfix rhs)  {
+    return lhs.right_complement();
     }
-}
-public extension RightComplementPrefixOrPostfix {
-    // Fancy prefix trick
-    public Plane operator /(Point rhs) {
-        return rhs.right_complement();
-    }
+// Fancy prefix trick
+public Plane operator /(RightComplementPrefixOrPostfix lhs, Point rhs) {
+    return rhs.right_complement();
 }
 public extension Point {
     public Plane right_complement() {
@@ -214,17 +174,13 @@ public extension Point {
         );
     }
 }
-public extension Scalar {
-    // Fancy postfix trick
-    public AntiScalar operator /(RightComplementPrefixOrPostfix rhs)  {
-        return this.right_complement();
+// Fancy postfix trick
+public AntiScalar operator /(Scalar lhs, RightComplementPrefixOrPostfix rhs)  {
+    return lhs.right_complement();
     }
-}
-public extension RightComplementPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiScalar operator /(Scalar rhs) {
-        return rhs.right_complement();
-    }
+// Fancy prefix trick
+public AntiScalar operator /(RightComplementPrefixOrPostfix lhs, Scalar rhs) {
+    return rhs.right_complement();
 }
 public extension Scalar {
     public AntiScalar right_complement() {

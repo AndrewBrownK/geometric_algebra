@@ -8,7 +8,7 @@ public struct Line {
     // e235, e315, e125, 0
     internal float4 group1;
 
-    __init(
+    public __init(
         float e415, float e425, float e435, float e235, float e315, float e125
     ) {
         group0 = float4(e415, e425, e435, 0.0);

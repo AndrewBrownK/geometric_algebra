@@ -1,16 +1,12 @@
 implementing cga3d;
 using traits;
-public extension AntiCircleRotor {
-    // Fancy infix trick (first half)
-    public WedgeInfixPartial<AntiCircleRotor> operator /(WedgeInfix rhs) {
-        return WedgeInfixPartial<AntiCircleRotor>(this);
-    }
+// Fancy infix trick (first half)
+public WedgeInfixPartial<AntiCircleRotor> operator /(AntiCircleRotor lhs, WedgeInfix rhs) {
+    return WedgeInfixPartial<AntiCircleRotor>(lhs);
 }
-public extension WedgeInfixPartial<AntiCircleRotor> {
-    // Fancy infix trick (second half)
-    public VersorOdd operator /(AntiCircleRotor rhs) {
-        return this.a.wedge(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorOdd operator /(WedgeInfixPartial<AntiCircleRotor> lhs, AntiCircleRotor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiCircleRotor {
     public VersorOdd wedge(AntiCircleRotor other) {
@@ -26,6 +22,10 @@ public extension AntiCircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(WedgeInfixPartial<AntiCircleRotor> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiCircleRotor {
     public VersorEven wedge(AntiDipoleInversion other) {
         return VersorEven(
@@ -39,6 +39,10 @@ public extension AntiCircleRotor {
             float4(this.scalar) * float4(other.group3.xyz, other.e4)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(WedgeInfixPartial<AntiCircleRotor> lhs, AntiDualNum rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiCircleRotor {
     public VersorOdd wedge(AntiDualNum other) {
@@ -54,6 +58,10 @@ public extension AntiCircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public CircleRotor operator /(WedgeInfixPartial<AntiCircleRotor> lhs, AntiFlatPoint rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiCircleRotor {
     public CircleRotor wedge(AntiFlatPoint other) {
         return CircleRotor(
@@ -65,6 +73,10 @@ public extension AntiCircleRotor {
             float4((this.group2.www * other.group0.xyz), -(this.e41 * other.e235) - (this.e42 * other.e315) - (this.e43 * other.e125) - (this.e45 * other.e321))
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(WedgeInfixPartial<AntiCircleRotor> lhs, AntiFlector rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiCircleRotor {
     public VersorEven wedge(AntiFlector other) {
@@ -80,6 +92,10 @@ public extension AntiCircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public DipoleInversion operator /(WedgeInfixPartial<AntiCircleRotor> lhs, AntiLine rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiCircleRotor {
     public DipoleInversion wedge(AntiLine other) {
         return DipoleInversion(
@@ -93,6 +109,10 @@ public extension AntiCircleRotor {
             float4((this.e42 * other.e35) + (this.e45 * other.e23), (this.e43 * other.e15) + (this.e45 * other.e31), (this.e41 * other.e25) + (this.e45 * other.e12), -(this.e23 * other.e15) - (this.e31 * other.e25) - (this.e12 * other.e35) - (this.e25 * other.e31) - (this.e35 * other.e12)) - float4((this.group0.xyz.zxy * other.group1.xyz.yzx), this.e15 * other.e23)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(WedgeInfixPartial<AntiCircleRotor> lhs, AntiMotor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiCircleRotor {
     public VersorOdd wedge(AntiMotor other) {
@@ -108,6 +128,10 @@ public extension AntiCircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(WedgeInfixPartial<AntiCircleRotor> lhs, AntiPlane rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiCircleRotor {
     public AntiDipoleInversion wedge(AntiPlane other) {
         return AntiDipoleInversion(
@@ -122,6 +146,10 @@ public extension AntiCircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<AntiCircleRotor> lhs, AntiScalar rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiCircleRotor {
     public AntiScalar wedge(AntiScalar other) {
         return AntiScalar(
@@ -129,6 +157,10 @@ public extension AntiCircleRotor {
             this.scalar * other.e12345
         );
     }
+}
+// Fancy infix trick (second half)
+public CircleRotor operator /(WedgeInfixPartial<AntiCircleRotor> lhs, Circle rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiCircleRotor {
     public CircleRotor wedge(Circle other) {
@@ -142,6 +174,10 @@ public extension AntiCircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public CircleRotor operator /(WedgeInfixPartial<AntiCircleRotor> lhs, CircleRotor rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiCircleRotor {
     public CircleRotor wedge(CircleRotor other) {
         return CircleRotor(
@@ -153,6 +189,10 @@ public extension AntiCircleRotor {
             float4((this.group2.www * other.group2.xyz), (this.scalar * other.e12345) - (this.e41 * other.e235) - (this.e42 * other.e315) - (this.e43 * other.e125) - (this.e23 * other.e415) - (this.e31 * other.e425) - (this.e12 * other.e435) - (this.e45 * other.e321) - (this.e15 * other.e423) - (this.e25 * other.e431) - (this.e35 * other.e412))
         );
     }
+}
+// Fancy infix trick (second half)
+public DipoleInversion operator /(WedgeInfixPartial<AntiCircleRotor> lhs, Dipole rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiCircleRotor {
     public DipoleInversion wedge(Dipole other) {
@@ -168,6 +208,10 @@ public extension AntiCircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public DipoleInversion operator /(WedgeInfixPartial<AntiCircleRotor> lhs, DipoleInversion rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiCircleRotor {
     public DipoleInversion wedge(DipoleInversion other) {
         return DipoleInversion(
@@ -182,6 +226,10 @@ public extension AntiCircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(WedgeInfixPartial<AntiCircleRotor> lhs, DualNum rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiCircleRotor {
     public Motor wedge(DualNum other) {
         return Motor(
@@ -191,6 +239,10 @@ public extension AntiCircleRotor {
             float4(other.e5) * float4(this.group1.xyz, this.scalar)
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(WedgeInfixPartial<AntiCircleRotor> lhs, FlatPoint rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiCircleRotor {
     public Flector wedge(FlatPoint other) {
@@ -202,6 +254,10 @@ public extension AntiCircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(WedgeInfixPartial<AntiCircleRotor> lhs, Flector rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiCircleRotor {
     public Flector wedge(Flector other) {
         return Flector(
@@ -211,6 +267,10 @@ public extension AntiCircleRotor {
             float4((this.e23 * other.e45) + (this.scalar * other.e4235), (this.e31 * other.e45) + (this.scalar * other.e4315), (this.e12 * other.e45) + (this.scalar * other.e4125), -(this.e31 * other.e25) - (this.e12 * other.e35)) + float4((this.group0.xyz.yzx * other.group0.zxy), this.scalar * other.e3215) - (other.group0.yzxx * float4(this.group0.xyz.zxy, this.e23))
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(WedgeInfixPartial<AntiCircleRotor> lhs, Line rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiCircleRotor {
     public Motor wedge(Line other) {
@@ -222,6 +282,10 @@ public extension AntiCircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(WedgeInfixPartial<AntiCircleRotor> lhs, Motor rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiCircleRotor {
     public Motor wedge(Motor other) {
         return Motor(
@@ -231,6 +295,10 @@ public extension AntiCircleRotor {
             float4(((float3(this.scalar) * other.group1.xyz) + (float3(other.e5) * this.group1.xyz)), this.scalar * other.e5)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(WedgeInfixPartial<AntiCircleRotor> lhs, MultiVector rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiCircleRotor {
     public MultiVector wedge(MultiVector other) {
@@ -260,6 +328,10 @@ public extension AntiCircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Plane operator /(WedgeInfixPartial<AntiCircleRotor> lhs, Plane rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiCircleRotor {
     public Plane wedge(Plane other) {
         return Plane(
@@ -267,6 +339,10 @@ public extension AntiCircleRotor {
             float4(this.scalar) * other.group0
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(WedgeInfixPartial<AntiCircleRotor> lhs, RoundPoint rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiCircleRotor {
     public AntiDipoleInversion wedge(RoundPoint other) {
@@ -282,6 +358,10 @@ public extension AntiCircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(WedgeInfixPartial<AntiCircleRotor> lhs, Scalar rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiCircleRotor {
     public AntiCircleRotor wedge(Scalar other) {
         return AntiCircleRotor(
@@ -294,6 +374,10 @@ public extension AntiCircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Sphere operator /(WedgeInfixPartial<AntiCircleRotor> lhs, Sphere rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiCircleRotor {
     public Sphere wedge(Sphere other) {
         return Sphere(
@@ -303,6 +387,10 @@ public extension AntiCircleRotor {
             this.scalar * other.e1234
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(WedgeInfixPartial<AntiCircleRotor> lhs, VersorEven rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiCircleRotor {
     public VersorEven wedge(VersorEven other) {
@@ -318,6 +406,10 @@ public extension AntiCircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(WedgeInfixPartial<AntiCircleRotor> lhs, VersorOdd rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiCircleRotor {
     public VersorOdd wedge(VersorOdd other) {
         return VersorOdd(
@@ -332,17 +424,13 @@ public extension AntiCircleRotor {
         );
     }
 }
-public extension AntiDipoleInversion {
-    // Fancy infix trick (first half)
-    public WedgeInfixPartial<AntiDipoleInversion> operator /(WedgeInfix rhs) {
-        return WedgeInfixPartial<AntiDipoleInversion>(this);
-    }
+// Fancy infix trick (first half)
+public WedgeInfixPartial<AntiDipoleInversion> operator /(AntiDipoleInversion lhs, WedgeInfix rhs) {
+    return WedgeInfixPartial<AntiDipoleInversion>(lhs);
 }
-public extension WedgeInfixPartial<AntiDipoleInversion> {
-    // Fancy infix trick (second half)
-    public VersorEven operator /(AntiCircleRotor rhs) {
-        return this.a.wedge(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorEven operator /(WedgeInfixPartial<AntiDipoleInversion> lhs, AntiCircleRotor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiDipoleInversion {
     public VersorEven wedge(AntiCircleRotor other) {
@@ -358,6 +446,10 @@ public extension AntiDipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public DipoleInversion operator /(WedgeInfixPartial<AntiDipoleInversion> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiDipoleInversion {
     public DipoleInversion wedge(AntiDipoleInversion other) {
         return DipoleInversion(
@@ -371,6 +463,10 @@ public extension AntiDipoleInversion {
             (other.group3.yzxw * this.group1.zxyw) + (this.group2.wwwz * float4(other.group2.xyz, other.e3)) + float4((this.group0.xyz * other.group3.www), other.e1 * this.e235) + float4((other.group1.yzx * this.group3.zxy), other.e2 * this.e315) - (float4(this.e5) * float4(other.group0.xyz, other.e321)) - (other.group2.wwwy * float4(this.group2.xyz, this.e2)) - (this.group3.yzxx * float4(other.group1.zxy, other.e235)) - float4((other.group3.zxy * this.group1.yzx), other.e125 * this.e3)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(WedgeInfixPartial<AntiDipoleInversion> lhs, AntiDualNum rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiDipoleInversion {
     public VersorEven wedge(AntiDualNum other) {
@@ -386,6 +482,10 @@ public extension AntiDipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public Sphere operator /(WedgeInfixPartial<AntiDipoleInversion> lhs, AntiFlatPoint rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiDipoleInversion {
     public Sphere wedge(AntiFlatPoint other) {
         return Sphere(
@@ -395,6 +495,10 @@ public extension AntiDipoleInversion {
             this.e4 * other.e321
         );
     }
+}
+// Fancy infix trick (second half)
+public DipoleInversion operator /(WedgeInfixPartial<AntiDipoleInversion> lhs, AntiFlector rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiDipoleInversion {
     public DipoleInversion wedge(AntiFlector other) {
@@ -410,6 +514,10 @@ public extension AntiDipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public CircleRotor operator /(WedgeInfixPartial<AntiDipoleInversion> lhs, AntiLine rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiDipoleInversion {
     public CircleRotor wedge(AntiLine other) {
         return CircleRotor(
@@ -421,6 +529,10 @@ public extension AntiDipoleInversion {
             float4((this.e2 * other.e35) + (this.e5 * other.e23), (this.e3 * other.e15) + (this.e5 * other.e31), (this.e1 * other.e25) + (this.e5 * other.e12), -(this.e431 * other.e25) - (this.e412 * other.e35) - (this.e415 * other.e23) - (this.e425 * other.e31) - (this.e435 * other.e12)) - float4((other.group1.xyz.yzx * this.group3.zxy), this.e423 * other.e15)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(WedgeInfixPartial<AntiDipoleInversion> lhs, AntiMotor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiDipoleInversion {
     public VersorEven wedge(AntiMotor other) {
@@ -436,6 +548,10 @@ public extension AntiDipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public DipoleInversion operator /(WedgeInfixPartial<AntiDipoleInversion> lhs, AntiPlane rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiDipoleInversion {
     public DipoleInversion wedge(AntiPlane other) {
         return DipoleInversion(
@@ -450,6 +566,10 @@ public extension AntiDipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public Sphere operator /(WedgeInfixPartial<AntiDipoleInversion> lhs, Circle rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiDipoleInversion {
     public Sphere wedge(Circle other) {
         return Sphere(
@@ -460,6 +580,10 @@ public extension AntiDipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public Sphere operator /(WedgeInfixPartial<AntiDipoleInversion> lhs, CircleRotor rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiDipoleInversion {
     public Sphere wedge(CircleRotor other) {
         return Sphere(
@@ -469,6 +593,10 @@ public extension AntiDipoleInversion {
             (this.e4 * other.e321) + (this.e1 * other.e423) + (this.e2 * other.e431) + (this.e3 * other.e412)
         );
     }
+}
+// Fancy infix trick (second half)
+public CircleRotor operator /(WedgeInfixPartial<AntiDipoleInversion> lhs, Dipole rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiDipoleInversion {
     public CircleRotor wedge(Dipole other) {
@@ -482,6 +610,10 @@ public extension AntiDipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public CircleRotor operator /(WedgeInfixPartial<AntiDipoleInversion> lhs, DipoleInversion rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiDipoleInversion {
     public CircleRotor wedge(DipoleInversion other) {
         return CircleRotor(
@@ -494,6 +626,10 @@ public extension AntiDipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(WedgeInfixPartial<AntiDipoleInversion> lhs, DualNum rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiDipoleInversion {
     public Flector wedge(DualNum other) {
         return Flector(
@@ -503,6 +639,10 @@ public extension AntiDipoleInversion {
             float4(other.e5) * float4(this.group0.xyz, this.e321)
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(WedgeInfixPartial<AntiDipoleInversion> lhs, FlatPoint rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiDipoleInversion {
     public Motor wedge(FlatPoint other) {
@@ -514,6 +654,10 @@ public extension AntiDipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(WedgeInfixPartial<AntiDipoleInversion> lhs, Flector rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiDipoleInversion {
     public Motor wedge(Flector other) {
         return Motor(
@@ -524,6 +668,10 @@ public extension AntiDipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public Plane operator /(WedgeInfixPartial<AntiDipoleInversion> lhs, Line rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiDipoleInversion {
     public Plane wedge(Line other) {
         return Plane(
@@ -531,6 +679,10 @@ public extension AntiDipoleInversion {
             float4((this.e4 * other.e235) + (this.e3 * other.e425), (this.e4 * other.e315) + (this.e1 * other.e435), (this.e4 * other.e125) + (this.e2 * other.e415), -(this.e2 * other.e315) - (this.e3 * other.e125)) - (this.group3.yzxx * float4(other.group0.xyz.zxy, other.e235))
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(WedgeInfixPartial<AntiDipoleInversion> lhs, Motor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiDipoleInversion {
     public Flector wedge(Motor other) {
@@ -541,6 +693,10 @@ public extension AntiDipoleInversion {
             float4((this.e4 * other.e235) + (this.e3 * other.e425), (this.e4 * other.e315) + (this.e1 * other.e435), (this.e4 * other.e125) + (this.e2 * other.e415), -(this.e2 * other.e315) - (this.e3 * other.e125)) + (float4(other.e5) * float4(this.group0.xyz, this.e321)) - (this.group3.yzxx * float4(other.group0.zxy, other.e235))
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(WedgeInfixPartial<AntiDipoleInversion> lhs, MultiVector rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiDipoleInversion {
     public MultiVector wedge(MultiVector other) {
@@ -570,6 +726,10 @@ public extension AntiDipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<AntiDipoleInversion> lhs, Plane rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiDipoleInversion {
     public AntiScalar wedge(Plane other) {
         return AntiScalar(
@@ -577,6 +737,10 @@ public extension AntiDipoleInversion {
             (this.e4 * other.e3215) + (this.e1 * other.e4235) + (this.e2 * other.e4315) + (this.e3 * other.e4125)
         );
     }
+}
+// Fancy infix trick (second half)
+public DipoleInversion operator /(WedgeInfixPartial<AntiDipoleInversion> lhs, RoundPoint rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiDipoleInversion {
     public DipoleInversion wedge(RoundPoint other) {
@@ -592,6 +756,10 @@ public extension AntiDipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(WedgeInfixPartial<AntiDipoleInversion> lhs, Scalar rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiDipoleInversion {
     public AntiDipoleInversion wedge(Scalar other) {
         return AntiDipoleInversion(
@@ -606,6 +774,10 @@ public extension AntiDipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<AntiDipoleInversion> lhs, Sphere rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiDipoleInversion {
     public AntiScalar wedge(Sphere other) {
         return AntiScalar(
@@ -613,6 +785,10 @@ public extension AntiDipoleInversion {
             (this.e4 * other.e3215) + (this.e1 * other.e4235) + (this.e2 * other.e4315) + (this.e3 * other.e4125) + (this.e5 * other.e1234)
         );
     }
+}
+// Fancy infix trick (second half)
+public DipoleInversion operator /(WedgeInfixPartial<AntiDipoleInversion> lhs, VersorEven rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiDipoleInversion {
     public DipoleInversion wedge(VersorEven other) {
@@ -628,6 +804,10 @@ public extension AntiDipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(WedgeInfixPartial<AntiDipoleInversion> lhs, VersorOdd rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiDipoleInversion {
     public VersorEven wedge(VersorOdd other) {
         return VersorEven(
@@ -642,17 +822,13 @@ public extension AntiDipoleInversion {
         );
     }
 }
-public extension AntiDualNum {
-    // Fancy infix trick (first half)
-    public WedgeInfixPartial<AntiDualNum> operator /(WedgeInfix rhs) {
-        return WedgeInfixPartial<AntiDualNum>(this);
-    }
+// Fancy infix trick (first half)
+public WedgeInfixPartial<AntiDualNum> operator /(AntiDualNum lhs, WedgeInfix rhs) {
+    return WedgeInfixPartial<AntiDualNum>(lhs);
 }
-public extension WedgeInfixPartial<AntiDualNum> {
-    // Fancy infix trick (second half)
-    public VersorOdd operator /(AntiCircleRotor rhs) {
-        return this.a.wedge(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorOdd operator /(WedgeInfixPartial<AntiDualNum> lhs, AntiCircleRotor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiDualNum {
     public VersorOdd wedge(AntiCircleRotor other) {
@@ -668,6 +844,10 @@ public extension AntiDualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(WedgeInfixPartial<AntiDualNum> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiDualNum {
     public VersorEven wedge(AntiDipoleInversion other) {
         return VersorEven(
@@ -682,6 +862,10 @@ public extension AntiDualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDualNum operator /(WedgeInfixPartial<AntiDualNum> lhs, AntiDualNum rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiDualNum {
     public AntiDualNum wedge(AntiDualNum other) {
         return AntiDualNum(
@@ -690,6 +874,10 @@ public extension AntiDualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlatPoint operator /(WedgeInfixPartial<AntiDualNum> lhs, AntiFlatPoint rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiDualNum {
     public AntiFlatPoint wedge(AntiFlatPoint other) {
         return AntiFlatPoint(
@@ -697,6 +885,10 @@ public extension AntiDualNum {
             float4(this.scalar) * other.group0
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(WedgeInfixPartial<AntiDualNum> lhs, AntiFlector rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiDualNum {
     public AntiFlector wedge(AntiFlector other) {
@@ -708,6 +900,10 @@ public extension AntiDualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiLine operator /(WedgeInfixPartial<AntiDualNum> lhs, AntiLine rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiDualNum {
     public AntiLine wedge(AntiLine other) {
         return AntiLine(
@@ -717,6 +913,10 @@ public extension AntiDualNum {
             float3(this.scalar) * other.group1.xyz
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(WedgeInfixPartial<AntiDualNum> lhs, AntiMotor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiDualNum {
     public AntiMotor wedge(AntiMotor other) {
@@ -728,6 +928,10 @@ public extension AntiDualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(WedgeInfixPartial<AntiDualNum> lhs, AntiPlane rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiDualNum {
     public AntiPlane wedge(AntiPlane other) {
         return AntiPlane(
@@ -736,6 +940,10 @@ public extension AntiDualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<AntiDualNum> lhs, AntiScalar rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiDualNum {
     public AntiScalar wedge(AntiScalar other) {
         return AntiScalar(
@@ -743,6 +951,10 @@ public extension AntiDualNum {
             this.scalar * other.e12345
         );
     }
+}
+// Fancy infix trick (second half)
+public Circle operator /(WedgeInfixPartial<AntiDualNum> lhs, Circle rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiDualNum {
     public Circle wedge(Circle other) {
@@ -756,6 +968,10 @@ public extension AntiDualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public CircleRotor operator /(WedgeInfixPartial<AntiDualNum> lhs, CircleRotor rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiDualNum {
     public CircleRotor wedge(CircleRotor other) {
         return CircleRotor(
@@ -768,6 +984,10 @@ public extension AntiDualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public Dipole operator /(WedgeInfixPartial<AntiDualNum> lhs, Dipole rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiDualNum {
     public Dipole wedge(Dipole other) {
         return Dipole(
@@ -779,6 +999,10 @@ public extension AntiDualNum {
             float3(this.scalar) * other.group2.xyz
         );
     }
+}
+// Fancy infix trick (second half)
+public DipoleInversion operator /(WedgeInfixPartial<AntiDualNum> lhs, DipoleInversion rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiDualNum {
     public DipoleInversion wedge(DipoleInversion other) {
@@ -794,6 +1018,10 @@ public extension AntiDualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public DualNum operator /(WedgeInfixPartial<AntiDualNum> lhs, DualNum rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiDualNum {
     public DualNum wedge(DualNum other) {
         return DualNum(
@@ -802,6 +1030,10 @@ public extension AntiDualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public FlatPoint operator /(WedgeInfixPartial<AntiDualNum> lhs, FlatPoint rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiDualNum {
     public FlatPoint wedge(FlatPoint other) {
         return FlatPoint(
@@ -809,6 +1041,10 @@ public extension AntiDualNum {
             float4(this.scalar) * other.group0
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(WedgeInfixPartial<AntiDualNum> lhs, Flector rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiDualNum {
     public Flector wedge(Flector other) {
@@ -820,6 +1056,10 @@ public extension AntiDualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public Line operator /(WedgeInfixPartial<AntiDualNum> lhs, Line rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiDualNum {
     public Line wedge(Line other) {
         return Line(
@@ -830,6 +1070,10 @@ public extension AntiDualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(WedgeInfixPartial<AntiDualNum> lhs, Motor rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiDualNum {
     public Motor wedge(Motor other) {
         return Motor(
@@ -839,6 +1083,10 @@ public extension AntiDualNum {
             float4(this.scalar) * other.group1
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(WedgeInfixPartial<AntiDualNum> lhs, MultiVector rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiDualNum {
     public MultiVector wedge(MultiVector other) {
@@ -868,6 +1116,10 @@ public extension AntiDualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public Plane operator /(WedgeInfixPartial<AntiDualNum> lhs, Plane rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiDualNum {
     public Plane wedge(Plane other) {
         return Plane(
@@ -875,6 +1127,10 @@ public extension AntiDualNum {
             float4(this.scalar) * other.group0
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(WedgeInfixPartial<AntiDualNum> lhs, RoundPoint rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiDualNum {
     public VersorEven wedge(RoundPoint other) {
@@ -890,6 +1146,10 @@ public extension AntiDualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDualNum operator /(WedgeInfixPartial<AntiDualNum> lhs, Scalar rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiDualNum {
     public AntiDualNum wedge(Scalar other) {
         return AntiDualNum(
@@ -897,6 +1157,10 @@ public extension AntiDualNum {
             float2(other.scalar) * this.group0.xy
         );
     }
+}
+// Fancy infix trick (second half)
+public Sphere operator /(WedgeInfixPartial<AntiDualNum> lhs, Sphere rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiDualNum {
     public Sphere wedge(Sphere other) {
@@ -907,6 +1171,10 @@ public extension AntiDualNum {
             this.scalar * other.e1234
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(WedgeInfixPartial<AntiDualNum> lhs, VersorEven rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiDualNum {
     public VersorEven wedge(VersorEven other) {
@@ -922,6 +1190,10 @@ public extension AntiDualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(WedgeInfixPartial<AntiDualNum> lhs, VersorOdd rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiDualNum {
     public VersorOdd wedge(VersorOdd other) {
         return VersorOdd(
@@ -936,17 +1208,13 @@ public extension AntiDualNum {
         );
     }
 }
-public extension AntiFlatPoint {
-    // Fancy infix trick (first half)
-    public WedgeInfixPartial<AntiFlatPoint> operator /(WedgeInfix rhs) {
-        return WedgeInfixPartial<AntiFlatPoint>(this);
-    }
+// Fancy infix trick (first half)
+public WedgeInfixPartial<AntiFlatPoint> operator /(AntiFlatPoint lhs, WedgeInfix rhs) {
+    return WedgeInfixPartial<AntiFlatPoint>(lhs);
 }
-public extension WedgeInfixPartial<AntiFlatPoint> {
-    // Fancy infix trick (second half)
-    public CircleRotor operator /(AntiCircleRotor rhs) {
-        return this.a.wedge(rhs);
-    }
+// Fancy infix trick (second half)
+public CircleRotor operator /(WedgeInfixPartial<AntiFlatPoint> lhs, AntiCircleRotor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiFlatPoint {
     public CircleRotor wedge(AntiCircleRotor other) {
@@ -960,6 +1228,10 @@ public extension AntiFlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public Sphere operator /(WedgeInfixPartial<AntiFlatPoint> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiFlatPoint {
     public Sphere wedge(AntiDipoleInversion other) {
         return Sphere(
@@ -970,6 +1242,10 @@ public extension AntiFlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlatPoint operator /(WedgeInfixPartial<AntiFlatPoint> lhs, AntiDualNum rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiFlatPoint {
     public AntiFlatPoint wedge(AntiDualNum other) {
         return AntiFlatPoint(
@@ -977,6 +1253,10 @@ public extension AntiFlatPoint {
             float4(other.scalar) * this.group0
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDualNum operator /(WedgeInfixPartial<AntiFlatPoint> lhs, AntiFlector rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiFlatPoint {
     public AntiDualNum wedge(AntiFlector other) {
@@ -986,6 +1266,10 @@ public extension AntiFlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlatPoint operator /(WedgeInfixPartial<AntiFlatPoint> lhs, AntiMotor rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiFlatPoint {
     public AntiFlatPoint wedge(AntiMotor other) {
         return AntiFlatPoint(
@@ -993,6 +1277,10 @@ public extension AntiFlatPoint {
             float4(other.scalar) * this.group0
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDualNum operator /(WedgeInfixPartial<AntiFlatPoint> lhs, AntiPlane rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiFlatPoint {
     public AntiDualNum wedge(AntiPlane other) {
@@ -1002,6 +1290,10 @@ public extension AntiFlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<AntiFlatPoint> lhs, Dipole rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiFlatPoint {
     public AntiScalar wedge(Dipole other) {
         return AntiScalar(
@@ -1009,6 +1301,10 @@ public extension AntiFlatPoint {
             -(this.e235 * other.e41) - (this.e315 * other.e42) - (this.e125 * other.e43) - (this.e321 * other.e45)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<AntiFlatPoint> lhs, DipoleInversion rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiFlatPoint {
     public AntiScalar wedge(DipoleInversion other) {
@@ -1018,6 +1314,10 @@ public extension AntiFlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDualNum operator /(WedgeInfixPartial<AntiFlatPoint> lhs, DualNum rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiFlatPoint {
     public AntiDualNum wedge(DualNum other) {
         return AntiDualNum(
@@ -1025,6 +1325,10 @@ public extension AntiFlatPoint {
             float2(this.e321 * other.e5, 1.0) * float2(1.0, 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<AntiFlatPoint> lhs, FlatPoint rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiFlatPoint {
     public AntiScalar wedge(FlatPoint other) {
@@ -1034,6 +1338,10 @@ public extension AntiFlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<AntiFlatPoint> lhs, Flector rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiFlatPoint {
     public AntiScalar wedge(Flector other) {
         return AntiScalar(
@@ -1042,6 +1350,10 @@ public extension AntiFlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDualNum operator /(WedgeInfixPartial<AntiFlatPoint> lhs, Motor rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiFlatPoint {
     public AntiDualNum wedge(Motor other) {
         return AntiDualNum(
@@ -1049,6 +1361,10 @@ public extension AntiFlatPoint {
             float2(this.e321 * other.e5, 1.0) * float2(1.0, 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(WedgeInfixPartial<AntiFlatPoint> lhs, MultiVector rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiFlatPoint {
     public MultiVector wedge(MultiVector other) {
@@ -1078,6 +1394,10 @@ public extension AntiFlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public Sphere operator /(WedgeInfixPartial<AntiFlatPoint> lhs, RoundPoint rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiFlatPoint {
     public Sphere wedge(RoundPoint other) {
         return Sphere(
@@ -1088,6 +1408,10 @@ public extension AntiFlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlatPoint operator /(WedgeInfixPartial<AntiFlatPoint> lhs, Scalar rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiFlatPoint {
     public AntiFlatPoint wedge(Scalar other) {
         return AntiFlatPoint(
@@ -1095,6 +1419,10 @@ public extension AntiFlatPoint {
             float4(other.scalar) * this.group0
         );
     }
+}
+// Fancy infix trick (second half)
+public Sphere operator /(WedgeInfixPartial<AntiFlatPoint> lhs, VersorEven rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiFlatPoint {
     public Sphere wedge(VersorEven other) {
@@ -1105,6 +1433,10 @@ public extension AntiFlatPoint {
             this.e321 * other.e4 * -1.0
         );
     }
+}
+// Fancy infix trick (second half)
+public CircleRotor operator /(WedgeInfixPartial<AntiFlatPoint> lhs, VersorOdd rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiFlatPoint {
     public CircleRotor wedge(VersorOdd other) {
@@ -1118,17 +1450,13 @@ public extension AntiFlatPoint {
         );
     }
 }
-public extension AntiFlector {
-    // Fancy infix trick (first half)
-    public WedgeInfixPartial<AntiFlector> operator /(WedgeInfix rhs) {
-        return WedgeInfixPartial<AntiFlector>(this);
-    }
+// Fancy infix trick (first half)
+public WedgeInfixPartial<AntiFlector> operator /(AntiFlector lhs, WedgeInfix rhs) {
+    return WedgeInfixPartial<AntiFlector>(lhs);
 }
-public extension WedgeInfixPartial<AntiFlector> {
-    // Fancy infix trick (second half)
-    public VersorEven operator /(AntiCircleRotor rhs) {
-        return this.a.wedge(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorEven operator /(WedgeInfixPartial<AntiFlector> lhs, AntiCircleRotor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiFlector {
     public VersorEven wedge(AntiCircleRotor other) {
@@ -1144,6 +1472,10 @@ public extension AntiFlector {
         );
     }
 }
+// Fancy infix trick (second half)
+public DipoleInversion operator /(WedgeInfixPartial<AntiFlector> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiFlector {
     public DipoleInversion wedge(AntiDipoleInversion other) {
         return DipoleInversion(
@@ -1158,6 +1490,10 @@ public extension AntiFlector {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(WedgeInfixPartial<AntiFlector> lhs, AntiDualNum rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiFlector {
     public AntiFlector wedge(AntiDualNum other) {
         return AntiFlector(
@@ -1168,6 +1504,10 @@ public extension AntiFlector {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDualNum operator /(WedgeInfixPartial<AntiFlector> lhs, AntiFlatPoint rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiFlector {
     public AntiDualNum wedge(AntiFlatPoint other) {
         return AntiDualNum(
@@ -1175,6 +1515,10 @@ public extension AntiFlector {
             float2(-(other.e235 * this.e1) - (other.e315 * this.e2) - (other.e125 * this.e3) - (other.e321 * this.e5), 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(WedgeInfixPartial<AntiFlector> lhs, AntiFlector rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiFlector {
     public AntiMotor wedge(AntiFlector other) {
@@ -1186,6 +1530,10 @@ public extension AntiFlector {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlatPoint operator /(WedgeInfixPartial<AntiFlector> lhs, AntiLine rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiFlector {
     public AntiFlatPoint wedge(AntiLine other) {
         return AntiFlatPoint(
@@ -1193,6 +1541,10 @@ public extension AntiFlector {
             float4((this.e2 * other.e35) + (this.e5 * other.e23), (this.e3 * other.e15) + (this.e5 * other.e31), (this.e1 * other.e25) + (this.e5 * other.e12), -(this.e2 * other.e31) - (this.e3 * other.e12)) - (this.group1.zxyx * float4(other.group1.xyz.yzx, other.e23))
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(WedgeInfixPartial<AntiFlector> lhs, AntiMotor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiFlector {
     public AntiFlector wedge(AntiMotor other) {
@@ -1204,6 +1556,10 @@ public extension AntiFlector {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(WedgeInfixPartial<AntiFlector> lhs, AntiPlane rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiFlector {
     public AntiMotor wedge(AntiPlane other) {
         return AntiMotor(
@@ -1213,6 +1569,10 @@ public extension AntiFlector {
             float4(this.e5 * other.e1 * -1.0, this.e5 * other.e2 * -1.0, this.e5 * other.e3 * -1.0, (this.e315 * other.e2) + (this.e125 * other.e3) + (this.e321 * other.e5)) + (other.group0.wwwx * float4(this.group1.xyz, this.e235))
         );
     }
+}
+// Fancy infix trick (second half)
+public Sphere operator /(WedgeInfixPartial<AntiFlector> lhs, Circle rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiFlector {
     public Sphere wedge(Circle other) {
@@ -1224,6 +1584,10 @@ public extension AntiFlector {
         );
     }
 }
+// Fancy infix trick (second half)
+public Sphere operator /(WedgeInfixPartial<AntiFlector> lhs, CircleRotor rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiFlector {
     public Sphere wedge(CircleRotor other) {
         return Sphere(
@@ -1233,6 +1597,10 @@ public extension AntiFlector {
             (this.e1 * other.e423) + (this.e2 * other.e431) + (this.e3 * other.e412)
         );
     }
+}
+// Fancy infix trick (second half)
+public CircleRotor operator /(WedgeInfixPartial<AntiFlector> lhs, Dipole rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiFlector {
     public CircleRotor wedge(Dipole other) {
@@ -1246,6 +1614,10 @@ public extension AntiFlector {
         );
     }
 }
+// Fancy infix trick (second half)
+public CircleRotor operator /(WedgeInfixPartial<AntiFlector> lhs, DipoleInversion rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiFlector {
     public CircleRotor wedge(DipoleInversion other) {
         return CircleRotor(
@@ -1258,6 +1630,10 @@ public extension AntiFlector {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(WedgeInfixPartial<AntiFlector> lhs, DualNum rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiFlector {
     public Flector wedge(DualNum other) {
         return Flector(
@@ -1267,6 +1643,10 @@ public extension AntiFlector {
             float4(float3(0.0), this.e321 * other.e5)
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(WedgeInfixPartial<AntiFlector> lhs, FlatPoint rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiFlector {
     public Motor wedge(FlatPoint other) {
@@ -1278,6 +1658,10 @@ public extension AntiFlector {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(WedgeInfixPartial<AntiFlector> lhs, Flector rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiFlector {
     public Motor wedge(Flector other) {
         return Motor(
@@ -1288,6 +1672,10 @@ public extension AntiFlector {
         );
     }
 }
+// Fancy infix trick (second half)
+public Plane operator /(WedgeInfixPartial<AntiFlector> lhs, Line rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiFlector {
     public Plane wedge(Line other) {
         return Plane(
@@ -1295,6 +1683,10 @@ public extension AntiFlector {
             float4(this.e3 * other.e425, this.e1 * other.e435, this.e2 * other.e415, -(this.e2 * other.e315) - (this.e3 * other.e125)) - (this.group1.yzxx * float4(other.group0.xyz.zxy, other.e235))
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(WedgeInfixPartial<AntiFlector> lhs, Motor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiFlector {
     public Flector wedge(Motor other) {
@@ -1305,6 +1697,10 @@ public extension AntiFlector {
             float4(float3(0.0), -(this.e2 * other.e315) - (this.e3 * other.e125)) + float4((this.group1.zxy * other.group0.yzx), this.e321 * other.e5) - (this.group1.yzxx * float4(other.group0.zxy, other.e235))
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(WedgeInfixPartial<AntiFlector> lhs, MultiVector rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiFlector {
     public MultiVector wedge(MultiVector other) {
@@ -1334,6 +1730,10 @@ public extension AntiFlector {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<AntiFlector> lhs, Plane rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiFlector {
     public AntiScalar wedge(Plane other) {
         return AntiScalar(
@@ -1341,6 +1741,10 @@ public extension AntiFlector {
             (this.e1 * other.e4235) + (this.e2 * other.e4315) + (this.e3 * other.e4125)
         );
     }
+}
+// Fancy infix trick (second half)
+public DipoleInversion operator /(WedgeInfixPartial<AntiFlector> lhs, RoundPoint rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiFlector {
     public DipoleInversion wedge(RoundPoint other) {
@@ -1356,6 +1760,10 @@ public extension AntiFlector {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(WedgeInfixPartial<AntiFlector> lhs, Scalar rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiFlector {
     public AntiFlector wedge(Scalar other) {
         return AntiFlector(
@@ -1366,6 +1774,10 @@ public extension AntiFlector {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<AntiFlector> lhs, Sphere rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiFlector {
     public AntiScalar wedge(Sphere other) {
         return AntiScalar(
@@ -1373,6 +1785,10 @@ public extension AntiFlector {
             (this.e1 * other.e4235) + (this.e2 * other.e4315) + (this.e3 * other.e4125) + (this.e5 * other.e1234)
         );
     }
+}
+// Fancy infix trick (second half)
+public DipoleInversion operator /(WedgeInfixPartial<AntiFlector> lhs, VersorEven rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiFlector {
     public DipoleInversion wedge(VersorEven other) {
@@ -1388,6 +1804,10 @@ public extension AntiFlector {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(WedgeInfixPartial<AntiFlector> lhs, VersorOdd rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiFlector {
     public VersorEven wedge(VersorOdd other) {
         return VersorEven(
@@ -1402,17 +1822,13 @@ public extension AntiFlector {
         );
     }
 }
-public extension AntiLine {
-    // Fancy infix trick (first half)
-    public WedgeInfixPartial<AntiLine> operator /(WedgeInfix rhs) {
-        return WedgeInfixPartial<AntiLine>(this);
-    }
+// Fancy infix trick (first half)
+public WedgeInfixPartial<AntiLine> operator /(AntiLine lhs, WedgeInfix rhs) {
+    return WedgeInfixPartial<AntiLine>(lhs);
 }
-public extension WedgeInfixPartial<AntiLine> {
-    // Fancy infix trick (second half)
-    public DipoleInversion operator /(AntiCircleRotor rhs) {
-        return this.a.wedge(rhs);
-    }
+// Fancy infix trick (second half)
+public DipoleInversion operator /(WedgeInfixPartial<AntiLine> lhs, AntiCircleRotor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiLine {
     public DipoleInversion wedge(AntiCircleRotor other) {
@@ -1428,6 +1844,10 @@ public extension AntiLine {
         );
     }
 }
+// Fancy infix trick (second half)
+public CircleRotor operator /(WedgeInfixPartial<AntiLine> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiLine {
     public CircleRotor wedge(AntiDipoleInversion other) {
         return CircleRotor(
@@ -1440,6 +1860,10 @@ public extension AntiLine {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiLine operator /(WedgeInfixPartial<AntiLine> lhs, AntiDualNum rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiLine {
     public AntiLine wedge(AntiDualNum other) {
         return AntiLine(
@@ -1450,6 +1874,10 @@ public extension AntiLine {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlatPoint operator /(WedgeInfixPartial<AntiLine> lhs, AntiFlector rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiLine {
     public AntiFlatPoint wedge(AntiFlector other) {
         return AntiFlatPoint(
@@ -1458,6 +1886,10 @@ public extension AntiLine {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDualNum operator /(WedgeInfixPartial<AntiLine> lhs, AntiLine rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiLine {
     public AntiDualNum wedge(AntiLine other) {
         return AntiDualNum(
@@ -1465,6 +1897,10 @@ public extension AntiLine {
             float2(-(other.e23 * this.e15) - (other.e31 * this.e25) - (other.e12 * this.e35) - (other.e15 * this.e23) - (other.e25 * this.e31) - (other.e35 * this.e12), 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(WedgeInfixPartial<AntiLine> lhs, AntiMotor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiLine {
     public AntiMotor wedge(AntiMotor other) {
@@ -1476,6 +1912,10 @@ public extension AntiLine {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlatPoint operator /(WedgeInfixPartial<AntiLine> lhs, AntiPlane rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiLine {
     public AntiFlatPoint wedge(AntiPlane other) {
         return AntiFlatPoint(
@@ -1483,6 +1923,10 @@ public extension AntiLine {
             float4((this.e23 * other.e5) + (this.e35 * other.e2), (this.e31 * other.e5) + (this.e15 * other.e3), (this.e12 * other.e5) + (this.e25 * other.e1), -(this.e31 * other.e2) - (this.e12 * other.e3)) - (other.group0.zxyx * float4(this.group1.xyz.yzx, this.e23))
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<AntiLine> lhs, Circle rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiLine {
     public AntiScalar wedge(Circle other) {
@@ -1492,6 +1936,10 @@ public extension AntiLine {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<AntiLine> lhs, CircleRotor rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiLine {
     public AntiScalar wedge(CircleRotor other) {
         return AntiScalar(
@@ -1499,6 +1947,10 @@ public extension AntiLine {
             -(this.e23 * other.e415) - (this.e31 * other.e425) - (this.e12 * other.e435) - (this.e15 * other.e423) - (this.e25 * other.e431) - (this.e35 * other.e412)
         );
     }
+}
+// Fancy infix trick (second half)
+public Sphere operator /(WedgeInfixPartial<AntiLine> lhs, Dipole rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiLine {
     public Sphere wedge(Dipole other) {
@@ -1510,6 +1962,10 @@ public extension AntiLine {
         );
     }
 }
+// Fancy infix trick (second half)
+public Sphere operator /(WedgeInfixPartial<AntiLine> lhs, DipoleInversion rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiLine {
     public Sphere wedge(DipoleInversion other) {
         return Sphere(
@@ -1520,6 +1976,10 @@ public extension AntiLine {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlatPoint operator /(WedgeInfixPartial<AntiLine> lhs, DualNum rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiLine {
     public AntiFlatPoint wedge(DualNum other) {
         return AntiFlatPoint(
@@ -1527,6 +1987,10 @@ public extension AntiLine {
             float4(other.group0.xy.xx, other.e5, 0.0) * float4(float3(1.0), 0.0) * float4(this.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public Plane operator /(WedgeInfixPartial<AntiLine> lhs, FlatPoint rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiLine {
     public Plane wedge(FlatPoint other) {
@@ -1536,6 +2000,10 @@ public extension AntiLine {
         );
     }
 }
+// Fancy infix trick (second half)
+public Plane operator /(WedgeInfixPartial<AntiLine> lhs, Flector rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiLine {
     public Plane wedge(Flector other) {
         return Plane(
@@ -1544,6 +2012,10 @@ public extension AntiLine {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<AntiLine> lhs, Line rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiLine {
     public AntiScalar wedge(Line other) {
         return AntiScalar(
@@ -1551,6 +2023,10 @@ public extension AntiLine {
             -(this.e23 * other.e415) - (this.e31 * other.e425) - (this.e12 * other.e435)
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(WedgeInfixPartial<AntiLine> lhs, Motor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiLine {
     public Motor wedge(Motor other) {
@@ -1561,6 +2037,10 @@ public extension AntiLine {
             float4(float3(1.0), 0.0) * float4(this.group0.xyz, 0.0) * float4(other.group1.www, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(WedgeInfixPartial<AntiLine> lhs, MultiVector rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiLine {
     public MultiVector wedge(MultiVector other) {
@@ -1590,6 +2070,10 @@ public extension AntiLine {
         );
     }
 }
+// Fancy infix trick (second half)
+public Circle operator /(WedgeInfixPartial<AntiLine> lhs, RoundPoint rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiLine {
     public Circle wedge(RoundPoint other) {
         return Circle(
@@ -1602,6 +2086,10 @@ public extension AntiLine {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiLine operator /(WedgeInfixPartial<AntiLine> lhs, Scalar rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiLine {
     public AntiLine wedge(Scalar other) {
         return AntiLine(
@@ -1611,6 +2099,10 @@ public extension AntiLine {
             float3(other.scalar) * this.group1.xyz
         );
     }
+}
+// Fancy infix trick (second half)
+public CircleRotor operator /(WedgeInfixPartial<AntiLine> lhs, VersorEven rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiLine {
     public CircleRotor wedge(VersorEven other) {
@@ -1623,6 +2115,10 @@ public extension AntiLine {
             float4((this.e23 * other.e5) + (this.e35 * other.e2), (this.e31 * other.e5) + (this.e15 * other.e3), (this.e12 * other.e5) + (this.e25 * other.e1), -(this.e31 * other.e425) - (this.e12 * other.e435) - (this.e15 * other.e423) - (this.e25 * other.e431) - (this.e35 * other.e412)) - float4((this.group1.xyz.yzx * other.group3.zxy), this.e23 * other.e415)
         );
     }
+}
+// Fancy infix trick (second half)
+public DipoleInversion operator /(WedgeInfixPartial<AntiLine> lhs, VersorOdd rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiLine {
     public DipoleInversion wedge(VersorOdd other) {
@@ -1638,17 +2134,13 @@ public extension AntiLine {
         );
     }
 }
-public extension AntiMotor {
-    // Fancy infix trick (first half)
-    public WedgeInfixPartial<AntiMotor> operator /(WedgeInfix rhs) {
-        return WedgeInfixPartial<AntiMotor>(this);
-    }
+// Fancy infix trick (first half)
+public WedgeInfixPartial<AntiMotor> operator /(AntiMotor lhs, WedgeInfix rhs) {
+    return WedgeInfixPartial<AntiMotor>(lhs);
 }
-public extension WedgeInfixPartial<AntiMotor> {
-    // Fancy infix trick (second half)
-    public VersorOdd operator /(AntiCircleRotor rhs) {
-        return this.a.wedge(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorOdd operator /(WedgeInfixPartial<AntiMotor> lhs, AntiCircleRotor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiMotor {
     public VersorOdd wedge(AntiCircleRotor other) {
@@ -1664,6 +2156,10 @@ public extension AntiMotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(WedgeInfixPartial<AntiMotor> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiMotor {
     public VersorEven wedge(AntiDipoleInversion other) {
         return VersorEven(
@@ -1678,6 +2174,10 @@ public extension AntiMotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(WedgeInfixPartial<AntiMotor> lhs, AntiDualNum rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiMotor {
     public AntiMotor wedge(AntiDualNum other) {
         return AntiMotor(
@@ -1688,6 +2188,10 @@ public extension AntiMotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlatPoint operator /(WedgeInfixPartial<AntiMotor> lhs, AntiFlatPoint rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiMotor {
     public AntiFlatPoint wedge(AntiFlatPoint other) {
         return AntiFlatPoint(
@@ -1695,6 +2199,10 @@ public extension AntiMotor {
             float4(this.scalar) * other.group0
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(WedgeInfixPartial<AntiMotor> lhs, AntiFlector rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiMotor {
     public AntiFlector wedge(AntiFlector other) {
@@ -1706,6 +2214,10 @@ public extension AntiMotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(WedgeInfixPartial<AntiMotor> lhs, AntiLine rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiMotor {
     public AntiMotor wedge(AntiLine other) {
         return AntiMotor(
@@ -1715,6 +2227,10 @@ public extension AntiMotor {
             float4((float3(this.scalar) * other.group1.xyz), -(other.e23 * this.e15) - (other.e31 * this.e25) - (other.e12 * this.e35) - (other.e15 * this.e23) - (other.e25 * this.e31) - (other.e35 * this.e12))
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(WedgeInfixPartial<AntiMotor> lhs, AntiMotor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiMotor {
     public AntiMotor wedge(AntiMotor other) {
@@ -1726,6 +2242,10 @@ public extension AntiMotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlector operator /(WedgeInfixPartial<AntiMotor> lhs, AntiPlane rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiMotor {
     public AntiFlector wedge(AntiPlane other) {
         return AntiFlector(
@@ -1736,6 +2256,10 @@ public extension AntiMotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<AntiMotor> lhs, AntiScalar rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiMotor {
     public AntiScalar wedge(AntiScalar other) {
         return AntiScalar(
@@ -1743,6 +2267,10 @@ public extension AntiMotor {
             this.scalar * other.e12345
         );
     }
+}
+// Fancy infix trick (second half)
+public CircleRotor operator /(WedgeInfixPartial<AntiMotor> lhs, Circle rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiMotor {
     public CircleRotor wedge(Circle other) {
@@ -1756,6 +2284,10 @@ public extension AntiMotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public CircleRotor operator /(WedgeInfixPartial<AntiMotor> lhs, CircleRotor rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiMotor {
     public CircleRotor wedge(CircleRotor other) {
         return CircleRotor(
@@ -1767,6 +2299,10 @@ public extension AntiMotor {
             float4((this.group0.www * other.group2.xyz), (this.scalar * other.e12345) - (this.e23 * other.e415) - (this.e31 * other.e425) - (this.e12 * other.e435) - (this.e15 * other.e423) - (this.e25 * other.e431) - (this.e35 * other.e412))
         );
     }
+}
+// Fancy infix trick (second half)
+public DipoleInversion operator /(WedgeInfixPartial<AntiMotor> lhs, Dipole rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiMotor {
     public DipoleInversion wedge(Dipole other) {
@@ -1782,6 +2318,10 @@ public extension AntiMotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public DipoleInversion operator /(WedgeInfixPartial<AntiMotor> lhs, DipoleInversion rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiMotor {
     public DipoleInversion wedge(DipoleInversion other) {
         return DipoleInversion(
@@ -1796,6 +2336,10 @@ public extension AntiMotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(WedgeInfixPartial<AntiMotor> lhs, DualNum rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiMotor {
     public Motor wedge(DualNum other) {
         return Motor(
@@ -1805,6 +2349,10 @@ public extension AntiMotor {
             float4(other.e5) * this.group0
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(WedgeInfixPartial<AntiMotor> lhs, FlatPoint rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiMotor {
     public Flector wedge(FlatPoint other) {
@@ -1816,6 +2364,10 @@ public extension AntiMotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(WedgeInfixPartial<AntiMotor> lhs, Flector rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiMotor {
     public Flector wedge(Flector other) {
         return Flector(
@@ -1825,6 +2377,10 @@ public extension AntiMotor {
             float4(this.scalar * other.e4235, this.scalar * other.e4315, this.scalar * other.e4125, -(this.e23 * other.e15) - (this.e31 * other.e25) - (this.e12 * other.e35)) + (this.group0 * float4(other.group0.www, other.e3215))
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(WedgeInfixPartial<AntiMotor> lhs, Line rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiMotor {
     public Motor wedge(Line other) {
@@ -1836,6 +2392,10 @@ public extension AntiMotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(WedgeInfixPartial<AntiMotor> lhs, Motor rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiMotor {
     public Motor wedge(Motor other) {
         return Motor(
@@ -1845,6 +2405,10 @@ public extension AntiMotor {
             float4(((float3(this.scalar) * other.group1.xyz) + (float3(other.e5) * this.group0.xyz)), this.scalar * other.e5)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(WedgeInfixPartial<AntiMotor> lhs, MultiVector rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiMotor {
     public MultiVector wedge(MultiVector other) {
@@ -1874,6 +2438,10 @@ public extension AntiMotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Plane operator /(WedgeInfixPartial<AntiMotor> lhs, Plane rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiMotor {
     public Plane wedge(Plane other) {
         return Plane(
@@ -1881,6 +2449,10 @@ public extension AntiMotor {
             float4(this.scalar) * other.group0
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(WedgeInfixPartial<AntiMotor> lhs, RoundPoint rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiMotor {
     public VersorEven wedge(RoundPoint other) {
@@ -1896,6 +2468,10 @@ public extension AntiMotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiMotor operator /(WedgeInfixPartial<AntiMotor> lhs, Scalar rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiMotor {
     public AntiMotor wedge(Scalar other) {
         return AntiMotor(
@@ -1906,6 +2482,10 @@ public extension AntiMotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Sphere operator /(WedgeInfixPartial<AntiMotor> lhs, Sphere rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiMotor {
     public Sphere wedge(Sphere other) {
         return Sphere(
@@ -1915,6 +2495,10 @@ public extension AntiMotor {
             this.scalar * other.e1234
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(WedgeInfixPartial<AntiMotor> lhs, VersorEven rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiMotor {
     public VersorEven wedge(VersorEven other) {
@@ -1930,6 +2514,10 @@ public extension AntiMotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(WedgeInfixPartial<AntiMotor> lhs, VersorOdd rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiMotor {
     public VersorOdd wedge(VersorOdd other) {
         return VersorOdd(
@@ -1944,17 +2532,13 @@ public extension AntiMotor {
         );
     }
 }
-public extension AntiPlane {
-    // Fancy infix trick (first half)
-    public WedgeInfixPartial<AntiPlane> operator /(WedgeInfix rhs) {
-        return WedgeInfixPartial<AntiPlane>(this);
-    }
+// Fancy infix trick (first half)
+public WedgeInfixPartial<AntiPlane> operator /(AntiPlane lhs, WedgeInfix rhs) {
+    return WedgeInfixPartial<AntiPlane>(lhs);
 }
-public extension WedgeInfixPartial<AntiPlane> {
-    // Fancy infix trick (second half)
-    public AntiDipoleInversion operator /(AntiCircleRotor rhs) {
-        return this.a.wedge(rhs);
-    }
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(WedgeInfixPartial<AntiPlane> lhs, AntiCircleRotor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiPlane {
     public AntiDipoleInversion wedge(AntiCircleRotor other) {
@@ -1970,6 +2554,10 @@ public extension AntiPlane {
         );
     }
 }
+// Fancy infix trick (second half)
+public DipoleInversion operator /(WedgeInfixPartial<AntiPlane> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiPlane {
     public DipoleInversion wedge(AntiDipoleInversion other) {
         return DipoleInversion(
@@ -1984,6 +2572,10 @@ public extension AntiPlane {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(WedgeInfixPartial<AntiPlane> lhs, AntiDualNum rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiPlane {
     public AntiPlane wedge(AntiDualNum other) {
         return AntiPlane(
@@ -1992,6 +2584,10 @@ public extension AntiPlane {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDualNum operator /(WedgeInfixPartial<AntiPlane> lhs, AntiFlatPoint rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiPlane {
     public AntiDualNum wedge(AntiFlatPoint other) {
         return AntiDualNum(
@@ -1999,6 +2595,10 @@ public extension AntiPlane {
             float2(-(other.e235 * this.e1) - (other.e315 * this.e2) - (other.e125 * this.e3) - (other.e321 * this.e5), 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(WedgeInfixPartial<AntiPlane> lhs, AntiFlector rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiPlane {
     public AntiMotor wedge(AntiFlector other) {
@@ -2010,6 +2610,10 @@ public extension AntiPlane {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlatPoint operator /(WedgeInfixPartial<AntiPlane> lhs, AntiLine rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiPlane {
     public AntiFlatPoint wedge(AntiLine other) {
         return AntiFlatPoint(
@@ -2017,6 +2621,10 @@ public extension AntiPlane {
             float4((other.e23 * this.e5) + (other.e35 * this.e2), (other.e31 * this.e5) + (other.e15 * this.e3), (other.e12 * this.e5) + (other.e25 * this.e1), -(other.e31 * this.e2) - (other.e12 * this.e3)) - (this.group0.zxyx * float4(other.group1.xyz.yzx, other.e23))
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(WedgeInfixPartial<AntiPlane> lhs, AntiMotor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiPlane {
     public AntiFlector wedge(AntiMotor other) {
@@ -2028,6 +2636,10 @@ public extension AntiPlane {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiLine operator /(WedgeInfixPartial<AntiPlane> lhs, AntiPlane rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiPlane {
     public AntiLine wedge(AntiPlane other) {
         return AntiLine(
@@ -2037,6 +2649,10 @@ public extension AntiPlane {
             (float3(other.e5) * this.group0.xyz) - (float3(this.e5) * other.group0.xyz)
         );
     }
+}
+// Fancy infix trick (second half)
+public Sphere operator /(WedgeInfixPartial<AntiPlane> lhs, Circle rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiPlane {
     public Sphere wedge(Circle other) {
@@ -2048,6 +2664,10 @@ public extension AntiPlane {
         );
     }
 }
+// Fancy infix trick (second half)
+public Sphere operator /(WedgeInfixPartial<AntiPlane> lhs, CircleRotor rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiPlane {
     public Sphere wedge(CircleRotor other) {
         return Sphere(
@@ -2057,6 +2677,10 @@ public extension AntiPlane {
             (this.e1 * other.e423) + (this.e2 * other.e431) + (this.e3 * other.e412)
         );
     }
+}
+// Fancy infix trick (second half)
+public Circle operator /(WedgeInfixPartial<AntiPlane> lhs, Dipole rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiPlane {
     public Circle wedge(Dipole other) {
@@ -2070,6 +2694,10 @@ public extension AntiPlane {
         );
     }
 }
+// Fancy infix trick (second half)
+public CircleRotor operator /(WedgeInfixPartial<AntiPlane> lhs, DipoleInversion rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiPlane {
     public CircleRotor wedge(DipoleInversion other) {
         return CircleRotor(
@@ -2082,6 +2710,10 @@ public extension AntiPlane {
         );
     }
 }
+// Fancy infix trick (second half)
+public FlatPoint operator /(WedgeInfixPartial<AntiPlane> lhs, DualNum rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiPlane {
     public FlatPoint wedge(DualNum other) {
         return FlatPoint(
@@ -2089,6 +2721,10 @@ public extension AntiPlane {
             float4(other.group0.xy.xx, other.e5, 0.0) * float4(float3(1.0), 0.0) * float4(this.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public Line operator /(WedgeInfixPartial<AntiPlane> lhs, FlatPoint rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiPlane {
     public Line wedge(FlatPoint other) {
@@ -2100,6 +2736,10 @@ public extension AntiPlane {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(WedgeInfixPartial<AntiPlane> lhs, Flector rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiPlane {
     public Motor wedge(Flector other) {
         return Motor(
@@ -2110,6 +2750,10 @@ public extension AntiPlane {
         );
     }
 }
+// Fancy infix trick (second half)
+public Plane operator /(WedgeInfixPartial<AntiPlane> lhs, Line rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiPlane {
     public Plane wedge(Line other) {
         return Plane(
@@ -2117,6 +2761,10 @@ public extension AntiPlane {
             float4(this.e3 * other.e425, this.e1 * other.e435, this.e2 * other.e415, -(this.e2 * other.e315) - (this.e3 * other.e125)) - (this.group0.yzxx * float4(other.group0.xyz.zxy, other.e235))
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(WedgeInfixPartial<AntiPlane> lhs, Motor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiPlane {
     public Flector wedge(Motor other) {
@@ -2127,6 +2775,10 @@ public extension AntiPlane {
             float4(this.e3 * other.e425, this.e1 * other.e435, this.e2 * other.e415, -(this.e2 * other.e315) - (this.e3 * other.e125)) - (this.group0.yzxx * float4(other.group0.zxy, other.e235))
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(WedgeInfixPartial<AntiPlane> lhs, MultiVector rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiPlane {
     public MultiVector wedge(MultiVector other) {
@@ -2156,6 +2808,10 @@ public extension AntiPlane {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<AntiPlane> lhs, Plane rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiPlane {
     public AntiScalar wedge(Plane other) {
         return AntiScalar(
@@ -2163,6 +2819,10 @@ public extension AntiPlane {
             (this.e1 * other.e4235) + (this.e2 * other.e4315) + (this.e3 * other.e4125)
         );
     }
+}
+// Fancy infix trick (second half)
+public Dipole operator /(WedgeInfixPartial<AntiPlane> lhs, RoundPoint rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiPlane {
     public Dipole wedge(RoundPoint other) {
@@ -2176,6 +2836,10 @@ public extension AntiPlane {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(WedgeInfixPartial<AntiPlane> lhs, Scalar rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiPlane {
     public AntiPlane wedge(Scalar other) {
         return AntiPlane(
@@ -2184,6 +2848,10 @@ public extension AntiPlane {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<AntiPlane> lhs, Sphere rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiPlane {
     public AntiScalar wedge(Sphere other) {
         return AntiScalar(
@@ -2191,6 +2859,10 @@ public extension AntiPlane {
             (this.e1 * other.e4235) + (this.e2 * other.e4315) + (this.e3 * other.e4125) + (this.e5 * other.e1234)
         );
     }
+}
+// Fancy infix trick (second half)
+public DipoleInversion operator /(WedgeInfixPartial<AntiPlane> lhs, VersorEven rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiPlane {
     public DipoleInversion wedge(VersorEven other) {
@@ -2206,6 +2878,10 @@ public extension AntiPlane {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(WedgeInfixPartial<AntiPlane> lhs, VersorOdd rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiPlane {
     public VersorEven wedge(VersorOdd other) {
         return VersorEven(
@@ -2220,17 +2896,13 @@ public extension AntiPlane {
         );
     }
 }
-public extension AntiScalar {
-    // Fancy infix trick (first half)
-    public WedgeInfixPartial<AntiScalar> operator /(WedgeInfix rhs) {
-        return WedgeInfixPartial<AntiScalar>(this);
-    }
+// Fancy infix trick (first half)
+public WedgeInfixPartial<AntiScalar> operator /(AntiScalar lhs, WedgeInfix rhs) {
+    return WedgeInfixPartial<AntiScalar>(lhs);
 }
-public extension WedgeInfixPartial<AntiScalar> {
-    // Fancy infix trick (second half)
-    public AntiScalar operator /(AntiCircleRotor rhs) {
-        return this.a.wedge(rhs);
-    }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<AntiScalar> lhs, AntiCircleRotor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiScalar {
     public AntiScalar wedge(AntiCircleRotor other) {
@@ -2240,6 +2912,10 @@ public extension AntiScalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<AntiScalar> lhs, AntiDualNum rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiScalar {
     public AntiScalar wedge(AntiDualNum other) {
         return AntiScalar(
@@ -2247,6 +2923,10 @@ public extension AntiScalar {
             other.scalar * this.e12345
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<AntiScalar> lhs, AntiMotor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiScalar {
     public AntiScalar wedge(AntiMotor other) {
@@ -2256,6 +2936,10 @@ public extension AntiScalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<AntiScalar> lhs, MultiVector rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiScalar {
     public AntiScalar wedge(MultiVector other) {
         return AntiScalar(
@@ -2263,6 +2947,10 @@ public extension AntiScalar {
             this.e12345 * other.scalar
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<AntiScalar> lhs, Scalar rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension AntiScalar {
     public AntiScalar wedge(Scalar other) {
@@ -2272,6 +2960,10 @@ public extension AntiScalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<AntiScalar> lhs, VersorOdd rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension AntiScalar {
     public AntiScalar wedge(VersorOdd other) {
         return AntiScalar(
@@ -2280,17 +2972,13 @@ public extension AntiScalar {
         );
     }
 }
-public extension Circle {
-    // Fancy infix trick (first half)
-    public WedgeInfixPartial<Circle> operator /(WedgeInfix rhs) {
-        return WedgeInfixPartial<Circle>(this);
-    }
+// Fancy infix trick (first half)
+public WedgeInfixPartial<Circle> operator /(Circle lhs, WedgeInfix rhs) {
+    return WedgeInfixPartial<Circle>(lhs);
 }
-public extension WedgeInfixPartial<Circle> {
-    // Fancy infix trick (second half)
-    public CircleRotor operator /(AntiCircleRotor rhs) {
-        return this.a.wedge(rhs);
-    }
+// Fancy infix trick (second half)
+public CircleRotor operator /(WedgeInfixPartial<Circle> lhs, AntiCircleRotor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Circle {
     public CircleRotor wedge(AntiCircleRotor other) {
@@ -2304,6 +2992,10 @@ public extension Circle {
         );
     }
 }
+// Fancy infix trick (second half)
+public Sphere operator /(WedgeInfixPartial<Circle> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Circle {
     public Sphere wedge(AntiDipoleInversion other) {
         return Sphere(
@@ -2313,6 +3005,10 @@ public extension Circle {
             -(other.e4 * this.e321) - (other.e1 * this.e423) - (other.e2 * this.e431) - (other.e3 * this.e412)
         );
     }
+}
+// Fancy infix trick (second half)
+public Circle operator /(WedgeInfixPartial<Circle> lhs, AntiDualNum rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Circle {
     public Circle wedge(AntiDualNum other) {
@@ -2326,6 +3022,10 @@ public extension Circle {
         );
     }
 }
+// Fancy infix trick (second half)
+public Sphere operator /(WedgeInfixPartial<Circle> lhs, AntiFlector rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Circle {
     public Sphere wedge(AntiFlector other) {
         return Sphere(
@@ -2336,6 +3036,10 @@ public extension Circle {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<Circle> lhs, AntiLine rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Circle {
     public AntiScalar wedge(AntiLine other) {
         return AntiScalar(
@@ -2343,6 +3047,10 @@ public extension Circle {
             -(other.e23 * this.e415) - (other.e31 * this.e425) - (other.e12 * this.e435) - (other.e15 * this.e423) - (other.e25 * this.e431) - (other.e35 * this.e412)
         );
     }
+}
+// Fancy infix trick (second half)
+public CircleRotor operator /(WedgeInfixPartial<Circle> lhs, AntiMotor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Circle {
     public CircleRotor wedge(AntiMotor other) {
@@ -2356,6 +3064,10 @@ public extension Circle {
         );
     }
 }
+// Fancy infix trick (second half)
+public Sphere operator /(WedgeInfixPartial<Circle> lhs, AntiPlane rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Circle {
     public Sphere wedge(AntiPlane other) {
         return Sphere(
@@ -2366,6 +3078,10 @@ public extension Circle {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<Circle> lhs, Dipole rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Circle {
     public AntiScalar wedge(Dipole other) {
         return AntiScalar(
@@ -2373,6 +3089,10 @@ public extension Circle {
             -(this.e423 * other.e15) - (this.e431 * other.e25) - (this.e412 * other.e35) - (this.e415 * other.e23) - (this.e425 * other.e31) - (this.e435 * other.e12) - (this.e321 * other.e45) - (this.e235 * other.e41) - (this.e315 * other.e42) - (this.e125 * other.e43)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<Circle> lhs, DipoleInversion rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Circle {
     public AntiScalar wedge(DipoleInversion other) {
@@ -2382,6 +3102,10 @@ public extension Circle {
         );
     }
 }
+// Fancy infix trick (second half)
+public Plane operator /(WedgeInfixPartial<Circle> lhs, DualNum rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Circle {
     public Plane wedge(DualNum other) {
         return Plane(
@@ -2389,6 +3113,10 @@ public extension Circle {
             float4(other.e5) * float4(this.group0.xyz, this.e321)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<Circle> lhs, FlatPoint rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Circle {
     public AntiScalar wedge(FlatPoint other) {
@@ -2398,6 +3126,10 @@ public extension Circle {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<Circle> lhs, Flector rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Circle {
     public AntiScalar wedge(Flector other) {
         return AntiScalar(
@@ -2406,6 +3138,10 @@ public extension Circle {
         );
     }
 }
+// Fancy infix trick (second half)
+public Plane operator /(WedgeInfixPartial<Circle> lhs, Motor rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Circle {
     public Plane wedge(Motor other) {
         return Plane(
@@ -2413,6 +3149,10 @@ public extension Circle {
             float4(other.e5) * float4(this.group0.xyz, this.e321)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(WedgeInfixPartial<Circle> lhs, MultiVector rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Circle {
     public MultiVector wedge(MultiVector other) {
@@ -2442,6 +3182,10 @@ public extension Circle {
         );
     }
 }
+// Fancy infix trick (second half)
+public Sphere operator /(WedgeInfixPartial<Circle> lhs, RoundPoint rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Circle {
     public Sphere wedge(RoundPoint other) {
         return Sphere(
@@ -2451,6 +3195,10 @@ public extension Circle {
             -(this.e423 * other.e1) - (this.e431 * other.e2) - (this.e412 * other.e3) - (this.e321 * other.e4)
         );
     }
+}
+// Fancy infix trick (second half)
+public Circle operator /(WedgeInfixPartial<Circle> lhs, Scalar rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Circle {
     public Circle wedge(Scalar other) {
@@ -2464,6 +3212,10 @@ public extension Circle {
         );
     }
 }
+// Fancy infix trick (second half)
+public Sphere operator /(WedgeInfixPartial<Circle> lhs, VersorEven rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Circle {
     public Sphere wedge(VersorEven other) {
         return Sphere(
@@ -2473,6 +3225,10 @@ public extension Circle {
             -(this.e423 * other.e1) - (this.e431 * other.e2) - (this.e412 * other.e3) - (this.e321 * other.e4)
         );
     }
+}
+// Fancy infix trick (second half)
+public CircleRotor operator /(WedgeInfixPartial<Circle> lhs, VersorOdd rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Circle {
     public CircleRotor wedge(VersorOdd other) {
@@ -2486,17 +3242,13 @@ public extension Circle {
         );
     }
 }
-public extension CircleRotor {
-    // Fancy infix trick (first half)
-    public WedgeInfixPartial<CircleRotor> operator /(WedgeInfix rhs) {
-        return WedgeInfixPartial<CircleRotor>(this);
-    }
+// Fancy infix trick (first half)
+public WedgeInfixPartial<CircleRotor> operator /(CircleRotor lhs, WedgeInfix rhs) {
+    return WedgeInfixPartial<CircleRotor>(lhs);
 }
-public extension WedgeInfixPartial<CircleRotor> {
-    // Fancy infix trick (second half)
-    public CircleRotor operator /(AntiCircleRotor rhs) {
-        return this.a.wedge(rhs);
-    }
+// Fancy infix trick (second half)
+public CircleRotor operator /(WedgeInfixPartial<CircleRotor> lhs, AntiCircleRotor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension CircleRotor {
     public CircleRotor wedge(AntiCircleRotor other) {
@@ -2510,6 +3262,10 @@ public extension CircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Sphere operator /(WedgeInfixPartial<CircleRotor> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension CircleRotor {
     public Sphere wedge(AntiDipoleInversion other) {
         return Sphere(
@@ -2519,6 +3275,10 @@ public extension CircleRotor {
             -(other.e4 * this.e321) - (other.e1 * this.e423) - (other.e2 * this.e431) - (other.e3 * this.e412)
         );
     }
+}
+// Fancy infix trick (second half)
+public CircleRotor operator /(WedgeInfixPartial<CircleRotor> lhs, AntiDualNum rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension CircleRotor {
     public CircleRotor wedge(AntiDualNum other) {
@@ -2532,6 +3292,10 @@ public extension CircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Sphere operator /(WedgeInfixPartial<CircleRotor> lhs, AntiFlector rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension CircleRotor {
     public Sphere wedge(AntiFlector other) {
         return Sphere(
@@ -2542,6 +3306,10 @@ public extension CircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<CircleRotor> lhs, AntiLine rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension CircleRotor {
     public AntiScalar wedge(AntiLine other) {
         return AntiScalar(
@@ -2549,6 +3317,10 @@ public extension CircleRotor {
             -(other.e23 * this.e415) - (other.e31 * this.e425) - (other.e12 * this.e435) - (other.e15 * this.e423) - (other.e25 * this.e431) - (other.e35 * this.e412)
         );
     }
+}
+// Fancy infix trick (second half)
+public CircleRotor operator /(WedgeInfixPartial<CircleRotor> lhs, AntiMotor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension CircleRotor {
     public CircleRotor wedge(AntiMotor other) {
@@ -2562,6 +3334,10 @@ public extension CircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Sphere operator /(WedgeInfixPartial<CircleRotor> lhs, AntiPlane rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension CircleRotor {
     public Sphere wedge(AntiPlane other) {
         return Sphere(
@@ -2572,6 +3348,10 @@ public extension CircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<CircleRotor> lhs, Dipole rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension CircleRotor {
     public AntiScalar wedge(Dipole other) {
         return AntiScalar(
@@ -2579,6 +3359,10 @@ public extension CircleRotor {
             -(this.e423 * other.e15) - (this.e431 * other.e25) - (this.e412 * other.e35) - (this.e415 * other.e23) - (this.e425 * other.e31) - (this.e435 * other.e12) - (this.e321 * other.e45) - (this.e235 * other.e41) - (this.e315 * other.e42) - (this.e125 * other.e43)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<CircleRotor> lhs, DipoleInversion rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension CircleRotor {
     public AntiScalar wedge(DipoleInversion other) {
@@ -2588,6 +3372,10 @@ public extension CircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Plane operator /(WedgeInfixPartial<CircleRotor> lhs, DualNum rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension CircleRotor {
     public Plane wedge(DualNum other) {
         return Plane(
@@ -2595,6 +3383,10 @@ public extension CircleRotor {
             float4(other.e5) * float4(this.group0.xyz, this.e321)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<CircleRotor> lhs, FlatPoint rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension CircleRotor {
     public AntiScalar wedge(FlatPoint other) {
@@ -2604,6 +3396,10 @@ public extension CircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<CircleRotor> lhs, Flector rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension CircleRotor {
     public AntiScalar wedge(Flector other) {
         return AntiScalar(
@@ -2612,6 +3408,10 @@ public extension CircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Plane operator /(WedgeInfixPartial<CircleRotor> lhs, Motor rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension CircleRotor {
     public Plane wedge(Motor other) {
         return Plane(
@@ -2619,6 +3419,10 @@ public extension CircleRotor {
             float4(other.e5) * float4(this.group0.xyz, this.e321)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(WedgeInfixPartial<CircleRotor> lhs, MultiVector rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension CircleRotor {
     public MultiVector wedge(MultiVector other) {
@@ -2648,6 +3452,10 @@ public extension CircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Sphere operator /(WedgeInfixPartial<CircleRotor> lhs, RoundPoint rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension CircleRotor {
     public Sphere wedge(RoundPoint other) {
         return Sphere(
@@ -2657,6 +3465,10 @@ public extension CircleRotor {
             -(this.e423 * other.e1) - (this.e431 * other.e2) - (this.e412 * other.e3) - (this.e321 * other.e4)
         );
     }
+}
+// Fancy infix trick (second half)
+public CircleRotor operator /(WedgeInfixPartial<CircleRotor> lhs, Scalar rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension CircleRotor {
     public CircleRotor wedge(Scalar other) {
@@ -2670,6 +3482,10 @@ public extension CircleRotor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Sphere operator /(WedgeInfixPartial<CircleRotor> lhs, VersorEven rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension CircleRotor {
     public Sphere wedge(VersorEven other) {
         return Sphere(
@@ -2679,6 +3495,10 @@ public extension CircleRotor {
             -(this.e423 * other.e1) - (this.e431 * other.e2) - (this.e412 * other.e3) - (this.e321 * other.e4)
         );
     }
+}
+// Fancy infix trick (second half)
+public CircleRotor operator /(WedgeInfixPartial<CircleRotor> lhs, VersorOdd rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension CircleRotor {
     public CircleRotor wedge(VersorOdd other) {
@@ -2692,17 +3512,13 @@ public extension CircleRotor {
         );
     }
 }
-public extension Dipole {
-    // Fancy infix trick (first half)
-    public WedgeInfixPartial<Dipole> operator /(WedgeInfix rhs) {
-        return WedgeInfixPartial<Dipole>(this);
-    }
+// Fancy infix trick (first half)
+public WedgeInfixPartial<Dipole> operator /(Dipole lhs, WedgeInfix rhs) {
+    return WedgeInfixPartial<Dipole>(lhs);
 }
-public extension WedgeInfixPartial<Dipole> {
-    // Fancy infix trick (second half)
-    public DipoleInversion operator /(AntiCircleRotor rhs) {
-        return this.a.wedge(rhs);
-    }
+// Fancy infix trick (second half)
+public DipoleInversion operator /(WedgeInfixPartial<Dipole> lhs, AntiCircleRotor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Dipole {
     public DipoleInversion wedge(AntiCircleRotor other) {
@@ -2718,6 +3534,10 @@ public extension Dipole {
         );
     }
 }
+// Fancy infix trick (second half)
+public CircleRotor operator /(WedgeInfixPartial<Dipole> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Dipole {
     public CircleRotor wedge(AntiDipoleInversion other) {
         return CircleRotor(
@@ -2729,6 +3549,10 @@ public extension Dipole {
             float4((other.e2 * this.e35) + (other.e5 * this.e23), (other.e3 * this.e15) + (other.e5 * this.e31), (other.e1 * this.e25) + (other.e5 * this.e12), -(other.e431 * this.e25) - (other.e412 * this.e35) - (other.e415 * this.e23) - (other.e425 * this.e31) - (other.e435 * this.e12) - (other.e321 * this.e45) - (other.e235 * this.e41) - (other.e315 * this.e42) - (other.e125 * this.e43)) - float4((this.group2.xyz.yzx * other.group3.zxy), other.e423 * this.e15)
         );
     }
+}
+// Fancy infix trick (second half)
+public Dipole operator /(WedgeInfixPartial<Dipole> lhs, AntiDualNum rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Dipole {
     public Dipole wedge(AntiDualNum other) {
@@ -2742,6 +3566,10 @@ public extension Dipole {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<Dipole> lhs, AntiFlatPoint rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Dipole {
     public AntiScalar wedge(AntiFlatPoint other) {
         return AntiScalar(
@@ -2749,6 +3577,10 @@ public extension Dipole {
             -(other.e235 * this.e41) - (other.e315 * this.e42) - (other.e125 * this.e43) - (other.e321 * this.e45)
         );
     }
+}
+// Fancy infix trick (second half)
+public CircleRotor operator /(WedgeInfixPartial<Dipole> lhs, AntiFlector rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Dipole {
     public CircleRotor wedge(AntiFlector other) {
@@ -2762,6 +3594,10 @@ public extension Dipole {
         );
     }
 }
+// Fancy infix trick (second half)
+public Sphere operator /(WedgeInfixPartial<Dipole> lhs, AntiLine rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Dipole {
     public Sphere wedge(AntiLine other) {
         return Sphere(
@@ -2771,6 +3607,10 @@ public extension Dipole {
             -(other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43)
         );
     }
+}
+// Fancy infix trick (second half)
+public DipoleInversion operator /(WedgeInfixPartial<Dipole> lhs, AntiMotor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Dipole {
     public DipoleInversion wedge(AntiMotor other) {
@@ -2786,6 +3626,10 @@ public extension Dipole {
         );
     }
 }
+// Fancy infix trick (second half)
+public Circle operator /(WedgeInfixPartial<Dipole> lhs, AntiPlane rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Dipole {
     public Circle wedge(AntiPlane other) {
         return Circle(
@@ -2798,6 +3642,10 @@ public extension Dipole {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<Dipole> lhs, Circle rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Dipole {
     public AntiScalar wedge(Circle other) {
         return AntiScalar(
@@ -2806,6 +3654,10 @@ public extension Dipole {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<Dipole> lhs, CircleRotor rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Dipole {
     public AntiScalar wedge(CircleRotor other) {
         return AntiScalar(
@@ -2813,6 +3665,10 @@ public extension Dipole {
             -(other.e423 * this.e15) - (other.e431 * this.e25) - (other.e412 * this.e35) - (other.e415 * this.e23) - (other.e425 * this.e31) - (other.e435 * this.e12) - (other.e321 * this.e45) - (other.e235 * this.e41) - (other.e315 * this.e42) - (other.e125 * this.e43)
         );
     }
+}
+// Fancy infix trick (second half)
+public Sphere operator /(WedgeInfixPartial<Dipole> lhs, Dipole rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Dipole {
     public Sphere wedge(Dipole other) {
@@ -2824,6 +3680,10 @@ public extension Dipole {
         );
     }
 }
+// Fancy infix trick (second half)
+public Sphere operator /(WedgeInfixPartial<Dipole> lhs, DipoleInversion rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Dipole {
     public Sphere wedge(DipoleInversion other) {
         return Sphere(
@@ -2833,6 +3693,10 @@ public extension Dipole {
             -(this.e41 * other.e23) - (this.e42 * other.e31) - (this.e43 * other.e12) - (this.e23 * other.e41) - (this.e31 * other.e42) - (this.e12 * other.e43)
         );
     }
+}
+// Fancy infix trick (second half)
+public Line operator /(WedgeInfixPartial<Dipole> lhs, DualNum rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Dipole {
     public Line wedge(DualNum other) {
@@ -2844,6 +3708,10 @@ public extension Dipole {
         );
     }
 }
+// Fancy infix trick (second half)
+public Plane operator /(WedgeInfixPartial<Dipole> lhs, FlatPoint rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Dipole {
     public Plane wedge(FlatPoint other) {
         return Plane(
@@ -2851,6 +3719,10 @@ public extension Dipole {
             float4((this.e42 * other.e35) + (this.e23 * other.e45), (this.e43 * other.e15) + (this.e31 * other.e45), (this.e41 * other.e25) + (this.e12 * other.e45), -(this.e31 * other.e25) - (this.e12 * other.e35)) - (other.group0.yzxx * float4(this.group0.xyz.zxy, this.e23))
         );
     }
+}
+// Fancy infix trick (second half)
+public Plane operator /(WedgeInfixPartial<Dipole> lhs, Flector rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Dipole {
     public Plane wedge(Flector other) {
@@ -2860,6 +3732,10 @@ public extension Dipole {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<Dipole> lhs, Line rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Dipole {
     public AntiScalar wedge(Line other) {
         return AntiScalar(
@@ -2867,6 +3743,10 @@ public extension Dipole {
             -(this.e41 * other.e235) - (this.e42 * other.e315) - (this.e43 * other.e125) - (this.e23 * other.e415) - (this.e31 * other.e425) - (this.e12 * other.e435)
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(WedgeInfixPartial<Dipole> lhs, Motor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Dipole {
     public Motor wedge(Motor other) {
@@ -2877,6 +3757,10 @@ public extension Dipole {
             float4(float3(1.0), 0.0) * float4(other.group1.www, 0.0) * float4(this.group1.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(WedgeInfixPartial<Dipole> lhs, MultiVector rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Dipole {
     public MultiVector wedge(MultiVector other) {
@@ -2906,6 +3790,10 @@ public extension Dipole {
         );
     }
 }
+// Fancy infix trick (second half)
+public Circle operator /(WedgeInfixPartial<Dipole> lhs, RoundPoint rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Dipole {
     public Circle wedge(RoundPoint other) {
         return Circle(
@@ -2917,6 +3805,10 @@ public extension Dipole {
             (float3(other.e5) * this.group1.xyz) + (this.group2.xyz.zxy * other.group0.yzx) - (this.group2.xyz.yzx * other.group0.zxy)
         );
     }
+}
+// Fancy infix trick (second half)
+public Dipole operator /(WedgeInfixPartial<Dipole> lhs, Scalar rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Dipole {
     public Dipole wedge(Scalar other) {
@@ -2930,6 +3822,10 @@ public extension Dipole {
         );
     }
 }
+// Fancy infix trick (second half)
+public CircleRotor operator /(WedgeInfixPartial<Dipole> lhs, VersorEven rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Dipole {
     public CircleRotor wedge(VersorEven other) {
         return CircleRotor(
@@ -2941,6 +3837,10 @@ public extension Dipole {
             float4((this.e23 * other.e5) + (this.e35 * other.e2), (this.e31 * other.e5) + (this.e15 * other.e3), (this.e12 * other.e5) + (this.e25 * other.e1), -(this.e42 * other.e315) - (this.e43 * other.e125) - (this.e23 * other.e415) - (this.e31 * other.e425) - (this.e12 * other.e435) - (this.e45 * other.e321) - (this.e15 * other.e423) - (this.e25 * other.e431) - (this.e35 * other.e412)) - float4((this.group2.xyz.yzx * other.group3.zxy), this.e41 * other.e235)
         );
     }
+}
+// Fancy infix trick (second half)
+public DipoleInversion operator /(WedgeInfixPartial<Dipole> lhs, VersorOdd rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Dipole {
     public DipoleInversion wedge(VersorOdd other) {
@@ -2956,17 +3856,13 @@ public extension Dipole {
         );
     }
 }
-public extension DipoleInversion {
-    // Fancy infix trick (first half)
-    public WedgeInfixPartial<DipoleInversion> operator /(WedgeInfix rhs) {
-        return WedgeInfixPartial<DipoleInversion>(this);
-    }
+// Fancy infix trick (first half)
+public WedgeInfixPartial<DipoleInversion> operator /(DipoleInversion lhs, WedgeInfix rhs) {
+    return WedgeInfixPartial<DipoleInversion>(lhs);
 }
-public extension WedgeInfixPartial<DipoleInversion> {
-    // Fancy infix trick (second half)
-    public DipoleInversion operator /(AntiCircleRotor rhs) {
-        return this.a.wedge(rhs);
-    }
+// Fancy infix trick (second half)
+public DipoleInversion operator /(WedgeInfixPartial<DipoleInversion> lhs, AntiCircleRotor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension DipoleInversion {
     public DipoleInversion wedge(AntiCircleRotor other) {
@@ -2982,6 +3878,10 @@ public extension DipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public CircleRotor operator /(WedgeInfixPartial<DipoleInversion> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension DipoleInversion {
     public CircleRotor wedge(AntiDipoleInversion other) {
         return CircleRotor(
@@ -2993,6 +3893,10 @@ public extension DipoleInversion {
             (other.group3.wwwx * float4(this.group1.xyz, this.e4235)) + float4(float3(0.0), (other.e2 * this.e4315) + (other.e3 * this.e4125) + (other.e5 * this.e1234) - (other.e431 * this.e25) - (other.e412 * this.e35) - (other.e415 * this.e23) - (other.e425 * this.e31) - (other.e435 * this.e12) - (other.e321 * this.e45) - (other.e235 * this.e41) - (other.e315 * this.e42) - (other.e125 * this.e43)) + float4((other.group3.yzx * this.group2.zxy), other.e4 * this.e3215) - (this.group2.yzxx * float4(other.group3.zxy, other.e423))
         );
     }
+}
+// Fancy infix trick (second half)
+public DipoleInversion operator /(WedgeInfixPartial<DipoleInversion> lhs, AntiDualNum rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension DipoleInversion {
     public DipoleInversion wedge(AntiDualNum other) {
@@ -3008,6 +3912,10 @@ public extension DipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<DipoleInversion> lhs, AntiFlatPoint rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension DipoleInversion {
     public AntiScalar wedge(AntiFlatPoint other) {
         return AntiScalar(
@@ -3015,6 +3923,10 @@ public extension DipoleInversion {
             -(other.e235 * this.e41) - (other.e315 * this.e42) - (other.e125 * this.e43) - (other.e321 * this.e45)
         );
     }
+}
+// Fancy infix trick (second half)
+public CircleRotor operator /(WedgeInfixPartial<DipoleInversion> lhs, AntiFlector rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension DipoleInversion {
     public CircleRotor wedge(AntiFlector other) {
@@ -3028,6 +3940,10 @@ public extension DipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public Sphere operator /(WedgeInfixPartial<DipoleInversion> lhs, AntiLine rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension DipoleInversion {
     public Sphere wedge(AntiLine other) {
         return Sphere(
@@ -3037,6 +3953,10 @@ public extension DipoleInversion {
             -(other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43)
         );
     }
+}
+// Fancy infix trick (second half)
+public DipoleInversion operator /(WedgeInfixPartial<DipoleInversion> lhs, AntiMotor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension DipoleInversion {
     public DipoleInversion wedge(AntiMotor other) {
@@ -3052,6 +3972,10 @@ public extension DipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public CircleRotor operator /(WedgeInfixPartial<DipoleInversion> lhs, AntiPlane rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension DipoleInversion {
     public CircleRotor wedge(AntiPlane other) {
         return CircleRotor(
@@ -3064,6 +3988,10 @@ public extension DipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<DipoleInversion> lhs, Circle rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension DipoleInversion {
     public AntiScalar wedge(Circle other) {
         return AntiScalar(
@@ -3072,6 +4000,10 @@ public extension DipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<DipoleInversion> lhs, CircleRotor rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension DipoleInversion {
     public AntiScalar wedge(CircleRotor other) {
         return AntiScalar(
@@ -3079,6 +4011,10 @@ public extension DipoleInversion {
             -(other.e423 * this.e15) - (other.e431 * this.e25) - (other.e412 * this.e35) - (other.e415 * this.e23) - (other.e425 * this.e31) - (other.e435 * this.e12) - (other.e321 * this.e45) - (other.e235 * this.e41) - (other.e315 * this.e42) - (other.e125 * this.e43)
         );
     }
+}
+// Fancy infix trick (second half)
+public Sphere operator /(WedgeInfixPartial<DipoleInversion> lhs, Dipole rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension DipoleInversion {
     public Sphere wedge(Dipole other) {
@@ -3090,6 +4026,10 @@ public extension DipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public Sphere operator /(WedgeInfixPartial<DipoleInversion> lhs, DipoleInversion rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension DipoleInversion {
     public Sphere wedge(DipoleInversion other) {
         return Sphere(
@@ -3099,6 +4039,10 @@ public extension DipoleInversion {
             -(other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43)
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(WedgeInfixPartial<DipoleInversion> lhs, DualNum rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension DipoleInversion {
     public Motor wedge(DualNum other) {
@@ -3110,6 +4054,10 @@ public extension DipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public Plane operator /(WedgeInfixPartial<DipoleInversion> lhs, FlatPoint rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension DipoleInversion {
     public Plane wedge(FlatPoint other) {
         return Plane(
@@ -3117,6 +4065,10 @@ public extension DipoleInversion {
             float4((this.e42 * other.e35) + (this.e23 * other.e45), (this.e43 * other.e15) + (this.e31 * other.e45), (this.e41 * other.e25) + (this.e12 * other.e45), -(this.e31 * other.e25) - (this.e12 * other.e35)) - (other.group0.yzxx * float4(this.group0.xyz.zxy, this.e23))
         );
     }
+}
+// Fancy infix trick (second half)
+public Plane operator /(WedgeInfixPartial<DipoleInversion> lhs, Flector rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension DipoleInversion {
     public Plane wedge(Flector other) {
@@ -3126,6 +4078,10 @@ public extension DipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<DipoleInversion> lhs, Line rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension DipoleInversion {
     public AntiScalar wedge(Line other) {
         return AntiScalar(
@@ -3133,6 +4089,10 @@ public extension DipoleInversion {
             -(this.e41 * other.e235) - (this.e42 * other.e315) - (this.e43 * other.e125) - (this.e23 * other.e415) - (this.e31 * other.e425) - (this.e12 * other.e435)
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(WedgeInfixPartial<DipoleInversion> lhs, Motor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension DipoleInversion {
     public Motor wedge(Motor other) {
@@ -3143,6 +4103,10 @@ public extension DipoleInversion {
             float4(float3(1.0), 0.0) * float4(other.group1.www, 0.0) * float4(this.group1.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(WedgeInfixPartial<DipoleInversion> lhs, MultiVector rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension DipoleInversion {
     public MultiVector wedge(MultiVector other) {
@@ -3172,6 +4136,10 @@ public extension DipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public CircleRotor operator /(WedgeInfixPartial<DipoleInversion> lhs, RoundPoint rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension DipoleInversion {
     public CircleRotor wedge(RoundPoint other) {
         return CircleRotor(
@@ -3183,6 +4151,10 @@ public extension DipoleInversion {
             float4(this.e25 * other.e3 * -1.0, this.e35 * other.e1 * -1.0, this.e15 * other.e2 * -1.0, (this.e4315 * other.e2) + (this.e4125 * other.e3) + (this.e3215 * other.e4)) + (float4(other.e5) * float4(this.group1.xyz, this.e1234)) + (other.group0.yzxx * float4(this.group2.zxy, this.e4235))
         );
     }
+}
+// Fancy infix trick (second half)
+public DipoleInversion operator /(WedgeInfixPartial<DipoleInversion> lhs, Scalar rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension DipoleInversion {
     public DipoleInversion wedge(Scalar other) {
@@ -3198,6 +4170,10 @@ public extension DipoleInversion {
         );
     }
 }
+// Fancy infix trick (second half)
+public CircleRotor operator /(WedgeInfixPartial<DipoleInversion> lhs, VersorEven rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension DipoleInversion {
     public CircleRotor wedge(VersorEven other) {
         return CircleRotor(
@@ -3209,6 +4185,10 @@ public extension DipoleInversion {
             (float4(other.e5) * float4(this.group1.xyz, this.e1234)) + (other.group3.yzxx * float4(this.group2.zxy, this.e4235)) + float4(float3(0.0), (this.e4315 * other.e2) + (this.e4125 * other.e3) + (this.e3215 * other.e4) - (this.e42 * other.e315) - (this.e43 * other.e125) - (this.e23 * other.e415) - (this.e31 * other.e425) - (this.e12 * other.e435) - (this.e45 * other.e321) - (this.e15 * other.e423) - (this.e25 * other.e431) - (this.e35 * other.e412)) - float4((this.group2.yzx * other.group3.zxy), this.e41 * other.e235)
         );
     }
+}
+// Fancy infix trick (second half)
+public DipoleInversion operator /(WedgeInfixPartial<DipoleInversion> lhs, VersorOdd rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension DipoleInversion {
     public DipoleInversion wedge(VersorOdd other) {
@@ -3224,17 +4204,13 @@ public extension DipoleInversion {
         );
     }
 }
-public extension DualNum {
-    // Fancy infix trick (first half)
-    public WedgeInfixPartial<DualNum> operator /(WedgeInfix rhs) {
-        return WedgeInfixPartial<DualNum>(this);
-    }
+// Fancy infix trick (first half)
+public WedgeInfixPartial<DualNum> operator /(DualNum lhs, WedgeInfix rhs) {
+    return WedgeInfixPartial<DualNum>(lhs);
 }
-public extension WedgeInfixPartial<DualNum> {
-    // Fancy infix trick (second half)
-    public Motor operator /(AntiCircleRotor rhs) {
-        return this.a.wedge(rhs);
-    }
+// Fancy infix trick (second half)
+public Motor operator /(WedgeInfixPartial<DualNum> lhs, AntiCircleRotor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension DualNum {
     public Motor wedge(AntiCircleRotor other) {
@@ -3246,6 +4222,10 @@ public extension DualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(WedgeInfixPartial<DualNum> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension DualNum {
     public Flector wedge(AntiDipoleInversion other) {
         return Flector(
@@ -3256,6 +4236,10 @@ public extension DualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public DualNum operator /(WedgeInfixPartial<DualNum> lhs, AntiDualNum rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension DualNum {
     public DualNum wedge(AntiDualNum other) {
         return DualNum(
@@ -3264,6 +4248,10 @@ public extension DualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDualNum operator /(WedgeInfixPartial<DualNum> lhs, AntiFlatPoint rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension DualNum {
     public AntiDualNum wedge(AntiFlatPoint other) {
         return AntiDualNum(
@@ -3271,6 +4259,10 @@ public extension DualNum {
             float2(other.e321 * this.e5, 1.0) * float2(-1.0, 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(WedgeInfixPartial<DualNum> lhs, AntiFlector rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension DualNum {
     public Flector wedge(AntiFlector other) {
@@ -3282,6 +4274,10 @@ public extension DualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlatPoint operator /(WedgeInfixPartial<DualNum> lhs, AntiLine rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension DualNum {
     public AntiFlatPoint wedge(AntiLine other) {
         return AntiFlatPoint(
@@ -3289,6 +4285,10 @@ public extension DualNum {
             float4(this.group0.xy.xx, this.e5, 0.0) * float4(float3(1.0), 0.0) * float4(other.group0.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(WedgeInfixPartial<DualNum> lhs, AntiMotor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension DualNum {
     public Motor wedge(AntiMotor other) {
@@ -3300,6 +4300,10 @@ public extension DualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public FlatPoint operator /(WedgeInfixPartial<DualNum> lhs, AntiPlane rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension DualNum {
     public FlatPoint wedge(AntiPlane other) {
         return FlatPoint(
@@ -3307,6 +4311,10 @@ public extension DualNum {
             float4(this.group0.xy.xx, this.e5, 0.0) * float4(float3(1.0), 0.0) * float4(other.group0.xyz, 0.0) * float4(-1.0, -1.0, -1.0, 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public Plane operator /(WedgeInfixPartial<DualNum> lhs, Circle rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension DualNum {
     public Plane wedge(Circle other) {
@@ -3316,6 +4324,10 @@ public extension DualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public Plane operator /(WedgeInfixPartial<DualNum> lhs, CircleRotor rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension DualNum {
     public Plane wedge(CircleRotor other) {
         return Plane(
@@ -3323,6 +4335,10 @@ public extension DualNum {
             float4(this.e5) * float4(other.group0.xyz, other.e321) * float4(-1.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public Line operator /(WedgeInfixPartial<DualNum> lhs, Dipole rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension DualNum {
     public Line wedge(Dipole other) {
@@ -3334,6 +4350,10 @@ public extension DualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(WedgeInfixPartial<DualNum> lhs, DipoleInversion rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension DualNum {
     public Motor wedge(DipoleInversion other) {
         return Motor(
@@ -3343,6 +4363,10 @@ public extension DualNum {
             float4(this.group0.xy.xx, this.e5, 0.0) * float4(float3(1.0), 0.0) * float4(other.group1.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(WedgeInfixPartial<DualNum> lhs, MultiVector rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension DualNum {
     public MultiVector wedge(MultiVector other) {
@@ -3372,6 +4396,10 @@ public extension DualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public FlatPoint operator /(WedgeInfixPartial<DualNum> lhs, RoundPoint rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension DualNum {
     public FlatPoint wedge(RoundPoint other) {
         return FlatPoint(
@@ -3379,6 +4407,10 @@ public extension DualNum {
             float4(this.e5) * other.group0 * float4(-1.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public DualNum operator /(WedgeInfixPartial<DualNum> lhs, Scalar rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension DualNum {
     public DualNum wedge(Scalar other) {
@@ -3388,6 +4420,10 @@ public extension DualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<DualNum> lhs, Sphere rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension DualNum {
     public AntiScalar wedge(Sphere other) {
         return AntiScalar(
@@ -3395,6 +4431,10 @@ public extension DualNum {
             this.e5 * other.e1234
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(WedgeInfixPartial<DualNum> lhs, VersorEven rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension DualNum {
     public Flector wedge(VersorEven other) {
@@ -3406,6 +4446,10 @@ public extension DualNum {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(WedgeInfixPartial<DualNum> lhs, VersorOdd rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension DualNum {
     public Motor wedge(VersorOdd other) {
         return Motor(
@@ -3416,17 +4460,13 @@ public extension DualNum {
         );
     }
 }
-public extension FlatPoint {
-    // Fancy infix trick (first half)
-    public WedgeInfixPartial<FlatPoint> operator /(WedgeInfix rhs) {
-        return WedgeInfixPartial<FlatPoint>(this);
-    }
+// Fancy infix trick (first half)
+public WedgeInfixPartial<FlatPoint> operator /(FlatPoint lhs, WedgeInfix rhs) {
+    return WedgeInfixPartial<FlatPoint>(lhs);
 }
-public extension WedgeInfixPartial<FlatPoint> {
-    // Fancy infix trick (second half)
-    public Flector operator /(AntiCircleRotor rhs) {
-        return this.a.wedge(rhs);
-    }
+// Fancy infix trick (second half)
+public Flector operator /(WedgeInfixPartial<FlatPoint> lhs, AntiCircleRotor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension FlatPoint {
     public Flector wedge(AntiCircleRotor other) {
@@ -3438,6 +4478,10 @@ public extension FlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(WedgeInfixPartial<FlatPoint> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension FlatPoint {
     public Motor wedge(AntiDipoleInversion other) {
         return Motor(
@@ -3448,6 +4492,10 @@ public extension FlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public FlatPoint operator /(WedgeInfixPartial<FlatPoint> lhs, AntiDualNum rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension FlatPoint {
     public FlatPoint wedge(AntiDualNum other) {
         return FlatPoint(
@@ -3456,6 +4504,10 @@ public extension FlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<FlatPoint> lhs, AntiFlatPoint rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension FlatPoint {
     public AntiScalar wedge(AntiFlatPoint other) {
         return AntiScalar(
@@ -3463,6 +4515,10 @@ public extension FlatPoint {
             other.e321 * this.e45 * -1.0
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(WedgeInfixPartial<FlatPoint> lhs, AntiFlector rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension FlatPoint {
     public Motor wedge(AntiFlector other) {
@@ -3474,6 +4530,10 @@ public extension FlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public Plane operator /(WedgeInfixPartial<FlatPoint> lhs, AntiLine rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension FlatPoint {
     public Plane wedge(AntiLine other) {
         return Plane(
@@ -3481,6 +4541,10 @@ public extension FlatPoint {
             float4((float3(this.e45) * other.group0.xyz), -(other.e23 * this.e15) - (other.e31 * this.e25) - (other.e12 * this.e35))
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(WedgeInfixPartial<FlatPoint> lhs, AntiMotor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension FlatPoint {
     public Flector wedge(AntiMotor other) {
@@ -3492,6 +4556,10 @@ public extension FlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public Line operator /(WedgeInfixPartial<FlatPoint> lhs, AntiPlane rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension FlatPoint {
     public Line wedge(AntiPlane other) {
         return Line(
@@ -3502,6 +4570,10 @@ public extension FlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<FlatPoint> lhs, Circle rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension FlatPoint {
     public AntiScalar wedge(Circle other) {
         return AntiScalar(
@@ -3509,6 +4581,10 @@ public extension FlatPoint {
             -(other.e423 * this.e15) - (other.e431 * this.e25) - (other.e412 * this.e35) - (other.e321 * this.e45)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<FlatPoint> lhs, CircleRotor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension FlatPoint {
     public AntiScalar wedge(CircleRotor other) {
@@ -3518,6 +4594,10 @@ public extension FlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public Plane operator /(WedgeInfixPartial<FlatPoint> lhs, Dipole rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension FlatPoint {
     public Plane wedge(Dipole other) {
         return Plane(
@@ -3526,6 +4606,10 @@ public extension FlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public Plane operator /(WedgeInfixPartial<FlatPoint> lhs, DipoleInversion rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension FlatPoint {
     public Plane wedge(DipoleInversion other) {
         return Plane(
@@ -3533,6 +4617,10 @@ public extension FlatPoint {
             float4((other.e42 * this.e35) + (other.e23 * this.e45), (other.e43 * this.e15) + (other.e31 * this.e45), (other.e41 * this.e25) + (other.e12 * this.e45), -(other.e31 * this.e25) - (other.e12 * this.e35)) - (this.group0.yzxx * float4(other.group0.xyz.zxy, other.e23))
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(WedgeInfixPartial<FlatPoint> lhs, MultiVector rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension FlatPoint {
     public MultiVector wedge(MultiVector other) {
@@ -3562,6 +4650,10 @@ public extension FlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public Line operator /(WedgeInfixPartial<FlatPoint> lhs, RoundPoint rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension FlatPoint {
     public Line wedge(RoundPoint other) {
         return Line(
@@ -3572,6 +4664,10 @@ public extension FlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public FlatPoint operator /(WedgeInfixPartial<FlatPoint> lhs, Scalar rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension FlatPoint {
     public FlatPoint wedge(Scalar other) {
         return FlatPoint(
@@ -3579,6 +4675,10 @@ public extension FlatPoint {
             float4(other.scalar) * this.group0
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(WedgeInfixPartial<FlatPoint> lhs, VersorEven rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension FlatPoint {
     public Motor wedge(VersorEven other) {
@@ -3590,6 +4690,10 @@ public extension FlatPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(WedgeInfixPartial<FlatPoint> lhs, VersorOdd rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension FlatPoint {
     public Flector wedge(VersorOdd other) {
         return Flector(
@@ -3600,17 +4704,13 @@ public extension FlatPoint {
         );
     }
 }
-public extension Flector {
-    // Fancy infix trick (first half)
-    public WedgeInfixPartial<Flector> operator /(WedgeInfix rhs) {
-        return WedgeInfixPartial<Flector>(this);
-    }
+// Fancy infix trick (first half)
+public WedgeInfixPartial<Flector> operator /(Flector lhs, WedgeInfix rhs) {
+    return WedgeInfixPartial<Flector>(lhs);
 }
-public extension WedgeInfixPartial<Flector> {
-    // Fancy infix trick (second half)
-    public Flector operator /(AntiCircleRotor rhs) {
-        return this.a.wedge(rhs);
-    }
+// Fancy infix trick (second half)
+public Flector operator /(WedgeInfixPartial<Flector> lhs, AntiCircleRotor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Flector {
     public Flector wedge(AntiCircleRotor other) {
@@ -3622,6 +4722,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(WedgeInfixPartial<Flector> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Flector {
     public Motor wedge(AntiDipoleInversion other) {
         return Motor(
@@ -3631,6 +4735,10 @@ public extension Flector {
             float4(((other.group3.yzx * this.group0.zxy) - (other.group3.zxy * this.group0.yzx)), 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(WedgeInfixPartial<Flector> lhs, AntiDualNum rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Flector {
     public Flector wedge(AntiDualNum other) {
@@ -3642,6 +4750,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<Flector> lhs, AntiFlatPoint rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Flector {
     public AntiScalar wedge(AntiFlatPoint other) {
         return AntiScalar(
@@ -3649,6 +4761,10 @@ public extension Flector {
             other.e321 * this.e45 * -1.0
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(WedgeInfixPartial<Flector> lhs, AntiFlector rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Flector {
     public Motor wedge(AntiFlector other) {
@@ -3660,6 +4776,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public Plane operator /(WedgeInfixPartial<Flector> lhs, AntiLine rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Flector {
     public Plane wedge(AntiLine other) {
         return Plane(
@@ -3667,6 +4787,10 @@ public extension Flector {
             float4((float3(this.e45) * other.group0.xyz), -(other.e23 * this.e15) - (other.e31 * this.e25) - (other.e12 * this.e35))
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(WedgeInfixPartial<Flector> lhs, AntiMotor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Flector {
     public Flector wedge(AntiMotor other) {
@@ -3678,6 +4802,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(WedgeInfixPartial<Flector> lhs, AntiPlane rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Flector {
     public Motor wedge(AntiPlane other) {
         return Motor(
@@ -3688,6 +4816,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<Flector> lhs, Circle rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Flector {
     public AntiScalar wedge(Circle other) {
         return AntiScalar(
@@ -3695,6 +4827,10 @@ public extension Flector {
             -(other.e423 * this.e15) - (other.e431 * this.e25) - (other.e412 * this.e35) - (other.e321 * this.e45)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<Flector> lhs, CircleRotor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Flector {
     public AntiScalar wedge(CircleRotor other) {
@@ -3704,6 +4840,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public Plane operator /(WedgeInfixPartial<Flector> lhs, Dipole rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Flector {
     public Plane wedge(Dipole other) {
         return Plane(
@@ -3712,6 +4852,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public Plane operator /(WedgeInfixPartial<Flector> lhs, DipoleInversion rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Flector {
     public Plane wedge(DipoleInversion other) {
         return Plane(
@@ -3719,6 +4863,10 @@ public extension Flector {
             float4((other.e42 * this.e35) + (other.e23 * this.e45), (other.e43 * this.e15) + (other.e31 * this.e45), (other.e41 * this.e25) + (other.e12 * this.e45), -(other.e31 * this.e25) - (other.e12 * this.e35)) - (this.group0.yzxx * float4(other.group0.xyz.zxy, other.e23))
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(WedgeInfixPartial<Flector> lhs, MultiVector rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Flector {
     public MultiVector wedge(MultiVector other) {
@@ -3748,6 +4896,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(WedgeInfixPartial<Flector> lhs, RoundPoint rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Flector {
     public Motor wedge(RoundPoint other) {
         return Motor(
@@ -3757,6 +4909,10 @@ public extension Flector {
             float4(((this.group0.zxy * other.group0.yzx) - (this.group0.yzx * other.group0.zxy)), 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(WedgeInfixPartial<Flector> lhs, Scalar rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Flector {
     public Flector wedge(Scalar other) {
@@ -3768,6 +4924,10 @@ public extension Flector {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(WedgeInfixPartial<Flector> lhs, VersorEven rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Flector {
     public Motor wedge(VersorEven other) {
         return Motor(
@@ -3777,6 +4937,10 @@ public extension Flector {
             float4(((this.group0.zxy * other.group3.yzx) - (this.group0.yzx * other.group3.zxy)), 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(WedgeInfixPartial<Flector> lhs, VersorOdd rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Flector {
     public Flector wedge(VersorOdd other) {
@@ -3788,17 +4952,13 @@ public extension Flector {
         );
     }
 }
-public extension Line {
-    // Fancy infix trick (first half)
-    public WedgeInfixPartial<Line> operator /(WedgeInfix rhs) {
-        return WedgeInfixPartial<Line>(this);
-    }
+// Fancy infix trick (first half)
+public WedgeInfixPartial<Line> operator /(Line lhs, WedgeInfix rhs) {
+    return WedgeInfixPartial<Line>(lhs);
 }
-public extension WedgeInfixPartial<Line> {
-    // Fancy infix trick (second half)
-    public Motor operator /(AntiCircleRotor rhs) {
-        return this.a.wedge(rhs);
-    }
+// Fancy infix trick (second half)
+public Motor operator /(WedgeInfixPartial<Line> lhs, AntiCircleRotor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Line {
     public Motor wedge(AntiCircleRotor other) {
@@ -3810,6 +4970,10 @@ public extension Line {
         );
     }
 }
+// Fancy infix trick (second half)
+public Plane operator /(WedgeInfixPartial<Line> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Line {
     public Plane wedge(AntiDipoleInversion other) {
         return Plane(
@@ -3817,6 +4981,10 @@ public extension Line {
             float4(-(other.e4 * this.e235) - (other.e3 * this.e425), -(other.e4 * this.e315) - (other.e1 * this.e435), -(other.e4 * this.e125) - (other.e2 * this.e415), (other.e2 * this.e315) + (other.e3 * this.e125)) + (other.group3.yzxx * float4(this.group0.xyz.zxy, this.e235))
         );
     }
+}
+// Fancy infix trick (second half)
+public Line operator /(WedgeInfixPartial<Line> lhs, AntiDualNum rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Line {
     public Line wedge(AntiDualNum other) {
@@ -3828,6 +4996,10 @@ public extension Line {
         );
     }
 }
+// Fancy infix trick (second half)
+public Plane operator /(WedgeInfixPartial<Line> lhs, AntiFlector rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Line {
     public Plane wedge(AntiFlector other) {
         return Plane(
@@ -3836,6 +5008,10 @@ public extension Line {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<Line> lhs, AntiLine rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Line {
     public AntiScalar wedge(AntiLine other) {
         return AntiScalar(
@@ -3843,6 +5019,10 @@ public extension Line {
             -(other.e23 * this.e415) - (other.e31 * this.e425) - (other.e12 * this.e435)
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(WedgeInfixPartial<Line> lhs, AntiMotor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Line {
     public Motor wedge(AntiMotor other) {
@@ -3854,6 +5034,10 @@ public extension Line {
         );
     }
 }
+// Fancy infix trick (second half)
+public Plane operator /(WedgeInfixPartial<Line> lhs, AntiPlane rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Line {
     public Plane wedge(AntiPlane other) {
         return Plane(
@@ -3861,6 +5045,10 @@ public extension Line {
             float4(other.e3 * this.e425 * -1.0, other.e1 * this.e435 * -1.0, other.e2 * this.e415 * -1.0, (other.e2 * this.e315) + (other.e3 * this.e125)) + (other.group0.yzxx * float4(this.group0.xyz.zxy, this.e235))
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<Line> lhs, Dipole rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Line {
     public AntiScalar wedge(Dipole other) {
@@ -3870,6 +5058,10 @@ public extension Line {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<Line> lhs, DipoleInversion rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Line {
     public AntiScalar wedge(DipoleInversion other) {
         return AntiScalar(
@@ -3877,6 +5069,10 @@ public extension Line {
             -(other.e41 * this.e235) - (other.e42 * this.e315) - (other.e43 * this.e125) - (other.e23 * this.e415) - (other.e31 * this.e425) - (other.e12 * this.e435)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(WedgeInfixPartial<Line> lhs, MultiVector rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Line {
     public MultiVector wedge(MultiVector other) {
@@ -3906,6 +5102,10 @@ public extension Line {
         );
     }
 }
+// Fancy infix trick (second half)
+public Plane operator /(WedgeInfixPartial<Line> lhs, RoundPoint rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Line {
     public Plane wedge(RoundPoint other) {
         return Plane(
@@ -3913,6 +5113,10 @@ public extension Line {
             float4(-(this.e425 * other.e3) - (this.e235 * other.e4), -(this.e435 * other.e1) - (this.e315 * other.e4), -(this.e415 * other.e2) - (this.e125 * other.e4), (this.e315 * other.e2) + (this.e125 * other.e3)) + (other.group0.yzxx * float4(this.group0.xyz.zxy, this.e235))
         );
     }
+}
+// Fancy infix trick (second half)
+public Line operator /(WedgeInfixPartial<Line> lhs, Scalar rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Line {
     public Line wedge(Scalar other) {
@@ -3924,6 +5128,10 @@ public extension Line {
         );
     }
 }
+// Fancy infix trick (second half)
+public Plane operator /(WedgeInfixPartial<Line> lhs, VersorEven rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Line {
     public Plane wedge(VersorEven other) {
         return Plane(
@@ -3931,6 +5139,10 @@ public extension Line {
             float4(-(this.e425 * other.e3) - (this.e235 * other.e4), -(this.e435 * other.e1) - (this.e315 * other.e4), -(this.e415 * other.e2) - (this.e125 * other.e4), (this.e315 * other.e2) + (this.e125 * other.e3)) + (other.group3.yzxx * float4(this.group0.xyz.zxy, this.e235))
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(WedgeInfixPartial<Line> lhs, VersorOdd rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Line {
     public Motor wedge(VersorOdd other) {
@@ -3942,17 +5154,13 @@ public extension Line {
         );
     }
 }
-public extension Motor {
-    // Fancy infix trick (first half)
-    public WedgeInfixPartial<Motor> operator /(WedgeInfix rhs) {
-        return WedgeInfixPartial<Motor>(this);
-    }
+// Fancy infix trick (first half)
+public WedgeInfixPartial<Motor> operator /(Motor lhs, WedgeInfix rhs) {
+    return WedgeInfixPartial<Motor>(lhs);
 }
-public extension WedgeInfixPartial<Motor> {
-    // Fancy infix trick (second half)
-    public Motor operator /(AntiCircleRotor rhs) {
-        return this.a.wedge(rhs);
-    }
+// Fancy infix trick (second half)
+public Motor operator /(WedgeInfixPartial<Motor> lhs, AntiCircleRotor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Motor {
     public Motor wedge(AntiCircleRotor other) {
@@ -3964,6 +5172,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(WedgeInfixPartial<Motor> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Motor {
     public Flector wedge(AntiDipoleInversion other) {
         return Flector(
@@ -3973,6 +5185,10 @@ public extension Motor {
             float4(-(other.e4 * this.e235) - (other.e3 * this.e425), -(other.e4 * this.e315) - (other.e1 * this.e435), -(other.e4 * this.e125) - (other.e2 * this.e415), (other.e2 * this.e315) + (other.e3 * this.e125)) + (other.group3.yzxx * float4(this.group0.zxy, this.e235)) - (float4(this.e5) * float4(other.group0.xyz, other.e321))
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(WedgeInfixPartial<Motor> lhs, AntiDualNum rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Motor {
     public Motor wedge(AntiDualNum other) {
@@ -3984,6 +5200,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDualNum operator /(WedgeInfixPartial<Motor> lhs, AntiFlatPoint rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Motor {
     public AntiDualNum wedge(AntiFlatPoint other) {
         return AntiDualNum(
@@ -3991,6 +5211,10 @@ public extension Motor {
             float2(other.e321 * this.e5, 1.0) * float2(-1.0, 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(WedgeInfixPartial<Motor> lhs, AntiFlector rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Motor {
     public Flector wedge(AntiFlector other) {
@@ -4002,6 +5226,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(WedgeInfixPartial<Motor> lhs, AntiLine rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Motor {
     public Motor wedge(AntiLine other) {
         return Motor(
@@ -4011,6 +5239,10 @@ public extension Motor {
             float4(float3(1.0), 0.0) * float4(other.group0.xyz, 0.0) * float4(this.group1.www, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(WedgeInfixPartial<Motor> lhs, AntiMotor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Motor {
     public Motor wedge(AntiMotor other) {
@@ -4022,6 +5254,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(WedgeInfixPartial<Motor> lhs, AntiPlane rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Motor {
     public Flector wedge(AntiPlane other) {
         return Flector(
@@ -4032,6 +5268,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Plane operator /(WedgeInfixPartial<Motor> lhs, Circle rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Motor {
     public Plane wedge(Circle other) {
         return Plane(
@@ -4040,6 +5280,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Plane operator /(WedgeInfixPartial<Motor> lhs, CircleRotor rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Motor {
     public Plane wedge(CircleRotor other) {
         return Plane(
@@ -4047,6 +5291,10 @@ public extension Motor {
             float4(this.e5) * float4(other.group0.xyz, other.e321) * float4(-1.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(WedgeInfixPartial<Motor> lhs, Dipole rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Motor {
     public Motor wedge(Dipole other) {
@@ -4058,6 +5306,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(WedgeInfixPartial<Motor> lhs, DipoleInversion rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Motor {
     public Motor wedge(DipoleInversion other) {
         return Motor(
@@ -4067,6 +5319,10 @@ public extension Motor {
             float4(float3(1.0), 0.0) * float4(this.group1.www, 0.0) * float4(other.group1.xyz, 0.0) * float4(1.0, 1.0, 1.0, 0.0)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(WedgeInfixPartial<Motor> lhs, MultiVector rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Motor {
     public MultiVector wedge(MultiVector other) {
@@ -4096,6 +5352,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(WedgeInfixPartial<Motor> lhs, RoundPoint rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Motor {
     public Flector wedge(RoundPoint other) {
         return Flector(
@@ -4105,6 +5365,10 @@ public extension Motor {
             float4(-(this.e425 * other.e3) - (this.e235 * other.e4), -(this.e435 * other.e1) - (this.e315 * other.e4), -(this.e415 * other.e2) - (this.e125 * other.e4), (this.e315 * other.e2) + (this.e125 * other.e3)) + (other.group0.yzxx * float4(this.group0.zxy, this.e235))
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(WedgeInfixPartial<Motor> lhs, Scalar rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Motor {
     public Motor wedge(Scalar other) {
@@ -4116,6 +5380,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<Motor> lhs, Sphere rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Motor {
     public AntiScalar wedge(Sphere other) {
         return AntiScalar(
@@ -4123,6 +5391,10 @@ public extension Motor {
             this.e5 * other.e1234
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(WedgeInfixPartial<Motor> lhs, VersorEven rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Motor {
     public Flector wedge(VersorEven other) {
@@ -4134,6 +5406,10 @@ public extension Motor {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(WedgeInfixPartial<Motor> lhs, VersorOdd rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Motor {
     public Motor wedge(VersorOdd other) {
         return Motor(
@@ -4144,17 +5420,13 @@ public extension Motor {
         );
     }
 }
-public extension MultiVector {
-    // Fancy infix trick (first half)
-    public WedgeInfixPartial<MultiVector> operator /(WedgeInfix rhs) {
-        return WedgeInfixPartial<MultiVector>(this);
-    }
+// Fancy infix trick (first half)
+public WedgeInfixPartial<MultiVector> operator /(MultiVector lhs, WedgeInfix rhs) {
+    return WedgeInfixPartial<MultiVector>(lhs);
 }
-public extension WedgeInfixPartial<MultiVector> {
-    // Fancy infix trick (second half)
-    public MultiVector operator /(AntiCircleRotor rhs) {
-        return this.a.wedge(rhs);
-    }
+// Fancy infix trick (second half)
+public MultiVector operator /(WedgeInfixPartial<MultiVector> lhs, AntiCircleRotor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension MultiVector {
     public MultiVector wedge(AntiCircleRotor other) {
@@ -4184,6 +5456,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(WedgeInfixPartial<MultiVector> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension MultiVector {
     public MultiVector wedge(AntiDipoleInversion other) {
         return MultiVector(
@@ -4211,6 +5487,10 @@ public extension MultiVector {
             (other.e423 * this.e1) + (other.e431 * this.e2) + (other.e412 * this.e3) + (other.e321 * this.e4) - (other.e4 * this.e321) - (other.e1 * this.e423) - (other.e2 * this.e431) - (other.e3 * this.e412)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(WedgeInfixPartial<MultiVector> lhs, AntiDualNum rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension MultiVector {
     public MultiVector wedge(AntiDualNum other) {
@@ -4240,6 +5520,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(WedgeInfixPartial<MultiVector> lhs, AntiFlatPoint rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension MultiVector {
     public MultiVector wedge(AntiFlatPoint other) {
         return MultiVector(
@@ -4267,6 +5551,10 @@ public extension MultiVector {
             other.e321 * this.e4
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(WedgeInfixPartial<MultiVector> lhs, AntiFlector rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension MultiVector {
     public MultiVector wedge(AntiFlector other) {
@@ -4296,6 +5584,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(WedgeInfixPartial<MultiVector> lhs, AntiLine rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension MultiVector {
     public MultiVector wedge(AntiLine other) {
         return MultiVector(
@@ -4323,6 +5615,10 @@ public extension MultiVector {
             -(other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(WedgeInfixPartial<MultiVector> lhs, AntiMotor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension MultiVector {
     public MultiVector wedge(AntiMotor other) {
@@ -4352,6 +5648,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(WedgeInfixPartial<MultiVector> lhs, AntiPlane rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension MultiVector {
     public MultiVector wedge(AntiPlane other) {
         return MultiVector(
@@ -4380,6 +5680,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<MultiVector> lhs, AntiScalar rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension MultiVector {
     public AntiScalar wedge(AntiScalar other) {
         return AntiScalar(
@@ -4387,6 +5691,10 @@ public extension MultiVector {
             other.e12345 * this.scalar
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(WedgeInfixPartial<MultiVector> lhs, Circle rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension MultiVector {
     public MultiVector wedge(Circle other) {
@@ -4416,6 +5724,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(WedgeInfixPartial<MultiVector> lhs, CircleRotor rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension MultiVector {
     public MultiVector wedge(CircleRotor other) {
         return MultiVector(
@@ -4443,6 +5755,10 @@ public extension MultiVector {
             (other.e423 * this.e1) + (other.e431 * this.e2) + (other.e412 * this.e3) + (other.e321 * this.e4)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(WedgeInfixPartial<MultiVector> lhs, Dipole rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension MultiVector {
     public MultiVector wedge(Dipole other) {
@@ -4472,6 +5788,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(WedgeInfixPartial<MultiVector> lhs, DipoleInversion rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension MultiVector {
     public MultiVector wedge(DipoleInversion other) {
         return MultiVector(
@@ -4499,6 +5819,10 @@ public extension MultiVector {
             (other.e1234 * this.scalar) - (other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(WedgeInfixPartial<MultiVector> lhs, DualNum rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension MultiVector {
     public MultiVector wedge(DualNum other) {
@@ -4528,6 +5852,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(WedgeInfixPartial<MultiVector> lhs, FlatPoint rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension MultiVector {
     public MultiVector wedge(FlatPoint other) {
         return MultiVector(
@@ -4555,6 +5883,10 @@ public extension MultiVector {
             0.0
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(WedgeInfixPartial<MultiVector> lhs, Flector rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension MultiVector {
     public MultiVector wedge(Flector other) {
@@ -4584,6 +5916,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(WedgeInfixPartial<MultiVector> lhs, Line rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension MultiVector {
     public MultiVector wedge(Line other) {
         return MultiVector(
@@ -4611,6 +5947,10 @@ public extension MultiVector {
             0.0
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(WedgeInfixPartial<MultiVector> lhs, Motor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension MultiVector {
     public MultiVector wedge(Motor other) {
@@ -4640,6 +5980,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(WedgeInfixPartial<MultiVector> lhs, MultiVector rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension MultiVector {
     public MultiVector wedge(MultiVector other) {
         return MultiVector(
@@ -4667,6 +6011,10 @@ public extension MultiVector {
             (other.scalar * this.e1234) + (other.e321 * this.e4) + (other.e423 * this.e1) + (other.e431 * this.e2) + (other.e412 * this.e3) + (other.e1234 * this.scalar) - (other.e1 * this.e423) - (other.e2 * this.e431) - (other.e3 * this.e412) - (other.e4 * this.e321) - (other.e41 * this.e23) - (other.e42 * this.e31) - (other.e43 * this.e12) - (other.e23 * this.e41) - (other.e31 * this.e42) - (other.e12 * this.e43)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(WedgeInfixPartial<MultiVector> lhs, Plane rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension MultiVector {
     public MultiVector wedge(Plane other) {
@@ -4696,6 +6044,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(WedgeInfixPartial<MultiVector> lhs, RoundPoint rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension MultiVector {
     public MultiVector wedge(RoundPoint other) {
         return MultiVector(
@@ -4723,6 +6075,10 @@ public extension MultiVector {
             -(this.e321 * other.e4) - (this.e423 * other.e1) - (this.e431 * other.e2) - (this.e412 * other.e3)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(WedgeInfixPartial<MultiVector> lhs, Scalar rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension MultiVector {
     public MultiVector wedge(Scalar other) {
@@ -4752,6 +6108,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(WedgeInfixPartial<MultiVector> lhs, Sphere rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension MultiVector {
     public MultiVector wedge(Sphere other) {
         return MultiVector(
@@ -4779,6 +6139,10 @@ public extension MultiVector {
             this.scalar * other.e1234
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(WedgeInfixPartial<MultiVector> lhs, VersorEven rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension MultiVector {
     public MultiVector wedge(VersorEven other) {
@@ -4808,6 +6172,10 @@ public extension MultiVector {
         );
     }
 }
+// Fancy infix trick (second half)
+public MultiVector operator /(WedgeInfixPartial<MultiVector> lhs, VersorOdd rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension MultiVector {
     public MultiVector wedge(VersorOdd other) {
         return MultiVector(
@@ -4836,17 +6204,13 @@ public extension MultiVector {
         );
     }
 }
-public extension Plane {
-    // Fancy infix trick (first half)
-    public WedgeInfixPartial<Plane> operator /(WedgeInfix rhs) {
-        return WedgeInfixPartial<Plane>(this);
-    }
+// Fancy infix trick (first half)
+public WedgeInfixPartial<Plane> operator /(Plane lhs, WedgeInfix rhs) {
+    return WedgeInfixPartial<Plane>(lhs);
 }
-public extension WedgeInfixPartial<Plane> {
-    // Fancy infix trick (second half)
-    public Plane operator /(AntiCircleRotor rhs) {
-        return this.a.wedge(rhs);
-    }
+// Fancy infix trick (second half)
+public Plane operator /(WedgeInfixPartial<Plane> lhs, AntiCircleRotor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Plane {
     public Plane wedge(AntiCircleRotor other) {
@@ -4856,6 +6220,10 @@ public extension Plane {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<Plane> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Plane {
     public AntiScalar wedge(AntiDipoleInversion other) {
         return AntiScalar(
@@ -4863,6 +6231,10 @@ public extension Plane {
             (other.e4 * this.e3215) + (other.e1 * this.e4235) + (other.e2 * this.e4315) + (other.e3 * this.e4125)
         );
     }
+}
+// Fancy infix trick (second half)
+public Plane operator /(WedgeInfixPartial<Plane> lhs, AntiDualNum rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Plane {
     public Plane wedge(AntiDualNum other) {
@@ -4872,6 +6244,10 @@ public extension Plane {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<Plane> lhs, AntiFlector rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Plane {
     public AntiScalar wedge(AntiFlector other) {
         return AntiScalar(
@@ -4879,6 +6255,10 @@ public extension Plane {
             (other.e1 * this.e4235) + (other.e2 * this.e4315) + (other.e3 * this.e4125)
         );
     }
+}
+// Fancy infix trick (second half)
+public Plane operator /(WedgeInfixPartial<Plane> lhs, AntiMotor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Plane {
     public Plane wedge(AntiMotor other) {
@@ -4888,6 +6268,10 @@ public extension Plane {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<Plane> lhs, AntiPlane rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Plane {
     public AntiScalar wedge(AntiPlane other) {
         return AntiScalar(
@@ -4895,6 +6279,10 @@ public extension Plane {
             (other.e1 * this.e4235) + (other.e2 * this.e4315) + (other.e3 * this.e4125)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(WedgeInfixPartial<Plane> lhs, MultiVector rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Plane {
     public MultiVector wedge(MultiVector other) {
@@ -4924,6 +6312,10 @@ public extension Plane {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<Plane> lhs, RoundPoint rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Plane {
     public AntiScalar wedge(RoundPoint other) {
         return AntiScalar(
@@ -4931,6 +6323,10 @@ public extension Plane {
             (this.e4235 * other.e1) + (this.e4315 * other.e2) + (this.e4125 * other.e3) + (this.e3215 * other.e4)
         );
     }
+}
+// Fancy infix trick (second half)
+public Plane operator /(WedgeInfixPartial<Plane> lhs, Scalar rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Plane {
     public Plane wedge(Scalar other) {
@@ -4940,6 +6336,10 @@ public extension Plane {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<Plane> lhs, VersorEven rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Plane {
     public AntiScalar wedge(VersorEven other) {
         return AntiScalar(
@@ -4947,6 +6347,10 @@ public extension Plane {
             (this.e4235 * other.e1) + (this.e4315 * other.e2) + (this.e4125 * other.e3) + (this.e3215 * other.e4)
         );
     }
+}
+// Fancy infix trick (second half)
+public Plane operator /(WedgeInfixPartial<Plane> lhs, VersorOdd rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Plane {
     public Plane wedge(VersorOdd other) {
@@ -4956,17 +6360,13 @@ public extension Plane {
         );
     }
 }
-public extension RoundPoint {
-    // Fancy infix trick (first half)
-    public WedgeInfixPartial<RoundPoint> operator /(WedgeInfix rhs) {
-        return WedgeInfixPartial<RoundPoint>(this);
-    }
+// Fancy infix trick (first half)
+public WedgeInfixPartial<RoundPoint> operator /(RoundPoint lhs, WedgeInfix rhs) {
+    return WedgeInfixPartial<RoundPoint>(lhs);
 }
-public extension WedgeInfixPartial<RoundPoint> {
-    // Fancy infix trick (second half)
-    public AntiDipoleInversion operator /(AntiCircleRotor rhs) {
-        return this.a.wedge(rhs);
-    }
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(WedgeInfixPartial<RoundPoint> lhs, AntiCircleRotor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension RoundPoint {
     public AntiDipoleInversion wedge(AntiCircleRotor other) {
@@ -4982,6 +6382,10 @@ public extension RoundPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public DipoleInversion operator /(WedgeInfixPartial<RoundPoint> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension RoundPoint {
     public DipoleInversion wedge(AntiDipoleInversion other) {
         return DipoleInversion(
@@ -4995,6 +6399,10 @@ public extension RoundPoint {
             float4((other.e425 * this.e3) + (other.e235 * this.e4), (other.e435 * this.e1) + (other.e315 * this.e4), (other.e415 * this.e2) + (other.e125 * this.e4), -(other.e315 * this.e2) - (other.e125 * this.e3)) - (float4(this.e5) * float4(other.group0.xyz, other.e321)) - (this.group0.yzxx * float4(other.group1.zxy, other.e235))
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(WedgeInfixPartial<RoundPoint> lhs, AntiDualNum rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension RoundPoint {
     public VersorEven wedge(AntiDualNum other) {
@@ -5010,6 +6418,10 @@ public extension RoundPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public Sphere operator /(WedgeInfixPartial<RoundPoint> lhs, AntiFlatPoint rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension RoundPoint {
     public Sphere wedge(AntiFlatPoint other) {
         return Sphere(
@@ -5019,6 +6431,10 @@ public extension RoundPoint {
             other.e321 * this.e4
         );
     }
+}
+// Fancy infix trick (second half)
+public DipoleInversion operator /(WedgeInfixPartial<RoundPoint> lhs, AntiFlector rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension RoundPoint {
     public DipoleInversion wedge(AntiFlector other) {
@@ -5034,6 +6450,10 @@ public extension RoundPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public Circle operator /(WedgeInfixPartial<RoundPoint> lhs, AntiLine rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension RoundPoint {
     public Circle wedge(AntiLine other) {
         return Circle(
@@ -5045,6 +6465,10 @@ public extension RoundPoint {
             (float3(this.e5) * other.group0.xyz) + (other.group1.xyz.zxy * this.group0.yzx) - (other.group1.xyz.yzx * this.group0.zxy)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(WedgeInfixPartial<RoundPoint> lhs, AntiMotor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension RoundPoint {
     public VersorEven wedge(AntiMotor other) {
@@ -5060,6 +6484,10 @@ public extension RoundPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public Dipole operator /(WedgeInfixPartial<RoundPoint> lhs, AntiPlane rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension RoundPoint {
     public Dipole wedge(AntiPlane other) {
         return Dipole(
@@ -5072,6 +6500,10 @@ public extension RoundPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public Sphere operator /(WedgeInfixPartial<RoundPoint> lhs, Circle rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension RoundPoint {
     public Sphere wedge(Circle other) {
         return Sphere(
@@ -5082,6 +6514,10 @@ public extension RoundPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public Sphere operator /(WedgeInfixPartial<RoundPoint> lhs, CircleRotor rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension RoundPoint {
     public Sphere wedge(CircleRotor other) {
         return Sphere(
@@ -5091,6 +6527,10 @@ public extension RoundPoint {
             (other.e423 * this.e1) + (other.e431 * this.e2) + (other.e412 * this.e3) + (other.e321 * this.e4)
         );
     }
+}
+// Fancy infix trick (second half)
+public Circle operator /(WedgeInfixPartial<RoundPoint> lhs, Dipole rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension RoundPoint {
     public Circle wedge(Dipole other) {
@@ -5104,6 +6544,10 @@ public extension RoundPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public CircleRotor operator /(WedgeInfixPartial<RoundPoint> lhs, DipoleInversion rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension RoundPoint {
     public CircleRotor wedge(DipoleInversion other) {
         return CircleRotor(
@@ -5116,6 +6560,10 @@ public extension RoundPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public FlatPoint operator /(WedgeInfixPartial<RoundPoint> lhs, DualNum rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension RoundPoint {
     public FlatPoint wedge(DualNum other) {
         return FlatPoint(
@@ -5123,6 +6571,10 @@ public extension RoundPoint {
             float4(other.e5) * this.group0
         );
     }
+}
+// Fancy infix trick (second half)
+public Line operator /(WedgeInfixPartial<RoundPoint> lhs, FlatPoint rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension RoundPoint {
     public Line wedge(FlatPoint other) {
@@ -5134,6 +6586,10 @@ public extension RoundPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(WedgeInfixPartial<RoundPoint> lhs, Flector rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension RoundPoint {
     public Motor wedge(Flector other) {
         return Motor(
@@ -5144,6 +6600,10 @@ public extension RoundPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public Plane operator /(WedgeInfixPartial<RoundPoint> lhs, Line rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension RoundPoint {
     public Plane wedge(Line other) {
         return Plane(
@@ -5151,6 +6611,10 @@ public extension RoundPoint {
             float4((other.e425 * this.e3) + (other.e235 * this.e4), (other.e435 * this.e1) + (other.e315 * this.e4), (other.e415 * this.e2) + (other.e125 * this.e4), -(other.e315 * this.e2) - (other.e125 * this.e3)) - (this.group0.yzxx * float4(other.group0.xyz.zxy, other.e235))
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(WedgeInfixPartial<RoundPoint> lhs, Motor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension RoundPoint {
     public Flector wedge(Motor other) {
@@ -5161,6 +6625,10 @@ public extension RoundPoint {
             float4((other.e425 * this.e3) + (other.e235 * this.e4), (other.e435 * this.e1) + (other.e315 * this.e4), (other.e415 * this.e2) + (other.e125 * this.e4), -(other.e315 * this.e2) - (other.e125 * this.e3)) - (this.group0.yzxx * float4(other.group0.zxy, other.e235))
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(WedgeInfixPartial<RoundPoint> lhs, MultiVector rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension RoundPoint {
     public MultiVector wedge(MultiVector other) {
@@ -5190,6 +6658,10 @@ public extension RoundPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<RoundPoint> lhs, Plane rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension RoundPoint {
     public AntiScalar wedge(Plane other) {
         return AntiScalar(
@@ -5197,6 +6669,10 @@ public extension RoundPoint {
             (other.e4235 * this.e1) + (other.e4315 * this.e2) + (other.e4125 * this.e3) + (other.e3215 * this.e4)
         );
     }
+}
+// Fancy infix trick (second half)
+public Dipole operator /(WedgeInfixPartial<RoundPoint> lhs, RoundPoint rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension RoundPoint {
     public Dipole wedge(RoundPoint other) {
@@ -5210,6 +6686,10 @@ public extension RoundPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public RoundPoint operator /(WedgeInfixPartial<RoundPoint> lhs, Scalar rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension RoundPoint {
     public RoundPoint wedge(Scalar other) {
         return RoundPoint(
@@ -5220,6 +6700,10 @@ public extension RoundPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<RoundPoint> lhs, Sphere rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension RoundPoint {
     public AntiScalar wedge(Sphere other) {
         return AntiScalar(
@@ -5227,6 +6711,10 @@ public extension RoundPoint {
             (this.e1 * other.e4235) + (this.e2 * other.e4315) + (this.e3 * other.e4125) + (this.e4 * other.e3215) + (this.e5 * other.e1234)
         );
     }
+}
+// Fancy infix trick (second half)
+public DipoleInversion operator /(WedgeInfixPartial<RoundPoint> lhs, VersorEven rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension RoundPoint {
     public DipoleInversion wedge(VersorEven other) {
@@ -5242,6 +6730,10 @@ public extension RoundPoint {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(WedgeInfixPartial<RoundPoint> lhs, VersorOdd rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension RoundPoint {
     public VersorEven wedge(VersorOdd other) {
         return VersorEven(
@@ -5256,17 +6748,13 @@ public extension RoundPoint {
         );
     }
 }
-public extension Scalar {
-    // Fancy infix trick (first half)
-    public WedgeInfixPartial<Scalar> operator /(WedgeInfix rhs) {
-        return WedgeInfixPartial<Scalar>(this);
-    }
+// Fancy infix trick (first half)
+public WedgeInfixPartial<Scalar> operator /(Scalar lhs, WedgeInfix rhs) {
+    return WedgeInfixPartial<Scalar>(lhs);
 }
-public extension WedgeInfixPartial<Scalar> {
-    // Fancy infix trick (second half)
-    public AntiCircleRotor operator /(AntiCircleRotor rhs) {
-        return this.a.wedge(rhs);
-    }
+// Fancy infix trick (second half)
+public AntiCircleRotor operator /(WedgeInfixPartial<Scalar> lhs, AntiCircleRotor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Scalar {
     public AntiCircleRotor wedge(AntiCircleRotor other) {
@@ -5279,6 +6767,10 @@ public extension Scalar {
             float4(this.scalar) * other.group2
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiDipoleInversion operator /(WedgeInfixPartial<Scalar> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Scalar {
     public AntiDipoleInversion wedge(AntiDipoleInversion other) {
@@ -5294,6 +6786,10 @@ public extension Scalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiDualNum operator /(WedgeInfixPartial<Scalar> lhs, AntiDualNum rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Scalar {
     public AntiDualNum wedge(AntiDualNum other) {
         return AntiDualNum(
@@ -5302,6 +6798,10 @@ public extension Scalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiFlatPoint operator /(WedgeInfixPartial<Scalar> lhs, AntiFlatPoint rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Scalar {
     public AntiFlatPoint wedge(AntiFlatPoint other) {
         return AntiFlatPoint(
@@ -5309,6 +6809,10 @@ public extension Scalar {
             float4(this.scalar) * other.group0
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiFlector operator /(WedgeInfixPartial<Scalar> lhs, AntiFlector rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Scalar {
     public AntiFlector wedge(AntiFlector other) {
@@ -5320,6 +6824,10 @@ public extension Scalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiLine operator /(WedgeInfixPartial<Scalar> lhs, AntiLine rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Scalar {
     public AntiLine wedge(AntiLine other) {
         return AntiLine(
@@ -5329,6 +6837,10 @@ public extension Scalar {
             float3(this.scalar) * other.group1.xyz
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiMotor operator /(WedgeInfixPartial<Scalar> lhs, AntiMotor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Scalar {
     public AntiMotor wedge(AntiMotor other) {
@@ -5340,6 +6852,10 @@ public extension Scalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiPlane operator /(WedgeInfixPartial<Scalar> lhs, AntiPlane rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Scalar {
     public AntiPlane wedge(AntiPlane other) {
         return AntiPlane(
@@ -5348,6 +6864,10 @@ public extension Scalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<Scalar> lhs, AntiScalar rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Scalar {
     public AntiScalar wedge(AntiScalar other) {
         return AntiScalar(
@@ -5355,6 +6875,10 @@ public extension Scalar {
             other.e12345 * this.scalar
         );
     }
+}
+// Fancy infix trick (second half)
+public Circle operator /(WedgeInfixPartial<Scalar> lhs, Circle rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Scalar {
     public Circle wedge(Circle other) {
@@ -5368,6 +6892,10 @@ public extension Scalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public CircleRotor operator /(WedgeInfixPartial<Scalar> lhs, CircleRotor rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Scalar {
     public CircleRotor wedge(CircleRotor other) {
         return CircleRotor(
@@ -5380,6 +6908,10 @@ public extension Scalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public Dipole operator /(WedgeInfixPartial<Scalar> lhs, Dipole rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Scalar {
     public Dipole wedge(Dipole other) {
         return Dipole(
@@ -5391,6 +6923,10 @@ public extension Scalar {
             float3(this.scalar) * other.group2.xyz
         );
     }
+}
+// Fancy infix trick (second half)
+public DipoleInversion operator /(WedgeInfixPartial<Scalar> lhs, DipoleInversion rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Scalar {
     public DipoleInversion wedge(DipoleInversion other) {
@@ -5406,6 +6942,10 @@ public extension Scalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public DualNum operator /(WedgeInfixPartial<Scalar> lhs, DualNum rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Scalar {
     public DualNum wedge(DualNum other) {
         return DualNum(
@@ -5414,6 +6954,10 @@ public extension Scalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public FlatPoint operator /(WedgeInfixPartial<Scalar> lhs, FlatPoint rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Scalar {
     public FlatPoint wedge(FlatPoint other) {
         return FlatPoint(
@@ -5421,6 +6965,10 @@ public extension Scalar {
             float4(this.scalar) * other.group0
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(WedgeInfixPartial<Scalar> lhs, Flector rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Scalar {
     public Flector wedge(Flector other) {
@@ -5432,6 +6980,10 @@ public extension Scalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public Line operator /(WedgeInfixPartial<Scalar> lhs, Line rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Scalar {
     public Line wedge(Line other) {
         return Line(
@@ -5442,6 +6994,10 @@ public extension Scalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(WedgeInfixPartial<Scalar> lhs, Motor rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Scalar {
     public Motor wedge(Motor other) {
         return Motor(
@@ -5451,6 +7007,10 @@ public extension Scalar {
             float4(this.scalar) * other.group1
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(WedgeInfixPartial<Scalar> lhs, MultiVector rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Scalar {
     public MultiVector wedge(MultiVector other) {
@@ -5480,6 +7040,10 @@ public extension Scalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public Plane operator /(WedgeInfixPartial<Scalar> lhs, Plane rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Scalar {
     public Plane wedge(Plane other) {
         return Plane(
@@ -5487,6 +7051,10 @@ public extension Scalar {
             float4(this.scalar) * other.group0
         );
     }
+}
+// Fancy infix trick (second half)
+public RoundPoint operator /(WedgeInfixPartial<Scalar> lhs, RoundPoint rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Scalar {
     public RoundPoint wedge(RoundPoint other) {
@@ -5498,6 +7066,10 @@ public extension Scalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public Scalar operator /(WedgeInfixPartial<Scalar> lhs, Scalar rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Scalar {
     public Scalar wedge(Scalar other) {
         return Scalar(
@@ -5505,6 +7077,10 @@ public extension Scalar {
             other.scalar * this.scalar
         );
     }
+}
+// Fancy infix trick (second half)
+public Sphere operator /(WedgeInfixPartial<Scalar> lhs, Sphere rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Scalar {
     public Sphere wedge(Sphere other) {
@@ -5515,6 +7091,10 @@ public extension Scalar {
             this.scalar * other.e1234
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(WedgeInfixPartial<Scalar> lhs, VersorEven rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Scalar {
     public VersorEven wedge(VersorEven other) {
@@ -5530,6 +7110,10 @@ public extension Scalar {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(WedgeInfixPartial<Scalar> lhs, VersorOdd rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Scalar {
     public VersorOdd wedge(VersorOdd other) {
         return VersorOdd(
@@ -5544,17 +7128,13 @@ public extension Scalar {
         );
     }
 }
-public extension Sphere {
-    // Fancy infix trick (first half)
-    public WedgeInfixPartial<Sphere> operator /(WedgeInfix rhs) {
-        return WedgeInfixPartial<Sphere>(this);
-    }
+// Fancy infix trick (first half)
+public WedgeInfixPartial<Sphere> operator /(Sphere lhs, WedgeInfix rhs) {
+    return WedgeInfixPartial<Sphere>(lhs);
 }
-public extension WedgeInfixPartial<Sphere> {
-    // Fancy infix trick (second half)
-    public Sphere operator /(AntiCircleRotor rhs) {
-        return this.a.wedge(rhs);
-    }
+// Fancy infix trick (second half)
+public Sphere operator /(WedgeInfixPartial<Sphere> lhs, AntiCircleRotor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Sphere {
     public Sphere wedge(AntiCircleRotor other) {
@@ -5566,6 +7146,10 @@ public extension Sphere {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<Sphere> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Sphere {
     public AntiScalar wedge(AntiDipoleInversion other) {
         return AntiScalar(
@@ -5573,6 +7157,10 @@ public extension Sphere {
             (other.e4 * this.e3215) + (other.e1 * this.e4235) + (other.e2 * this.e4315) + (other.e3 * this.e4125) + (other.e5 * this.e1234)
         );
     }
+}
+// Fancy infix trick (second half)
+public Sphere operator /(WedgeInfixPartial<Sphere> lhs, AntiDualNum rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Sphere {
     public Sphere wedge(AntiDualNum other) {
@@ -5584,6 +7172,10 @@ public extension Sphere {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<Sphere> lhs, AntiFlector rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Sphere {
     public AntiScalar wedge(AntiFlector other) {
         return AntiScalar(
@@ -5591,6 +7183,10 @@ public extension Sphere {
             (other.e1 * this.e4235) + (other.e2 * this.e4315) + (other.e3 * this.e4125) + (other.e5 * this.e1234)
         );
     }
+}
+// Fancy infix trick (second half)
+public Sphere operator /(WedgeInfixPartial<Sphere> lhs, AntiMotor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Sphere {
     public Sphere wedge(AntiMotor other) {
@@ -5602,6 +7198,10 @@ public extension Sphere {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<Sphere> lhs, AntiPlane rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Sphere {
     public AntiScalar wedge(AntiPlane other) {
         return AntiScalar(
@@ -5609,6 +7209,10 @@ public extension Sphere {
             (other.e1 * this.e4235) + (other.e2 * this.e4315) + (other.e3 * this.e4125) + (other.e5 * this.e1234)
         );
     }
+}
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<Sphere> lhs, DualNum rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Sphere {
     public AntiScalar wedge(DualNum other) {
@@ -5618,6 +7222,10 @@ public extension Sphere {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<Sphere> lhs, Motor rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Sphere {
     public AntiScalar wedge(Motor other) {
         return AntiScalar(
@@ -5625,6 +7233,10 @@ public extension Sphere {
             other.e5 * this.e1234
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(WedgeInfixPartial<Sphere> lhs, MultiVector rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Sphere {
     public MultiVector wedge(MultiVector other) {
@@ -5654,6 +7266,10 @@ public extension Sphere {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<Sphere> lhs, RoundPoint rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Sphere {
     public AntiScalar wedge(RoundPoint other) {
         return AntiScalar(
@@ -5661,6 +7277,10 @@ public extension Sphere {
             (other.e1 * this.e4235) + (other.e2 * this.e4315) + (other.e3 * this.e4125) + (other.e4 * this.e3215) + (other.e5 * this.e1234)
         );
     }
+}
+// Fancy infix trick (second half)
+public Sphere operator /(WedgeInfixPartial<Sphere> lhs, Scalar rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Sphere {
     public Sphere wedge(Scalar other) {
@@ -5672,6 +7292,10 @@ public extension Sphere {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<Sphere> lhs, VersorEven rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension Sphere {
     public AntiScalar wedge(VersorEven other) {
         return AntiScalar(
@@ -5679,6 +7303,10 @@ public extension Sphere {
             (this.e4235 * other.e1) + (this.e4315 * other.e2) + (this.e4125 * other.e3) + (this.e3215 * other.e4) + (this.e1234 * other.e5)
         );
     }
+}
+// Fancy infix trick (second half)
+public Sphere operator /(WedgeInfixPartial<Sphere> lhs, VersorOdd rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension Sphere {
     public Sphere wedge(VersorOdd other) {
@@ -5690,17 +7318,13 @@ public extension Sphere {
         );
     }
 }
-public extension VersorEven {
-    // Fancy infix trick (first half)
-    public WedgeInfixPartial<VersorEven> operator /(WedgeInfix rhs) {
-        return WedgeInfixPartial<VersorEven>(this);
-    }
+// Fancy infix trick (first half)
+public WedgeInfixPartial<VersorEven> operator /(VersorEven lhs, WedgeInfix rhs) {
+    return WedgeInfixPartial<VersorEven>(lhs);
 }
-public extension WedgeInfixPartial<VersorEven> {
-    // Fancy infix trick (second half)
-    public VersorEven operator /(AntiCircleRotor rhs) {
-        return this.a.wedge(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorEven operator /(WedgeInfixPartial<VersorEven> lhs, AntiCircleRotor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension VersorEven {
     public VersorEven wedge(AntiCircleRotor other) {
@@ -5716,6 +7340,10 @@ public extension VersorEven {
         );
     }
 }
+// Fancy infix trick (second half)
+public DipoleInversion operator /(WedgeInfixPartial<VersorEven> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension VersorEven {
     public DipoleInversion wedge(AntiDipoleInversion other) {
         return DipoleInversion(
@@ -5729,6 +7357,10 @@ public extension VersorEven {
             (float4(other.e5) * float4(this.group0.xyz, this.e321)) + (other.group3.yzxz * float4(this.group1.zxy, this.e125)) + float4((other.group1.yzx * this.group3.zxy), other.e1 * this.e235) + float4((this.group3.www * other.group2.xyz), other.e2 * this.e315) - (float4(this.e5) * float4(other.group0.xyz, other.e321)) - (other.group2.wwwy * float4(this.group2.xyz, this.e2)) - (this.group3.yzxx * float4(other.group1.zxy, other.e235)) - float4((other.group3.zxy * this.group1.yzx), other.e125 * this.e3)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(WedgeInfixPartial<VersorEven> lhs, AntiDualNum rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension VersorEven {
     public VersorEven wedge(AntiDualNum other) {
@@ -5744,6 +7376,10 @@ public extension VersorEven {
         );
     }
 }
+// Fancy infix trick (second half)
+public Sphere operator /(WedgeInfixPartial<VersorEven> lhs, AntiFlatPoint rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension VersorEven {
     public Sphere wedge(AntiFlatPoint other) {
         return Sphere(
@@ -5753,6 +7389,10 @@ public extension VersorEven {
             other.e321 * this.e4
         );
     }
+}
+// Fancy infix trick (second half)
+public DipoleInversion operator /(WedgeInfixPartial<VersorEven> lhs, AntiFlector rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension VersorEven {
     public DipoleInversion wedge(AntiFlector other) {
@@ -5768,6 +7408,10 @@ public extension VersorEven {
         );
     }
 }
+// Fancy infix trick (second half)
+public CircleRotor operator /(WedgeInfixPartial<VersorEven> lhs, AntiLine rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension VersorEven {
     public CircleRotor wedge(AntiLine other) {
         return CircleRotor(
@@ -5779,6 +7423,10 @@ public extension VersorEven {
             float4((other.e23 * this.e5) + (other.e35 * this.e2), (other.e31 * this.e5) + (other.e15 * this.e3), (other.e12 * this.e5) + (other.e25 * this.e1), -(other.e31 * this.e425) - (other.e12 * this.e435) - (other.e15 * this.e423) - (other.e25 * this.e431) - (other.e35 * this.e412)) - float4((other.group1.xyz.yzx * this.group3.zxy), other.e23 * this.e415)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(WedgeInfixPartial<VersorEven> lhs, AntiMotor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension VersorEven {
     public VersorEven wedge(AntiMotor other) {
@@ -5794,6 +7442,10 @@ public extension VersorEven {
         );
     }
 }
+// Fancy infix trick (second half)
+public DipoleInversion operator /(WedgeInfixPartial<VersorEven> lhs, AntiPlane rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension VersorEven {
     public DipoleInversion wedge(AntiPlane other) {
         return DipoleInversion(
@@ -5808,6 +7460,10 @@ public extension VersorEven {
         );
     }
 }
+// Fancy infix trick (second half)
+public Sphere operator /(WedgeInfixPartial<VersorEven> lhs, Circle rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension VersorEven {
     public Sphere wedge(Circle other) {
         return Sphere(
@@ -5818,6 +7474,10 @@ public extension VersorEven {
         );
     }
 }
+// Fancy infix trick (second half)
+public Sphere operator /(WedgeInfixPartial<VersorEven> lhs, CircleRotor rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension VersorEven {
     public Sphere wedge(CircleRotor other) {
         return Sphere(
@@ -5827,6 +7487,10 @@ public extension VersorEven {
             (other.e423 * this.e1) + (other.e431 * this.e2) + (other.e412 * this.e3) + (other.e321 * this.e4)
         );
     }
+}
+// Fancy infix trick (second half)
+public CircleRotor operator /(WedgeInfixPartial<VersorEven> lhs, Dipole rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension VersorEven {
     public CircleRotor wedge(Dipole other) {
@@ -5840,6 +7504,10 @@ public extension VersorEven {
         );
     }
 }
+// Fancy infix trick (second half)
+public CircleRotor operator /(WedgeInfixPartial<VersorEven> lhs, DipoleInversion rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension VersorEven {
     public CircleRotor wedge(DipoleInversion other) {
         return CircleRotor(
@@ -5852,6 +7520,10 @@ public extension VersorEven {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(WedgeInfixPartial<VersorEven> lhs, DualNum rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension VersorEven {
     public Flector wedge(DualNum other) {
         return Flector(
@@ -5861,6 +7533,10 @@ public extension VersorEven {
             float4(other.e5) * float4(this.group0.xyz, this.e321)
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(WedgeInfixPartial<VersorEven> lhs, FlatPoint rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension VersorEven {
     public Motor wedge(FlatPoint other) {
@@ -5872,6 +7548,10 @@ public extension VersorEven {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(WedgeInfixPartial<VersorEven> lhs, Flector rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension VersorEven {
     public Motor wedge(Flector other) {
         return Motor(
@@ -5882,6 +7562,10 @@ public extension VersorEven {
         );
     }
 }
+// Fancy infix trick (second half)
+public Plane operator /(WedgeInfixPartial<VersorEven> lhs, Line rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension VersorEven {
     public Plane wedge(Line other) {
         return Plane(
@@ -5889,6 +7573,10 @@ public extension VersorEven {
             float4((other.e425 * this.e3) + (other.e235 * this.e4), (other.e435 * this.e1) + (other.e315 * this.e4), (other.e415 * this.e2) + (other.e125 * this.e4), -(other.e315 * this.e2) - (other.e125 * this.e3)) - (this.group3.yzxx * float4(other.group0.xyz.zxy, other.e235))
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(WedgeInfixPartial<VersorEven> lhs, Motor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension VersorEven {
     public Flector wedge(Motor other) {
@@ -5899,6 +7587,10 @@ public extension VersorEven {
             float4((other.e235 * this.e4) + (other.e5 * this.e423), (other.e315 * this.e4) + (other.e5 * this.e431), (other.e125 * this.e4) + (other.e5 * this.e412), -(other.e315 * this.e2) - (other.e125 * this.e3)) + float4((other.group0.yzx * this.group3.zxy), other.e5 * this.e321) - (this.group3.yzxx * float4(other.group0.zxy, other.e235))
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(WedgeInfixPartial<VersorEven> lhs, MultiVector rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension VersorEven {
     public MultiVector wedge(MultiVector other) {
@@ -5928,6 +7620,10 @@ public extension VersorEven {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<VersorEven> lhs, Plane rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension VersorEven {
     public AntiScalar wedge(Plane other) {
         return AntiScalar(
@@ -5935,6 +7631,10 @@ public extension VersorEven {
             (other.e4235 * this.e1) + (other.e4315 * this.e2) + (other.e4125 * this.e3) + (other.e3215 * this.e4)
         );
     }
+}
+// Fancy infix trick (second half)
+public DipoleInversion operator /(WedgeInfixPartial<VersorEven> lhs, RoundPoint rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension VersorEven {
     public DipoleInversion wedge(RoundPoint other) {
@@ -5950,6 +7650,10 @@ public extension VersorEven {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(WedgeInfixPartial<VersorEven> lhs, Scalar rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension VersorEven {
     public VersorEven wedge(Scalar other) {
         return VersorEven(
@@ -5964,6 +7668,10 @@ public extension VersorEven {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<VersorEven> lhs, Sphere rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension VersorEven {
     public AntiScalar wedge(Sphere other) {
         return AntiScalar(
@@ -5971,6 +7679,10 @@ public extension VersorEven {
             (other.e4235 * this.e1) + (other.e4315 * this.e2) + (other.e4125 * this.e3) + (other.e3215 * this.e4) + (other.e1234 * this.e5)
         );
     }
+}
+// Fancy infix trick (second half)
+public DipoleInversion operator /(WedgeInfixPartial<VersorEven> lhs, VersorEven rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension VersorEven {
     public DipoleInversion wedge(VersorEven other) {
@@ -5986,6 +7698,10 @@ public extension VersorEven {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(WedgeInfixPartial<VersorEven> lhs, VersorOdd rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension VersorEven {
     public VersorEven wedge(VersorOdd other) {
         return VersorEven(
@@ -6000,17 +7716,13 @@ public extension VersorEven {
         );
     }
 }
-public extension VersorOdd {
-    // Fancy infix trick (first half)
-    public WedgeInfixPartial<VersorOdd> operator /(WedgeInfix rhs) {
-        return WedgeInfixPartial<VersorOdd>(this);
-    }
+// Fancy infix trick (first half)
+public WedgeInfixPartial<VersorOdd> operator /(VersorOdd lhs, WedgeInfix rhs) {
+    return WedgeInfixPartial<VersorOdd>(lhs);
 }
-public extension WedgeInfixPartial<VersorOdd> {
-    // Fancy infix trick (second half)
-    public VersorOdd operator /(AntiCircleRotor rhs) {
-        return this.a.wedge(rhs);
-    }
+// Fancy infix trick (second half)
+public VersorOdd operator /(WedgeInfixPartial<VersorOdd> lhs, AntiCircleRotor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension VersorOdd {
     public VersorOdd wedge(AntiCircleRotor other) {
@@ -6026,6 +7738,10 @@ public extension VersorOdd {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(WedgeInfixPartial<VersorOdd> lhs, AntiDipoleInversion rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension VersorOdd {
     public VersorEven wedge(AntiDipoleInversion other) {
         return VersorEven(
@@ -6039,6 +7755,10 @@ public extension VersorOdd {
             float4(this.scalar) * float4(other.group3.xyz, other.e4)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(WedgeInfixPartial<VersorOdd> lhs, AntiDualNum rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension VersorOdd {
     public VersorOdd wedge(AntiDualNum other) {
@@ -6054,6 +7774,10 @@ public extension VersorOdd {
         );
     }
 }
+// Fancy infix trick (second half)
+public CircleRotor operator /(WedgeInfixPartial<VersorOdd> lhs, AntiFlatPoint rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension VersorOdd {
     public CircleRotor wedge(AntiFlatPoint other) {
         return CircleRotor(
@@ -6065,6 +7789,10 @@ public extension VersorOdd {
             float4((float3(this.scalar) * other.group0.xyz), -(other.e235 * this.e41) - (other.e315 * this.e42) - (other.e125 * this.e43) - (other.e321 * this.e45))
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(WedgeInfixPartial<VersorOdd> lhs, AntiFlector rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension VersorOdd {
     public VersorEven wedge(AntiFlector other) {
@@ -6080,6 +7808,10 @@ public extension VersorOdd {
         );
     }
 }
+// Fancy infix trick (second half)
+public DipoleInversion operator /(WedgeInfixPartial<VersorOdd> lhs, AntiLine rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension VersorOdd {
     public DipoleInversion wedge(AntiLine other) {
         return DipoleInversion(
@@ -6093,6 +7825,10 @@ public extension VersorOdd {
             float4((other.e23 * this.e45) + (other.e35 * this.e42), (other.e31 * this.e45) + (other.e15 * this.e43), (other.e12 * this.e45) + (other.e25 * this.e41), -(other.e31 * this.e25) - (other.e12 * this.e35) - (other.e15 * this.e23) - (other.e25 * this.e31) - (other.e35 * this.e12)) - float4((other.group1.xyz.yzx * this.group0.zxy), other.e23 * this.e15)
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(WedgeInfixPartial<VersorOdd> lhs, AntiMotor rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension VersorOdd {
     public VersorOdd wedge(AntiMotor other) {
@@ -6108,6 +7844,10 @@ public extension VersorOdd {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorEven operator /(WedgeInfixPartial<VersorOdd> lhs, AntiPlane rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension VersorOdd {
     public VersorEven wedge(AntiPlane other) {
         return VersorEven(
@@ -6122,6 +7862,10 @@ public extension VersorOdd {
         );
     }
 }
+// Fancy infix trick (second half)
+public AntiScalar operator /(WedgeInfixPartial<VersorOdd> lhs, AntiScalar rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension VersorOdd {
     public AntiScalar wedge(AntiScalar other) {
         return AntiScalar(
@@ -6129,6 +7873,10 @@ public extension VersorOdd {
             other.e12345 * this.scalar
         );
     }
+}
+// Fancy infix trick (second half)
+public CircleRotor operator /(WedgeInfixPartial<VersorOdd> lhs, Circle rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension VersorOdd {
     public CircleRotor wedge(Circle other) {
@@ -6142,6 +7890,10 @@ public extension VersorOdd {
         );
     }
 }
+// Fancy infix trick (second half)
+public CircleRotor operator /(WedgeInfixPartial<VersorOdd> lhs, CircleRotor rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension VersorOdd {
     public CircleRotor wedge(CircleRotor other) {
         return CircleRotor(
@@ -6153,6 +7905,10 @@ public extension VersorOdd {
             float4((float3(this.scalar) * other.group2.xyz), (other.e12345 * this.scalar) - (other.e423 * this.e15) - (other.e431 * this.e25) - (other.e412 * this.e35) - (other.e415 * this.e23) - (other.e425 * this.e31) - (other.e435 * this.e12) - (other.e321 * this.e45) - (other.e235 * this.e41) - (other.e315 * this.e42) - (other.e125 * this.e43))
         );
     }
+}
+// Fancy infix trick (second half)
+public DipoleInversion operator /(WedgeInfixPartial<VersorOdd> lhs, Dipole rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension VersorOdd {
     public DipoleInversion wedge(Dipole other) {
@@ -6168,6 +7924,10 @@ public extension VersorOdd {
         );
     }
 }
+// Fancy infix trick (second half)
+public DipoleInversion operator /(WedgeInfixPartial<VersorOdd> lhs, DipoleInversion rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension VersorOdd {
     public DipoleInversion wedge(DipoleInversion other) {
         return DipoleInversion(
@@ -6182,6 +7942,10 @@ public extension VersorOdd {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(WedgeInfixPartial<VersorOdd> lhs, DualNum rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension VersorOdd {
     public Motor wedge(DualNum other) {
         return Motor(
@@ -6191,6 +7955,10 @@ public extension VersorOdd {
             float4(other.e5) * float4(this.group1.xyz, this.scalar)
         );
     }
+}
+// Fancy infix trick (second half)
+public Flector operator /(WedgeInfixPartial<VersorOdd> lhs, FlatPoint rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension VersorOdd {
     public Flector wedge(FlatPoint other) {
@@ -6202,6 +7970,10 @@ public extension VersorOdd {
         );
     }
 }
+// Fancy infix trick (second half)
+public Flector operator /(WedgeInfixPartial<VersorOdd> lhs, Flector rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension VersorOdd {
     public Flector wedge(Flector other) {
         return Flector(
@@ -6211,6 +7983,10 @@ public extension VersorOdd {
             float4((other.e45 * this.e23) + (other.e4235 * this.scalar), (other.e45 * this.e31) + (other.e4315 * this.scalar), (other.e45 * this.e12) + (other.e4125 * this.scalar), -(other.e25 * this.e31) - (other.e35 * this.e12)) + (this.group0.yzxw * float4(other.group0.zxy, other.e3215)) - (other.group0.yzxx * float4(this.group0.zxy, this.e23))
         );
     }
+}
+// Fancy infix trick (second half)
+public Motor operator /(WedgeInfixPartial<VersorOdd> lhs, Line rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension VersorOdd {
     public Motor wedge(Line other) {
@@ -6222,6 +7998,10 @@ public extension VersorOdd {
         );
     }
 }
+// Fancy infix trick (second half)
+public Motor operator /(WedgeInfixPartial<VersorOdd> lhs, Motor rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension VersorOdd {
     public Motor wedge(Motor other) {
         return Motor(
@@ -6231,6 +8011,10 @@ public extension VersorOdd {
             float4(((float3(other.e5) * this.group1.xyz) + (float3(this.scalar) * other.group1.xyz)), other.e5 * this.scalar)
         );
     }
+}
+// Fancy infix trick (second half)
+public MultiVector operator /(WedgeInfixPartial<VersorOdd> lhs, MultiVector rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension VersorOdd {
     public MultiVector wedge(MultiVector other) {
@@ -6260,6 +8044,10 @@ public extension VersorOdd {
         );
     }
 }
+// Fancy infix trick (second half)
+public Plane operator /(WedgeInfixPartial<VersorOdd> lhs, Plane rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension VersorOdd {
     public Plane wedge(Plane other) {
         return Plane(
@@ -6267,6 +8055,10 @@ public extension VersorOdd {
             float4(this.scalar) * other.group0
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(WedgeInfixPartial<VersorOdd> lhs, RoundPoint rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension VersorOdd {
     public VersorEven wedge(RoundPoint other) {
@@ -6282,6 +8074,10 @@ public extension VersorOdd {
         );
     }
 }
+// Fancy infix trick (second half)
+public VersorOdd operator /(WedgeInfixPartial<VersorOdd> lhs, Scalar rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension VersorOdd {
     public VersorOdd wedge(Scalar other) {
         return VersorOdd(
@@ -6296,6 +8092,10 @@ public extension VersorOdd {
         );
     }
 }
+// Fancy infix trick (second half)
+public Sphere operator /(WedgeInfixPartial<VersorOdd> lhs, Sphere rhs) {
+    return lhs.a.wedge(rhs);
+}
 public extension VersorOdd {
     public Sphere wedge(Sphere other) {
         return Sphere(
@@ -6305,6 +8105,10 @@ public extension VersorOdd {
             other.e1234 * this.scalar
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorEven operator /(WedgeInfixPartial<VersorOdd> lhs, VersorEven rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension VersorOdd {
     public VersorEven wedge(VersorEven other) {
@@ -6319,6 +8123,10 @@ public extension VersorOdd {
             float4(this.scalar) * other.group3
         );
     }
+}
+// Fancy infix trick (second half)
+public VersorOdd operator /(WedgeInfixPartial<VersorOdd> lhs, VersorOdd rhs) {
+    return lhs.a.wedge(rhs);
 }
 public extension VersorOdd {
     public VersorOdd wedge(VersorOdd other) {

@@ -6,7 +6,7 @@ public struct Point {
     // e1, e2, e3, e4
     internal float4 group0;
 
-    __init(
+    public __init(
         float e1, float e2, float e3, float e4
     ) {
         group0 = float4(e1, e2, e3, e4);

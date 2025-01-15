@@ -4,7 +4,7 @@ use std::sync::Arc;
 
 use parking_lot::Mutex;
 use wgpu::util::{BufferInitDescriptor, DeviceExt};
-use wgpu::{include_spirv, BindGroupDescriptor, BindGroupLayoutDescriptor, BindGroupLayoutEntry, BufferUsages, Instance, InstanceDescriptor, SurfaceTargetUnsafe};
+use wgpu::{include_spirv, BindGroupDescriptor, BindGroupLayoutDescriptor, BindGroupLayoutEntry, BufferUsages, Instance, InstanceDescriptor, PipelineCompilationOptions, SurfaceTargetUnsafe};
 use winit::application::ApplicationHandler;
 use winit::dpi::PhysicalSize;
 use winit::event::WindowEvent;
@@ -114,18 +114,21 @@ impl App {
             layout: Some(&pipeline_layout),
             vertex: wgpu::VertexState {
                 module: &device.create_shader_module(include_spirv!("../res/shader.vs.spv")),
-                entry_point: "vs_main",
+                entry_point: Some("vs_main"),
+                compilation_options: PipelineCompilationOptions::default(),
                 buffers: &[],
             },
             fragment: Some(wgpu::FragmentState {
                 module: &device.create_shader_module(include_spirv!("../res/shader.fs.spv")),
-                entry_point: "fs_main",
+                entry_point: Some("fs_main"),
+                compilation_options: PipelineCompilationOptions::default(),
                 targets: &[Some(swapchain_format.into())],
             }),
             primitive: wgpu::PrimitiveState::default(),
             depth_stencil: None,
             multisample: wgpu::MultisampleState::default(),
             multiview: None,
+            cache: None,
         });
 
         let mut surface_configuration = surface.get_default_config(&adapter, window_size.width, window_size.height).unwrap();

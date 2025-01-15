@@ -1,6 +1,7 @@
 import cga3d;
-using cga3d.data;
-using cga3d.traits;
+// TODO alter namespacing to just be cga3d and that's it
+using data;
+using traits;
 
 // Quick refresher on shader stages:
 // 1) Objects start in homogenous space, perhaps also known as "view space"
@@ -29,15 +30,13 @@ VertexOutput vs_main(uint in_vertex_index : SV_VertexID) {
     return out;
 }
 
-cbuffer ScreenSize : register(b0) {
-    float2 screen_size;
-};
-
-
+[[vk::binding(0)]]
+ConstantBuffer<float2> ScreenSize : register(b0);
 
 [shader("fragment")]
-void vertexMain(
-    float3 position : POSITION, out float4 outPosition : SV_Position
+void fs_main(
+    in VertexOutput vertex,
+    out float4 background_color : SV_Target0,
 ) {
     // Start by recovering a nice coordinate space
     // (0, 0) is in the center
@@ -47,18 +46,18 @@ void vertexMain(
     float new_y = vertex.percent_position.y;
     new_x = (2.0 * new_x) - 1.0;
     new_y = 1.0 - (2.0 * new_y);
-    float max_aspect = max(screen_size.x, screen_size.y);
-    float x_correction = max_aspect / screen_size.y;
-    float y_correction = max_aspect / screen_size.x;
+    float max_aspect = max(ScreenSize.x, ScreenSize.y);
+    float x_correction = max_aspect / ScreenSize.y;
+    float y_correction = max_aspect / ScreenSize.x;
     new_x = new_x * x_correction;
     new_y = new_y * y_correction;
 
     // Choose some background colors that will help us confirm that we got the coordinate space we wanted
     float4 color = float4(new_x, new_y, 0.0, 1.0);
-    float4 background_color = select(
-        color,
+    background_color = select(
+        (color.x < -1.0) || (color.y < -0.5),
         float4(color.x, color.y, 0.5, 1.0),
-        (color.x < -1.0) || (color.y < -0.5)
+        color,
     );
     // return background_color;
 
@@ -88,17 +87,17 @@ void vertexMain(
     FlatPoint direction = FlatPoint(0.0, 0.0, 1.0, 0.0);
 
     // Join a round point and point at infinity to create a line
-    Circle fragment_as_line = direction /wedge/ fragment_point;
+    Line fragment_as_line = direction /wedge/ fragment_point;
 
     // Now perform a meet to get a RoundPoint centered on the line and contained by the circle
-    RoundPoint meet_fragment_and_circle = circle /antiWedge/ fragment_as_line;
+    RoundPoint meet_fragment_and_circle = circle /anti_wedge/ fragment_as_line;
 
     // Now get the squared radius of the meet
-    float radius_squared = meet_fragment_and_circle.unitizedRadiusNormSquared();
+    float radius_squared = meet_fragment_and_circle.unitized_radius_norm_squared();
 
     // And lastly, make pixels more bright the closer they are to the circle.
-    float destructive_circle_color = float4(1.0) - float4(abs(radius_squared) * 100.0);
+    float4 destructive_circle_color = float4(1.0) - float4(abs(radius_squared) * 100.0);
     float4 circle_color = destructive_circle_color;
     // circle_color = max(float4(0.0), destructive_circle_color);
-    return background_color + circle_color;
+    background_color = background_color + circle_color;
 }

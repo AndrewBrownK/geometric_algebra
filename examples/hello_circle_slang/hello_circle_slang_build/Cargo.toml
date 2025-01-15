@@ -8,7 +8,7 @@ publish = false
 
 [dependencies]
 # naga_oil limits the version of wgpu and naga we can use (TODO update versions)
-cga3d = { path = "../../../libraries/cga3d", features = ["wgsl"] }
+cga3d = { path = "../../../libraries/cga3d", features = ["slang"] }
 #naga_oil = { version = "0.14.0", features = ["prune"] }
 #naga = { version = "0.20.0", features = ["spv-out"]}
 bytemuck = "1.16.0"

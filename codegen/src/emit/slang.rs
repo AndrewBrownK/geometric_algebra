@@ -1607,7 +1607,7 @@ internal bool lessThanOrEqualsHelper<T: IComparable>(T a, T b) {{
         }
 
 
-        writeln!(w, "\n\n    __init(")?;
+        writeln!(w, "\n\n    public __init(")?;
         for (i, el) in multi_vec.elements().into_iter().enumerate() {
             if i > 0 {
                 write!(w, ", ")?;
@@ -1904,23 +1904,31 @@ internal bool lessThanOrEqualsHelper<T: IComparable>(T a, T b) {{
             if let Some(infix_term) = infix_term {
                 if let TraitParam::Class(mv) = &owner_ty {
                     let n = mv.name();
-                    if !is_op && !already_granted_infix.contains(n) {
-                        already_granted_infix.insert(n);
-                        write!(w, "public extension ")?;
-                        self.write_type(w, *owner_ty)?;
-                        writeln!(w, " {{")?;
-                        if let TraitArity::Two = def.arity {
-                            writeln!(w, "    // Fancy infix trick (first half)")?;
-                            writeln!(w, "    public {ucc}{infix_term}Partial<{n}> {operator_method}({ucc}Infix rhs) {{")?;
-                            writeln!(w, "        return {ucc}{infix_term}Partial<{n}>(this);")?;
-                            writeln!(w, "    }}")?;
+                    if !is_op {
+                        // TODO use the [ForceInline] attribute
+
+                        // write!(w, "public extension ")?;
+                        // self.write_type(w, *owner_ty)?;
+                        // writeln!(w, " {{")?;
+                        if !already_granted_infix.contains(n) {
+                            already_granted_infix.insert(n);
+                            if let TraitArity::Two = def.arity {
+                                writeln!(w, "// Fancy infix trick (first half)")?;
+                                write!(w, "public {ucc}{infix_term}Partial<{n}> {operator_method}(")?;
+                                self.write_type(w, *owner_ty)?;
+                                writeln!(w, " lhs, {ucc}Infix rhs) {{")?;
+                                writeln!(w, "    return {ucc}{infix_term}Partial<{n}>(lhs);")?;
+                                writeln!(w, "}}")?;
+                            }
                         }
                         if let TraitArity::One = def.arity {
-                            writeln!(w, "    // Fancy postfix trick")?;
-                            write!(w, "    public ")?;
+                            writeln!(w, "// Fancy postfix trick")?;
+                            write!(w, "public ")?;
                             self.write_type(w, output_ty)?;
-                            writeln!(w, " {operator_method}({ucc}{infix_term} rhs)  {{")?;
-                            writeln!(w, "        return this.{lsc}();\n    }}")?;
+                            write!(w, " {operator_method}(")?;
+                            self.write_type(w, *owner_ty)?;
+                            writeln!(w, " lhs, {ucc}{infix_term} rhs)  {{")?;
+                            writeln!(w, "    return lhs.{lsc}();\n    }}")?;
                             // if &output_ty == owner_ty {
                             //     writeln!(w, "    // Fancy postfix self-assign")?;
                             //     writeln!(w, "    public {n}& {operator_method}=(const {ucc}{infix_term}& rhs) {{")?;
@@ -1928,31 +1936,36 @@ internal bool lessThanOrEqualsHelper<T: IComparable>(T a, T b) {{
                             //     writeln!(w, "        return *this;\n    }}")?;
                             // }
                         }
-                        writeln!(w, "}}")?;
+                        // writeln!(w, "}}")?;
                         if let (TraitArity::Two, Some(other_ty)) = (def.arity, var_param) {
 
-                            write!(w, "public extension {ucc}{infix_term}Partial<")?;
-                            self.write_type(w, *owner_ty)?;
-                            writeln!(w, "> {{")?;
-                            writeln!(w, "    // Fancy infix trick (second half)")?;
-                            write!(w, "    public ")?;
+                            // write!(w, "public extension {ucc}{infix_term}Partial<")?;
+                            // self.write_type(w, *owner_ty)?;
+                            // writeln!(w, "> {{")?;
+                            writeln!(w, "// Fancy infix trick (second half)")?;
+                            write!(w, "public ")?;
                             self.write_type(w, output_ty)?;
                             write!(w, " {operator_method}(")?;
+                            write!(w, "{ucc}{infix_term}Partial<")?;
+                            self.write_type(w, *owner_ty)?;
+                            write!(w, "> lhs, ")?;
                             self.write_type(w, *other_ty)?;
                             writeln!(w, " rhs) {{")?;
-                            writeln!(w, "        return this.a.{lsc}(rhs);")?;
-                            writeln!(w, "    }}\n}}")?;
+                            writeln!(w, "    return lhs.a.{lsc}(rhs);")?;
+                            writeln!(w, "}}")?;
+                            // writeln!(w, "}}")?;
                         }
                         if let TraitArity::One = def.arity {
-                            writeln!(w, "public extension {ucc}{infix_term} {{")?;
-                            writeln!(w, "    // Fancy prefix trick")?;
-                            write!(w, "    public ")?;
+                            // writeln!(w, "public extension {ucc}{infix_term} {{")?;
+                            writeln!(w, "// Fancy prefix trick")?;
+                            write!(w, "public ")?;
                             self.write_type(w, output_ty)?;
-                            write!(w, " {operator_method}(")?;
+                            write!(w, " {operator_method}({ucc}{infix_term} lhs, ")?;
                             self.write_type(w, *owner_ty)?;
                             writeln!(w, " rhs) {{")?;
-                            writeln!(w, "        return rhs.{lsc}();")?;
-                            writeln!(w, "    }}\n}}")?;
+                            writeln!(w, "    return rhs.{lsc}();")?;
+                            writeln!(w, "}}")?;
+                            // writeln!(w, "}}")?;
                         }
                     }
                 }

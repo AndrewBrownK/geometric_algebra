@@ -120,8 +120,8 @@ pub fn emit_slang_support<W: Write>(w: &mut W, algebra_name: &str) -> anyhow::Re
 
     #[derive(Clone, Copy)]
     pub struct Target {{
-        file_extension: &'static str,
-        target_argument: &'static str,
+        pub file_extension: &'static str,
+        pub target_argument: &'static str,
     }}
     impl Target {{
         const fn new(
@@ -163,7 +163,7 @@ pub fn emit_slang_support<W: Write>(w: &mut W, algebra_name: &str) -> anyhow::Re
 
     #[derive(Clone, Copy)]
     pub struct Stage {{
-        stage_argument: &'static str,
+        pub stage_argument: &'static str,
     }}
     impl Stage {{
         const fn new(
@@ -189,8 +189,8 @@ pub fn emit_slang_support<W: Write>(w: &mut W, algebra_name: &str) -> anyhow::Re
     }}
 
     pub struct EntryPoint<S> {{
-        name: S,
-        stage: Stage,
+        pub name: S,
+        pub stage: Stage,
     }}
 
     // https://github.com/shader-slang/slang/blob/master/docs/command-line-slangc-reference.md#-o

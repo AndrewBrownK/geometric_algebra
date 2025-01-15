@@ -6,7 +6,7 @@ public struct Horizon {
     // e321, 0, 0, 0
     internal float4 group0;
 
-    __init(
+    public __init(
         float e321
     ) {
         group0 = float4(e321, 0.0, 0.0, 0.0);

@@ -1,16 +1,12 @@
 implementing cga3d;
 using traits;
-public extension AntiCircleRotor {
-    // Fancy postfix trick
-    public MultiVector operator /(RoundNormPrefixOrPostfix rhs)  {
-        return this.round_norm();
+// Fancy postfix trick
+public MultiVector operator /(AntiCircleRotor lhs, RoundNormPrefixOrPostfix rhs)  {
+    return lhs.round_norm();
     }
-}
-public extension RoundNormPrefixOrPostfix {
-    // Fancy prefix trick
-    public MultiVector operator /(AntiCircleRotor rhs) {
-        return rhs.round_norm();
-    }
+// Fancy prefix trick
+public MultiVector operator /(RoundNormPrefixOrPostfix lhs, AntiCircleRotor rhs) {
+    return rhs.round_norm();
 }
 public extension AntiCircleRotor {
     public MultiVector round_norm() {
@@ -40,17 +36,13 @@ public extension AntiCircleRotor {
         );
     }
 }
-public extension AntiDipoleInversion {
-    // Fancy postfix trick
-    public MultiVector operator /(RoundNormPrefixOrPostfix rhs)  {
-        return this.round_norm();
+// Fancy postfix trick
+public MultiVector operator /(AntiDipoleInversion lhs, RoundNormPrefixOrPostfix rhs)  {
+    return lhs.round_norm();
     }
-}
-public extension RoundNormPrefixOrPostfix {
-    // Fancy prefix trick
-    public MultiVector operator /(AntiDipoleInversion rhs) {
-        return rhs.round_norm();
-    }
+// Fancy prefix trick
+public MultiVector operator /(RoundNormPrefixOrPostfix lhs, AntiDipoleInversion rhs) {
+    return rhs.round_norm();
 }
 public extension AntiDipoleInversion {
     public MultiVector round_norm() {
@@ -80,17 +72,13 @@ public extension AntiDipoleInversion {
         );
     }
 }
-public extension Circle {
-    // Fancy postfix trick
-    public MultiVector operator /(RoundNormPrefixOrPostfix rhs)  {
-        return this.round_norm();
+// Fancy postfix trick
+public MultiVector operator /(Circle lhs, RoundNormPrefixOrPostfix rhs)  {
+    return lhs.round_norm();
     }
-}
-public extension RoundNormPrefixOrPostfix {
-    // Fancy prefix trick
-    public MultiVector operator /(Circle rhs) {
-        return rhs.round_norm();
-    }
+// Fancy prefix trick
+public MultiVector operator /(RoundNormPrefixOrPostfix lhs, Circle rhs) {
+    return rhs.round_norm();
 }
 public extension Circle {
     public MultiVector round_norm() {
@@ -120,17 +108,13 @@ public extension Circle {
         );
     }
 }
-public extension CircleRotor {
-    // Fancy postfix trick
-    public MultiVector operator /(RoundNormPrefixOrPostfix rhs)  {
-        return this.round_norm();
+// Fancy postfix trick
+public MultiVector operator /(CircleRotor lhs, RoundNormPrefixOrPostfix rhs)  {
+    return lhs.round_norm();
     }
-}
-public extension RoundNormPrefixOrPostfix {
-    // Fancy prefix trick
-    public MultiVector operator /(CircleRotor rhs) {
-        return rhs.round_norm();
-    }
+// Fancy prefix trick
+public MultiVector operator /(RoundNormPrefixOrPostfix lhs, CircleRotor rhs) {
+    return rhs.round_norm();
 }
 public extension CircleRotor {
     public MultiVector round_norm() {
@@ -160,17 +144,13 @@ public extension CircleRotor {
         );
     }
 }
-public extension Dipole {
-    // Fancy postfix trick
-    public MultiVector operator /(RoundNormPrefixOrPostfix rhs)  {
-        return this.round_norm();
+// Fancy postfix trick
+public MultiVector operator /(Dipole lhs, RoundNormPrefixOrPostfix rhs)  {
+    return lhs.round_norm();
     }
-}
-public extension RoundNormPrefixOrPostfix {
-    // Fancy prefix trick
-    public MultiVector operator /(Dipole rhs) {
-        return rhs.round_norm();
-    }
+// Fancy prefix trick
+public MultiVector operator /(RoundNormPrefixOrPostfix lhs, Dipole rhs) {
+    return rhs.round_norm();
 }
 public extension Dipole {
     public MultiVector round_norm() {
@@ -200,17 +180,13 @@ public extension Dipole {
         );
     }
 }
-public extension DipoleInversion {
-    // Fancy postfix trick
-    public MultiVector operator /(RoundNormPrefixOrPostfix rhs)  {
-        return this.round_norm();
+// Fancy postfix trick
+public MultiVector operator /(DipoleInversion lhs, RoundNormPrefixOrPostfix rhs)  {
+    return lhs.round_norm();
     }
-}
-public extension RoundNormPrefixOrPostfix {
-    // Fancy prefix trick
-    public MultiVector operator /(DipoleInversion rhs) {
-        return rhs.round_norm();
-    }
+// Fancy prefix trick
+public MultiVector operator /(RoundNormPrefixOrPostfix lhs, DipoleInversion rhs) {
+    return rhs.round_norm();
 }
 public extension DipoleInversion {
     public MultiVector round_norm() {
@@ -240,17 +216,13 @@ public extension DipoleInversion {
         );
     }
 }
-public extension MultiVector {
-    // Fancy postfix trick
-    public MultiVector operator /(RoundNormPrefixOrPostfix rhs)  {
-        return this.round_norm();
+// Fancy postfix trick
+public MultiVector operator /(MultiVector lhs, RoundNormPrefixOrPostfix rhs)  {
+    return lhs.round_norm();
     }
-}
-public extension RoundNormPrefixOrPostfix {
-    // Fancy prefix trick
-    public MultiVector operator /(MultiVector rhs) {
-        return rhs.round_norm();
-    }
+// Fancy prefix trick
+public MultiVector operator /(RoundNormPrefixOrPostfix lhs, MultiVector rhs) {
+    return rhs.round_norm();
 }
 public extension MultiVector {
     public MultiVector round_norm() {
@@ -280,17 +252,13 @@ public extension MultiVector {
         );
     }
 }
-public extension RoundPoint {
-    // Fancy postfix trick
-    public MultiVector operator /(RoundNormPrefixOrPostfix rhs)  {
-        return this.round_norm();
+// Fancy postfix trick
+public MultiVector operator /(RoundPoint lhs, RoundNormPrefixOrPostfix rhs)  {
+    return lhs.round_norm();
     }
-}
-public extension RoundNormPrefixOrPostfix {
-    // Fancy prefix trick
-    public MultiVector operator /(RoundPoint rhs) {
-        return rhs.round_norm();
-    }
+// Fancy prefix trick
+public MultiVector operator /(RoundNormPrefixOrPostfix lhs, RoundPoint rhs) {
+    return rhs.round_norm();
 }
 public extension RoundPoint {
     public MultiVector round_norm() {
@@ -320,17 +288,13 @@ public extension RoundPoint {
         );
     }
 }
-public extension VersorEven {
-    // Fancy postfix trick
-    public MultiVector operator /(RoundNormPrefixOrPostfix rhs)  {
-        return this.round_norm();
+// Fancy postfix trick
+public MultiVector operator /(VersorEven lhs, RoundNormPrefixOrPostfix rhs)  {
+    return lhs.round_norm();
     }
-}
-public extension RoundNormPrefixOrPostfix {
-    // Fancy prefix trick
-    public MultiVector operator /(VersorEven rhs) {
-        return rhs.round_norm();
-    }
+// Fancy prefix trick
+public MultiVector operator /(RoundNormPrefixOrPostfix lhs, VersorEven rhs) {
+    return rhs.round_norm();
 }
 public extension VersorEven {
     public MultiVector round_norm() {
@@ -360,17 +324,13 @@ public extension VersorEven {
         );
     }
 }
-public extension VersorOdd {
-    // Fancy postfix trick
-    public MultiVector operator /(RoundNormPrefixOrPostfix rhs)  {
-        return this.round_norm();
+// Fancy postfix trick
+public MultiVector operator /(VersorOdd lhs, RoundNormPrefixOrPostfix rhs)  {
+    return lhs.round_norm();
     }
-}
-public extension RoundNormPrefixOrPostfix {
-    // Fancy prefix trick
-    public MultiVector operator /(VersorOdd rhs) {
-        return rhs.round_norm();
-    }
+// Fancy prefix trick
+public MultiVector operator /(RoundNormPrefixOrPostfix lhs, VersorOdd rhs) {
+    return rhs.round_norm();
 }
 public extension VersorOdd {
     public MultiVector round_norm() {

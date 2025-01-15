@@ -26,7 +26,7 @@ public struct MultiVector {
     // e1234, 0, 0, 0
     internal float4 group10;
 
-    __init(
+    public __init(
         float scalar, float e12345, float e1, float e2, float e3, float e4, float e5, float e15, float e25, float e35, float e45, float e41, float e42, float e43, float e23, float e31, float e12, float e415, float e425, float e435, float e321, float e423, float e431, float e412, float e235, float e315, float e125, float e4235, float e4315, float e4125, float e3215, float e1234
     ) {
         group0 = float4(scalar, e12345, 0.0, 0.0);

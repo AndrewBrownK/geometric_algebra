@@ -1,16 +1,12 @@
 implementing rga3d;
 using traits;
-public extension DualNum {
-    // Fancy postfix trick
-    public Horizon operator /(AntiSupportPrefixOrPostfix rhs)  {
-        return this.anti_support();
+// Fancy postfix trick
+public Horizon operator /(DualNum lhs, AntiSupportPrefixOrPostfix rhs)  {
+    return lhs.anti_support();
     }
-}
-public extension AntiSupportPrefixOrPostfix {
-    // Fancy prefix trick
-    public Horizon operator /(DualNum rhs) {
-        return rhs.anti_support();
-    }
+// Fancy prefix trick
+public Horizon operator /(AntiSupportPrefixOrPostfix lhs, DualNum rhs) {
+    return rhs.anti_support();
 }
 public extension DualNum {
     public Horizon anti_support() {
@@ -20,17 +16,13 @@ public extension DualNum {
         );
     }
 }
-public extension Flector {
-    // Fancy postfix trick
-    public Motor operator /(AntiSupportPrefixOrPostfix rhs)  {
-        return this.anti_support();
+// Fancy postfix trick
+public Motor operator /(Flector lhs, AntiSupportPrefixOrPostfix rhs)  {
+    return lhs.anti_support();
     }
-}
-public extension AntiSupportPrefixOrPostfix {
-    // Fancy prefix trick
-    public Motor operator /(Flector rhs) {
-        return rhs.anti_support();
-    }
+// Fancy prefix trick
+public Motor operator /(AntiSupportPrefixOrPostfix lhs, Flector rhs) {
+    return rhs.anti_support();
 }
 public extension Flector {
     public Motor anti_support() {
@@ -48,17 +40,13 @@ public extension Flector {
         );
     }
 }
-public extension Horizon {
-    // Fancy postfix trick
-    public Scalar operator /(AntiSupportPrefixOrPostfix rhs)  {
-        return this.anti_support();
+// Fancy postfix trick
+public Scalar operator /(Horizon lhs, AntiSupportPrefixOrPostfix rhs)  {
+    return lhs.anti_support();
     }
-}
-public extension AntiSupportPrefixOrPostfix {
-    // Fancy prefix trick
-    public Scalar operator /(Horizon rhs) {
-        return rhs.anti_support();
-    }
+// Fancy prefix trick
+public Scalar operator /(AntiSupportPrefixOrPostfix lhs, Horizon rhs) {
+    return rhs.anti_support();
 }
 public extension Horizon {
     public Scalar anti_support() {
@@ -68,17 +56,13 @@ public extension Horizon {
         );
     }
 }
-public extension Line {
-    // Fancy postfix trick
-    public Point operator /(AntiSupportPrefixOrPostfix rhs)  {
-        return this.anti_support();
+// Fancy postfix trick
+public Point operator /(Line lhs, AntiSupportPrefixOrPostfix rhs)  {
+    return lhs.anti_support();
     }
-}
-public extension AntiSupportPrefixOrPostfix {
-    // Fancy prefix trick
-    public Point operator /(Line rhs) {
-        return rhs.anti_support();
-    }
+// Fancy prefix trick
+public Point operator /(AntiSupportPrefixOrPostfix lhs, Line rhs) {
+    return rhs.anti_support();
 }
 public extension Line {
     public Point anti_support() {
@@ -88,17 +72,13 @@ public extension Line {
         );
     }
 }
-public extension Motor {
-    // Fancy postfix trick
-    public Flector operator /(AntiSupportPrefixOrPostfix rhs)  {
-        return this.anti_support();
+// Fancy postfix trick
+public Flector operator /(Motor lhs, AntiSupportPrefixOrPostfix rhs)  {
+    return lhs.anti_support();
     }
-}
-public extension AntiSupportPrefixOrPostfix {
-    // Fancy prefix trick
-    public Flector operator /(Motor rhs) {
-        return rhs.anti_support();
-    }
+// Fancy prefix trick
+public Flector operator /(AntiSupportPrefixOrPostfix lhs, Motor rhs) {
+    return rhs.anti_support();
 }
 public extension Motor {
     public Flector anti_support() {
@@ -120,17 +100,13 @@ public extension Motor {
         );
     }
 }
-public extension MultiVector {
-    // Fancy postfix trick
-    public MultiVector operator /(AntiSupportPrefixOrPostfix rhs)  {
-        return this.anti_support();
+// Fancy postfix trick
+public MultiVector operator /(MultiVector lhs, AntiSupportPrefixOrPostfix rhs)  {
+    return lhs.anti_support();
     }
-}
-public extension AntiSupportPrefixOrPostfix {
-    // Fancy prefix trick
-    public MultiVector operator /(MultiVector rhs) {
-        return rhs.anti_support();
-    }
+// Fancy prefix trick
+public MultiVector operator /(AntiSupportPrefixOrPostfix lhs, MultiVector rhs) {
+    return rhs.anti_support();
 }
 public extension MultiVector {
     public MultiVector anti_support() {
@@ -164,17 +140,13 @@ public extension MultiVector {
         );
     }
 }
-public extension Plane {
-    // Fancy postfix trick
-    public Scalar operator /(AntiSupportPrefixOrPostfix rhs)  {
-        return this.anti_support();
+// Fancy postfix trick
+public Scalar operator /(Plane lhs, AntiSupportPrefixOrPostfix rhs)  {
+    return lhs.anti_support();
     }
-}
-public extension AntiSupportPrefixOrPostfix {
-    // Fancy prefix trick
-    public Scalar operator /(Plane rhs) {
-        return rhs.anti_support();
-    }
+// Fancy prefix trick
+public Scalar operator /(AntiSupportPrefixOrPostfix lhs, Plane rhs) {
+    return rhs.anti_support();
 }
 public extension Plane {
     public Scalar anti_support() {
@@ -184,17 +156,13 @@ public extension Plane {
         );
     }
 }
-public extension Point {
-    // Fancy postfix trick
-    public Line operator /(AntiSupportPrefixOrPostfix rhs)  {
-        return this.anti_support();
+// Fancy postfix trick
+public Line operator /(Point lhs, AntiSupportPrefixOrPostfix rhs)  {
+    return lhs.anti_support();
     }
-}
-public extension AntiSupportPrefixOrPostfix {
-    // Fancy prefix trick
-    public Line operator /(Point rhs) {
-        return rhs.anti_support();
-    }
+// Fancy prefix trick
+public Line operator /(AntiSupportPrefixOrPostfix lhs, Point rhs) {
+    return rhs.anti_support();
 }
 public extension Point {
     public Line anti_support() {
@@ -206,17 +174,13 @@ public extension Point {
         );
     }
 }
-public extension Scalar {
-    // Fancy postfix trick
-    public Horizon operator /(AntiSupportPrefixOrPostfix rhs)  {
-        return this.anti_support();
+// Fancy postfix trick
+public Horizon operator /(Scalar lhs, AntiSupportPrefixOrPostfix rhs)  {
+    return lhs.anti_support();
     }
-}
-public extension AntiSupportPrefixOrPostfix {
-    // Fancy prefix trick
-    public Horizon operator /(Scalar rhs) {
-        return rhs.anti_support();
-    }
+// Fancy prefix trick
+public Horizon operator /(AntiSupportPrefixOrPostfix lhs, Scalar rhs) {
+    return rhs.anti_support();
 }
 public extension Scalar {
     public Horizon anti_support() {

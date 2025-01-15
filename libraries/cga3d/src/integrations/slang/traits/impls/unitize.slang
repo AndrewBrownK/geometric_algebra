@@ -1,16 +1,12 @@
 implementing cga3d;
 using traits;
-public extension AntiCircleRotor {
-    // Fancy postfix trick
-    public AntiCircleRotor operator /(UnitizePrefixOrPostfix rhs)  {
-        return this.unitize();
+// Fancy postfix trick
+public AntiCircleRotor operator /(AntiCircleRotor lhs, UnitizePrefixOrPostfix rhs)  {
+    return lhs.unitize();
     }
-}
-public extension UnitizePrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiCircleRotor operator /(AntiCircleRotor rhs) {
-        return rhs.unitize();
-    }
+// Fancy prefix trick
+public AntiCircleRotor operator /(UnitizePrefixOrPostfix lhs, AntiCircleRotor rhs) {
+    return rhs.unitize();
 }
 public extension AntiCircleRotor {
     public AntiCircleRotor unitize() {
@@ -28,17 +24,13 @@ public extension AntiCircleRotor {
         );
     }
 }
-public extension AntiDipoleInversion {
-    // Fancy postfix trick
-    public AntiDipoleInversion operator /(UnitizePrefixOrPostfix rhs)  {
-        return this.unitize();
+// Fancy postfix trick
+public AntiDipoleInversion operator /(AntiDipoleInversion lhs, UnitizePrefixOrPostfix rhs)  {
+    return lhs.unitize();
     }
-}
-public extension UnitizePrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiDipoleInversion operator /(AntiDipoleInversion rhs) {
-        return rhs.unitize();
-    }
+// Fancy prefix trick
+public AntiDipoleInversion operator /(UnitizePrefixOrPostfix lhs, AntiDipoleInversion rhs) {
+    return rhs.unitize();
 }
 public extension AntiDipoleInversion {
     public AntiDipoleInversion unitize() {
@@ -58,17 +50,13 @@ public extension AntiDipoleInversion {
         );
     }
 }
-public extension Circle {
-    // Fancy postfix trick
-    public Circle operator /(UnitizePrefixOrPostfix rhs)  {
-        return this.unitize();
+// Fancy postfix trick
+public Circle operator /(Circle lhs, UnitizePrefixOrPostfix rhs)  {
+    return lhs.unitize();
     }
-}
-public extension UnitizePrefixOrPostfix {
-    // Fancy prefix trick
-    public Circle operator /(Circle rhs) {
-        return rhs.unitize();
-    }
+// Fancy prefix trick
+public Circle operator /(UnitizePrefixOrPostfix lhs, Circle rhs) {
+    return rhs.unitize();
 }
 public extension Circle {
     public Circle unitize() {
@@ -86,17 +74,13 @@ public extension Circle {
         );
     }
 }
-public extension CircleRotor {
-    // Fancy postfix trick
-    public CircleRotor operator /(UnitizePrefixOrPostfix rhs)  {
-        return this.unitize();
+// Fancy postfix trick
+public CircleRotor operator /(CircleRotor lhs, UnitizePrefixOrPostfix rhs)  {
+    return lhs.unitize();
     }
-}
-public extension UnitizePrefixOrPostfix {
-    // Fancy prefix trick
-    public CircleRotor operator /(CircleRotor rhs) {
-        return rhs.unitize();
-    }
+// Fancy prefix trick
+public CircleRotor operator /(UnitizePrefixOrPostfix lhs, CircleRotor rhs) {
+    return rhs.unitize();
 }
 public extension CircleRotor {
     public CircleRotor unitize() {
@@ -114,17 +98,13 @@ public extension CircleRotor {
         );
     }
 }
-public extension Dipole {
-    // Fancy postfix trick
-    public Dipole operator /(UnitizePrefixOrPostfix rhs)  {
-        return this.unitize();
+// Fancy postfix trick
+public Dipole operator /(Dipole lhs, UnitizePrefixOrPostfix rhs)  {
+    return lhs.unitize();
     }
-}
-public extension UnitizePrefixOrPostfix {
-    // Fancy prefix trick
-    public Dipole operator /(Dipole rhs) {
-        return rhs.unitize();
-    }
+// Fancy prefix trick
+public Dipole operator /(UnitizePrefixOrPostfix lhs, Dipole rhs) {
+    return rhs.unitize();
 }
 public extension Dipole {
     public Dipole unitize() {
@@ -142,17 +122,13 @@ public extension Dipole {
         );
     }
 }
-public extension DipoleInversion {
-    // Fancy postfix trick
-    public DipoleInversion operator /(UnitizePrefixOrPostfix rhs)  {
-        return this.unitize();
+// Fancy postfix trick
+public DipoleInversion operator /(DipoleInversion lhs, UnitizePrefixOrPostfix rhs)  {
+    return lhs.unitize();
     }
-}
-public extension UnitizePrefixOrPostfix {
-    // Fancy prefix trick
-    public DipoleInversion operator /(DipoleInversion rhs) {
-        return rhs.unitize();
-    }
+// Fancy prefix trick
+public DipoleInversion operator /(UnitizePrefixOrPostfix lhs, DipoleInversion rhs) {
+    return rhs.unitize();
 }
 public extension DipoleInversion {
     public DipoleInversion unitize() {
@@ -172,17 +148,13 @@ public extension DipoleInversion {
         );
     }
 }
-public extension MultiVector {
-    // Fancy postfix trick
-    public MultiVector operator /(UnitizePrefixOrPostfix rhs)  {
-        return this.unitize();
+// Fancy postfix trick
+public MultiVector operator /(MultiVector lhs, UnitizePrefixOrPostfix rhs)  {
+    return lhs.unitize();
     }
-}
-public extension UnitizePrefixOrPostfix {
-    // Fancy prefix trick
-    public MultiVector operator /(MultiVector rhs) {
-        return rhs.unitize();
-    }
+// Fancy prefix trick
+public MultiVector operator /(UnitizePrefixOrPostfix lhs, MultiVector rhs) {
+    return rhs.unitize();
 }
 public extension MultiVector {
     public MultiVector unitize() {
@@ -216,17 +188,13 @@ public extension MultiVector {
         );
     }
 }
-public extension RoundPoint {
-    // Fancy postfix trick
-    public RoundPoint operator /(UnitizePrefixOrPostfix rhs)  {
-        return this.unitize();
+// Fancy postfix trick
+public RoundPoint operator /(RoundPoint lhs, UnitizePrefixOrPostfix rhs)  {
+    return lhs.unitize();
     }
-}
-public extension UnitizePrefixOrPostfix {
-    // Fancy prefix trick
-    public RoundPoint operator /(RoundPoint rhs) {
-        return rhs.unitize();
-    }
+// Fancy prefix trick
+public RoundPoint operator /(UnitizePrefixOrPostfix lhs, RoundPoint rhs) {
+    return rhs.unitize();
 }
 public extension RoundPoint {
     public RoundPoint unitize() {
@@ -242,17 +210,13 @@ public extension RoundPoint {
         );
     }
 }
-public extension Sphere {
-    // Fancy postfix trick
-    public Sphere operator /(UnitizePrefixOrPostfix rhs)  {
-        return this.unitize();
+// Fancy postfix trick
+public Sphere operator /(Sphere lhs, UnitizePrefixOrPostfix rhs)  {
+    return lhs.unitize();
     }
-}
-public extension UnitizePrefixOrPostfix {
-    // Fancy prefix trick
-    public Sphere operator /(Sphere rhs) {
-        return rhs.unitize();
-    }
+// Fancy prefix trick
+public Sphere operator /(UnitizePrefixOrPostfix lhs, Sphere rhs) {
+    return rhs.unitize();
 }
 public extension Sphere {
     public Sphere unitize() {
@@ -268,17 +232,13 @@ public extension Sphere {
         );
     }
 }
-public extension VersorEven {
-    // Fancy postfix trick
-    public VersorEven operator /(UnitizePrefixOrPostfix rhs)  {
-        return this.unitize();
+// Fancy postfix trick
+public VersorEven operator /(VersorEven lhs, UnitizePrefixOrPostfix rhs)  {
+    return lhs.unitize();
     }
-}
-public extension UnitizePrefixOrPostfix {
-    // Fancy prefix trick
-    public VersorEven operator /(VersorEven rhs) {
-        return rhs.unitize();
-    }
+// Fancy prefix trick
+public VersorEven operator /(UnitizePrefixOrPostfix lhs, VersorEven rhs) {
+    return rhs.unitize();
 }
 public extension VersorEven {
     public VersorEven unitize() {
@@ -298,17 +258,13 @@ public extension VersorEven {
         );
     }
 }
-public extension VersorOdd {
-    // Fancy postfix trick
-    public VersorOdd operator /(UnitizePrefixOrPostfix rhs)  {
-        return this.unitize();
+// Fancy postfix trick
+public VersorOdd operator /(VersorOdd lhs, UnitizePrefixOrPostfix rhs)  {
+    return lhs.unitize();
     }
-}
-public extension UnitizePrefixOrPostfix {
-    // Fancy prefix trick
-    public VersorOdd operator /(VersorOdd rhs) {
-        return rhs.unitize();
-    }
+// Fancy prefix trick
+public VersorOdd operator /(UnitizePrefixOrPostfix lhs, VersorOdd rhs) {
+    return rhs.unitize();
 }
 public extension VersorOdd {
     public VersorOdd unitize() {

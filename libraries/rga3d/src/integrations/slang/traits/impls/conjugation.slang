@@ -1,50 +1,38 @@
 implementing rga3d;
 using traits;
-public extension AntiScalar {
-    // Fancy postfix trick
-    public AntiScalar operator /(ConjugationPrefixOrPostfix rhs)  {
-        return this.conjugation();
+// Fancy postfix trick
+public AntiScalar operator /(AntiScalar lhs, ConjugationPrefixOrPostfix rhs)  {
+    return lhs.conjugation();
     }
-}
-public extension ConjugationPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiScalar operator /(AntiScalar rhs) {
-        return rhs.conjugation();
-    }
+// Fancy prefix trick
+public AntiScalar operator /(ConjugationPrefixOrPostfix lhs, AntiScalar rhs) {
+    return rhs.conjugation();
 }
 public extension AntiScalar {
     public AntiScalar conjugation() {
         return this;
     }
 }
-public extension DualNum {
-    // Fancy postfix trick
-    public DualNum operator /(ConjugationPrefixOrPostfix rhs)  {
-        return this.conjugation();
+// Fancy postfix trick
+public DualNum operator /(DualNum lhs, ConjugationPrefixOrPostfix rhs)  {
+    return lhs.conjugation();
     }
-}
-public extension ConjugationPrefixOrPostfix {
-    // Fancy prefix trick
-    public DualNum operator /(DualNum rhs) {
-        return rhs.conjugation();
-    }
+// Fancy prefix trick
+public DualNum operator /(ConjugationPrefixOrPostfix lhs, DualNum rhs) {
+    return rhs.conjugation();
 }
 public extension DualNum {
     public DualNum conjugation() {
         return this;
     }
 }
-public extension Flector {
-    // Fancy postfix trick
-    public Flector operator /(ConjugationPrefixOrPostfix rhs)  {
-        return this.conjugation();
+// Fancy postfix trick
+public Flector operator /(Flector lhs, ConjugationPrefixOrPostfix rhs)  {
+    return lhs.conjugation();
     }
-}
-public extension ConjugationPrefixOrPostfix {
-    // Fancy prefix trick
-    public Flector operator /(Flector rhs) {
-        return rhs.conjugation();
-    }
+// Fancy prefix trick
+public Flector operator /(ConjugationPrefixOrPostfix lhs, Flector rhs) {
+    return rhs.conjugation();
 }
 public extension Flector {
     public Flector conjugation() {
@@ -56,34 +44,26 @@ public extension Flector {
         );
     }
 }
-public extension Horizon {
-    // Fancy postfix trick
-    public Horizon operator /(ConjugationPrefixOrPostfix rhs)  {
-        return this.conjugation();
+// Fancy postfix trick
+public Horizon operator /(Horizon lhs, ConjugationPrefixOrPostfix rhs)  {
+    return lhs.conjugation();
     }
-}
-public extension ConjugationPrefixOrPostfix {
-    // Fancy prefix trick
-    public Horizon operator /(Horizon rhs) {
-        return rhs.conjugation();
-    }
+// Fancy prefix trick
+public Horizon operator /(ConjugationPrefixOrPostfix lhs, Horizon rhs) {
+    return rhs.conjugation();
 }
 public extension Horizon {
     public Horizon conjugation() {
         return this;
     }
 }
-public extension Line {
-    // Fancy postfix trick
-    public Line operator /(ConjugationPrefixOrPostfix rhs)  {
-        return this.conjugation();
+// Fancy postfix trick
+public Line operator /(Line lhs, ConjugationPrefixOrPostfix rhs)  {
+    return lhs.conjugation();
     }
-}
-public extension ConjugationPrefixOrPostfix {
-    // Fancy prefix trick
-    public Line operator /(Line rhs) {
-        return rhs.conjugation();
-    }
+// Fancy prefix trick
+public Line operator /(ConjugationPrefixOrPostfix lhs, Line rhs) {
+    return rhs.conjugation();
 }
 public extension Line {
     public Line conjugation() {
@@ -95,17 +75,13 @@ public extension Line {
         );
     }
 }
-public extension Motor {
-    // Fancy postfix trick
-    public Motor operator /(ConjugationPrefixOrPostfix rhs)  {
-        return this.conjugation();
+// Fancy postfix trick
+public Motor operator /(Motor lhs, ConjugationPrefixOrPostfix rhs)  {
+    return lhs.conjugation();
     }
-}
-public extension ConjugationPrefixOrPostfix {
-    // Fancy prefix trick
-    public Motor operator /(Motor rhs) {
-        return rhs.conjugation();
-    }
+// Fancy prefix trick
+public Motor operator /(ConjugationPrefixOrPostfix lhs, Motor rhs) {
+    return rhs.conjugation();
 }
 public extension Motor {
     public Motor conjugation() {
@@ -117,17 +93,13 @@ public extension Motor {
         );
     }
 }
-public extension MultiVector {
-    // Fancy postfix trick
-    public MultiVector operator /(ConjugationPrefixOrPostfix rhs)  {
-        return this.conjugation();
+// Fancy postfix trick
+public MultiVector operator /(MultiVector lhs, ConjugationPrefixOrPostfix rhs)  {
+    return lhs.conjugation();
     }
-}
-public extension ConjugationPrefixOrPostfix {
-    // Fancy prefix trick
-    public MultiVector operator /(MultiVector rhs) {
-        return rhs.conjugation();
-    }
+// Fancy prefix trick
+public MultiVector operator /(ConjugationPrefixOrPostfix lhs, MultiVector rhs) {
+    return rhs.conjugation();
 }
 public extension MultiVector {
     public MultiVector conjugation() {
@@ -145,17 +117,13 @@ public extension MultiVector {
         );
     }
 }
-public extension Origin {
-    // Fancy postfix trick
-    public Origin operator /(ConjugationPrefixOrPostfix rhs)  {
-        return this.conjugation();
+// Fancy postfix trick
+public Origin operator /(Origin lhs, ConjugationPrefixOrPostfix rhs)  {
+    return lhs.conjugation();
     }
-}
-public extension ConjugationPrefixOrPostfix {
-    // Fancy prefix trick
-    public Origin operator /(Origin rhs) {
-        return rhs.conjugation();
-    }
+// Fancy prefix trick
+public Origin operator /(ConjugationPrefixOrPostfix lhs, Origin rhs) {
+    return rhs.conjugation();
 }
 public extension Origin {
     public Origin conjugation() {
@@ -165,34 +133,26 @@ public extension Origin {
         );
     }
 }
-public extension Plane {
-    // Fancy postfix trick
-    public Plane operator /(ConjugationPrefixOrPostfix rhs)  {
-        return this.conjugation();
+// Fancy postfix trick
+public Plane operator /(Plane lhs, ConjugationPrefixOrPostfix rhs)  {
+    return lhs.conjugation();
     }
-}
-public extension ConjugationPrefixOrPostfix {
-    // Fancy prefix trick
-    public Plane operator /(Plane rhs) {
-        return rhs.conjugation();
-    }
+// Fancy prefix trick
+public Plane operator /(ConjugationPrefixOrPostfix lhs, Plane rhs) {
+    return rhs.conjugation();
 }
 public extension Plane {
     public Plane conjugation() {
         return this;
     }
 }
-public extension Point {
-    // Fancy postfix trick
-    public Point operator /(ConjugationPrefixOrPostfix rhs)  {
-        return this.conjugation();
+// Fancy postfix trick
+public Point operator /(Point lhs, ConjugationPrefixOrPostfix rhs)  {
+    return lhs.conjugation();
     }
-}
-public extension ConjugationPrefixOrPostfix {
-    // Fancy prefix trick
-    public Point operator /(Point rhs) {
-        return rhs.conjugation();
-    }
+// Fancy prefix trick
+public Point operator /(ConjugationPrefixOrPostfix lhs, Point rhs) {
+    return rhs.conjugation();
 }
 public extension Point {
     public Point conjugation() {
@@ -202,17 +162,13 @@ public extension Point {
         );
     }
 }
-public extension Scalar {
-    // Fancy postfix trick
-    public Scalar operator /(ConjugationPrefixOrPostfix rhs)  {
-        return this.conjugation();
+// Fancy postfix trick
+public Scalar operator /(Scalar lhs, ConjugationPrefixOrPostfix rhs)  {
+    return lhs.conjugation();
     }
-}
-public extension ConjugationPrefixOrPostfix {
-    // Fancy prefix trick
-    public Scalar operator /(Scalar rhs) {
-        return rhs.conjugation();
-    }
+// Fancy prefix trick
+public Scalar operator /(ConjugationPrefixOrPostfix lhs, Scalar rhs) {
+    return rhs.conjugation();
 }
 public extension Scalar {
     public Scalar conjugation() {

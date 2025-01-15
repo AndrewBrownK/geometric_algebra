@@ -1,16 +1,12 @@
 implementing rga3d;
 using traits;
-public extension DualNum {
-    // Fancy postfix trick
-    public AntiScalar operator /(ConstraintViolationPrefixOrPostfix rhs)  {
-        return this.constraint_violation();
+// Fancy postfix trick
+public AntiScalar operator /(DualNum lhs, ConstraintViolationPrefixOrPostfix rhs)  {
+    return lhs.constraint_violation();
     }
-}
-public extension ConstraintViolationPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiScalar operator /(DualNum rhs) {
-        return rhs.constraint_violation();
-    }
+// Fancy prefix trick
+public AntiScalar operator /(ConstraintViolationPrefixOrPostfix lhs, DualNum rhs) {
+    return rhs.constraint_violation();
 }
 public extension DualNum {
     public AntiScalar constraint_violation() {
@@ -20,17 +16,13 @@ public extension DualNum {
         );
     }
 }
-public extension Flector {
-    // Fancy postfix trick
-    public AntiScalar operator /(ConstraintViolationPrefixOrPostfix rhs)  {
-        return this.constraint_violation();
+// Fancy postfix trick
+public AntiScalar operator /(Flector lhs, ConstraintViolationPrefixOrPostfix rhs)  {
+    return lhs.constraint_violation();
     }
-}
-public extension ConstraintViolationPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiScalar operator /(Flector rhs) {
-        return rhs.constraint_violation();
-    }
+// Fancy prefix trick
+public AntiScalar operator /(ConstraintViolationPrefixOrPostfix lhs, Flector rhs) {
+    return rhs.constraint_violation();
 }
 public extension Flector {
     public AntiScalar constraint_violation() {
@@ -46,17 +38,13 @@ public extension Flector {
         );
     }
 }
-public extension Line {
-    // Fancy postfix trick
-    public AntiScalar operator /(ConstraintViolationPrefixOrPostfix rhs)  {
-        return this.constraint_violation();
+// Fancy postfix trick
+public AntiScalar operator /(Line lhs, ConstraintViolationPrefixOrPostfix rhs)  {
+    return lhs.constraint_violation();
     }
-}
-public extension ConstraintViolationPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiScalar operator /(Line rhs) {
-        return rhs.constraint_violation();
-    }
+// Fancy prefix trick
+public AntiScalar operator /(ConstraintViolationPrefixOrPostfix lhs, Line rhs) {
+    return rhs.constraint_violation();
 }
 public extension Line {
     public AntiScalar constraint_violation() {
@@ -72,17 +60,13 @@ public extension Line {
         );
     }
 }
-public extension Motor {
-    // Fancy postfix trick
-    public AntiScalar operator /(ConstraintViolationPrefixOrPostfix rhs)  {
-        return this.constraint_violation();
+// Fancy postfix trick
+public AntiScalar operator /(Motor lhs, ConstraintViolationPrefixOrPostfix rhs)  {
+    return lhs.constraint_violation();
     }
-}
-public extension ConstraintViolationPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiScalar operator /(Motor rhs) {
-        return rhs.constraint_violation();
-    }
+// Fancy prefix trick
+public AntiScalar operator /(ConstraintViolationPrefixOrPostfix lhs, Motor rhs) {
+    return rhs.constraint_violation();
 }
 public extension Motor {
     public AntiScalar constraint_violation() {
@@ -98,17 +82,13 @@ public extension Motor {
         );
     }
 }
-public extension MultiVector {
-    // Fancy postfix trick
-    public MultiVector operator /(ConstraintViolationPrefixOrPostfix rhs)  {
-        return this.constraint_violation();
+// Fancy postfix trick
+public MultiVector operator /(MultiVector lhs, ConstraintViolationPrefixOrPostfix rhs)  {
+    return lhs.constraint_violation();
     }
-}
-public extension ConstraintViolationPrefixOrPostfix {
-    // Fancy prefix trick
-    public MultiVector operator /(MultiVector rhs) {
-        return rhs.constraint_violation();
-    }
+// Fancy prefix trick
+public MultiVector operator /(ConstraintViolationPrefixOrPostfix lhs, MultiVector rhs) {
+    return rhs.constraint_violation();
 }
 public extension MultiVector {
     public MultiVector constraint_violation() {

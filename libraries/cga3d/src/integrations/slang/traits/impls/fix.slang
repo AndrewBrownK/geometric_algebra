@@ -1,16 +1,12 @@
 implementing cga3d;
 using traits;
-public extension AntiFlatPoint {
-    // Fancy postfix trick
-    public AntiFlatPoint operator /(FixPrefixOrPostfix rhs)  {
-        return this.fix();
+// Fancy postfix trick
+public AntiFlatPoint operator /(AntiFlatPoint lhs, FixPrefixOrPostfix rhs)  {
+    return lhs.fix();
     }
-}
-public extension FixPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiFlatPoint operator /(AntiFlatPoint rhs) {
-        return rhs.fix();
-    }
+// Fancy prefix trick
+public AntiFlatPoint operator /(FixPrefixOrPostfix lhs, AntiFlatPoint rhs) {
+    return rhs.fix();
 }
 public extension AntiFlatPoint {
     public AntiFlatPoint fix() {
@@ -20,17 +16,13 @@ public extension AntiFlatPoint {
         );
     }
 }
-public extension AntiPlane {
-    // Fancy postfix trick
-    public AntiPlane operator /(FixPrefixOrPostfix rhs)  {
-        return this.fix();
+// Fancy postfix trick
+public AntiPlane operator /(AntiPlane lhs, FixPrefixOrPostfix rhs)  {
+    return lhs.fix();
     }
-}
-public extension FixPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiPlane operator /(AntiPlane rhs) {
-        return rhs.fix();
-    }
+// Fancy prefix trick
+public AntiPlane operator /(FixPrefixOrPostfix lhs, AntiPlane rhs) {
+    return rhs.fix();
 }
 public extension AntiPlane {
     public AntiPlane fix() {
@@ -40,17 +32,13 @@ public extension AntiPlane {
         );
     }
 }
-public extension AntiScalar {
-    // Fancy postfix trick
-    public AntiScalar operator /(FixPrefixOrPostfix rhs)  {
-        return this.fix();
+// Fancy postfix trick
+public AntiScalar operator /(AntiScalar lhs, FixPrefixOrPostfix rhs)  {
+    return lhs.fix();
     }
-}
-public extension FixPrefixOrPostfix {
-    // Fancy prefix trick
-    public AntiScalar operator /(AntiScalar rhs) {
-        return rhs.fix();
-    }
+// Fancy prefix trick
+public AntiScalar operator /(FixPrefixOrPostfix lhs, AntiScalar rhs) {
+    return rhs.fix();
 }
 public extension AntiScalar {
     public AntiScalar fix() {
@@ -60,17 +48,13 @@ public extension AntiScalar {
         );
     }
 }
-public extension FlatPoint {
-    // Fancy postfix trick
-    public FlatPoint operator /(FixPrefixOrPostfix rhs)  {
-        return this.fix();
+// Fancy postfix trick
+public FlatPoint operator /(FlatPoint lhs, FixPrefixOrPostfix rhs)  {
+    return lhs.fix();
     }
-}
-public extension FixPrefixOrPostfix {
-    // Fancy prefix trick
-    public FlatPoint operator /(FlatPoint rhs) {
-        return rhs.fix();
-    }
+// Fancy prefix trick
+public FlatPoint operator /(FixPrefixOrPostfix lhs, FlatPoint rhs) {
+    return rhs.fix();
 }
 public extension FlatPoint {
     public FlatPoint fix() {
@@ -80,17 +64,13 @@ public extension FlatPoint {
         );
     }
 }
-public extension Plane {
-    // Fancy postfix trick
-    public Plane operator /(FixPrefixOrPostfix rhs)  {
-        return this.fix();
+// Fancy postfix trick
+public Plane operator /(Plane lhs, FixPrefixOrPostfix rhs)  {
+    return lhs.fix();
     }
-}
-public extension FixPrefixOrPostfix {
-    // Fancy prefix trick
-    public Plane operator /(Plane rhs) {
-        return rhs.fix();
-    }
+// Fancy prefix trick
+public Plane operator /(FixPrefixOrPostfix lhs, Plane rhs) {
+    return rhs.fix();
 }
 public extension Plane {
     public Plane fix() {
@@ -100,17 +80,13 @@ public extension Plane {
         );
     }
 }
-public extension RoundPoint {
-    // Fancy postfix trick
-    public RoundPoint operator /(FixPrefixOrPostfix rhs)  {
-        return this.fix();
+// Fancy postfix trick
+public RoundPoint operator /(RoundPoint lhs, FixPrefixOrPostfix rhs)  {
+    return lhs.fix();
     }
-}
-public extension FixPrefixOrPostfix {
-    // Fancy prefix trick
-    public RoundPoint operator /(RoundPoint rhs) {
-        return rhs.fix();
-    }
+// Fancy prefix trick
+public RoundPoint operator /(FixPrefixOrPostfix lhs, RoundPoint rhs) {
+    return rhs.fix();
 }
 public extension RoundPoint {
     public RoundPoint fix() {
@@ -126,17 +102,13 @@ public extension RoundPoint {
         );
     }
 }
-public extension Scalar {
-    // Fancy postfix trick
-    public Scalar operator /(FixPrefixOrPostfix rhs)  {
-        return this.fix();
+// Fancy postfix trick
+public Scalar operator /(Scalar lhs, FixPrefixOrPostfix rhs)  {
+    return lhs.fix();
     }
-}
-public extension FixPrefixOrPostfix {
-    // Fancy prefix trick
-    public Scalar operator /(Scalar rhs) {
-        return rhs.fix();
-    }
+// Fancy prefix trick
+public Scalar operator /(FixPrefixOrPostfix lhs, Scalar rhs) {
+    return rhs.fix();
 }
 public extension Scalar {
     public Scalar fix() {
@@ -146,17 +118,13 @@ public extension Scalar {
         );
     }
 }
-public extension Sphere {
-    // Fancy postfix trick
-    public Sphere operator /(FixPrefixOrPostfix rhs)  {
-        return this.fix();
+// Fancy postfix trick
+public Sphere operator /(Sphere lhs, FixPrefixOrPostfix rhs)  {
+    return lhs.fix();
     }
-}
-public extension FixPrefixOrPostfix {
-    // Fancy prefix trick
-    public Sphere operator /(Sphere rhs) {
-        return rhs.fix();
-    }
+// Fancy prefix trick
+public Sphere operator /(FixPrefixOrPostfix lhs, Sphere rhs) {
+    return rhs.fix();
 }
 public extension Sphere {
     public Sphere fix() {

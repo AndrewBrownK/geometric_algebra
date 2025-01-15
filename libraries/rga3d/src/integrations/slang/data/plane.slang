@@ -6,7 +6,7 @@ public struct Plane {
     // e423, e431, e412, e321
     internal float4 group0;
 
-    __init(
+    public __init(
         float e423, float e431, float e412, float e321
     ) {
         group0 = float4(e423, e431, e412, e321);
