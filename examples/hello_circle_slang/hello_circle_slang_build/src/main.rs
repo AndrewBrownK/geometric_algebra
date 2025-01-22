@@ -1,6 +1,6 @@
 /*
-Measure-Command { slangc -I "../../../libraries/cga3d/src/integrations/slang" -entry "fs_main" -stage "fragment" -o "res/shader.fs.spv" -- "src/shader.slang" }
-Measure-Command { slangc -I "../../../libraries/cga3d/src/integrations/slang" -entry "vs_main" -stage "vertex" -o "res/shader.vs.spv" -- "src/shader.slang" }
+Measure-Command { slangc -I "../../../libraries/cga3d/src/integrations/slang-module" -entry "vs_main" -stage "vertex" -o "res/shader.vs.spv" -reflection-json "res/shader.vs.json" -report-perf-benchmark -fvk-use-entrypoint-name -- "src/shader.slang" }
+Measure-Command { slangc -I "../../../libraries/cga3d/src/integrations/slang-module" -entry "fs_main" -stage "fragment" -o "res/shader.fs.spv" -reflection-json "res/shader.fs.json" -report-perf-benchmark -fvk-use-entrypoint-name -- "src/shader.slang" }
  */
 
 pub fn main() -> anyhow::Result<()> {

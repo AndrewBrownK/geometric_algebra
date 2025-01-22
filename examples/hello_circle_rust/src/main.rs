@@ -1,15 +1,15 @@
-use cga3d_min::norms::UnitizedRadiusNormSquared;
-use cga3d_min::products::exterior::{AntiWedge, Wedge};
-use cga3d_min::{FlatPoint, RoundPoint};
+use cga3d::traits::UnitizedRadiusNormSquared;
+use cga3d::traits::{AntiWedge, Wedge};
+use cga3d::data::{FlatPoint, RoundPoint};
 
 fn main() {
     // Start by constructing a Circle.
     // We'll create our circle by joining 3 RoundPoints.
 
     // Create 3 round points
-    let left = RoundPoint::new(-1.0, 0.0, 0.0, 1.0, 0.5);
-    let top = RoundPoint::new(0.0, 1.0, 0.0, 1.0, 0.5);
-    let right = RoundPoint::new(1.0, 0.0, 0.0, 1.0, 0.5);
+    let left = RoundPoint::from_elements(-1.0, 0.0, 0.0, 1.0, 0.5);
+    let top = RoundPoint::from_elements(0.0, 1.0, 0.0, 1.0, 0.5);
+    let right = RoundPoint::from_elements(1.0, 0.0, 0.0, 1.0, 0.5);
 
     // Join the first pair
     let left_to_top_dipole = left.wedge(top);
@@ -26,8 +26,8 @@ fn main() {
 
             // Let's create a line representing this fragment
             let fp_e5 = (x * x + y * y + 0.0) / 2.0;
-            let fragment_point = RoundPoint::new(x, y, 0.0, 1.0, fp_e5);
-            let direction = FlatPoint::new(0.0, 0.0, 1.0, 0.0);
+            let fragment_point = RoundPoint::from_elements(x, y, 0.0, 1.0, fp_e5);
+            let direction = FlatPoint::from_elements(0.0, 0.0, 1.0, 0.0);
 
             // Join a round point and point at infinity to create a line
             let fragment_as_line = fragment_point.wedge(direction);

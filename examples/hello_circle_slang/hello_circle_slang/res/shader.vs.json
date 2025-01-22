@@ -1,0 +1,91 @@
+{
+    "parameters": [
+        {
+            "name": "ScreenSize",
+            "binding": {"kind": "descriptorTableSlot", "index": 0},
+            "type": {
+                "kind": "constantBuffer",
+                "elementType": {
+                    "kind": "vector",
+                    "elementCount": 2,
+                    "elementType": {
+                        "kind": "scalar",
+                        "scalarType": "float32"
+                    }
+                },
+                "containerVarLayout": {
+                    "binding": {"kind": "descriptorTableSlot", "index": 0}
+                },
+                "elementVarLayout": {
+                    "type": {
+                        "kind": "vector",
+                        "elementCount": 2,
+                        "elementType": {
+                            "kind": "scalar",
+                            "scalarType": "float32"
+                        }
+                    },
+                    "binding": {"kind": "uniform", "offset": 0, "size": 8}
+                }
+            }
+        }
+    ],
+    "entryPoints": [
+        {
+            "name": "vs_main",
+            "stage:": "vertex",
+            "parameters": [
+                {
+                    "name": "in_vertex_index",
+                    "semanticName": "SV_VERTEXID",
+                    "type": {
+                        "kind": "scalar",
+                        "scalarType": "uint32"
+                    }
+                }
+            ],
+            "result:": {
+                "stage": "vertex",
+                "binding": {"kind": "varyingOutput", "index": 0},
+                "type": {
+                    "kind": "struct",
+                    "name": "VertexOutput",
+                    "fields": [
+                        {
+                            "name": "position",
+                            "type": {
+                                "kind": "vector",
+                                "elementCount": 4,
+                                "elementType": {
+                                    "kind": "scalar",
+                                    "scalarType": "float32"
+                                }
+                            },
+                            "semanticName": "SV_POSITION"
+                        },
+                        {
+                            "name": "percent_position",
+                            "type": {
+                                "kind": "vector",
+                                "elementCount": 4,
+                                "elementType": {
+                                    "kind": "scalar",
+                                    "scalarType": "float32"
+                                }
+                            },
+                            "stage": "vertex",
+                            "binding": {"kind": "varyingOutput", "index": 0},
+                            "semanticName": "TEXCOORD"
+                        }
+                    ]
+                }
+            },
+            "bindings": [
+                {
+                    "name": "ScreenSize",
+                    "binding": {"kind": "descriptorTableSlot", "index": 0, "used": 0}
+                }
+            ]
+        }
+    ]
+}

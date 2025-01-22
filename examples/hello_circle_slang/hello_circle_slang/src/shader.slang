@@ -34,10 +34,12 @@ VertexOutput vs_main(uint in_vertex_index : SV_VertexID) {
 ConstantBuffer<float2> ScreenSize : register(b0);
 
 [shader("fragment")]
-void fs_main(
+float4 fs_main(
     in VertexOutput vertex,
-    out float4 background_color : SV_Target0,
-) {
+): SV_Target0 {
+
+    //return float4(0, 1, 0, 1);
+
     // Start by recovering a nice coordinate space
     // (0, 0) is in the center
     // lesser of x or y will range from -1 to 1
@@ -54,12 +56,12 @@ void fs_main(
 
     // Choose some background colors that will help us confirm that we got the coordinate space we wanted
     float4 color = float4(new_x, new_y, 0.0, 1.0);
-    background_color = select(
+    float4 background_color = select(
         (color.x < -1.0) || (color.y < -0.5),
         float4(color.x, color.y, 0.5, 1.0),
         color,
     );
-    // return background_color;
+    //return background_color;
 
 
 
@@ -75,9 +77,15 @@ void fs_main(
 
     // Join the first pair
     Dipole left_to_top_dipole = left /wedge/ top;
+    // return background_color + float4(left_to_top_dipole.e41);
 
     // Join the remaining point
     Circle circle = left_to_top_dipole /wedge/ right;
+    //return background_color + float4(circle.e412); // causes black screen
+    //return background_color + float4(circle.e125); // causes color changes, mostly black
+    //return background_color - float4(circle.e412); // causes white screen (so likely a large negative number, not NaN issue)
+    // return background_color - float4(circle.e125); // Causes color changes, mostly white
+
 
     // Now that we have our circle, we can determine what we want to do with this fragment
 
@@ -94,10 +102,16 @@ void fs_main(
 
     // Now get the squared radius of the meet
     float radius_squared = meet_fragment_and_circle.unitized_radius_norm_squared();
+    // TODO it seems like radius_squared is positive infinity, which naga will refuse to compile literals,
+    //  but perhaps the GPU rolls with it at runtime
+    if (abs(radius_squared) > pow(2.0, 126)) {
+        return float4(1.0) - background_color;
+    } else {
+        return background_color;
+    }
+
 
     // And lastly, make pixels more bright the closer they are to the circle.
     float4 destructive_circle_color = float4(1.0) - float4(abs(radius_squared) * 100.0);
-    float4 circle_color = destructive_circle_color;
-    // circle_color = max(float4(0.0), destructive_circle_color);
-    background_color = background_color + circle_color;
+    return background_color + destructive_circle_color;
 }
